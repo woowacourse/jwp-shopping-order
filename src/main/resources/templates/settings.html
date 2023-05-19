@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>설정</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/cart.css}">
+</head>
+<body>
+<header class="gnb">
+    <nav>
+        <ul class="gnb-group">
+            <li><a href="/settings">설정</a></li>
+            <li class="nav-admin"><a href="/admin">관리자</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="container">
+    <h1>사용자 선택</h1>
+    <div class="cart-items">
+        <div class="cart-item" th:each="member : ${members}">
+            <div class="cart-item-info">
+                <div class="cart-item-name" th:text="${member.email}"></div>
+                <div class="cart-item-price" th:text="${member.password}"></div>
+                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/settings.js}"> </script>
+</body>
+</html>
