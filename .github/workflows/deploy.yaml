@@ -1,0 +1,11 @@
+name: deploy
+on:
+  push:
+    branches: [ step1 ]
+
+jobs:
+  build:
+    runs-on: Linux
+    steps:
+      - name: run
+        run: ~/jwp-shopping-order/run.sh
