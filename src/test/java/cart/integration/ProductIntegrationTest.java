@@ -3,6 +3,7 @@ package cart.integration;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -15,6 +16,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     public void getProducts() {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.ORIGIN, "http://www.example.com")
                 .when()
                 .get("/products")
                 .then()
