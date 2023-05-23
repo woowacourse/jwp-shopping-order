@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active:
+
+  thymeleaf:
+    cache: false
