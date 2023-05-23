@@ -97,5 +97,10 @@ public class CartItemDao {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
+
+    public void deleteByProductId(final Long productId) {
+        String sql = "DELETE FROM cart_item WHERE product_id = ?";
+        jdbcTemplate.update(sql, productId);
+    }
 }
 

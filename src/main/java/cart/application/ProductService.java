@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.dao.CartItemDao;
 import cart.domain.Product;
 import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
@@ -13,9 +14,11 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductDao productDao;
+    private final CartItemDao cartItemDao;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(final ProductDao productDao, final CartItemDao cartItemDao) {
         this.productDao = productDao;
+        this.cartItemDao = cartItemDao;
     }
 
     public List<ProductResponse> getAllProducts() {
@@ -40,5 +43,6 @@ public class ProductService {
 
     public void deleteProduct(Long productId) {
         productDao.deleteProduct(productId);
+        cartItemDao.deleteByProductId(productId);
     }
 }

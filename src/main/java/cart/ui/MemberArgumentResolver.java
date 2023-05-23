@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +20,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Member.class);
+        return parameter.hasParameterAnnotation(Auth.class)
+                & parameter.getParameterType().equals(Member.class);
     }
 
     @Override
