@@ -1,0 +1,13 @@
+name: deploy
+on:
+  push:
+    branches:
+      - step1
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: deploy
+        run: |
+          chmod +x ./deploy.sh
+          ./deploy.sh
