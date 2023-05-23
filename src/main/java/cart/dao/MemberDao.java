@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -21,13 +20,13 @@ public class MemberDao {
 
     public Member getMemberById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
+        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
         return members.isEmpty() ? null : members.get(0);
     }
 
     public Member getMemberByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
+        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
         return members.isEmpty() ? null : members.get(0);
     }
 

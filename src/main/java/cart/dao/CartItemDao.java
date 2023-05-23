@@ -27,7 +27,8 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             String email = rs.getString("email");
             Long productId = rs.getLong("product.id");
             String name = rs.getString("name");
@@ -38,7 +39,7 @@ public class CartItemDao {
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
-        });
+        }, memberId);
     }
 
     public Long save(CartItem cartItem) {
@@ -66,7 +67,8 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
+
+        List<CartItem> cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Long productId = rs.getLong("id");
@@ -78,7 +80,7 @@ public class CartItemDao {
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
-        });
+        }, id);
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
