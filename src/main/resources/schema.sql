@@ -17,5 +17,5 @@ CREATE TABLE cart_item (
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
