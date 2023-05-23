@@ -12,6 +12,12 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private static final String BASIC_TYPE = "Basic";
+    private static final String DELIMITER = ":";
+    private static final int EMAIL_INDEX = 0;
+    private static final int PASSWORD_INDEX = 1;
+
     private final MemberDao memberDao;
 
     public MemberArgumentResolver(MemberDao memberDao) {
@@ -24,29 +30,43 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            return null;
+    public Object resolveArgument(MethodParameter parameter,
+                                  ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest,
+                                  WebDataBinderFactory binderFactory) throws Exception {
+        String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+
+        validateAuthorizationHeader(header);
+
+        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        String decoded = new String(Base64.decodeBase64(authHeaderValue));
+
+        String[] credentials = decoded.split(DELIMITER);
+
+        try {
+            String email = credentials[EMAIL_INDEX];
+            String password = credentials[PASSWORD_INDEX];
+
+            Member member = memberDao.getMemberByEmail(email);
+            if (!member.checkPassword(password)) {
+                throw new AuthenticationException("로그인에 실패했습니다.");
+            }
+            return member;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new AuthenticationException("토큰 형식이 올바르지 않습니다.", ex);
         }
+    }
 
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
+    private void validateAuthorizationHeader(String header) {
+        if (header == null) {
+            throw new AuthenticationException("로그인이 필요한 기능입니다.");
         }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
-
-        // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+        if (checkNonBasicType(header)) {
+            throw new AuthenticationException("Basic 인증 방식이 아닙니다.");
         }
-        return member;
+    }
+
+    private boolean checkNonBasicType(String header) {
+        return !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase());
     }
 }
