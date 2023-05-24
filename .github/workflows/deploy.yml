@@ -21,8 +21,6 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Connect to EC2
-        run: |
-          chmod 400 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_IP }} "~/deploy.sh"
+        run: ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "~./deploy.sh"
 
 
