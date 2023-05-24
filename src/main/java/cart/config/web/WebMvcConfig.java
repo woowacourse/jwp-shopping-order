@@ -31,7 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        config.addAllowedOrigin("https://xodms0309.github.io/react-shopping-cart/");
+        config.addAllowedOrigin("http://locahost:3000");
         config.addAllowedHeader(CorsConfiguration.ALL);
         config.addAllowedMethod(HttpMethod.GET);
         config.addAllowedMethod(HttpMethod.POST);
