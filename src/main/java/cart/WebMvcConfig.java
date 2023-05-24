@@ -27,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/products")
                 .allowedOrigins("*");
         registry.addMapping("/cart-items")
-                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
                 .allowCredentials(true);
     }
 }
