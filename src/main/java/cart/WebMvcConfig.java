@@ -25,6 +25,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://");
+                .allowedOrigins("https://solo5star.github.io/react-shopping-cart-prod/")
+                .allowedOrigins("https://naveowo.github.io/react-shopping-cart-prod/")
+                .allowedMethods("*");
     }
 }
