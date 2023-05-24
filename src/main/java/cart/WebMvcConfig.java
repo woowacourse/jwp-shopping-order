@@ -31,6 +31,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "http://localhost:3000"
                 )
                 .allowedMethods("*")
-                .allowedHeaders("*");
+                .exposedHeaders("Location");
     }
 }
