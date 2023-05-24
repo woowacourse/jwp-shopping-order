@@ -18,8 +18,9 @@ jobs:
 
       - name: deploy
         run: |
-          chmod +x ./deploy.sh
-          sudo ./deploy.sh
+          echo $PWD
+#          chmod +x ./deploy.sh
+#          sudo ./deploy.sh
 
 
 
