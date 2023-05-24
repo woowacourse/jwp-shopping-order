@@ -15,5 +15,14 @@ jobs:
         with:
           ref: deploy
 
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Connect to EC2
-        run: ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@${{ secrets.EC2_IP }} "~/deploy.sh"
+        run: |
+          chmod 400 key.pem
+          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_IP }} "~/deploy.sh"
+
+
