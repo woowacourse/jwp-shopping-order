@@ -4,12 +4,16 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
+import cart.exception.ProductNotExistsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +32,24 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Product product = productDao.getProductById(cartItemRequest.getProductId());
+
+        if (Objects.isNull(product)) {
+            throw new ProductNotExistsException("카트에 추가하려는 상품이 존재하지 않습니다.");
+        }
+
+        return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+
+
         CartItem cartItem = cartItemDao.findById(id);
+
+        if (Objects.isNull(cartItem)) {
+            throw new CartItemException("존재하지 않는 장바구니 아이템입니다.");
+        }
+
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {

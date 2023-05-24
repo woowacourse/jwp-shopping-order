@@ -27,12 +27,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new AuthenticationException("현재 입력된 사용자 정보가 없습니다.");
         }
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
+            throw new AuthenticationException("basic 인증 관련 문제가 발생했습니다.");
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
