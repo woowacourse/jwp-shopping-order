@@ -1,0 +1,9 @@
+spring:
+  thymeleaf:
+    cache: false
+
+logging:
+  level:
+    root: warn
+  file:
+    path: ./logs
