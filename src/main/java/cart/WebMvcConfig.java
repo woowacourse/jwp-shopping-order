@@ -30,6 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "https://naveowo.github.io/react-shopping-cart-prod",
                         "http://localhost:3000"
                 )
-                .allowedMethods("*");
+                .allowedMethods("*")
+                .allowedHeaders("*");
     }
 }
