@@ -2,7 +2,7 @@
 
     <!-- 로그 파일 경로 및 형식 설정 -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/error-log.log</file> <!-- 로그 파일 경로 -->
+        <file>./logs/error-log.log</file> <!-- 로그 파일 경로 -->
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern> <!-- 로그 형식 -->
         </encoder>
