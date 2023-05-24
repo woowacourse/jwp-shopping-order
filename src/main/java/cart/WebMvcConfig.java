@@ -14,12 +14,12 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberDao memberDao;
 
-    public WebMvcConfig(MemberDao memberDao) {
+    public WebMvcConfig(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberArgumentResolver(memberDao));
     }
 
@@ -27,9 +27,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(final CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000");
+                        .allowedMethods("*")
+                        .allowedOrigins("http://localhost:3000")
+                        .maxAge(3600);
             }
         };
     }
