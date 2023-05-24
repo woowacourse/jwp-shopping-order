@@ -1,7 +1,6 @@
-package cart.ui;
+package cart.controller;
 
-import cart.application.CartItemService;
-import cart.domain.CartItem;
+import cart.service.CartItemService;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;

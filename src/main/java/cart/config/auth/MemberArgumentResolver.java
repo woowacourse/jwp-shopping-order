@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.config.auth;
 
 import cart.exception.AuthenticationException;
 import cart.dao.MemberDao;

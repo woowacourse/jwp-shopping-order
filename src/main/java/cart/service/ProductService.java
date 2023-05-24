@@ -1,4 +1,4 @@
-package cart.application;
+package cart.service;
 
 import cart.domain.Product;
 import cart.dao.ProductDao;
