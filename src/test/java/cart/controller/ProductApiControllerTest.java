@@ -1,42 +1,45 @@
 package cart.controller;
 
-import cart.application.ProductService;
-import cart.dao.MemberDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import cart.ui.ProductApiController;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.List;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureRestDocs
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import cart.application.ProductService;
+import cart.dao.MemberDao;
+import cart.dto.DtoSnippet;
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
+import cart.ui.ProductApiController;
+
 @SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest(ProductApiController.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-public class ProductApiControllerTest {
+public class ProductApiControllerTest extends ControllerTestWithDocs {
 
     private static final String API_URL = "/products";
     @Autowired
@@ -64,14 +67,8 @@ public class ProductApiControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", containsString("1")))
                 .andDo(print())
-                .andDo(document("product-create",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("name").description("제품 명"),
-                                fieldWithPath("price").description("제품 가격"),
-                                fieldWithPath("imageUrl").description("제품 이미지 url")
-                        )
+                .andDo(documentationOf("product-create",
+                        DtoSnippet.of(request)
                 ));
     }
 
@@ -91,17 +88,9 @@ public class ProductApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
                 .andDo(print())
-                .andDo(document("product-getById",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("id").description("상품 아이디")),
-                        responseFields(
-                                fieldWithPath("id").description("제품 id"),
-                                fieldWithPath("name").description("제품 명"),
-                                fieldWithPath("price").description("제품 가격"),
-                                fieldWithPath("imageUrl").description("제품 이미지 url")
-                        )
+                .andDo(documentationOf("product-getById",
+                        pathParameters(parameterWithName("id").description("상품 아이디")),
+                        DtoSnippet.of(response)
                 ));
     }
 
@@ -124,20 +113,15 @@ public class ProductApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
                 .andDo(print())
-                .andDo(document("product-getAll",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        responseFields(
-                                fieldWithPath("[].id").description("제품 id"),
-                                fieldWithPath("[].name").description("제품 명"),
-                                fieldWithPath("[].price").description("제품 가격"),
-                                fieldWithPath("[].imageUrl").description("제품 이미지 url")
-                        )
+                .andDo(documentationOf("product-getAll",
+                        DtoSnippet.of(response)
                 ));
+
     }
 
     @Test
     void 상품_수정() throws Exception {
+        System.err.println(testInfo.getDisplayName());
         //given
         ProductRequest request = new ProductRequest("바뀐김치", 2000, "www.kakao.com");
 
@@ -150,16 +134,9 @@ public class ProductApiControllerTest {
         result
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("product-update",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("id").description("상품 아이디")),
-                        requestFields(
-                                fieldWithPath("name").description("제품 명"),
-                                fieldWithPath("price").description("제품 가격"),
-                                fieldWithPath("imageUrl").description("제품 이미지 url")
-                        )
+                .andDo(documentationOf(testInfo.getTestMethod().get().getName(),
+                        pathParameters(parameterWithName("id").description("상품 아이디")),
+                        DtoSnippet.of(request)
                 ));
     }
 
@@ -172,11 +149,8 @@ public class ProductApiControllerTest {
         result
                 .andExpect(status().isNoContent())
                 .andDo(print())
-                .andDo(document("product-delete",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("id").description("상품 아이디")
-                        )));
+                .andDo(documentationOf("product-delete",
+                        pathParameters(parameterWithName("id").description("상품 아이디"))
+                ));
     }
 }

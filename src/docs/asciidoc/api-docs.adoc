@@ -45,12 +45,12 @@ include::{snippets}/product-getAll/response-fields.adoc[]
 
 ==== HTTP request
 
-include::{snippets}/product-update/http-request.adoc[]
-include::{snippets}/product-update/path-parameters.adoc[]
+include::{snippets}/상품_수정/http-request.adoc[]
+include::{snippets}/상품 수정/path-parameters.adoc[]
 
 ==== HTTP response
 
-include::{snippets}/product-update/http-response.adoc[]
+include::{snippets}/상품 수정/http-response.adoc[]
 
 === Product 삭제
 
