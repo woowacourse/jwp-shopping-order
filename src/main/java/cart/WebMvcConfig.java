@@ -3,6 +3,7 @@ package cart;
 import cart.dao.MemberDao;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -27,6 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
                 .allowedMethods("*")
+                .exposedHeaders(HttpHeaders.LOCATION)
                 .allowCredentials(true);
     }
 }
