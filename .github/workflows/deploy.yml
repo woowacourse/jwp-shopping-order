@@ -11,7 +11,8 @@ jobs:
 
     steps:
       - name: Deploy
-        run: nohup ~/deploy.sh &
+        run: |
+          nohup ~/deploy.sh > /dev/null 2>&1 & 
 
 
 
