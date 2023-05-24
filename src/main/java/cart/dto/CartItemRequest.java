@@ -1,5 +1,7 @@
 package cart.dto;
 
+import java.util.Objects;
+
 public class CartItemRequest {
     private Long productId;
 

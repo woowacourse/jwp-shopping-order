@@ -1,5 +1,7 @@
 package cart.dto;
 
+import java.util.Objects;
+
 public class ProductRequest {
     private String name;
     private int price;
