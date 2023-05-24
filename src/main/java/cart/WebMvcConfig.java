@@ -27,6 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("https://solo5star.github.io/react-shopping-cart-prod/")
                 .allowedOrigins("https://naveowo.github.io/react-shopping-cart-prod/")
+                .allowedOrigins("http://localhost:3000")
                 .allowedMethods("*");
     }
 }
