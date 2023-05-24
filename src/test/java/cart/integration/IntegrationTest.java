@@ -15,5 +15,7 @@ public class IntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        RestAssured.useRelaxedHTTPSValidation();
+        RestAssured.baseURI = "https://localhost:" + port;
     }
 }
