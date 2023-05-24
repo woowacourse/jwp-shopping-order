@@ -12,9 +12,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleException(final Exception e) {
-        log.error("------------------------This is Error------------------");
         log.error(e.getMessage());
-        log.error("------------------------This is Error------------------");
 
         return e.getMessage();
     }
