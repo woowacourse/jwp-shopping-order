@@ -4,11 +4,9 @@ import cart.application.ProductService;
 import cart.dao.MemberDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@CrossOrigin(origins = "*")
 public class PageController {
     private final ProductService productService;
     private final MemberDao memberDao;
