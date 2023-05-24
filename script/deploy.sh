@@ -1,28 +1,34 @@
 #!/bin/bash
 
+PORT=80
+PROJECT_NAME="jwp-shopping-order"
+PROJECT_DIR="~/"+$PROJECT_NAME
+REPOSITORY_URL="https://github.com/pilyang/jwp-shopping-order"
+DEPLOY_BRANCH="step1"
+
 # Step 1: Check if port 8080 is running and kill the process if it is
-if lsof -i :80; then
-    echo "Port 8080 is already in use. Killing the process..."
-    lsof -i :80 | awk 'NR!=1 {print $2}' | xargs kill -9
+if lsof -i :$PORT; then
+    echo "Port $PORT is already in use. Killing the process..."
+    lsof -i :$PORT | awk 'NR!=1 {print $2}' | xargs kill -9
 fi
 
 # Step 2: Check if jwp-shopping-order directory exists, and clone it if it doesn't
-if [ ! -d "jwp-shopping-order" ]; then
-    echo "Cloning jwp-shopping-order repository..."
-    git clone --single-branch -b step1 https://github.com/beer-2000/jwp-shopping-order
+if [ ! -d PROJECT_DIR ]; then
+    echo "Cloning $PROJECT_NAME repository..."
+    git -C ~ clone --single-branch -b DEPLOY_BRANCH REPOSITORY_URL
 fi
 
 # Step 3: Checkout the 'step1' branch
-cd jwp-shopping-order
 echo "Checking out 'step1' branch..."
-git checkout step1
+git -C PROJECT_DIR checkout DEPLOY_BRANCH
 
 # Step 4: Pull the latest changes from the 'step1' branch
 echo "Pulling the latest changes from 'step1' branch..."
-git pull origin step1
+git -C PROJECT_DIR pull origin DEPLOY_BRANCH
 
 # Step 5: Build the project using './gradlew clean bootJar'
 echo "Building the project..."
+cd PROJECT_DIR
 ./gradlew clean bootJar
 
 # Step 6: Run the application in the background using 'java -jar' and 'nohup'
