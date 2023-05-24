@@ -5,13 +5,20 @@ on:
     branches:
       - deploy
 
-jobs:
   deploy:
     runs-on: self-hosted
-
     steps:
-      - name: Deploy
-        run: sudo ~/deploy.sh
+      - name: change permission
+        run: |
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/jwp-shopping-order
 
+      - uses: actions/checkout@v3
+      - name: copy file
+        run: |
+          cp ./script/deploy.sh .
+      - name: deploy
+        run: |
+          chmod +x ./deploy.sh
+          sudo ./deploy.sh
 
 
