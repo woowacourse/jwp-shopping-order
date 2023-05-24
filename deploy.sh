@@ -23,7 +23,12 @@ if [ -z "$CURRENT_PID" ]; then
 else
   echo "> kill -9 $CURRENT_PID"
   kill -9 "$CURRENT_PID"
-  sleep 5
+  echo "> sleep until shutdown"
+  while [ $(pgrep -f ${PROJECT_NAME}.*.jar) ]
+  do
+    echo "> zzz"
+    sleep 1
+  done
 fi
 
 echo "> start server"
