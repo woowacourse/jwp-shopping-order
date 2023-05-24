@@ -1,11 +1,12 @@
 package cart.dto;
 
 public class ProductRequest {
+
     private String name;
     private int price;
     private String imageUrl;
 
-    public ProductRequest() {
+    private ProductRequest() {
     }
 
     public ProductRequest(String name, int price, String imageUrl) {

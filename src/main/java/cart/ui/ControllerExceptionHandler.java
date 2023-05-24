@@ -1,23 +1,24 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import cart.dto.ErrorResponse;
+import cart.exception.ApplicationException;
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
+public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ErrorResponse> handlerAuthenticationException(ApplicationException e) {
+        log(e);
+        return ResponseEntity.status(e.status()).body(new ErrorResponse(e));
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    private void log(ApplicationException e) {
+        logger.error(e.toString());
+        logger.error(e.getStackTrace());
     }
-
 }
