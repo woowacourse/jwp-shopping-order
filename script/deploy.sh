@@ -9,7 +9,7 @@ fi
 # Step 2: Check if jwp-shopping-order directory exists, and clone it if it doesn't
 if [ ! -d "jwp-shopping-order" ]; then
     echo "Cloning jwp-shopping-order repository..."
-    git clone --single-branch -b step1 https://github.com/beer-2000/jwp-shopping-order
+    git clone --single-branch -b step1 https://github.com/be-student/jwp-shopping-order
 fi
 
 # Step 3: Checkout the 'step1' branch
