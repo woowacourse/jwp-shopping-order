@@ -36,7 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         config.addAllowedMethod(HttpMethod.GET);
         config.addAllowedMethod(HttpMethod.POST);
         config.addAllowedMethod(HttpMethod.HEAD);
-        config.addAllowedMethod(HttpMethod.PUT);
+        config.addAllowedMethod(HttpMethod.PATCH);
         config.addAllowedMethod(HttpMethod.DELETE);
         config.addAllowedMethod(HttpMethod.TRACE);
         config.addAllowedMethod(HttpMethod.OPTIONS);
