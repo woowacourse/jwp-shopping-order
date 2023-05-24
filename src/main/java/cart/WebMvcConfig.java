@@ -24,10 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/products")
-                .allowedMethods("*")
-                .allowedOrigins("*");
-        registry.addMapping("/cart-items")
+        registry.addMapping("/**")
                 .allowedOriginPatterns("*")
                 .allowedMethods("*")
                 .allowCredentials(true);
