@@ -1,6 +1,7 @@
 <configuration>
     <!-- WARN 이하의 레벨을 가진 로그를 파일로 분리하여 저장 -->
-    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.ConsoleAppender">
+        <target>System.err</target>
         <file>logs/error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
