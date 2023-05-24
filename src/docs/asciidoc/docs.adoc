@@ -1,0 +1,98 @@
+= Product
+:toc: left
+:source-highlighter: highlightjs
+:sectlinks:
+
+== 상품 API
+
+=== 상품 추가
+
+==== 요청
+include::{snippets}/product-api-controller-test/create-product/http-request.adoc[]
+include::{snippets}/product-api-controller-test/create-product/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/product-api-controller-test/create-product/http-response.adoc[]
+include::{snippets}/product-api-controller-test/create-product/response-headers.adoc[]
+
+=== 상품 단일 조회
+
+==== 요청
+include::{snippets}/product-api-controller-test/get-product-by-id/http-request.adoc[]
+include::{snippets}/product-api-controller-test/get-product-by-id/path-parameters.adoc[]
+
+==== 응답
+include::{snippets}/product-api-controller-test/get-product-by-id/http-response.adoc[]
+include::{snippets}/product-api-controller-test/get-product-by-id/response-fields.adoc[]
+
+=== 상품 전체 조회
+
+==== 요청
+include::{snippets}/product-api-controller-test/get-all-products/http-request.adoc[]
+
+==== 응답
+include::{snippets}/product-api-controller-test/get-all-products/http-response.adoc[]
+include::{snippets}/product-api-controller-test/get-all-products/response-fields.adoc[]
+
+=== 상품 정보 수정
+
+==== 요청
+include::{snippets}/product-api-controller-test/update-product/http-request.adoc[]
+include::{snippets}/product-api-controller-test/update-product/path-parameters.adoc[]
+include::{snippets}/product-api-controller-test/update-product/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/product-api-controller-test/update-product/http-response.adoc[]
+
+=== 상품 삭제
+
+==== 요청
+include::{snippets}/product-api-controller-test/delete-product/http-request.adoc[]
+include::{snippets}/product-api-controller-test/delete-product/path-parameters.adoc[]
+
+==== 응답
+include::{snippets}/product-api-controller-test/delete-product/http-response.adoc[]
+
+== 장바구니 API
+
+=== 장바구니 상품 추가
+
+==== 요청
+include::{snippets}/cart-item-api-controller-test/add-cart-items/http-request.adoc[]
+include::{snippets}/cart-item-api-controller-test/add-cart-items/request-headers.adoc[]
+include::{snippets}/cart-item-api-controller-test/add-cart-items/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/cart-item-api-controller-test/add-cart-items/http-response.adoc[]
+include::{snippets}/cart-item-api-controller-test/add-cart-items/response-headers.adoc[]
+
+=== 장바구니 상품 전체 조회
+
+==== 요청
+include::{snippets}/cart-item-api-controller-test/show-cart-items/http-request.adoc[]
+include::{snippets}/cart-item-api-controller-test/show-cart-items/request-headers.adoc[]
+
+==== 응답
+include::{snippets}/cart-item-api-controller-test/show-cart-items/http-response.adoc[]
+include::{snippets}/cart-item-api-controller-test/show-cart-items/response-fields.adoc[]
+
+=== 장바구니 상품 수량 수정
+
+==== 요청
+include::{snippets}/cart-item-api-controller-test/update-cart-item-quantity/http-request.adoc[]
+include::{snippets}/cart-item-api-controller-test/update-cart-item-quantity/path-parameters.adoc[]
+include::{snippets}/cart-item-api-controller-test/update-cart-item-quantity/request-headers.adoc[]
+include::{snippets}/cart-item-api-controller-test/update-cart-item-quantity/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/cart-item-api-controller-test/update-cart-item-quantity/http-response.adoc[]
+
+=== 장바구니 상품 삭제
+
+==== 요청
+include::{snippets}/cart-item-api-controller-test/remove-cart-items/http-request.adoc[]
+include::{snippets}/cart-item-api-controller-test/remove-cart-items/path-parameters.adoc[]
+include::{snippets}/cart-item-api-controller-test/remove-cart-items/request-headers.adoc[]
+
+==== 응답
+include::{snippets}/cart-item-api-controller-test/remove-cart-items/http-response.adoc[]
