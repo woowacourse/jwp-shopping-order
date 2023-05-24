@@ -1,15 +1,10 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url=jdbc:h2:mem:testdb:
-  #    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:13306/shopping_cart
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shopping_cart
     username: root
     password: 1234
-  thymeleaf:
-    cache: false
 
   sql:
     init:
       mode: always
-
