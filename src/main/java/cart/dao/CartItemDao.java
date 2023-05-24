@@ -35,7 +35,7 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
+            Member member = new Member(memberId, email, null, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         });
@@ -75,7 +75,7 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
+            Member member = new Member(memberId, email, null, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         });
@@ -98,4 +98,3 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }
-
