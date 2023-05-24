@@ -4,8 +4,13 @@ INSERT INTO product (name, price, image_url) VALUES ('피자', 13000, 'https://i
 
 INSERT INTO member (email, password) VALUES ('a@a.com', '1234');
 INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
+INSERT INTO member (email, password) VALUES ('no1msh1217@gmail.com', '12345');
+INSERT INTO member (email, password) VALUES ('koreanotter6@gmail.com', '12345');
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
-
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (3, 3, 3);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (3, 2, 5);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (4, 1, 2);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (4, 2, 4);
