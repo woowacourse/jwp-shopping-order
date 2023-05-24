@@ -12,10 +12,6 @@ jobs:
       run:
         working-directory: "."
     steps:
-      - name: change permission
-        run: |
-          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/jwp-shopping-order
-
       - name: deploy
         run: |
           echo $PWD
