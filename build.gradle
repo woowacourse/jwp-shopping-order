@@ -53,6 +53,7 @@ tasks.register('copySwaggerUI', Copy) {
 
 tasks.withType(BootJar).configureEach {
     dependsOn 'copySwaggerUI'
+    dependsOn 'openapi3'
 }
 
 tasks.withType(GenerateSwaggerUI) {
