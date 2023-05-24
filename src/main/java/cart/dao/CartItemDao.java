@@ -4,6 +4,8 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,9 +18,11 @@ import java.util.Objects;
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
@@ -96,6 +100,28 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public void deleteByIdsAndMemberId(final Long memberId, final List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE cart_item.id IN "
+                + " (SELECT cart_item.id FROM cart_item JOIN member ON cart_item.member_id = member.id and cart_item.id in (:ids) AND member.id = (:memberId))";
+
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("ids", ids);
+        mapSqlParameterSource.addValue("memberId", memberId);
+        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
+    }
+
+    public Long countByIdsAndMemberId(final Long memberId, List<Long> ids) {
+        String sql = "SELECT COUNT(*) " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.id IN (:ids) AND member.id = (:memberId)";
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("ids", ids);
+        mapSqlParameterSource.addValue("memberId", memberId);
+        return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Long.class);
     }
 }
 

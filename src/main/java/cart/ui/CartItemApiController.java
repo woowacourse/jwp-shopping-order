@@ -47,4 +47,11 @@ public class CartItemApiController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> removeCartItems(Member member, @RequestParam List<Long> ids) {
+        cartItemService.removeItems(member, ids);
+
+        return ResponseEntity.noContent().build();
+    }
 }
