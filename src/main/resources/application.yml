@@ -1,9 +1,2 @@
-spring:
-  thymeleaf:
-    cache: false
-
-logging:
-  level:
-    root: warn
-  file:
-    path: ./logs
+server:
+  port: 80
