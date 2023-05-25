@@ -52,8 +52,4 @@ public class CartItem {
     public Integer calculateTotalPrice() {
         return product.getPrice() * quantity;
     }
-
-    public boolean isNotBelongsToMember(Member member) {
-        return !this.member.equals(member);
-    }
 }

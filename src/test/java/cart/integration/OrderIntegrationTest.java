@@ -52,4 +52,46 @@ public class OrderIntegrationTest extends IntegrationTest {
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
+
+    @Test
+    @DisplayName("존재하지 않는 cartItemId가 포함되어 있는 경우 400을 반환한다.")
+    void orderFailByNonExistedCartItem() {
+        //given
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L, 2L, 10L));
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("다른 멤버의 장바구니 아이템을 구매하려는 경우 403을 반환한다.")
+    void orderFailByMemberDoesNotHaveCartItem() {
+        //given
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L, 2L, 3L));
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
 }

@@ -2,7 +2,7 @@ package cart.domain;
 
 import java.util.List;
 
-import cart.exception.InvalidOrderException;
+import cart.exception.CartItemException;
 
 public class CartItems {
     private final List<CartItem> cartItems;
@@ -22,10 +22,12 @@ public class CartItems {
     }
 
     public void validateAllCartItemsBelongsToMember(Member member) {
-        final boolean isNotBelongs = cartItems.stream()
-                .anyMatch(cartItem -> cartItem.isNotBelongsToMember(member));
-        if (isNotBelongs) {
-            throw new InvalidOrderException("Some of cart items doesn't belong to member.");
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+    }
+
+    public void validateExistentCartItems(List<Long> cartItemIds) {
+        if(cartItemIds.size() != cartItems.size()) {
+            throw new CartItemException("존재하지 않는 cartItemId가 포함되어 있습니다.");
         }
     }
 }

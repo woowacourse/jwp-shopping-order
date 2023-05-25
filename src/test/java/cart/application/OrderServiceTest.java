@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import cart.domain.Member;
 import cart.dto.OrderRequest;
-import cart.exception.InvalidOrderException;
+import cart.exception.CartItemException;
 import cart.fixture.Fixture;
 
 @SpringBootTest
@@ -46,7 +46,7 @@ class OrderServiceTest {
 
         // then
         assertThatThrownBy(() -> orderService.order(orderRequest, member))
-                .isInstanceOf(InvalidOrderException.class)
-                .hasMessage("Some of cart items doesn't belong to member.");
+                .isInstanceOf(CartItemException.IllegalMember.class)
+                .hasMessageContaining("Illegal member attempts to cart;");
     }
 }

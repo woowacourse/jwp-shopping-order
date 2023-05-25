@@ -39,6 +39,7 @@ public class OrderService {
         final List<Long> cartItemIds = orderRequest.getCartItemIds();
         final CartItems cartItems = new CartItems(cartItemDao.findByIds(cartItemIds));
         cartItems.validateAllCartItemsBelongsToMember(member);
+        cartItems.validateExistentCartItems(cartItemIds);
 
         final Integer totalPrice = cartItems.calculatePriceSum();
         final Integer finalPrice = priceCalculator.calculateFinalPrice(totalPrice, member);
