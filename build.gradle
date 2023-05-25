@@ -22,7 +22,7 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.16.2'
 
-    runtimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'com.h2database:h2'
 }
 
 bootJar {
