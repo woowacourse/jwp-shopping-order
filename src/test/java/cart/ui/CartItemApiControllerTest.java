@@ -105,7 +105,6 @@ class CartItemApiControllerTest {
                                         fieldWithPath("[0].product.name").type(JsonFieldType.STRING).description("상품 이름"),
                                         fieldWithPath("[0].product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
                                         fieldWithPath("[0].product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소")
-
                                 )
                         )
                 );

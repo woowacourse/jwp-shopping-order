@@ -20,7 +20,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
-        logger.error(ex);
+        logger.error("", ex);
 
         return ResponseEntity.internalServerError()
                 .body(new ExceptionResponse("예상치 못한 문제가 발생했습니다."));
@@ -28,7 +28,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ExceptionResponse> handlerAuthenticationException(AuthenticationException ex) {
-        logger.info(ex);
+        logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ExceptionResponse(ex.getMessage()));
@@ -36,10 +36,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
     public ResponseEntity<ExceptionResponse> handleException(CartItemException.IllegalMember ex) {
-        logger.info(ex);
+        logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse("잘못된 사용자입니다."));
+    }
+
+    @ExceptionHandler(CartItemException.AlreadyExist.class)
+    public ResponseEntity<ExceptionResponse> handleException(CartItemException.AlreadyExist ex) {
+        logger.info("", ex);
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ExceptionResponse(ex.getMessage()));
     }
 
     @Override
@@ -47,7 +55,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
                                                                   WebRequest request) {
-        logger.info(ex);
+        logger.info("", ex);
 
         String fieldErrorMessage = ex.getBindingResult().getFieldErrors()
                 .stream()
@@ -65,7 +73,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
-        logger.warn(ex);
+        logger.warn("", ex);
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
     }
