@@ -27,7 +27,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         validateAuthorizationHeader(authorization);
 
@@ -37,24 +37,31 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         Member member = memberDao.getMemberByEmail(email);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("비밀번호가 틀렸습니다.");
         }
         return member;
     }
 
     private String[] decode(String authorization) {
         String token = authorization.replace(BASIC_AUTH_PREFIX, "");
-        String decodedToken = new String(Base64.decodeBase64(token));
-        String[] credentials = decodedToken.split(":");
-        return credentials;
+        String decodeToken = decodeToken(token);
+        return decodeToken.split(":");
+    }
+
+    private String decodeToken(String token) {
+        try {
+            return new String(Base64.decodeBase64(token));
+        } catch (IllegalStateException e) {
+            throw new AuthenticationException("잘못된 토큰입니다.");
+        }
     }
 
     private void validateAuthorizationHeader(String authorization) {
         if (authorization == null) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("Authorization 헤더가 없습니다.");
         }
         if (!authorization.startsWith(BASIC_AUTH_PREFIX)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("잘못된 토큰입니다.");
         }
     }
 }

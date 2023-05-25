@@ -10,7 +10,7 @@ public class CartItemException extends RuntimeException {
 
     public static class IllegalMember extends CartItemException {
         public IllegalMember(CartItem cartItem, Member member) {
-            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
+            super("다른 사용자의 카트에 접근할 수 없습니다.; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
         }
     }
 }
