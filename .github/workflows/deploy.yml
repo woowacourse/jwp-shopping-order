@@ -18,8 +18,10 @@ jobs:
 
       - name: kill 80 port if exist
         run: |
-          chmod +x ./script/kill.sh
-          sudo ./script/kill.sh
+          if lsof -i :80; then
+            echo "Port 80 is already in use. Killing the process..."
+            lsof -i :80 | awk 'NR!=1 {print $2}' | xargs kill -9
+          fi
 
       - name: deploy
         run: |
