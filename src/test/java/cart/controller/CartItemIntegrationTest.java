@@ -1,4 +1,4 @@
-package cart.integration;
+package cart.controller;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;

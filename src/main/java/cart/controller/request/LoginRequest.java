@@ -1,4 +1,4 @@
-package cart.ui.request;
+package cart.controller.request;
 
 public class LoginRequest {
 
