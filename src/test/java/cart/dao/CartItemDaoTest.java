@@ -3,7 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.CartProduct;
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @JdbcTest
-class CartProductDaoTest {
+class CartItemDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -50,10 +50,10 @@ class CartProductDaoTest {
         // given
         final Long memberId = insertMember("pizza@pizza.com", "password");
         final Long productId = insertProduct("치즈피자", "1.jpg", 8900L);
-        final CartProduct cartProduct = new CartProduct(memberId, productId);
+        final CartItem cartItem = new CartItem(memberId, productId);
 
         // when
-        final Long id = cartProductDao.saveAndGetId(cartProduct);
+        final Long id = cartProductDao.saveAndGetId(cartItem);
 
         // then
         final List<Product> result = cartProductDao.findAllProductByMemberId(memberId);
@@ -83,9 +83,9 @@ class CartProductDaoTest {
         final Long productId1 = insertProduct("치즈피자", "1.jpg", 8900L);
         final Long productId2 = insertProduct("치즈피자2", "2.jpg", 18900L);
         final Long productId3 = insertProduct("치즈피자3", "3.jpg", 18900L);
-        cartProductDao.saveAndGetId(new CartProduct(memberId1, productId1));
-        cartProductDao.saveAndGetId(new CartProduct(memberId1, productId2));
-        cartProductDao.saveAndGetId(new CartProduct(memberId2, productId3));
+        cartProductDao.saveAndGetId(new CartItem(memberId1, productId1));
+        cartProductDao.saveAndGetId(new CartItem(memberId1, productId2));
+        cartProductDao.saveAndGetId(new CartItem(memberId2, productId3));
 
         // when
         final List<Product> result = cartProductDao.findAllProductByMemberId(memberId1);
@@ -102,7 +102,7 @@ class CartProductDaoTest {
         // given
         final Long memberId = insertMember("pizza1@pizza.com", "password1");
         final Long productId = insertProduct("치즈피자", "1.jpg", 8900L);
-        cartProductDao.saveAndGetId(new CartProduct(memberId, productId));
+        cartProductDao.saveAndGetId(new CartItem(memberId, productId));
 
         // when
         final int result = cartProductDao.delete(productId, memberId);

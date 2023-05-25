@@ -1,11 +1,15 @@
 package cart.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dao.ProductDao;
@@ -39,6 +43,48 @@ class ProductControllerTest {
 
     @Autowired
     private ProductDao productDao;
+
+    @Test
+    void 상품을_전체_조회한다() throws Exception {
+        // given
+        final Product product1 = new Product("허브티", "tea.jpg", 1000L);
+        final Long id1 = productDao.saveAndGetId(product1);
+
+        final Product product2 = new Product("우가티", "tea.jpg", 20000L);
+        final Long id2 = productDao.saveAndGetId(product2);
+
+        // when
+        mockMvc.perform(get("/products")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(id1.intValue())))
+                .andExpect(jsonPath("$[0].name", is("허브티")))
+                .andExpect(jsonPath("$[0].imageUrl", is("tea.jpg")))
+                .andExpect(jsonPath("$[0].price", is(1000)))
+                .andExpect(jsonPath("$[1].id", is(id2.intValue())))
+                .andExpect(jsonPath("$[1].name", is("우가티")))
+                .andExpect(jsonPath("$[1].imageUrl", is("tea.jpg")))
+                .andExpect(jsonPath("$[1].price", is(20000)))
+                .andDo(print());
+    }
+
+    @Test
+    void 상품을_단일_조회한다() throws Exception {
+        // given
+        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Long id = productDao.saveAndGetId(product);
+
+        // when
+        mockMvc.perform(get("/products/" + id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(id.intValue())))
+                .andExpect(jsonPath("$.name", is("허브티")))
+                .andExpect(jsonPath("$.imageUrl", is("tea.jpg")))
+                .andExpect(jsonPath("$.price", is(1000)))
+                .andDo(print());
+    }
 
     @Test
     void 상품을_저장한다() throws Exception {
@@ -78,7 +124,7 @@ class ProductControllerTest {
         mockMvc.perform(put("/products/" + id)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(print());
 
         // then

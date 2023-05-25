@@ -3,7 +3,7 @@ package cart.service;
 import static java.util.stream.Collectors.toList;
 
 import cart.dao.CartProductDao;
-import cart.domain.CartProduct;
+import cart.domain.CartItem;
 import cart.dto.CartProductSaveRequest;
 import cart.dto.CartProductSearchResponse;
 import cart.dto.ProductDto;
@@ -23,8 +23,8 @@ public class CartProductService {
     }
 
     public Long save(final Long memberId, final CartProductSaveRequest request) {
-        final CartProduct cartProduct = new CartProduct(memberId, request.getProductId());
-        return cartProductDao.saveAndGetId(cartProduct);
+        final CartItem cartItem = new CartItem(memberId, request.getProductId());
+        return cartProductDao.saveAndGetId(cartItem);
     }
 
     @Transactional(readOnly = true)

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.CartProductDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.CartProduct;
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartProductSearchResponse;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @Transactional
 @SpringBootTest
-public class CartProductServiceTest {
+public class CartItemServiceTest {
 
     @Autowired
     private CartProductService cartProductService;
@@ -45,10 +45,10 @@ public class CartProductServiceTest {
         // given
         final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        final CartProduct cartProduct = new CartProduct(memberId, productId);
+        final CartItem cartItem = new CartItem(memberId, productId);
 
         // when
-        final Long id = cartProductDao.saveAndGetId(cartProduct);
+        final Long id = cartProductDao.saveAndGetId(cartItem);
 
         // then
         final List<Product> result = cartProductDao.findAllProductByMemberId(memberId);
@@ -64,8 +64,8 @@ public class CartProductServiceTest {
         final Long productId1 = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long productId2 = productDao.saveAndGetId(new Product("pizza2", "pizza2.jpg", 18900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartProductDao.saveAndGetId(new CartProduct(memberId, productId1));
-        cartProductDao.saveAndGetId(new CartProduct(memberId, productId2));
+        cartProductDao.saveAndGetId(new CartItem(memberId, productId1));
+        cartProductDao.saveAndGetId(new CartItem(memberId, productId2));
 
         // when
         final CartProductSearchResponse result = cartProductService.findAll(memberId);
@@ -82,7 +82,7 @@ public class CartProductServiceTest {
         // given
         final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartProductDao.saveAndGetId(new CartProduct(memberId, productId));
+        cartProductDao.saveAndGetId(new CartItem(memberId, productId));
 
         // when
         cartProductService.delete(productId, memberId);

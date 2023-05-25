@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartProduct;
+import cart.domain.CartItem;
 import cart.domain.Product;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,8 +30,8 @@ public class CartProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long saveAndGetId(final CartProduct cartProduct) {
-        final SqlParameterSource params = new BeanPropertySqlParameterSource(cartProduct);
+    public Long saveAndGetId(final CartItem cartItem) {
+        final SqlParameterSource params = new BeanPropertySqlParameterSource(cartItem);
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 

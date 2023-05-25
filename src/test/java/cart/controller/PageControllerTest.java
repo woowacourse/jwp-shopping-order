@@ -43,13 +43,13 @@ class PageControllerTest {
     private Matcher<Object> generateProductPropertiesMatcher(
             final Long id,
             final String name,
-            final String image,
+            final String imageUrl,
             final long price
     ) {
         return allOf(
                 hasProperty("id", is(id)),
                 hasProperty("name", is(name)),
-                hasProperty("image", is(image)),
+                hasProperty("imageUrl", is(imageUrl)),
                 hasProperty("price", is(price))
         );
     }

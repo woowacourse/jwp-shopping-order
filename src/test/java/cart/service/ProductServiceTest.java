@@ -77,7 +77,7 @@ class ProductServiceTest {
         assertAll(
                 () -> assertThat(productDto.getId()).isEqualTo(id),
                 () -> assertThat(productDto.getName()).isEqualTo("허브티"),
-                () -> assertThat(productDto.getImage()).isEqualTo("tea.jpg"),
+                () -> assertThat(productDto.getImageUrl()).isEqualTo("tea.jpg"),
                 () -> assertThat(productDto.getPrice()).isEqualTo(99L)
         );
     }

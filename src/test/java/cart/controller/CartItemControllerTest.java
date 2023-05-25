@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.dao.CartProductDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.CartProduct;
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartProductSaveRequest;
@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 @SpringBootTest
-public class CartProductControllerTest {
+public class CartItemControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -86,8 +86,8 @@ public class CartProductControllerTest {
         final Long productId1 = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long productId2 = productDao.saveAndGetId(new Product("pizza2", "pizza2.jpg", 18900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartProductDao.saveAndGetId(new CartProduct(memberId, productId1));
-        cartProductDao.saveAndGetId(new CartProduct(memberId, productId2));
+        cartProductDao.saveAndGetId(new CartItem(memberId, productId1));
+        cartProductDao.saveAndGetId(new CartItem(memberId, productId2));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // expect
@@ -97,10 +97,10 @@ public class CartProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.products", hasSize(2)))
                 .andExpect(jsonPath("$.products[0].name", is("pizza1")))
-                .andExpect(jsonPath("$.products[0].image", is("pizza1.jpg")))
+                .andExpect(jsonPath("$.products[0].imageUrl", is("pizza1.jpg")))
                 .andExpect(jsonPath("$.products[0].price", is(8900)))
                 .andExpect(jsonPath("$.products[1].name", is("pizza2")))
-                .andExpect(jsonPath("$.products[1].image", is("pizza2.jpg")))
+                .andExpect(jsonPath("$.products[1].imageUrl", is("pizza2.jpg")))
                 .andExpect(jsonPath("$.products[1].price", is(18900)))
                 .andDo(print());
     }
@@ -110,7 +110,7 @@ public class CartProductControllerTest {
         // given
         final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartProductDao.saveAndGetId(new CartProduct(memberId, productId));
+        cartProductDao.saveAndGetId(new CartItem(memberId, productId));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // when
