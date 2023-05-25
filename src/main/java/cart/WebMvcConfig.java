@@ -3,11 +3,14 @@ package cart;
 import cart.dao.MemberDao;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
+
+import static org.springframework.http.CacheControl.maxAge;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -27,6 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "DELETE", "PATCH", "PUT")
+                .exposedHeaders(HttpHeaders.LOCATION) // exposed header 지정
                 .maxAge(3000);
     }
 }
