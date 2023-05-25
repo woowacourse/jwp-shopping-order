@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("218.39.176.142:3000", "http://localhost:3000/")
+                .allowedOrigins("218.39.176.142:3000", "http://localhost:3000/", "https://react-shopping-cart-woowa.netlify.app/")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowCredentials(true);
     }
