@@ -5,6 +5,7 @@
 
 == 상품
 
-== 장바구니
+include::cart-items-api.adoc[]
+
 
 == 회원
