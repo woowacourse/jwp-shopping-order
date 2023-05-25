@@ -43,7 +43,6 @@ public class CartItemDao {
 
     public Long save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
