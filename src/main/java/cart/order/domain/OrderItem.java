@@ -1,6 +1,6 @@
 package cart.order.domain;
 
-import static cart.order.exception.OrderExceptionType.INVALID_QUANTITY;
+import static cart.order.exception.OrderExceptionType.INVALID_ORDER_ITEM_PRODUCT_QUANTITY;
 
 import cart.order.exception.OrderException;
 import cart.product.domain.Product;
@@ -24,7 +24,7 @@ public class OrderItem {
 
     private void validateQuantity(int quantity) {
         if (quantity < 1) {
-            throw new OrderException(INVALID_QUANTITY);
+            throw new OrderException(INVALID_ORDER_ITEM_PRODUCT_QUANTITY);
         }
     }
 

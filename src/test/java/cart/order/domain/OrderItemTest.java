@@ -1,6 +1,6 @@
 package cart.order.domain;
 
-import static cart.order.exception.OrderExceptionType.INVALID_QUANTITY;
+import static cart.order.exception.OrderExceptionType.INVALID_ORDER_ITEM_PRODUCT_QUANTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -38,6 +38,6 @@ class OrderItemTest {
         ).exceptionType();
 
         // then
-        assertThat(baseExceptionType).isEqualTo(INVALID_QUANTITY);
+        assertThat(baseExceptionType).isEqualTo(INVALID_ORDER_ITEM_PRODUCT_QUANTITY);
     }
 }

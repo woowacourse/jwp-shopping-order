@@ -15,10 +15,15 @@ public enum OrderExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "잘못된 주문 상품 ID가 포함되어 있습니다."
     ),
-    INVALID_QUANTITY(
+    INVALID_ORDER_ITEM_PRODUCT_QUANTITY(
             102,
             HttpStatus.BAD_REQUEST,
-            "주문 상품의 수량은 양수여야 합니다."
+            "주문 상품의 상품 수량은 양수여야 합니다."
+    ),
+    NON_EXIST_ORDER_ITEM(
+            103,
+            HttpStatus.BAD_REQUEST,
+            "주문 상품이 존재하지 않습니다."
     ),
     ;
 
