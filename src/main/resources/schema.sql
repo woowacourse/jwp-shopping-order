@@ -30,4 +30,12 @@ CREATE TABLE orders
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-
+CREATE TABLE order_item
+(
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    quantity   INT    NOT NULL,
+    product_id BIGINT NOT NULL,
+    order_id   BIGINT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product (id),
+    FOREIGN KEY (order_id) REFERENCES orders (id)
+);
