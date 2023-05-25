@@ -11,10 +11,16 @@ jobs:
           sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/jwp-shopping-order
 
       - uses: actions/checkout@v3
-      - name: copy file
+      - name: gradle clean bootjar
         run: |
-          cp ./script/deploy.sh .
+          chmod +x ./gradlew
+          ./gradlew bootjar
+
+      - name: kill 80 port if exist
+        run: |
+          chmod +x ./script/kill.sh
+          sudo ./script/kill.sh
+
       - name: deploy
         run: |
-          chmod +x ./deploy.sh
-          sudo ./deploy.sh
+          sudo java -jar build/libs/jwp-shopping-order.jar --spring.profiles.active=prod &
