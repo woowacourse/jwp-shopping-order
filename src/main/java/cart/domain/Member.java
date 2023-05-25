@@ -1,14 +1,39 @@
 package cart.domain;
 
-public class Member {
-    private Long id;
-    private String email;
-    private String password;
+import cart.exception.MemberNotValidException;
 
-    public Member(Long id, String email, String password) {
+public class Member {
+
+    private final Long id;
+    private final String email;
+    private final String password;
+
+    public Member(final String email, final String password) {
+        this(null, email, password);
+    }
+
+    public Member(final Long id, final String email, final String password) {
+        validate(email, password);
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    private void validate(final String email, final String password) {
+        validateEmail(email);
+        validatePassword(password);
+    }
+
+    private void validateEmail(final String email) {
+        if (email == null || email.isBlank()) {
+            throw new MemberNotValidException("이메일은 공백일 수 없습니다.");
+        }
+    }
+
+    private void validatePassword(final String password) {
+        if (password == null || password.isBlank()) {
+            throw new MemberNotValidException("비밀번호는 공백일 수 없습니다.");
+        }
     }
 
     public Long getId() {
@@ -21,9 +46,5 @@ public class Member {
 
     public String getPassword() {
         return password;
-    }
-
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
     }
 }
