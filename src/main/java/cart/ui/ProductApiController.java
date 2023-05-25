@@ -20,9 +20,9 @@ import cart.application.ProductService;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*",
-	methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.DELETE,
-		RequestMethod.OPTIONS},
+@CrossOrigin(origins = {"https://feb-dain.github.io/react-shopping-cart-prod/", "http://localhost:3000"},
+	allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH,
+	RequestMethod.DELETE, RequestMethod.OPTIONS},
 	allowCredentials = "true", exposedHeaders = "Location")
 @RestController
 @RequestMapping("/products")
