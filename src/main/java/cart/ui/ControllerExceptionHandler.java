@@ -3,6 +3,8 @@ package cart.ui;
 import cart.dto.ExceptionResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.MemberException;
+import cart.exception.ProductException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,16 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler({CartItemException.NotFound.class,
+            ProductException.NotFound.class,
+            MemberException.NotFound.class})
+    public ResponseEntity<ExceptionResponse> handleException(RuntimeException ex) {
+        logger.info("", ex);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
