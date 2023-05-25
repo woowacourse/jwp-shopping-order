@@ -29,7 +29,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "https://react-dobob-shopping-cart.netlify.app/",
                         "https://afds4567.github.io/")
                 .allowedMethods("*")
-                .allowedHeaders(HttpHeaders.AUTHORIZATION)
+                .allowedHeaders("*")
                 .exposedHeaders(HttpHeaders.LOCATION)
                 .maxAge(86400);
     }
