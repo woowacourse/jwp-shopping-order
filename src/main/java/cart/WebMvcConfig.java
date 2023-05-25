@@ -27,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOrigins("https://monumental-kleicha-ad648a.netlify.app/", "http://localhost:9000",
-                "http://localhost:3000", "http://localhost:8080")
+                "http://localhost:3000", "http://localhost:8080", "https://journey-shop.kro.kr/")
             .allowedMethods("*");
     }
 }
