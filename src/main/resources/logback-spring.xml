@@ -25,7 +25,7 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <root level="TRACE">
         <appender-ref ref="APPLICATION_FILE"/>
     </root>
 
