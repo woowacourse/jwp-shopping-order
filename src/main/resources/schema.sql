@@ -18,5 +18,29 @@ CREATE TABLE IF NOT EXISTS cart_item
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL
+    quantity   INT    NOT NULL,
+
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (product_id) REFERENCES product (id)
 );
+
+CREATE TABLE IF NOT EXISTS `order`
+(
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    price     INT    NOT NULL,
+    member_id BIGINT NOT NULL,
+
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE IF NOT EXISTS ordered_product
+(
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id   BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity   INT    NOT NULL,
+
+    FOREIGN KEY (product_id) REFERENCES product (id),
+    FOREIGN KEY (order_id) REFERENCES `order` (id)
+);
+
