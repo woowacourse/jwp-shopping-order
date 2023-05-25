@@ -52,4 +52,8 @@ public class CartItem {
     public Integer calculateTotalPrice() {
         return product.getPrice() * quantity;
     }
+
+    public boolean isNotBelongsToMember(Long memberId) {
+        return !id.equals(memberId);
+    }
 }

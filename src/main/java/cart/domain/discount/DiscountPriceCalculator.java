@@ -1,7 +1,10 @@
 package cart.domain.discount;
 
+import org.springframework.stereotype.Component;
+
 import cart.domain.Member;
 
+@Component
 public class DiscountPriceCalculator implements PriceCalculator{
     private final DiscountPolicy discountPolicy;
 

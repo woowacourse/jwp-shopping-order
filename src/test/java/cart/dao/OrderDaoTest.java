@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.domain.Order;
-import cart.domain.OrderedProduct;
 import cart.fixture.Fixture;
 
 @JdbcTest
@@ -31,7 +30,7 @@ class OrderDaoTest {
     @DisplayName("오더를 추가한다.")
     void addOrder() {
         //given
-        final Order order = new Order(10000, Fixture.GOLD_MEMBER, List.of(Fixture.ORDERED_PRODUCT1));
+        final Order order = new Order(10000, Fixture.GOLD_MEMBER, List.of(Fixture.CART_ITEM1));
 
         //when
         final Long id = orderDao.addOrder(order);
