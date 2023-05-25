@@ -18,10 +18,12 @@ public class Product {
 
     public Product(String name, int price, String imageUrl) {
         validateName(name);
-        validatePrice(price);
-        validateImageUrl(imageUrl);
         this.name = name;
+
+        validatePrice(price);
         this.price = price;
+
+        validateImageUrl(imageUrl);
         this.imageUrl = imageUrl;
     }
 
