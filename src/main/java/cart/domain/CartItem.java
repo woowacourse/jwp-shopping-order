@@ -53,7 +53,7 @@ public class CartItem {
         return product.getPrice() * quantity;
     }
 
-    public boolean isNotBelongsToMember(Long memberId) {
-        return !id.equals(memberId);
+    public boolean isNotBelongsToMember(Member member) {
+        return !this.member.equals(member);
     }
 }

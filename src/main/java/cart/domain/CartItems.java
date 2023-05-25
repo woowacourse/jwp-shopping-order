@@ -22,9 +22,8 @@ public class CartItems {
     }
 
     public void validateAllCartItemsBelongsToMember(Member member) {
-        final Long memberId = member.getId();
         final boolean isNotBelongs = cartItems.stream()
-                .anyMatch(cartItem -> cartItem.isNotBelongsToMember(memberId));
+                .anyMatch(cartItem -> cartItem.isNotBelongsToMember(member));
         if (isNotBelongs) {
             throw new InvalidOrderException("Some of cart items doesn't belong to member.");
         }
