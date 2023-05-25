@@ -10,8 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Repository
 public class CartItemDao {
@@ -96,5 +98,11 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public int deleteByIds(List<Long> cartIds) {
+        String inClause = String.join(",", Collections.nCopies(cartIds.size(), "?"));
+        String sql = "DELETE FROM cart_item WHERE id IN (" + inClause + ")";
+        return jdbcTemplate.update(sql, cartIds.toArray());
     }
 }
