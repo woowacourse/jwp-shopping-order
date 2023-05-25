@@ -7,12 +7,13 @@ import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.restdocs.headers.HeaderDocumentation;
 
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
@@ -42,10 +43,9 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .header("Authorization", "basic YUBhLmNvbToxMjM0")
                 .filter(document("{method-name}",
                         requestHeaders(
-                                HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("basic 64인코딩값")
                         ),
                         responseFields(
                                 fieldWithPath("[].id").description("장바구니 상품 식별자값"),
@@ -57,6 +57,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .auth().preemptive().basic("a@a.com", "1234")
                 .get("/cart-items")
         .then()
                 .statusCode(HttpStatus.OK.value());
@@ -69,17 +70,17 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .header("Authorization", "basic YUBhLmNvbToxMjM0")
-                .body(new CartItemRequest(계란.getId()))
                 .filter(document("{method-name}",
                         requestHeaders(
-                                HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
+                                headerWithName("Authorization").description("basic 64인코딩값")
                         ),
                         requestFields(
-                                fieldWithPath("productId").description("상품 식별자값")
+                        fieldWithPath("productId").description("상품 식별자값")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .auth().preemptive().basic("a@a.com", "1234")
+                .body(new CartItemRequest(계란.getId()))
                 .post("/cart-items")
         .then()
                 .statusCode(HttpStatus.CREATED.value());
@@ -93,18 +94,18 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .header("Authorization", "basic YUBhLmNvbToxMjM0")
-                .pathParam("id", 장바구니_상품.getId())
-                .body(new CartItemQuantityUpdateRequest(10))
                 .filter(document("{method-name}",
                         requestHeaders(
-                                HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
+                                headerWithName("Authorization").description("basic 64인코딩값")
                         ),
                         requestFields(
                                 fieldWithPath("quantity").description("장바구니 상품 수량")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .auth().preemptive().basic("a@a.com", "1234")
+                .pathParam("id", 장바구니_상품.getId())
+                .body(new CartItemQuantityUpdateRequest(10))
                 .patch("/cart-items/{id}")
         .then()
                 .statusCode(HttpStatus.OK.value());
@@ -118,14 +119,14 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .header("Authorization", "basic YUBhLmNvbToxMjM0")
-                .pathParam("id", 장바구니_상품.getId())
                 .filter(document("{method-name}",
                         requestHeaders(
-                                HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
+                                headerWithName("Authorization").description("basic 64인코딩값")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .auth().preemptive().basic("a@a.com", "1234")
+                .pathParam("id", 장바구니_상품.getId())
                 .delete("/cart-items/{id}")
         .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());

@@ -31,9 +31,9 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("[].imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .get("/products")
-                .then()
+        .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -43,7 +43,6 @@ class ProductApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .pathParam("id", 1L)
                 .filter(document("{method-name}",
                         responseFields(
                                 fieldWithPath("id").description("상품 식별자값"),
@@ -53,6 +52,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .pathParam("id", 1L)
                 .get("/products/{id}")
         .then()
                 .statusCode(HttpStatus.OK.value());
@@ -62,7 +62,6 @@ class ProductApiControllerTest extends ControllerTestConfig {
     void createProduct() {
         given(spec)
                 .log().all()
-                .body(new ProductRequest("계란", 1000, "계란_이미지_주소"))
                 .filter(document("{method-name}",
                         requestFields(
                                 fieldWithPath("name").description("상품명"),
@@ -71,6 +70,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .body(new ProductRequest("계란", 1000, "계란_이미지_주소"))
                 .post("/products")
         .then()
                 .statusCode(HttpStatus.CREATED.value());
@@ -82,8 +82,6 @@ class ProductApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .pathParam("id", 상품_계란_식별자값)
-                .body(new ProductRequest("수정된 계란", 1000, "수정된 계란_이미지_주소"))
                 .filter(document("{method-name}",
                         requestFields(
                                 fieldWithPath("name").description("상품명"),
@@ -92,6 +90,8 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .body(new ProductRequest("수정된 계란", 1000, "수정된 계란_이미지_주소"))
+                .pathParam("id", 상품_계란_식별자값)
                 .put("/products/{id}")
         .then()
                 .statusCode(HttpStatus.OK.value());
