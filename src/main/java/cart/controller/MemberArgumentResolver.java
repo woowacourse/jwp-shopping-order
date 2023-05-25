@@ -38,7 +38,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
         String decodedString = new String(decodedBytes);
 
-        String[] credentials = decodedString.split(":");
+        String[] credentials = decodedString.split("@");
         String email = credentials[0];
         String password = credentials[1];
 
