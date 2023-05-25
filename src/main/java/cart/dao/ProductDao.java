@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -31,14 +32,15 @@ public class ProductDao {
         });
     }
 
-    public Product getProductById(Long productId) {
+    public Optional<Product> getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+        Product product = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
         }, productId);
+        return Optional.of(product);
     }
 
     public Long createProduct(Product product) {
