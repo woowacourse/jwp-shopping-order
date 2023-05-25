@@ -24,7 +24,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
     }
 
     Member 회원_등록() {
-        final Member member = new Member(1L, "test@test.com", "test");
+        final Member member = new Member(1L, "a@a.com", "1234");
         memberDao.addMember(member);
         return member;
     }
@@ -42,7 +42,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .header("Authorization", "basic dGVzdEB0ZXN0LmNvbTp0ZXN0")
+                .header("Authorization", "basic YUBhLmNvbToxMjM0")
                 .filter(document("{method-name}",
                         requestHeaders(
                                 HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
@@ -69,7 +69,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .header("Authorization", "basic dGVzdEB0ZXN0LmNvbTp0ZXN0")
+                .header("Authorization", "basic YUBhLmNvbToxMjM0")
                 .body(new CartItemRequest(계란.getId()))
                 .filter(document("{method-name}",
                         requestHeaders(
@@ -93,7 +93,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .header("Authorization", "basic dGVzdEB0ZXN0LmNvbTp0ZXN0")
+                .header("Authorization", "basic YUBhLmNvbToxMjM0")
                 .pathParam("id", 장바구니_상품.getId())
                 .body(new CartItemQuantityUpdateRequest(10))
                 .filter(document("{method-name}",
@@ -118,7 +118,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
         given(spec)
                 .log().all()
-                .header("Authorization", "basic dGVzdEB0ZXN0LmNvbTp0ZXN0")
+                .header("Authorization", "basic YUBhLmNvbToxMjM0")
                 .pathParam("id", 장바구니_상품.getId())
                 .filter(document("{method-name}",
                         requestHeaders(
