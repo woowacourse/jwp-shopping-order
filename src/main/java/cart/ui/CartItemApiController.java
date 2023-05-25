@@ -21,9 +21,9 @@ import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*",
-	methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.DELETE,
-		RequestMethod.OPTIONS},
+@CrossOrigin(origins = {"https://feb-dain.github.io/react-shopping-cart-prod/", "http://localhost:3000"},
+	allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH,
+	RequestMethod.DELETE, RequestMethod.OPTIONS},
 	allowCredentials = "true", exposedHeaders = "Location")
 @RestController
 @RequestMapping("/cart-items")
