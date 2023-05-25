@@ -1,4 +1,7 @@
 README.md
+
+src/main/resources/application-private.properties
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
