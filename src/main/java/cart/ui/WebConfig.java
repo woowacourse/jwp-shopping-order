@@ -2,6 +2,7 @@ package cart.ui;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,7 +16,13 @@ public class WebConfig implements WebMvcConfigurer {
         for (String mappingUrl : MAPPING_URLS) {
             registry.addMapping(mappingUrl)
                     .allowedOriginPatterns("*")
-                    .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                    .allowedMethods(
+                            HttpMethod.GET.name(),
+                            HttpMethod.POST.name(),
+                            HttpMethod.PUT.name(),
+                            HttpMethod.PATCH.name(),
+                            HttpMethod.DELETE.name(),
+                            HttpMethod.OPTIONS.name())
                     .allowedHeaders("*")
                     .exposedHeaders("Location")
                     .allowCredentials(true);
