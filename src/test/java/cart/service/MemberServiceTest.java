@@ -28,18 +28,16 @@ public class MemberServiceTest {
     @Test
     void 모든_사용자를_조회한다() {
         // given
-        final Member member1 = new Member("pizza1@pizza.com", "password");
-        final Member member2 = new Member("pizza2@pizza.com", "password");
-        final Long id1 = memberDao.saveAndGetId(member1);
-        final Long id2 = memberDao.saveAndGetId(member2);
+        final Member member1 = memberDao.save(new Member("pizza1@pizza.com", "password"));
+        final Member member2 = memberDao.save(new Member("pizza2@pizza.com", "password"));
 
         // when
         final List<MemberDto> result = memberService.findAll();
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new MemberDto(id1, member1.getEmail(), member1.getPassword()),
-                new MemberDto(id2, member2.getEmail(), member2.getPassword())
+                new MemberDto(member1.getId(), member1.getEmail(), member1.getPassword()),
+                new MemberDto(member2.getId(), member2.getEmail(), member2.getPassword())
         ));
     }
 }

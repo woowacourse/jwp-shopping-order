@@ -47,22 +47,19 @@ class ProductControllerTest {
     @Test
     void 상품을_전체_조회한다() throws Exception {
         // given
-        final Product product1 = new Product("허브티", "tea.jpg", 1000L);
-        final Long id1 = productDao.saveAndGetId(product1);
-
-        final Product product2 = new Product("우가티", "tea.jpg", 20000L);
-        final Long id2 = productDao.saveAndGetId(product2);
+        final Product product1 = productDao.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product2 = productDao.save(new Product("우가티", "tea.jpg", 20000L));
 
         // when
         mockMvc.perform(get("/products")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(id1.intValue())))
+                .andExpect(jsonPath("$[0].id", is(product1.getId().intValue())))
                 .andExpect(jsonPath("$[0].name", is("허브티")))
                 .andExpect(jsonPath("$[0].imageUrl", is("tea.jpg")))
                 .andExpect(jsonPath("$[0].price", is(1000)))
-                .andExpect(jsonPath("$[1].id", is(id2.intValue())))
+                .andExpect(jsonPath("$[1].id", is(product2.getId().intValue())))
                 .andExpect(jsonPath("$[1].name", is("우가티")))
                 .andExpect(jsonPath("$[1].imageUrl", is("tea.jpg")))
                 .andExpect(jsonPath("$[1].price", is(20000)))
@@ -72,14 +69,13 @@ class ProductControllerTest {
     @Test
     void 상품을_단일_조회한다() throws Exception {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product);
+        final Product product = productDao.save(new Product("허브티", "tea.jpg", 1000L));
 
         // when
-        mockMvc.perform(get("/products/" + id)
+        mockMvc.perform(get("/products/" + product.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(id.intValue())))
+                .andExpect(jsonPath("$.id", is(product.getId().intValue())))
                 .andExpect(jsonPath("$.name", is("허브티")))
                 .andExpect(jsonPath("$.imageUrl", is("tea.jpg")))
                 .andExpect(jsonPath("$.price", is(1000)))
@@ -106,7 +102,7 @@ class ProductControllerTest {
         final Product result = productDao.findById(id).orElseThrow();
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("허브티"),
-                () -> assertThat(result.getImage()).isEqualTo("tea.jpg"),
+                () -> assertThat(result.getImageUrl()).isEqualTo("tea.jpg"),
                 () -> assertThat(result.getPrice()).isEqualTo(1000L),
                 () -> assertThat(location).isEqualTo("/products/" + result.getId())
         );
@@ -115,24 +111,23 @@ class ProductControllerTest {
     @Test
     void 상품을_수정한다() throws Exception {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product);
+        final Product product = productDao.save(new Product("허브티", "tea.jpg", 1000L));
         final ProductUpdateRequest updateRequestDto = new ProductUpdateRequest("고양이", "cat.jpg", 1000000L);
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
         // when
-        mockMvc.perform(put("/products/" + id)
+        mockMvc.perform(put("/products/" + product.getId())
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
 
         // then
-        final Product result = productDao.findById(id).orElseThrow();
+        final Product result = productDao.findById(product.getId()).orElseThrow();
         assertAll(
-                () -> assertThat(result.getId()).isEqualTo(id),
+                () -> assertThat(result.getId()).isEqualTo(product.getId()),
                 () -> assertThat(result.getName()).isEqualTo("고양이"),
-                () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
+                () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
                 () -> assertThat(result.getPrice()).isEqualTo(1000000L)
         );
     }
@@ -140,17 +135,16 @@ class ProductControllerTest {
     @Test
     void 상품을_삭제한다() throws Exception {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product);
+        final Product product = productDao.save(new Product("허브티", "tea.jpg", 1000L));
 
         // when
-        mockMvc.perform(delete("/products/" + id)
+        mockMvc.perform(delete("/products/" + product.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
         // then
-        assertThat(productDao.findById(id)).isNotPresent();
+        assertThat(productDao.findById(product.getId())).isNotPresent();
     }
 
     @Test

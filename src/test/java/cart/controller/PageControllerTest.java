@@ -7,7 +7,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,6 +39,27 @@ class PageControllerTest {
     @Autowired
     private MemberDao memberDao;
 
+    @Test
+    void 관리자_페이지에_접근한다() throws Exception {
+        // given
+        final Product product1 = productDao.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product2 = productDao.save(new Product("고양이", "cat.jpg", 1000000L));
+
+        // expect
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("products", hasSize(2)))
+                .andExpect(model().attribute(
+                        "products",
+                        hasItem(generateProductPropertiesMatcher(product1.getId(), "허브티", "tea.jpg", 1000L))
+                ))
+                .andExpect(model().attribute(
+                        "products",
+                        hasItem(generateProductPropertiesMatcher(product2.getId(), "고양이", "cat.jpg", 1000000L))
+                ))
+                .andDo(print());
+    }
+
     private Matcher<Object> generateProductPropertiesMatcher(
             final Long id,
             final String name,
@@ -54,6 +74,27 @@ class PageControllerTest {
         );
     }
 
+    @Test
+    void 세팅_페이지에_접근한다() throws Exception {
+        // given
+        final Member member1 = memberDao.save(new Member("pizza1@pizza.com", "password1"));
+        final Member member2 = memberDao.save(new Member("pizza2@pizza.com", "password2"));
+
+        // expect
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("members", hasSize(2)))
+                .andExpect(model().attribute(
+                        "members",
+                        hasItem(generateMemberPropertiesMatcher(member1.getId(), "pizza1@pizza.com", "password1"))
+                ))
+                .andExpect(model().attribute(
+                        "members",
+                        hasItem(generateMemberPropertiesMatcher(member2.getId(), "pizza2@pizza.com", "password2"))
+                ))
+                .andDo(print());
+    }
+
     private Matcher<Object> generateMemberPropertiesMatcher(
             final Long id,
             final String email,
@@ -64,51 +105,5 @@ class PageControllerTest {
                 hasProperty("email", is(email)),
                 hasProperty("password", is(password))
         );
-    }
-
-    @Test
-    void 관리자_페이지에_접근한다() throws Exception {
-        // given
-        final Product product1 = new Product("허브티", "tea.jpg", 1000L);
-        final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
-        final Long id2 = productDao.saveAndGetId(product2);
-        final Long id1 = productDao.saveAndGetId(product1);
-
-        // expect
-        mockMvc.perform(get("/admin"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("products", hasSize(2)))
-                .andExpect(model().attribute(
-                        "products",
-                        hasItem(generateProductPropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
-                ))
-                .andExpect(model().attribute(
-                        "products",
-                        hasItem(generateProductPropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
-                ))
-                .andDo(print());
-    }
-
-    @Test
-    void 세팅_페이지에_접근한다() throws Exception {
-        // given
-        final Member member1 = new Member("pizza1@pizza.com", "password1");
-        final Member member2 = new Member("pizza2@pizza.com", "password2");
-        final Long id1 = memberDao.saveAndGetId(member1);
-        final Long id2 = memberDao.saveAndGetId(member2);
-
-        // expect
-        mockMvc.perform(get("/settings"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("members", hasSize(2)))
-                .andExpect(model().attribute(
-                        "members",
-                        hasItem(generateMemberPropertiesMatcher(id1, "pizza1@pizza.com", "password1"))
-                ))
-                .andExpect(model().attribute(
-                        "members",
-                        hasItem(generateMemberPropertiesMatcher(id2, "pizza2@pizza.com", "password2"))
-                ))
-                .andDo(print());
     }
 }

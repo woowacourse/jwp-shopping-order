@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.ProductNotValidException;
+import java.util.Objects;
 
 public class Product {
 
@@ -9,24 +10,24 @@ public class Product {
 
     private final Long id;
     private final String name;
-    private final String image;
+    private final String imageUrl;
     private final long price;
 
-    public Product(final String name, final String image, final long price) {
-        this(null, name, image, price);
+    public Product(final String name, final String imageUrl, final long price) {
+        this(null, name, imageUrl, price);
     }
 
-    public Product(final Long id, final String name, final String image, final long price) {
-        validate(name, image, price);
+    public Product(final Long id, final String name, final String imageUrl, final long price) {
+        validate(name, imageUrl, price);
         this.id = id;
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    private void validate(final String name, final String image, final long price) {
+    private void validate(final String name, final String imageUrl, final long price) {
         validateName(name);
-        validateImage(image);
+        validateImage(imageUrl);
         validatePrice(price);
     }
 
@@ -36,8 +37,8 @@ public class Product {
         }
     }
 
-    private void validateImage(final String image) {
-        if (image == null || image.isBlank()) {
+    private void validateImage(final String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
             throw new ProductNotValidException("이미지는 공백일 수 없습니다.");
         }
     }
@@ -48,6 +49,23 @@ public class Product {
         }
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
     public Long getId() {
         return id;
     }
@@ -56,8 +74,8 @@ public class Product {
         return name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public long getPrice() {

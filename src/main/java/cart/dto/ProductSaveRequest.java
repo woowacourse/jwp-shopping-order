@@ -11,14 +11,14 @@ public class ProductSaveRequest {
     private final String name;
 
     @NotBlank(message = "이미지는 공백일 수 없습니다.")
-    private final String image;
+    private final String imageUrl;
 
     @Range(message = "가격은 최소 {min}원 이상, {max}원 이하여야 합니다.")
     private final long price;
 
-    public ProductSaveRequest(final String name, final String image, final long price) {
+    public ProductSaveRequest(final String name, final String imageUrl, final long price) {
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
@@ -26,8 +26,8 @@ public class ProductSaveRequest {
         return name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public long getPrice() {

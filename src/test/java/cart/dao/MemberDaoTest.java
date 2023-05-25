@@ -34,13 +34,13 @@ class MemberDaoTest {
         final Member member = new Member("pizza@pizza.com", "password");
 
         // when
-        final Long id = memberDao.saveAndGetId(member);
+        final Member savedMember = memberDao.save(member);
 
         // then
         final List<Member> result = memberDao.findAll();
         assertAll(
                 () -> assertThat(result).hasSize(1),
-                () -> assertThat(id).isPositive()
+                () -> assertThat(savedMember).isEqualTo(result.get(0))
         );
     }
 
@@ -49,16 +49,13 @@ class MemberDaoTest {
         // given
         final Member member1 = new Member("pizza1@pizza.com", "password");
         final Member member2 = new Member("pizza2@pizza.com", "password");
-        final Long id1 = memberDao.saveAndGetId(member1);
-        final Long id2 = memberDao.saveAndGetId(member2);
+        final Member savedMember1 = memberDao.save(member1);
+        final Member savedMember2 = memberDao.save(member2);
 
         // when
         List<Member> result = memberDao.findAll();
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new Member(id1, member1.getEmail(), member1.getPassword()),
-                new Member(id2, member2.getEmail(), member2.getPassword())
-        ));
+        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(savedMember1, savedMember2));
     }
 }

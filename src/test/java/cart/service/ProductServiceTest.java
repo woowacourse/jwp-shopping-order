@@ -59,8 +59,8 @@ class ProductServiceTest {
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new ProductDto(id1, request1.getName(), request1.getImage(), request1.getPrice()),
-                new ProductDto(id2, request2.getName(), request2.getImage(), request2.getPrice())
+                new ProductDto(id1, request1.getName(), request1.getImageUrl(), request1.getPrice()),
+                new ProductDto(id2, request2.getName(), request2.getImageUrl(), request2.getPrice())
         ));
     }
 
@@ -105,7 +105,7 @@ class ProductServiceTest {
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(id),
                 () -> assertThat(result.getName()).isEqualTo("블랙캣"),
-                () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
+                () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
                 () -> assertThat(result.getPrice()).isEqualTo(100L)
         );
     }

@@ -23,8 +23,8 @@ public class ProductService {
     }
 
     public Long save(final ProductSaveRequest request) {
-        final Product product = new Product(request.getName(), request.getImage(), request.getPrice());
-        return productDao.saveAndGetId(product);
+        final Product product = new Product(request.getName(), request.getImageUrl(), request.getPrice());
+        return productDao.save(product).getId();
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +42,7 @@ public class ProductService {
     }
 
     public void update(final Long id, final ProductUpdateRequest request) {
-        final Product savedProduct = new Product(id, request.getName(), request.getImage(), request.getPrice());
+        final Product savedProduct = new Product(id, request.getName(), request.getImageUrl(), request.getPrice());
         final int affectedCount = productDao.update(savedProduct);
         if (affectedCount == 0) {
             throw new ProductNotFoundException();

@@ -35,13 +35,13 @@ class ProductDaoTest {
         final Product product = new Product("허브티", "tea.jpg", 1000L);
 
         // when
-        final Long id = productDao.saveAndGetId(product);
+        final Product savedProduct = productDao.save(product);
 
         // then
-        final List<Product> result = productDao.findAll();
+        final List<Product> products = productDao.findAll();
         assertAll(
-                () -> assertThat(result).hasSize(1),
-                () -> assertThat(id).isPositive()
+                () -> assertThat(products).hasSize(1),
+                () -> assertThat(savedProduct).isEqualTo(products.get(0))
         );
     }
 
@@ -50,53 +50,46 @@ class ProductDaoTest {
         // given
         final Product product1 = new Product("허브티", "tea.jpg", 1000L);
         final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
-        final Long id1 = productDao.saveAndGetId(product1);
-        final Long id2 = productDao.saveAndGetId(product2);
+        final Product savedProduct1 = productDao.save(product1);
+        final Product savedProduct2 = productDao.save(product2);
 
         // when
         List<Product> result = productDao.findAll();
 
         // then
-        assertThat(result).usingRecursiveComparison().ignoringFieldsOfTypes(LocalDateTime.class).isEqualTo(List.of(
-                new Product(id1, product1.getName(), product1.getImage(), product1.getPrice()),
-                new Product(id2, product2.getName(), product2.getImage(), product2.getPrice())
-        ));
+        assertThat(result).usingRecursiveComparison()
+                .ignoringFieldsOfTypes(LocalDateTime.class)
+                .isEqualTo(List.of(savedProduct1, savedProduct2));
     }
 
     @Test
     void 단일_상품을_조회한다() {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product);
+        final Product savedProduct = productDao.save(product);
 
         // when
-        final Product result = productDao.findById(id).get();
+        final Product result = productDao.findById(savedProduct.getId()).get();
 
         // then
-        assertAll(
-                () -> assertThat(result.getId()).isEqualTo(id),
-                () -> assertThat(result.getName()).isEqualTo("허브티"),
-                () -> assertThat(result.getImage()).isEqualTo("tea.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(1000L)
-        );
+        assertThat(result).isEqualTo(savedProduct);
     }
 
     @Test
     void 상품을_수정한다() {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product);
-        final Product updatedProduct = new Product(id, "블랙캣", "cat.jpg", 10000L);
+        final Product savedProduct = productDao.save(product);
+        final Product updatedProduct = new Product(savedProduct.getId(), "블랙캣", "cat.jpg", 10000L);
 
         // when
         productDao.update(updatedProduct);
 
         // then
-        final Product result = productDao.findAll().get(0);
+        final Product result = productDao.findById(updatedProduct.getId()).get();
         assertAll(
-                () -> assertThat(result.getId()).isEqualTo(id),
                 () -> assertThat(result.getName()).isEqualTo("블랙캣"),
-                () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
+                () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
                 () -> assertThat(result.getPrice()).isEqualTo(10000L)
         );
     }
@@ -105,10 +98,10 @@ class ProductDaoTest {
     void 상품을_삭제한다() {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product);
+        final Product savedProduct = productDao.save(product);
 
         // when
-        productDao.delete(id);
+        productDao.delete(savedProduct.getId());
 
         // then
         assertThat(productDao.findAll()).isEmpty();

@@ -19,7 +19,7 @@ public class ProductDao {
     private final RowMapper<Product> rowMapper = (resultSet, rowNum) -> new Product(
             resultSet.getLong("id"),
             resultSet.getString("name"),
-            resultSet.getString("image"),
+            resultSet.getString("image_url"),
             resultSet.getLong("price")
     );
 
@@ -27,13 +27,14 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
-                .usingColumns("name", "image", "price")
+                .usingColumns("name", "image_url", "price")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long saveAndGetId(final Product product) {
+    public Product save(final Product product) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(product);
-        return jdbcInsert.executeAndReturnKey(params).longValue();
+        final long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return new Product(id, product.getName(), product.getImageUrl(), product.getPrice());
     }
 
     public List<Product> findAll() {
@@ -42,11 +43,11 @@ public class ProductDao {
     }
 
     public int update(final Product product) {
-        final String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
+        final String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE id = ?";
         return jdbcTemplate.update(
                 sql,
                 product.getName(),
-                product.getImage(),
+                product.getImageUrl(),
                 product.getPrice(),
                 product.getId()
         );

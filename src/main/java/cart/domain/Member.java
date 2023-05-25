@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.MemberNotValidException;
+import java.util.Objects;
 
 public class Member {
 
@@ -13,15 +14,10 @@ public class Member {
     }
 
     public Member(final Long id, final String email, final String password) {
-        validate(email, password);
+        validateEmail(email);
         this.id = id;
         this.email = email;
         this.password = password;
-    }
-
-    private void validate(final String email, final String password) {
-        validateEmail(email);
-        validatePassword(password);
     }
 
     private void validateEmail(final String email) {
@@ -30,10 +26,21 @@ public class Member {
         }
     }
 
-    private void validatePassword(final String password) {
-        if (password == null || password.isBlank()) {
-            throw new MemberNotValidException("비밀번호는 공백일 수 없습니다.");
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
         }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Member member = (Member) o;
+        return Objects.equals(id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public Long getId() {

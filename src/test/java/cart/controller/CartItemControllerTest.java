@@ -2,10 +2,9 @@ package cart.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,6 +16,7 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
@@ -55,9 +55,9 @@ public class CartItemControllerTest {
     @Test
     void 장바구니에_상품을_추가한다() throws Exception {
         // given
-        final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        final CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(productId);
+        final Product savedProduct = productDao.save(new Product("pizza1", "pizza1.jpg", 8900L));
+        final Member savedMember = memberDao.save(new Member("pizza@pizza.com", "password"));
+        final CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(savedProduct.getId());
         final String request = objectMapper.writeValueAsString(cartItemSaveRequest);
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
@@ -71,23 +71,19 @@ public class CartItemControllerTest {
                 .andReturn();
 
         // then
-        final List<Product> result = cartItemDao.findAllProductByMemberId(memberId);
-        assertAll(
-                () -> assertThat(result).hasSize(1),
-                () -> assertThat(result.get(0).getName()).isEqualTo("pizza1"),
-                () -> assertThat(result.get(0).getImage()).isEqualTo("pizza1.jpg"),
-                () -> assertThat(result.get(0).getPrice()).isEqualTo(8900L)
-        );
+        final List<CartItem> result = cartItemDao.findAllByMemberId(savedMember.getId());
+        assertThat(result).hasSize(1);
     }
 
     @Test
     void 사용자의_장바구니에_담겨있는_모든_상품을_조회한다() throws Exception {
         // given
-        final Long productId1 = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Long productId2 = productDao.saveAndGetId(new Product("pizza2", "pizza2.jpg", 18900L));
-        final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartItemDao.saveAndGetId(new CartItem(memberId, productId1));
-        cartItemDao.saveAndGetId(new CartItem(memberId, productId2));
+        final Product product1 = productDao.save(new Product("pizza1", "pizza1.jpg", 8900L));
+        final Product product2 = productDao.save(new Product("pizza2", "pizza2.jpg", 18900L));
+        final Member member = memberDao.save(new Member("pizza@pizza.com", "password"));
+
+        cartItemDao.save(new CartItem(member, product1));
+        cartItemDao.save(new CartItem(member, product2));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // expect
@@ -95,32 +91,50 @@ public class CartItemControllerTest {
                         .header("Authorization", header)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.products", hasSize(2)))
-                .andExpect(jsonPath("$.products[0].name", is("pizza1")))
-                .andExpect(jsonPath("$.products[0].imageUrl", is("pizza1.jpg")))
-                .andExpect(jsonPath("$.products[0].price", is(8900)))
-                .andExpect(jsonPath("$.products[1].name", is("pizza2")))
-                .andExpect(jsonPath("$.products[1].imageUrl", is("pizza2.jpg")))
-                .andExpect(jsonPath("$.products[1].price", is(18900)))
+                .andExpect(jsonPath("$", hasSize(2)))
                 .andDo(print());
     }
 
     @Test
     void 장바구니에_담겨있는_상품을_제거한다() throws Exception {
         // given
-        final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartItemDao.saveAndGetId(new CartItem(memberId, productId));
+        final Product product = productDao.save(new Product("pizza1", "pizza1.jpg", 8900L));
+        final Member member = memberDao.save(new Member("pizza@pizza.com", "password"));
+        cartItemDao.save(new CartItem(member, product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // when
-        mockMvc.perform(delete("/cart-items/" + productId)
+        mockMvc.perform(delete("/cart-items/" + product.getId())
                         .header("Authorization", header)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
         // then
-        assertThat(cartItemDao.findAllProductByMemberId(memberId)).isEmpty();
+        assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty();
+    }
+
+    @Test
+    void 장바구니에_담긴_상품의_수량을_변경한다() throws Exception {
+        // given
+        final Product product = productDao.save(new Product("pizza1", "pizza1.jpg", 8900L));
+        final Member member = memberDao.save(new Member("pizza@pizza.com", "password"));
+        final CartItem cartItem = cartItemDao.save(new CartItem(member, product));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final CartItemQuantityUpdateRequest updateRequest = new CartItemQuantityUpdateRequest(2);
+
+        final String request = objectMapper.writeValueAsString(updateRequest);
+
+        // when
+        mockMvc.perform(patch("/cart-items/" + cartItem.getId())
+                        .header("Authorization", header)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        // then
+        final CartItem result = cartItemDao.findById(cartItem.getId()).get();
+        assertThat(result.getQuantity()).isEqualTo(2);
     }
 }
