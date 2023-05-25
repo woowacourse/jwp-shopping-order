@@ -31,6 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         HttpMethod.POST.name(),
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name(),
-                        HttpMethod.PATCH.name());
+                        HttpMethod.PATCH.name())
+                .allowedHeaders("Location");
     }
 }
