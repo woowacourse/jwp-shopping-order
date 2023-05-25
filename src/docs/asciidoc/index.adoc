@@ -1,4 +1,5 @@
 = Shopping Order
+:doctype: book
 :toc: left
 :source-highlighter: highlightjs
 :sectlinks:
