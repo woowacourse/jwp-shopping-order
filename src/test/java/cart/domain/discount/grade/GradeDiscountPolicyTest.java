@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import cart.domain.Member;
+import cart.fixture.Fixture;
 
 class GradeDiscountPolicyTest {
     GradeDiscountPolicy gradeDiscountPolicy = new GradeDiscountPolicy();
@@ -25,9 +26,9 @@ class GradeDiscountPolicyTest {
 
     public static Stream<Arguments> provideMemberAndPrice() {
         return Stream.of(
-                Arguments.of(20000, new Member(1L, "a@a.com", "1234", 1), 1000),
-                Arguments.of(20000, new Member(1L, "a@a.com", "1234", 2), 600),
-                Arguments.of(20000, new Member(1L, "a@a.com", "1234", 3), 200)
+                Arguments.of(20000, Fixture.GOLD_MEMBER, 1000),
+                Arguments.of(20000, Fixture.SILVER_MEMBER, 600),
+                Arguments.of(20000, Fixture.BRONZE_MEMBER, 200)
         );
     }
 }
