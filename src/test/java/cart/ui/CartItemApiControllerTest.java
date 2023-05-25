@@ -8,10 +8,12 @@ import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.headers.HeaderDocumentation;
 
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
 class CartItemApiControllerTest extends ControllerTestConfig {
@@ -42,6 +44,9 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                 .log().all()
                 .header("Authorization", "basic dGVzdEB0ZXN0LmNvbTp0ZXN0")
                 .filter(document("{method-name}",
+                        requestHeaders(
+                                HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
+                        ),
                         responseFields(
                                 fieldWithPath("[].id").description("장바구니 상품 식별자값"),
                                 fieldWithPath("[].quantity").description("장바구니 상품 수량"),
@@ -67,6 +72,9 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                 .header("Authorization", "basic dGVzdEB0ZXN0LmNvbTp0ZXN0")
                 .body(new CartItemRequest(계란.getId()))
                 .filter(document("{method-name}",
+                        requestHeaders(
+                                HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
+                        ),
                         requestFields(
                                 fieldWithPath("productId").description("상품 식별자값")
                         )))
@@ -89,6 +97,9 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                 .pathParam("id", 장바구니_상품.getId())
                 .body(new CartItemQuantityUpdateRequest(10))
                 .filter(document("{method-name}",
+                        requestHeaders(
+                                HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
+                        ),
                         requestFields(
                                 fieldWithPath("quantity").description("장바구니 상품 수량")
                         )))
@@ -109,7 +120,10 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                 .log().all()
                 .header("Authorization", "basic dGVzdEB0ZXN0LmNvbTp0ZXN0")
                 .pathParam("id", 장바구니_상품.getId())
-                .filter(document("{method-name}"))
+                .filter(document("{method-name}",
+                        requestHeaders(
+                                HeaderDocumentation.headerWithName("Authorization").description("basic 64인코딩값")
+                        )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
                 .delete("/cart-items/{id}")
