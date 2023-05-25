@@ -1,0 +1,53 @@
+[[product-api]]
+== 상품
+
+[[product-findAll]]
+=== 조회
+
+*요청*
+include::{snippets}/products/findAll/http-request.adoc[]
+
+*응답*
+include::{snippets}/products/findAll/http-response.adoc[]
+include::{snippets}/products/findAll/response-fields.adoc[]
+
+[[product-findById]]
+=== 상세 조회
+
+*요청*
+include::{snippets}/products/findById/http-request.adoc[]
+include::{snippets}/products/findById/path-parameters.adoc[]
+
+*응답*
+include::{snippets}/products/findById/http-response.adoc[]
+include::{snippets}/products/findById/response-fields.adoc[]
+
+[[product-create]]
+=== 생성
+
+*요청*
+include::{snippets}/products/create/http-request.adoc[]
+include::{snippets}/products/create/request-fields.adoc[]
+
+*응답*
+include::{snippets}/products/findById/http-response.adoc[]
+
+[[product-update]]
+=== 수정
+
+*요청*
+include::{snippets}/products/update/http-request.adoc[]
+include::{snippets}/products/update/path-parameters.adoc[]
+
+*응답*
+include::{snippets}/products/update/http-response.adoc[]
+
+[[product-delete]]
+=== 삭제
+
+*요청*
+include::{snippets}/products/delete/http-request.adoc[]
+include::{snippets}/products/delete/path-parameters.adoc[]
+
+*응답*
+include::{snippets}/products/delete/http-response.adoc[]
