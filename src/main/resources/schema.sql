@@ -28,10 +28,17 @@ CREATE TABLE `order`
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
+    price INT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE `ordered_item`
+(
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id   BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity   INT    NOT NULL,
-    totalPrice INT    NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (order_id) REFERENCES `order` (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
