@@ -1,12 +1,14 @@
 package cart.application;
 
-import cart.domain.Product;
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +26,16 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
+        if (Objects.isNull(productId)) {
+            throw new ProductException.IllegalId("조회할 상품 아이디를 입력해야 합니다.");
+        }
+
         Product product = productDao.getProductById(productId);
+
+        if (Objects.isNull(product)) {
+            throw new ProductException.NotFound("찾는 상품이 없습니다.");
+        }
+
         return ProductResponse.of(product);
     }
 
@@ -34,11 +45,24 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
+        if (Objects.isNull(productId)) {
+            throw new ProductException.IllegalId("수정할 상품 아이디를 입력해야 합니다.");
+        }
+
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+
+        if (Objects.isNull(product)) {
+            throw new ProductException.NotFound("수정할 상품이 존재하지 않습니다.");
+        }
+
         productDao.updateProduct(productId, product);
     }
 
     public void deleteProduct(Long productId) {
+        if (Objects.isNull(productId)) {
+            throw new ProductException.IllegalId("삭제할 상품 아이디를 입력해야 합니다.");
+        }
+
         productDao.deleteProduct(productId);
     }
 }

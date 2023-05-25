@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.ProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,5 +31,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
         logger.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @ExceptionHandler({CartItemException.class, ProductException.class})
+    public ResponseEntity<Void> handleBadRequestException(RuntimeException e) {
+        logger.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

@@ -2,12 +2,22 @@ package cart.domain;
 
 import cart.exception.CartItemException;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class CartItem {
+
     private Long id;
+
+    @NotNull
+    @Min(0)
     private int quantity;
+
+    @NotNull
     private final Product product;
+
+    @NotNull
     private final Member member;
 
     public CartItem(Member member, Product product) {
