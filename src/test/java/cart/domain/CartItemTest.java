@@ -12,7 +12,7 @@ class CartItemTest {
     @DisplayName("카트아이템이 담긴 프로덕트와 quantity를 이용해 합계를 계산한다.")
     void calculateTotalPrice() {
         //given
-        final CartItem cartItem = new CartItem(1L, 10, Fixture.PIZZA_PRODUCT, Fixture.GOLD_MEMBER);
+        final CartItem cartItem = Fixture.CART_ITEM1;
 
         //when
         final int result = cartItem.calculateTotalPrice();
