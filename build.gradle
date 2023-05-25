@@ -32,6 +32,7 @@ dependencies {
 asciidoctor {
     dependsOn test
     configurations 'asciidoctorExt'
+    baseDirFollowsSourceFile()
 }
 
 tasks.named('test') {
