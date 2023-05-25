@@ -30,11 +30,11 @@ class CartItemDaoTest {
 
     private SimpleJdbcInsert productJdbcInsert;
 
-    private CartProductDao cartProductDao;
+    private CartItemDao cartItemDao;
 
     @BeforeEach
     void setUp() {
-        cartProductDao = new CartProductDao(jdbcTemplate);
+        cartItemDao = new CartItemDao(jdbcTemplate);
         memberJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")
                 .usingColumns("email", "password")
@@ -53,10 +53,10 @@ class CartItemDaoTest {
         final CartItem cartItem = new CartItem(memberId, productId);
 
         // when
-        final Long id = cartProductDao.saveAndGetId(cartItem);
+        final Long id = cartItemDao.saveAndGetId(cartItem);
 
         // then
-        final List<Product> result = cartProductDao.findAllProductByMemberId(memberId);
+        final List<Product> result = cartItemDao.findAllProductByMemberId(memberId);
         assertAll(
                 () -> assertThat(result).hasSize(1),
                 () -> assertThat(id).isPositive()
@@ -83,12 +83,12 @@ class CartItemDaoTest {
         final Long productId1 = insertProduct("치즈피자", "1.jpg", 8900L);
         final Long productId2 = insertProduct("치즈피자2", "2.jpg", 18900L);
         final Long productId3 = insertProduct("치즈피자3", "3.jpg", 18900L);
-        cartProductDao.saveAndGetId(new CartItem(memberId1, productId1));
-        cartProductDao.saveAndGetId(new CartItem(memberId1, productId2));
-        cartProductDao.saveAndGetId(new CartItem(memberId2, productId3));
+        cartItemDao.saveAndGetId(new CartItem(memberId1, productId1));
+        cartItemDao.saveAndGetId(new CartItem(memberId1, productId2));
+        cartItemDao.saveAndGetId(new CartItem(memberId2, productId3));
 
         // when
-        final List<Product> result = cartProductDao.findAllProductByMemberId(memberId1);
+        final List<Product> result = cartItemDao.findAllProductByMemberId(memberId1);
 
         // then
         assertThat(result).usingRecursiveComparison().ignoringFieldsOfTypes(LocalDateTime.class).isEqualTo(List.of(
@@ -102,14 +102,14 @@ class CartItemDaoTest {
         // given
         final Long memberId = insertMember("pizza1@pizza.com", "password1");
         final Long productId = insertProduct("치즈피자", "1.jpg", 8900L);
-        cartProductDao.saveAndGetId(new CartItem(memberId, productId));
+        cartItemDao.saveAndGetId(new CartItem(memberId, productId));
 
         // when
-        final int result = cartProductDao.delete(productId, memberId);
+        final int result = cartItemDao.delete(productId, memberId);
 
         // then
         assertAll(
-                () -> assertThat(cartProductDao.findAllProductByMemberId(memberId)).isEmpty(),
+                () -> assertThat(cartItemDao.findAllProductByMemberId(memberId)).isEmpty(),
                 () -> assertThat(result).isOne()
         );
     }

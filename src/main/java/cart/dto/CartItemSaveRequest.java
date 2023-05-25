@@ -1,13 +1,13 @@
 package cart.dto;
 
-public class CartProductSaveRequest {
+public class CartItemSaveRequest {
 
     private Long productId;
 
-    public CartProductSaveRequest() {
+    public CartItemSaveRequest() {
     }
 
-    public CartProductSaveRequest(final Long productId) {
+    public CartItemSaveRequest(final Long productId) {
         this.productId = productId;
     }
 

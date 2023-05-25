@@ -2,9 +2,9 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
-import cart.dto.CartProductSaveRequest;
-import cart.dto.CartProductSearchResponse;
-import cart.service.CartProductService;
+import cart.dto.CartItemSaveRequest;
+import cart.dto.CartItemSearchResponse;
+import cart.service.CartItemService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,26 +15,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/cart-products")
+@RequestMapping("/cart-items")
 @RestController
-public class CartProductController {
+public class CartItemController {
 
-    private final CartProductService cartProductService;
+    private final CartItemService cartItemService;
 
-    public CartProductController(final CartProductService cartProductService) {
-        this.cartProductService = cartProductService;
+    public CartItemController(final CartItemService cartItemService) {
+        this.cartItemService = cartItemService;
     }
 
     @PostMapping
     public ResponseEntity<Void> save(@Auth final Credential credential,
-                                     @RequestBody final CartProductSaveRequest request) {
-        final Long id = cartProductService.save(credential.getMemberId(), request);
-        return ResponseEntity.created(URI.create("/cart-products/" + id)).build();
+                                     @RequestBody final CartItemSaveRequest request) {
+        final Long id = cartItemService.save(credential.getMemberId(), request);
+        return ResponseEntity.created(URI.create("/cart-items/" + id)).build();
     }
 
     @GetMapping
-    public ResponseEntity<CartProductSearchResponse> findAll(@Auth final Credential credential) {
-        final CartProductSearchResponse result = cartProductService.findAll(credential.getMemberId());
+    public ResponseEntity<CartItemSearchResponse> findAll(@Auth final Credential credential) {
+        final CartItemSearchResponse result = cartItemService.findAll(credential.getMemberId());
         return ResponseEntity.ok(result);
     }
 
@@ -43,7 +43,7 @@ public class CartProductController {
             @Auth final Credential credential,
             @PathVariable final Long productId
     ) {
-        cartProductService.delete(productId, credential.getMemberId());
+        cartItemService.delete(productId, credential.getMemberId());
         return ResponseEntity.noContent().build();
     }
 }

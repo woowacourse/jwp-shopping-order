@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CartProductDao {
+public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -22,10 +22,10 @@ public class CartProductDao {
             resultSet.getLong("price")
     );
 
-    public CartProductDao(final JdbcTemplate jdbcTemplate) {
+    public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart_product")
+                .withTableName("cart_item")
                 .usingColumns("member_id", "product_id")
                 .usingGeneratedKeyColumns("id");
     }
@@ -37,15 +37,15 @@ public class CartProductDao {
 
     public List<Product> findAllProductByMemberId(final Long memberId) {
         final String sql = "SELECT product.id AS id, name, image, price "
-                + "FROM cart_product "
+                + "FROM cart_item "
                 + "LEFT JOIN product "
-                + "ON cart_product.product_id = product.id "
+                + "ON cart_item.product_id = product.id "
                 + "WHERE member_id = ?";
         return jdbcTemplate.query(sql, productRowMapper, memberId);
     }
 
     public int delete(final Long productId, final Long memberId) {
-        final String sql = "DELETE FROM cart_product WHERE product_id = ? AND member_id = ?";
+        final String sql = "DELETE FROM cart_item WHERE product_id = ? AND member_id = ?";
         return jdbcTemplate.update(sql, productId, memberId);
     }
 }
