@@ -41,8 +41,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberDao.getMemberById(1L).get();
+        member2 = memberDao.getMemberById(2L).get();
     }
 
     private Long createProduct(final ProductRequest productRequest) {

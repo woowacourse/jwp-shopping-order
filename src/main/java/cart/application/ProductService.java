@@ -4,6 +4,7 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.getProductById(productId)
+                .orElseThrow(() -> new ProductException.NotFound(productId));
         return ProductResponse.of(product);
     }
 

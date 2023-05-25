@@ -4,10 +4,12 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,11 +34,15 @@ public class CartItemService {
         if (cartItemDao.isExistBy(member.getId(), cartItemRequest.getProductId())) {
             throw new CartItemException.AlreadyExist(member, cartItemRequest.getProductId());
         }
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+
+        Product product = productDao.getProductById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
+        return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(() -> new CartItemException.NotFound(id));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -49,7 +55,8 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(() -> new CartItemException.NotFound(id));
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
