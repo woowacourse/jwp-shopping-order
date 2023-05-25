@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cart.domain.CartItem;
 import cart.fixture.Fixture;
 
 @JdbcTest
@@ -38,5 +39,18 @@ class CartItemDaoTest {
 
         //then
         assertThat(result).isEqualTo(ids.size());
+    }
+
+    @Test
+    @DisplayName("여러개의 id를 통해 일치하는 모든 상품을 반환한다.")
+    void findByIds() {
+        //given
+        final List<Long> cartItemIds = List.of(1L, 2L);
+
+        //when
+        final List<CartItem> result = cartItemDao.findByIds(cartItemIds);
+
+        //then
+        assertThat(result.size()).isEqualTo(cartItemIds.size());
     }
 }

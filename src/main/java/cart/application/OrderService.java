@@ -1,7 +1,6 @@
 package cart.application;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderedItemDao;
-import cart.domain.CartItem;
 import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -39,7 +37,7 @@ public class OrderService {
     @Transactional
     public Long order(OrderRequest orderRequest, Member member) {
         final List<Long> cartItemIds = orderRequest.getCartItemIds();
-        final CartItems cartItems = new CartItems(getCartItems(cartItemIds));
+        final CartItems cartItems = new CartItems(cartItemDao.findByIds(cartItemIds));
         cartItems.validateAllCartItemsBelongsToMember(member);
 
         final Integer totalPrice = cartItems.calculatePriceSum();
@@ -52,11 +50,5 @@ public class OrderService {
         cartItemDao.deleteByIds(cartItemIds);
 
         return orderId;
-    }
-
-    private List<CartItem> getCartItems(List<Long> cartItemIds) {
-        return cartItemIds.stream()
-                .map(cartItemDao::findById)
-                .collect(Collectors.toUnmodifiableList());
     }
 }
