@@ -19,4 +19,10 @@ public class CartItemException extends RuntimeException {
             super(member.getEmail() + "의 장바구니에 이미 " + productId + "상품이 존재합니다.");
         }
     }
+
+    public static class NotFound extends CartItemException {
+        public NotFound(Long id) {
+            super("해당 장바구니 상품을 찾을 수 없습니다 : " + id);
+        }
+    }
 }
