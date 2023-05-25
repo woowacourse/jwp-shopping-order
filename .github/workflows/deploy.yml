@@ -18,9 +18,9 @@ jobs:
           ./gradlew bootJar
       - name: kill 8080 port if exist
         run: |
-          if lsof -i :8080; then
+          if sudo lsof -i :8080; then
             echo "Port 8080 is already in use. Killing the process..."
-            lsof -i :8080 | awk 'NR!=1 {print $2}' | xargs kill -9
+            sudo lsof -i :8080 | awk 'NR!=1 {print $2}' | sudo xargs kill -9
           fi
 
       - name: deploy
