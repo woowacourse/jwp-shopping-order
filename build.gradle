@@ -40,10 +40,10 @@ test {
 }
 
 asciidoctor {
+    dependsOn test
     configurations 'asciidoctorExtensions'
     baseDirFollowsSourceFile()
     inputs.dir snippetsDir
-    dependsOn test
 }
 
 asciidoctor.doFirst {
@@ -53,7 +53,7 @@ asciidoctor.doFirst {
 task copyDocument(type: Copy) {
     dependsOn asciidoctor
 
-    from "${asciidoctor.outputDir}"
+    from file("${asciidoctor.outputDir}")
     into file("src/main/resources/static/docs")
 }
 
