@@ -1,0 +1,19 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  common_job:
+    runs-on: self_hosted
+    defaults:
+      run:
+        working-directory: ../..
+    steps:
+      - name: deploy
+        run: |
+          echo $PWD
+          chmod +x ./deploy.sh
+          sudo ./deploy.sh
