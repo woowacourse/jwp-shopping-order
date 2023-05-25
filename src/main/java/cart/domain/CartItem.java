@@ -23,6 +23,10 @@ public class CartItem {
         this.member = member;
     }
 
+    public boolean equalsProductId(Long productId) {
+        return product.getId().equals(productId);
+    }
+
     public Long getId() {
         return id;
     }
