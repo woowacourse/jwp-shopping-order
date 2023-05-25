@@ -13,7 +13,7 @@ public final class LoggingRequestUrlInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(LoggingRequestUrlInterceptor.class);
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         final String url = request.getRequestURL().toString();
         logger.info("Http Request: {}", url);
 
