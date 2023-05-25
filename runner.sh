@@ -4,7 +4,7 @@ echo "\n🐣 Github에서 프로젝트를 Pull 합니다.\n"
 
 git pull
 PORT=443
-PROCESS_ID=$(sudo lsof -t -i:$(PORT))
+PROCESS_ID=$(sudo lsof -t -i:$PORT)
 
 if [ -n "$PROCESS_ID" ]; then
         echo "\n🐣 구동중인 애플리케이션을 종료했습니다. (pid : $PROCESS_ID)\n"
