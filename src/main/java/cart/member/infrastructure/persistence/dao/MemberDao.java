@@ -1,15 +1,14 @@
 package cart.member.infrastructure.persistence.dao;
 
+import cart.common.annotation.Dao;
 import cart.member.domain.Member;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
-@Repository
+@Dao
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;

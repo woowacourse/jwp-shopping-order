@@ -1,17 +1,16 @@
 package cart.product.infrastructure.persistence.dao;
 
+import cart.common.annotation.Dao;
 import cart.product.domain.Product;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-@Repository
+@Dao
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
