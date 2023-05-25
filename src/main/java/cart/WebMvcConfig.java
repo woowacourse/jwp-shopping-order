@@ -30,7 +30,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
             public void addCorsMappings(final CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedMethods("*")
-                        .allowedOrigins("http://localhost:3000", "https://nlom0218.github.io")
+                        .allowedOrigins("http://localhost:3000",
+                                "https://nlom0218.github.io",
+                                "https://tkdrb12.github.io")
                         .maxAge(3600);
             }
         };
