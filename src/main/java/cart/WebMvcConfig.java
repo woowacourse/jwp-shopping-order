@@ -31,7 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 registry.addMapping("/**")
                         .allowedMethods("*")
                         .allowedOrigins("http://localhost:3000")
-                        .allowedOrigins("https://nlom0218.github.io/*")
+                        .allowedOrigins("https://nlom0218.github.io")
                         .maxAge(3600);
             }
         };
