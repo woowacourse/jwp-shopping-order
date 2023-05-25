@@ -9,6 +9,6 @@ server:
     enabled-protocols:
       - TLSv1.1
       - TLSv1.2
-    key-store: "classpath:publickey.p12"
+    key-store: "classpath:${KEYSTORE}"
     key-store-password: ${PASSWORD}
     key-store-type: "PKCS12"
