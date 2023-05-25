@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
         for (String mappingUrl : MAPPING_URLS) {
             registry.addMapping(mappingUrl)
                     .allowedOriginPatterns("*")
-                    .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTION")
+                    .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .exposedHeaders("Location")
                     .allowCredentials(true);
