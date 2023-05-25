@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +24,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
             return null;
@@ -39,6 +40,10 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String decodedString = new String(decodedBytes);
 
         String[] credentials = decodedString.split(":");
+
+        if (credentials.length != 2) {
+            throw new AuthenticationException("이메일과 비밀번호를 모두 입력해야 합니다.");
+        }
         String email = credentials[0];
         String password = credentials[1];
 
