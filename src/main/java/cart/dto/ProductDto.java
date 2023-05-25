@@ -1,12 +1,21 @@
 package cart.dto;
 
 import cart.domain.Product;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "상품")
 public class ProductDto {
 
+    @Schema(description = "상품 Id", example = "1")
     private final Long id;
+    
+    @Schema(description = "상품명", example = "치즈피자")
     private final String name;
+
+    @Schema(description = "이미지", example = "치즈피자.png")
     private final String imageUrl;
+
+    @Schema(description = "가격", example = "8900")
     private final long price;
 
     public ProductDto(final Long id, final String name, final String imageUrl, final long price) {

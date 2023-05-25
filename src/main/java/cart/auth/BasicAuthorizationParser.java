@@ -15,6 +15,9 @@ public class BasicAuthorizationParser {
     private static final String EMPTY = "";
 
     public Credential parse(final String authorizationHeader) {
+        if (authorizationHeader.isBlank()) {
+            throw new InvalidBasicCredentialException(authorizationHeader);
+        }
         final String[] credential = parseCredential(authorizationHeader);
         if (isInvalidBasicCredential(authorizationHeader)) {
             throw new InvalidBasicCredentialException(authorizationHeader);

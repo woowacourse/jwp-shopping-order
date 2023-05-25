@@ -1,7 +1,9 @@
 package cart.auth;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.lang.Nullable;
 
+@Hidden
 public class Credential {
 
     private final Long memberId;
@@ -22,6 +24,10 @@ public class Credential {
         return !this.password.equals(credential.getPassword());
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     @Nullable
     public Long getMemberId() {
         return memberId;
@@ -29,9 +35,5 @@ public class Credential {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }
