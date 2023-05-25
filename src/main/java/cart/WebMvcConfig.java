@@ -21,7 +21,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOriginPatterns("http://192.168.*.*:3000")
+                .exposedHeaders("*")
+                .allowedOriginPatterns("http://woowacourse-teo.store", "https://woowacourse-teo.store")
                 .allowCredentials(true);
     }
 
