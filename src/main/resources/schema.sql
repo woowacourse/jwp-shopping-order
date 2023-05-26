@@ -15,12 +15,14 @@ CREATE TABLE member
 
 CREATE TABLE cart_item
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    quantity      INT          NOT NULL,
+    product_id    BIGINT       NOT NULL,
+    name          VARCHAR(255) NOT NULL,
+    product_price INT          NOT NULL,
+    image_url     VARCHAR(255) NOT NULL,
+    member_id     BIGINT       NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
 CREATE TABLE orders

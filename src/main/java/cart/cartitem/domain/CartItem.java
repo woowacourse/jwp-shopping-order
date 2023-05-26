@@ -14,7 +14,7 @@ public class CartItem {
     private final Long productId;
     private final String name;
     private final String imageUrl;
-    private final int price;
+    private final int productPrice;
     private final Long memberId;
 
     public CartItem(Product product, Member member) {
@@ -31,13 +31,21 @@ public class CartItem {
                 member.getId());
     }
 
-    public CartItem(Long id, int quantity, Long productId, String name, String imageUrl, int price, Long memberId) {
+    public CartItem(
+            Long id,
+            int quantity,
+            Long productId,
+            String name,
+            String imageUrl,
+            int productPrice,
+            Long memberId
+    ) {
         this.id = id;
         this.quantity = quantity;
         this.productId = productId;
         this.name = name;
         this.imageUrl = imageUrl;
-        this.price = price;
+        this.productPrice = productPrice;
         this.memberId = memberId;
     }
 
@@ -67,8 +75,8 @@ public class CartItem {
         return name;
     }
 
-    public int getPrice() {
-        return price;
+    public int getProductPrice() {
+        return productPrice;
     }
 
     public String getImageUrl() {

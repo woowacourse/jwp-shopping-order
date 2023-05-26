@@ -34,6 +34,11 @@ public class JdbcCartItemRepository implements CartItemRepository {
     }
 
     @Override
+    public void deleteById(Long id) {
+        cartItemDao.deleteById(id);
+    }
+
+    @Override
     public CartItem findById(Long id) {
         CartItemEntity entity = cartItemDao.findById(id)
                 .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));

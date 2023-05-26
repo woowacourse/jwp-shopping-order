@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.test.context.jdbc.Sql;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -16,5 +17,6 @@ import org.springframework.context.annotation.FilterType;
                 @Filter(type = FilterType.ANNOTATION, classes = Dao.class)
         }
 )
+@Sql("/truncate.sql")
 public @interface DaoTest {
 }

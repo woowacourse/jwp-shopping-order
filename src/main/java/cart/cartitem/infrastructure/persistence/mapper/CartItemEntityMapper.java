@@ -12,7 +12,7 @@ public class CartItemEntityMapper {
                 cartItem.getProductId(),
                 cartItem.getName(),
                 cartItem.getImageUrl(),
-                cartItem.getPrice(),
+                cartItem.getProductPrice(),
                 cartItem.getMemberId()
         );
     }
