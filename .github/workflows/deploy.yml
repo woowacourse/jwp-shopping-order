@@ -1,0 +1,29 @@
+name: deploy
+
+on:
+  push:
+    branches: [ step1 ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: change permission
+        run: |
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/work/jwp-shopping-order
+      - uses: actions/checkout@v3
+      - name: gradle bootjar
+        # ./gradlew 권한 설정 해줘야 됨
+        run: |
+          chmod +x ./gradlew
+          ./gradlew bootjar
+      - name: kill 8080 port if exist
+        run: |
+          if sudo lsof -i :8080; then
+            echo "Port 8080 is already in use. Killing the process..."
+            sudo lsof -i :8080 | awk 'NR!=1 {print $2}' | sudo xargs kill -9
+          fi
+
+      - name: deploy
+        run: |
+          sudo java -jar build/libs/jwp-shopping-order.jar --spring.profiles.active=prod &
