@@ -1,4 +1,12 @@
 spring:
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
   sql:
     init:
       mode: always
@@ -6,32 +14,29 @@ spring:
 ---
 
 spring:
-  profiles:
-    active: default
+  config:
+    activate:
+      on-profile: prod
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
----
-
-spring:
-  profiles:
-    active: prod
-  datasource:
-    url: ENC(BXXhUrJfOIqbUtF8yll7EjQ+p8K4/0u1E0ubdUQSf0BwxcmsNmkBlrkIl2V7VjuD)
-    username: ENC(/Cc+iFAaVyf/lY6HeirDJg==)
-    password: ENC(mIWXE/6J6jziZ2lkEGpZZg==)
+    url: ${PROD_DB_URL}
+    username: ${PROD_DB_USERNAME}
+    password: ${PROD_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: never
 
 ---
 
 spring:
-  profiles:
-    active: test
+  config:
+    activate:
+      on-profile: test
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  sql:
+    init:
+      mode: always

@@ -1,4 +1,4 @@
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE product
     image_url VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE member
+CREATE TABLE IF NOT EXISTS member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     grade_id BIGINT       NOT NULL DEFAULT 1,
@@ -14,7 +14,7 @@ CREATE TABLE member
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE cart_item
+CREATE TABLE IF NOT EXISTS cart_item
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE `order`
+CREATE TABLE IF NOT EXISTS `order`
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `order`
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-CREATE TABLE `ordered_item`
+CREATE TABLE IF NOT EXISTS `ordered_item`
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id   BIGINT NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `ordered_item`
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE grade
+CREATE TABLE IF NOT EXISTS grade
 (
     id    BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     grade INT    NOT NULL
