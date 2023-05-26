@@ -13,9 +13,9 @@ jobs:
           sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/work/jwp-shopping-order
       - uses: actions/checkout@v3
 
-      - name: copy prod file
+      - name: copy application-prod.yml
         run: |
-          sudo cp ~/spring/application-prod.yml ./src/main/resources
+          echo "${{secrets.PROD_PROPERTIES}}" >> ./src/main/resources/application-prod 
 
       - name: gradle bootjar
         # ./gradlew 권한 설정 해줘야 됨
