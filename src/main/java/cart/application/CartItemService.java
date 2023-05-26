@@ -41,10 +41,6 @@ public class CartItemService {
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        if (Objects.isNull(id)) {
-            throw new CartItemException("장바구니 아이디를 입력해야 합니다.");
-        }
-
         CartItem cartItem = cartItemDao.findById(id);
 
         if (Objects.isNull(cartItem)) {
@@ -63,10 +59,6 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        if (Objects.isNull(id)) {
-            throw new CartItemException("장바구니 아이디를 입력해야 합니다");
-        }
-
         CartItem cartItem = cartItemDao.findById(id);
 
         if (Objects.isNull(cartItem)) {

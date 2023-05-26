@@ -26,10 +26,6 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        if (Objects.isNull(productId)) {
-            throw new ProductException.IllegalId("조회할 상품 아이디를 입력해야 합니다.");
-        }
-
         Product product = productDao.getProductById(productId);
 
         if (Objects.isNull(product)) {
@@ -45,10 +41,6 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        if (Objects.isNull(productId)) {
-            throw new ProductException.IllegalId("수정할 상품 아이디를 입력해야 합니다.");
-        }
-
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
 
         if (Objects.isNull(product)) {
@@ -59,10 +51,6 @@ public class ProductService {
     }
 
     public void deleteProduct(Long productId) {
-        if (Objects.isNull(productId)) {
-            throw new ProductException.IllegalId("삭제할 상품 아이디를 입력해야 합니다.");
-        }
-
         productDao.deleteProduct(productId);
     }
 }
