@@ -4,11 +4,14 @@ import cart.dao.MemberDao;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
+
+import static org.springframework.http.HttpHeaders.LOCATION;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -30,9 +33,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
             public void addCorsMappings(final CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedMethods("*")
-                        .allowedOrigins("http://localhost:3000",
+                        .exposedHeaders(LOCATION)
+                        .allowedOrigins(
+                                "http://localhost:3000",
                                 "https://nlom0218.github.io",
-                                "https://tkdrb12.github.io")
+                                "https://tkdrb12.github.io"
+                        )
                         .maxAge(3600);
             }
         };
