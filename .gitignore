@@ -35,8 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-
-## remove ##
-src/main/resources/application.yml
-src/test/resources/application.yml
