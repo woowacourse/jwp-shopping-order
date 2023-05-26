@@ -9,7 +9,6 @@ import cart.controller.response.OrderProductResponseDto;
 import cart.controller.response.OrderResponseDto;
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
@@ -25,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-public class PaymentIntegrationTest extends IntegrationTest {
+class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
@@ -56,7 +55,7 @@ public class PaymentIntegrationTest extends IntegrationTest {
         OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(hongCartItemId, mattCartItemId));
 
         // when
-        // 사용자는 장바구니에 있는 물품들을 선택해서 주문한다.
+        // 사용자는 장바구니에 있는 물품들을 선택해서 주문한다. // TODO : 주문하기
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -70,7 +69,7 @@ public class PaymentIntegrationTest extends IntegrationTest {
         OrderResponseDto result = response.as(OrderResponseDto.class);
 
         // then
-        // 사용자는 결제 결과를 응답받는다.
+        // 사용자는 결제 결과를 응답받는다 // TODO : 주문하기
         assertThat(result.getTotalPrice())
                 .isEqualTo(PRICE * 2);
         assertThat(result.getOrderProducts())
@@ -78,12 +77,12 @@ public class PaymentIntegrationTest extends IntegrationTest {
                 .extracting(ProductResponse::getName, ProductResponse::getPrice, ProductResponse::getImageUrl)
                 .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
 
-        // 주문한 물품을 장바구니에서 삭제한다.
+        // 주문한 물품을 장바구니에서 삭제한다. // TODO : 주문하기
         ExtractableResponse<Response> cartItems = requestGetCartItems(member);
         List<CartItemResponse> cartItemResponse = cartItems.as(new TypeRef<>() {});
         assertThat(cartItemResponse).isEmpty();
 
-        // 주문내역을 저장한다.
+        // 주문내역을 저장한다. // TODO : 주문 내역 확인
         OrderResponseDto orderResponse = given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())

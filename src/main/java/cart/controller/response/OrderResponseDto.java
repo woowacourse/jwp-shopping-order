@@ -11,6 +11,10 @@ public class OrderResponseDto {
     private final LocalDateTime timestamp;
     private final Integer totalPrice;
 
+    private OrderResponseDto() {
+        this(null, null, null, null);
+    }
+
     public OrderResponseDto(final Long id,
                             final List<OrderProductResponseDto> orderProducts,
                             final LocalDateTime timestamp,

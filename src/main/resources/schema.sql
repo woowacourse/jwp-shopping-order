@@ -27,7 +27,7 @@ CREATE TABLE orders
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
-    time_stamp TIMESTAMP default current_timestamp,
+    time_stamp TIMESTAMP NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 

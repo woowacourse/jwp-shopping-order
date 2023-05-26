@@ -5,6 +5,10 @@ public class LoginRequest {
     private final String id;
     private final String password;
 
+    private LoginRequest() {
+        this(null, null);
+    }
+
     public LoginRequest(String id, String password) {
         this.id = id;
         this.password = password;

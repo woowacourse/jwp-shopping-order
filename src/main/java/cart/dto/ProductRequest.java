@@ -5,7 +5,7 @@ public class ProductRequest {
     private int price;
     private String imageUrl;
 
-    public ProductRequest() {
+    private ProductRequest() {
     }
 
     public ProductRequest(String name, int price, String imageUrl) {
