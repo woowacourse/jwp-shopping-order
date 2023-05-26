@@ -25,6 +25,11 @@ public enum OrderExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "주문 상품이 존재하지 않습니다."
     ),
+    MISMATCH_PRODUCT(
+            104,
+            HttpStatus.BAD_REQUEST,
+            "상품 정보가 변경되었습니다."
+    ),
     ;
 
     private final int errorCode;
