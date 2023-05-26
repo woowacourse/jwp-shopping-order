@@ -17,6 +17,10 @@ public class Order {
         this(null, memberId, Arrays.asList(orderItems));
     }
 
+    public Order(Long memberId, List<OrderItem> orderItems) {
+        this(null, memberId, orderItems);
+    }
+
     public Order(Long id, Long memberId, OrderItem... orderItems) {
         this(id, memberId, Arrays.asList(orderItems));
     }

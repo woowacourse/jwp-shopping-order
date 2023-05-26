@@ -2,6 +2,7 @@ package cart.order.domain;
 
 import static cart.order.exception.OrderExceptionType.INVALID_ORDER_ITEM_PRODUCT_QUANTITY;
 
+import cart.cartitem.domain.CartItem;
 import cart.order.exception.OrderException;
 
 public class OrderItem {
@@ -25,6 +26,14 @@ public class OrderItem {
         this.name = name;
         this.productPrice = productPrice;
         this.imageUrl = imageUrl;
+    }
+
+    public static OrderItem from(CartItem cartItem) {
+        return new OrderItem(cartItem.getQuantity(),
+                cartItem.getProductId(),
+                cartItem.getName(),
+                cartItem.getProductPrice(),
+                cartItem.getImageUrl());
     }
 
     private void validateQuantity(int quantity) {
