@@ -1,7 +1,10 @@
 package cart.dao;
 
+import cart.dao.dto.OrderDto;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -35,9 +38,14 @@ public class OrderDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public OrderDto findById(final Long orderId) {
+    public Optional<OrderDto> findById(final Long orderId) {
         String sql = "SELECT * FROM orders WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     // findById

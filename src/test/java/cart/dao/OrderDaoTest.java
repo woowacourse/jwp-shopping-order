@@ -2,6 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dao.dto.OrderDto;
 import java.time.LocalDateTime;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +56,8 @@ class OrderDaoTest {
         String sql = "INSERT INTO orders (id, member_id, time_stamp) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, orderDto.getId(), orderDto.getMemberId(), orderDto.getTimeStamp());
 
-        OrderDto queryResultOrder = orderDao.findById(orderDto.getId());
+        OrderDto queryResultOrder = orderDao.findById(orderDto.getId())
+                .orElseThrow(IllegalArgumentException::new);
 
         assertThat(orderDto.getMemberId()).isEqualTo(queryResultOrder.getMemberId());
         assertThat(orderDto.getTimeStamp()).isEqualTo(queryResultOrder.getTimeStamp());

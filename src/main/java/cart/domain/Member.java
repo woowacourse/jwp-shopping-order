@@ -3,7 +3,7 @@ package cart.domain;
 import java.util.Objects;
 
 public class Member {
-    
+
     private final Long id;
     private final String email;
     private final String password;
