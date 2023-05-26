@@ -17,7 +17,7 @@ public class OrderProductDao {
             rs.getLong("id"),
             rs.getLong("order_id"),
             rs.getLong("product_id"),
-            rs.getLong("quantity")
+            rs.getInt("quantity")
     );
 
     private final JdbcTemplate jdbcTemplate;

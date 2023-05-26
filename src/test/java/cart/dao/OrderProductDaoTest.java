@@ -19,7 +19,7 @@ class OrderProductDaoTest {
             rs.getLong("id"),
             rs.getLong("order_id"),
             rs.getLong("product_id"),
-            rs.getLong("quantity")
+            rs.getInt("quantity")
     );
 
     @Autowired
@@ -37,7 +37,7 @@ class OrderProductDaoTest {
     @Test
     @DisplayName("OrdersProduct 저장")
     void insert() {
-        OrderProductDto orderProductDto = new OrderProductDto(2L, 3L, 1L);
+        OrderProductDto orderProductDto = new OrderProductDto(2L, 3L, 1);
 
         Long orderProductId = orderProductDao.insert(orderProductDto);
 
@@ -45,24 +45,28 @@ class OrderProductDaoTest {
         OrderProductDto queryResultOrderProduct
                 = jdbcTemplate.queryForObject(sql, orderProductDtoRowMapper, orderProductId);
         assertThat(queryResultOrderProduct)
-                .extracting(OrderProductDto::getId, OrderProductDto::getOrderId, OrderProductDto::getProductId,
-                        OrderProductDto::getQuantity)
-                .contains(orderProductId, 2L, 3L, 1L);
+                .extracting(
+                        OrderProductDto::getId,
+                        OrderProductDto::getOrderId,
+                        OrderProductDto::getProductId,
+                        OrderProductDto::getQuantity
+                )
+                .contains(orderProductId, 2L, 3L, 1);
     }
 
     @Test
     @DisplayName("OrdersProduct 조회하는 기능 테스트")
     void findById() {
         String sql = "INSERT INTO orders_product(id, order_id, product_id, quantity) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, 1L, 2L, 3L, 4L);
+        jdbcTemplate.update(sql, 1L, 2L, 3L, 4);
 
         OrderProductDto queryResultOrderProduct = orderProductDao.findById(1L)
                 .orElseThrow(IllegalArgumentException::new);
 
         assertThat(queryResultOrderProduct)
-                .extracting(OrderProductDto::getId, OrderProductDto::getOrderId, OrderProductDto::getProductId,
-                        OrderProductDto::getQuantity)
-                .contains(1L, 2L, 3L, 4L);
+                .extracting(OrderProductDto::getId, OrderProductDto::getOrderId
+                        , OrderProductDto::getProductId, OrderProductDto::getQuantity)
+                .contains(1L, 2L, 3L, 4);
 
     }
 

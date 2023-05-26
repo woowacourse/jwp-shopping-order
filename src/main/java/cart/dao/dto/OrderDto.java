@@ -1,5 +1,6 @@
 package cart.dao.dto;
 
+import cart.domain.Order;
 import java.time.LocalDateTime;
 
 public class OrderDto {
@@ -16,6 +17,10 @@ public class OrderDto {
 
     public OrderDto(final Long memberId, final LocalDateTime timeStamp) {
         this(null, memberId, timeStamp);
+    }
+
+    public static OrderDto from(final Order order) {
+        return new OrderDto(order.getMember().getId(), order.getTimeStamp());
     }
 
     public Long getId() {

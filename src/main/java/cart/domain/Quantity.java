@@ -30,4 +30,5 @@ public class Quantity {
     public int hashCode() {
         return Objects.hash(value);
     }
+
 }
