@@ -1,0 +1,37 @@
+spring:
+  sql:
+    init:
+      mode: always
+
+---
+
+spring:
+  profiles:
+    active: default
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+---
+
+spring:
+  profiles:
+    active: prod
+  datasource:
+    url: ENC(BXXhUrJfOIqbUtF8yll7EjQ+p8K4/0u1E0ubdUQSf0BwxcmsNmkBlrkIl2V7VjuD)
+    username: ENC(/Cc+iFAaVyf/lY6HeirDJg==)
+    password: ENC(mIWXE/6J6jziZ2lkEGpZZg==)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+---
+
+spring:
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
