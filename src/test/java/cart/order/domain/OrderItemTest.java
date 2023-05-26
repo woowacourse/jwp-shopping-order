@@ -21,7 +21,12 @@ class OrderItemTest {
     void 주문_상품의_가격은_상품_단일_가격과_수량의_곱과_같다() {
         // given
         Product product = new Product("말랑", 100, "image");
-        OrderItem orderItem = new OrderItem(product, 10);
+        OrderItem orderItem = new OrderItem(
+                10,
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl());
 
         // when & then
         assertThat(orderItem.price()).isEqualTo(1000);
@@ -34,7 +39,12 @@ class OrderItemTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                new OrderItem(product, 0)
+                new OrderItem(
+                        0,
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getImageUrl())
         ).exceptionType();
 
         // then

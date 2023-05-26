@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import cart.common.execption.BaseExceptionType;
 import cart.order.exception.OrderException;
-import cart.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -31,16 +30,12 @@ class OrderTest {
     @Test
     void 주문의_총액은_주문상품들의_가격의_합이다() {
         // given
-        Product product1 = new Product("말랑", 100, "image1");
-        Product product2 = new Product("코코", 200, "image2");
-        Product product3 = new Product("닥", 300, "image3");
-        Order order = new Order(1L,
-                new OrderItem(product1, 100),  // 10000
-                new OrderItem(product2, 2),  // 400
-                new OrderItem(product3, 3)  // 900
+        Order order = new Order(1L, 1L,
+                new OrderItem(3L, 10, 1L, "말랑", 1000, "image"),  // 1000 * 10
+                new OrderItem(4L, 20, 2L, "코코닥", 2000, "image")  // 2000 *  20
         );
 
         // when & then
-        assertThat(order.totalPrice()).isEqualTo(11300);
+        assertThat(order.totalPrice()).isEqualTo(50000);
     }
 }
