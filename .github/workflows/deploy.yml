@@ -32,4 +32,4 @@ jobs:
       - name: deploy
         run: |
           cd build/libs
-          java -jar jwp-shopping-order.jar --spring.config.location=file:/home/ubuntu/spring/application.yml &
+          sudo java -jar jwp-shopping-order.jar --spring.config.location=file:/home/ubuntu/spring/application.yml &
