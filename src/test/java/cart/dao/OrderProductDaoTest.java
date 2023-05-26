@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,8 +45,25 @@ class OrderProductDaoTest {
         OrderProductDto queryResultOrderProduct
                 = jdbcTemplate.queryForObject(sql, orderProductDtoRowMapper, orderProductId);
         assertThat(queryResultOrderProduct)
-                .extracting(OrderProductDto::getId, OrderProductDto::getOrderId, OrderProductDto::getProductId, OrderProductDto::getQuantity)
+                .extracting(OrderProductDto::getId, OrderProductDto::getOrderId, OrderProductDto::getProductId,
+                        OrderProductDto::getQuantity)
                 .contains(orderProductId, 2L, 3L, 1L);
+    }
+
+    @Test
+    @DisplayName("OrdersProduct 조회하는 기능 테스트")
+    void findById() {
+        String sql = "INSERT INTO orders_product(id, order_id, product_id, quantity) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, 1L, 2L, 3L, 4L);
+
+        OrderProductDto queryResultOrderProduct = orderProductDao.findById(1L)
+                .orElseThrow(IllegalArgumentException::new);
+
+        assertThat(queryResultOrderProduct)
+                .extracting(OrderProductDto::getId, OrderProductDto::getOrderId, OrderProductDto::getProductId,
+                        OrderProductDto::getQuantity)
+                .contains(1L, 2L, 3L, 4L);
+
     }
 
 }
