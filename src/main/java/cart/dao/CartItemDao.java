@@ -115,13 +115,13 @@ public class CartItemDao {
     public List<CartItem> findByIds(List<Long> ids) {
         String inClause = String.join(",", Collections.nCopies(ids.size(), "?"));
         final String sql =
-                "SELECT c.id, c.member_id, m.email, p.id, p.name, p.price, p.image_url, c.quantity "
-                        + "FROM cart_item AS c "
-                        + "INNER JOIN member AS m "
-                        + "ON c.member_id = m.id "
-                        + "INNER JOIN product AS p "
-                        + "ON c.product_id = p.id "
-                        + "WHERE c.id IN (" + inClause + ")";
+                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        + "FROM cart_item "
+                        + "INNER JOIN member "
+                        + "ON cart_item.member_id = member.id "
+                        + "INNER JOIN product "
+                        + "ON cart_item.product_id = product.id "
+                        + "WHERE cart_item.id IN (" + inClause + ")";
         return jdbcTemplate.query(sql, ids.toArray(), defaultRowMapper);
     }
 }
