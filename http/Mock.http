@@ -1,0 +1,11 @@
+### GET /users
+GET http://localhost:8080/users
+
+### POST /orders
+POST http://localhost:8080/orders
+
+### GET /orders
+GET http://localhost:8080/orders
+
+### GET /orders/{id}
+GET http://localhost:8080/orders/1
