@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cart.application.ProductService;
 import cart.dao.MemberDao;
-import cart.dto.DtoSnippet;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.ui.ProductApiController;
@@ -52,7 +51,7 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
     private MemberDao memberDao;
 
     @Test
-    void 상품_생성_테스트() throws Exception {
+    void 상품_생성() throws Exception {
         //given
         ProductRequest request = new ProductRequest("치킨", 10000, "a");
         when(productService.createProduct(any(ProductRequest.class))).thenReturn(1L);
@@ -67,13 +66,13 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", containsString("1")))
                 .andDo(print())
-                .andDo(documentationOf("product-create",
-                        DtoSnippet.of(request)
+                .andDo(documentationOf(
+                        request
                 ));
     }
 
     @Test
-    void 상품_단일_조회_테스트() throws Exception {
+    void 상품_단일_조회() throws Exception {
         //given
         ProductResponse response = new ProductResponse(1L, "김치", 1000, "www.naver.com");
         when(productService.getProductById(eq(1L)))
@@ -88,14 +87,14 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
                 .andDo(print())
-                .andDo(documentationOf("product-getById",
-                        pathParameters(parameterWithName("id").description("상품 아이디")),
-                        DtoSnippet.of(response)
+                .andDo(documentationOf(
+                        response,
+                        pathParameters(parameterWithName("id").description("상품 아이디"))
                 ));
     }
 
     @Test
-    void 상품_전체_조회_테스트() throws Exception {
+    void 상품_전체_조회() throws Exception {
         //given
         List<ProductResponse> response = List.of(
                 new ProductResponse(1L, "안성탕면", 1000, "www.naver.com"),
@@ -113,8 +112,8 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
                 .andDo(print())
-                .andDo(documentationOf("product-getAll",
-                        DtoSnippet.of(response)
+                .andDo(documentationOf(
+                        response
                 ));
 
     }
@@ -134,9 +133,10 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(documentationOf(testInfo.getTestMethod().get().getName(),
-                        pathParameters(parameterWithName("id").description("상품 아이디")),
-                        DtoSnippet.of(request)
+                .andDo(documentationOf(
+                        request,
+                        pathParameters(parameterWithName("id").description("상품 아이디"))
+
                 ));
     }
 
@@ -149,7 +149,7 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isNoContent())
                 .andDo(print())
-                .andDo(documentationOf("product-delete",
+                .andDo(documentationOf(
                         pathParameters(parameterWithName("id").description("상품 아이디"))
                 ));
     }

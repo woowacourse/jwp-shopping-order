@@ -26,13 +26,12 @@ dependencies {
 }
 
 bootJar {
-    dependsOn(openapi3);
+
 }
 
 openapi3 {
-    server = 'https://localhost:8080'
-    title = 'My API'
-    description = 'My API description'
+    server = 'https://0chil.better-than-coupang.kro.kr'
+    title = '파오땡 API 문서'
     version = '0.1.0'
     format = 'yaml'
 }
@@ -43,5 +42,6 @@ ext {
 
 test {
     useJUnitPlatform()
+    dependsOn()
     outputs.dir snippetsDir
 }

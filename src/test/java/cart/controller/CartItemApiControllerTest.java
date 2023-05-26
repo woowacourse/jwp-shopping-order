@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cart.application.CartItemService;
 import cart.dao.MemberDao;
 import cart.dto.CartItemResponse;
-import cart.dto.DtoSnippet;
 import cart.dto.ProductResponse;
 import cart.ui.CartItemApiController;
 
@@ -52,8 +51,8 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(documentationOf("product-delete",
-                        DtoSnippet.of(cartItemResponses)
+                .andDo(documentationOf(
+                        cartItemResponses
                 ));
     }
 }
