@@ -22,8 +22,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods("*")
                 .exposedHeaders("*")
-                .allowedOriginPatterns("http://woowacourse-teo.store", "https://woowacourse-teo.store")
-                .allowCredentials(true);
+                .allowedOrigins(
+                        "http://woowacourse-teo.store",
+                        "https://woowacourse-teo.store",
+                        "https://kyw0716.github.io",
+                        "https://gyeongza.github.io"
+                ).allowCredentials(true);
     }
 
     @Override
