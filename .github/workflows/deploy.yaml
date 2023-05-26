@@ -4,8 +4,31 @@ on:
     branches: [ step1 ]
 
 jobs:
-  build:
-    runs-on: Linux
+  deploy:
+    runs-on: self-hosted
     steps:
-      - name: run
-        run: ~/jwp-shopping-order/run.sh
+      - name: change permission
+        run: |
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/jwp-shopping-order
+      - uses: actions/checkout@v3
+
+      - name: write application-prod
+        run: |
+          echo "${{ secrets.PROD_PROPERTIES }}" >> ./src/main/resources/application-prod.properties
+
+      - name: gradle bootjar
+        run: |
+          chmod +x ./gradlew
+          ./gradlew bootjar
+
+      - name: kill 8080 port if exist
+        run: |
+          if sudo lsof -i :8080; then
+            echo "Port 8080 is already in use. Killing the process..."
+            sudo lsof -i :8080 | awk 'NR!=1 {print $2}' | sudo xargs kill -9
+          fi
+
+      - name: deploy
+        run: |
+          sudo java -jar build/libs/jwp-shopping-order.jar --spring.profiles.active=prod &
+
