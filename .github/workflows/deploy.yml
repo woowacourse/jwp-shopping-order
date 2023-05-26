@@ -21,7 +21,7 @@ jobs:
         # ./gradlew 권한 설정 해줘야 됨
         run: |
           chmod +x ./gradlew
-          ./gradlew bootjar
+          ./gradlew bootJar
       - name: kill 8080 port if exist
         run: |
           if sudo lsof -i :8080; then
