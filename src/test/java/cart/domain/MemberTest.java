@@ -17,7 +17,7 @@ class MemberTest {
     @Test
     void 아이디를_입력하지_않으면_예외를_던진다() {
         assertThatThrownBy(() -> new Member(null, validEmail, validPassword))
-                .isInstanceOf(MemberException.InvalidId.class)
+                .isInstanceOf(MemberException.InvalidIdByNull.class)
                 .hasMessageContaining("멤버 아이디를 입력해야 합니다.");
     }
 
@@ -28,14 +28,14 @@ class MemberTest {
         @ValueSource(strings = {"", "a"})
         void 올바른_형식이_아니면_예외를_던진다(String invalidEmail) {
             assertThatThrownBy(() -> new Member(validId, invalidEmail, validPassword))
-                    .isInstanceOf(MemberException.InvalidEmail.class)
+                    .isInstanceOf(MemberException.InvalidEmailByNull.class)
                     .hasMessageContaining("이메일 형식을 확인해주세요.");
         }
 
         @Test
         void 입력하지_않으면_예외를_던진다() {
             assertThatThrownBy(() -> new Member(validId, null, validPassword))
-                    .isInstanceOf(MemberException.InvalidEmail.class)
+                    .isInstanceOf(MemberException.InvalidEmailByNull.class)
                     .hasMessageContaining("이메일은 빈 값으로 입력할 수 없습니다.");
         }
     }
@@ -43,14 +43,14 @@ class MemberTest {
     @Test
     void 비밀번호를_입력하지_않으면_예외를_던진다() {
         assertThatThrownBy(() -> new Member(validId, validEmail, null))
-                .isInstanceOf(MemberException.InvalidPassword.class)
+                .isInstanceOf(MemberException.InvalidPasswordByNull.class)
                 .hasMessageContaining("비밀번호는 빈 값으로 입력할 수 없습니다.");
     }
 
     @Test
     void 비밀번호_길이가_1보다_작으면_예외를_던진다() {
         assertThatThrownBy(() -> new Member(validId, validEmail, ""))
-                .isInstanceOf(MemberException.InvalidPassword.class)
+                .isInstanceOf(MemberException.InvalidPasswordByNull.class)
                 .hasMessageContaining("비밀번호는 최소 1자 이상이어야 합니다.");
     }
 }

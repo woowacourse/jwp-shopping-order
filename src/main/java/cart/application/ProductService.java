@@ -29,7 +29,7 @@ public class ProductService {
         Product product = productDao.getProductById(productId);
 
         if (Objects.isNull(product)) {
-            throw new ProductException.NotFound("찾는 상품이 없습니다.");
+            throw new ProductException.NotFound();
         }
 
         return ProductResponse.of(product);
@@ -44,7 +44,7 @@ public class ProductService {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
 
         if (Objects.isNull(product)) {
-            throw new ProductException.NotFound("수정할 상품이 존재하지 않습니다.");
+            throw new ProductException.NotFound();
         }
 
         productDao.updateProduct(productId, product);

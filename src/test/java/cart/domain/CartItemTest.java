@@ -25,7 +25,7 @@ class CartItemTest {
     @Test
     void 아이디를_입력하지_않으면_예외를_던진다() {
         assertThatThrownBy(() -> new CartItem(null, validQuantity, validProduct, validMember))
-                .isInstanceOf(CartItemException.InvalidId.class)
+                .isInstanceOf(CartItemException.InvalidIdByNull.class)
                 .hasMessageContaining("장바구니 아이디를 입력해야 합니다.");
     }
 

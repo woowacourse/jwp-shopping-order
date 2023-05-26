@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class Member {
 
-    private static final int MINIMUM_PASSWORD_LENGTH = 1;
+    public static final int MINIMUM_PASSWORD_LENGTH = 1;
     private static final String EMAIL_REGEX = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
 
     private final Long id;
@@ -28,27 +28,27 @@ public class Member {
 
     private void validateId(Long id) {
         if (Objects.isNull(id)) {
-            throw new MemberException.InvalidId("멤버 아이디를 입력해야 합니다.");
+            throw new MemberException.InvalidIdByNull();
         }
     }
 
     private void validateEmail(String email) {
         if (Objects.isNull(email)) {
-            throw new MemberException.InvalidEmail("이메일은 빈 값으로 입력할 수 없습니다.");
+            throw new MemberException.InvalidEmailByNull();
         }
 
         Matcher matcher = Pattern.compile(EMAIL_REGEX).matcher(email);
         if (!matcher.matches()) {
-            throw new MemberException.InvalidEmail("이메일 형식을 확인해주세요.");
+            throw new MemberException.InvalidEmail();
         }
     }
 
     private void validatePassword(String password) {
         if (Objects.isNull(password)) {
-            throw new MemberException.InvalidPassword("비밀번호는 빈 값으로 입력할 수 없습니다.");
+            throw new MemberException.InvalidPasswordByNull();
         }
         if (password.length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new MemberException.InvalidPassword("비밀번호는 최소 " + MINIMUM_PASSWORD_LENGTH + "자 이상이어야 합니다.");
+            throw new MemberException.InvalidPasswordByLength(password);
         }
     }
 

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class CartItem {
 
-    private static final int MINIMUM_QUANTITY = 1;
+    public static final int MINIMUM_QUANTITY = 1;
 
     private Long id;
     private int quantity;
@@ -39,25 +39,25 @@ public class CartItem {
 
     private void validateId(Long id) {
         if (Objects.isNull(id)) {
-            throw new CartItemException.InvalidId("장바구니 아이디를 입력해야 합니다.");
+            throw new CartItemException.InvalidIdByNull();
         }
     }
 
     private void validateQuantity(int quantity) {
         if (quantity < MINIMUM_QUANTITY) {
-            throw new CartItemException.InvalidQuantity("장바구니에 담긴 상품의 개수는 최소 " + MINIMUM_QUANTITY + " 이상이어야 합니다.");
+            throw new CartItemException.InvalidQuantity(this);
         }
     }
 
     private void validateProduct(Object object) {
         if (Objects.isNull(object)) {
-            throw new CartItemException.InvalidProduct("장바구니에 담으려는 상품이 존재하지 않습니다.");
+            throw new CartItemException.InvalidProduct();
         }
     }
 
     private void validateMember(Member member) {
         if (Objects.isNull(member)) {
-            throw new CartItemException.InvalidMember("장바구니에 접근하려는 멤버가 없습니다.");
+            throw new CartItemException.InvalidMember(this, member);
         }
     }
 

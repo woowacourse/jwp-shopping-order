@@ -16,7 +16,7 @@ class ProductTest {
     @Test
     void 아이디를_입력하지_않으면_예외를_던진다() {
         assertThatThrownBy(() -> new Product(null, validName, validPrice, validImageUrl))
-                .isInstanceOf(ProductException.InvalidId.class)
+                .isInstanceOf(ProductException.InvalidIdByNull.class)
                 .hasMessageContaining("상품 아이디를 입력해야 합니다.");
     }
 
@@ -26,14 +26,14 @@ class ProductTest {
         @Test
         void 한_글자보다_작으면_예외를_던진다() {
             assertThatThrownBy(() -> new Product(validId, "", validPrice, validImageUrl))
-                    .isInstanceOf(ProductException.InvalidName.class)
+                    .isInstanceOf(ProductException.InvalidNameLength.class)
                     .hasMessageContaining("상품 이름은 1자 이상 255자 이하여야합니다.");
         }
 
         @Test
         void 최대_입력_가능한_값보다_작으면_예외를_던진다() {
             assertThatThrownBy(() -> new Product(validId, "a".repeat(256), validPrice, validImageUrl))
-                    .isInstanceOf(ProductException.InvalidName.class)
+                    .isInstanceOf(ProductException.InvalidNameLength.class)
                     .hasMessageContaining("상품 이름은 1자 이상 255자 이하여야합니다.");
         }
     }

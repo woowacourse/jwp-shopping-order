@@ -34,7 +34,7 @@ public class CartItemService {
         Product product = productDao.getProductById(cartItemRequest.getProductId());
 
         if (Objects.isNull(product)) {
-            throw new CartItemException.NotFound("카트에 추가하려는 상품이 존재하지 않습니다.");
+            throw new CartItemException.NotFound();
         }
 
         return cartItemDao.save(new CartItem(member, product));
@@ -62,7 +62,7 @@ public class CartItemService {
         CartItem cartItem = cartItemDao.findById(id);
 
         if (Objects.isNull(cartItem)) {
-            throw new CartItemException.CartItemNotExists("존재하지 않는 장바구니 상품입니다.");
+            throw new CartItemException.CartItemNotExists();
         }
 
         cartItem.checkOwner(member);

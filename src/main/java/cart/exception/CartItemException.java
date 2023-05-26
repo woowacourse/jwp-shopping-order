@@ -3,6 +3,8 @@ package cart.exception;
 import cart.domain.CartItem;
 import cart.domain.Member;
 
+import static cart.domain.CartItem.MINIMUM_QUANTITY;
+
 public class CartItemException extends RuntimeException {
 
     public CartItemException(String message) {
@@ -15,44 +17,40 @@ public class CartItemException extends RuntimeException {
         public InvalidMember(CartItem cartItem, Member member) {
             super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
         }
-
-        public InvalidMember(String message) {
-            super(message);
-        }
     }
 
     public static class CartItemNotExists extends CartItemException {
 
-        public CartItemNotExists(String message) {
-            super(message);
+        public CartItemNotExists() {
+            super("존재하지 않는 장바구니 상품입니다.");
         }
     }
 
     public static class NotFound extends CartItemException {
 
-        public NotFound(String message) {
-            super(message);
+        public NotFound() {
+            super("카트에 추가하려는 상품이 존재하지 않습니다.");
         }
     }
 
-    public static class InvalidId extends CartItemException {
+    public static class InvalidIdByNull extends CartItemException {
 
-        public InvalidId(String message) {
-            super(message);
+        public InvalidIdByNull() {
+            super("장바구니 아이디를 입력해야 합니다.");
         }
     }
 
     public static class InvalidQuantity extends CartItemException {
 
-        public InvalidQuantity(String message) {
-            super(message);
+        public InvalidQuantity(CartItem cartItem) {
+            super("장바구니에 담긴 상품의 개수는 최소 " + MINIMUM_QUANTITY + " 이상이어야 합니다.; cartItemId=" + cartItem.getId() + "cartItemQuantity=" + cartItem.getQuantity());
         }
     }
 
     public static class InvalidProduct extends CartItemException {
 
-        public InvalidProduct(String message) {
-            super(message);
+        public InvalidProduct() {
+            super("장바구니에 담으려는 상품이 존재하지 않습니다.");
         }
     }
 }
