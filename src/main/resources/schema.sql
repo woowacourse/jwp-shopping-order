@@ -1,3 +1,6 @@
+CREATE DATABASE polo;
+USE polo;
+
 CREATE TABLE product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
