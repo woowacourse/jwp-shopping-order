@@ -2,7 +2,7 @@ spring:
   thymeleaf:
     cache: false
   datasource:
-    url: jdbc:mysql://localhost:3306/shop?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: ${DB}
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
