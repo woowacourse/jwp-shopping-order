@@ -4,6 +4,7 @@ import cart.common.annotation.Dao;
 import cart.order.infrastructure.persistence.entity.OrderEntity;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,10 +14,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 @Dao
 public class OrderDao {
 
-    private static final RowMapper<OrderEntity> orderRowMapper = (rs, rowNum) -> new OrderEntity(
-            rs.getLong("id"),
-            rs.getLong("member_id")
-    );
+    private static final RowMapper<OrderEntity> orderRowMapper =
+            new BeanPropertyRowMapper<>(OrderEntity.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

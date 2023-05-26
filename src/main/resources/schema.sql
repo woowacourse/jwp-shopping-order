@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -34,10 +40,12 @@ CREATE TABLE orders
 
 CREATE TABLE order_item
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    quantity   INT    NOT NULL,
-    product_id BIGINT NOT NULL,
-    order_id   BIGINT NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES product (id),
+    id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    quantity      INT          NOT NULL,
+    product_id    BIGINT       NOT NULL,
+    name          VARCHAR(255) NOT NULL,
+    product_price INT          NOT NULL,
+    image_url     VARCHAR(255) NOT NULL,
+    order_id      BIGINT       NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
