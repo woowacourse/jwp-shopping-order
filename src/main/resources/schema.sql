@@ -19,3 +19,29 @@ CREATE TABLE cart_item (
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+
+CREATE TABLE purchase (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	member_id BIGINT NOT NULL,
+	total_amount INT NOT NULL,
+	FOREIGN KEY (member_id) REFERENCES member(id)
+);
+
+CREATE TABLE purchase_details (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    purchase_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (purchase_id) REFERENCES purchase(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+CREATE TABLE shipping_fee (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	fee int NOT NULL
+);
+
+CREATE TABLE shipping_discount_policy (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	threshold BIGINT NOT NULL
+);
