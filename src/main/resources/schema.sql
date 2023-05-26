@@ -29,3 +29,5 @@ CREATE TABLE IF NOT EXISTS order (
     cart_item_id BIGINT NOT NULL ON DELETE CASCADE,
     FOREIGN KEY (cart_item_id) REFERENCES cart_item(id) ON DELETE CASCADE,
 );
+
+
