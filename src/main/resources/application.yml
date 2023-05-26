@@ -3,8 +3,8 @@ spring:
     cache: false
   datasource:
     url: ${DB}
-    username: root
-    password: root
+    username: ${USERNAME}
+    password: ${PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
