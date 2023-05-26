@@ -31,4 +31,5 @@ jobs:
 
       - name: deploy
         run: |
-          sudo nohup java -jar build/libs/jwp-shopping-order.jar --spring.profiles.active=prod &
+          cd build/libs
+          sudo nohup java -jar jwp-shopping-order.jar --spring.profiles.active=prod &
