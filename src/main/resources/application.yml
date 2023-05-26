@@ -2,3 +2,6 @@ spring:
   thymeleaf.cache: false
   config:
     import: application-datasource.yml
+  web:
+    resources:
+      static-locations: file:src/main/resources/static/

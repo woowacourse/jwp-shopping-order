@@ -39,3 +39,5 @@ out/
 secret.properties
 application-datasource.yml
 *.p12
+
+**/src/main/**/resources/static/docs

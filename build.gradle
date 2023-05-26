@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'com.epages.restdocs-api-spec' version '0.16.2'
+    id 'com.epages.restdocs-api-spec' version '0.16.4'
 }
 
 sourceCompatibility = '11'
@@ -20,18 +20,15 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.16.2'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.16.4'
 
-    testRuntimeOnly 'com.h2database:h2'
-}
-
-bootJar {
-
+    runtimeOnly 'com.h2database:h2'
 }
 
 openapi3 {
+    outputDirectory = 'src/main/resources/static/docs'
     server = 'https://0chil.better-than-coupang.kro.kr'
-    title = '파오땡 API 문서'
+    title = 'better-than-coupang API 문서'
     version = '0.1.0'
     format = 'yaml'
 }
@@ -42,6 +39,8 @@ ext {
 
 test {
     useJUnitPlatform()
-    dependsOn()
-    outputs.dir snippetsDir
+}
+
+bootJar {
+    dependsOn 'openapi3'
 }
