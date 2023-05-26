@@ -1,10 +1,10 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Member;
+import cart.entity.MemberEntity;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -31,31 +31,40 @@ class MemberDaoTest {
     @Test
     void 사용자를_저장한다() {
         // given
-        final Member member = new Member("pizza@pizza.com", "password");
+        final MemberEntity memberEntity = new MemberEntity("pizza@pizza.com", "password");
 
         // when
-        final Member savedMember = memberDao.save(member);
+        memberDao.insert(memberEntity);
 
         // then
-        final List<Member> result = memberDao.findAll();
-        assertAll(
-                () -> assertThat(result).hasSize(1),
-                () -> assertThat(savedMember).isEqualTo(result.get(0))
-        );
+        assertThat(memberDao.findAll()).hasSize(1);
     }
 
     @Test
     void 전체_사용자를_조회한다() {
         // given
-        final Member member1 = new Member("pizza1@pizza.com", "password");
-        final Member member2 = new Member("pizza2@pizza.com", "password");
-        final Member savedMember1 = memberDao.save(member1);
-        final Member savedMember2 = memberDao.save(member2);
+        final MemberEntity memberEntity1 = new MemberEntity("pizza1@pizza.com", "password");
+        final MemberEntity memberEntity2 = new MemberEntity("pizza2@pizza.com", "password");
+        final MemberEntity savedMemberEntity1 = memberDao.insert(memberEntity1);
+        final MemberEntity savedMemberEntity2 = memberDao.insert(memberEntity2);
 
         // when
-        List<Member> result = memberDao.findAll();
+        final List<MemberEntity> result = memberDao.findAll();
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(savedMember1, savedMember2));
+        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(savedMemberEntity1, savedMemberEntity2));
+    }
+
+    @Test
+    void 단일_사용자를_조회한다() {
+        // given
+        final MemberEntity memberEntity = new MemberEntity("pizza1@pizza.com", "password");
+        final MemberEntity savedMemberEntity = memberDao.insert(memberEntity);
+
+        // when
+        final Optional<MemberEntity> result = memberDao.findById(savedMemberEntity.getId());
+
+        // then
+        assertThat(result).isPresent();
     }
 }

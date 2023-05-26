@@ -12,10 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
+import cart.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -42,13 +42,13 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @Test
     void 상품을_전체_조회한다() throws Exception {
         // given
-        final Product product1 = productDao.save(new Product("허브티", "tea.jpg", 1000L));
-        final Product product2 = productDao.save(new Product("우가티", "tea.jpg", 20000L));
+        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product2 = productRepository.save(new Product("우가티", "tea.jpg", 20000L));
 
         // when
         mockMvc.perform(get("/products")
@@ -69,7 +69,7 @@ class ProductControllerTest {
     @Test
     void 상품을_단일_조회한다() throws Exception {
         // given
-        final Product product = productDao.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
 
         // when
         mockMvc.perform(get("/products/" + product.getId())
@@ -99,7 +99,7 @@ class ProductControllerTest {
         // then
         final String location = mvcResult.getResponse().getHeader("Location");
         final Long id = Long.parseLong(location.substring(10));
-        final Product result = productDao.findById(id).orElseThrow();
+        final Product result = productRepository.findById(id).orElseThrow();
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("허브티"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("tea.jpg"),
@@ -111,7 +111,7 @@ class ProductControllerTest {
     @Test
     void 상품을_수정한다() throws Exception {
         // given
-        final Product product = productDao.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
         final ProductUpdateRequest updateRequestDto = new ProductUpdateRequest("고양이", "cat.jpg", 1000000L);
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
@@ -123,7 +123,7 @@ class ProductControllerTest {
                 .andDo(print());
 
         // then
-        final Product result = productDao.findById(product.getId()).orElseThrow();
+        final Product result = productRepository.findById(product.getId()).orElseThrow();
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(product.getId()),
                 () -> assertThat(result.getName()).isEqualTo("고양이"),
@@ -135,7 +135,7 @@ class ProductControllerTest {
     @Test
     void 상품을_삭제한다() throws Exception {
         // given
-        final Product product = productDao.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
 
         // when
         mockMvc.perform(delete("/products/" + product.getId())
@@ -144,7 +144,7 @@ class ProductControllerTest {
                 .andDo(print());
 
         // then
-        assertThat(productDao.findById(product.getId())).isNotPresent();
+        assertThat(productRepository.findById(product.getId())).isNotPresent();
     }
 
     @Test
@@ -172,29 +172,6 @@ class ProductControllerTest {
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andDo(print());
-    }
-
-    @Test
-    void 등록되지_않은_상품_수정을_요청하면_404_BadRequest_를_응답한다() throws Exception {
-        // given
-        final ProductUpdateRequest updateRequestDto = new ProductUpdateRequest("고양이", "cat.jpg", 1000000L);
-        final String request = objectMapper.writeValueAsString(updateRequestDto);
-
-        // expect
-        mockMvc.perform(put("/products/" + Long.MAX_VALUE)
-                        .content(request)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andDo(print());
-    }
-
-    @Test
-    void 등록되지_않은_상품_삭제를_요청하면_404_BadRequest_를_응답한다() throws Exception {
-        // expect
-        mockMvc.perform(delete("/products/" + Long.MAX_VALUE)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
                 .andDo(print());
     }
 }

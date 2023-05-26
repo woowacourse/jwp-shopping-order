@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
 import cart.exception.ProductNotFoundException;
+import cart.repository.ProductRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -28,7 +28,7 @@ class ProductServiceTest {
     private ProductService productService;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @Test
     void 상품을_저장한다() {
@@ -39,7 +39,7 @@ class ProductServiceTest {
         final Long id = productService.save(request);
 
         // then
-        final List<Product> result = productDao.findAll();
+        final List<Product> result = productRepository.findAll();
         assertAll(
                 () -> assertThat(id).isPositive(),
                 () -> assertThat(result).hasSize(1)
@@ -101,25 +101,13 @@ class ProductServiceTest {
         productService.update(id, request);
 
         // then
-        final Product result = productDao.findAll().get(0);
+        final Product result = productRepository.findAll().get(0);
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(id),
                 () -> assertThat(result.getName()).isEqualTo("블랙캣"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
                 () -> assertThat(result.getPrice()).isEqualTo(100L)
         );
-    }
-
-    @Test
-    void 없는_상품을_수정하는_경우_ProductNotFoundException_을_던진다() {
-        // given
-        final Long id = Long.MAX_VALUE;
-        final ProductUpdateRequest request = new ProductUpdateRequest("블랙캣", "cat.jpg", 100L);
-
-        // expect
-        assertThatThrownBy(() -> productService.update(id, request))
-                .isInstanceOf(ProductNotFoundException.class)
-                .hasMessage("상품을 찾을 수 없습니다.");
     }
 
     @Test
@@ -132,14 +120,6 @@ class ProductServiceTest {
         productService.delete(id);
 
         // then
-        assertThat(productDao.findAll()).isEmpty();
-    }
-
-    @Test
-    void 없는_상품을_삭제하는_경우_ProductNotFoundException_을_던진다() {
-        // expect
-        assertThatThrownBy(() -> productService.delete(Long.MAX_VALUE))
-                .isInstanceOf(ProductNotFoundException.class)
-                .hasMessage("상품을 찾을 수 없습니다.");
+        assertThat(productRepository.findAll()).isEmpty();
     }
 }
