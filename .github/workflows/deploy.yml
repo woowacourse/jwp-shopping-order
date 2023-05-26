@@ -15,7 +15,7 @@ jobs:
 
       - name: copy application-prod.yml
         run: |
-          echo "${{secrets.PROD_PROPERTIES}}" >> ./src/main/resources/application-prod 
+          echo "${{secrets.PROD_PROPERTIES}}" >> ./src/main/resources/application-prod.yml
 
       - name: gradle bootjar
         # ./gradlew 권한 설정 해줘야 됨
