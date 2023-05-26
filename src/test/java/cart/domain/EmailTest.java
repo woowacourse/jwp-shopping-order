@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.member.Email;
 import cart.exception.EmailInvalidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
