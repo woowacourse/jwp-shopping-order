@@ -49,9 +49,9 @@ public enum RequestSnippets {
     }
 
     private String getNameOf(Object dto) {
-        String name = this.name();
+        String name = clazz.getSimpleName();
         if (isList(dto)) {
-            name += "S";
+            name += "s";
         }
         return name;
     }
