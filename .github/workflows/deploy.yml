@@ -23,4 +23,4 @@ jobs:
           fi
       - name: deploy
         run: |
-          nohup java -jar build/libs/jwp-shopping-order.jar --spring.config.location=file:/home/ubuntu/application.properties &
+          java -jar build/libs/jwp-shopping-order.jar --spring.config.location=file:/home/ubuntu/application.properties &
