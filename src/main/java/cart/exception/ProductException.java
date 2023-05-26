@@ -13,9 +13,9 @@ public class ProductException extends RuntimeException {
         }
     }
 
-    public static class IllegalId extends ProductException {
+    public static class InvalidId extends ProductException {
 
-        public IllegalId(String message) {
+        public InvalidId(String message) {
             super(message);
         }
     }

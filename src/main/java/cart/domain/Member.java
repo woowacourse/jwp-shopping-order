@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
 import cart.exception.MemberException;
 
 import java.util.Objects;
@@ -27,12 +26,9 @@ public class Member {
         this.password = password;
     }
 
-    private void validatePassword(String password) {
-        if (Objects.isNull(password)) {
-            throw new MemberException.InvalidPassword("비밀번호는 빈 값으로 입력할 수 없습니다.");
-        }
-        if (password.length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new MemberException.InvalidPassword("비밀번호는 최소 " + MINIMUM_PASSWORD_LENGTH + " 이상이어야 합니다.");
+    private void validateId(Long id) {
+        if (Objects.isNull(id)) {
+            throw new MemberException.InvalidId("멤버 아이디를 입력해야 합니다.");
         }
     }
 
@@ -47,9 +43,12 @@ public class Member {
         }
     }
 
-    private void validateId(Long id) {
-        if (Objects.isNull(id)) {
-            throw new CartItemException.IllegalId("장바구니 아이디를 입력해야 합니다.");
+    private void validatePassword(String password) {
+        if (Objects.isNull(password)) {
+            throw new MemberException.InvalidPassword("비밀번호는 빈 값으로 입력할 수 없습니다.");
+        }
+        if (password.length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new MemberException.InvalidPassword("비밀번호는 최소 " + MINIMUM_PASSWORD_LENGTH + "자 이상이어야 합니다.");
         }
     }
 

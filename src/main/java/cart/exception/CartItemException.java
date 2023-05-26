@@ -10,13 +10,13 @@ public class CartItemException extends RuntimeException {
         super(message);
     }
 
-    public static class IllegalMember extends CartItemException {
+    public static class InvalidMember extends CartItemException {
 
-        public IllegalMember(CartItem cartItem, Member member) {
+        public InvalidMember(CartItem cartItem, Member member) {
             super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
         }
 
-        public IllegalMember(String message) {
+        public InvalidMember(String message) {
             super(message);
         }
     }
@@ -35,23 +35,23 @@ public class CartItemException extends RuntimeException {
         }
     }
 
-    public static class IllegalId extends CartItemException {
+    public static class InvalidId extends CartItemException {
 
-        public IllegalId(String message) {
+        public InvalidId(String message) {
             super(message);
         }
     }
 
-    public static class IllegalQuantity extends CartItemException {
+    public static class InvalidQuantity extends CartItemException {
 
-        public IllegalQuantity(String message) {
+        public InvalidQuantity(String message) {
             super(message);
         }
     }
 
-    public static class IllegalProduct extends CartItemException {
+    public static class InvalidProduct extends CartItemException {
 
-        public IllegalProduct(String message) {
+        public InvalidProduct(String message) {
             super(message);
         }
     }

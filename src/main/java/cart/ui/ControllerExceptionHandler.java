@@ -28,7 +28,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
+    public ResponseEntity<Void> handleException(CartItemException.InvalidMember e) {
         logger.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }

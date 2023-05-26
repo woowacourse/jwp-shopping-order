@@ -18,4 +18,10 @@ public class MemberException extends RuntimeException {
             super(message);
         }
     }
+
+    public static class InvalidId extends MemberException {
+        public InvalidId(String message) {
+            super(message);
+        }
+    }
 }
