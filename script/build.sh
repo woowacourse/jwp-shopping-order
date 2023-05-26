@@ -17,4 +17,4 @@ fi
 
 echo "애플리케이션을 실행합니다."
 
-nohup java -jar ${ABSDIR}/${APPNAME}.jar -Dlog=${ABSDIR}/log 1>> build.log 2>> build_error.log &
+nohup java -jar ${ABSDIR}/${APPNAME}.jar --spring.config.location=file:./application.yml -Dlog=${ABSDIR}/log 1>> build.log 2>> build_error.log &
