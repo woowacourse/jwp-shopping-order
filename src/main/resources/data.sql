@@ -1,4 +1,4 @@
-INSERT INTO product (name, price, image_url) VALUES ('지구', 1000, 'https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg');
+INSERT INTO product (name, price, image_url) VALUES ('지구별', 1000, 'https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg');
 INSERT INTO product (name, price, image_url) VALUES ('화성', 200000, 'https://cdn.pixabay.com/photo/2011/12/13/14/30/mars-11012__480.jpg');
 INSERT INTO product (name, price, image_url) VALUES ('달', 300, 'https://cdn.pixabay.com/photo/2016/04/02/19/40/moon-1303512__480.png');
 INSERT INTO product (name, price, image_url) VALUES ('해왕성', 10000, 'https://cdn.pixabay.com/photo/2020/09/06/22/11/neptune-5550216__480.jpg');
