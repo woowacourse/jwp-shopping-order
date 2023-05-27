@@ -5,23 +5,25 @@ import cart.entity.CartEntity;
 import cart.entity.CartItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class CartDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CartDao(final JdbcTemplate jdbcTemplate) {
+    public CartDao(final JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("cart")
-                .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     private final RowMapper<CartEntity> cartRowMapper = (rs, rowNum) ->
@@ -53,9 +55,10 @@ public class CartDao {
         return jdbcTemplate.queryForObject(sqlForCartId, Long.class, memberId);
     }
 
-    public CartItemEntity findCartItemEntityById(final Long cartItemId) {
-        String sql = "SELECT id, cart_id, product_id, quantity FROM cart_item WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, cartItemRowMapper, cartItemId);
+    public Optional<CartItemEntity> findCartItemEntityById(final Long cartItemId) {
+        String sql = "SELECT id, cart_id, product_id, quantity FROM cart_item WHERE id = :id";
+        return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource("id", cartItemId), cartItemRowMapper).stream()
+                .findAny();
     }
 
     public Long saveCartItem(final long cartId, final CartItem cartItem) {

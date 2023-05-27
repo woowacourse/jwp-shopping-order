@@ -42,8 +42,8 @@ public class CartItemApiController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(@Auth Member member, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
-        cartItemService.updateQuantity(member, id, request);
+    public ResponseEntity<Void> updateCartItemQuantity(@Auth Member member, @PathVariable("id") Long cartItemId, @RequestBody CartItemQuantityUpdateRequest request) {
+        cartItemService.updateQuantity(member, cartItemId, request);
 
         return ResponseEntity.ok().build();
     }

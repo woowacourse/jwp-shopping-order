@@ -8,6 +8,10 @@ public class CartItemResponse {
     private int quantity;
     private ProductResponse product;
 
+    private CartItemResponse() {
+
+    }
+
     private CartItemResponse(final Long id, final int quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;

@@ -12,6 +12,7 @@ import cart.entity.CartEntity;
 import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
+import cart.exception.CartItemNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -55,7 +56,9 @@ public class CartRepository {
     }
 
     public CartItem findCartItemById(final Long cartItemId) {
-        CartItemEntity cartItemEntity = cartDao.findCartItemEntityById(cartItemId);
+        CartItemEntity cartItemEntity = cartDao.findCartItemEntityById(cartItemId)
+                .orElseThrow(CartItemNotFoundException::new);
+
         ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
 
         Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
