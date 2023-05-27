@@ -51,16 +51,16 @@ CREATE TABLE IF NOT EXISTS `ORDER_ITEM`
 
 CREATE TABLE IF NOT EXISTS `COUPON`
 (
-    `id`                  long PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `name`                varchar(255)     NOT NULL,
-    `policyType`          varchar(255)     NOT NULL,
-    `discountPrice`       long             NOT NULL,
-    `discountPercent`     int              NOT NULL,
-    `discountDeliveryFee` boolean          NOT NULL,
-    `conditionType`       varchar(255)     NOT NULL,
-    `minimumPrice`        long             NOT NULL,
-    `created_at`          timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    `updated_at`          timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
+    `id`                    long PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `name`                  varchar(255)     NOT NULL,
+    `policy_type`           varchar(255)     NOT NULL,
+    `discount_price`        long             NOT NULL,
+    `discount_percent`      int              NOT NULL,
+    `discount_delivery_fee` boolean          NOT NULL,
+    `condition_type`        varchar(255)     NOT NULL,
+    `minimum_price`         long             NOT NULL,
+    `created_at`            timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at`            timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE IF NOT EXISTS `MEMBER_COUPON`
