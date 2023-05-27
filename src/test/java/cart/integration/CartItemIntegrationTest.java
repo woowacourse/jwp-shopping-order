@@ -124,8 +124,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
         ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
 
-        // TODO : 추후 GlobalExceptionHandler 추가 후 404에러로 변경하기
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {

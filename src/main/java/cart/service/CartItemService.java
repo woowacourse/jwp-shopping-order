@@ -7,7 +7,7 @@ import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import cart.exception.CartItemException;
+import cart.exception.MemberNotOwnerException;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -51,7 +51,7 @@ public class CartItemService {
     public void updateQuantity(final Member member, final Long cartItemId, final CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-        validateOwner(member, cart, cartItem);
+        validateOwner(cart, cartItem);
 
         if (request.getQuantity() == 0) {
             cart.removeItem(cartItem);
@@ -67,15 +67,15 @@ public class CartItemService {
     public void remove(final Member member, final Long cartItemId) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-        validateOwner(member, cart, cartItem);
+        validateOwner(cart, cartItem);
 
         cart.removeItem(cartItem);
         cartRepository.deleteCartItemById(cartItem.getId());
     }
 
-    private void validateOwner(final Member member, final Cart cart, final CartItem cartItem) {
+    private void validateOwner(final Cart cart, final CartItem cartItem) {
         if (!cart.hasItem(cartItem)) {
-            throw new CartItemException.IllegalMember(cart, member);
+            throw new MemberNotOwnerException();
         }
     }
 }
