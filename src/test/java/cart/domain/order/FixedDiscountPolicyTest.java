@@ -39,7 +39,7 @@ class FixedDiscountPolicyTest {
 
         // then
         assertThat(discountPrice).isEqualTo(2_000);
-        assertThat(discountedPrice.getValue()).isEqualTo(price.getValue() - discountPrice);
+        assertThat(discountedPrice).isEqualTo(price.minus(discountPrice));
     }
 
     @DisplayName("10만원 이상의 금액은 5000원 할인된다.")
@@ -56,7 +56,7 @@ class FixedDiscountPolicyTest {
 
         // then
         assertThat(discountPrice).isEqualTo(5_000);
-        assertThat(discountedPrice.getValue()).isEqualTo(price.getValue() - discountPrice);
+        assertThat(discountedPrice).isEqualTo(price.minus(discountPrice));
     }
 
     @DisplayName("20만원 이상의 금액은 12000원 할인된다.")
@@ -73,6 +73,6 @@ class FixedDiscountPolicyTest {
 
         // then
         assertThat(discountPrice).isEqualTo(12_000);
-        assertThat(discountedPrice.getValue()).isEqualTo(price.getValue() - discountPrice);
+        assertThat(discountedPrice).isEqualTo(price.minus(discountPrice));
     }
 }

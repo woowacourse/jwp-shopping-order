@@ -34,8 +34,7 @@ public enum FixedDiscountPolicy implements DiscountPolicy{
 
     @Override
     public Price discount(final Price price) {
-        int discountedValue = price.getValue() - discountPrice;
-        return new Price(discountedValue);
+        return price.minus(discountPrice);
     }
 
     public int getDiscountPrice() {

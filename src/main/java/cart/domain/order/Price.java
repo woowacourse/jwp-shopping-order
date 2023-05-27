@@ -18,6 +18,14 @@ public class Price {
         }
     }
 
+    public Price plus(final int operand) {
+        return new Price(value + operand);
+    }
+
+    public Price minus(final int operand) {
+        return new Price(value - operand);
+    }
+
     public int getValue() {
         return value;
     }
