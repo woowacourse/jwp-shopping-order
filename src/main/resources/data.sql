@@ -23,3 +23,18 @@ INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO coupon_type (name, description, discount_amount) VALUES ('할인쿠폰1', '1000원 할인 쿠폰', 1000);
+INSERT INTO coupon_type (name, description, discount_amount) VALUES ('할인쿠폰2', '3000원 할인 쿠폰', 3000);
+INSERT INTO coupon_type (name, description, discount_amount) VALUES ('할인쿠폰3', '5000원 할인 쿠폰', 5000);
+INSERT INTO coupon_type (name, description, discount_amount) VALUES ('할인쿠폰4', '10000원 할인 쿠폰', 10000);
+
+INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES ('N', 1, 1);
+INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES ('N', 1, 2);
+INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES ('N', 1, 3);
+INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES ('N', 1, 4);
+
+INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES ('N', 2, 1);
+INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES ('N', 2, 2);
+INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES ('N', 2, 3);
+INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES ('N', 2, 4);
