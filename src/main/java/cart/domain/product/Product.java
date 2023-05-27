@@ -1,6 +1,9 @@
 package cart.domain.product;
 
+import java.util.Objects;
+
 public class Product {
+
     private Long id;
     private String name;
     private int price;
@@ -33,5 +36,18 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
