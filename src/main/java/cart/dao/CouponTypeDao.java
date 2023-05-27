@@ -28,7 +28,7 @@ public class CouponTypeDao {
     }
 
     public List<CouponType> findAll() {
-        String sql = "SELECT * FROM coupon_type";
+        String sql = "SELECT * FROM coupon_type ORDER BY discount_amount";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
