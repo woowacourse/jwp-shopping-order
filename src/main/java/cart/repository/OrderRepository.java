@@ -12,6 +12,7 @@ import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.entity.OrderEntity;
+import cart.entity.OrderedItemEntity;
 
 @Repository
 @Transactional(readOnly = true)
@@ -41,6 +42,7 @@ public class OrderRepository {
 
     public Order findOrderById(Long orderId) {
         final OrderEntity orderEntity = orderDao.findById(orderId);
+        List<OrderedItemEntity> orderedItems = orderedItemDao.findItemsByOrderId(orderId);
         return null;
     }
 }

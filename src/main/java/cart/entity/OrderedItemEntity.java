@@ -1,12 +1,12 @@
 package cart.entity;
 
-public class OrderedItem {
+public class OrderedItemEntity {
     private final Long id;
     private final Long orderId;
     private final Long productId;
     private final int quantity;
 
-    public OrderedItem(Long id, Long orderId, Long productId, int quantity) {
+    public OrderedItemEntity(Long id, Long orderId, Long productId, int quantity) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
