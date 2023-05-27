@@ -34,6 +34,10 @@ public class Cart {
         cartItems.changeQuantity(cartItemId, quantity);
     }
 
+    public boolean hasItem(final CartItem cartItem) {
+        return cartItems.hasItem(cartItem);
+    }
+
     public Long getId() {
         return id;
     }

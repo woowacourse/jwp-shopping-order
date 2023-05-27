@@ -94,4 +94,18 @@ class CartItemsTest {
         assertThatThrownBy(() -> cartItems.changeQuantity(10, 10))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @DisplayName("아이템을 가지고 있는지 확인한다.")
+    @Test
+    void check_has_cart_item() {
+        // given
+        CartItems cartItems = createCartItems();
+        CartItem cartItem = createCartItem();
+
+        // when
+        boolean result = cartItems.hasItem(cartItem);
+
+        // then
+        assertThat(result).isTrue();
+    }
 }

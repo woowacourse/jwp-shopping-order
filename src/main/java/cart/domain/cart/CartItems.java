@@ -34,10 +34,6 @@ public class CartItems {
         cartItems.remove(cartItem);
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
-
     public void changeQuantity(final long cartItemId, final int quantity) {
         CartItem cartItem = cartItems.stream()
                 .filter(item -> item.hasSameId(cartItemId))
@@ -50,5 +46,14 @@ public class CartItems {
         }
 
         cartItem.changeQuantity(quantity);
+    }
+
+    public boolean hasItem(final CartItem cartItem) {
+        return cartItems.stream()
+                .anyMatch(item -> item.hasSameId(cartItem.getId()));
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 }
