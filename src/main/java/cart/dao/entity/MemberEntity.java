@@ -9,15 +9,23 @@ public class MemberEntity {
     private String password;
     private Integer point;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAT;
+    private LocalDateTime updatedAt;
 
-    public MemberEntity(Long id, String email, String password, Integer point, LocalDateTime createdAt, LocalDateTime updatedAT) {
+    public MemberEntity(String email, String password, Integer point) {
+        this(null, email, password, point);
+    }
+
+    public MemberEntity(Long id, String email, String password, Integer point) {
+        this(id, email, password, point, null, null);
+    }
+
+    public MemberEntity(Long id, String email, String password, Integer point, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.point = point;
         this.createdAt = createdAt;
-        this.updatedAT = updatedAT;
+        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -40,7 +48,7 @@ public class MemberEntity {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAT() {
-        return updatedAT;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
