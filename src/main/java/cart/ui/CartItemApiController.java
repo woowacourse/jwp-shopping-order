@@ -1,9 +1,8 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
+import cart.dto.CartItemQuantityRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import org.springframework.http.ResponseEntity;
@@ -24,27 +23,26 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        List<CartItemResponse> cartItemResponses = cartItemService.findByMember(member);
+        return ResponseEntity.ok(cartItemResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
-
+    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest request) {
+        Long cartItemId = cartItemService.add(member, request);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,
+                                                       @RequestBody CartItemQuantityRequest request) {
         cartItemService.updateQuantity(member, id, request);
-
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
-
         return ResponseEntity.noContent().build();
     }
 }

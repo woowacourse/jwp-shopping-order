@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @Repository
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
@@ -80,12 +81,6 @@ public class CartItemDao {
             return new CartItem(cartItemId, quantity, product, member);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
-    }
-
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
     }
 
     public void deleteById(Long id) {

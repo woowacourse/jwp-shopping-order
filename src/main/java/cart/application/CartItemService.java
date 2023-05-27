@@ -4,7 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
+import cart.dto.CartItemQuantityRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -24,30 +25,31 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(new CartItem(null, 1,
+                productDao.getProductById(cartItemRequest.getProductId()), member));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
-
+    public void updateQuantity(Member member, Long id, CartItemQuantityRequest request) {
         if (request.getQuantity() == 0) {
             cartItemDao.deleteById(id);
             return;
         }
-
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        CartItem cartItem = cartItemDao.findById(id);
+        cartItem.validateIsOwnedBy(member);
+        CartItem updated = new CartItem(cartItem.getId(), request.getQuantity(),
+                cartItem.getProduct(), cartItem.getMember());
+        cartItemDao.updateQuantity(updated);
     }
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
-
+        cartItem.validateIsOwnedBy(member);
         cartItemDao.deleteById(id);
     }
 }

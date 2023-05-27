@@ -31,14 +31,14 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        Long id = productService.createProduct(productRequest);
+    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest request) {
+        Long id = productService.createProduct(request);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
-        productService.updateProduct(id, productRequest);
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest request) {
+        productService.updateProduct(id, request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

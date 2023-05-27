@@ -2,7 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
+import cart.dto.CartItemQuantityRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
@@ -194,7 +194,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
-        CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
+        CartItemQuantityRequest quantityUpdateRequest = new CartItemQuantityRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())

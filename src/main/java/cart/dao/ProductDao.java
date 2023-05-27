@@ -60,9 +60,9 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void updateProduct(Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
     }
 
     public void deleteProduct(Long productId) {
