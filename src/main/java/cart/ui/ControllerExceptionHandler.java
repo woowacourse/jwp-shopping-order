@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(AuthenticationException.class)

@@ -11,4 +11,5 @@ import org.springframework.context.annotation.PropertySource;
         factory = YamlPropertySourceFactory.class
 )
 public class ExternalPropertyConfig {
+
 }

@@ -3,6 +3,7 @@ package cart.dto;
 import cart.domain.Product;
 
 public class ProductResponse {
+
     private Long id;
     private String name;
     private int price;
