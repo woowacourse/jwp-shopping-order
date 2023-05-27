@@ -44,6 +44,18 @@ public class CartItemIntegrationTest extends IntegrationTest {
         member2 = memberDao.getMemberById(2L);
     }
 
+    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(cartItemRequest)
+                .when()
+                .post("/cart-items")
+                .then()
+                .log().all()
+                .extract();
+    }
+
     @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
@@ -163,18 +175,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
         return Long.parseLong(response.header("Location").split("/")[2]);
-    }
-
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(cartItemRequest)
-                .when()
-                .post("/cart-items")
-                .then()
-                .log().all()
-                .extract();
     }
 
     private Long requestAddCartItemAndGetId(Member member, Long productId) {
