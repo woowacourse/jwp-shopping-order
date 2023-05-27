@@ -16,7 +16,7 @@ class CouponTest {
         // given
         final Coupon coupon = new Coupon(
                 1L,
-                "30000원 이상 2000원 할인 쿠폰",
+                "2000원 할인 쿠폰",
                 new AmountDiscountPolicy(2000L),
                 new NoneDiscountCondition()
         );
@@ -33,7 +33,7 @@ class CouponTest {
         // given
         final Coupon coupon = new Coupon(
                 1L,
-                "배달비_할인_쿠폰",
+                "배달비 할인 쿠폰",
                 new DeliveryFeeDiscountPolicy(),
                 new MinimumPriceDiscountCondition(30000)
         );
