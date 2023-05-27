@@ -1,14 +1,13 @@
 package cart.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import cart.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class MemberDao {
@@ -29,6 +28,11 @@ public class MemberDao {
         String sql = "SELECT * FROM member WHERE email = ?";
         List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
+    }
+
+    public Boolean isNotExistByEmailAndPassword(String email, String password) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM MEMBER WHERE email = ? and password = ?)";
+        return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email, password));
     }
 
     public void addMember(Member member) {

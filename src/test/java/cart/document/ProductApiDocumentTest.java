@@ -1,6 +1,6 @@
 package cart.document;
 
-import cart.WebMvcConfig;
+import cart.config.WebMvcConfig;
 import cart.application.ProductService;
 import cart.ui.ProductApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
