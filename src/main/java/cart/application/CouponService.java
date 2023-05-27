@@ -39,7 +39,7 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
-    public List<CouponResponse> getCoupons(final Long memberId) {
+    public List<CouponResponse> getMemberCoupons(final Long memberId) {
         return couponDao.findAll(memberId).stream()
                 .map(coupon -> {
                     CouponType couponType = couponTypeDao.findById(coupon.getCouponTypeId())
@@ -48,4 +48,10 @@ public class CouponService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void deleteByCouponId(final Long couponId) {
+        couponDao.deleteById(couponId);
+    }
+
 }

@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.dto.CouponResponse;
 import cart.dto.CouponTypeResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +46,13 @@ public class CouponController {
 
     @GetMapping("/member")
     public ResponseEntity<List<CouponResponse>> showMemberCoupons(Member member) {
-        List<CouponResponse> coupons = couponService.getCoupons(member.getId());
+        List<CouponResponse> coupons = couponService.getMemberCoupons(member.getId());
         return ResponseEntity.ok().body(coupons);
+    }
+
+    @DeleteMapping("/coupons/{couponId}")
+    public ResponseEntity<Void> deleteCoupon(Member member, @PathVariable Long couponId) {
+        couponService.deleteByCouponId(couponId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -48,4 +48,8 @@ public class CouponDao {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
+    public void deleteById(final Long couponId) {
+        String sql = "DELETE FROM coupon WHERE id = ?";
+        jdbcTemplate.update(sql, couponId);
+    }
 }
