@@ -1,10 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.MemberEntity;
-import cart.domain.Member;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +28,11 @@ public class MemberDao {
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<MemberEntity> getAllMembers() {
+        String sql = "SELECT id, email, password, point, created_at, updated_at from member";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public Optional<MemberEntity> getMemberById(Long id) {
@@ -66,33 +68,4 @@ public class MemberDao {
         );
         return (Long) keyHolder.getKeys().get("ID");
     }
-
-    public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
-    }
-
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    public List<Member> getAllMembers() {
-        String sql = "SELECT * from member";
-        return jdbcTemplate.query(sql, new MemberRowMapper());
-    }
-
-    private static class MemberRowMapper implements RowMapper<Member> {
-
-        @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(
-                    rs.getLong("id"),
-                    rs.getString("email"),
-                    rs.getString("password"),
-                    rs.getInt("point")
-            );
-        }
-    }
 }
-

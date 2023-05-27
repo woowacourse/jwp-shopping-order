@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.DaoTest;
 import cart.dao.entity.MemberEntity;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,23 @@ class MemberDaoTest extends DaoTest {
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(jdbcTemplate);
+    }
+
+    @Test
+    @DisplayName("getAllMembers 메서드는 모든 멤버 데이터를 조회한다.")
+    void getAllMembers() {
+        Long firstMemberId = memberDao.addMember(new MemberEntity("a@a.com", "password1", 0));
+        Long secondMemberId = memberDao.addMember(new MemberEntity("b@b.com", "password2", 0));
+
+        List<MemberEntity> result = memberDao.getAllMembers();
+
+        MemberEntity firstMember = memberDao.getMemberById(firstMemberId).get();
+        MemberEntity secondMember = memberDao.getMemberById(secondMemberId).get();
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(firstMember),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(secondMember)
+        );
     }
 
     @Nested
