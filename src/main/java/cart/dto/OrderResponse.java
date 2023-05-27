@@ -1,15 +1,26 @@
 package cart.dto;
 
 import cart.domain.cart.Order;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Schema(description = "주문 정보")
 public class OrderResponse {
 
+    @Schema(description = "주문 id", example = "1")
     private final Long id;
+
+    @Schema(description = "총 상품 가격", example = "100000")
     private final Long totalItemsPrice;
+
+    @Schema(description = "할인 가격", example = "0")
     private final Long discountPrice;
+
+    @Schema(description = "배달비", example = "3000")
     private final Long deliveryFee;
+
+    @Schema(description = "주문 상품")
     private final List<ItemDto> orderItems;
 
     public OrderResponse(
