@@ -1,5 +1,9 @@
 package cart.application;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
@@ -7,10 +11,6 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
@@ -24,7 +24,7 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return CartItemResponse.of(cartItems);
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
