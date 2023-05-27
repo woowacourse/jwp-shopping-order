@@ -4,8 +4,10 @@ import cart.domain.Item;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
 import cart.dto.ItemIdDto;
+import cart.dto.OrderResponse;
 import cart.dto.OrderSaveRequest;
 import cart.exception.CouponNotFoundException;
+import cart.exception.OrderNotFoundException;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;
@@ -38,7 +40,7 @@ public class OrderService {
                 .map(ItemIdDto::getId)
                 .collect(Collectors.toList());
         final List<Item> items = cartItemRepository.findAllByIds(itemIds, memberId);
-        if (Objects.isNull(orderSaveRequest.getCouponId())) {
+        if (Objects.nonNull(orderSaveRequest.getCouponId())) {
             final Coupon coupon = couponRepository.findByIdAndMemberId(orderSaveRequest.getCouponId(), memberId)
                     .orElseThrow(CouponNotFoundException::new);
             final Order order = orderRepository.save(new Order(coupon, memberId, items));
@@ -46,5 +48,17 @@ public class OrderService {
         }
         final Order order = orderRepository.save(new Order(Coupon.EMPTY, memberId, items));
         return order.getId();
+    }
+
+    public List<OrderResponse> findAll(final Long memberId) {
+        return orderRepository.findAllByMemberId(memberId).stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public OrderResponse findById(final Long id, final Long memberId) {
+        return orderRepository.findById(id, memberId)
+                .map(OrderResponse::from)
+                .orElseThrow(OrderNotFoundException::new);
     }
 }

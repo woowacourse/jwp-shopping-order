@@ -18,6 +18,7 @@ import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -118,15 +119,15 @@ public class OrderRepository {
         final Long id = orderEntity.getId();
         return new Order(
                 id,
-                couponIdByCoupon.get(id),
+                couponIdByCoupon.getOrDefault(id, EMPTY),
                 orderEntity.getMemberId(),
                 Money.from(orderEntity.getDeliveryFee()),
-                orderIdByOrderItems.get(id).stream()
+                orderIdByOrderItems.getOrDefault(id, new ArrayList<>()).stream()
                         .map(OrderItemEntity::toDomain)
                         .collect(toList())
         );
     }
-
+    
     public Optional<Order> findById(final Long id, final Long memberId) {
         return orderDao.findById(id)
                 .map(orderEntity -> toOrder(orderEntity,
