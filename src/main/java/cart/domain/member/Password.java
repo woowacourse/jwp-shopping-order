@@ -19,6 +19,10 @@ public class Password {
         }
     }
 
+    public boolean isPassed(final String password) {
+        return this.password.equals(password);
+    }
+
     public String getPassword() {
         return password;
     }

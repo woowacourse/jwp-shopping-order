@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -30,4 +31,18 @@ class PasswordTest {
         // when & then
         assertDoesNotThrow(() -> new Password(password));
     }
+
+    @DisplayName("패스워드가 일치하는지 확인한다.")
+    @Test
+    void check_password() {
+        // given
+        Password password = new Password("1234");
+        String input = "1234";
+
+        // when
+        boolean passed = password.isPassed(input);
+
+        // then
+        assertThat(passed).isTrue();
+     }
 }
