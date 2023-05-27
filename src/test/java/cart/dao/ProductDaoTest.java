@@ -4,29 +4,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.entity.ProductEntity;
+import cart.test.RepositoryTest;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-@JdbcTest
+@RepositoryTest
 class ProductDaoTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private ProductDao productDao;
-
-    @BeforeEach
-    void setUp() {
-        productDao = new ProductDao(jdbcTemplate);
-    }
 
     @Test
     void 상품을_저장한다() {

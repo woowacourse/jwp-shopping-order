@@ -4,31 +4,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.auth.Credential;
+import cart.test.RepositoryTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-@JdbcTest
+@RepositoryTest
 class CredentialDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
+    
     private SimpleJdbcInsert memberJdbcInsert;
 
+    @Autowired
     private CredentialDao credentialDao;
 
     @BeforeEach
     void setUp() {
-        credentialDao = new CredentialDao(jdbcTemplate);
         memberJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")
                 .usingColumns("email", "password")
