@@ -1,4 +1,4 @@
-package cart;
+package cart.config;
 
 import cart.dao.MemberDao;
 import cart.ui.MemberArgumentResolver;
@@ -25,9 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000/",
-                        "https://react-dobob-shopping-cart.netlify.app/",
-                        "https://afds4567.github.io/")
+                .allowedOrigins("*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .exposedHeaders(HttpHeaders.LOCATION)
