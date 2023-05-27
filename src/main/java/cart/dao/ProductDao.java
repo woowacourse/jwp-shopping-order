@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dao.entity.ProductEntity;
-import cart.domain.product.Product;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -62,9 +61,12 @@ public class ProductDao {
         return (Long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void updateProduct(ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(
+                sql,
+                productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getId()
+        );
     }
 
     public void deleteProduct(Long productId) {

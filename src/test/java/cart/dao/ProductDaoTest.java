@@ -67,4 +67,34 @@ class ProductDaoTest extends DaoTest {
             assertThat(result).isEmpty();
         }
     }
+
+    @Test
+    @DisplayName("updateProduct 메서드는 상품 데이터를 수정한다.")
+    void updateProduct() {
+        Long savedProductId = productDao.createProduct(new ProductEntity("치킨", 10000, "http://image.com"));
+        ProductEntity findProductEntity = productDao.getProductById(savedProductId).get();
+        ProductEntity updateProductEntity = new ProductEntity(findProductEntity.getId(), "피자", 13000, "http://photo.com");
+
+        productDao.updateProduct(updateProductEntity);
+
+        ProductEntity result = productDao.getProductById(savedProductId).get();
+        assertAll(
+                () -> assertThat(result).usingRecursiveComparison()
+                        .ignoringFields("createdAt", "updatedAt")
+                        .isEqualTo(updateProductEntity),
+                () -> assertThat(result.getCreatedAt()).isEqualTo(findProductEntity.getCreatedAt()),
+                () -> assertThat(result.getUpdatedAt()).isNotNull()
+        );
+    }
+
+    @Test
+    @DisplayName("deleteProduct 메서드는 상품 데이터를 삭제한다.")
+    void deleteProduct() {
+        Long savedProductId = productDao.createProduct(new ProductEntity("치킨", 10000, "http://image.com"));
+
+        productDao.deleteProduct(savedProductId);
+
+        Optional<ProductEntity> result = productDao.getProductById(savedProductId);
+        assertThat(result).isEmpty();
+    }
 }
