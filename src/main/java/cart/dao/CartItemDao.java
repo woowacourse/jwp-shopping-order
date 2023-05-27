@@ -65,7 +65,7 @@ public class CartItemDao {
                 "INNER JOIN member m ON ci.member_id = m.id " +
                 "INNER JOIN product p ON ci.product_id = p.id " +
                 "WHERE ci.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
+        final List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             final Long memberId = rs.getLong("member.id");
             final String email = rs.getString("email");
             final Member member = new Member(memberId, email, null);
