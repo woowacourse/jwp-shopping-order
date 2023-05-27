@@ -2,12 +2,10 @@ package cart.repository.mapper;
 
 import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
-import org.springframework.stereotype.Component;
 
-@Component
 public class MemberMapper {
 
-    public Member toDomain(MemberEntity memberEntity) {
+    public static Member toDomain(MemberEntity memberEntity) {
         return new Member(
                 memberEntity.getId(),
                 memberEntity.getEmail(),
@@ -16,7 +14,7 @@ public class MemberMapper {
         );
     }
 
-    public MemberEntity toEntity(Member member) {
+    public static MemberEntity toEntity(Member member) {
         return new MemberEntity(
                 member.getId(),
                 member.getEmail(),

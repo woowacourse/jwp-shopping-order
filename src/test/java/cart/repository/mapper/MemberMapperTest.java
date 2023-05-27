@@ -10,14 +10,12 @@ import org.junit.jupiter.api.Test;
 
 class MemberMapperTest {
 
-    private final MemberMapper memberMapper = new MemberMapper();
-
     @Test
     @DisplayName("엔티티를 도메인으로 변환한다.")
     void convertFromEntityToDomain() {
         MemberEntity entity = new MemberEntity(1L, "a@a.com", "password1", 0);
 
-        Member result = memberMapper.toDomain(entity);
+        Member result = MemberMapper.toDomain(entity);
 
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(entity.getId()),
@@ -32,7 +30,7 @@ class MemberMapperTest {
     void convertFromDomainToEntity() {
         Member domain = new Member(1L, "a@a.com", "password1", 0);
 
-        MemberEntity result = memberMapper.toEntity(domain);
+        MemberEntity result = MemberMapper.toEntity(domain);
 
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(domain.getId()),

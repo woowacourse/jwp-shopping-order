@@ -3,25 +3,22 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.DaoTest;
 import cart.dao.entity.MemberEntity;
+import cart.test.RepositoryTest;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
-class MemberDaoTest extends DaoTest {
+@RepositoryTest
+class MemberDaoTest {
 
+    @Autowired
     private MemberDao memberDao;
-
-    @BeforeEach
-    void setUp() {
-        memberDao = new MemberDao(jdbcTemplate);
-    }
 
     @Test
     @DisplayName("getAllMembers 메서드는 모든 멤버 데이터를 조회한다.")

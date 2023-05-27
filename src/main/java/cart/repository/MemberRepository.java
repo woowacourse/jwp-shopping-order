@@ -13,23 +13,21 @@ import org.springframework.stereotype.Repository;
 public class MemberRepository {
 
     private final MemberDao memberDao;
-    private final MemberMapper memberMapper;
 
-    public MemberRepository(MemberDao memberDao, MemberMapper memberMapper) {
+    public MemberRepository(MemberDao memberDao) {
         this.memberDao = memberDao;
-        this.memberMapper = memberMapper;
     }
 
     public List<Member> getAllMembers() {
         List<MemberEntity> memberEntities = memberDao.getAllMembers();
         return memberEntities.stream()
-                .map(memberMapper::toDomain)
+                .map(MemberMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
     public Member getMemberByEmailAndPassword(String email, String password) {
         MemberEntity memberEntity = memberDao.getMemberByEmailAndPassword(email, password)
                 .orElseThrow(() -> new NotFound());
-        return memberMapper.toDomain(memberEntity);
+        return MemberMapper.toDomain(memberEntity);
     }
 }

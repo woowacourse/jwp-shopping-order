@@ -7,6 +7,10 @@ public class Member {
     private final String password;
     private final int point;
 
+    public Member(String email, String password, int point) {
+        this(null, email, password, point);
+    }
+
     public Member(Long id, String email, String password, int point) {
         this.id = id;
         this.email = email;

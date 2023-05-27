@@ -3,23 +3,20 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.DaoTest;
 import cart.dao.entity.ProductEntity;
+import cart.test.RepositoryTest;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-class ProductDaoTest extends DaoTest {
+@RepositoryTest
+class ProductDaoTest {
 
+    @Autowired
     private ProductDao productDao;
-
-    @BeforeEach
-    void setUp() {
-        productDao = new ProductDao(jdbcTemplate);
-    }
 
     @Test
     @DisplayName("getAllProducts 메서드는 모든 상품 데이터를 조회한다.")
