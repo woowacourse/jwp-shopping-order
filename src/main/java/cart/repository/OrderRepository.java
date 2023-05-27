@@ -10,7 +10,8 @@ import cart.dao.OrderDao;
 import cart.dao.OrderedItemDao;
 import cart.domain.CartItems;
 import cart.domain.Member;
-import cart.entity.Order;
+import cart.domain.Order;
+import cart.entity.OrderEntity;
 
 @Repository
 @Transactional(readOnly = true)
@@ -31,10 +32,15 @@ public class OrderRepository {
 
     @Transactional
     public Long saveOrder(List<Long> cartItemIds, Member member, Integer price, CartItems cartItems) {
-        final Order order = new Order(price, member.getId());
-        final Long orderId = orderDao.addOrder(order);
+        final OrderEntity orderEntity = new OrderEntity(price, member.getId());
+        final Long orderId = orderDao.addOrder(orderEntity);
         orderedItemDao.saveAll(cartItems.getCartItems(), orderId);
         cartItemDao.deleteByIds(cartItemIds);
         return orderId;
+    }
+
+    public Order findOrderById(Long orderId) {
+        final OrderEntity orderEntity = orderDao.findById(orderId);
+        return null;
     }
 }

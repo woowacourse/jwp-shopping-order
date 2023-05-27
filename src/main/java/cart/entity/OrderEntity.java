@@ -1,17 +1,17 @@
 package cart.entity;
 
-public class Order {
+public class OrderEntity {
     private final Long id;
     private final Integer price;
     private final Long memberId;
 
-    public Order(Long id, Integer price, Long memberId) {
+    public OrderEntity(Long id, Integer price, Long memberId) {
         this.id = id;
         this.price = price;
         this.memberId = memberId;
     }
 
-    public Order(Integer price, Long memberId) {
+    public OrderEntity(Integer price, Long memberId) {
         this(null, price, memberId);
     }
 

@@ -8,7 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import cart.entity.Order;
+import cart.entity.OrderEntity;
 
 @Repository
 public class OrderDao {
@@ -18,7 +18,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrder(Order order) {
+    public Long addOrder(OrderEntity order) {
         final String sql = "INSERT INTO `order` (member_id, price) VALUES (?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -32,5 +32,15 @@ public class OrderDao {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public OrderEntity findById(Long orderId) {
+        final String sql = "SELECT * FROM `order` WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{orderId}, (rs, rowNum) -> {
+            final long id = rs.getLong("id");
+            final long memberId = rs.getLong("member_id");
+            final int price = rs.getInt("price");
+            return new OrderEntity(id, price, memberId);
+        });
     }
 }
