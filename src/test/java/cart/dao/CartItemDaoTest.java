@@ -74,10 +74,30 @@ class CartItemDaoTest {
         // given
         final MemberEntity member = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password1"));
         final ProductEntity product = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
-        final CartItemEntity cartItemEntity = new CartItemEntity(member.getId(), product.getId(), 1);
+        final CartItemEntity cartItem = cartItemDao.insert(new CartItemEntity(member.getId(), product.getId(), 1));
 
         // when
-        cartItemDao.deleteById(cartItemEntity.getId(), member.getId());
+        cartItemDao.deleteById(cartItem.getId(), member.getId());
+
+        // then
+        assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty();
+    }
+
+    @Test
+    void 사용자_아이디와_삭제할_장바구니의_상품_아이디_목록을_받아_장바구니_항목을_제거한다() {
+        // given
+        final MemberEntity member = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password1"));
+        final ProductEntity product1 = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
+        final ProductEntity product2 = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
+        final CartItemEntity cartItemEntity1 = cartItemDao.insert(
+                new CartItemEntity(member.getId(), product1.getId(), 1)
+        );
+        final CartItemEntity cartItemEntity2 = cartItemDao.insert(
+                new CartItemEntity(member.getId(), product2.getId(), 1)
+        );
+
+        // when
+        cartItemDao.deleteByIds(List.of(cartItemEntity1.getId(), cartItemEntity2.getId()), member.getId());
 
         // then
         assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty();

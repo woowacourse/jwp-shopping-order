@@ -7,6 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) -> {
         final Long id = rs.getLong("id");
@@ -25,6 +28,7 @@ public class CartItemDao {
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingColumns("quantity", "member_id", "product_id")
@@ -59,6 +63,17 @@ public class CartItemDao {
     public int deleteById(final Long cartItemId, final Long memberId) {
         final String sql = "DELETE FROM cart_item WHERE id = ? AND member_id = ?";
         return jdbcTemplate.update(sql, cartItemId, memberId);
+    }
+
+    public void deleteByIds(final List<Long> cartItemIds, final Long memberId) {
+        if (cartItemIds.isEmpty()) {
+            return;
+        }
+        final String sql = "DELETE FROM cart_item WHERE member_id = (:member_id) AND id IN (:ids)";
+        final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("ids", cartItemIds);
+        parameterSource.addValue("member_id", memberId);
+        namedJdbcTemplate.update(sql, parameterSource);
     }
 
     public void updateQuantity(final CartItemEntity cartItemEntity) {
