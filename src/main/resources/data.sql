@@ -28,3 +28,8 @@ values (1, 2, false);
 INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
 values (2, 2, false);
 
+INSERT INTO ORDERS (delivery_fee, coupon_id, member_id)
+values (30000, 1, 1);
+
+INSERT INTO ORDER_ITEM (name, image_url, price, quantity, order_id)
+values ('피자스쿨 치즈피자', 'https://t1.daumcdn.net/cfile/tistory/2647BE3754B7E8B733', 8900, 1, 1);

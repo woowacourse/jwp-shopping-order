@@ -37,7 +37,8 @@ public class WebConfiguration implements WebMvcConfigurer {
         );
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/cart-items/**")
-                .addPathPatterns("/coupons/**");
+                .addPathPatterns("/coupons/**")
+                .addPathPatterns("/orders/**");
     }
 
     @Override
