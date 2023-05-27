@@ -4,17 +4,25 @@ import cart.domain.Member;
 
 public class MemberFixtures {
 
-    public static class MemberA {
+    public static class Dooly {
         public static final Long ID = 1L;
-        public static final String EMAIL = "a@a.com";
+        public static final String EMAIL = "dooly@dooly.com";
         public static final String PASSWORD = "1234";
 
         public static final Member ENTITY = new Member(ID, EMAIL, PASSWORD);
     }
 
-    public static class MemberB {
+    public static class Ber {
         public static final Long ID = 2L;
-        public static final String EMAIL = "b@b.com";
+        public static final String EMAIL = "ber@ber.com";
+        public static final String PASSWORD = "1234";
+
+        public static final Member ENTITY = new Member(ID, EMAIL, PASSWORD);
+    }
+
+    public static class Bixx {
+        public static final Long ID = 3L;
+        public static final String EMAIL = "bixx@bixx.com";
         public static final String PASSWORD = "1234";
 
         public static final Member ENTITY = new Member(ID, EMAIL, PASSWORD);
