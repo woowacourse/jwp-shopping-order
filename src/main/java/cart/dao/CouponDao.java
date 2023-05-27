@@ -25,4 +25,5 @@ public class CouponDao {
         String sql = "INSERT INTO coupon(usage_status, member_id, coupon_type_id) VALUES (?, ?, ?) ";
         return (long) jdbcTemplate.update(sql, "N", memberId, couponTypeId);
     }
+
 }

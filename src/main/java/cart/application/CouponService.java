@@ -1,17 +1,24 @@
 package cart.application;
 
 import cart.dao.CouponDao;
+import cart.dao.CouponTypeDao;
+import cart.dto.CouponTypeResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class CouponService {
 
     private final CouponDao couponDao;
+    private final CouponTypeDao couponTypeDao;
 
-    public CouponService(final CouponDao couponDao) {
+    public CouponService(final CouponDao couponDao, final CouponTypeDao couponTypeDao) {
         this.couponDao = couponDao;
+        this.couponTypeDao = couponTypeDao;
     }
 
     @Transactional
@@ -22,6 +29,12 @@ public class CouponService {
     @Transactional
     public void addCoupon(final Long memberId, final Long couponId) {
         couponDao.updateUsageStatus(memberId, couponId);
+    }
+
+    public List<CouponTypeResponse> getCouponsType() {
+        return couponTypeDao.findAll().stream()
+                .map(CouponTypeResponse::new)
+                .collect(Collectors.toList());
     }
 
 }

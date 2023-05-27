@@ -1,19 +1,17 @@
 package cart.domain;
 
-public class Coupon {
+public class CouponType {
 
     private final Long id;
     private final String name;
     private final String description;
     private final int discountAmount;
-    private final Long memberId;
 
-    public Coupon(final Long id, final String name, final String description, final int discountAmount, final Long memberId) {
+    public CouponType(final Long id, final String name, final String description, final int discountAmount) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.discountAmount = discountAmount;
-        this.memberId = memberId;
     }
 
     public Long getId() {
@@ -30,9 +28,5 @@ public class Coupon {
 
     public int getDiscountAmount() {
         return discountAmount;
-    }
-
-    public Long getMemberId() {
-        return memberId;
     }
 }
