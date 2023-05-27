@@ -2,6 +2,10 @@ package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.cart.Item;
+import cart.domain.cart.Member;
+import cart.domain.cart.OrderItem;
+import cart.domain.cart.Product;
 import cart.domain.common.Money;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.domain.Member;
+import cart.domain.cart.Member;
 
 public class MemberEntity {
 

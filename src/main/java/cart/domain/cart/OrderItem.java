@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.cart;
 
 import cart.domain.common.Money;
 import cart.exception.InvalidCartItemOwnerException;
@@ -18,7 +18,7 @@ public class OrderItem implements Item {
     public OrderItem(final Long id, final Integer quantity, final Product product) {
         this(id, quantity, null, product);
     }
-    
+
     public OrderItem(final Long id, final Integer quantity, final Member member, final Product product) {
         this.id = id;
         this.quantity = quantity;

@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberCouponDao;
-import cart.domain.CartItem;
-import cart.domain.Item;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.Item;
+import cart.domain.cart.Member;
+import cart.domain.cart.Order;
+import cart.domain.cart.Product;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.NoneDiscountCondition;

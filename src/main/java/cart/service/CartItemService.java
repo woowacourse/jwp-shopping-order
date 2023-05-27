@@ -2,10 +2,10 @@ package cart.service;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.domain.CartItem;
-import cart.domain.Item;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.Item;
+import cart.domain.cart.Member;
+import cart.domain.cart.Product;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;

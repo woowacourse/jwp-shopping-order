@@ -2,7 +2,7 @@ package cart.service;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
-import cart.domain.Product;
+import cart.domain.cart.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;

@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Order;
+import cart.domain.cart.Order;
 import java.util.List;
 import java.util.stream.Collectors;
 

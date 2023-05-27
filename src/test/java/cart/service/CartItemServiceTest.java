@@ -2,10 +2,10 @@ package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.CartItem;
-import cart.domain.Item;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.Item;
+import cart.domain.cart.Member;
+import cart.domain.cart.Product;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.ProductDto;

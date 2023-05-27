@@ -1,7 +1,7 @@
 package cart.dto;
 
-import cart.domain.Item;
-import cart.domain.Product;
+import cart.domain.cart.Item;
+import cart.domain.cart.Product;
 
 public class ItemDto {
 

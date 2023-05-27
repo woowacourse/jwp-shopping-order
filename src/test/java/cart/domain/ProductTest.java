@@ -2,6 +2,7 @@ package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.domain.cart.Product;
 import cart.exception.ProductNotValidException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

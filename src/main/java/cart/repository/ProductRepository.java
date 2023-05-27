@@ -3,7 +3,7 @@ package cart.repository;
 import static java.util.stream.Collectors.toList;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.cart.Product;
 import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.Objects;

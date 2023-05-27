@@ -2,7 +2,7 @@ package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Member;
+import cart.domain.cart.Member;
 import cart.dto.MemberDto;
 import cart.repository.MemberRepository;
 import java.util.List;

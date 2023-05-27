@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.Product;
+import cart.domain.cart.Product;
 import cart.domain.common.Money;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;

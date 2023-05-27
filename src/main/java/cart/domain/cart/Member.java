@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.cart;
 
 import cart.exception.MemberNotValidException;
 import java.util.Objects;

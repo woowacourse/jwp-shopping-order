@@ -1,8 +1,8 @@
 package cart.entity;
 
-import cart.domain.Item;
-import cart.domain.OrderItem;
-import cart.domain.Product;
+import cart.domain.cart.Item;
+import cart.domain.cart.OrderItem;
+import cart.domain.cart.Product;
 
 public class OrderItemEntity {
 

@@ -10,8 +10,8 @@ import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.domain.Item;
-import cart.domain.Order;
+import cart.domain.cart.Item;
+import cart.domain.cart.Order;
 import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
 import cart.entity.CouponEntity;
@@ -127,7 +127,7 @@ public class OrderRepository {
                         .collect(toList())
         );
     }
-    
+
     public Optional<Order> findById(final Long id, final Long memberId) {
         return orderDao.findById(id)
                 .map(orderEntity -> toOrder(orderEntity,

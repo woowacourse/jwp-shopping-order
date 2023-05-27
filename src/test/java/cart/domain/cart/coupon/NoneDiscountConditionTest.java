@@ -1,9 +1,11 @@
-package cart.domain.coupon;
+package cart.domain.cart.coupon;
 
 import static cart.domain.coupon.DiscountConditionType.NONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.common.Money;
+import cart.domain.coupon.DiscountCondition;
+import cart.domain.coupon.NoneDiscountCondition;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

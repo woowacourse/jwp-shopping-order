@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Product;
+import cart.domain.cart.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "상품")

@@ -2,10 +2,10 @@ package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.CartItem;
-import cart.domain.Item;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.Item;
+import cart.domain.cart.Member;
+import cart.domain.cart.Product;
 import cart.test.RepositoryTest;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;

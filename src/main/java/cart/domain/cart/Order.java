@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.cart;
 
 import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
