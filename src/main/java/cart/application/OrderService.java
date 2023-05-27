@@ -1,6 +1,7 @@
 package cart.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,8 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import cart.dao.CartItemDao;
 import cart.domain.CartItems;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.domain.discount.PriceCalculator;
+import cart.dto.CartItemResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.repository.OrderRepository;
 
 @Service
@@ -40,5 +44,14 @@ public class OrderService {
         final Integer finalPrice = priceCalculator.calculateFinalPrice(totalPrice, member);
 
         return orderRepository.saveOrder(cartItemIds, member, finalPrice, cartItems);
+    }
+
+    public OrderResponse findOrderById(Long orderId, Member member) {
+        final Order order = orderRepository.findOrderById(orderId, member);
+        final List<CartItemResponse> cartItemResponses = order.getProducts()
+                .stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toUnmodifiableList());
+        return new OrderResponse(order.getId(), order.getPrice(), cartItemResponses);
     }
 }
