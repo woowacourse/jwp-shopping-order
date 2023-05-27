@@ -39,26 +39,23 @@ public class MemberRepositoryTest {
     @Test
     void 전체_사용자를_조회한다() {
         // given
-        final Member member1 = new Member("pizza1@pizza.com", "password");
-        final Member member2 = new Member("pizza2@pizza.com", "password");
-        final Member savedMember1 = memberRepository.save(member1);
-        final Member savedMember2 = memberRepository.save(member2);
+        final Member member1 = memberRepository.save(new Member("pizza1@pizza.com", "password"));
+        final Member member2 = memberRepository.save(new Member("pizza2@pizza.com", "password"));
 
         // when
         List<Member> result = memberRepository.findAll();
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(savedMember1, savedMember2));
+        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(member1, member2));
     }
 
     @Test
     void 단일_사용자를_조회한다() {
         // given
-        final Member member = new Member("pizza1@pizza.com", "password");
-        final Member savedMember = memberRepository.save(member);
+        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
 
         // when
-        final Optional<Member> result = memberRepository.findById(savedMember.getId());
+        final Optional<Member> result = memberRepository.findById(member.getId());
 
         // then
         assertThat(result).isPresent();
