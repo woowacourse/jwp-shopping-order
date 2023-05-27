@@ -49,11 +49,11 @@ class MemberCouponDaoTest {
         memberCouponDao.insert(memberCouponEntity);
 
         // then
-        assertThat(memberCouponDao.findAllByMemberId(memberCouponEntity.getMemberId())).hasSize(1);
+        assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberCouponEntity.getMemberId())).hasSize(1);
     }
 
     @Test
-    void 사용자_아이디를_입력받아_사용자의_쿠폰_엔티티를_조회한다() {
+    void 사용자_아이디를_입력받아_사용하지_않은_사용자의_쿠폰_엔티티를_조회한다() {
         // given
         final CouponEntity couponEntity1 = couponDao.insert(new CouponEntity(
                 "30000원 이상 3000원 할인 쿠폰",
@@ -61,6 +61,11 @@ class MemberCouponDaoTest {
                 MINIMUM_PRICE.name(), 20000
         ));
         final CouponEntity couponEntity2 = couponDao.insert(new CouponEntity(
+                "무료 배달 쿠폰",
+                DELIVERY.name(), 0, 0, true,
+                NONE.name(), 0
+        ));
+        final CouponEntity couponEntity3 = couponDao.insert(new CouponEntity(
                 "무료 배달 쿠폰",
                 DELIVERY.name(), 0, 0, true,
                 NONE.name(), 0
@@ -76,9 +81,11 @@ class MemberCouponDaoTest {
                 memberEntity.getId(),
                 false
         ));
+        memberCouponDao.insert(new MemberCouponEntity(couponEntity3.getId(), memberEntity.getId(), true));
 
         // when
-        final List<MemberCouponEntity> result = memberCouponDao.findAllByMemberId(memberEntity.getId());
+        final List<MemberCouponEntity> result = memberCouponDao.findAllUnusedMemberCouponByMemberId(
+                memberEntity.getId());
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(memberCouponEntity1, memberCouponEntity2));

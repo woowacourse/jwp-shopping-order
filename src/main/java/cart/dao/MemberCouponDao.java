@@ -40,8 +40,8 @@ public class MemberCouponDao {
         );
     }
 
-    public List<MemberCouponEntity> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
+    public List<MemberCouponEntity> findAllUnusedMemberCouponByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM member_coupon WHERE member_id = ? and used = false";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }
