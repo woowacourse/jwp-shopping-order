@@ -17,9 +17,9 @@ public class CouponService {
     public CouponService(final CouponRepository couponRepository) {
         this.couponRepository = couponRepository;
     }
-    
-    public List<CouponResponse> findAll() {
-        return couponRepository.findAll().stream()
+
+    public List<CouponResponse> findAllByMemberId(final Long memberId) {
+        return couponRepository.findAllByMemberId(memberId).stream()
                 .map(CouponResponse::from)
                 .collect(toUnmodifiableList());
     }
