@@ -24,7 +24,7 @@ public class Member {
         return password.getPassword();
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public boolean checkPassword(final String password) {
+        return this.password.isPassed(password);
     }
 }

@@ -1,7 +1,7 @@
 package cart.config.web;
 
 import cart.config.auth.MemberArgumentResolver;
-import cart.dao.MemberDao;
+import cart.repository.member.MemberRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,15 +12,15 @@ import java.util.List;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public WebMvcConfig(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public WebMvcConfig(final MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberDao));
+        resolvers.add(new MemberArgumentResolver(memberRepository));
     }
 
     @Override
