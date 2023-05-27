@@ -1,70 +1,163 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static io.restassured.http.ContentType.JSON;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(ReplaceUnderscores.class)
+@DisplayName("ProductController 통합 테스트은(는)")
 public class ProductIntegrationTest extends IntegrationTest {
 
-    @Test
-    public void getProducts() {
-        var result = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/products")
-                .then()
-                .extract();
+    private static final String API_URL = "/products";
 
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    void 상품_추가() {
+        // when
+        var response = 상품_추가("치킨", 10_000, "http://example.com/chicken.jpg");
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotEmpty();
     }
 
     @Test
-    public void createProduct() {
-        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+    void 모든_상품을_조회한다() {
+        //given
+        상품_추가("치킨", 10_000, "http://example.com/chicken.jpg");
+        상품_추가("피자", 20_000, "http://example.com/pizza.jpg");
 
+        // when
         var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(product)
                 .when()
-                .post("/products")
+                .get(API_URL)
                 .then()
+                .log().all()
                 .extract();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        // then
+        List<ProductResponse> result = response.as(
+                new ParameterizedTypeReference<List<ProductResponse>>() {
+                }.getType()
+        );
+
+        ProductResponse 첫번째상품 = result.get(0);
+        ProductResponse 두번째상품 = result.get(1);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        상품_검증(첫번째상품, "치킨", 10_000, "http://example.com/chicken.jpg");
+        상품_검증(두번째상품, "피자", 20_000, "http://example.com/pizza.jpg");
     }
 
     @Test
-    public void getCreatedProduct() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+    void 단일_상품을_조회한다() {
+        // given
+        String 위치 = 상품을_추가하고_위치를_반환("치킨", 10_000, "http://example.com/chicken.jpg");
 
-        // create product
-        var location =
-                given()
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(product)
-                        .when()
-                        .post("/products")
-                        .then()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract().header("Location");
+        // when
+        var response = 상품_조회(위치);
 
-        // get product
-        var responseProduct = given().log().all()
+        // then
+        상품_검증(response, "치킨", 10_000, "http://example.com/chicken.jpg");
+    }
+
+    @Test
+    void 상품을_수정한다() throws JsonProcessingException {
+        // given
+        String 위치 = 상품을_추가하고_위치를_반환("치킨", 10_000, "http://example.com/chicken.jpg");
+        ProductRequest 비싸진치킨 = new ProductRequest("비싸진치킨", 15_000, "http://example.com/chicken.jpg");
+
+        // when
+        given().log().all()
+                .contentType(JSON)
+                .body(objectMapper.writeValueAsString(비싸진치킨))
                 .when()
-                .get(location)
+                .put(위치)
+                .then()
+                .log().all();
+
+        // then
+        var response = 상품_조회(위치);
+        상품_검증(response, "비싸진치킨", 15_000, "http://example.com/chicken.jpg");
+    }
+
+    //TODO: DAO 코드 리팩토링 후 테스트 활성화
+//    @Test
+    void 상품을_삭제한다() {
+        // given
+        String 위치 = 상품을_추가하고_위치를_반환("치킨", 10_000, "www.naver.com");
+
+        // when
+        given().log().all()
+                .contentType(JSON)
+                .when()
+                .delete(위치)
+                .then()
+                .log().all();
+
+        // then
+        var response = 상품_조회(위치);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    private ExtractableResponse<Response> 상품_추가(String 이름, int 가격, String 이미지_url) {
+        var request = new ProductRequest(이름, 가격, 이미지_url);
+        return 상품_추가(request);
+    }
+
+    private String 상품을_추가하고_위치를_반환(String 이름, int 가격, String 이미지_url) {
+        var request = new ProductRequest(이름, 가격, 이미지_url);
+        return 상품_추가(request).header("Location");
+    }
+
+    private ExtractableResponse<Response> 상품_추가(ProductRequest request) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post(API_URL)
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private void 상품_검증(ExtractableResponse<Response> 응답, String 이름, int 가격, String 이미지_URL) {
+        var 상품 = 응답.as(ProductResponse.class);
+        상품_검증(상품, 이름, 가격, 이미지_URL);
+    }
+
+    private void 상품_검증(ProductResponse 상품, String 이름, int 가격, String 이미지_URL) {
+        assertThat(상품.getId()).isPositive();
+        assertThat(상품.getName()).isEqualTo(이름);
+        assertThat(상품.getPrice()).isEqualTo(가격);
+        assertThat(상품.getImageUrl()).isEqualTo(이미지_URL);
+    }
+
+    private ExtractableResponse<Response> 상품_조회(String 위치) {
+        return given().log().all()
+                .when()
+                .get(위치)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .extract()
-                .jsonPath()
-                .getObject(".", ProductResponse.class);
-
-        assertThat(responseProduct.getId()).isNotNull();
-        assertThat(responseProduct.getName()).isEqualTo("피자");
-        assertThat(responseProduct.getPrice()).isEqualTo(15_000);
+                .extract();
     }
 }

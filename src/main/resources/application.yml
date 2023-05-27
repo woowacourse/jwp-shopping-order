@@ -2,6 +2,10 @@
   spring:
     config:
       import: secret.properties, application-datasource.yml
+      sql:
+        init:
+          mode: always
+
   server:
     port: 443
     ssl:
