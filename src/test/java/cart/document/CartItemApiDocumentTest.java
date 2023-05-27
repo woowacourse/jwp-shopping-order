@@ -31,8 +31,8 @@ import org.springframework.util.Base64Utils;
 
 import java.util.List;
 
-import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
-import static cart.fixtures.CartItemFixtures.MemberA_CartItem2;
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
 import static cart.fixtures.MemberFixtures.Dooly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -90,7 +90,7 @@ public class CartItemApiDocumentTest {
         // given
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         given(cartItemService.findByMember(Dooly.ENTITY))
-                .willReturn(List.of(MemberA_CartItem1.RESPONSE, MemberA_CartItem2.RESPONSE));
+                .willReturn(List.of(Dooly_CartItem1.RESPONSE, Dooly_CartItem2.RESPONSE));
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 
         // when, then
@@ -118,7 +118,7 @@ public class CartItemApiDocumentTest {
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         final CartItemRequest request = new CartItemRequest(ProductFixtures.CHICKEN.ID);
         given(cartItemService.add(any(Member.class), any(CartItemRequest.class)))
-                .willReturn(MemberA_CartItem1.ID);
+                .willReturn(Dooly_CartItem1.ID);
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 
         // when, then
@@ -127,7 +127,7 @@ public class CartItemApiDocumentTest {
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/cart-items/" + MemberA_CartItem1.ID))
+                .andExpect(header().string(HttpHeaders.LOCATION, "/cart-items/" + Dooly_CartItem1.ID))
                 .andDo(document("cart-items/addCartItems",
                                 preprocessRequest(prettyPrint()),
                                 requestFields(
@@ -142,11 +142,11 @@ public class CartItemApiDocumentTest {
         // given
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(10);
-        willDoNothing().given(cartItemService).updateQuantity(Dooly.ENTITY, MemberA_CartItem1.ID, request);
+        willDoNothing().given(cartItemService).updateQuantity(Dooly.ENTITY, Dooly_CartItem1.ID, request);
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 
         // when, then
-        mockMvc.perform(patch("/cart-items/{id}", MemberA_CartItem1.ID)
+        mockMvc.perform(patch("/cart-items/{id}", Dooly_CartItem1.ID)
                         .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -167,11 +167,11 @@ public class CartItemApiDocumentTest {
     void 특정_유저의_장바구니_상품_삭제_문서화() throws Exception {
         // given
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
-        willDoNothing().given(cartItemService).remove(Dooly.ENTITY, MemberA_CartItem1.ID);
+        willDoNothing().given(cartItemService).remove(Dooly.ENTITY, Dooly_CartItem1.ID);
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 
         // when, then
-        mockMvc.perform(delete("/cart-items/{id}", MemberA_CartItem1.ID)
+        mockMvc.perform(delete("/cart-items/{id}", Dooly_CartItem1.ID)
                         .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo))
                 .andExpect(status().isNoContent())
                 .andDo(document("cart-items/removeCartItems",

@@ -15,7 +15,7 @@ public class ProductFixtures {
         public static final Product DOMAIN = new Product(NAME, PRICE, IMAGE_URL);
         public static final Product ENTITY = new Product(ID, NAME, PRICE, IMAGE_URL);
         public static final ProductRequest REQUEST = new ProductRequest(NAME, PRICE, IMAGE_URL);
-        public static final ProductResponse RESPONSE = ProductResponse.of(ENTITY);
+        public static final ProductResponse RESPONSE = ProductResponse.from(ENTITY);
     }
 
     public static class SALAD {
@@ -27,7 +27,7 @@ public class ProductFixtures {
         public static final Product DOMAIN = new Product(NAME, PRICE, IMAGE_URL);
         public static final Product ENTITY = new Product(ID, NAME, PRICE, IMAGE_URL);
         public static final ProductRequest REQUEST = new ProductRequest(NAME, PRICE, IMAGE_URL);
-        public static final ProductResponse RESPONSE = ProductResponse.of(ENTITY);
+        public static final ProductResponse RESPONSE = ProductResponse.from(ENTITY);
     }
 
     public static class PIZZA {
@@ -39,6 +39,18 @@ public class ProductFixtures {
         public static final Product DOMAIN = new Product(NAME, PRICE, IMAGE_URL);
         public static final Product ENTITY = new Product(ID, NAME, PRICE, IMAGE_URL);
         public static final ProductRequest REQUEST = new ProductRequest(NAME, PRICE, IMAGE_URL);
-        public static final ProductResponse RESPONSE = ProductResponse.of(ENTITY);
+        public static final ProductResponse RESPONSE = ProductResponse.from(ENTITY);
+    }
+
+    public static class PANCAKE {
+        public static final Long ID = 4L;
+        public static final String NAME = "팬케이크";
+        public static final int PRICE = 8000;
+        public static final String IMAGE_URL = "https://images.unsplash.com/photo-1544726982-b414d58fabaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8JUVEJThDJUFDJUVDJUJDJTgwJUVDJTlEJUI0JUVEJTgxJUFDfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60";
+
+        public static final Product DOMAIN = new Product(NAME, PRICE, IMAGE_URL);
+        public static final Product ENTITY = new Product(ID, NAME, PRICE, IMAGE_URL);
+        public static final ProductRequest REQUEST = new ProductRequest(NAME, PRICE, IMAGE_URL);
+        public static final ProductResponse RESPONSE = ProductResponse.from(ENTITY);
     }
 }

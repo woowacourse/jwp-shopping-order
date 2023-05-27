@@ -1,6 +1,9 @@
 package cart.ui;
 
 import cart.application.ProductService;
+import cart.config.AuthPrincipal;
+import cart.dto.AuthMember;
+import cart.dto.ProductCartItemResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,12 @@ public class ProductApiController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
+    }
+
+    @GetMapping("/{id}/cart-items")
+    public ResponseEntity<ProductCartItemResponse> getProductCartItems(@AuthPrincipal AuthMember authMember, @PathVariable Long id) {
+        ProductCartItemResponse productCartItems = productService.findProductCartItems(authMember, id);
+        return ResponseEntity.ok(productCartItems);
     }
 
     @PostMapping

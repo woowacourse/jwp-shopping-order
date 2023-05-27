@@ -13,7 +13,7 @@ import static cart.fixtures.ProductFixtures.SALAD;
 
 public class CartItemFixtures {
 
-    public static class MemberA_CartItem1 {
+    public static class Dooly_CartItem1 {
         public static final Long ID = 1L;
         public static final int QUANTITY = 2;
         public static final Product PRODUCT = CHICKEN.ENTITY;
@@ -23,7 +23,7 @@ public class CartItemFixtures {
         public static final CartItemResponse RESPONSE = CartItemResponse.from(ENTITY);
     }
 
-    public static class MemberA_CartItem2 {
+    public static class Dooly_CartItem2 {
         public static final Long ID = 2L;
         public static final int QUANTITY = 4;
         public static final Product PRODUCT = SALAD.ENTITY;
@@ -33,7 +33,7 @@ public class CartItemFixtures {
         public static final CartItemResponse RESPONSE = CartItemResponse.from(ENTITY);
     }
 
-    public static class MemberB_CartItem1 {
+    public static class Ber_CartItem1 {
         public static final Long ID = 3L;
         public static final int QUANTITY = 5;
         public static final Product PRODUCT = PIZZA.ENTITY;
