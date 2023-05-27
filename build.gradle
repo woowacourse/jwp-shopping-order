@@ -2,9 +2,14 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 sourceCompatibility = '11'
+
+configurations {
+    asciidoctorExt
+}
 
 repositories {
     mavenCentral()
@@ -22,7 +27,44 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
+    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
     runtimeOnly 'com.h2database:h2'
+
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+}
+
+asciidoctor {
+    dependsOn test
+    configurations 'asciidoctorExt'
+}
+
+tasks.register('copyApiDocument', Copy) {
+    dependsOn asciidoctor
+    doFirst {
+        delete file("src/main/resources/static/docs")
+    }
+
+    from asciidoctor.outputDir
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyApiDocument
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+test {
+    useJUnitPlatform()
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
 }
 
 tasks.named('test') {
