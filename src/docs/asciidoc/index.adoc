@@ -8,3 +8,4 @@
 :sectlinks:
 
 include::Product-API.adoc[]
+include::CartItem-API.adoc[]
