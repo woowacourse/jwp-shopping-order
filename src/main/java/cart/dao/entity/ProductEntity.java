@@ -12,6 +12,10 @@ public class ProductEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public ProductEntity(String name, Integer price, String imageUrl) {
+        this(null, name, price, imageUrl);
+    }
+
     public ProductEntity(Long id, String name, Integer price, String imageUrl) {
         this(id, name, price, imageUrl, null, null);
     }

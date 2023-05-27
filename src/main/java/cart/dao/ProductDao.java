@@ -1,11 +1,15 @@
 package cart.dao;
 
-import cart.domain.Product;
+import cart.dao.entity.ProductEntity;
+import cart.domain.product.Product;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -13,50 +17,49 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
 
+    private static final RowMapper<ProductEntity> ROW_MAPPER = (rs, rowNum) -> new ProductEntity(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getInt("price"),
+            rs.getString("image_url"),
+            rs.getTimestamp("created_at").toLocalDateTime(),
+            rs.getTimestamp("updated_at").toLocalDateTime()
+    );
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+    public List<ProductEntity> getAllProducts() {
+        String sql = "SELECT id, name, price, image_url, created_at, updated_at FROM product";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+    public Optional<ProductEntity> getProductById(Long productId) {
+        String sql = "SELECT id, name, price, image_url, created_at, updated_at FROM product WHERE id = ?";
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, productId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public Long createProduct(Product product) {
+    public Long createProduct(ProductEntity productEntity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        String sql = "INSERT INTO product(name, price, image_url) VALUES(?, ?, ?)";
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, productEntity.getName());
+                    ps.setInt(2, productEntity.getPrice());
+                    ps.setString(3, productEntity.getImageUrl());
+                    return ps;
+                },
+                keyHolder
+        );
+        return (Long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
     }
 
     public void updateProduct(Long productId, Product product) {
