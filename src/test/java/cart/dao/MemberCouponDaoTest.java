@@ -53,6 +53,33 @@ class MemberCouponDaoTest {
     }
 
     @Test
+    void 사용자_쿠폰을_수정한다() {
+        // given
+        final CouponEntity couponEntity = couponDao.insert(new CouponEntity(
+                "30000원 이상 3000원 할인 쿠폰",
+                PRICE.name(), 30000, 0, false,
+                MINIMUM_PRICE.name(), 20000
+        ));
+        final MemberEntity memberEntity = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
+        final MemberCouponEntity memberCouponEntity = memberCouponDao.insert(new MemberCouponEntity(
+                couponEntity.getId(),
+                memberEntity.getId(),
+                false
+        ));
+        final MemberCouponEntity updateMemberCouponEntity = new MemberCouponEntity(
+                couponEntity.getId(),
+                memberEntity.getId(),
+                true
+        );
+
+        // when
+        memberCouponDao.update(updateMemberCouponEntity);
+
+        // then
+        assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberEntity.getId())).isEmpty();
+    }
+
+    @Test
     void 사용자_아이디를_입력받아_사용하지_않은_사용자의_쿠폰_엔티티를_조회한다() {
         // given
         final CouponEntity couponEntity1 = couponDao.insert(new CouponEntity(

@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toMap;
 
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
+import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.Item;
@@ -14,6 +15,7 @@ import cart.domain.Order;
 import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
 import cart.entity.CouponEntity;
+import cart.entity.MemberCouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import java.util.List;
@@ -29,17 +31,16 @@ public class OrderRepository {
     private final CouponDao couponDao;
     private final CartItemDao cartItemDao;
     private final OrderItemDao orderItemDao;
+    private final MemberCouponDao memberCouponDao;
 
-    public OrderRepository(
-            final OrderDao orderDao,
-            final CouponDao couponDao,
-            final CartItemDao cartItemDao,
-            final OrderItemDao orderItemDao
-    ) {
+    public OrderRepository(final OrderDao orderDao, final CouponDao couponDao, final CartItemDao cartItemDao,
+                           final OrderItemDao orderItemDao,
+                           final MemberCouponDao memberCouponDao) {
         this.orderDao = orderDao;
         this.couponDao = couponDao;
         this.cartItemDao = cartItemDao;
         this.orderItemDao = orderItemDao;
+        this.memberCouponDao = memberCouponDao;
     }
 
     public Order save(final Order order) {
@@ -49,6 +50,7 @@ public class OrderRepository {
                 order.getMemberId()
         );
         final OrderEntity savedOrderEntity = orderDao.insert(orderEntity);
+        useMemberCoupon(savedOrderEntity);
         saveOrderItems(order, savedOrderEntity);
         deleteCartItems(order);
         return new Order(
@@ -58,6 +60,15 @@ public class OrderRepository {
                 order.getDeliveryFee(),
                 order.getItems()
         );
+    }
+
+    private void useMemberCoupon(final OrderEntity orderEntity) {
+        final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(
+                orderEntity.getCouponId(),
+                orderEntity.getMemberId(),
+                true
+        );
+        memberCouponDao.update(memberCouponEntity);
     }
 
     private void saveOrderItems(final Order order, final OrderEntity orderEntity) {

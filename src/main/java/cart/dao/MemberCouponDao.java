@@ -44,4 +44,14 @@ public class MemberCouponDao {
         final String sql = "SELECT * FROM member_coupon WHERE member_id = ? and used = false";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
+
+    public void update(final MemberCouponEntity memberCouponEntity) {
+        final String sql = "UPDATE member_coupon SET used = ? where coupon_id = ? and member_id = ?";
+        jdbcTemplate.update(
+                sql,
+                memberCouponEntity.isUsed(),
+                memberCouponEntity.getCouponId(),
+                memberCouponEntity.getMemberId()
+        );
+    }
 }

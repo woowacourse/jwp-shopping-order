@@ -3,6 +3,7 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.MemberCouponDao;
 import cart.domain.CartItem;
 import cart.domain.Item;
 import cart.domain.Member;
@@ -12,6 +13,7 @@ import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DeliveryFeeDiscountPolicy;
 import cart.domain.coupon.NoneDiscountCondition;
+import cart.entity.MemberCouponEntity;
 import cart.test.RepositoryTest;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -39,6 +41,9 @@ class OrderRepositoryTest {
     @Autowired
     private CouponRepository couponRepository;
 
+    @Autowired
+    private MemberCouponDao memberCouponDao;
+
     @Test
     void 주문을_저장한다() {
         // given
@@ -53,13 +58,17 @@ class OrderRepositoryTest {
                 new DeliveryFeeDiscountPolicy(),
                 new NoneDiscountCondition()
         ));
+        memberCouponDao.insert(new MemberCouponEntity(coupon.getId(), member.getId(), false));
         final Order order = new Order(coupon, member.getId(), List.of(cartItem1, cartItem2));
 
         // when
         orderRepository.save(order);
 
         // then
-        assertThat(orderRepository.findAllByMemberId(member.getId())).hasSize(1);
+        assertAll(
+                () -> assertThat(orderRepository.findAllByMemberId(member.getId())).hasSize(1),
+                () -> assertThat(couponRepository.findAllByMemberId(member.getId())).isEmpty()
+        );
     }
 
     @Test
