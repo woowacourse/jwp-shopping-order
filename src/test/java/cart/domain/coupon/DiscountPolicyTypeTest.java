@@ -15,7 +15,7 @@ class DiscountPolicyTypeTest {
     @Test
     void 입력받는_값에_해당하는_정책이_없으면_예외를_던진다() {
         // expect
-        assertThatThrownBy(() -> DiscountConditionType.from("INVALID"))
+        assertThatThrownBy(() -> DiscountPolicyType.from("INVALID"))
                 .isInstanceOf(DiscountPolicyNotFoundException.class)
                 .hasMessage("할인 정책을 찾을 수 없습니다.");
     }
@@ -23,6 +23,6 @@ class DiscountPolicyTypeTest {
     @Test
     void 이름에_해당하는_할인_정책을_반환한다() {
         // expect
-        assertThat(DiscountConditionType.from("PRICE")).isEqualTo(DiscountPolicyType.PRICE);
+        assertThat(DiscountPolicyType.from("PRICE")).isEqualTo(DiscountPolicyType.PRICE);
     }
 }
