@@ -2,7 +2,8 @@ CREATE TABLE product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
-    image_url VARCHAR(255) NOT NULL
+    image_url VARCHAR(255) NOT NULL,
+    discount_percent INT NOT NULL
 );
 
 CREATE TABLE member (
@@ -19,3 +20,12 @@ CREATE TABLE cart_item (
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+
+-- CREATE TABLE sale (
+--     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--     product_id BIGINT NOT NULL,
+--     discount_percent INT NOT NULL,
+--     FOREIGN KEY (product_id) REFERENCES product(id)
+-- );
+
+
