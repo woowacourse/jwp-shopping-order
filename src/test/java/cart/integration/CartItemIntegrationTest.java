@@ -35,10 +35,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() {
-        super.setUp();
-
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+
+        memberDao.addMember(new Member(1L, "a@a.com", "1234"));
+        memberDao.addMember(new Member(2L, "b@b.com", "1234"));
 
         member = memberDao.getMemberById(1L);
         member2 = memberDao.getMemberById(2L);

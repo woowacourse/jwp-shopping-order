@@ -4,16 +4,19 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestExecutionListeners;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+import static org.springframework.test.context.TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IntegrationTest {
+@TestExecutionListeners(listeners = AcceptanceTestExecutionListener.class, mergeMode = MERGE_WITH_DEFAULTS)
+public abstract class IntegrationTest {
+
     @LocalServerPort
     private int port;
 
     @BeforeEach
-    void setUp() {
+    void init() {
         RestAssured.port = port;
     }
 }
