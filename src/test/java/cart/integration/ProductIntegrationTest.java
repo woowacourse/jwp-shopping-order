@@ -31,7 +31,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void 상품_추가() {
+    void 상품을_추가한다() {
         // when
         var response = 상품_추가("치킨", 10_000, "http://example.com/chicken.jpg");
 
@@ -100,8 +100,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         상품_검증(response, "비싸진치킨", 15_000, "http://example.com/chicken.jpg");
     }
 
-    //TODO: DAO 코드 리팩토링 후 테스트 활성화
-//    @Test
+    @Test
     void 상품을_삭제한다() {
         // given
         String 위치 = 상품을_추가하고_위치를_반환("치킨", 10_000, "www.naver.com");
@@ -157,7 +156,6 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .when()
                 .get(위치)
                 .then()
-                .statusCode(HttpStatus.OK.value())
                 .extract();
     }
 }

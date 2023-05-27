@@ -4,16 +4,18 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import org.springframework.stereotype.Service;
-
+import cart.exception.ProductNotFound;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -28,7 +30,9 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Product product = productDao.findById(cartItemRequest.getProductId())
+                .orElseThrow(ProductNotFound::new);
+        return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
