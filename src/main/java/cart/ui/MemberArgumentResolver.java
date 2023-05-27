@@ -1,9 +1,8 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
+import cart.application.MemberService;
 import cart.domain.Member;
-import cart.exception.AuthenticationException;
-import org.apache.tomcat.util.codec.binary.Base64;
+import cart.ui.controller.dto.response.MemberResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -13,49 +12,25 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberDao memberDao;
+    private final BasicAuthenticationExtractor basicAuthenticationExtractor;
+    private final MemberService memberService;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(BasicAuthenticationExtractor basicAuthenticationExtractor, MemberService memberService) {
+        this.basicAuthenticationExtractor = basicAuthenticationExtractor;
+        this.memberService = memberService;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Member.class);
+        return parameter.getParameterType().equals(MemberAuth.class);
     }
 
     @Override
-    public Object resolveArgument(
-            MethodParameter parameter,
-            ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest,
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            return null;
-        }
-
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
-        }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
-
-        if (credentials.length != 2) {
-            throw new AuthenticationException("이메일과 비밀번호를 모두 입력해야 합니다.");
-        }
-        String email = credentials[0];
-        String password = credentials[1];
-
-        // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
-        }
-        return member;
+        MemberAuth memberAuth = basicAuthenticationExtractor.extract(authorization);
+        MemberResponse response = memberService.findByEmailAndPassword(memberAuth.getEmail(), memberAuth.getPassword());
+        return new Member(response.getId(), response.getEmail(), response.getPassword(), response.getPoint());
     }
 }
