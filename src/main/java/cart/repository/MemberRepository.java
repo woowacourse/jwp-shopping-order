@@ -19,7 +19,7 @@ public class MemberRepository {
     }
 
     public Member findByEmailAndPassword(String email, String password) {
-        MemberEntity memberEntity = memberDao.findByEmailAndPassword(email, password)
+        MemberEntity memberEntity = memberDao.getMemberByEmailAndPassword(email, password)
                 .orElseThrow(() -> new NotFound());
         return memberMapper.toDomain(memberEntity);
     }

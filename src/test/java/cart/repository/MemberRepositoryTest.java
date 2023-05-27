@@ -42,7 +42,7 @@ class MemberRepositoryTest {
             MemberEntity memberEntity =
                     new MemberEntity(1L, "a@a.com", "password1", 0, LocalDateTime.now(), LocalDateTime.now());
             Member member = new Member(1L, "a@a.com", "password1", 0);
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.of(memberEntity));
+            given(memberDao.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(Optional.of(memberEntity));
             given(memberMapper.toDomain(any(MemberEntity.class))).willReturn(member);
 
             Member result = memberRepository.findByEmailAndPassword("a@a.com", "password1");
@@ -53,7 +53,7 @@ class MemberRepositoryTest {
         @Test
         @DisplayName("조회 시 이메일, 비밀번호와 일치하는 멤버가 존재하지 않으면 예외를 던진다.")
         void findMemberWithException() {
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
+            given(memberDao.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> memberRepository.findByEmailAndPassword("a@a.com", "password1"))
                     .isInstanceOf(MemberException.class)
