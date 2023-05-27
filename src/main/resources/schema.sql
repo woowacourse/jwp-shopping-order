@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `COUPON`
     `name`                varchar(255)     NOT NULL,
     `policyType`          varchar(255)     NOT NULL,
     `discountPrice`       long             NOT NULL,
-    `discountPercent`     long             NOT NULL,
+    `discountPercent`     int              NOT NULL,
     `discountDeliveryFee` boolean          NOT NULL,
     `conditionType`       varchar(255)     NOT NULL,
     `minimumPrice`        long             NOT NULL,
