@@ -34,7 +34,11 @@ public class Order {
     public Money calculateDiscountPrice() {
         final Money totalPrice = calculateTotalPrice();
         final Money subtrahend = coupon.calculatePrice(totalPrice);
-        return totalPrice.minus(subtrahend);
+        final Money discountPrice = totalPrice.minus(subtrahend);
+        if (discountPrice.isGreaterThanOrEqual(totalPrice)) {
+            return totalPrice;
+        }
+        return discountPrice;
     }
 
     public Money calculateTotalPrice() {
