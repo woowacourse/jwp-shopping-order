@@ -1,7 +1,8 @@
-package cart.domain;
+package cart.domain.amount;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.common.Money;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

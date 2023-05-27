@@ -1,25 +1,38 @@
 package cart.domain.coupon;
 
+import cart.domain.common.Money;
 import cart.exception.InvalidDiscountPolicyException;
 
 public class PercentDiscountPolicy implements DiscountPolicy {
 
-    private static final long MINIMUM_RANGE = 0;
-    private static final long MAXIMUM_RANGE = 100;
+    private static final int MINIMUM_RANGE = 0;
+    private static final int MAXIMUM_RANGE = 100;
+    private static final int RATIO_DIVISOR = 100;
 
     private final DiscountPolicyType discountPolicyType;
-    private final long discountPercent;
+    private final int discountPercent;
 
-    public PercentDiscountPolicy(final long discountPercent) {
+    public PercentDiscountPolicy(final int discountPercent) {
         validate(discountPercent);
         this.discountPolicyType = DiscountPolicyType.PERCENT;
         this.discountPercent = discountPercent;
     }
 
-    private void validate(final long discountPercent) {
+    private void validate(final int discountPercent) {
         if (discountPercent < MINIMUM_RANGE || MAXIMUM_RANGE < discountPercent) {
             throw new InvalidDiscountPolicyException("비율 할인 정책의 비율은 0 ~ 100 사이여야합니다.");
         }
+    }
+
+    @Override
+    public Money calculatePrice(final Money price) {
+        final Money subtrahend = price.times(Double.valueOf(discountPercent) / RATIO_DIVISOR);
+        return price.minus(subtrahend);
+    }
+
+    @Override
+    public Money calculateDeliveryFee(final Money deliveryFee) {
+        return deliveryFee;
     }
 
     @Override
@@ -28,12 +41,12 @@ public class PercentDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public long getDiscountPrice() {
-        return 0;
+    public Money getDiscountPrice() {
+        return Money.ZERO;
     }
 
     @Override
-    public long getDiscountPercent() {
+    public int getDiscountPercent() {
         return discountPercent;
     }
 

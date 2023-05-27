@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.common.Money;
 import cart.exception.InvalidDiscountPolicyException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -28,28 +29,52 @@ class PercentDiscountPolicyTest {
     @ParameterizedTest(name = "{displayName} 입력값: {0}")
     void _0_에서_100_사이의_값을_입력받으면_정상_생성된다(final int discountPercent) {
         // expect
-        final PercentDiscountPolicy percentDiscountPolicy = new PercentDiscountPolicy(discountPercent);
-        assertThat(percentDiscountPolicy.getDiscountPercent()).isEqualTo(discountPercent);
+        final PercentDiscountPolicy discountPolicy = new PercentDiscountPolicy(discountPercent);
+        assertThat(discountPolicy.getDiscountPercent()).isEqualTo(discountPercent);
     }
 
     @Test
     void 할인_비율을_제외하고_0이나_false를_반환한다() {
         // given
-        final DiscountPolicy percentDiscountPolicy = new PercentDiscountPolicy(30);
+        final DiscountPolicy discountPolicy = new PercentDiscountPolicy(30);
 
         // expect
         assertAll(
-                () -> assertThat(percentDiscountPolicy.getDiscountPrice()).isZero(),
-                () -> assertThat(percentDiscountPolicy.isDiscountDeliveryFee()).isFalse()
+                () -> assertThat(discountPolicy.getDiscountPrice()).isEqualTo(Money.ZERO),
+                () -> assertThat(discountPolicy.isDiscountDeliveryFee()).isFalse()
         );
     }
 
     @Test
     void 할인_정책_PERCENT_타입을_반환한다() {
         // given
-        final DiscountPolicy percentDiscountPolicy = new PercentDiscountPolicy(30);
+        final DiscountPolicy discountPolicy = new PercentDiscountPolicy(30);
 
         // expect
-        assertThat(percentDiscountPolicy.getDiscountPolicyType()).isEqualTo(DiscountPolicyType.PERCENT);
+        assertThat(discountPolicy.getDiscountPolicyType()).isEqualTo(DiscountPolicyType.PERCENT);
+    }
+
+    @Test
+    void 할인_비율에_해당하는_금액을_할인하여_반환한다() {
+        // given
+        final DiscountPolicy amountDiscountPolicy = new PercentDiscountPolicy(20);
+
+        // when
+        final Money result = amountDiscountPolicy.calculatePrice(Money.from(30000));
+
+        // then
+        assertThat(result).isEqualTo(Money.from(24000));
+    }
+
+    @Test
+    void 배달비는_할인하지_않고_그대로_반환한다() {
+        // given
+        final DiscountPolicy amountDiscountPolicy = new PercentDiscountPolicy(20);
+
+        // when
+        final Money result = amountDiscountPolicy.calculateDeliveryFee(Money.from(3000));
+
+        // then
+        assertThat(result).isEqualTo(Money.from(3000));
     }
 }

@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.common;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -33,14 +33,6 @@ public class Money {
         return value.compareTo(other.value) >= 0;
     }
 
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public long getLongValue() {
-        return value.longValue();
-    }
-
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -56,5 +48,20 @@ public class Money {
 
     public int hashCode() {
         return Objects.hashCode(value);
+    }
+
+    @Override
+    public String toString() {
+        return "Money{" +
+                "value=" + value +
+                '}';
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public long getLongValue() {
+        return value.longValue();
     }
 }

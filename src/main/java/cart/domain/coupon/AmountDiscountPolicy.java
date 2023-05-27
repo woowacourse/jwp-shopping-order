@@ -1,13 +1,25 @@
 package cart.domain.coupon;
 
+import cart.domain.common.Money;
+
 public class AmountDiscountPolicy implements DiscountPolicy {
 
     private final DiscountPolicyType discountPolicyType;
-    private final long discountPrice;
+    private final Money discountPrice;
 
     public AmountDiscountPolicy(final long discountPrice) {
         this.discountPolicyType = DiscountPolicyType.PRICE;
-        this.discountPrice = discountPrice;
+        this.discountPrice = Money.from(discountPrice);
+    }
+
+    @Override
+    public Money calculatePrice(final Money price) {
+        return price.minus(discountPrice);
+    }
+
+    @Override
+    public Money calculateDeliveryFee(final Money deliveryFee) {
+        return deliveryFee;
     }
 
     @Override
@@ -16,12 +28,12 @@ public class AmountDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public long getDiscountPrice() {
+    public Money getDiscountPrice() {
         return discountPrice;
     }
 
     @Override
-    public long getDiscountPercent() {
+    public int getDiscountPercent() {
         return 0;
     }
 
