@@ -1,13 +1,16 @@
 package cart.dao;
 
 import cart.domain.Product;
+
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +18,13 @@ import java.util.Objects;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Product> defaultRowMapper = (rs, rowNum) -> {
+        Long productId = rs.getLong("id");
+        String name = rs.getString("name");
+        int price = rs.getInt("price");
+        String imageUrl = rs.getString("image_url");
+        return new Product(productId, name, price, imageUrl);
+    };
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -22,13 +32,7 @@ public class ProductDao {
 
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.query(sql, defaultRowMapper);
     }
 
     public Product getProductById(Long productId) {
@@ -68,5 +72,11 @@ public class ProductDao {
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public List<Product> findByIds(List<Long> ids) {
+        String inClause = String.join(",", Collections.nCopies(ids.size(), "?"));
+        final String sql = "SELECT * FROM product WHERE id IN (" + inClause + ")";
+        return jdbcTemplate.query(sql, ids.toArray(), defaultRowMapper);
     }
 }
