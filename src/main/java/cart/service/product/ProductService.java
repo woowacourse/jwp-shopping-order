@@ -5,6 +5,7 @@ import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,27 +19,32 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAllProducts().stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
+    @Transactional(readOnly = true)
+    public ProductResponse getProductById(final Long productId) {
         return ProductResponse.from(productRepository.findProductById(productId));
     }
 
-    public Long createProduct(ProductRequest productRequest) {
+    @Transactional
+    public Long createProduct(final ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         return productRepository.createProduct(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
+    @Transactional
+    public void updateProduct(final Long productId, final ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         productRepository.updateProduct(productId, product);
     }
 
-    public void deleteProduct(Long productId) {
+    @Transactional
+    public void deleteProduct(final Long productId) {
         productRepository.deleteProduct(productId);
     }
 }

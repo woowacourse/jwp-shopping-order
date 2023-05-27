@@ -17,7 +17,7 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -42,7 +42,7 @@ public class ProductDao {
         });
     }
 
-    public Long createProduct(Product product) {
+    public Long createProduct(final Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -61,12 +61,12 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(final Long productId, Product product) {
+    public void updateProduct(final Long productId, final Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(Long productId) {
+    public void deleteProduct(final Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
