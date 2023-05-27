@@ -15,6 +15,11 @@ public class CouponService {
     }
 
     @Transactional
+    public Long createCoupon(final Long memberId, final Long couponTypeId) {
+        return couponDao.create(memberId, couponTypeId);
+    }
+
+    @Transactional
     public void addCoupon(final Long memberId, final Long couponId) {
         couponDao.updateUsageStatus(memberId, couponId);
     }
