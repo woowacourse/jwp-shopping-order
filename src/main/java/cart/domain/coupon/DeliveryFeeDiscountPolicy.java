@@ -5,11 +5,9 @@ import cart.domain.common.Money;
 public class DeliveryFeeDiscountPolicy implements DiscountPolicy {
 
     private final DiscountPolicyType discountPolicyType;
-    private final boolean discountDeliveryFee;
 
-    public DeliveryFeeDiscountPolicy(final boolean discountDeliveryFee) {
+    public DeliveryFeeDiscountPolicy() {
         this.discountPolicyType = DiscountPolicyType.DELIVERY;
-        this.discountDeliveryFee = discountDeliveryFee;
     }
 
     @Override
@@ -19,10 +17,7 @@ public class DeliveryFeeDiscountPolicy implements DiscountPolicy {
 
     @Override
     public Money calculateDeliveryFee(final Money deliveryFee) {
-        if (discountDeliveryFee) {
-            return Money.ZERO;
-        }
-        return deliveryFee;
+        return Money.ZERO;
     }
 
     @Override
@@ -42,6 +37,6 @@ public class DeliveryFeeDiscountPolicy implements DiscountPolicy {
 
     @Override
     public boolean isDiscountDeliveryFee() {
-        return discountDeliveryFee;
+        return true;
     }
 }

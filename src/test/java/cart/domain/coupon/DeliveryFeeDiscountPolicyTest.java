@@ -15,7 +15,7 @@ class DeliveryFeeDiscountPolicyTest {
     @Test
     void 배달비_할인_가능_여부를_제외하고_0을_반환한다() {
         // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy(true);
+        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
 
         // expect
         assertAll(
@@ -27,7 +27,7 @@ class DeliveryFeeDiscountPolicyTest {
     @Test
     void 배달비_할인_여부를_true로_반환한다() {
         // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy(true);
+        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
 
         // expect
         assertThat(discountPolicy.isDiscountDeliveryFee()).isTrue();
@@ -36,7 +36,7 @@ class DeliveryFeeDiscountPolicyTest {
     @Test
     void 할인_정책_DELIVERY_타입을_반환한다() {
         // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy(true);
+        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
 
         // expect
         assertThat(discountPolicy.getDiscountPolicyType()).isEqualTo(DiscountPolicyType.DELIVERY);
@@ -45,7 +45,7 @@ class DeliveryFeeDiscountPolicyTest {
     @Test
     void 금액은_할인하지_않고_반환한다() {
         // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy(true);
+        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
 
         // when
         final Money result = discountPolicy.calculatePrice(Money.from(30000));
@@ -57,7 +57,7 @@ class DeliveryFeeDiscountPolicyTest {
     @Test
     void 배달비를_전부_할인하여_반환한다() {
         // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy(true);
+        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
 
         // when
         final Money result = discountPolicy.calculateDeliveryFee(Money.from(3000));
