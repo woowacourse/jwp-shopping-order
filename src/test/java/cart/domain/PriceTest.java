@@ -25,7 +25,24 @@ class PriceTest {
         Price price = new Price(5000);
 
         assertThat(price.discount(percentage)).isEqualTo(new Price(value2));
+    }
 
+    @Test
+    @DisplayName("가격을 더할 수 있다.")
+    void plus() {
+        Price price1 = new Price(2000);
+        Price price2 = new Price(1000);
+
+        assertThat(price1.plus(price2)).isEqualTo(new Price(3000));
+    }
+
+    @Test
+    @DisplayName("가격을 뺄 수 있다.")
+    void minus() {
+        Price price1 = new Price(2000);
+        Price price2 = new Price(1000);
+
+        assertThat(price1.minus(price2)).isEqualTo(new Price(1000));
     }
 
 }

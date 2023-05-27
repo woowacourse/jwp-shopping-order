@@ -20,6 +20,14 @@ public class Price {
         return new Price(value - (int) (value * percentage.getPercentage()));
     }
 
+    public Price plus(Price price) {
+        return new Price(this.value + price.value);
+    }
+
+    public Price minus(Price price) {
+        return new Price(this.value - price.value);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
