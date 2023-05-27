@@ -1,6 +1,7 @@
 package cart.controller;
 
-import static org.hamcrest.Matchers.containsString;
+import static cart.fixture.JsonMapper.toJson;
+import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -28,11 +29,13 @@ import cart.dao.MemberDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.ui.ProductApiController;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -54,41 +57,85 @@ public class ProductApiControllerTest {
     @MockBean
     private ProductService productService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private MemberDao memberDao;
 
-    @Test
-    void 상품_생성_테스트() throws Exception {
-        //given
-        ProductRequest request = new ProductRequest("치킨", 10000, "a");
-        when(productService.createProduct(any(ProductRequest.class))).thenReturn(1L);
+    @Nested
+    class 상품_생성시 {
 
-        //when
-        ResultActions result = mockMvc.perform(post(API_URL)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+        @Test
+        void 성공한다() throws Exception {
+            //given
+            ProductRequest request = new ProductRequest("치킨", 10000, "a");
+            when(productService.createProduct(any(ProductRequest.class))).thenReturn(1L);
 
-        //then
-        result
-                .andExpect(status().isCreated())
-                .andExpect(header().string("location", containsString("1")))
-                .andDo(print())
-                .andDo(document("product-create",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("name").description("제품 명"),
-                                fieldWithPath("price").description("제품 가격"),
-                                fieldWithPath("imageUrl").description("제품 이미지 url")
-                        )
-                ));
+            //when
+            ResultActions response = 상품_생성(request);
+
+            //then
+            response
+                    .andExpect(status().isCreated())
+                    .andExpect(header().string("location", endsWith("1")))
+                    .andDo(document("product-create",
+                            preprocessRequest(prettyPrint()),
+                            preprocessResponse(prettyPrint()),
+                            requestFields(
+                                    fieldWithPath("name").description("제품 명"),
+                                    fieldWithPath("price").description("제품 가격"),
+                                    fieldWithPath("imageUrl").description("제품 이미지 url")
+                            )
+                    ));
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        void 상품_이름이_null이나_공백이면_예외(String nullOrEmpty) throws Exception {
+            // given
+            ProductRequest request = new ProductRequest(nullOrEmpty, 10000, "a");
+
+            // when
+            ResultActions response = 상품_생성(request);
+
+            // then
+            response.andExpect(status().isUnprocessableEntity());
+        }
+
+        @Test
+        void 가격이_null이면_예외() throws Exception {
+            // given"
+            ProductRequest request = new ProductRequest("치킨", null, "a");
+
+            // when
+            ResultActions response = 상품_생성(request);
+
+            // then
+            response.andExpect(status().isUnprocessableEntity());
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        void 이미지URL이_null이거나_공백이면_예외(String nullOrEmpty) throws Exception {
+            // given
+            ProductRequest request = new ProductRequest("치킨", 10000, nullOrEmpty);
+
+            // when
+            ResultActions response = 상품_생성(request);
+
+            // then
+            response.andExpect(status().isUnprocessableEntity());
+        }
+
+        private ResultActions 상품_생성(ProductRequest request) throws Exception {
+            return mockMvc.perform(post(API_URL)
+                            .contentType(APPLICATION_JSON)
+                            .content(toJson(request)))
+                    .andDo(print());
+        }
     }
 
+
     @Test
-    void 상품_단일_조회_테스트() throws Exception {
+    void 단일_상품을_조회한다() throws Exception {
         //given
         ProductResponse response = new ProductResponse(1L, "김치", 1000, "www.naver.com");
         when(productService.getProductById(eq(1L)))
@@ -98,7 +145,7 @@ public class ProductApiControllerTest {
         ResultActions result = mockMvc.perform(get(API_URL + "/{id}", 1L));
 
         //then
-        String body = objectMapper.writeValueAsString(response);
+        String body = toJson(response);
         result
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
@@ -118,7 +165,7 @@ public class ProductApiControllerTest {
     }
 
     @Test
-    void 상품_전체_조회_테스트() throws Exception {
+    void 모든_상품을_조회한다() throws Exception {
         //given
         List<ProductResponse> response = List.of(
                 new ProductResponse(1L, "안성탕면", 1000, "www.naver.com"),
@@ -131,7 +178,7 @@ public class ProductApiControllerTest {
         ResultActions result = mockMvc.perform(get(API_URL));
 
         //then
-        String body = objectMapper.writeValueAsString(response);
+        String body = toJson(response);
         result
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
@@ -148,35 +195,82 @@ public class ProductApiControllerTest {
                 ));
     }
 
-    @Test
-    void 상품_수정() throws Exception {
-        //given
-        ProductRequest request = new ProductRequest("바뀐김치", 2000, "www.kakao.com");
+    @Nested
+    class 상품_수정시 {
 
-        //when
-        ResultActions result = mockMvc.perform(put(API_URL + "/{id}", 1L)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+        @Test
+        void 성공한다() throws Exception {
+            //given
+            ProductRequest request = new ProductRequest("바뀐김치", 2000, "www.kakao.com");
 
-        //then
-        result
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("product-update",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("id").description("상품 아이디")),
-                        requestFields(
-                                fieldWithPath("name").description("제품 명"),
-                                fieldWithPath("price").description("제품 가격"),
-                                fieldWithPath("imageUrl").description("제품 이미지 url")
-                        )
-                ));
+            //when
+            ResultActions result = 상품_수정(request);
+
+            //then
+            result
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andDo(document("product-update",
+                            preprocessRequest(prettyPrint()),
+                            preprocessResponse(prettyPrint()),
+                            pathParameters(
+                                    parameterWithName("id").description("상품 아이디")),
+                            requestFields(
+                                    fieldWithPath("name").description("제품 명"),
+                                    fieldWithPath("price").description("제품 가격"),
+                                    fieldWithPath("imageUrl").description("제품 이미지 url")
+                            )
+                    ));
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        void 상품_이름이_null이나_공백이면_예외(String nullOrEmpty) throws Exception {
+            // given
+            ProductRequest request = new ProductRequest(nullOrEmpty, 10000, "a");
+
+            // when
+            ResultActions response = 상품_수정(request);
+
+            // then
+            response.andExpect(status().isUnprocessableEntity());
+        }
+
+        @Test
+        void 가격이_null이면_예외() throws Exception {
+            // given"
+            ProductRequest request = new ProductRequest("치킨", null, "a");
+
+            // when
+            ResultActions response = 상품_수정(request);
+
+            // then
+            response.andExpect(status().isUnprocessableEntity());
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        void 이미지URL이_null이거나_공백이면_예외(String nullOrEmpty) throws Exception {
+            // given
+            ProductRequest request = new ProductRequest("치킨", 10000, nullOrEmpty);
+
+            // when
+            ResultActions response = 상품_수정(request);
+
+            // then
+            response.andExpect(status().isUnprocessableEntity());
+        }
+
+        private ResultActions 상품_수정(ProductRequest request) throws Exception {
+            return mockMvc.perform(put(API_URL + "/{id}", 1L)
+                            .contentType(APPLICATION_JSON)
+                            .content(toJson(request)))
+                    .andDo(print());
+        }
     }
 
     @Test
-    void 상품_삭제() throws Exception {
+    void 상품을_삭제한다() throws Exception {
         //when
         ResultActions result = mockMvc.perform(delete(API_URL + "/{id}", 1L));
 

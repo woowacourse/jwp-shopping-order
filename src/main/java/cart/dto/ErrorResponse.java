@@ -1,8 +1,8 @@
 package cart.dto;
 
-import java.time.LocalDateTime;
-
 import cart.exception.ApplicationException;
+import java.time.LocalDateTime;
+import org.springframework.http.HttpStatus;
 
 public class ErrorResponse {
 
@@ -13,14 +13,18 @@ public class ErrorResponse {
     private ErrorResponse() {
     }
 
-    private ErrorResponse(int status, String message, LocalDateTime timestamp) {
+    private ErrorResponse(int status, String message) {
         this.status = status;
         this.message = message;
-        this.timestamp = timestamp;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public ErrorResponse(HttpStatus status, String message) {
+        this(status.value(), message);
     }
 
     public ErrorResponse(ApplicationException exception) {
-        this(exception.status().value(), exception.getMessage(), LocalDateTime.now());
+        this(exception.status().value(), exception.getMessage());
     }
 
     public int getStatus() {
