@@ -1,5 +1,8 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
@@ -8,21 +11,19 @@ import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
+@Sql("classpath:/init.sql")
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
@@ -40,6 +41,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
+        memberDao.addMember(new Member(1L, "jourey@test.com", "test1234"));
+        memberDao.addMember(new Member(2L, "jourey2@test.com", "test1234"));
+
         member = memberDao.getMemberById(1L);
         member2 = memberDao.getMemberById(2L);
     }
@@ -50,7 +54,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.statusCode())
+            .isEqualTo(HttpStatus.CREATED.value());
     }
 
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
@@ -60,7 +65,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.statusCode())
+            .isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
