@@ -52,19 +52,32 @@ public class OrderRepository {
     public Order findOrderById(Long orderId, Member member) {
         final OrderEntity orderEntity = orderDao.findById(orderId);
         List<OrderedItemEntity> orderedItems = orderedItemDao.findItemsByOrderId(orderId);
-        final List<Long> productIds = orderedItems.stream()
-                .map(OrderedItemEntity::getProductId)
-                .collect(Collectors.toUnmodifiableList());
+        final List<CartItem> items = orderedItemToCartItem(member, orderedItems);
+        return new Order(orderEntity.getId(), orderEntity.getPrice(), member, items);
+    }
+
+    private List<CartItem> orderedItemToCartItem(Member member, List<OrderedItemEntity> orderedItems) {
+        final List<Long> productIds = collectIds(orderedItems);
         List<Product> products = productDao.findByIds(productIds);
-        final Map<Long, Product> idToProduct = products.stream()
-                .collect(Collectors.toMap(Product::getId, Function.identity()));
-        final List<CartItem> items = orderedItems.stream()
+        final Map<Long, Product> idToProduct = createTable(products);
+
+        return orderedItems.stream()
                 .map(orderedItemEntity -> new CartItem(
                         orderedItemEntity.getQuantity(),
                         idToProduct.get(orderedItemEntity.getProductId()),
                         member
                 ))
                 .collect(Collectors.toUnmodifiableList());
-        return new Order(orderEntity.getId(), orderEntity.getPrice(), member, items);
+    }
+
+    private Map<Long, Product> createTable(List<Product> products) {
+        return products.stream()
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
+    }
+
+    private List<Long> collectIds(List<OrderedItemEntity> orderedItems) {
+        return orderedItems.stream()
+                .map(OrderedItemEntity::getProductId)
+                .collect(Collectors.toUnmodifiableList());
     }
 }
