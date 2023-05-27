@@ -13,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.domain.CartItem;
-import cart.domain.Order;
+import cart.entity.Order;
 import cart.fixture.Fixture;
 
 @JdbcTest
@@ -34,7 +34,7 @@ class OrderedItemDaoTest {
     void saveAll() {
         //given
         final List<CartItem> items = List.of(Fixture.CART_ITEM1, Fixture.CART_ITEM2);
-        final Long orderId = orderDao.addOrder(new Order(20000, Fixture.GOLD_MEMBER, items));
+        final Long orderId = orderDao.addOrder(new Order(10000, 1L));
 
         //when
         final int[] rows = orderedItemDao.saveAll(items, orderId);

@@ -6,32 +6,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.dao.CartItemDao;
-import cart.dao.OrderDao;
-import cart.dao.OrderedItemDao;
 import cart.domain.CartItems;
 import cart.domain.Member;
-import cart.domain.Order;
 import cart.domain.discount.PriceCalculator;
 import cart.dto.OrderRequest;
+import cart.repository.OrderRepository;
 
 @Service
 @Transactional(readOnly = true)
 public class OrderService {
-    private final OrderDao orderDao;
     private final CartItemDao cartItemDao;
-    private final OrderedItemDao orderedItemDao;
     private final PriceCalculator priceCalculator;
+    private final OrderRepository orderRepository;
 
     public OrderService(
-            OrderDao orderDao,
             CartItemDao cartItemDao,
-            OrderedItemDao orderedItemDao,
-            PriceCalculator priceCalculator
+            PriceCalculator priceCalculator,
+            OrderRepository orderRepository
     ) {
-        this.orderDao = orderDao;
         this.cartItemDao = cartItemDao;
-        this.orderedItemDao = orderedItemDao;
         this.priceCalculator = priceCalculator;
+        this.orderRepository = orderRepository;
     }
 
     @Transactional
@@ -44,12 +39,6 @@ public class OrderService {
         final Integer totalPrice = cartItems.calculatePriceSum();
         final Integer finalPrice = priceCalculator.calculateFinalPrice(totalPrice, member);
 
-        final Order order = new Order(finalPrice, member, cartItems.getCartItems());
-        final Long orderId = orderDao.addOrder(order);
-
-        orderedItemDao.saveAll(cartItems.getCartItems(), orderId);
-        cartItemDao.deleteByIds(cartItemIds);
-
-        return orderId;
+        return orderRepository.saveOrder(cartItemIds, member, finalPrice, cartItems);
     }
 }

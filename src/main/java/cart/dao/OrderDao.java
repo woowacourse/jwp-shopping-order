@@ -8,7 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import cart.domain.Order;
+import cart.entity.Order;
 
 @Repository
 public class OrderDao {
@@ -26,7 +26,7 @@ public class OrderDao {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql,
                     Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1, order.getMember().getId());
+            ps.setLong(1, order.getMemberId());
             ps.setInt(2, order.getPrice());
             return ps;
         }, keyHolder);
