@@ -3,9 +3,9 @@ package cart.dto;
 import cart.domain.CartItem;
 
 public class CartItemResponse {
-    private Long id;
-    private int quantity;
-    private ProductResponse product;
+    private final Long id;
+    private final int quantity;
+    private final ProductResponse product;
 
     private CartItemResponse(Long id, int quantity, ProductResponse product) {
         this.id = id;
@@ -13,11 +13,11 @@ public class CartItemResponse {
         this.product = product;
     }
 
-    public static CartItemResponse of(CartItem cartItem) {
+    public static CartItemResponse from(CartItem cartItem) {
         return new CartItemResponse(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
+                ProductResponse.from(cartItem.getProduct())
         );
     }
 
