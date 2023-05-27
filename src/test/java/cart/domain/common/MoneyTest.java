@@ -1,8 +1,7 @@
-package cart.domain.amount;
+package cart.domain.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.common.Money;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -89,10 +88,10 @@ class MoneyTest {
     void 입력받는_금액과_비교하여_입력받은_금액_이상인지_확인한다(final Long amount, final boolean returnValue) {
         // given
         final Money minAmount = Money.from(10000);
-        final Money Amount = Money.from(amount);
+        final Money price = Money.from(amount);
 
         // when
-        final boolean result = Amount.isGreaterThanOrEqual(minAmount);
+        final boolean result = price.isGreaterThanOrEqual(minAmount);
 
         // then
         assertThat(result).isEqualTo(returnValue);
