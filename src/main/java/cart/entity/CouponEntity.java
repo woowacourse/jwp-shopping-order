@@ -1,8 +1,15 @@
 package cart.entity;
 
+import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.DeliveryFeeDiscountPolicy;
 import cart.domain.coupon.DiscountCondition;
+import cart.domain.coupon.DiscountConditionType;
 import cart.domain.coupon.DiscountPolicy;
+import cart.domain.coupon.DiscountPolicyType;
+import cart.domain.coupon.MinimumPriceDiscountCondition;
+import cart.domain.coupon.NoneDiscountCondition;
+import cart.domain.coupon.PercentDiscountPolicy;
 import java.util.Objects;
 
 public class CouponEntity {
@@ -63,6 +70,31 @@ public class CouponEntity {
                 discountCondition.getDiscountConditionType().name(),
                 discountCondition.getMinimumPrice().getLongValue()
         );
+    }
+
+    public Coupon toDomain() {
+        final DiscountPolicy discountPolicy = parseDiscountPolicy();
+        final DiscountCondition discountCondition = parseDiscountCondition();
+        return new Coupon(id, name, discountPolicy, discountCondition);
+    }
+
+    private DiscountCondition parseDiscountCondition() {
+        final DiscountConditionType conditionType = DiscountConditionType.from(this.conditionType);
+        if (conditionType == DiscountConditionType.MINIMUM_PRICE) {
+            return new MinimumPriceDiscountCondition(minimumPrice);
+        }
+        return new NoneDiscountCondition();
+    }
+
+    private DiscountPolicy parseDiscountPolicy() {
+        final DiscountPolicyType policyType = DiscountPolicyType.from(this.policyType);
+        if (policyType == DiscountPolicyType.PRICE) {
+            return new AmountDiscountPolicy(discountPrice);
+        }
+        if (policyType == DiscountPolicyType.PERCENT) {
+            return new PercentDiscountPolicy(discountPercent);
+        }
+        return new DeliveryFeeDiscountPolicy();
     }
 
     public Long getId() {
