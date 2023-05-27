@@ -1,6 +1,7 @@
-package cart.ui;
+package cart.ui.auth;
 
-import org.apache.tomcat.util.codec.binary.Base64;
+import java.util.Objects;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -28,28 +29,18 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            return null;
-        }
-
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
-        }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
+        Credentials credentials = BasicAuthorizationExtractor.extract(authorization);
+        validateHas(credentials);
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email)
+        return memberDao.getMemberByEmail(credentials.getEmail())
+                .filter(it -> it.checkPassword(credentials.getPassword()))
                 .orElseThrow(AuthenticationException::new);
-        if (!member.checkPassword(password)) {
+    }
+
+    private void validateHas(Credentials credentials) {
+        if (Objects.isNull(credentials)) {
             throw new AuthenticationException();
         }
-        return member;
     }
 }
