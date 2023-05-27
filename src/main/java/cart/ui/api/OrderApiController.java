@@ -1,5 +1,6 @@
-package cart.ui;
+package cart.ui.api;
 
+import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -13,11 +14,18 @@ import java.util.List;
 @RequestMapping("/orders")
 @Controller
 public final class OrderApiController {
+    private final OrderService orderService;
+
+    public OrderApiController(final OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @PostMapping
     public ResponseEntity<Void> order(final Member member,
                                       @RequestBody final OrderRequest request) {
-        return ResponseEntity.created(URI.create("/orders/1")).build();
+        final Long orderId = orderService.order(member, request);
+
+        return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @GetMapping

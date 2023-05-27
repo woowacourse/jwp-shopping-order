@@ -31,27 +31,21 @@ class OrderApiControllerTest {
     @LocalServerPort
     private int port;
 
-    private Member member;
-    private Product product;
-    private CartItem cartItem;
-
     @Autowired
     private MemberDao memberDao;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-
-        memberDao.addMember(new Member("test@naver.com", "1234"));
-        member = memberDao.getMemberByEmail("test@naver.com");
-
-        product = insertProduct(new ProductRequest("새우깡", 50000, "http://이미지"));
-        cartItem = insertCartItem(member, product);
     }
 
     @DisplayName("상품 주문하기")
     @Test
     void order() {
+        //given
+        final Member member = createMember();
+        final CartItem cartItem = createCartItem(member);
+
         RestAssured.given()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .contentType(APPLICATION_JSON_VALUE)
@@ -65,6 +59,9 @@ class OrderApiControllerTest {
     @DisplayName("사용자 주문 목록 보기")
     @Test
     void getOrders() {
+        //given
+        final Member member = createMember();
+
         RestAssured.given()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .get("/orders")
@@ -75,11 +72,24 @@ class OrderApiControllerTest {
     @DisplayName("특정 주문 상세 보기")
     @Test
     void getOrder() {
+        //given
+        final Member member = createMember();
+
         RestAssured.given()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .get("/orders/{id}", 1)
                 .then()
                 .statusCode(OK.value());
+    }
+
+    private Member createMember() {
+        memberDao.addMember(new Member("test@naver.com", "1234"));
+        return memberDao.getMemberByEmail("test@naver.com");
+    }
+
+    private CartItem createCartItem(final Member member) {
+        Product product = insertProduct(new ProductRequest("새우깡", 50000, "http://이미지"));
+        return insertCartItem(member, product);
     }
 
     private Product insertProduct(final ProductRequest productRequest) {

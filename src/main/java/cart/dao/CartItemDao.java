@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Repository
 public class CartItemDao {
@@ -82,6 +83,35 @@ public class CartItemDao {
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
+    public List<CartItem> findAllByIds(final List<Long> ids) {
+        final String query = ids.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(", "));
+
+        final String sql = "SELECT c.id, c.member_id, m.email, p.id AS product_id, p.name, p.price, p.image_url, c.quantity " +
+                "FROM cart_item c " +
+                "INNER JOIN member m ON c.member_id = m.id " +
+                "INNER JOIN product p ON c.product_id = p.id " +
+                "WHERE c.id IN " +
+                "(" + query + ")";
+
+        final List<CartItem> cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long memberId = rs.getLong("member_id");
+            String email = rs.getString("email");
+            Long productId = rs.getLong("product_id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            Long cartItemId = rs.getLong("id");
+            int quantity = rs.getInt("cart_item.quantity");
+            Member member = new Member(memberId, email, null);
+            Product product = new Product(productId, name, price, imageUrl);
+            return new CartItem(cartItemId, quantity, product, member);
+        });
+
+        return cartItems;
+    }
+
 
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
@@ -91,6 +121,15 @@ public class CartItemDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteAllByIds(final List<Long> ids) {
+        final String query = ids.stream()
+                .map(id -> "cart_item.id = " + id)
+                .collect(Collectors.joining(" OR "));
+
+        final String sql = "DELETE FROM cart_item WHERE " + query;
+        jdbcTemplate.update(sql);
     }
 
     public void updateQuantity(CartItem cartItem) {
