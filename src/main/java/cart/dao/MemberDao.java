@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.entity.MemberEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -9,14 +9,14 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final RowMapper<Member> rowMapper = (resultSet, rowNum) -> new Member(
+    private final RowMapper<MemberEntity> rowMapper = (resultSet, rowNum) -> new MemberEntity(
             resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password")
@@ -30,18 +30,18 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Member save(final Member member) {
-        final SqlParameterSource params = new BeanPropertySqlParameterSource(member);
+    public MemberEntity insert(final MemberEntity memberEntity) {
+        final SqlParameterSource params = new BeanPropertySqlParameterSource(memberEntity);
         final long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new Member(id, member.getEmail(), member.getPassword());
+        return new MemberEntity(id, memberEntity.getEmail(), memberEntity.getPassword());
     }
 
-    public List<Member> findAll() {
+    public List<MemberEntity> findAll() {
         final String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<Member> findById(final Long id) {
+    public Optional<MemberEntity> findById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));

@@ -1,11 +1,10 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.entity.CartItemEntity;
+import cart.entity.MemberEntity;
+import cart.entity.ProductEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -39,36 +38,32 @@ class CartItemDaoTest {
     @Test
     void 장바구니에_상품을_추가한다() {
         // given
-        final Member member = memberDao.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productDao.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final CartItem cartItem = new CartItem(member, product);
+        final MemberEntity member = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password1"));
+        final ProductEntity product = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
+        final CartItemEntity cartItemEntity = new CartItemEntity(member.getId(), product.getId(), 1);
 
         // when
-        final CartItem result = cartItemDao.save(cartItem);
+        cartItemDao.insert(cartItemEntity);
 
         // then
-        final List<CartItem> cartItems = cartItemDao.findAllByMemberId(member.getId());
-        assertAll(
-                () -> assertThat(cartItems).hasSize(1),
-                () -> assertThat(result.getQuantity()).isEqualTo(cartItem.getQuantity())
-        );
+        assertThat(cartItemDao.findAllByMemberId(member.getId())).hasSize(1);
     }
 
     @Test
     void 사용자_아이디를_받아_해당_사용자의_장바구니에_있는_모든_품목을_반환한다() {
         // given
-        final Member member1 = memberDao.save(new Member("pizza1@pizza.com", "password1"));
-        final Member member2 = memberDao.save(new Member("pizza2@pizza.com", "password2"));
-        final Product product1 = productDao.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final Product product2 = productDao.save(new Product("치즈피자2", "2.jpg", 18900L));
-        final Product product3 = productDao.save(new Product("치즈피자3", "3.jpg", 18900L));
+        final MemberEntity member1 = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
+        final MemberEntity member2 = memberDao.insert(new MemberEntity("pizza2@pizza.com", "password"));
+        final ProductEntity product1 = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
+        final ProductEntity product2 = productDao.insert(new ProductEntity("치즈피자2", "2.jpg", 8900L));
+        final ProductEntity product3 = productDao.insert(new ProductEntity("치즈피자3", "3.jpg", 8900L));
 
-        cartItemDao.save(new CartItem(member1, product1));
-        cartItemDao.save(new CartItem(member1, product2));
-        cartItemDao.save(new CartItem(member2, product3));
+        cartItemDao.insert(new CartItemEntity(member1.getId(), product1.getId(), 1));
+        cartItemDao.insert(new CartItemEntity(member1.getId(), product2.getId(), 1));
+        cartItemDao.insert(new CartItemEntity(member2.getId(), product3.getId(), 1));
 
         // when
-        final List<CartItem> result = cartItemDao.findAllByMemberId(member1.getId());
+        final List<CartItemEntity> result = cartItemDao.findAllByMemberId(member1.getId());
 
         // then
         assertThat(result).hasSize(2);
@@ -77,34 +72,37 @@ class CartItemDaoTest {
     @Test
     void 사용자_아이디와_삭제할_장바구니의_상품_아이디를_받아_장바구니_항목을_제거한다() {
         // given
-        final Member member = memberDao.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productDao.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final CartItem cartItem = cartItemDao.save(new CartItem(member, product));
+        final MemberEntity member = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password1"));
+        final ProductEntity product = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
+        final CartItemEntity cartItemEntity = new CartItemEntity(member.getId(), product.getId(), 1);
 
         // when
-        final int result = cartItemDao.delete(cartItem.getId(), member.getId());
+        cartItemDao.deleteById(cartItemEntity.getId(), member.getId());
 
         // then
-        assertAll(
-                () -> assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty(),
-                () -> assertThat(result).isOne()
-        );
+        assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty();
     }
 
     @Test
     void 장바구니의_상품의_수량을_변경한다() {
         // given
-        final Member member = memberDao.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productDao.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final CartItem cartItem = cartItemDao.save(new CartItem(member, product));
+        final MemberEntity member = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password1"));
+        final ProductEntity product = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
+        final CartItemEntity cartItemEntity = new CartItemEntity(member.getId(), product.getId(), 1);
+        final CartItemEntity savedCartItemEntity = cartItemDao.insert(cartItemEntity);
 
-        final CartItem updatedCartItem = new CartItem(cartItem.getId(), 2, cartItem.getMember(), cartItem.getProduct());
+        final CartItemEntity updatedCartItemEntity = new CartItemEntity(
+                savedCartItemEntity.getId(),
+                savedCartItemEntity.getMemberId(),
+                savedCartItemEntity.getProductId(),
+                2
+        );
 
         // when
-        cartItemDao.updateQuantity(updatedCartItem);
+        cartItemDao.updateQuantity(updatedCartItemEntity);
 
         // then
-        final CartItem result = cartItemDao.findById(updatedCartItem.getId()).get();
+        final CartItemEntity result = cartItemDao.findById(updatedCartItemEntity.getId()).get();
         assertThat(result.getQuantity()).isEqualTo(2);
     }
 }

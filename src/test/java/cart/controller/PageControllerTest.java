@@ -10,10 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.repository.MemberRepository;
+import cart.repository.ProductRepository;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -34,16 +34,16 @@ class PageControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Test
     void 관리자_페이지에_접근한다() throws Exception {
         // given
-        final Product product1 = productDao.save(new Product("허브티", "tea.jpg", 1000L));
-        final Product product2 = productDao.save(new Product("고양이", "cat.jpg", 1000000L));
+        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product2 = productRepository.save(new Product("고양이", "cat.jpg", 1000000L));
 
         // expect
         mockMvc.perform(get("/admin"))
@@ -77,8 +77,8 @@ class PageControllerTest {
     @Test
     void 세팅_페이지에_접근한다() throws Exception {
         // given
-        final Member member1 = memberDao.save(new Member("pizza1@pizza.com", "password1"));
-        final Member member2 = memberDao.save(new Member("pizza2@pizza.com", "password2"));
+        final Member member1 = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
+        final Member member2 = memberRepository.save(new Member("pizza2@pizza.com", "password2"));
 
         // expect
         mockMvc.perform(get("/settings"))
