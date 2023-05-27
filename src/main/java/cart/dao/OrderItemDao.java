@@ -49,6 +49,13 @@ public class OrderItemDao {
         );
     }
 
+    public void insertAll(final List<OrderItemEntity> orderItemEntity) {
+        final BeanPropertySqlParameterSource[] parameterSources = orderItemEntity.stream()
+                .map(BeanPropertySqlParameterSource::new)
+                .toArray(BeanPropertySqlParameterSource[]::new);
+        jdbcInsert.executeBatch(parameterSources);
+    }
+
     public List<OrderItemEntity> findAllByOrderId(final Long orderId) {
         final String sql = "SELECT * FROM order_item WHERE order_id = ?";
         return jdbcTemplate.query(sql, rowMapper, orderId);

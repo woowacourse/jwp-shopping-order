@@ -3,6 +3,7 @@ package cart.domain;
 import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
 
@@ -10,10 +11,10 @@ public class Order {
     private final Coupon coupon;
     private final Long memberId;
     private final Money deliveryFee;
-    private final List<CartItem> cartItems;
+    private final List<Item> items;
 
-    public Order(final Coupon coupon, final Long memberId, final List<CartItem> cartItems) {
-        this(null, coupon, memberId, Money.from(3000L), cartItems);
+    public Order(final Coupon coupon, final Long memberId, final List<Item> items) {
+        this(null, coupon, memberId, Money.from(3000L), items);
     }
 
     public Order(
@@ -21,13 +22,13 @@ public class Order {
             final Coupon coupon,
             final Long memberId,
             final Money deliveryFee,
-            final List<CartItem> cartItems
+            final List<Item> items
     ) {
         this.id = id;
         this.coupon = coupon;
         this.memberId = memberId;
         this.deliveryFee = deliveryFee;
-        this.cartItems = cartItems;
+        this.items = items;
     }
 
     public Money calculateDiscountPrice() {
@@ -37,13 +38,30 @@ public class Order {
     }
 
     public Money calculateTotalPrice() {
-        return cartItems.stream()
-                .map(CartItem::calculateTotalPrice)
+        return items.stream()
+                .map(Item::calculateTotalPrice)
                 .reduce(Money.ZERO, Money::plus);
     }
 
     public Money calculateDeliveryFee() {
         return coupon.calculateDeliveryFee(calculateTotalPrice(), deliveryFee);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Order order = (Order) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public Long getId() {
@@ -62,7 +80,7 @@ public class Order {
         return deliveryFee;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
+    public List<Item> getItems() {
+        return items;
     }
 }

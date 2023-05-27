@@ -4,6 +4,13 @@ import cart.domain.common.Money;
 
 public class Coupon {
 
+    public static final Coupon EMPTY = new Coupon(
+            null,
+            "",
+            new AmountDiscountPolicy(0),
+            new NoneDiscountCondition()
+    );
+
     private final Long id;
     private final String name;
     private final DiscountPolicy discountPolicy;

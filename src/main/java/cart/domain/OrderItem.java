@@ -4,36 +4,43 @@ import cart.domain.common.Money;
 import cart.exception.InvalidCartItemOwnerException;
 import java.util.Objects;
 
-public class CartItem implements Item {
+public class OrderItem implements Item {
 
     private final Long id;
     private final Member member;
     private final Product product;
     private Integer quantity;
 
-    public CartItem(final Member member, final Product product) {
+    public OrderItem(final Member member, final Product product) {
         this(null, 1, member, product);
     }
 
-    public CartItem(final Long id, final Integer quantity, final Member member, final Product product) {
+    public OrderItem(final Long id, final Integer quantity, final Product product) {
+        this(id, quantity, null, product);
+    }
+    
+    public OrderItem(final Long id, final Integer quantity, final Member member, final Product product) {
         this.id = id;
         this.quantity = quantity;
         this.member = member;
         this.product = product;
     }
 
+    @Override
     public Money calculateTotalPrice() {
         return product.getPrice().times(quantity);
     }
 
+    @Override
     public void checkOwner(final Member member) {
         if (!this.member.equals(member)) {
             throw new InvalidCartItemOwnerException();
         }
     }
 
+    @Override
     public void changeQuantity(final int quantity) {
-        this.quantity = quantity;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -44,8 +51,8 @@ public class CartItem implements Item {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final CartItem cartItem = (CartItem) o;
-        return Objects.equals(id, cartItem.id);
+        final OrderItem orderItem = (OrderItem) o;
+        return Objects.equals(id, orderItem.id);
     }
 
     @Override
@@ -53,18 +60,22 @@ public class CartItem implements Item {
         return Objects.hash(id);
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public Integer getQuantity() {
         return quantity;
     }
 
+    @Override
     public Member getMember() {
-        return member;
+        throw new UnsupportedOperationException();
     }
 
+    @Override
     public Product getProduct() {
         return product;
     }

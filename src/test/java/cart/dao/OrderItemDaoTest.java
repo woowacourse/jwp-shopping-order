@@ -52,6 +52,27 @@ class OrderItemDaoTest {
     }
 
     @Test
+    void 주문목록을_받아_저장한다() {
+        // given
+        final CouponEntity coupon = couponDao.insert(new CouponEntity(
+                "30000원 이상 3000원 할인 쿠폰",
+                PRICE.name(), 30000, 0, false,
+                MINIMUM_PRICE.name(), 20000
+        ));
+        final MemberEntity member = memberDao.insert(new MemberEntity("pizza@pizza.com", "password"));
+        final OrderEntity order = orderDao.insert(new OrderEntity(3000L, coupon.getId(), member.getId()));
+
+        // when
+        orderItemDao.insertAll(List.of(
+                new OrderItemEntity("허브티", "tea.jpg", 1000L, 1, order.getId()),
+                new OrderItemEntity("공차", "tea.jpg", 1000L, 2, order.getId())
+        ));
+
+        // then
+        assertThat(orderItemDao.findAllByOrderId(order.getId())).hasSize(2);
+    }
+
+    @Test
     void 주문_id를_입력받아_전체_주문_상품을_조회한다() {
         // given
         final CouponEntity coupon = couponDao.insert(new CouponEntity(
