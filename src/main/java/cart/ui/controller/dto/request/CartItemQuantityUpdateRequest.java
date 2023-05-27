@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.ui.controller.dto.request;
 
 public class CartItemQuantityUpdateRequest {
 
