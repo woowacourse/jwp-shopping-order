@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
@@ -29,7 +30,7 @@ public class ProductService {
     }
 
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = new Product(productRequest.getName(),productRequest.getPrice(), productRequest.getImageUrl());
         return productDao.createProduct(product);
     }
 

@@ -16,8 +16,8 @@ public class Price {
         }
     }
 
-    public Price discount(Percentage percentage) {
-        return new Price(value - (int) (value * percentage.getPercentage()));
+    public Price discount(Percent percent) {
+        return new Price(value - (int) (value * percent.getPercentage()));
     }
 
     public Price plus(Price price) {
