@@ -30,7 +30,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         MemberAuth memberAuth = basicAuthenticationExtractor.extract(authorization);
-        MemberResponse response = memberService.findByEmailAndPassword(memberAuth.getEmail(), memberAuth.getPassword());
+        MemberResponse response = memberService.getMemberByEmailAndPassword(memberAuth.getEmail(), memberAuth.getPassword());
         return new Member(response.getId(), response.getEmail(), response.getPassword(), response.getPoint());
     }
 }

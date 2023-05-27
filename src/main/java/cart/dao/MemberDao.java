@@ -4,6 +4,7 @@ import cart.dao.entity.MemberEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -58,14 +59,14 @@ public class MemberDao {
         String sql = "INSERT INTO member(email, password, point) VALUES(?, ?, ?)";
         jdbcTemplate.update(
                 connection -> {
-                    PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    pstm.setString(1, memberEntity.getEmail());
-                    pstm.setString(2, memberEntity.getPassword());
-                    pstm.setInt(3, memberEntity.getPoint());
-                    return pstm;
+                    PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, memberEntity.getEmail());
+                    ps.setString(2, memberEntity.getPassword());
+                    ps.setInt(3, memberEntity.getPoint());
+                    return ps;
                 },
                 keyHolder
         );
-        return (Long) keyHolder.getKeys().get("ID");
+        return (Long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
     }
 }

@@ -3,6 +3,8 @@ package cart.application;
 import cart.domain.Member;
 import cart.repository.MemberRepository;
 import cart.ui.controller.dto.response.MemberResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +18,15 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public MemberResponse findByEmailAndPassword(String email, String password) {
-        Member member = memberRepository.findByEmailAndPassword(email, password);
+    public List<MemberResponse> getAllMembers() {
+        List<Member> members = memberRepository.getAllMembers();
+        return members.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public MemberResponse getMemberByEmailAndPassword(String email, String password) {
+        Member member = memberRepository.getMemberByEmailAndPassword(email, password);
         return MemberResponse.from(member);
     }
 }

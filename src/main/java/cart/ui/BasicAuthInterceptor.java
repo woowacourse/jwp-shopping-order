@@ -20,7 +20,7 @@ public class BasicAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         MemberAuth memberAuth = basicAuthenticationExtractor.extract(authorization);
-        memberService.findByEmailAndPassword(memberAuth.getEmail(), memberAuth.getPassword());
+        memberService.getMemberByEmailAndPassword(memberAuth.getEmail(), memberAuth.getPassword());
         return true;
     }
 }
