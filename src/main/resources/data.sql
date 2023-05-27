@@ -11,3 +11,16 @@ INSERT INTO MEMBER (email, password)
 VALUES ('pizza1@pizza.com', 'pizza');
 INSERT INTO MEMBER (email, password)
 VALUES ('pizza2@pizza.com', 'pizza');
+
+INSERT INTO COUPON (name, policy_type, discount_price, discount_percent, discount_delivery_fee, condition_type,
+                    minimum_price)
+VALUES ('30000원 이상 3000원 할인 쿠폰', 'PRICE', 3000, 0, false, 'MINIMUM_PRICE', 3000);
+INSERT INTO COUPON (name, policy_type, discount_price, discount_percent, discount_delivery_fee, condition_type,
+                    minimum_price)
+VALUES ('30000원 이상 4000원 할인 쿠폰', 'PRICE', 4000, 0, false, 'MINIMUM_PRICE', 3000);
+
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (1, 1, false);
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (2, 1, false);
+
