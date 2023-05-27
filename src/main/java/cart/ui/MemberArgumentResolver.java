@@ -1,5 +1,6 @@
 package cart.ui;
 
+import cart.application.MemberService;
 import cart.exception.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
@@ -11,12 +12,14 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Objects;
+
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberDao memberDao;
+    private final MemberService memberService;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @Override
@@ -25,29 +28,37 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            return null;
-        }
+        validate(authorization);
 
         String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
-        }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
+        String decodedString = new String(Base64.decodeBase64(authHeader[1]));
 
         String[] credentials = decodedString.split(":");
         String email = credentials[0];
         String password = credentials[1];
 
-        // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.hasPassword(password)) {
+        memberService.validateMemberProfile(email, password);
+        return memberService.getMemberByEmail(email);
+    }
+
+    private void validate(String authorization) {
+        validateNotNull(authorization);
+        validateIsBasicEncoded(authorization);
+    }
+
+    private void validateNotNull(String authorization) {
+        if (Objects.isNull(authorization)) {
             throw new AuthenticationException();
         }
-        return member;
+    }
+
+    private void validateIsBasicEncoded(String authorization) {
+        String[] authHeader = authorization.split(" ");
+        if (!authHeader[0].equalsIgnoreCase("basic")) {
+            throw new AuthenticationException();
+        }
     }
 }
