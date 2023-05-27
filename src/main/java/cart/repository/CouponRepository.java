@@ -3,6 +3,7 @@ package cart.repository;
 import static java.util.stream.Collectors.toList;
 
 import cart.dao.CouponDao;
+import cart.dao.MemberCouponDao;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DeliveryFeeDiscountPolicy;
@@ -14,6 +15,7 @@ import cart.domain.coupon.MinimumPriceDiscountCondition;
 import cart.domain.coupon.NoneDiscountCondition;
 import cart.domain.coupon.PercentDiscountPolicy;
 import cart.entity.CouponEntity;
+import cart.entity.MemberCouponEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -22,9 +24,11 @@ import org.springframework.stereotype.Repository;
 public class CouponRepository {
 
     private final CouponDao couponDao;
+    private final MemberCouponDao memberCouponDao;
 
-    public CouponRepository(final CouponDao couponDao) {
+    public CouponRepository(final CouponDao couponDao, final MemberCouponDao memberCouponDao) {
         this.couponDao = couponDao;
+        this.memberCouponDao = memberCouponDao;
     }
 
     public Coupon save(final Coupon coupon) {
@@ -38,8 +42,11 @@ public class CouponRepository {
         );
     }
 
-    public List<Coupon> findAll() {
-        return couponDao.findAll().stream()
+    public List<Coupon> findAllByMemberId(final Long memberId) {
+        final List<Long> couponIds = memberCouponDao.findAllUnusedMemberCouponByMemberId(memberId).stream()
+                .map(MemberCouponEntity::getCouponId)
+                .collect(toList());
+        return couponDao.findByIds(couponIds).stream()
                 .map(this::toCoupon)
                 .collect(toList());
     }

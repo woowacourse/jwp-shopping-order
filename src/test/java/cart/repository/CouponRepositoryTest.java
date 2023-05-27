@@ -3,11 +3,14 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.MemberCouponDao;
+import cart.domain.Member;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DeliveryFeeDiscountPolicy;
 import cart.domain.coupon.MinimumPriceDiscountCondition;
 import cart.domain.coupon.NoneDiscountCondition;
+import cart.entity.MemberCouponEntity;
 import cart.test.RepositoryTest;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,12 @@ class CouponRepositoryTest {
     @Autowired
     private CouponRepository couponRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberCouponDao memberCouponDao;
+
     @Test
     void 쿠폰을_저장한다() {
         // given
@@ -34,14 +43,14 @@ class CouponRepositoryTest {
         );
 
         // when
-        couponRepository.save(coupon);
+        final Coupon savedCoupon = couponRepository.save(coupon);
 
         // then
-        assertThat(couponRepository.findAll()).hasSize(1);
+        assertThat(couponRepository.findById(savedCoupon.getId())).isPresent();
     }
 
     @Test
-    void 전체_쿠폰을_조회한다() {
+    void 사용자_아이디를_입력받아_전체_쿠폰을_조회한다() {
         // given
         final Coupon coupon1 = couponRepository.save(new Coupon(
                 "30000원 이상 2000원 할인 쿠폰",
@@ -53,9 +62,12 @@ class CouponRepositoryTest {
                 new DeliveryFeeDiscountPolicy(),
                 new MinimumPriceDiscountCondition(30000)
         ));
+        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
+        memberCouponDao.insert(new MemberCouponEntity(coupon1.getId(), member.getId(), false));
+        memberCouponDao.insert(new MemberCouponEntity(coupon2.getId(), member.getId(), false));
 
         // when
-        final List<Coupon> result = couponRepository.findAll();
+        final List<Coupon> result = couponRepository.findAllByMemberId(member.getId());
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(coupon1, coupon2));
