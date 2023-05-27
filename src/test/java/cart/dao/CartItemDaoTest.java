@@ -8,14 +8,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.domain.CartItem;
 import cart.fixture.Fixture;
 
-@JdbcTest
-class CartItemDaoTest {
+class CartItemDaoTest extends DaoTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;

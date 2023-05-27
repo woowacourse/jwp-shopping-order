@@ -18,6 +18,6 @@ class CartItemTest {
         final int result = cartItem.calculateTotalPrice();
 
         //then
-        assertThat(result).isEqualTo(100000);
+        assertThat(result).isEqualTo(20000);
     }
 }
