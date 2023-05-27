@@ -32,4 +32,13 @@ class MinimumPriceDiscountConditionTest {
         // expect
         assertThat(discountCondition.isSatisfiedBy(Money.from(price))).isEqualTo(result);
     }
+
+    @Test
+    void 조건에_해당하는_최소_비용을_반환한다() {
+        // given
+        final DiscountCondition discountCondition = new MinimumPriceDiscountCondition(30000);
+
+        // expect
+        assertThat(discountCondition.getMinimumPrice()).isEqualTo(Money.from(30000));
+    }
 }

@@ -19,4 +19,9 @@ public class NoneDiscountCondition implements DiscountCondition {
     public DiscountConditionType getDiscountConditionType() {
         return discountConditionType;
     }
+
+    @Override
+    public Money getMinimumPrice() {
+        return Money.ZERO;
+    }
 }

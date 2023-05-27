@@ -7,4 +7,6 @@ public interface DiscountCondition {
     boolean isSatisfiedBy(final Money totalPrice);
 
     DiscountConditionType getDiscountConditionType();
+    
+    Money getMinimumPrice();
 }

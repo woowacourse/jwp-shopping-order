@@ -21,4 +21,9 @@ public class MinimumPriceDiscountCondition implements DiscountCondition {
     public DiscountConditionType getDiscountConditionType() {
         return discountConditionType;
     }
+
+    @Override
+    public Money getMinimumPrice() {
+        return minimumPrice;
+    }
 }

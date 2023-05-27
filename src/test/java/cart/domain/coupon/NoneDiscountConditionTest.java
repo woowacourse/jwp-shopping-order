@@ -29,4 +29,13 @@ class NoneDiscountConditionTest {
         // expect
         assertThat(discountCondition.isSatisfiedBy(Money.ZERO)).isTrue();
     }
+
+    @Test
+    void 조건에_해당하는_최소_비용을_반환한다() {
+        // given
+        final DiscountCondition discountCondition = new NoneDiscountCondition();
+
+        // expect
+        assertThat(discountCondition.getMinimumPrice()).isEqualTo(Money.ZERO);
+    }
 }
