@@ -23,4 +23,8 @@ INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
 values (1, 1, false);
 INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
 values (2, 1, false);
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (1, 2, false);
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (2, 2, false);
 
