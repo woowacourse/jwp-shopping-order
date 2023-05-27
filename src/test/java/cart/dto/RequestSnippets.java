@@ -23,6 +23,9 @@ public enum RequestSnippets {
     )),
     CART_ITEM(CartItemRequest.class, () -> Map.of(
             "productId", "제품 id"
+    )),
+    CART_ITEM_QUANTITY_UPDATE(CartItemQuantityUpdateRequest.class, () -> Map.of(
+            "quantity", "수량"
     ));
 
     private static final String EMPTY = "";

@@ -1,5 +1,9 @@
 package cart.controller;
 
+import static cart.fixture.TestFixture.감자튀김;
+import static cart.fixture.TestFixture.샐러드;
+import static cart.fixture.TestFixture.치킨;
+import static cart.fixture.TestFixture.햄버거;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,8 +33,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cart.WebMvcConfig;
 import cart.application.ProductService;
-import cart.dao.MemberDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.ui.ProductApiController;
@@ -40,24 +44,23 @@ import cart.ui.ProductApiController;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class ProductApiControllerTest extends ControllerTestWithDocs {
 
-    private static final String API_URL = "/products";
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
-    private ProductService productService;
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private MemberDao memberDao;
+    private WebMvcConfig webMvcConfig;
+    @MockBean
+    private ProductService productService;
 
     @Test
     void 상품_생성() throws Exception {
         //given
-        ProductRequest request = new ProductRequest("치킨", 10000, "a");
-        when(productService.createProduct(any(ProductRequest.class))).thenReturn(1L);
+        ProductRequest request = new ProductRequest(치킨.getName(), 치킨.getPrice(), 치킨.getImageUrl());
+        when(productService.createProduct(any(ProductRequest.class))).thenReturn(치킨.getId());
 
         //when
-        ResultActions result = mockMvc.perform(post(API_URL)
+        ResultActions result = mockMvc.perform(post("/products")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -66,23 +69,20 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", containsString("1")))
                 .andDo(print())
-                .andDo(documentationOf(
-                        request
-                ));
+                .andDo(documentationOf(request));
     }
 
     @Test
     void 상품_단일_조회() throws Exception {
         //given
-        ProductResponse response = new ProductResponse(1L, "김치", 1000, "www.naver.com");
-        when(productService.getProductById(eq(1L)))
-                .thenReturn(response);
+        ProductResponse response = ProductResponse.of(샐러드);
+        String body = objectMapper.writeValueAsString(response);
+        when(productService.getProductById(eq(1L))).thenReturn(response);
 
         //when
-        ResultActions result = mockMvc.perform(get(API_URL + "/{id}", 1L));
+        ResultActions result = mockMvc.perform(get("/products/{id}", 1L));
 
         //then
-        String body = objectMapper.writeValueAsString(response);
         result
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
@@ -97,35 +97,31 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
     void 상품_전체_조회() throws Exception {
         //given
         List<ProductResponse> response = List.of(
-                new ProductResponse(1L, "안성탕면", 1000, "www.naver.com"),
-                new ProductResponse(2L, "신라면", 1200, "www.kakao.com")
+                ProductResponse.of(햄버거),
+                ProductResponse.of(감자튀김)
         );
-        when(productService.getAllProducts())
-                .thenReturn(response);
+        String body = objectMapper.writeValueAsString(response);
+        when(productService.getAllProducts()).thenReturn(response);
 
         //when
-        ResultActions result = mockMvc.perform(get(API_URL));
+        ResultActions result = mockMvc.perform(get("/products"));
 
         //then
-        String body = objectMapper.writeValueAsString(response);
         result
                 .andExpect(status().isOk())
                 .andExpect(content().json(body))
                 .andDo(print())
-                .andDo(documentationOf(
-                        response
-                ));
+                .andDo(documentationOf(response));
 
     }
 
     @Test
     void 상품_수정() throws Exception {
-        System.err.println(testInfo.getDisplayName());
         //given
-        ProductRequest request = new ProductRequest("바뀐김치", 2000, "www.kakao.com");
+        ProductRequest request = new ProductRequest(치킨.getName(), 30000, 치킨.getImageUrl());
 
         //when
-        ResultActions result = mockMvc.perform(put(API_URL + "/{id}", 1L)
+        ResultActions result = mockMvc.perform(put("/products/{id}", 치킨.getId())
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -136,14 +132,13 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
                 .andDo(documentationOf(
                         request,
                         pathParameters(parameterWithName("id").description("상품 아이디"))
-
                 ));
     }
 
     @Test
     void 상품_삭제() throws Exception {
         //when
-        ResultActions result = mockMvc.perform(delete(API_URL + "/{id}", 1L));
+        ResultActions result = mockMvc.perform(delete("/products/{id}", 1L));
 
         //then
         result
