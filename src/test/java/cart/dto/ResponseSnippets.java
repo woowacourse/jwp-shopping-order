@@ -1,6 +1,7 @@
 package cart.dto;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,10 +12,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.restdocs.payload.FieldDescriptor;
-
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.epages.restdocs.apispec.ResourceSnippetParametersBuilder;
-import com.epages.restdocs.apispec.Schema;
+import org.springframework.restdocs.snippet.Snippet;
 
 public enum ResponseSnippets {
     PRODUCT(ProductResponse.class, () -> Map.of(
@@ -43,17 +41,15 @@ public enum ResponseSnippets {
         this.fieldsSupplier = fieldsSupplier;
     }
 
-    public static Optional<ResourceSnippetParametersBuilder> resourceBuilderOf(Object dto) {
+    public static Optional<Snippet> of(Object dto) {
         return Arrays.stream(values())
                 .filter(that -> that.clazz.equals(getClassOf(dto)))
-                .map(it -> it.toResourceBuilderOf(dto))
-                .findFirst();
+                .map(it -> it.toSnippet(dto))
+                .findAny();
     }
 
-    private ResourceSnippetParametersBuilder toResourceBuilderOf(Object dto) {
-        return ResourceSnippetParameters.builder()
-                .responseSchema(new Schema(getNameOf(dto)))
-                .responseFields(toFields(withPrefix(getPrefixOf(dto), fieldsSupplier.get())));
+    private Snippet toSnippet(Object dto) {
+        return responseFields(toFields(withPrefix(getPrefixOf(dto), fieldsSupplier.get())));
     }
 
     private String getNameOf(Object dto) {

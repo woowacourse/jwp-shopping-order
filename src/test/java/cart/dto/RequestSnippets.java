@@ -1,6 +1,7 @@
 package cart.dto;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,10 +12,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.restdocs.payload.FieldDescriptor;
-
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.epages.restdocs.apispec.ResourceSnippetParametersBuilder;
-import com.epages.restdocs.apispec.Schema;
+import org.springframework.restdocs.snippet.Snippet;
 
 public enum RequestSnippets {
 
@@ -22,6 +20,9 @@ public enum RequestSnippets {
             "name", "제품 명",
             "price", "제품 가격",
             "imageUrl", "제품 이미지 url"
+    )),
+    CART_ITEM(CartItemRequest.class, () -> Map.of(
+            "productId", "제품 id"
     ));
 
     private static final String EMPTY = "";
@@ -35,17 +36,15 @@ public enum RequestSnippets {
         this.fieldsSupplier = fieldsSupplier;
     }
 
-    public static Optional<ResourceSnippetParametersBuilder> resourceBuilderOf(Object dto) {
+    public static Optional<Snippet> of(Object dto) {
         return Arrays.stream(values())
                 .filter(that -> that.clazz.equals(getClassOf(dto)))
-                .map(it -> it.toResourceBuilderOf(dto))
-                .findFirst();
+                .map(it -> it.toSnippet(dto))
+                .findAny();
     }
 
-    private ResourceSnippetParametersBuilder toResourceBuilderOf(Object dto) {
-        return ResourceSnippetParameters.builder()
-                .requestSchema(new Schema(getNameOf(dto)))
-                .requestFields(toFields(withPrefix(getPrefixOf(dto), fieldsSupplier.get())));
+    private Snippet toSnippet(Object dto) {
+        return requestFields(toFields(withPrefix(getPrefixOf(dto), fieldsSupplier.get())));
     }
 
     private String getNameOf(Object dto) {
