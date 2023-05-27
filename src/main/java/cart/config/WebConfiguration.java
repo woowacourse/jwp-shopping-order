@@ -35,7 +35,9 @@ public class WebConfiguration implements WebMvcConfigurer {
                 basicAuthorizationParser,
                 credentialThreadLocal
         );
-        registry.addInterceptor(authInterceptor).addPathPatterns("/cart-items/**");
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/cart-items/**")
+                .addPathPatterns("/coupons/**");
     }
 
     @Override
