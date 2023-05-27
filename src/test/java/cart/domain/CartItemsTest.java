@@ -3,8 +3,10 @@ package cart.domain;
 import static cart.fixtures.CartItemFixtures.바닐라_크림_콜드브루_ID_4_3개_17400원;
 import static cart.fixtures.CartItemFixtures.유자_민트_티_ID_1_5개_29500원;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.order.Price;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,15 @@ class CartItemsTest {
 
         // then
         assertThat(sum.getValue()).isEqualTo(46_900);
+    }
+
+    @DisplayName("장바구니 상품이 존재하지 않으면 예외가 발생한다")
+    @Test
+    void createCartItems_ItemNotExist_throws() {
+        // when, then
+        assertThatThrownBy(() -> new CartItems(Collections.emptyList()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("장바구니 상품이 존재하지 않습니다.");
     }
 
 }
