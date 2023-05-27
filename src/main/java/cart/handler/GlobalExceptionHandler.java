@@ -7,11 +7,19 @@ import cart.exception.MemberNotOwnerException;
 import cart.exception.PasswordInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Objects;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
+        return responseBadRequest(Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage());
+    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handlerAuthenticationException(final AuthenticationException exception) {
@@ -25,24 +33,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CartItemNotFoundException.class)
     public ResponseEntity<String> handleCartItemNotFoundException(final CartItemNotFoundException exception) {
-        return responseNotFound(exception);
+        return responseNotFound(exception.getMessage());
     }
 
     @ExceptionHandler(EmailInvalidException.class)
     public ResponseEntity<String> handleEmailInvalidException(final EmailInvalidException exception) {
-        return responseBadRequest(exception);
+        return responseBadRequest(exception.getMessage());
     }
 
     @ExceptionHandler(PasswordInvalidException.class)
     public ResponseEntity<String> handlePasswordInvalidException(final PasswordInvalidException exception) {
-        return responseBadRequest(exception);
+        return responseBadRequest(exception.getMessage());
     }
 
-    private ResponseEntity<String> responseNotFound(final Exception exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    private ResponseEntity<String> responseNotFound(final String message) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
-    private ResponseEntity<String> responseBadRequest(final Exception exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    private ResponseEntity<String> responseBadRequest(final String message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 }

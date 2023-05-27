@@ -1,12 +1,14 @@
 package cart.domain.cart;
 
 import cart.domain.product.Product;
+import cart.exception.CartItemNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
 
 public class CartItems {
 
+    private static final int EMPTY_COUNT = 0;
     private final List<CartItem> cartItems;
 
     public CartItems(final List<CartItem> cartItems) {
@@ -38,9 +40,9 @@ public class CartItems {
         CartItem cartItem = cartItems.stream()
                 .filter(item -> item.hasSameId(cartItemId))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("cartItem을 찾을 수 없습니다."));
+                .orElseThrow(CartItemNotFoundException::new);
 
-        if (quantity == 0) {
+        if (quantity == EMPTY_COUNT) {
             this.remove(cartItem);
             return;
         }

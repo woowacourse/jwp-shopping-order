@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.product.Product;
+import cart.exception.CartItemNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -92,7 +93,7 @@ class CartItemsTest {
 
         // when  & then
         assertThatThrownBy(() -> cartItems.changeQuantity(10, 10))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CartItemNotFoundException.class);
     }
 
     @DisplayName("아이템을 가지고 있는지 확인한다.")

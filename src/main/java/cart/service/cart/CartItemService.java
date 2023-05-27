@@ -51,6 +51,7 @@ public class CartItemService {
     public void updateQuantity(final Member member, final Long cartItemId, final CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
         Cart cart = cartRepository.findCartByMemberId(member.getId());
+
         validateOwner(cart, cartItem);
 
         if (request.getQuantity() == 0) {
