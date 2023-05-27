@@ -94,4 +94,25 @@ public class OrderIntegrationTest extends IntegrationTest {
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
+
+    @Test
+    @DisplayName("존재하지 않는 cartItemId를 통해 구매를 하는 경우 400을 응답한다.")
+    void orderFailByUnExistedCartItem() {
+        //given
+        final OrderRequest orderRequest = new OrderRequest(List.of(1L, 2L, 10L));
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }
