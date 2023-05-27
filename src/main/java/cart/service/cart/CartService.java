@@ -11,21 +11,23 @@ import cart.exception.MemberNotOwnerException;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CartItemService {
+public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
 
-    public CartItemService(final CartRepository cartRepository, final ProductRepository productRepository) {
+    public CartService(final CartRepository cartRepository, final ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(final Member member) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
 
@@ -34,6 +36,7 @@ public class CartItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
         Product product = productRepository.findProductById(cartItemRequest.getProductId());
@@ -48,6 +51,7 @@ public class CartItemService {
         return cartRepository.insertNewCartItem(cart.getId(), cartItem);
     }
 
+    @Transactional
     public void updateQuantity(final Member member, final Long cartItemId, final CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
         Cart cart = cartRepository.findCartByMemberId(member.getId());
@@ -65,6 +69,7 @@ public class CartItemService {
         cartRepository.updateCartItemQuantity(cartItem);
     }
 
+    @Transactional
     public void remove(final Member member, final Long cartItemId) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
         Cart cart = cartRepository.findCartByMemberId(member.getId());

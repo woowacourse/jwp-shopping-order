@@ -50,11 +50,6 @@ public class CartDao {
         return jdbcTemplate.queryForObject(sql, cartRowMapper, memberId);
     }
 
-    private Long findCartId(final Long memberId) {
-        String sqlForCartId = "SELECT id FROM cart WHERE member_id = ?";
-        return jdbcTemplate.queryForObject(sqlForCartId, Long.class, memberId);
-    }
-
     public Optional<CartItemEntity> findCartItemEntityById(final Long cartItemId) {
         String sql = "SELECT id, cart_id, product_id, quantity FROM cart_item WHERE id = :id";
         return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource("id", cartItemId), cartItemRowMapper).stream()

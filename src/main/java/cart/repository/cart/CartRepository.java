@@ -76,8 +76,4 @@ public class CartRepository {
     public void deleteCartItemById(final Long cartItemId) {
         cartDao.removeCartItem(cartItemId);
     }
-
-    public boolean isExistCartItem(final long cartItemId) {
-        return cartDao.isExistCartItem(cartItemId);
-    }
 }
