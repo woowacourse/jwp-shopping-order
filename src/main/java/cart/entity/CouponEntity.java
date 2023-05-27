@@ -1,5 +1,8 @@
 package cart.entity;
 
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.DiscountCondition;
+import cart.domain.coupon.DiscountPolicy;
 import java.util.Objects;
 
 public class CouponEntity {
@@ -46,6 +49,20 @@ public class CouponEntity {
         this.discountDeliveryFee = discountDeliveryFee;
         this.conditionType = conditionType;
         this.minimumPrice = minimumPrice;
+    }
+
+    public static CouponEntity from(final Coupon coupon) {
+        final DiscountPolicy discountPolicy = coupon.getDiscountPolicy();
+        final DiscountCondition discountCondition = coupon.getDiscountCondition();
+        return new CouponEntity(
+                coupon.getName(),
+                discountPolicy.getDiscountPolicyType().name(),
+                discountPolicy.getDiscountPrice().getLongValue(),
+                discountPolicy.getDiscountPercent(),
+                discountPolicy.isDiscountDeliveryFee(),
+                discountCondition.getDiscountConditionType().name(),
+                discountCondition.getMinimumPrice().getLongValue()
+        );
     }
 
     public Long getId() {

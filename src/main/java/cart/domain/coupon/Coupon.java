@@ -9,6 +9,10 @@ public class Coupon {
     private final DiscountPolicy discountPolicy;
     private final DiscountCondition discountCondition;
 
+    public Coupon(final String name, final DiscountPolicy discountPolicy, final DiscountCondition discountCondition) {
+        this(null, name, discountPolicy, discountCondition);
+    }
+
     public Coupon(
             final Long id,
             final String name,
@@ -33,5 +37,21 @@ public class Coupon {
             return discountPolicy.calculateDeliveryFee(deliveryFee);
         }
         return deliveryFee;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
+    }
+
+    public DiscountCondition getDiscountCondition() {
+        return discountCondition;
     }
 }
