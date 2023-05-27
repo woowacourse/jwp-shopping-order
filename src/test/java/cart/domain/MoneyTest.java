@@ -34,6 +34,14 @@ public class MoneyTest {
         assertThat(money.minus(new Money(1500))).isEqualTo(new Money(500));
     }
 
+    @DisplayName("빼면 음수인지 알 수 있다")
+    @Test
+    void is_negative_by_subtracting_money() {
+        var money = new Money(2000);
+
+        assertThat(money.isNegativeBySubtracting(2001)).isTrue();
+    }
+
     @DisplayName("백분율을 구할 수 있다")
     @Test
     void percentage_of_money() {

@@ -11,6 +11,8 @@ public class Money {
     private static final int MINIMUM = 0;
     private static final int MAX_PERCENTAGE = 100;
 
+    public static final Money ZERO = new Money(0);
+
     private final int value;
 
     public Money(int value) {
@@ -30,6 +32,10 @@ public class Money {
 
     public Money minus(Money other) {
         return new Money(value - other.value);
+    }
+
+    public boolean isNegativeBySubtracting(int value) {
+        return this.value - value < MINIMUM;
     }
 
     public Money percentageOf(int percentage) {
