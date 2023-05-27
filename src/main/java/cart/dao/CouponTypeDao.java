@@ -1,11 +1,13 @@
 package cart.dao;
 
 import cart.domain.CouponType;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CouponTypeDao {
@@ -30,4 +32,12 @@ public class CouponTypeDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public Optional<CouponType> findById(final Long couponTypeId) {
+        String sql = "SELECT * FROM coupon_type WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, couponTypeId));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
 }

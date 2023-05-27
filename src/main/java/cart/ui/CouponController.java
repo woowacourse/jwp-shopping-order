@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.CouponService;
 import cart.domain.Member;
+import cart.dto.CouponResponse;
 import cart.dto.CouponTypeResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,4 +43,9 @@ public class CouponController {
         return ResponseEntity.ok().body(couponsType);
     }
 
+    @GetMapping("/member")
+    public ResponseEntity<List<CouponResponse>> showMemberCoupons(Member member) {
+        List<CouponResponse> coupons = couponService.getCoupons(member.getId());
+        return ResponseEntity.ok().body(coupons);
+    }
 }

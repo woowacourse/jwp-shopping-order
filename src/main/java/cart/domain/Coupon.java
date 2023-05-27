@@ -3,36 +3,30 @@ package cart.domain;
 public class Coupon {
 
     private final Long id;
-    private final String name;
-    private final String description;
-    private final int discountAmount;
+    private final String usageStatus;
     private final Long memberId;
+    private final Long couponTypeId;
 
-    public Coupon(final Long id, final String name, final String description, final int discountAmount, final Long memberId) {
+    public Coupon(final Long id, final String usageStatus, final Long memberId, final Long couponTypeId) {
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.discountAmount = discountAmount;
+        this.usageStatus = usageStatus;
         this.memberId = memberId;
+        this.couponTypeId = couponTypeId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getDiscountAmount() {
-        return discountAmount;
+    public String getUsageStatus() {
+        return usageStatus;
     }
 
     public Long getMemberId() {
         return memberId;
+    }
+
+    public Long getCouponTypeId() {
+        return couponTypeId;
     }
 }

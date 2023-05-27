@@ -1,19 +1,26 @@
 package cart.dto;
 
+import cart.domain.Coupon;
 import cart.domain.CouponType;
 
-public class CouponTypeResponse {
+public class CouponResponse {
 
     private final Long id;
     private final String name;
     private final int discountAmount;
     private final String description;
+    private final boolean isUsed;
 
-    public CouponTypeResponse(final CouponType couponType) {
-        this.id = couponType.getId();
+    public CouponResponse(final Coupon coupon, final CouponType couponType) {
+        this.id = coupon.getId();
         this.name = couponType.getName();
         this.discountAmount = couponType.getDiscountAmount();
         this.description = couponType.getDescription();
+        this.isUsed = judgeTrueOrFalse(coupon.getUsageStatus());
+    }
+
+    private boolean judgeTrueOrFalse(final String usageStatus) {
+        return usageStatus.equals("Y");
     }
 
     public Long getId() {
@@ -32,4 +39,7 @@ public class CouponTypeResponse {
         return description;
     }
 
+    public boolean isUsed() {
+        return isUsed;
+    }
 }

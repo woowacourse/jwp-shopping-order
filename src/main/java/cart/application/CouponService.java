@@ -2,6 +2,8 @@ package cart.application;
 
 import cart.dao.CouponDao;
 import cart.dao.CouponTypeDao;
+import cart.domain.CouponType;
+import cart.dto.CouponResponse;
 import cart.dto.CouponTypeResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,4 +39,13 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
+    public List<CouponResponse> getCoupons(final Long memberId) {
+        return couponDao.findAll(memberId).stream()
+                .map(coupon -> {
+                    CouponType couponType = couponTypeDao.findById(coupon.getCouponTypeId())
+                            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰 종류입니다."));
+                    return new CouponResponse(coupon, couponType);
+                })
+                .collect(Collectors.toList());
+    }
 }

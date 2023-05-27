@@ -1,10 +1,23 @@
 package cart.dao;
 
+import cart.domain.Coupon;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class CouponDao {
+
+    private RowMapper<Coupon> rowMapper = (rs, rowNum) -> {
+        return new Coupon(
+                rs.getLong("id"),
+                rs.getString("usage_status"),
+                rs.getLong("member_id"),
+                rs.getLong("coupon_type_id")
+        );
+    };
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -24,6 +37,15 @@ public class CouponDao {
     public Long create(final Long memberId, final Long couponTypeId) {
         String sql = "INSERT INTO coupon(usage_status, member_id, coupon_type_id) VALUES (?, ?, ?) ";
         return (long) jdbcTemplate.update(sql, "N", memberId, couponTypeId);
+    }
+
+    public List<Coupon> findAll(final Long memberId) {
+        String sql = "SELECT * " +
+                "FROM coupon c " +
+                "INNER JOIN coupon_type ct " +
+                "ON c.coupon_type_id = ct.id " +
+                "WHERE member_id = ? ";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
 }
