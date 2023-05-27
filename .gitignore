@@ -38,3 +38,7 @@ out/
 
 ### log ###
 logs
+
+### private ###
+docker/.env
+application-prod.yml

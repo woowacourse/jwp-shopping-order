@@ -5,9 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource(
-        value = {
-                "file:/home/ubuntu/application-prod.yml"
-        },
+        value = {"file:/Users/choeuchang/Desktop/wooteco/course/level2/application-prod.yml"},
         factory = YamlPropertySourceFactory.class
 )
 public class ExternalPropertyConfig {
