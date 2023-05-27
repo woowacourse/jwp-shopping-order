@@ -1,12 +1,15 @@
 package cart.dao;
 
 import cart.entity.CouponEntity;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Repository;
 public class CouponDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<CouponEntity> rowMapper = (rs, rowNum) -> {
         final Long id = rs.getLong("id");
@@ -31,6 +35,7 @@ public class CouponDao {
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("coupon")
                 .usingColumns("name", "policy_type", "discount_price", "discount_percent",
@@ -53,9 +58,13 @@ public class CouponDao {
         );
     }
 
-    public List<CouponEntity> findAll() {
-        final String sql = "SELECT * FROM coupon";
-        return jdbcTemplate.query(sql, rowMapper);
+    public List<CouponEntity> findByIds(final List<Long> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        final String sql = "SELECT * FROM coupon WHERE id IN (:ids)";
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+        return namedJdbcTemplate.query(sql, parameters, rowMapper);
     }
 
     public Optional<CouponEntity> findById(final Long id) {

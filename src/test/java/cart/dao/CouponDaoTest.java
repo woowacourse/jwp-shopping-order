@@ -34,14 +34,14 @@ class CouponDaoTest {
         );
 
         // when
-        couponDao.insert(couponEntity);
+        final CouponEntity savedCouponEntity = couponDao.insert(couponEntity);
 
         // then
-        assertThat(couponDao.findAll()).hasSize(1);
+        assertThat(couponDao.findById(savedCouponEntity.getId())).isPresent();
     }
 
     @Test
-    void 전체_쿠폰을_조회한다() {
+    void 쿠폰_아이디_리스트를_입력받아_쿠폰을_조회한다() {
         // given
         final CouponEntity couponEntity1 = couponDao.insert(new CouponEntity(
                 "30000원 이상 3000원 할인 쿠폰",
@@ -55,7 +55,7 @@ class CouponDaoTest {
         ));
 
         // when
-        final List<CouponEntity> result = couponDao.findAll();
+        final List<CouponEntity> result = couponDao.findByIds(List.of(couponEntity1.getId(), couponEntity2.getId()));
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(couponEntity1, couponEntity2));
