@@ -39,7 +39,7 @@ public class CartItemService {
 
         CartItem cartItem = cart.addItem(product);
 
-        if (!cartItem.isExistAlready()) {
+        if (cartItem.isExistAlready()) {
             cartRepository.updateCartItemQuantity(cartItem);
             return cartItem.getId();
         }
