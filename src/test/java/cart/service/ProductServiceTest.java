@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
+import cart.domain.common.Money;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
@@ -106,7 +107,7 @@ class ProductServiceTest {
                 () -> assertThat(result.getId()).isEqualTo(id),
                 () -> assertThat(result.getName()).isEqualTo("블랙캣"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(100L)
+                () -> assertThat(result.getPrice()).isEqualTo(Money.from(100L))
         );
     }
 

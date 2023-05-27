@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.common.Money;
 import cart.exception.ProductNotValidException;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class Product {
     private final Long id;
     private final String name;
     private final String imageUrl;
-    private final long price;
+    private final Money price;
 
     public Product(final String name, final String imageUrl, final long price) {
         this(null, name, imageUrl, price);
@@ -22,7 +23,7 @@ public class Product {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
-        this.price = price;
+        this.price = Money.from(price);
     }
 
     private void validate(final String name, final String imageUrl, final long price) {
@@ -78,7 +79,7 @@ public class Product {
         return imageUrl;
     }
 
-    public long getPrice() {
+    public Money getPrice() {
         return price;
     }
 }

@@ -21,7 +21,12 @@ public class ProductEntity {
     }
 
     public static ProductEntity from(final Product product) {
-        return new ProductEntity(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
+        return new ProductEntity(
+                product.getId(),
+                product.getName(),
+                product.getImageUrl(),
+                product.getPrice().getLongValue()
+        );
     }
 
     public Product toDomain() {

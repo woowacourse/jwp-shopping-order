@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
+import cart.domain.common.Money;
 import cart.test.RepositoryTest;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -77,7 +78,7 @@ class ProductRepositoryTest {
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("블랙캣"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(10000L)
+                () -> assertThat(result.getPrice()).isEqualTo(Money.from(10000L))
         );
     }
 

@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.Product;
+import cart.domain.common.Money;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
 import cart.repository.ProductRepository;
@@ -103,7 +104,7 @@ class ProductControllerTest {
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("허브티"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("tea.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(1000L),
+                () -> assertThat(result.getPrice()).isEqualTo(Money.from(1000L)),
                 () -> assertThat(location).isEqualTo("/products/" + result.getId())
         );
     }
@@ -128,7 +129,7 @@ class ProductControllerTest {
                 () -> assertThat(result.getId()).isEqualTo(product.getId()),
                 () -> assertThat(result.getName()).isEqualTo("고양이"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(1000000L)
+                () -> assertThat(result.getPrice()).isEqualTo(Money.from(1000000L))
         );
     }
 

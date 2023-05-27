@@ -8,7 +8,7 @@ public class ProductDto {
 
     @Schema(description = "상품 Id", example = "1")
     private final Long id;
-    
+
     @Schema(description = "상품명", example = "치즈피자")
     private final String name;
 
@@ -26,7 +26,12 @@ public class ProductDto {
     }
 
     public static ProductDto from(final Product product) {
-        return new ProductDto(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
+        return new ProductDto(
+                product.getId(),
+                product.getName(),
+                product.getImageUrl(),
+                product.getPrice().getLongValue()
+        );
     }
 
     public Long getId() {
