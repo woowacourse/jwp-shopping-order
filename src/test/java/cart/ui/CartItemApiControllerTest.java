@@ -1,9 +1,9 @@
 package cart.ui;
 
-import static cart.fixtures.CartItemFixtures.바닐라_크림_콜드브루_ID_4_3개;
-import static cart.fixtures.CartItemFixtures.아메리카노_ID_3_8개;
-import static cart.fixtures.CartItemFixtures.유자_민트_티_ID_1_5개;
-import static cart.fixtures.CartItemFixtures.자몽_허니_블랙티_ID_2_7개;
+import static cart.fixtures.CartItemFixtures.바닐라_크림_콜드브루_ID_4_3개_17400원;
+import static cart.fixtures.CartItemFixtures.아메리카노_ID_3_8개_36000원;
+import static cart.fixtures.CartItemFixtures.유자_민트_티_ID_1_5개_29500원;
+import static cart.fixtures.CartItemFixtures.자몽_허니_블랙티_ID_2_7개_39900원;
 import static cart.utils.RestDocsHelper.customDocument;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willReturn;
@@ -90,10 +90,10 @@ class CartItemApiControllerTest {
         willReturn(member).given(memberDao).getMemberByEmail(email);
 
         final List<CartItemResponse> cartItems = List.of(
-                CartItemResponse.of(유자_민트_티_ID_1_5개(member)),
-                CartItemResponse.of(자몽_허니_블랙티_ID_2_7개(member)),
-                CartItemResponse.of(아메리카노_ID_3_8개(member)),
-                CartItemResponse.of(바닐라_크림_콜드브루_ID_4_3개(member))
+                CartItemResponse.of(유자_민트_티_ID_1_5개_29500원(member)),
+                CartItemResponse.of(자몽_허니_블랙티_ID_2_7개_39900원(member)),
+                CartItemResponse.of(아메리카노_ID_3_8개_36000원(member)),
+                CartItemResponse.of(바닐라_크림_콜드브루_ID_4_3개_17400원(member))
         );
         willReturn(cartItems).given(cartItemService).findByMember(member);
 
