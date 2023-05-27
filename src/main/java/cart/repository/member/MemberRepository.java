@@ -1,8 +1,8 @@
 package cart.repository.member;
 
-import cart.dao.MemberDao;
+import cart.dao.member.MemberDao;
 import cart.domain.member.Member;
-import cart.entity.MemberEntity;
+import cart.entity.member.MemberEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

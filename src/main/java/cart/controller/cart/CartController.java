@@ -1,11 +1,11 @@
-package cart.controller;
+package cart.controller.cart;
 
 import cart.config.auth.Auth;
 import cart.domain.member.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.service.CartItemService;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.cart.CartItemResponse;
+import cart.service.cart.CartItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +21,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cart-items")
-public class CartItemApiController {
+public class CartController {
 
     private final CartItemService cartItemService;
 
-    public CartItemApiController(CartItemService cartItemService) {
+    public CartController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 

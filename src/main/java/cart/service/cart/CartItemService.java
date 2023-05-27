@@ -1,12 +1,12 @@
-package cart.service;
+package cart.service.cart;
 
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.cart.CartItemResponse;
 import cart.exception.MemberNotOwnerException;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;

@@ -1,8 +1,8 @@
-package cart.controller;
+package cart.controller.product;
 
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import cart.service.ProductService;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
+import cart.service.product.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,11 +19,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-public class ProductApiController {
+public class ProductController {
 
     private final ProductService productService;
 
-    public ProductApiController(ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 

@@ -1,10 +1,10 @@
 package cart.integration;
 
 import cart.domain.member.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.cart.CartItemResponse;
+import cart.dto.product.ProductRequest;
 import cart.repository.member.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

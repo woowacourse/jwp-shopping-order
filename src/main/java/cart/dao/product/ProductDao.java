@@ -1,7 +1,7 @@
-package cart.dao;
+package cart.dao.product;
 
 import cart.domain.product.Product;
-import cart.entity.ProductEntity;
+import cart.entity.product.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

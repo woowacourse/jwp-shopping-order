@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.entity.cart;
 
 public class CartEntity {
 

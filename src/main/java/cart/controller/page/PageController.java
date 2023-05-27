@@ -1,7 +1,7 @@
-package cart.controller;
+package cart.controller.page;
 
 import cart.repository.member.MemberRepository;
-import cart.service.ProductService;
+import cart.service.product.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

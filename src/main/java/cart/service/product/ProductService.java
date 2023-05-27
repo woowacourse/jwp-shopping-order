@@ -1,8 +1,8 @@
-package cart.service;
+package cart.service.product;
 
 import cart.domain.product.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
 
