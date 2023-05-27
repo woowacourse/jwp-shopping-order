@@ -16,5 +16,5 @@ INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
-
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 3, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
