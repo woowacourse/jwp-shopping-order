@@ -3,6 +3,7 @@ package cart.service;
 import static java.util.stream.Collectors.toList;
 
 import cart.domain.CartItem;
+import cart.domain.Item;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemDto;
@@ -62,18 +63,18 @@ public class CartItemService {
             final Long cartItemId,
             final CartItemQuantityUpdateRequest request
     ) {
-        final CartItem cartItem = cartItemRepository.findById(cartItemId)
+        final Item item = cartItemRepository.findById(cartItemId)
                 .orElseThrow(CartItemNotFoundException::new);
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        cartItem.checkOwner(member);
+        item.checkOwner(member);
         if (request.getQuantity() == 0) {
             cartItemRepository.deleteById(cartItemId, memberId);
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemRepository.save(cartItem);
+        item.changeQuantity(request.getQuantity());
+        cartItemRepository.save(item);
     }
 }

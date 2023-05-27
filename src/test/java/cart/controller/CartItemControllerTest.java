@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.CartItem;
+import cart.domain.Item;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
@@ -71,7 +72,7 @@ public class CartItemControllerTest {
                 .andReturn();
 
         // then
-        final List<CartItem> result = cartItemRepository.findAllByMemberId(savedMember.getId());
+        final List<Item> result = cartItemRepository.findAllByMemberId(savedMember.getId());
         assertThat(result).hasSize(1);
     }
 
@@ -119,7 +120,7 @@ public class CartItemControllerTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final Item cartItem = cartItemRepository.save(new CartItem(member, product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
         final CartItemQuantityUpdateRequest updateRequest = new CartItemQuantityUpdateRequest(2);
 
@@ -134,7 +135,7 @@ public class CartItemControllerTest {
                 .andDo(print());
 
         // then
-        final CartItem result = cartItemRepository.findById(cartItem.getId()).get();
+        final Item result = cartItemRepository.findById(cartItem.getId()).get();
         assertThat(result.getQuantity()).isEqualTo(2);
     }
 }

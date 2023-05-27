@@ -70,6 +70,28 @@ class CartItemDaoTest {
     }
 
     @Test
+    void 사용자_아이디와_장바구니_상품_아이디_목록을_받아_조회한다() {
+        // given
+        final MemberEntity member = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
+        final ProductEntity product1 = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
+        final ProductEntity product2 = productDao.insert(new ProductEntity("치즈피자2", "2.jpg", 8900L));
+        final ProductEntity product3 = productDao.insert(new ProductEntity("치즈피자3", "3.jpg", 8900L));
+
+        final CartItemEntity cartItem1 = cartItemDao.insert(new CartItemEntity(member.getId(), product1.getId(), 1));
+        final CartItemEntity cartItem2 = cartItemDao.insert(new CartItemEntity(member.getId(), product2.getId(), 1));
+        final CartItemEntity cartItem3 = cartItemDao.insert(new CartItemEntity(member.getId(), product3.getId(), 1));
+
+        // when
+        final List<CartItemEntity> result = cartItemDao.findByIds(
+                List.of(cartItem1.getId(), cartItem2.getId()),
+                member.getId()
+        );
+
+        // then
+        assertThat(result).hasSize(2);
+    }
+
+    @Test
     void 사용자_아이디와_삭제할_장바구니의_상품_아이디를_받아_장바구니_항목을_제거한다() {
         // given
         final MemberEntity member = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password1"));

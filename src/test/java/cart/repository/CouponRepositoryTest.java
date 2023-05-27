@@ -91,4 +91,42 @@ class CouponRepositoryTest {
                 () -> assertThat(result.get()).usingRecursiveComparison().isEqualTo(coupon)
         );
     }
+
+    @Test
+    void 단일_쿠폰을_사용자_아이디와_함께_조회한다() {
+        // given
+        final Coupon coupon = couponRepository.save(new Coupon(
+                "30000원 이상 2000원 할인 쿠폰",
+                new AmountDiscountPolicy(2000L),
+                new NoneDiscountCondition()
+        ));
+        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
+        memberCouponDao.insert(new MemberCouponEntity(coupon.getId(), member.getId(), false));
+
+        // when
+        final Optional<Coupon> result = couponRepository.findByIdAndMemberId(coupon.getId(), member.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(result).isPresent(),
+                () -> assertThat(result.get()).usingRecursiveComparison().isEqualTo(coupon)
+        );
+    }
+
+    @Test
+    void 단일_쿠폰을_사용자_아이디와_함께_조회할_때_올바른_쿠폰이_아니면_빈값을_반환한다() {
+        // given
+        final Coupon coupon = couponRepository.save(new Coupon(
+                "30000원 이상 2000원 할인 쿠폰",
+                new AmountDiscountPolicy(2000L),
+                new NoneDiscountCondition()
+        ));
+        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
+
+        // when
+        final Optional<Coupon> result = couponRepository.findByIdAndMemberId(coupon.getId(), member.getId());
+
+        // then
+        assertThat(result).isNotPresent();
+    }
 }

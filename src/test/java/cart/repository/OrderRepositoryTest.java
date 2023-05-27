@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.CartItem;
+import cart.domain.Item;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
@@ -44,8 +45,8 @@ class OrderRepositoryTest {
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
         final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
         final Product product2 = productRepository.save(new Product("고양이", "cat.jpg", 1000000L));
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
+        final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final Coupon coupon = couponRepository.save(new Coupon(
                 1L,
                 "배달비 할인 쿠폰",
@@ -67,8 +68,8 @@ class OrderRepositoryTest {
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
         final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
         final Product product2 = productRepository.save(new Product("고양이", "cat.jpg", 1000000L));
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
+        final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final Coupon coupon = couponRepository.save(new Coupon(
                 1L,
                 "배달비 할인 쿠폰",
@@ -90,7 +91,7 @@ class OrderRepositoryTest {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
         final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final Item cartItem = cartItemRepository.save(new CartItem(member, product));
         final Coupon coupon = couponRepository.save(new Coupon(
                 1L,
                 "배달비 할인 쿠폰",

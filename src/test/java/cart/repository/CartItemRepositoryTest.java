@@ -3,6 +3,7 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartItem;
+import cart.domain.Item;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.test.RepositoryTest;
@@ -34,7 +35,7 @@ class CartItemRepositoryTest {
         final CartItem cartItem = new CartItem(member, product);
 
         // when
-        final CartItem result = cartItemRepository.save(cartItem);
+        final Item result = cartItemRepository.save(cartItem);
 
         // then
         assertThat(cartItemRepository.findAllByMemberId(member.getId())).hasSize(1);
@@ -54,7 +55,29 @@ class CartItemRepositoryTest {
         cartItemRepository.save(new CartItem(member2, product3));
 
         // when
-        final List<CartItem> result = cartItemRepository.findAllByMemberId(member1.getId());
+        final List<Item> result = cartItemRepository.findAllByMemberId(member1.getId());
+
+        // then
+        assertThat(result).hasSize(2);
+    }
+
+    @Test
+    void 사용자_아이디와_상품_아이디_목록을_받아_조회한다() {
+        // given
+        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
+        final Product product1 = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
+        final Product product2 = productRepository.save(new Product("치즈피자2", "2.jpg", 18900L));
+        final Product product3 = productRepository.save(new Product("치즈피자3", "3.jpg", 18900L));
+
+        final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
+        final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final Item cartItem3 = cartItemRepository.save(new CartItem(member, product3));
+
+        // when
+        final List<Item> result = cartItemRepository.findAllByIds(
+                List.of(cartItem1.getId(), cartItem2.getId()),
+                member.getId()
+        );
 
         // then
         assertThat(result).hasSize(2);
@@ -65,7 +88,7 @@ class CartItemRepositoryTest {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
         final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final Item cartItem = cartItemRepository.save(new CartItem(member, product));
 
         // when
         cartItemRepository.deleteById(cartItem.getId(), member.getId());
@@ -79,12 +102,12 @@ class CartItemRepositoryTest {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
         final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final Item cartItem = cartItemRepository.save(new CartItem(member, product));
 
         final CartItem updatedCartItem = new CartItem(cartItem.getId(), 2, cartItem.getMember(), cartItem.getProduct());
 
         // when
-        final CartItem result = cartItemRepository.save(updatedCartItem);
+        final Item result = cartItemRepository.save(updatedCartItem);
 
         // then
         assertThat(result.getQuantity()).isEqualTo(2);

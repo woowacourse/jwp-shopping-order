@@ -43,7 +43,16 @@ public class CouponRepository {
     }
 
     public Optional<Coupon> findById(final Long id) {
-        return couponDao.findById(id)
-                .map(CouponEntity::toDomain);
+        return couponDao.findById(id).map(CouponEntity::toDomain);
+    }
+
+    public Optional<Coupon> findByIdAndMemberId(final Long id, final Long memberId) {
+        final boolean invalidCoupon = memberCouponDao.findAllUnusedMemberCouponByMemberId(memberId).stream()
+                .map(MemberCouponEntity::getCouponId)
+                .noneMatch(couponId -> couponId.equals(id));
+        if (invalidCoupon) {
+            return Optional.empty();
+        }
+        return couponDao.findById(id).map(CouponEntity::toDomain);
     }
 }

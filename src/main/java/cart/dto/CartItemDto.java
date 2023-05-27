@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.CartItem;
+import cart.domain.Item;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "장바구니 상품")
@@ -19,7 +19,7 @@ public class CartItemDto {
         this.product = product;
     }
 
-    public static CartItemDto from(final CartItem cartItem) {
+    public static CartItemDto from(final Item cartItem) {
         final ProductDto productDto = ProductDto.from(cartItem.getProduct());
         return new CartItemDto(cartItem.getId(), cartItem.getQuantity(), productDto);
     }
