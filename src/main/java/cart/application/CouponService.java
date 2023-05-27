@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.dao.CouponDao;
 import cart.dao.CouponTypeDao;
+import cart.domain.Coupon;
 import cart.domain.CouponType;
 import cart.dto.CouponResponse;
 import cart.dto.CouponTypeResponse;
@@ -43,7 +44,7 @@ public class CouponService {
         return couponDao.findAll(memberId).stream()
                 .map(coupon -> {
                     CouponType couponType = couponTypeDao.findById(coupon.getCouponTypeId())
-                            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰 종류입니다."));
+                            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰 종류입니다. 쿠폰 타입 ID가 일치하는지 확인해주세요."));
                     return new CouponResponse(coupon, couponType);
                 })
                 .collect(Collectors.toList());
@@ -51,7 +52,16 @@ public class CouponService {
 
     @Transactional
     public void deleteByCouponId(final Long couponId) {
+        validateCouponUsageStatus(couponId);
         couponDao.deleteById(couponId);
+    }
+
+    private void validateCouponUsageStatus(final Long couponId) {
+        Coupon coupon = couponDao.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("쿠폰을 찾을 수 없습니다. 쿠폰 ID가 일치하는지 확인해주세요."));
+        if (coupon.getUsageStatus().equals("N")) {
+            throw new IllegalArgumentException("사용하지 않은 쿠폰은 삭제할 수 없습니다. 사용한 후에 삭제해주세요!");
+        }
     }
 
 }

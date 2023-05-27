@@ -50,9 +50,10 @@ public class CouponController {
         return ResponseEntity.ok().body(coupons);
     }
 
-    @DeleteMapping("/coupons/{couponId}")
+    @DeleteMapping("/{couponId}")
     public ResponseEntity<Void> deleteCoupon(Member member, @PathVariable Long couponId) {
         couponService.deleteByCouponId(couponId);
         return ResponseEntity.noContent().build();
     }
+
 }
