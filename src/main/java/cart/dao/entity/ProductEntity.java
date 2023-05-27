@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public class ProductEntity {
 
-    private Long id;
-    private String name;
-    private Integer price;
-    private String imageUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final String name;
+    private final Integer price;
+    private final String imageUrl;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public ProductEntity(String name, Integer price, String imageUrl) {
         this(null, name, price, imageUrl);

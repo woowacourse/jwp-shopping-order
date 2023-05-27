@@ -5,11 +5,11 @@ import java.util.Objects;
 
 public class OrderEntity {
 
-    private Long id;
-    private Long memberId;
-    private Integer usedPoint;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final Long memberId;
+    private final Integer usedPoint;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public OrderEntity(Long id, Long memberId, Integer usedPoint, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;

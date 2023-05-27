@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public class CartProductItemEntity {
 
-    private Long id;
-    private Long memberId;
-    private ProductEntity productEntity;
-    private Integer quantity;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final Long memberId;
+    private final ProductEntity productEntity;
+    private final Integer quantity;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public CartProductItemEntity(Long id, Long memberId, ProductEntity productEntity, Integer quantity, LocalDateTime createdAt,
             LocalDateTime updatedAt) {

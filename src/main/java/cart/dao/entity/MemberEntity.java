@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public class MemberEntity {
 
-    private Long id;
-    private String email;
-    private String password;
-    private Integer point;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final Integer point;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public MemberEntity(String email, String password, Integer point) {
         this(null, email, password, point);

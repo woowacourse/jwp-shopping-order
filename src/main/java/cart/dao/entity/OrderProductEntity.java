@@ -5,15 +5,15 @@ import java.util.Objects;
 
 public class OrderProductEntity {
 
-    private Long id;
-    private Long orderId;
-    private Long productId;
-    private String orderProductName;
-    private Integer orderProductPrice;
-    private String orderProductImageUrl;
-    private Integer quantity;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final Long orderId;
+    private final Long productId;
+    private final String orderProductName;
+    private final Integer orderProductPrice;
+    private final String orderProductImageUrl;
+    private final Integer quantity;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public OrderProductEntity(Long id, Long orderId, Long productId, String orderProductName, Integer orderProductPrice,
             String orderProductImageUrl, Integer quantity, LocalDateTime createdAt, LocalDateTime updatedAt) {
