@@ -3,6 +3,7 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -145,10 +146,12 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     private void 상품_검증(ProductResponse 상품, String 이름, int 가격, String 이미지_URL) {
-        assertThat(상품.getId()).isPositive();
-        assertThat(상품.getName()).isEqualTo(이름);
-        assertThat(상품.getPrice()).isEqualTo(가격);
-        assertThat(상품.getImageUrl()).isEqualTo(이미지_URL);
+        assertAll(
+                () -> assertThat(상품.getId()).isPositive(),
+                () -> assertThat(상품.getName()).isEqualTo(이름),
+                () -> assertThat(상품.getPrice()).isEqualTo(가격),
+                () -> assertThat(상품.getImageUrl()).isEqualTo(이미지_URL)
+        );
     }
 
     private ExtractableResponse<Response> 상품_조회(String 위치) {

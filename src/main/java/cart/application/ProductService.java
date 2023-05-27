@@ -31,7 +31,7 @@ public class ProductService {
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productDao.save(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {

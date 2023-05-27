@@ -45,7 +45,7 @@ public class ProductDao {
         }
     }
 
-    public Long createProduct(Product product) {
+    public Long save(Product product) {
         final SqlParameterSource source = new BeanPropertySqlParameterSource(product);
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
