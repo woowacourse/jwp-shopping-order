@@ -1,5 +1,6 @@
 package cart.fixtures;
 
+import static cart.fixtures.ProductFixtures.맥북_1500000원_ID_5;
 import static cart.fixtures.ProductFixtures.바닐라_크림_콜드브루_5800원_ID_4;
 import static cart.fixtures.ProductFixtures.아메리카노_4500원_ID_3;
 import static cart.fixtures.ProductFixtures.유자_민트_티_5900원_ID_1;
@@ -25,5 +26,9 @@ public class CartItemFixtures {
 
     public static CartItem 바닐라_크림_콜드브루_ID_4_3개_17400원(Member member) {
         return new CartItem(4L, 3, 바닐라_크림_콜드브루_5800원_ID_4, member);
+    }
+
+    public static CartItem 맥북_ID_5_1개_1500000원(Member member) {
+        return new CartItem(5L, 1, 맥북_1500000원_ID_5, member);
     }
 }

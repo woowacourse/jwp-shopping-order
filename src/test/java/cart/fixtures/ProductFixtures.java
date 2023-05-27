@@ -29,4 +29,11 @@ public class ProductFixtures {
             "바닐라 크림 콜드브루",
             5_800,
             "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000000487]_20210430112319040.jpg");
+
+    public static final Product 맥북_1500000원_ID_5 = new Product(
+            5L,
+            "맥북",
+            1_500_000,
+            "https://www.google.com/aclk?sa=l&ai=DChcSEwj-ldzrhZb_AhXBPGAKHRzYDc4YABADGgJ0bQ&sig=AOD64_054oKMYNU04wcYoDv5JhUHOOFfzQ&adurl&ctype=5&ved=2ahUKEwjn0tLrhZb_AhUVPnAKHWKMAAYQvhd6BAgBEHY"
+    );
 }
