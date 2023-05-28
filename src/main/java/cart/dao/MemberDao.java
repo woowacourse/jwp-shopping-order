@@ -49,10 +49,10 @@ public class MemberDao {
         return jdbcTemplate.query(sql, memberEntityRowMapper());
     }
 
-    public Long saveMember(final Member memberEntity) {
+    public Long saveMember(final Member member) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("email", memberEntity.getEmail())
-                .addValue("password", memberEntity.getPassword());
+                .addValue("email", member.getEmail())
+                .addValue("password", member.getPassword());
 
         return insertAction.executeAndReturnKey(parameters).longValue();
     }

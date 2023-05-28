@@ -39,23 +39,23 @@ public class ProductDao {
         return Optional.of(products.get(0));
     }
 
-    public Long saveProduct(final Product productEntity) {
+    public Long saveProduct(final Product product) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", productEntity.getName())
-                .addValue("price", productEntity.getPrice())
-                .addValue("image_url", productEntity.getImageUrl());
+                .addValue("name", product.getName())
+                .addValue("price", product.getPrice())
+                .addValue("image_url", product.getImageUrl());
 
         return insertAction.executeAndReturnKey(parameters).longValue();
     }
 
-    public void updateProduct(final Long productId, final Product productEntity) {
+    public void updateProduct(final Long productId, final Product product) {
         final String updateProductQuery
                 = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
 
         jdbcTemplate.update(updateProductQuery,
-                productEntity.getName(),
-                productEntity.getPrice(),
-                productEntity.getImageUrl(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
                 productId
         );
     }
