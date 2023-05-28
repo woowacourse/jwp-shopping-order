@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: application
+    active: prod
 
 server:
   port: 80
