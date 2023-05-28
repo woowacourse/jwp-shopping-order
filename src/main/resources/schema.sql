@@ -1,9 +1,19 @@
+CREATE TABLE policy
+(
+    id           BIGINT PRIMARY KEY AUTO_INCREMENT,
+    isPercentage BOOLEAN NOT NULL,
+    amount       INT     NOT NULL
+);
+
 CREATE TABLE product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
     price     INT          NOT NULL,
-    image_url VARCHAR(255) NOT NULL
+    image_url VARCHAR(255) NOT NULL,
+    isOnSale  BOOLEAN NOT NULL,
+    policy_id BIGINT       NOT NULL,
+    FOREIGN KEY (policy_id) REFERENCES policy (id)
 );
 
 CREATE TABLE member
@@ -11,6 +21,16 @@ CREATE TABLE member
     id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE coupon
+(
+    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name      VARCHAR(255) NOT NULL,
+    policy_id BIGINT       NOT NULL,
+    member_id BIGINT       NOT NULL,
+    FOREIGN KEY (policy_id) REFERENCES policy (id),
+    FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
 CREATE TABLE cart
@@ -28,21 +48,4 @@ CREATE TABLE cart_item
     quantity   INT    NOT NULL,
     FOREIGN KEY (cart_id) REFERENCES cart (id),
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
-);
-
-CREATE TABLE policy
-(
-    id           BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name         VARCHAR(255) NOT NULL,
-    isPercentage BOOLEAN      NOT NULL,
-    amount        INT          NOT NULL
-);
-
-CREATE TABLE coupon
-(
-    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
-    policy_id BIGINT NOT NULL,
-    member_id BIGINT NOT NULL,
-    FOREIGN KEY (policy_id) REFERENCES policy (id),
-    FOREIGN KEY (member_id) REFERENCES member (id)
 );
