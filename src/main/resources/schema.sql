@@ -39,6 +39,6 @@ CREATE TABLE IF NOT EXISTS order_product
     order_id   BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity   INT    NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES member (id),
+    FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
