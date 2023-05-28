@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -44,13 +45,27 @@ public class OrderDao {
     }
 
     public List<Order> findOrderByMember(final Long memberId) {
-        final String findAllQuery =
+        final String findOrderByMemberQuery =
                 "SELECT orders.id, orders.member_id, orders.created_at, orders.total_price, orders.final_price, member.id, member.email, member.password "
                         + "FROM orders "
                         + "INNER JOIN member ON orders.member_id = member.id "
                         + "WHERE orders.member_id = ?";
 
-        return jdbcTemplate.query(findAllQuery, orderRowMapper(), memberId);
+        return jdbcTemplate.query(findOrderByMemberQuery, orderRowMapper(), memberId);
+    }
+
+    public Optional<Order> findById(final Long id) {
+        final String findByIdQuery =
+                "SELECT orders.id, orders.member_id, orders.created_at, orders.total_price, orders.final_price, member.id, member.email, member.password "
+                        + "FROM orders "
+                        + "INNER JOIN member ON orders.member_id = member.id "
+                        + "WHERE orders.id = ?";
+        final List<Order> orders = jdbcTemplate.query(findByIdQuery, orderRowMapper(), id);
+
+        if (orders.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(orders.get(0));
     }
 
     private RowMapper<Order> orderRowMapper() {

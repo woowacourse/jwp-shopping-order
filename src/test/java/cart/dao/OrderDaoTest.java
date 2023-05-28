@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.domain.Member;
 import cart.domain.Order;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,26 @@ class OrderDaoTest {
         final Order memberAOrder = orderByMemberA.get(0);
         assertThat(memberAOrder.getMember().getEmail()).isEqualTo("testEmailA");
         assertThat(memberAOrder.getTotalPrice()).isEqualTo(70_000);
+    }
+
+    @Test
+    void 식별자로_주문_조회_테스트() {
+        //given
+        final Member memberFixtureA = getSavedMemberFixture("testEmailA");
+        final Order orderA = new Order(memberFixtureA, 70_000, 65_000);
+        final Long savedOrderId = orderDao.saveOrder(orderA);
+
+        final Member memberFixtureB = getSavedMemberFixture("testEmailB");
+        final Order orderB = new Order(memberFixtureB, 30_000, 28_000);
+        orderDao.saveOrder(orderB);
+
+        //when
+        final Optional<Order> byId = orderDao.findById(savedOrderId);
+
+        //then
+        assertThat(byId).isNotEmpty();
+        assertThat(byId.get().getId()).isEqualTo(savedOrderId);
+        assertThat(byId.get().getTotalPrice()).isEqualTo(70_000);
     }
 
     private Member getSavedMemberFixture(final String email) {
