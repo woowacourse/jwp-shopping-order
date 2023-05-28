@@ -1,7 +1,7 @@
-INSERT INTO policy (id, isPercentage, amount) VALUES (1, false, 0);
-INSERT INTO policy (id, isPercentage, amount) VALUES (2, false, 0);
-INSERT INTO policy (id, isPercentage, amount) VALUES (3, false, 0);
-INSERT INTO policy (id, isPercentage, amount) VALUES (4, false, 0);
+INSERT INTO policy (id, isPercentage, amount) VALUES (1, true, 0);
+INSERT INTO policy (id, isPercentage, amount) VALUES (2, true, 0);
+INSERT INTO policy (id, isPercentage, amount) VALUES (3, true, 0);
+INSERT INTO policy (id, isPercentage, amount) VALUES (4, true, 0);
 
 INSERT INTO product (id, name, price, image_url, isOnSale, policy_id) VALUES (1, '치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80', false, 1);
 INSERT INTO product (id, name, price, image_url , isOnSale, policy_id) VALUES (2, '샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80', false, 2);
