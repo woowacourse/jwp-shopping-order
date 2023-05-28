@@ -27,7 +27,8 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            boolean isDeleted = rs.getBoolean("is_deleted");
+            return new Product(productId, name, price, imageUrl, isDeleted);
         });
     }
 
@@ -37,7 +38,8 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            boolean isDeleted = rs.getBoolean("is_deleted");
+            return new Product(productId, name, price, imageUrl, isDeleted);
         });
     }
 
@@ -66,7 +68,7 @@ public class ProductDao {
     }
 
     public void deleteProduct(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
+        String sql = "UPDATE product SET is_deleted = TRUE WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
 }
