@@ -1,6 +1,7 @@
 package cart.domain.cartitem.dto;
 
 public class CartItemSaveReq {
+
     private final Long cartItemId;
     private final int cartItemQuantity;
 

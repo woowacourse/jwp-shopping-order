@@ -28,7 +28,7 @@ public class MemberIntegrationTest extends IntegrationTest {
             .post("/users/join")
             .then()
             .statusCode(HttpStatus.CREATED.value())
-            .header("Location", "/users/" + 1);
+            .header(LOCATION, "/users/" + 1);
     }
 
     @Test
@@ -76,15 +76,5 @@ public class MemberIntegrationTest extends IntegrationTest {
             .body("[2].id", equalTo(3))
             .body("[2].name", equalTo("zuny"))
             .body("[2].password", equalTo("jourzura3"));
-    }
-
-    private void 사용자_저장(final MemberSaveRequest 사용자_저장_요청) {
-        given()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(사용자_저장_요청)
-            .when()
-            .post("/users/join")
-            .then()
-            .statusCode(HttpStatus.CREATED.value());
     }
 }

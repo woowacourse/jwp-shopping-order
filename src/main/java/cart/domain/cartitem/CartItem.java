@@ -6,6 +6,7 @@ import cart.exception.ForbiddenException;
 import java.util.Objects;
 
 public class CartItem {
+
     private int quantity;
     private final Product product;
     private final Member member;

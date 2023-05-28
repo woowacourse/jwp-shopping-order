@@ -1,24 +1,16 @@
 package cart.integration;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.BeforeEach;
+import cart.application.dto.CartItemQuantityUpdateRequest;
+import cart.application.dto.CartItemRequest;
+import cart.application.dto.MemberLoginRequest;
+import cart.application.dto.MemberSaveRequest;
+import cart.application.dto.ProductRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
@@ -26,200 +18,241 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("classpath:/init.sql")
 public class CartItemIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    private MemberDao memberDao;
-
-    private Long productId;
-    private Long productId2;
-    private Member member;
-    private Member member2;
-
-    @BeforeEach
-    void setUp() {
-        super.setUp();
-
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
-
-        memberDao.addMember(new Member(1L, "jourey@test.com", "test1234"));
-        memberDao.addMember(new Member(2L, "jourey2@test.com", "test1234"));
-
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
-    }
-
     @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
+        // given
+        final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
+        사용자_저장(져니_등록_요청);
 
-        assertThat(response.statusCode())
-            .isEqualTo(HttpStatus.CREATED.value());
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        final ProductRequest 피자_등록_요청 = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        상품_저장(치킨_등록_요청);
+        상품_저장(피자_등록_요청);
+
+        // expected
+        final CartItemRequest 장바구니_저장_요청 = new CartItemRequest(1L);
+        given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(져니_등록_요청.getName(), 져니_등록_요청.getPassword())
+            .body(장바구니_저장_요청)
+            .when()
+            .post("/cart-items")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .header(LOCATION, "/cart-items/" + 1);
     }
 
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
+        // given
+        final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
+        사용자_저장(져니_등록_요청);
 
-        assertThat(response.statusCode())
-            .isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        // expected
+        final CartItemRequest 장바구니_저장_요청 = new CartItemRequest(1L);
+        given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(져니_등록_요청.getName(), "test123")
+            .body(장바구니_저장_요청)
+            .when()
+            .post("/cart-items")
+            .then()
+            .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     @Test
     void getCartItems() {
-        Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
-        Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
+        // given
+        final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
+        사용자_저장(져니_등록_요청);
 
-        ExtractableResponse<Response> response = requestGetCartItems(member);
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        final ProductRequest 피자_등록_요청 = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        상품_저장(치킨_등록_요청);
+        상품_저장(피자_등록_요청);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
+        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        final CartItemRequest 피자_장바구니_저장_요청 = new CartItemRequest(2L);
+        장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
+        장바구니_상품_저장(져니_로그인_요청, 피자_장바구니_저장_요청);
 
-        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
-                .map(CartItemResponse::getId)
-                .collect(Collectors.toList());
-        assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
+        final CartItemQuantityUpdateRequest 장바구니_수량_수정_요청 = new CartItemQuantityUpdateRequest(10);
+        장바구니_상품_수량_수정(져니_로그인_요청, 장바구니_수량_수정_요청, 1L);
+
+        // expected
+        given().log().all()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/cart-items")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("size", is(2))
+            .body("[0].id", equalTo(1))
+            .body("[0].quantity", equalTo(10))
+            .body("[0].product.id", equalTo(1))
+            .body("[0].product.name", equalTo("치킨"))
+            .body("[0].product.price", equalTo(10000))
+            .body("[0].product.imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("[1].id", equalTo(2))
+            .body("[1].quantity", equalTo(1))
+            .body("[1].product.id", equalTo(2))
+            .body("[1].product.name", equalTo("피자"))
+            .body("[1].product.price", equalTo(15000))
+            .body("[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
     }
 
     @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     @Test
     void increaseCartItemQuantity() {
-        Long cartItemId = requestAddCartItemAndGetId(member, productId);
+        // given
+        final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
+        사용자_저장(져니_등록_요청);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        상품_저장(치킨_등록_요청);
 
-        ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
+        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
 
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
-                .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
-                .findFirst();
-
-        assertThat(selectedCartItemResponse.isPresent()).isTrue();
-        assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
+        // expected
+        final CartItemQuantityUpdateRequest 장바구니_수량_수정_요청 = new CartItemQuantityUpdateRequest(10);
+        given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .body(장바구니_수량_수정_요청)
+            .patch("/cart-items/{cartItemId}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract();
     }
 
     @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     @Test
     void decreaseCartItemQuantityToZero() {
-        Long cartItemId = requestAddCartItemAndGetId(member, productId);
+        // given
+        final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
+        사용자_저장(져니_등록_요청);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        상품_저장(치킨_등록_요청);
 
-        ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
+        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
 
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
-                .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
-                .findFirst();
+        final CartItemQuantityUpdateRequest 장바구니_수량_수정_요청 = new CartItemQuantityUpdateRequest(0);
+        장바구니_상품_수량_수정(져니_로그인_요청, 장바구니_수량_수정_요청, 1L);
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        // expected
+        given().log().all()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/cart-items")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("size", is(0));
     }
 
     @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     @Test
     void updateOtherMembersCartItem() {
-        Long cartItemId = requestAddCartItemAndGetId(member, productId);
+        // given
+        final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
+        final MemberSaveRequest 라온_등록_요청 = new MemberSaveRequest("raon", "jourzura!");
+        사용자_저장(져니_등록_요청);
+        사용자_저장(라온_등록_요청);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        상품_저장(치킨_등록_요청);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
+        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
+
+        // expected
+        final CartItemQuantityUpdateRequest 장바구니_수량_수정_요청 = new CartItemQuantityUpdateRequest(10);
+        given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(라온_등록_요청.getName(), 라온_등록_요청.getPassword())
+            .when()
+            .body(장바구니_수량_수정_요청)
+            .patch("/cart-items/{cartItemId}", 1)
+            .then()
+            .statusCode(HttpStatus.FORBIDDEN.value())
+            .extract();
     }
 
     @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     @Test
     void removeCartItem() {
-        Long cartItemId = requestAddCartItemAndGetId(member, productId);
+        // given
+        final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
+        사용자_저장(져니_등록_요청);
 
-        ExtractableResponse<Response> response = requestDeleteCartItem(cartItemId);
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        상품_저장(치킨_등록_요청);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
+        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
 
-        ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
+        // when
+        given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .delete("/cart-items/{cartItemId}", 1)
+            .then();
 
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
-                .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
-                .findFirst();
-
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        // then
+        given().log().all()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/cart-items")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("size", is(0));
     }
 
-    private Long createProduct(ProductRequest productRequest) {
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when()
-                .post("/products")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract();
+    @DisplayName("장바구니에 담긴 아이템을 여러 개 삭제한다.")
+    @Test
+    void removeCartItems() {
+        // given
+        final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
+        사용자_저장(져니_등록_요청);
 
-        return getIdFromCreatedResponse(response);
-    }
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        final ProductRequest 피자_등록_요청 = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        상품_저장(치킨_등록_요청);
+        상품_저장(피자_등록_요청);
 
-    private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
-        return Long.parseLong(response.header("Location").split("/")[2]);
-    }
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
+        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        final CartItemRequest 피자_장바구니_저장_요청 = new CartItemRequest(2L);
+        장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
+        장바구니_상품_저장(져니_로그인_요청, 피자_장바구니_저장_요청);
 
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(cartItemRequest)
-                .when()
-                .post("/cart-items")
-                .then()
-                .log().all()
-                .extract();
-    }
+        // when
+        given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .delete("/cart-items?ids=1,2")
+            .then();
 
-    private Long requestAddCartItemAndGetId(Member member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
-        return getIdFromCreatedResponse(response);
-    }
-
-    private ExtractableResponse<Response> requestGetCartItems(Member member) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .get("/cart-items")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
-        CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .body(quantityUpdateRequest)
-                .patch("/cart-items/{cartItemId}", cartItemId)
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> requestDeleteCartItem(Long cartItemId) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .delete("/cart-items/{cartItemId}", cartItemId)
-                .then()
-                .log().all()
-                .extract();
+        // then
+        given().log().all()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/cart-items")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("size", is(0));
     }
 }

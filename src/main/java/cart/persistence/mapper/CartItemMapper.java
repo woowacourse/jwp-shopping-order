@@ -10,6 +10,7 @@ import cart.domain.product.dto.ProductWithId;
 import cart.persistence.dto.CartItemDto;
 
 public class CartItemMapper {
+
     public static CartItem convertCartItem(final CartItemDto cartItemDto) {
         return new CartItem(cartItemDto.getProductQuantity(), convertProduct(cartItemDto), convertMember(cartItemDto));
     }
@@ -17,6 +18,7 @@ public class CartItemMapper {
     public static CartItemWithId convertCartItemWithId(final CartItemDto cartItemDto) {
         final ProductWithId productWithId = new ProductWithId(cartItemDto.getProductId(), convertProduct(cartItemDto));
         final MemberWithId memberWithId = new MemberWithId(cartItemDto.getMemberId(), convertMember(cartItemDto));
-        return new CartItemWithId(cartItemDto.getCartId(), cartItemDto.getProductQuantity(), productWithId, memberWithId);
+        return new CartItemWithId(cartItemDto.getCartId(), cartItemDto.getProductQuantity(), productWithId,
+            memberWithId);
     }
 }
