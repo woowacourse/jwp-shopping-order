@@ -1,6 +1,7 @@
-package cart.domain;
+package member.domain;
 
 public class Member {
+
     private Long id;
     private String email;
     private String password;

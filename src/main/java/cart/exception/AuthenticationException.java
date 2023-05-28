@@ -1,4 +1,7 @@
 package cart.exception;
 
-public class AuthenticationException extends RuntimeException {
+import common.ui.ApiException;
+
+public class AuthenticationException extends ApiException {
+
 }

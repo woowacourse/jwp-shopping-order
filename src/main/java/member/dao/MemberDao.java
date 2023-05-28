@@ -1,14 +1,12 @@
-package cart.dao;
-
-import cart.domain.Member;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+package member.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import member.domain.Member;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
@@ -52,10 +50,10 @@ public class MemberDao {
     }
 
     private static class MemberRowMapper implements RowMapper<Member> {
+
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
         }
     }
 }
-

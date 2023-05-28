@@ -1,27 +1,26 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import member.dao.MemberDao;
+import member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
+import product.application.dto.ProductRequest;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
@@ -33,6 +32,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     private Member member;
     private Member member2;
 
+    @Override
     @BeforeEach
     void setUp() {
         super.setUp();

@@ -3,7 +3,7 @@ package cart;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"cart", "member", "product", "coupon", "common"})
 public class JwpCartApplication {
 
     public static void main(String[] args) {

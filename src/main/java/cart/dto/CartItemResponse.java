@@ -1,8 +1,10 @@
 package cart.dto;
 
 import cart.domain.CartItem;
+import product.ui.dto.ProductResponse;
 
 public class CartItemResponse {
+
     private Long id;
     private int quantity;
     private ProductResponse product;

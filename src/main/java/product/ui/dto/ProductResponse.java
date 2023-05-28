@@ -1,22 +1,23 @@
-package cart.domain;
+package product.ui.dto;
 
-public class Product {
+import product.domain.Product;
+
+public class ProductResponse {
+
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
 
-    public Product(String name, int price, String imageUrl) {
+    private ProductResponse(Long id, String name, int price, String imageUrl) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public static ProductResponse of(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {
