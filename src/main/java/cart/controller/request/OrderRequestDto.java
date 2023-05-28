@@ -14,4 +14,7 @@ public class OrderRequestDto {
         this.cartItemIds = cartItemIds;
     }
 
+    public List<Long> getCartItemIds() {
+        return cartItemIds;
+    }
 }

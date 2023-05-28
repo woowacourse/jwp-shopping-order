@@ -47,7 +47,7 @@ public class OrderRepository {
 
     private List<OrderProduct> saveOrderProducts(final Long orderId, final List<OrderProduct> orderProducts) {
         List<OrderProduct> orderProductsAfterSave = new LinkedList<>();
-        for (OrderProduct orderProduct : orderProducts) {
+        for (final OrderProduct orderProduct : orderProducts) {
             OrderProductDto orderProductDto = OrderProductDto.of(orderId, orderProduct);
             Long insert = orderProductDao.insert(orderProductDto);
             orderProductsAfterSave.add(new OrderProduct(insert, orderProduct.getProduct(),
