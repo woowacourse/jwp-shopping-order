@@ -1,9 +1,7 @@
 package cart.exception;
 
-import org.springframework.http.HttpStatus;
-
 import cart.domain.CartItem;
-import cart.domain.Member;
+import org.springframework.http.HttpStatus;
 
 public class CartItemException extends ApplicationException {
 
@@ -17,8 +15,8 @@ public class CartItemException extends ApplicationException {
     }
 
     public static class IllegalMember extends CartItemException {
-        public IllegalMember(CartItem cartItem, Member member) {
-            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
+        public IllegalMember(CartItem cartItem, Long memberId) {
+            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + memberId);
         }
     }
 }

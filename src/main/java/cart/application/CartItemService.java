@@ -1,5 +1,7 @@
 package cart.application;
 
+import static java.util.stream.Collectors.toList;
+
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
@@ -10,7 +12,6 @@ import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.ProductNotFound;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,18 +27,20 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productDao.findById(cartItemRequest.getProductId())
                 .orElseThrow(ProductNotFound::new);
-        return cartItemDao.save(new CartItem(member, product));
+        return cartItemDao.save(new CartItem(product, member.getId()));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
+        cartItem.checkOwner(member.getId());
 
         if (request.getQuantity() == 0) {
             cartItemDao.deleteById(id);
@@ -50,7 +53,7 @@ public class CartItemService {
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
+        cartItem.checkOwner(member.getId());
 
         cartItemDao.deleteById(id);
     }
