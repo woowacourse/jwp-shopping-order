@@ -24,7 +24,7 @@ class MemberRepositoryImplTest {
     @BeforeEach
     void setUp() {
         memberRepositoryImpl = new MemberRepositoryImpl(
-                new MemberDao2(jdbcTemplate)
+                new MemberDao(jdbcTemplate)
         );
     }
 

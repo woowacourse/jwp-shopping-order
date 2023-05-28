@@ -16,11 +16,11 @@ class MemberDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private MemberDao2 memberDao;
+    private MemberDao memberDao;
 
     @BeforeEach
     void setUp() {
-        memberDao = new MemberDao2(jdbcTemplate);
+        memberDao = new MemberDao(jdbcTemplate);
     }
 
     @Test

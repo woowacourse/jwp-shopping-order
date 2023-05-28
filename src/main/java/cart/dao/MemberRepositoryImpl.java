@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberRepositoryImpl implements MemberRepository {
 
-    private final MemberDao2 memberDao;
+    private final MemberDao memberDao;
 
-    public MemberRepositoryImpl(final MemberDao2 memberDao) {
+    public MemberRepositoryImpl(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 

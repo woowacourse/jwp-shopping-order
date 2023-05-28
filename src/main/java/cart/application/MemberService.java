@@ -22,9 +22,14 @@ public class MemberService {
         final Member member = memberRepository.findMemberByEmail(email)
                 .orElseThrow();
         if (member.checkPassword(password)) {
-            throw new AuthenticationException();
+            return member;
         }
 
-        return member;
+        throw new AuthenticationException();
+    }
+
+    public Member findMemberById(final long memberId) {
+        return memberRepository.findMemberById(memberId)
+                .orElseThrow();
     }
 }
