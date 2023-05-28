@@ -1,7 +1,7 @@
 INSERT INTO product (name, price, image_url) VALUES ('제네시스 g80', 1000000, 'https://www.genesis.com/content/dam/genesis-p2/kr/assets/utility/sns/genesis-kr-model-g80-02-social-1200x630-ko.jpg');
 INSERT INTO product (name, price, image_url) VALUES ('부가티 시론', 2000000, 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Bugatti_Chiron_%2836559710091%29.jpg/300px-Bugatti_Chiron_%2836559710091%29.jpg');
 INSERT INTO product (name, price, image_url) VALUES ('롤스로이스 펜텀', 13000, 'https://www.motoya.co.kr/news/photo/202205/35313_220048_1952.jpg');
-INSERT INTO product (name, price, image_url) VALUES ('루피', 10000, 'https://wepick.kr/wp-content/uploads/2022/08/image-21.png');
+INSERT INTO product (name, price, image_url) VALUES ('현루피', 10000, 'https://wepick.kr/wp-content/uploads/2022/08/image-21.png');
 INSERT INTO product (name, price, image_url) VALUES ('맥북', 1500000, 'https://thumbnail8.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/398911002531188-97af85fd-bfc2-4561-b086-a8ef7db72b72.jpg');
 INSERT INTO product (name, price, image_url) VALUES ('아이폰 14', 13000, 'https://thumbnail7.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/2022/09/21/15/6/d39d5f95-018e-421e-b951-00028fe9eefe.jpg');
 INSERT INTO product (name, price, image_url) VALUES ('우아한테크코스', 500000, 'https://woowacourse.github.io/logo_thumnail_bg.jpg');
