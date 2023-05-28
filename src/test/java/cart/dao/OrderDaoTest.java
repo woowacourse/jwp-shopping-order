@@ -37,7 +37,7 @@ class OrderDaoTest {
     @Test
     @DisplayName("orderDto를 저장하는 기능 테스트")
     void insertTest() {
-        LocalDateTime dateTime = LocalDateTime.now();
+        LocalDateTime dateTime = LocalDateTime.now().withNano(0);
         OrderDto orderDto = new OrderDto(2L, dateTime);
 
         Long orderId = orderDao.insert(orderDto);
@@ -51,7 +51,7 @@ class OrderDaoTest {
     @Test
     @DisplayName("orderDto를 조회하는 기능 테스트")
     void findByIdTest() {
-        LocalDateTime dateTime = LocalDateTime.now();
+        LocalDateTime dateTime = LocalDateTime.now().withNano(0);
         OrderDto orderDto = new OrderDto(1L, 2L, dateTime);
         String sql = "INSERT INTO orders (id, member_id, time_stamp) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, orderDto.getId(), orderDto.getMemberId(), orderDto.getTimeStamp());
