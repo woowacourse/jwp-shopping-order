@@ -9,16 +9,14 @@ import java.util.stream.Collectors;
 
 public class Cart {
 
-    private static final int DEFAULT_DELIVERY_FEE = 3000;
-
     private Long id;
     private final CartItems cartItems;
-    private int deliveryFee;
+    private DeliveryFee deliveryFee;
 
     public Cart(final Long id, final CartItems cartItems) {
         this.id = id;
         this.cartItems = cartItems;
-        this.deliveryFee = DEFAULT_DELIVERY_FEE;
+        this.deliveryFee = DeliveryFee.createDefault();
     }
 
     public CartItem addItem(final Product product) {
@@ -54,7 +52,7 @@ public class Cart {
     }
 
     public int calculateDeliveryFeeUsingCoupons(final List<Coupon> reqCoupons) {
-        int price = deliveryFee;
+        int price = deliveryFee.getFee();
 
         List<Coupon> coupons = reqCoupons.stream()
                 .filter(Coupon::isDeliveryCoupon)
@@ -79,7 +77,13 @@ public class Cart {
         return cartItems.getCartItems();
     }
 
+    public List<String> getProductNames() {
+        return cartItems.getCartItems().stream()
+                .map(cartItem -> cartItem.getProduct().getName())
+                .collect(Collectors.toList());
+    }
+
     public int getDeliveryFee() {
-        return deliveryFee;
+        return deliveryFee.getFee();
     }
 }

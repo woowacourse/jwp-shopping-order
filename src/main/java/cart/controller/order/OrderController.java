@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/orders")
 @RestController
-public class Order {
+public class OrderController {
 
     private final OrderService orderService;
 
-    public Order(final OrderService orderService) {
+    public OrderController(final OrderService orderService) {
         this.orderService = orderService;
     }
 

@@ -85,5 +85,10 @@ public class CartDao {
 
         return count != null && count > 0;
     }
+
+    public void deleteAllByCartId(final long cartId) {
+        String sql = "DELETE FROM cart_item WHERE cart_id = ?";
+        jdbcTemplate.update(sql, cartId);
+    }
 }
 

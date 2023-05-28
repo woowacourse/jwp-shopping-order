@@ -3,7 +3,7 @@ package cart.dto.payment;
 import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponResponse;
-import cart.dto.product.DeliveryPriceResponse;
+import cart.dto.product.DeliveryFeeResponse;
 import cart.dto.product.ProductPayResponse;
 
 import java.util.List;
@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 public class PaymentResponse {
 
     private final List<ProductPayResponse> products;
-    private final DeliveryPriceResponse deliveryPrice;
+    private final DeliveryFeeResponse price;
     private final List<CouponResponse> coupons;
 
-    private PaymentResponse(final List<ProductPayResponse> products, final DeliveryPriceResponse deliveryPrice, final List<CouponResponse> coupons) {
+    private PaymentResponse(final List<ProductPayResponse> products, final DeliveryFeeResponse price, final List<CouponResponse> coupons) {
         this.products = products;
-        this.deliveryPrice = deliveryPrice;
+        this.price = price;
         this.coupons = coupons;
     }
 
@@ -26,7 +26,7 @@ public class PaymentResponse {
                 .map(cartItem -> ProductPayResponse.from(cartItem.getProduct()))
                 .collect(Collectors.toList());
 
-        DeliveryPriceResponse deliveryPrice = new DeliveryPriceResponse(cart.getDeliveryFee());
+        DeliveryFeeResponse deliveryPrice = DeliveryFeeResponse.from(cart.getDeliveryFee());
 
         List<CouponResponse> coupons = member.getCoupons().stream()
                 .map(CouponResponse::from)
@@ -39,8 +39,8 @@ public class PaymentResponse {
         return products;
     }
 
-    public DeliveryPriceResponse getDeliveryPrice() {
-        return deliveryPrice;
+    public DeliveryFeeResponse getDeliveryPrice() {
+        return price;
     }
 
     public List<CouponResponse> getCoupons() {

@@ -1,6 +1,7 @@
 package cart.dto.coupon;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.order.CouponHistory;
 
 public class CouponResponse {
 
@@ -14,6 +15,10 @@ public class CouponResponse {
 
     public static CouponResponse from(final Coupon coupon) {
         return new CouponResponse(coupon.getId(), coupon.getName());
+    }
+
+    public static CouponResponse from(final CouponHistory couponHistory) {
+        return new CouponResponse(couponHistory.getId(), couponHistory.getName());
     }
 
     public long getCouponId() {
