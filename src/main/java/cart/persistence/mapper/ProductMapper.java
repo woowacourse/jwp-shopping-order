@@ -6,6 +6,7 @@ import cart.persistence.dto.CartItemDto;
 import cart.persistence.entity.ProductEntity;
 
 public class ProductMapper {
+
     public static Product convertProduct(final ProductEntity productEntity) {
         return new Product(productEntity.getName(), productEntity.getPrice(),
             productEntity.getImageUrl());

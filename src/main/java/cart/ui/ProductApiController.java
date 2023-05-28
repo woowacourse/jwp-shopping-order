@@ -1,14 +1,20 @@
 package cart.ui;
 
 import cart.application.ProductService;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import cart.application.dto.ProductRequest;
+import cart.application.dto.ProductResponse;
 import java.net.URI;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
@@ -32,7 +38,7 @@ public class ProductApiController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        Long id = productService.createProduct(productRequest);
+        final Long id = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
@@ -47,5 +53,4 @@ public class ProductApiController {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }

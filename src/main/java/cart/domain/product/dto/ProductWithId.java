@@ -3,6 +3,7 @@ package cart.domain.product.dto;
 import cart.domain.product.Product;
 
 public class ProductWithId {
+
     private final Long id;
     private final Product product;
 
