@@ -61,7 +61,7 @@ public class ProductDao {
     }
 
     public Boolean isNotExistById(Long id) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM PRODUCT WHERE id = ?)";
+        String sql = "SELECT EXISTS(SELECT 1 FROM product WHERE id = ?)";
         return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 

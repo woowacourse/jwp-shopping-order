@@ -31,7 +31,7 @@ public class MemberDao {
     }
 
     public Boolean isNotExistByEmailAndPassword(String email, String password) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM MEMBER WHERE email = ? and password = ?)";
+        String sql = "SELECT EXISTS(SELECT 1 FROM member WHERE email = ? and password = ?)";
         return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email, password));
     }
 
