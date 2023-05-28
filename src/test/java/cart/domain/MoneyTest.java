@@ -66,4 +66,14 @@ public class MoneyTest {
         assertThatThrownBy(() -> new Money(15461).percentageOf(101))
                 .isInstanceOf(IllegalPercentageException.class);
     }
+
+    @DisplayName("변경해도, 기존 돈은 변하지 않는다.")
+    @Test
+    void calculation_does_not_affect_money() {
+        Money original = new Money(12000);
+
+        original.minus(new Money(10000));
+
+        assertThat(original).isEqualTo(new Money(12000));
+    }
 }
