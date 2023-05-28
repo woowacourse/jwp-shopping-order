@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Product;
+import cart.repository.dao.ProductDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

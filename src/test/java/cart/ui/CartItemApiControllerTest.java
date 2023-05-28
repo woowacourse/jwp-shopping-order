@@ -23,9 +23,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.application.CartItemService;
-import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
+import cart.repository.dao.CartItemDao;
+import cart.repository.dao.MemberDao;
+import cart.repository.dao.ProductDao;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;

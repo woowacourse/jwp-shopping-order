@@ -23,7 +23,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.application.ProductService;
-import cart.dao.MemberDao;
+import cart.repository.dao.MemberDao;
 import cart.dto.ProductResponse;
 import java.util.List;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,7 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.MemberDao;
+import cart.repository.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
 import io.restassured.RestAssured;

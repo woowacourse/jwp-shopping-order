@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartItem;
+import cart.repository.dao.CartItemDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
