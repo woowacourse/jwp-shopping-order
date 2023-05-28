@@ -53,6 +53,10 @@ public class CartItem {
         return quantity;
     }
 
+    public int getPrice() {
+        return this.product.getPrice();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

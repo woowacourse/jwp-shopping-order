@@ -9,6 +9,7 @@ import java.util.Optional;
 public class CartItems {
 
     private static final int EMPTY_COUNT = 0;
+
     private final List<CartItem> cartItems;
 
     public CartItems(final List<CartItem> cartItems) {
@@ -53,6 +54,12 @@ public class CartItems {
     public boolean hasItem(final CartItem cartItem) {
         return cartItems.stream()
                 .anyMatch(item -> item.hasSameId(cartItem.getId()));
+    }
+
+    public int getTotalPrice() {
+        return cartItems.stream()
+                .mapToInt(CartItem::getPrice)
+                .sum();
     }
 
     public List<CartItem> getCartItems() {
