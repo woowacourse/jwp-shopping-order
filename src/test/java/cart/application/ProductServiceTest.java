@@ -1,0 +1,87 @@
+package cart.application;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+
+import cart.dao.ProductDao;
+import cart.domain.Product;
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
+import cart.exception.ProductNotFound;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
+import org.junit.jupiter.api.Test;
+
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(ReplaceUnderscores.class)
+@DisplayName("ProductService 은(는)")
+class ProductServiceTest {
+
+    private ProductDao productDao = mock(ProductDao.class);
+    private ProductService productService = new ProductService(productDao);
+
+    @Test
+    void 단일_상품을_반환한다() {
+        // given
+        Product expected = new Product(1L, "치킨", 10_000, "www.naver.com");
+        given(productDao.findById(1L))
+                .willReturn(Optional.of(expected));
+
+        // when
+        ProductResponse actual = productService.findById(1L);
+
+        // then
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 상품_조회시_없으면_예외() {
+        // given
+        given(productDao.findById(1L))
+                .willReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> productService.findById(1L))
+                .isInstanceOf(ProductNotFound.class);
+    }
+
+    @Test
+    void 모든_상품을_반환한다() {
+        // given
+        List<Product> expected = List.of(
+                new Product(1L, "치킨", 10_000, "www.naver.com"),
+                new Product(2L, "피자", 20_000, "www.kakao.com")
+
+        );
+        given(productDao.findAll())
+                .willReturn(expected);
+
+        // when
+        List<ProductResponse> actual = productService.findAll();
+
+        // then
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 상품을_생성한다() {
+        // given
+        ProductRequest given = new ProductRequest("치킨", 10_000, "www.naver.com");
+        given(productDao.save(any()))
+                .willReturn(1L);
+
+        // when
+        Long actual = productService.createProduct(given);
+
+        // then
+        assertThat(actual).isEqualTo(1L);
+    }
+}

@@ -1,13 +1,15 @@
 package cart.application;
 
+import static java.util.stream.Collectors.toList;
+
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ProductNotFound;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -18,27 +20,34 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.findAll();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findAll() {
+        return productDao.findAll().stream()
+                .map(ProductResponse::of)
+                .collect(toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
+    @Transactional(readOnly = true)
+    public ProductResponse findById(Long productId) {
         Product product = productDao.findById(productId)
                 .orElseThrow(ProductNotFound::new);
         return ProductResponse.of(product);
     }
 
+    @Transactional
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = productRequest.toEntity();
         return productDao.save(product);
     }
 
+
+    @Transactional
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = productRequest.toEntity();
         productDao.updateById(productId, product);
     }
 
+    @Transactional
     public void deleteProduct(Long productId) {
         productDao.deleteById(productId);
     }

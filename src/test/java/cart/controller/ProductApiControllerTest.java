@@ -138,7 +138,7 @@ public class ProductApiControllerTest {
     void 단일_상품을_조회한다() throws Exception {
         //given
         ProductResponse response = new ProductResponse(1L, "김치", 1000, "www.naver.com");
-        when(productService.getProductById(eq(1L)))
+        when(productService.findById(eq(1L)))
                 .thenReturn(response);
 
         //when
@@ -171,7 +171,7 @@ public class ProductApiControllerTest {
                 new ProductResponse(1L, "안성탕면", 1000, "www.naver.com"),
                 new ProductResponse(2L, "신라면", 1200, "www.kakao.com")
         );
-        when(productService.getAllProducts())
+        when(productService.findAll())
                 .thenReturn(response);
 
         //when

@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.Product;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -33,5 +34,9 @@ public class ProductRequest {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Product toEntity() {
+        return new Product(name, price, imageUrl);
     }
 }
