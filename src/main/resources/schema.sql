@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS ordered_item (
     order_id BIGINT UNSIGNED NOT NULL,
     product_name VARCHAR(255) NOT NULL,
     product_price INT UNSIGNED NOT NULL,
-    product_quantity INT UNSIGNED NOT NULL
+    product_quantity INT UNSIGNED NOT NULL,
+    product_image TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS coupon (
