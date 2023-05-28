@@ -18,13 +18,12 @@ CREATE TABLE cart_item (
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT UNSIGNED NOT NULL
---     FOREIGN KEY (member_id) REFERENCES member(id),
---     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
 CREATE TABLE order (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     total_price INT UNSIGNED NOT NULL,
+    member_id BIGINT UNSIGNED NOT NULL,
     point INT UNSIGNED DEFAULT 0,
     created_at DATETIME DEFAULT now()
 );
@@ -32,7 +31,6 @@ CREATE TABLE order (
 CREATE TABLE ordered_item (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id BIGINT UNSIGNED NOT NULL,
-    member_id BIGINT UNSIGNED NOT NULL,
     product_name VARCHAR(255) NOT NULL,
     product_price INT UNSIGNED NOT NULL,
     product_quantity INT UNSIGNED NOT NULL
@@ -56,4 +54,4 @@ CREATE TABLE ordered_coupon (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id BIGINT UNSIGNED NOT NULL,
     member_coupon_id BIGINT UNSIGNED NOT NULL
-)
+);
