@@ -3,12 +3,12 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.MemberCouponDao;
-import cart.domain.cart.Member;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DeliveryFeeDiscountPolicy;
 import cart.domain.coupon.MinimumPriceDiscountCondition;
 import cart.domain.coupon.NoneDiscountCondition;
+import cart.domain.member.Member;
 import cart.dto.CouponResponse;
 import cart.entity.MemberCouponEntity;
 import cart.repository.CouponRepository;

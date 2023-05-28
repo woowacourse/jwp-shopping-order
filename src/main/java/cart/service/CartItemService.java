@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toList;
 
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Item;
-import cart.domain.cart.Member;
 import cart.domain.cart.Product;
+import cart.domain.member.Member;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;

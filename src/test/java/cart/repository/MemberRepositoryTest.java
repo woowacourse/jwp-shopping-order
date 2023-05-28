@@ -3,7 +3,7 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.cart.Member;
+import cart.domain.member.Member;
 import cart.test.RepositoryTest;
 import java.util.List;
 import java.util.Optional;

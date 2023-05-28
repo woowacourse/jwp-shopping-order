@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.common.Money;
+import cart.domain.member.Member;
 import cart.exception.InvalidCartItemOwnerException;
 import java.util.Objects;
 
@@ -10,14 +11,6 @@ public class OrderItem implements Item {
     private final Member member;
     private final Product product;
     private Integer quantity;
-
-    public OrderItem(final Member member, final Product product) {
-        this(null, 1, member, product);
-    }
-
-    public OrderItem(final Long id, final Integer quantity, final Product product) {
-        this(id, quantity, null, product);
-    }
 
     public OrderItem(final Long id, final Integer quantity, final Member member, final Product product) {
         this.id = id;

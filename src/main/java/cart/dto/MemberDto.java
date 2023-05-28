@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.cart.Member;
+import cart.domain.member.Member;
 
 public class MemberDto {
 

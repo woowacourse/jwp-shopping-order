@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Item;
-import cart.domain.cart.Member;
 import cart.domain.cart.Product;
+import cart.domain.member.Member;
 import cart.test.RepositoryTest;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -35,7 +35,7 @@ class CartItemRepositoryTest {
         final CartItem cartItem = new CartItem(member, product);
 
         // when
-        final Item result = cartItemRepository.save(cartItem);
+        cartItemRepository.save(cartItem);
 
         // then
         assertThat(cartItemRepository.findAllByMemberId(member.getId())).hasSize(1);

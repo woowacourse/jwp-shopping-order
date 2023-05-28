@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.cart.Member;
 import cart.domain.cart.Product;
+import cart.domain.member.Member;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
 import org.hamcrest.Matcher;

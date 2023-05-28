@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Item;
-import cart.domain.cart.Member;
 import cart.domain.cart.Product;
+import cart.domain.member.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;
 import cart.repository.CartItemRepository;

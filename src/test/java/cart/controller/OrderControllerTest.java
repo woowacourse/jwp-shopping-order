@@ -13,12 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.dao.MemberCouponDao;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Item;
-import cart.domain.cart.Member;
 import cart.domain.cart.Order;
 import cart.domain.cart.Product;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.NoneDiscountCondition;
+import cart.domain.member.Member;
 import cart.dto.ItemIdDto;
 import cart.dto.OrderSaveRequest;
 import cart.entity.MemberCouponEntity;

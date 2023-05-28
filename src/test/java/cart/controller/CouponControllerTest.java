@@ -7,16 +7,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dao.MemberCouponDao;
-import cart.domain.cart.Member;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DeliveryFeeDiscountPolicy;
 import cart.domain.coupon.MinimumPriceDiscountCondition;
 import cart.domain.coupon.NoneDiscountCondition;
+import cart.domain.member.Member;
 import cart.entity.MemberCouponEntity;
 import cart.repository.CouponRepository;
 import cart.repository.MemberRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -36,9 +35,6 @@ public class CouponControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private MemberRepository memberRepository;

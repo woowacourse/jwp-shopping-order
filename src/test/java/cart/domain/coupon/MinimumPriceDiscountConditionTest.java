@@ -1,11 +1,9 @@
-package cart.domain.cart.coupon;
+package cart.domain.coupon;
 
 import static cart.domain.coupon.DiscountConditionType.MINIMUM_PRICE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.common.Money;
-import cart.domain.coupon.DiscountCondition;
-import cart.domain.coupon.MinimumPriceDiscountCondition;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

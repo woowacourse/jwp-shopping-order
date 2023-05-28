@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.common.Money;
+import cart.domain.member.Member;
 import cart.exception.InvalidCartItemOwnerException;
 import java.util.Objects;
 

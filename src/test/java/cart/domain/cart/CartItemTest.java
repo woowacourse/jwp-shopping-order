@@ -1,13 +1,11 @@
-package cart.domain;
+package cart.domain.cart;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.domain.cart.CartItem;
-import cart.domain.cart.Member;
-import cart.domain.cart.Product;
 import cart.domain.common.Money;
+import cart.domain.member.Member;
 import cart.exception.InvalidCartItemOwnerException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

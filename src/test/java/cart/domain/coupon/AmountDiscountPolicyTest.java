@@ -1,12 +1,9 @@
-package cart.domain.cart.coupon;
+package cart.domain.coupon;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.common.Money;
-import cart.domain.coupon.AmountDiscountPolicy;
-import cart.domain.coupon.DiscountPolicy;
-import cart.domain.coupon.DiscountPolicyType;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

@@ -1,10 +1,7 @@
-package cart.domain;
+package cart.domain.cart;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.cart.CartItem;
-import cart.domain.cart.Order;
-import cart.domain.cart.Product;
 import cart.domain.common.Money;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
