@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
 import cart.exception.IllegalMemberException;
 
 import java.util.Objects;

@@ -2,7 +2,6 @@ package cart.ui;
 
 import cart.application.MemberService;
 import cart.application.ProductService;
-import cart.dao.MemberDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

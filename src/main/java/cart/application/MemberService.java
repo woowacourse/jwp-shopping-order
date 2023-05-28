@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.dao.MemberDao;
+import cart.application.repository.MemberRepository;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,10 @@ import java.util.List;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberService(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     public void validateMemberProfile(String email, String password) {
@@ -24,10 +24,10 @@ public class MemberService {
     }
 
     public Member getMemberByEmail(String email) {
-        return memberDao.getMemberByEmail(email);
+        return memberRepository.findByEmail(email);
     }
 
     public List<Member> getAllMembers() {
-        return memberDao.getAllMembers();
+        return memberRepository.findAll();
     }
 }
