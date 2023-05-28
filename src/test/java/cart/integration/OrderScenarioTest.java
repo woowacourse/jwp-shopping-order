@@ -1,7 +1,7 @@
 package cart.integration;
 
-import cart.domain.Member;
-import cart.dto.CartItemRequest;
+import cart.member.Member;
+import cart.cart.presentation.dto.CartItemRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;

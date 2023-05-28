@@ -1,11 +1,11 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.member.infrastructure.MemberDao;
+import cart.member.Member;
+import cart.cart.presentation.dto.CartItemQuantityUpdateRequest;
+import cart.cart.presentation.dto.CartItemRequest;
+import cart.cart.presentation.dto.CartItemResponse;
+import cart.product.presentation.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

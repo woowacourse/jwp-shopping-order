@@ -1,8 +1,8 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.ProductRequest;
+import cart.member.infrastructure.MemberDao;
+import cart.member.Member;
+import cart.product.presentation.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
