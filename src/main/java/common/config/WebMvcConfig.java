@@ -1,4 +1,4 @@
-package cart;
+package common.config;
 
 import cart.ui.MemberArgumentResolver;
 import java.util.List;

@@ -130,3 +130,47 @@ coupon 과, order 에서 member 의 정보가 맞는지 검사를 해야하니, 
 요청을 보낼때, email, password 를 그대로 보내는 것은 보안상 위험하다고 생각합니다  
 token 이라면 token 내부에 memberId 를 넣어둘 것 같고, session 이라면 memberId 를 넣어둘 것 같지만  
 이런 방향의 해결책이 괜찮은지와, basicAuth 를 사용했을 때, email, password 를 어떻게 처리해야할지 궁금합니다
+
+### 도메인별로 패키지를 분리했을 때, WebMvcConfig 같은 것들을 어떻게 처리해야하는지 궁금합니다
+
+도메인별로 패키지가 분리되어있기때문에, 공통적으로 사용하는 WebMvcConfig 같은 것들은 common 같은 곳으로 모이는데
+
+추후에 싱글 프로젝트 멀티 모듈같은 곳으로 갔을 때, cart 모듈같은 것이 common 모듈을 의존하면,  
+도메인이 웹에 대한 의존성을 품게 되는 것 같아서 아쉬운 부분이 있는 것 같아요
+
+이를 해결하기 위해서 계층별로 모듈로 분리하게 되는지 궁금합니다
+
+### 에러 처리 방식 질문
+
+다른 크루의 코드를 봤을 때, 에러를 한 곳에 모아두고,
+
+```java
+interface BaseExceptionType {
+
+    int errorCode();
+
+    HttpStatus httpStatus();
+
+    String message();
+}
+
+
+public enum LineExceptionType implements BaseExceptionType {
+    NOT_FOUND_LINE(
+            200,
+            HttpStatus.NOT_FOUND,
+            "노선이 존재하지 않습니다."
+    ),
+    UP_AND_DOWN_STATION_IS_SAME(
+            201,
+            HttpStatus.BAD_REQUEST,
+            "노선은 상행역과 하행역이 동일해서는 안됩니다"
+    )
+}
+```
+
+같은 방식으로 처리하는 것을 봤는데요  
+관리는 한곳에 모이기에, 간단해지지만 도메인 모듈이, web 의존성을 가지게 되는 부분이 아쉬워 보였습니다
+
+추후에 graphql 같은 것들이 추가되면, 이에 대한 의존성도 도메인이 품게 될 것 같아보이는 구조였지만,  
+관리가 편해보여서 이런 방식으로 관리하는 것은 어떻게 생각하시는지 궁금합니다
