@@ -38,6 +38,15 @@ public class ProductDao {
         return new Product(id, name, price, imageUrl);
     };
 
+    public Long createProduct(final Product product) {
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", product.getNameValue())
+                .addValue("price", product.getPriceValue())
+                .addValue("image_url", product.getImageUrlValue());
+
+        return jdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
     public List<Product> getAllProducts() {
         final String sql = "SELECT id, name, price, image_url FROM product";
 
@@ -50,7 +59,7 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, productRowMapper, productId);
     }
 
-    public List<Product> getProductsById(final List<Long> productIds) {
+    public List<Product> getProductsByIds(final List<Long> productIds) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", productIds);
         final String sql = "SELECT id, name, price, image_url " +
@@ -58,15 +67,6 @@ public class ProductDao {
                 "WHERE id IN (:ids)";
 
         return namedParameterJdbcTemplate.query(sql, parameters, productRowMapper);
-    }
-
-    public Long createProduct(final Product product) {
-        final SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", product.getNameValue())
-                .addValue("price", product.getPriceValue())
-                .addValue("image_url", product.getImageUrlValue());
-
-        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public void updateProduct(final Long productId, final Product product) {

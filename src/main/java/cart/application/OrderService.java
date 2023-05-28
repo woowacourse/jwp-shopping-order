@@ -53,7 +53,7 @@ public class OrderService {
         memberDao.updateMember(updatedMember);
 
         final Long orderId = orderDao.save(new Order(updatedMember, new MemberPoint(request.getPoint())));
-        final List<Product> products = productDao.getProductsById(cartItems.getProductIds());
+        final List<Product> products = productDao.getProductsByIds(cartItems.getProductIds());
         final List<OrderProduct> orderProducts = cartItems.toOrderProducts(orderId, products);
 
         orderProductDao.save(orderProducts);
