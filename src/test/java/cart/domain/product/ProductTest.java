@@ -1,0 +1,71 @@
+package cart.domain.product;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import static cart.fixture.ProductFixture.createProduct;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+class ProductTest {
+
+    @DisplayName("상품에 세일을 적용한다.")
+    @Test
+    void apply_sale_on_product() {
+        // given
+        Product product = createProduct();
+
+        // when
+        product.applySale(30);
+
+        // then
+        assertAll(
+                () -> assertThat(product.getApplyDiscountPrice()).isEqualTo(14000),
+                () -> assertThat(product.getSalePrice()).isEqualTo(6000),
+                () -> assertThat(product.isOnSale()).isEqualTo(true)
+        );
+    }
+
+    @DisplayName("상품의 세일을 제거한다.")
+    @Test
+    void un_apply_sale_on_product() {
+        // given
+        Product product = createProduct();
+        product.applySale(10);
+
+        // when
+        product.unApplySale();
+
+        // then
+        assertThat(product.isOnSale()).isEqualTo(false);
+    }
+
+    @DisplayName("상품의 세일 적용시 최대 1~100%까지 가능하다.")
+    @ValueSource(ints = {-1, 0, 101})
+    @ParameterizedTest
+    void throws_exception_when_sale_value_invalid_range(final int value) {
+        // given
+        Product product = createProduct();
+
+        // when & then
+        assertThatThrownBy(() -> product.applySale(value))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("세일 적용이 되지 않는다면 세일 적용된 가격을 조회할 수 없다.")
+    @Test
+    void throws_exception_when_send_request_of_applied_sale_price_of_un_sale_product() {
+        // given
+        Product product = createProduct();
+
+        // when & then
+        assertThatThrownBy(product::getSalePrice)
+                .isInstanceOf(IllegalArgumentException.class);
+
+        assertThatThrownBy(product::getApplyDiscountPrice)
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+}

@@ -1,18 +1,28 @@
 package cart.domain.product;
 
+import cart.domain.discount.Policy;
+import cart.domain.discount.PolicyPercentage;
+
 import java.util.Objects;
 
 public class Product {
+
+    private static final int MAXIMUM_SALE_PERCENT = 100;
+    private static final int MINIMUM_SALE_PERCENT = 1;
 
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
+    private boolean isOnSale;
+    private Policy policy;
 
     public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.isOnSale = false;
+        this.policy = new PolicyPercentage(0);
     }
 
     public Product(Long id, String name, int price, String imageUrl) {
@@ -20,6 +30,38 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.isOnSale = false;
+        this.policy = new PolicyPercentage(0);
+    }
+
+    public void applySale(int value) {
+        if (value > MAXIMUM_SALE_PERCENT || value < MINIMUM_SALE_PERCENT) {
+            throw new IllegalArgumentException("상품 세일은 최대 1~100%까지 가능합니다.");
+        }
+
+        policy.updateDiscountValue(value);
+        this.isOnSale = true;
+    }
+
+    public void unApplySale() {
+        policy.updateDiscountValue(0);
+        this.isOnSale = false;
+    }
+
+    public int getApplyDiscountPrice() {
+        validateIsOnSale();
+        return policy.calculate(this.price);
+    }
+
+    public int getSalePrice() {
+        validateIsOnSale();
+        return price - policy.calculate(price);
+    }
+
+    private void validateIsOnSale() {
+        if (!isOnSale) {
+            throw new IllegalArgumentException("세일 적용 중이 아닙니다.");
+        }
     }
 
     public Long getId() {
@@ -32,6 +74,10 @@ public class Product {
 
     public int getPrice() {
         return price;
+    }
+
+    public boolean isOnSale() {
+        return isOnSale;
     }
 
     public String getImageUrl() {
