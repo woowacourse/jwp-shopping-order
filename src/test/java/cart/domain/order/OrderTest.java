@@ -23,7 +23,7 @@ class OrderTest {
         final Member member = new Member(1L, "test@email.com", "password");
         final Member otherMember = new Member(2L, "other@email.com", "password");
         final List<CartItem> items = List.of(유자_민트_티_ID_1_5개_29500원(member), 바닐라_크림_콜드브루_ID_4_3개_17400원(member));
-        final CartItems cartItems = new CartItems(items);
+        final CartItems cartItems = new CartItems(items, member);
         final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
 
         // when, then
@@ -38,7 +38,7 @@ class OrderTest {
         // given
         final Member member = new Member(1L, "test@email.com", "password");
         final List<CartItem> items = List.of(유자_민트_티_ID_1_5개_29500원(member), 바닐라_크림_콜드브루_ID_4_3개_17400원(member));
-        final CartItems cartItems = new CartItems(items);
+        final CartItems cartItems = new CartItems(items, member);
         final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
 
         // when
@@ -55,7 +55,7 @@ class OrderTest {
         // given
         final Member member = new Member(1L, "test@email.com", "password");
         final List<CartItem> items = List.of(유자_민트_티_ID_1_5개_29500원(member), 자몽_허니_블랙티_ID_2_7개_39900원(member));
-        final CartItems cartItems = new CartItems(items);
+        final CartItems cartItems = new CartItems(items, member);
         final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
 
         // when
@@ -76,7 +76,7 @@ class OrderTest {
                 자몽_허니_블랙티_ID_2_7개_39900원(member),
                 아메리카노_ID_3_8개_36000원(member),
                 바닐라_크림_콜드브루_ID_4_3개_17400원(member));
-        final CartItems cartItems = new CartItems(items);
+        final CartItems cartItems = new CartItems(items, member);
         final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
 
         // when
@@ -93,7 +93,7 @@ class OrderTest {
         // given
         final Member member = new Member(1L, "test@email.com", "password");
         final List<CartItem> items = List.of(맥북_ID_5_1개_1500000원(member));
-        final CartItems cartItems = new CartItems(items);
+        final CartItems cartItems = new CartItems(items, member);
         final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
 
         // when

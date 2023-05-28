@@ -24,7 +24,7 @@ class CartItemsTest {
         final List<CartItem> cartItems = List.of(유자_민트_티_ID_1_5개_29500원(member), 자몽_허니_블랙티_ID_2_7개_39900원(otherMember));
 
         // when, then
-        assertThatThrownBy(() -> new CartItems(cartItems))
+        assertThatThrownBy(() -> new CartItems(cartItems, member))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("다른 Member의 장바구니 상품이 포함되어 있습니다");
 
@@ -33,8 +33,11 @@ class CartItemsTest {
     @DisplayName("장바구니 상품이 존재하지 않으면 예외가 발생한다")
     @Test
     void createCartItems_ItemNotExist_throws() {
+        // given
+        final Member member = new Member(1L, "test@email.com", "password");
+
         // when, then
-        assertThatThrownBy(() -> new CartItems(Collections.emptyList()))
+        assertThatThrownBy(() -> new CartItems(Collections.emptyList(), member))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("장바구니 상품이 존재하지 않습니다.");
     }
@@ -45,7 +48,7 @@ class CartItemsTest {
         // given
         final Member member = new Member(1L, "test@email.com", "password");
         final List<CartItem> items = List.of(유자_민트_티_ID_1_5개_29500원(member), 바닐라_크림_콜드브루_ID_4_3개_17400원(member));
-        final CartItems cartItems = new CartItems(items);
+        final CartItems cartItems = new CartItems(items, member);
 
         // when
         Price sum = cartItems.sumOfPrice();

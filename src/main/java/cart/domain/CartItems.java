@@ -6,8 +6,10 @@ import java.util.List;
 public class CartItems {
 
     private final List<CartItem> cartItems;
+    private final Member member;
 
-    public CartItems(final List<CartItem> cartItems) {
+    public CartItems(final List<CartItem> cartItems, final Member member) {
+        this.member = member;
         validateItemsLength(cartItems);
         validateMember(cartItems);
         this.cartItems = cartItems;
@@ -20,13 +22,14 @@ public class CartItems {
     }
 
     private void validateMember(final List<CartItem> cartItems) {
-        final long memberCount = cartItems.stream()
-                .map(CartItem::getMember)
-                .distinct()
-                .count();
-        if (memberCount != 1) {
+        if (containsOtherMemberCartItem(cartItems)) {
             throw new IllegalArgumentException("다른 Member의 장바구니 상품이 포함되어 있습니다");
         }
+    }
+
+    private boolean containsOtherMemberCartItem(final List<CartItem> cartItems) {
+        return cartItems.stream()
+                .anyMatch(cartItem -> !cartItem.getMember().equals(member));
     }
 
     public Price sumOfPrice() {
@@ -41,6 +44,7 @@ public class CartItems {
     }
 
     public Member getMember() {
-        return cartItems.get(0).getMember();
+        return member;
     }
+
 }
