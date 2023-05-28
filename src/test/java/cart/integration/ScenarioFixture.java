@@ -1,6 +1,6 @@
 package cart.integration;
 
-import cart.member.infrastructure.MemberDao;
+import cart.member.application.MemberRepository;
 import cart.member.Member;
 import cart.product.presentation.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
@@ -14,7 +14,7 @@ import static io.restassured.RestAssured.given;
 
 public class ScenarioFixture extends IntegrationTest {
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     protected Member 사용자1;
     protected Member 사용자2;
@@ -28,7 +28,7 @@ public class ScenarioFixture extends IntegrationTest {
         상품아이디1 = 새_상품을_만든다(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         상품아이디2 = 새_상품을_만든다(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        사용자1 = memberDao.getMemberById(1L);
+        사용자1 = memberRepository.getMemberById(1L);
     }
 
     private Long 새_상품을_만든다(ProductRequest productRequest) {

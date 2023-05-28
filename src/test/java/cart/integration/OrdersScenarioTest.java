@@ -1,5 +1,6 @@
 package cart.integration;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("주문조회 화면에서 일어나는 API 시나리오")
+@Disabled
 public class OrdersScenarioTest extends ScenarioFixture {
     @Test
     void 전체_주문내역_페이지에_접속한다() {

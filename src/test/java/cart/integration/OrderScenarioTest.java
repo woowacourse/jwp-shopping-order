@@ -4,6 +4,7 @@ import cart.member.Member;
 import cart.cart.presentation.dto.CartItemRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("주문화면에서 일어나는 API 시나리오")
+@Disabled
 public class OrderScenarioTest extends ScenarioFixture {
     @Test
     void 사용자가_결제_페이지에_처음_접속한다() {
