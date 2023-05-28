@@ -11,18 +11,16 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
 
 import cart.application.MemberService;
 import cart.application.ProductService;
 import cart.config.MemberArgumentResolver;
 import cart.config.WebMvcConfig;
 import cart.dto.AuthMember;
+import cart.dto.ProductPagingResponse;
 import cart.ui.ProductApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,6 +76,9 @@ public class ProductApiDocumentTest {
                 .defaultRequest(MockMvcRequestBuilders
                         .get("/products/{id}/cart-items", CHICKEN.ID)
                         .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo))
+                .defaultRequest(MockMvcRequestBuilders
+                        .get("/products/cart-items")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo))
                 .setCustomArgumentResolvers(new MemberArgumentResolver())
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
                 .build();
@@ -86,20 +87,32 @@ public class ProductApiDocumentTest {
     @Test
     void 모든_상품_목록_조회_문서화() throws Exception {
         // given
-        given(productService.getAllProducts())
-                .willReturn(List.of(CHICKEN.RESPONSE, SALAD.RESPONSE, PIZZA.RESPONSE));
+        Long firstId = 0L;
+        int pageItemCount = 3;
+        given(productService.getAllPagingProductCartItems(any(AuthMember.class), eq(firstId), eq(pageItemCount)))
+                .willReturn(new ProductPagingResponse(FIRST_PAGING_PRODUCTS.PRODUCT_CART_ITEM_RESPONSES, false));
 
         // when, then
-        mockMvc.perform(get("/products")
+        mockMvc.perform(get("/products/cart-items")
+                        .param("lastId", String.valueOf(firstId))
+                        .param("pageItemCount", String.valueOf(pageItemCount))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("products/getAllProducts",
+                .andDo(document("products/getAllPagingProductCartItems",
                                 preprocessResponse(prettyPrint()),
+                                requestParameters(
+                                        parameterWithName("lastId").description("마지막 상품의 아이디 / 첫 페이지면 0으로 요청"),
+                                        parameterWithName("pageItemCount").description("한 페이지에 보여줄 상품 개수")
+                                ),
                                 responseFields(
-                                        fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 아이디"),
-                                        fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품 이름"),
-                                        fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                        fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL"))
+                                        fieldWithPath("products[].product.id").type(JsonFieldType.NUMBER).description("상품 아이디"),
+                                        fieldWithPath("products[].product.name").type(JsonFieldType.STRING).description("상품 이름"),
+                                        fieldWithPath("products[].product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                        fieldWithPath("products[].product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL"),
+                                        fieldWithPath("products[].cartItem.id").type(JsonFieldType.NUMBER).description("장바구니에 담긴 상품 아이디"),
+                                        fieldWithPath("products[].cartItem.quantity").type(JsonFieldType.NUMBER).description("장바구니에 담긴 상품 수량"),
+                                        fieldWithPath("products[].cartItem").optional().description("장바구니에 담기지 않은 상품 NULL"),
+                                        fieldWithPath("last").type(JsonFieldType.BOOLEAN).description("해당 페이지가 마지막 페이지인지 여부"))
                         )
                 );
     }

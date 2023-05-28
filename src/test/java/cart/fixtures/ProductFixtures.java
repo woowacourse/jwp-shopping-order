@@ -1,6 +1,6 @@
 package cart.fixtures;
 
-import static cart.fixtures.CartItemFixtures.*;
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
 
 import java.util.List;
 
@@ -8,7 +8,6 @@ import cart.domain.product.Product;
 import cart.dto.ProductCartItemResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.fixtures.CartItemFixtures.Dooly_CartItem1;
 
 public class ProductFixtures {
 
@@ -68,9 +67,9 @@ public class ProductFixtures {
         );
 
         public static final List<ProductCartItemResponse> PRODUCT_CART_ITEM_RESPONSES = List.of(
-                ProductCartItemResponse.createContainsCartItem(CHICKEN.ENTITY, Dooly_CartItem1.ENTITY),
-                ProductCartItemResponse.createContainsCartItem(SALAD.ENTITY, Dooly_CartItem2.ENTITY),
-                ProductCartItemResponse.createOnlyProduct(PIZZA.ENTITY)
+                ProductCartItemResponse.createOnlyProduct(PANCAKE.ENTITY),
+                ProductCartItemResponse.createOnlyProduct(PIZZA.ENTITY),
+                ProductCartItemResponse.createContainsCartItem(SALAD.ENTITY, Dooly_CartItem2.ENTITY)
         );
     }
 

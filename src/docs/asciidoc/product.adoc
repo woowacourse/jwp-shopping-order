@@ -6,12 +6,13 @@
 
 [discrete]
 ====== 요청
-include::{snippets}/products/getAllProducts/http-request.adoc[]
+include::{snippets}/products/getAllPagingProductCartItems/http-request.adoc[]
+include::{snippets}/products/getAllPagingProductCartItems/request-parameters.adoc[]
 
 [discrete]
 ====== 응답
-include::{snippets}/products/getAllProducts/http-response.adoc[]
-include::{snippets}/products/getAllProducts/response-fields.adoc[]
+include::{snippets}/products/getAllPagingProductCartItems/http-response.adoc[]
+include::{snippets}/products/getAllPagingProductCartItems/response-fields.adoc[]
 
 
 ==== 2-1. 특정 상품 조회 (CASE : 장바구니에 상품이 담겨있는 경우)
