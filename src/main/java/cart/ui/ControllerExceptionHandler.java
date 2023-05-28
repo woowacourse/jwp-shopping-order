@@ -19,8 +19,8 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(final CartItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<String> handleException(final CartItemException.IllegalMember e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -29,5 +29,4 @@ public class ControllerExceptionHandler {
         final FieldError fieldError = bindingResult.getFieldError();
         return ResponseEntity.badRequest().body(fieldError.getDefaultMessage());
     }
-
 }

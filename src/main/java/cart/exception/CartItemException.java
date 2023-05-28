@@ -1,16 +1,13 @@
 package cart.exception;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-
 public class CartItemException extends RuntimeException {
-    public CartItemException(String message) {
+    public CartItemException(final String message) {
         super(message);
     }
 
     public static class IllegalMember extends CartItemException {
-        public IllegalMember(CartItem cartItem, Member member) {
-            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
+        public IllegalMember() {
+            super("장바구니 아이템 소유자와 사용자가 다릅니다.");
         }
     }
 }

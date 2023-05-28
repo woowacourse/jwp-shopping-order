@@ -293,5 +293,25 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         }
+
+        @DisplayName("장바구니 아이템을 담은 사용자와 결제 요청 사용자가 다를 경우 bad request를 반환한다.")
+        @Test
+        void differentMemberPayment() {
+            final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 100);
+
+            final ExtractableResponse<Response> response = given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
+                    .body(request)
+                    .when()
+                    .post("/cart-items/payment")
+                    .then()
+                    .extract();
+
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value()),
+                    () -> assertThat(response.asString()).isEqualTo("장바구니 아이템 소유자와 사용자가 다릅니다.")
+            );
+        }
     }
 }

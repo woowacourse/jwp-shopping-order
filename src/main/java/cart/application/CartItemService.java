@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.PaymentRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,22 +18,22 @@ public class CartItemService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
+    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+    public List<CartItemResponse> findByMember(final Member member) {
+        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
+    public Long add(final Member member, final CartItemRequest cartItemRequest) {
         return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+    public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
+        final CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -44,10 +45,19 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+    public void remove(final Member member, final Long id) {
+        final CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    public Integer payment(final Member member, final PaymentRequest request) {
+        final List<Long> cartIds = request.getCartItemRequests().stream()
+                .map(CartItemRequest::getProductId)
+                .collect(Collectors.toList());
+        final List<CartItem> cartItems = cartItemDao.findByIds(cartIds);
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+        return 1;
     }
 }
