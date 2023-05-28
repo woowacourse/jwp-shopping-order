@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.domain.order.Price;
 import java.util.List;
 
 public class CartItems {
@@ -30,13 +29,6 @@ public class CartItems {
     private boolean containsOtherMemberCartItem(final List<CartItem> cartItems) {
         return cartItems.stream()
                 .anyMatch(cartItem -> !cartItem.getMember().equals(member));
-    }
-
-    public Price sumOfPrice() {
-        int sum = cartItems.stream()
-                .mapToInt(CartItem::getPrice)
-                .sum();
-        return new Price(sum);
     }
 
     public List<CartItem> getCartItems() {

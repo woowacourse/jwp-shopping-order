@@ -27,10 +27,6 @@ public class CartItem {
         return product.getId().equals(productId);
     }
 
-    public int getPrice() {
-        return quantity * product.getPrice();
-    }
-
     public Long getId() {
         return id;
     }

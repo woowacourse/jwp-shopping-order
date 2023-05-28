@@ -24,10 +24,11 @@ class OrderTest {
         final Member otherMember = new Member(2L, "other@email.com", "password");
         final List<CartItem> items = List.of(유자_민트_티_ID_1_5개_29500원(member), 바닐라_크림_콜드브루_ID_4_3개_17400원(member));
         final CartItems cartItems = new CartItems(items, member);
-        final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
+        final OrderItems orderItems = OrderItems.from(cartItems);
+        DiscountPolicy discountPolicy = FixedDiscountPolicy.from(orderItems.sumOfPrice());
 
         // when, then
-        assertThatThrownBy(() -> new Order(otherMember, cartItems, discountPolicy))
+        assertThatThrownBy(() -> new Order(otherMember, orderItems, discountPolicy))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("장바구니 상품을 추가한 Member와 주문을 생성한 Member가 일치하지 않습니다");
     }
@@ -39,10 +40,11 @@ class OrderTest {
         final Member member = new Member(1L, "test@email.com", "password");
         final List<CartItem> items = List.of(유자_민트_티_ID_1_5개_29500원(member), 바닐라_크림_콜드브루_ID_4_3개_17400원(member));
         final CartItems cartItems = new CartItems(items, member);
-        final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
+        final OrderItems orderItems = OrderItems.from(cartItems);
+        DiscountPolicy discountPolicy = FixedDiscountPolicy.from(orderItems.sumOfPrice());
 
         // when
-        final Order order = new Order(member, cartItems, discountPolicy);
+        final Order order = new Order(member, orderItems, discountPolicy);
 
         // then
         assertThat(order.getOriginalPrice().getValue()).isEqualTo(46_900);
@@ -56,10 +58,11 @@ class OrderTest {
         final Member member = new Member(1L, "test@email.com", "password");
         final List<CartItem> items = List.of(유자_민트_티_ID_1_5개_29500원(member), 자몽_허니_블랙티_ID_2_7개_39900원(member));
         final CartItems cartItems = new CartItems(items, member);
-        final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
+        final OrderItems orderItems = OrderItems.from(cartItems);
+        DiscountPolicy discountPolicy = FixedDiscountPolicy.from(orderItems.sumOfPrice());
 
         // when
-        final Order order = new Order(member, cartItems, discountPolicy);
+        final Order order = new Order(member, orderItems, discountPolicy);
 
         // then
         assertThat(order.getOriginalPrice().getValue()).isEqualTo(69_400);
@@ -77,10 +80,11 @@ class OrderTest {
                 아메리카노_ID_3_8개_36000원(member),
                 바닐라_크림_콜드브루_ID_4_3개_17400원(member));
         final CartItems cartItems = new CartItems(items, member);
-        final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
+        final OrderItems orderItems = OrderItems.from(cartItems);
+        DiscountPolicy discountPolicy = FixedDiscountPolicy.from(orderItems.sumOfPrice());
 
         // when
-        final Order order = new Order(member, cartItems, discountPolicy);
+        final Order order = new Order(member, orderItems, discountPolicy);
 
         // then
         assertThat(order.getOriginalPrice().getValue()).isEqualTo(122_800);
@@ -94,10 +98,11 @@ class OrderTest {
         final Member member = new Member(1L, "test@email.com", "password");
         final List<CartItem> items = List.of(맥북_ID_5_1개_1500000원(member));
         final CartItems cartItems = new CartItems(items, member);
-        final FixedDiscountPolicy discountPolicy = FixedDiscountPolicy.from(cartItems.sumOfPrice());
+        final OrderItems orderItems = OrderItems.from(cartItems);
+        DiscountPolicy discountPolicy = FixedDiscountPolicy.from(orderItems.sumOfPrice());
 
         // when
-        final Order order = new Order(member, cartItems, discountPolicy);
+        final Order order = new Order(member, orderItems, discountPolicy);
 
         // then
         assertThat(order.getOriginalPrice().getValue()).isEqualTo(1_500_000);
