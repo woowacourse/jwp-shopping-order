@@ -16,6 +16,10 @@ public class OrderProducts {
                 .sum();
     }
 
+    public List<CartItem> getProducts() {
+        return products;
+    }
+
     public Integer getSavedPoint() {
         return (int) (getTotalAmount() * POINT_RATE);
     }
