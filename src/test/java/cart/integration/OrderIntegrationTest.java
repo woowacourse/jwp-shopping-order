@@ -93,6 +93,27 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.jsonPath().getLong("id")).isEqualTo(orderId);
     }
 
+    @Test
+    @DisplayName("회원의 모든 결제내역을 반환한다.")
+    void findOrdersByMember() {
+        //given
+        createOrder(List.of(1L));
+        createOrder(List.of(2L));
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/ordres")
+                .then()
+                .log().all()
+                .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
     private ExtractableResponse<Response> createOrder(List<Long> cartItemIds) {
         final OrderRequest orderRequest = new OrderRequest(cartItemIds);
 
