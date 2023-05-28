@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BRANCH="step1"
+BRANCH="step2"
 REPOSITORY="/home/ubuntu"
 PROJECT="jwp-shopping-order"
 
