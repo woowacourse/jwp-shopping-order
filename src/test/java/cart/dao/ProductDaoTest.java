@@ -6,29 +6,33 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("ProductDao 은(는)")
-@JdbcTest(includeFilters = {
-        @Filter(type = FilterType.ANNOTATION, value = Repository.class)
-})
+@JdbcTest
 class ProductDaoTest {
 
     private static final Product 치킨 = new Product("치킨", 10_000, "www.naver.com");
     private static final Product 피자 = new Product("피자", 15_000, "www.kakao.com");
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private ProductDao productDao;
+
+    @BeforeEach
+    void setUp() {
+        productDao = new ProductDao(jdbcTemplate);
+    }
 
     @Test
     void 상품을_추가한다() {

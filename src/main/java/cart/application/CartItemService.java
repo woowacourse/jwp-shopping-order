@@ -10,6 +10,7 @@ import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
 import cart.exception.ProductNotFound;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -35,11 +36,12 @@ public class CartItemService {
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productDao.findById(cartItemRequest.getProductId())
                 .orElseThrow(ProductNotFound::new);
-        return cartItemDao.save(new CartItem(product, member.getId()));
+        CartItem cartItem = new CartItem(product, member.getId());
+        return cartItemDao.save(cartItem);
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = findCartItemById(id);
         cartItem.checkOwner(member.getId());
 
         if (request.getQuantity() == 0) {
@@ -51,10 +53,14 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member.getId());
+    private CartItem findCartItemById(Long id) {
+        return cartItemDao.findById(id)
+                .orElseThrow(CartItemException::new);
+    }
 
+    public void remove(Member member, Long id) {
+        CartItem cartItem = findCartItemById(id);
+        cartItem.checkOwner(member.getId());
         cartItemDao.deleteById(id);
     }
 }

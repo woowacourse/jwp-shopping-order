@@ -31,6 +31,11 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    public Long save(Product product) {
+        final SqlParameterSource source = new BeanPropertySqlParameterSource(product);
+        return simpleJdbcInsert.executeAndReturnKey(source).longValue();
+    }
+
     public List<Product> findAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productRowMapper);
@@ -43,11 +48,6 @@ public class ProductDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    public Long save(Product product) {
-        final SqlParameterSource source = new BeanPropertySqlParameterSource(product);
-        return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
     public int updateById(Long id, Product product) {

@@ -1,22 +1,15 @@
 package cart.exception;
 
-import cart.domain.CartItem;
 import org.springframework.http.HttpStatus;
 
 public class CartItemException extends ApplicationException {
 
-    public CartItemException(String message) {
-        super(message);
+    public CartItemException() {
+        super("존재하지 않는 상품입니다.");
     }
 
     @Override
     public HttpStatus status() {
-        return HttpStatus.FORBIDDEN;
-    }
-
-    public static class IllegalMember extends CartItemException {
-        public IllegalMember(CartItem cartItem, Long memberId) {
-            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + memberId);
-        }
+        return HttpStatus.NOT_FOUND;
     }
 }
