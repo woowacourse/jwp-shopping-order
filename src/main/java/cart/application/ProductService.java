@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.repository.ProductRepository;
 import cart.ui.controller.dto.request.ProductRequest;
@@ -16,7 +15,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository, ProductDao productDao) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

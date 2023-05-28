@@ -1,16 +1,14 @@
 package cart.dao;
 
 import cart.dao.entity.MemberEntity;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,9 +24,14 @@ public class MemberDao {
     );
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("email", "password", "point");
     }
 
     public List<MemberEntity> getAllMembers() {
@@ -55,18 +58,7 @@ public class MemberDao {
     }
 
     public Long addMember(MemberEntity memberEntity) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO member(email, password, point) VALUES(?, ?, ?)";
-        jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, memberEntity.getEmail());
-                    ps.setString(2, memberEntity.getPassword());
-                    ps.setInt(3, memberEntity.getPoint());
-                    return ps;
-                },
-                keyHolder
-        );
-        return (Long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(memberEntity);
+        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 }

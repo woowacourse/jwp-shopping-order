@@ -9,7 +9,7 @@ public class ProductRequest {
     private String name;
     @NotNull(message = "상품 가격은 존재해야 합니다.")
     private Integer price;
-    @NotNull(message = "상품 이미지는 비어있을 수 없습니다.")
+    @NotBlank(message = "상품 이미지는 비어있을 수 없습니다.")
     private String imageUrl;
 
     private ProductRequest() {

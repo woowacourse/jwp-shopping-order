@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   db:
-    image: mysql:8.0.28
+    image: mysql:8.0.33
     container_name: db
     ports:
       - "3307:3306"
@@ -12,7 +12,4 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - ../src/main/resources/db:/docker-entrypoint-initdb.d
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
     restart: always

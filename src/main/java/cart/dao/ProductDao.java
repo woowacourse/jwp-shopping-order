@@ -1,16 +1,14 @@
 package cart.dao;
 
 import cart.dao.entity.ProductEntity;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,9 +24,14 @@ public class ProductDao {
     );
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("name", "price", "image_url");
     }
 
     public List<ProductEntity> getAllProducts() {
@@ -46,19 +49,8 @@ public class ProductDao {
     }
 
     public Long createProduct(ProductEntity productEntity) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO product(name, price, image_url) VALUES(?, ?, ?)";
-        jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, productEntity.getName());
-                    ps.setInt(2, productEntity.getPrice());
-                    ps.setString(3, productEntity.getImageUrl());
-                    return ps;
-                },
-                keyHolder
-        );
-        return (Long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
+        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
     public void updateProduct(ProductEntity productEntity) {
