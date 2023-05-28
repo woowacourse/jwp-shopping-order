@@ -55,7 +55,7 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
     axios.put(`/products/${id}`, product)
         .then((response) => {
             window.location.reload();

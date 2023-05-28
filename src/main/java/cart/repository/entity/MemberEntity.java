@@ -10,7 +10,8 @@ public class MemberEntity {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public MemberEntity(final Long id, final String email, final String password, final int point, final LocalDateTime createdAt,
+    public MemberEntity(final Long id, final String email, final String password, final int point,
+                        final LocalDateTime createdAt,
                         final LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
