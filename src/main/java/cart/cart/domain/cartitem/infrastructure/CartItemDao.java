@@ -1,6 +1,6 @@
-package cart.cart.infrastructure;
+package cart.cart.domain.cartitem.infrastructure;
 
-import cart.cart.CartItem;
+import cart.cart.domain.cartitem.CartItem;
 import cart.member.Member;
 import cart.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;

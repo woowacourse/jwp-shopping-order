@@ -1,16 +1,16 @@
-package cart.cart.application;
+package cart.cart.domain.cartitem.application;
 
-import cart.cart.CartItem;
-import cart.cart.infrastructure.CartItemDao;
+import cart.cart.domain.cartitem.CartItem;
+import cart.cart.domain.cartitem.infrastructure.CartItemDao;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class CartRepositoryDaoImpl implements CartRepository {
+public class CartItemRepositoryDaoImpl implements CartItemRepository {
     private final CartItemDao cartItemDao;
 
-    public CartRepositoryDaoImpl(CartItemDao cartItemDao) {
+    public CartItemRepositoryDaoImpl(CartItemDao cartItemDao) {
         this.cartItemDao = cartItemDao;
     }
 

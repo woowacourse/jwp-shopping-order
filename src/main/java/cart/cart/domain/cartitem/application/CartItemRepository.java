@@ -1,10 +1,10 @@
-package cart.cart.application;
+package cart.cart.domain.cartitem.application;
 
-import cart.cart.CartItem;
+import cart.cart.domain.cartitem.CartItem;
 
 import java.util.List;
 
-public interface CartRepository {
+public interface CartItemRepository {
     List<CartItem> findByMemberId(Long memberId);
 
     Long save(CartItem cartItem);
