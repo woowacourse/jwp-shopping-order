@@ -1,11 +1,13 @@
 package cart.dao;
 
+import static cart.fixtures.CartItemFixtures.*;
 import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Optional;
 
-import cart.domain.CartItem;
+import cart.domain.cartitem.CartItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ class CartItemDaoTest {
     }
 
     @Test
-    @DisplayName("장바구니 상품 조회 시  멤버 ID와 상품 ID에 해당하는 장바구니 상품이 존재하면 장바구니 상품을 반환한다.")
+    @DisplayName("장바구니 상품 조회 시 멤버 ID와 상품 ID에 해당하는 장바구니 상품이 존재하면 장바구니 상품을 반환한다.")
     void selectByMemberIdAndProductId() {
         // given
         Long memberId = Dooly_CartItem1.MEMBER.getId();
@@ -52,5 +54,20 @@ class CartItemDaoTest {
 
         // then
         assertThat(cartItem.get()).usingRecursiveComparison().isEqualTo(Dooly_CartItem1.ENTITY);
+    }
+
+    @Test
+    @DisplayName("멤버 ID로 모든 장바구니 상품을 조회한다.")
+    void selectAllByMemberId() {
+        // given
+        Long memberId = Dooly_CartItem1.MEMBER.getId();
+
+        // when
+        List<CartItem> cartItems = cartItemDao.selectAllByMemberId(memberId);
+
+        // then
+        assertThat(cartItems)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
+                .contains(Dooly_CartItem1.ENTITY, Dooly_CartItem2.ENTITY, Dooly_CartItem3.ENTITY);
     }
 }

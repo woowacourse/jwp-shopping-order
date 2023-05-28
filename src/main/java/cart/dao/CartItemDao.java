@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -50,6 +50,11 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
+    public List<CartItem> selectAllByMemberId(Long memberId) {
+        String sql = JOIN_SQL + "WHERE member_id=?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 

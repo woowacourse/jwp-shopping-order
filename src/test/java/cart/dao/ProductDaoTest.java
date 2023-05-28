@@ -1,8 +1,14 @@
 package cart.dao;
 
+import static cart.fixtures.ProductFixtures.*;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
+
+import cart.domain.product.Product;
+import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -44,5 +50,55 @@ class ProductDaoTest {
             // when, then
             assertThat(productDao.isNotExistById(CHICKEN.ID)).isFalse();
         }
+    }
+
+    @Test
+    @DisplayName("상품들을 Limit에 맞게 조회한다.")
+    void selectFirstProductsByLimit() {
+        // given
+        int limit = FIRST_PAGING_PRODUCTS.LIMIT;
+
+        // when
+        List<Product> products = productDao.selectFirstProductsByLimit(limit);
+
+        // then
+        assertThat(products).usingRecursiveComparison().isEqualTo(FIRST_PAGING_PRODUCTS.PAGING_PRODUCTS);
+    }
+
+    @Test
+    @DisplayName("마지막 상품 ID 다음의 상품들을 LIMIT에 맞게 조회한다.")
+    void selectProductsByIdAndLimit() {
+        // given
+        Long lastId = SALAD.ID;
+        int limit = NEXT_PAGING_PRODUCTS.LIMIT;
+
+        // when
+        List<Product> products = productDao.selectProductsByIdAndLimit(lastId, limit);
+
+        // then
+        assertThat(products).usingRecursiveComparison().isEqualTo(NEXT_PAGING_PRODUCTS.PAGING_PRODUCTS);
+    }
+
+    @Test
+    @DisplayName("마지막 상품을 조회한다.")
+    void selectLastProduct() {
+        // when
+        Product product = productDao.selectLastProduct();
+
+        // then
+        assertThat(product).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
+    }
+
+    @Test
+    @DisplayName("마지막 상품 조회 시 상품이 존재하지 않으면 예외가 발생한다.")
+    void selectLastProduct_throws_not_exist_products() {
+        // given
+        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.update("TRUNCATE TABLE product");
+
+        // when, then
+        assertThatThrownBy(() -> productDao.selectLastProduct())
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessage("최근 상품이 존재하지 않습니다.");
     }
 }

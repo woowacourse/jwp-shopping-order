@@ -5,8 +5,10 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
+import cart.exception.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,29 +18,43 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private RowMapper<Product> rowMapper = (rs, rowNum) -> {
+        long productId = rs.getLong("id");
+        String name = rs.getString("name");
+        int price = rs.getInt("price");
+        String imageUrl = rs.getString("image_url");
+        return new Product(productId, name, price, imageUrl);
+    };
+
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public List<Product> selectFirstProductsByLimit(int limit) {
+        String sql = "SELECT * FROM product ORDER BY id DESC LIMIT ?";
+        return jdbcTemplate.query(sql, rowMapper, limit);
+    }
+
+    public List<Product> selectProductsByIdAndLimit(Long lastId, int limit) {
+        String sql = "SELECT * FROM product WHERE id < ? ORDER BY id DESC LIMIT ?";
+        return jdbcTemplate.query(sql, rowMapper, lastId, limit);
+    }
+
+    public Product selectLastProduct() {
+        String sql = "SELECT * FROM product ORDER BY id ASC LIMIT 1";
+        return jdbcTemplate.query(sql, rowMapper).stream()
+                .findAny()
+                .orElseThrow(() -> new ProductNotFoundException("최근 상품이 존재하지 않습니다."));
     }
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.queryForObject(sql, rowMapper, productId);
     }
 
     public Long createProduct(Product product) {
