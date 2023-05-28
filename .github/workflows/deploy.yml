@@ -9,6 +9,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
+    if: ${{ github.event.test.conclusion == 'success' }}
     needs: test
     steps:
       - name: change permission
