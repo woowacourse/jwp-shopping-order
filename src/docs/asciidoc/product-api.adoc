@@ -30,7 +30,7 @@ include::{snippets}/products/create/http-request.adoc[]
 include::{snippets}/products/create/request-fields.adoc[]
 
 *응답*
-include::{snippets}/products/findById/http-response.adoc[]
+include::{snippets}/products/create/http-response.adoc[]
 
 [[product-update]]
 === 수정

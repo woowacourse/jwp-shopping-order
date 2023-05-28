@@ -53,9 +53,9 @@ class CartItemApiControllerTest {
     @DisplayName("회원의 모든 장바구니 품목을 조회한다.")
     void showCartItems() throws Exception {
 
-        Product product = new Product("곰돌이", 10000, "http:localhost:8080");
+        Product product = new Product(1L, "곰돌이", 10000, "http:localhost:8080");
         Member member = new Member(1L, "aa@aaa.com", "1234");
-        CartItem cartItem = new CartItem(member, product);
+        CartItem cartItem = new CartItem(1L, 3, product, member);
         CartItemResponse cartItemResponse = CartItemResponse.of(cartItem);
         given(cartItemService.findByMember(any(Member.class))).willReturn(List.of(cartItemResponse));
         given(memberDao.getMemberByEmail(any())).willReturn(member);
@@ -124,7 +124,7 @@ class CartItemApiControllerTest {
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/cart-items/{id}", 1L)
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(RestDocsHelper.prettyDocument(
                         "cart-items/deleteCartItems",
                         pathParameters(

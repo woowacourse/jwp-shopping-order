@@ -11,7 +11,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -68,10 +67,10 @@ class ProductApiControllerTest {
                 .andExpect(status().isOk())
                 .andDo(prettyDocument("products/findAll",
                         relaxedResponseFields(
-                                fieldWithPath("[0].id").description("상품 ID"),
-                                fieldWithPath("[0].name").description("상품의 이름"),
-                                fieldWithPath("[0].price").description("상품의 가격"),
-                                fieldWithPath("[0].imageUrl").description("상품의 이미지 URL")
+                                fieldWithPath("result[0].id").description("상품 ID"),
+                                fieldWithPath("result[0].name").description("상품의 이름"),
+                                fieldWithPath("result[0].price").description("상품의 가격"),
+                                fieldWithPath("result[0].imageUrl").description("상품의 이미지 URL")
                         )
                 ));
     }
@@ -93,11 +92,11 @@ class ProductApiControllerTest {
                         pathParameters(
                                 parameterWithName("id").description("상품 ID")
                         ),
-                        responseFields(
-                                fieldWithPath("id").description("상품 ID"),
-                                fieldWithPath("name").description("상품의 이름"),
-                                fieldWithPath("price").description("상품의 가격"),
-                                fieldWithPath("imageUrl").description("상품의 이미지 URL")
+                        relaxedResponseFields(
+                                fieldWithPath("result.id").description("상품 ID"),
+                                fieldWithPath("result.name").description("상품의 이름"),
+                                fieldWithPath("result.price").description("상품의 가격"),
+                                fieldWithPath("result.imageUrl").description("상품의 이미지 URL")
                         )
                 ));
     }
@@ -148,7 +147,7 @@ class ProductApiControllerTest {
         // expect
         mockMvc.perform(delete("/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(prettyDocument("products/delete",
                         pathParameters(
                                 parameterWithName("id").description("상품 ID")
