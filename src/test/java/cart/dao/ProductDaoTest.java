@@ -2,6 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.Product;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,11 +27,11 @@ class ProductDaoTest {
     @Test
     void 상품_저장_테스트() {
         final String testProductName = "testProductA";
-        final ProductEntity productEntity = new ProductEntity(testProductName, 3_000, "testImageUrl");
+        final Product productEntity = new Product(testProductName, 3_000, "testImageUrl");
 
         productDao.saveProduct(productEntity);
 
-        final List<ProductEntity> allProducts = productDao.findAllProducts();
+        final List<Product> allProducts = productDao.findAllProducts();
         assertThat(allProducts).hasSize(1);
         assertThat(allProducts.get(0).getName()).isEqualTo(testProductName);
     }
@@ -38,10 +39,10 @@ class ProductDaoTest {
     @Test
     void 상품_식별자_조회_테스트() {
         final String testProductName = "testProductA";
-        final ProductEntity productEntity = new ProductEntity(testProductName, 3_000, "testImageUrl");
+        final Product productEntity = new Product(testProductName, 3_000, "testImageUrl");
         final Long savedProductId = productDao.saveProduct(productEntity);
 
-        final ProductEntity productById = productDao.findProductById(savedProductId);
+        final Product productById = productDao.findProductById(savedProductId);
 
         assertThat(productById.getName()).isEqualTo(testProductName);
     }
@@ -50,20 +51,20 @@ class ProductDaoTest {
     void 상품_정보_수정_테스트() {
         final String beforeName = "testProductA";
         final String afterName = "testProductB";
-        final ProductEntity beforeProduct = new ProductEntity(beforeName, 3_000, "testImageUrl");
+        final Product beforeProduct = new Product(beforeName, 3_000, "testImageUrl");
         final Long savedProductId = productDao.saveProduct(beforeProduct);
-        final ProductEntity afterProduct = new ProductEntity(afterName, beforeProduct.getPrice(),
+        final Product afterProduct = new Product(afterName, beforeProduct.getPrice(),
                 beforeProduct.getImageUrl());
 
         productDao.updateProduct(savedProductId, afterProduct);
 
-        final ProductEntity updatedProduct = productDao.findProductById(savedProductId);
+        final Product updatedProduct = productDao.findProductById(savedProductId);
         assertThat(updatedProduct.getName()).isEqualTo(afterName);
     }
 
     @Test
     void 상품_삭제_테스트() {
-        final ProductEntity productEntity = new ProductEntity("testProductA", 3_000, "testImageUrl");
+        final Product productEntity = new Product("testProductA", 3_000, "testImageUrl");
         final Long savedProductId = productDao.saveProduct(productEntity);
         assertThat(productDao.findAllProducts()).hasSize(1);
 

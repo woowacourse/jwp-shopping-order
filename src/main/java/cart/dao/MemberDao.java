@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.Member;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,9 +21,9 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public MemberEntity findMemberById(final Long id) {
+    public Member findMemberById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
-        final List<MemberEntity> members = jdbcTemplate.query(sql, memberEntityRowMapper(), id);
+        final List<Member> members = jdbcTemplate.query(sql, memberEntityRowMapper(), id);
 
         if (members.isEmpty()) {
             return null;
@@ -31,9 +32,9 @@ public class MemberDao {
         return members.get(0);
     }
 
-    public MemberEntity findMemberByEmail(final String email) {
+    public Member findMemberByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
-        final List<MemberEntity> members = jdbcTemplate.query(sql, memberEntityRowMapper(), email);
+        final List<Member> members = jdbcTemplate.query(sql, memberEntityRowMapper(), email);
 
         if (members.isEmpty()) {
             return null;
@@ -42,12 +43,12 @@ public class MemberDao {
         return members.get(0);
     }
 
-    public List<MemberEntity> findAllMembers() {
+    public List<Member> findAllMembers() {
         final String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, memberEntityRowMapper());
     }
 
-    public Long saveMember(final MemberEntity memberEntity) {
+    public Long saveMember(final Member memberEntity) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("email", memberEntity.getEmail())
                 .addValue("password", memberEntity.getPassword());
@@ -55,13 +56,13 @@ public class MemberDao {
         return insertAction.executeAndReturnKey(parameters).longValue();
     }
 
-    private RowMapper<MemberEntity> memberEntityRowMapper() {
+    private RowMapper<Member> memberEntityRowMapper() {
         return (rs, rowNum) -> {
             final long memberId = rs.getLong("id");
             final String email = rs.getString("email");
             final String password = rs.getString("password");
 
-            return new MemberEntity(memberId, email, password);
+            return new Member(memberId, email, password);
         };
     }
 }

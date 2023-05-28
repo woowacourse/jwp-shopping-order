@@ -1,9 +1,9 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
+import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.ProductRepository;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
-    public CartItemService(final ProductRepository productRepository, final CartItemDao cartItemDao) {
-        this.productRepository = productRepository;
+    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao) {
+        this.productDao = productDao;
         this.cartItemDao = cartItemDao;
     }
 
@@ -27,8 +27,7 @@ public class CartItemService {
     }
 
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
-        return cartItemDao.save(
-                new CartItem(member, productRepository.findProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(new CartItem(member, productDao.findProductById(cartItemRequest.getProductId())));
     }
 
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {

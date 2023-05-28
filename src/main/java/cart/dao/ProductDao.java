@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.Product;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,17 +22,17 @@ public class ProductDao {
 
     }
 
-    public List<ProductEntity> findAllProducts() {
+    public List<Product> findAllProducts() {
         final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, prodcutEntityRowMapper());
     }
 
-    public ProductEntity findProductById(final Long productId) {
+    public Product findProductById(final Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, prodcutEntityRowMapper(), productId);
     }
 
-    public Long saveProduct(final ProductEntity productEntity) {
+    public Long saveProduct(final Product productEntity) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", productEntity.getName())
                 .addValue("price", productEntity.getPrice())
@@ -40,7 +41,7 @@ public class ProductDao {
         return insertAction.executeAndReturnKey(parameters).longValue();
     }
 
-    public void updateProduct(final Long productId, final ProductEntity productEntity) {
+    public void updateProduct(final Long productId, final Product productEntity) {
         final String updateProductQuery
                 = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
 
@@ -57,14 +58,14 @@ public class ProductDao {
         jdbcTemplate.update(deleteProductQuery, productId);
     }
 
-    private RowMapper<ProductEntity> prodcutEntityRowMapper() {
+    private RowMapper<Product> prodcutEntityRowMapper() {
         return (rs, rowNum) -> {
             final Long productId = rs.getLong("id");
             final String name = rs.getString("name");
             final int price = rs.getInt("price");
             final String imageUrl = rs.getString("image_url");
 
-            return new ProductEntity(productId, name, price, imageUrl);
+            return new Product(productId, name, price, imageUrl);
         };
     }
 }
