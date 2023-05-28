@@ -1,6 +1,7 @@
 package member.application;
 
 import java.util.List;
+import java.util.Optional;
 import member.dao.MemberDao;
 import member.domain.Member;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,9 @@ public class MemberQueryService {
 
     public List<Member> getAllMembers() {
         return memberDao.getAllMembers();
+    }
+
+    public Optional<Member> findByEmailAndPassword(String email, String password) {
+        return memberDao.findByEmailAndPassword(email, password);
     }
 }

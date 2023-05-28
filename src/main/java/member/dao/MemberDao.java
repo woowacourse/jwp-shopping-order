@@ -3,6 +3,7 @@ package member.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import member.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -47,6 +48,16 @@ public class MemberDao {
     public List<Member> getAllMembers() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
+    }
+
+    public Optional<Member> findByEmailAndPassword(String email, String password) {
+        String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
+        try {
+            Member member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), email, password);
+            return Optional.of(member);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     private static class MemberRowMapper implements RowMapper<Member> {

@@ -123,3 +123,10 @@ coupon 과, order 에서 member 의 정보가 맞는지 검사를 해야하니, 
 쿠폰에도 멤버가 필요하고, 카트에도 member 가 필요합니다  
 쿠폰 도메인에서는 네이밍상 Member 가 적절하지만, Cart 에서는 Buyer 라는 네이밍이 더 적합해보이는데요  
 서로 다른 도메인에 이름을 통일시키는 방향으로 작성하는 것이 좋은지, 아니면 도메인별 적절한 네이밍을 사용하는 것이 더 권장되는지 궁금합니다
+
+### member 에 대한 것을 조회할 때, email 과 password 처리를 어떻게 해야하나요
+
+현재는 BasicAuth 를 사용하기에, email, password 를 사용하는데요  
+요청을 보낼때, email, password 를 그대로 보내는 것은 보안상 위험하다고 생각합니다  
+token 이라면 token 내부에 memberId 를 넣어둘 것 같고, session 이라면 memberId 를 넣어둘 것 같지만  
+이런 방향의 해결책이 괜찮은지와, basicAuth 를 사용했을 때, email, password 를 어떻게 처리해야할지 궁금합니다
