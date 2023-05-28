@@ -2,6 +2,7 @@ package cart.controller.product;
 
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
+import cart.dto.sale.SaleProductRequest;
 import cart.service.product.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
-        Long id = productService.createProduct(productRequest);
+        long id = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
@@ -54,5 +55,18 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/sales/{id}")
+    public ResponseEntity<Void> applySale(@PathVariable("id") final Long productId,
+                                          @RequestBody @Valid final SaleProductRequest request) {
+        long id = productService.applySale(productId, request);
+        return ResponseEntity.created(URI.create("/products/" + id)).build();
+    }
+
+    @DeleteMapping("/sales/{id}")
+    public ResponseEntity<Void> unapplySale(@PathVariable("id") final Long productId) {
+        long id = productService.unapplySale(productId);
+        return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 }

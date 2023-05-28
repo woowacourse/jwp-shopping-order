@@ -3,6 +3,7 @@ package cart.service.product;
 import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
+import cart.dto.sale.SaleProductRequest;
 import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,5 +47,23 @@ public class ProductService {
     @Transactional
     public void deleteProduct(final Long productId) {
         productRepository.deleteProduct(productId);
+    }
+
+    @Transactional
+    public long applySale(final Long productId, final SaleProductRequest request) {
+        Product product = productRepository.findProductById(productId);
+        product.applySale(request.getAmount());
+
+        productRepository.applySale(productId, request.getAmount());
+        return productId;
+    }
+
+    @Transactional
+    public long unapplySale(final Long productId) {
+        Product product = productRepository.findProductById(productId);
+        product.unApplySale();
+
+        productRepository.unapplySale(productId);
+        return product.getId();
     }
 }

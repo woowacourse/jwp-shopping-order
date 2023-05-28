@@ -47,4 +47,14 @@ public class PolicyDao {
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
+
+    public void applySalePolicy(final long policyId, final int amount) {
+        String sql = "UPDATE policy SET amount = ? WHERE id = ?";
+        jdbcTemplate.update(sql, amount, policyId);
+    }
+
+    public void deletePolicy(final long policyId) {
+        String sql = "DELETE FROM policy WHERE id = ?";
+        jdbcTemplate.update(sql, policyId);
+    }
 }

@@ -28,7 +28,9 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new ProductEntity(productId, name, price, imageUrl);
+            Boolean isOnSale = rs.getBoolean("isOnSale");
+            long policyId = rs.getLong("policy_id");
+            return new ProductEntity(productId, name, price, imageUrl, isOnSale, policyId);
         });
     }
 
@@ -38,7 +40,9 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new ProductEntity(productId, name, price, imageUrl);
+            Boolean isOnSale = rs.getBoolean("isOnSale");
+            long policyId = rs.getLong("policy_id");
+            return new ProductEntity(productId, name, price, imageUrl, isOnSale, policyId);
         });
     }
 
@@ -71,5 +75,10 @@ public class ProductDao {
     public void deleteProduct(final Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public void applySalePolicy(final long productId, final boolean isOnSale) {
+        String sql = "UPDATE product SET isOnSale = ? WHERE id = ?";
+        jdbcTemplate.update(sql, isOnSale, productId);
     }
 }

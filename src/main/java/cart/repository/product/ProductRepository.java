@@ -43,6 +43,20 @@ public class ProductRepository {
     }
 
     public void deleteProduct(final Long productId) {
+        ProductEntity productEntity = productDao.getProductById(productId);
         productDao.deleteProduct(productId);
+        policyDao.deletePolicy(productEntity.getPolicyId());
+    }
+
+    public void applySale(final long productId, final int amount) {
+        ProductEntity productEntity = productDao.getProductById(productId);
+        productDao.applySalePolicy(productId, true);
+        policyDao.applySalePolicy(productEntity.getPolicyId(), amount);
+    }
+
+    public void unapplySale(final long productId) {
+        ProductEntity productEntity = productDao.getProductById(productId);
+        productDao.applySalePolicy(productId, false);
+        policyDao.applySalePolicy(productEntity.getPolicyId(), 0);
     }
 }
