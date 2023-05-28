@@ -1,6 +1,5 @@
 package cart.domain.member;
 
-import cart.domain.cart.Cart;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
 
@@ -12,23 +11,17 @@ public class Member {
     private Long id;
     private final Email email;
     private final Password password;
-    private Cart cart;
     private Coupons coupons;
 
     public Member(final Long id, final String email, final String password) {
         this.id = id;
         this.email = new Email(email);
         this.password = new Password(password);
-        cart = null;
         this.coupons = null;
     }
 
     public void initCoupons(final Coupons coupons) {
         this.coupons = coupons;
-    }
-
-    public void initCart(final Cart cart) {
-        this.cart = cart;
     }
 
     public boolean checkPassword(final String password) {
@@ -45,10 +38,6 @@ public class Member {
 
     public String getPassword() {
         return password.getPassword();
-    }
-
-    public Cart getCart() {
-        return cart;
     }
 
     public List<Coupon> getCoupons() {

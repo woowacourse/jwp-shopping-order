@@ -1,7 +1,5 @@
 package cart.domain.cart;
 
-import cart.domain.coupon.Coupons;
-import cart.domain.member.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,8 +9,6 @@ import static cart.fixture.CartFixture.createCart;
 import static cart.fixture.CouponFixture.createCoupons;
 import static cart.fixture.CouponFixture.createDeliveryCoupon;
 import static cart.fixture.CouponFixture.createDiscountCoupon;
-import static cart.fixture.MemberFixture.createMember;
-import static cart.fixture.MemberFixture.createMemberWithCart;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
@@ -35,9 +31,7 @@ class CartTest {
     @Test
     void calculate_after_apply_coupons_price() {
         // given
-        Member member = createMemberWithCart();
-        member.initCoupons(createCoupons());
-        Cart cart = member.getCart();
+        Cart cart = createCart();
 
         // when
         int result = cart.calculateItemsUsingCoupons(createCoupons().getCoupons());
@@ -50,9 +44,7 @@ class CartTest {
     @Test
     void calculate_after_apply_delivery_coupon_price() {
         // given
-        Member member = createMemberWithCart();
-        member.initCoupons(new Coupons(List.of(createDeliveryCoupon())));
-        Cart cart = member.getCart();
+        Cart cart = createCart();
 
         // when
         int result = cart.calculateDeliveryFeeUsingCoupons(List.of(createDeliveryCoupon()));
@@ -67,9 +59,6 @@ class CartTest {
         // given
         Cart cart = createCart();
         cart.getCartItems().get(0).getProduct().applySale(100);
-        Member member = createMember();
-        member.initCart(cart);
-        member.initCoupons(new Coupons(List.of(createDiscountCoupon())));
 
         // when
         int result = cart.calculateItemsUsingCoupons(List.of(createDiscountCoupon()));

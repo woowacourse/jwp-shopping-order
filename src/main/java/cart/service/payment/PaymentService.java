@@ -32,10 +32,9 @@ public class PaymentService {
     public PaymentResponse findPaymentPage(final Member member) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
         Coupons coupons = couponRepository.findAllByMemberId(member.getId());
-        member.initCart(cart);
         member.initCoupons(coupons);
 
-        return PaymentResponse.from(member);
+        return PaymentResponse.from(member, cart);
     }
 
     @Transactional
@@ -46,7 +45,6 @@ public class PaymentService {
 
         // TODO: validate member and request coupons equals or diff
 
-        member.initCart(cart);
         member.initCoupons(requestCoupons);
 
         return PaymentUsingCouponsResponse.from(cart, requestCoupons.getCoupons());

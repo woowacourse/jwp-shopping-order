@@ -21,9 +21,7 @@ public class PaymentResponse {
         this.coupons = coupons;
     }
 
-    public static PaymentResponse from(final Member member) {
-        Cart cart = member.getCart();
-
+    public static PaymentResponse from(final Member member, final Cart cart) {
         List<ProductPayResponse> productPayResponses = cart.getCartItems().stream()
                 .map(cartItem -> ProductPayResponse.from(cartItem.getProduct()))
                 .collect(Collectors.toList());
