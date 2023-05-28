@@ -1,8 +1,8 @@
 package cart.dao;
 
-import cart.domain.Product;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;

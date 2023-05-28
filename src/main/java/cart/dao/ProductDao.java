@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -48,9 +48,9 @@ public class ProductDao {
 
     public Long createProduct(final Product product) {
         final SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", product.getName())
-                .addValue("price", product.getPrice())
-                .addValue("image_url", product.getImageUrl());
+                .addValue("name", product.getNameValue())
+                .addValue("price", product.getPriceValue())
+                .addValue("image_url", product.getImageUrlValue());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
@@ -58,7 +58,7 @@ public class ProductDao {
     public void updateProduct(final Long productId, final Product product) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getNameValue(), product.getPriceValue(), product.getImageUrlValue(), productId);
     }
 
     public void deleteProduct(final Long productId) {
