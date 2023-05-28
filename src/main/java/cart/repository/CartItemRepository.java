@@ -11,6 +11,7 @@ import cart.domain.Member;
 import cart.domain.Product;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
+import cart.exception.InvalidCartItemOwnerException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.ProductNotFoundException;
 import java.util.List;
@@ -50,18 +51,9 @@ public class CartItemRepository {
 
     public List<CartItem> findAllByMemberId(final Long memberId) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberId(memberId);
-        final Member member = memberDao.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new)
-                .toDomain();
-        final List<Long> productIds = cartItemEntities.stream()
-                .map(CartItemEntity::getProductId)
-                .collect(toList());
-        final Map<Long, Product> products = productDao.findByIds(productIds).stream()
-                .map(ProductEntity::toDomain)
-                .collect(toMap(Product::getId, Function.identity()));
-        return cartItemEntities.stream()
-                .map(it -> new CartItem(it.getId(), it.getQuantity(), member, products.get(it.getProductId())))
-                .collect(toList());
+        final Member member = getMember(memberId);
+        final Map<Long, Product> products = getProducts(cartItemEntities);
+        return makeCartItems(cartItemEntities, member, products);
     }
 
     public Optional<CartItem> findById(Long id) {
@@ -70,16 +62,52 @@ public class CartItemRepository {
             return Optional.empty();
         }
         final CartItemEntity cartItemEntity = mayBeCartItemEntity.get();
-        final Member member = memberDao.findById(cartItemEntity.getMemberId())
-                .orElseThrow(MemberNotFoundException::new)
-                .toDomain();
-        final Product product = productDao.findById(cartItemEntity.getProductId())
+        final Member member = getMember(cartItemEntity.getMemberId());
+        final Product product = getProduct(cartItemEntity);
+        return Optional.of(new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), member, product));
+    }
+
+    private Product getProduct(final CartItemEntity cartItemEntity) {
+        return productDao.findById(cartItemEntity.getProductId())
                 .orElseThrow(ProductNotFoundException::new)
                 .toDomain();
-        return Optional.of(new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), member, product));
     }
 
     public void deleteById(final Long cartItemId, final Long memberId) {
         cartItemDao.deleteById(cartItemId, memberId);
+    }
+
+    public List<CartItem> findAllByMemberIdAndCartItemIds(final Long memberId, final List<Long> orderItemIds) {
+        List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberIdAndCartItemIds(memberId,
+                orderItemIds);
+
+        if (cartItemEntities.size() != orderItemIds.size()) {
+            throw new InvalidCartItemOwnerException();
+        }
+        final Member member = getMember(memberId);
+        final Map<Long, Product> products = getProducts(cartItemEntities);
+        return makeCartItems(cartItemEntities, member, products);
+    }
+
+    private static List<CartItem> makeCartItems(final List<CartItemEntity> cartItemEntities, final Member member,
+                                             final Map<Long, Product> products) {
+        return cartItemEntities.stream()
+                .map(it -> new CartItem(it.getId(), it.getQuantity(), member, products.get(it.getProductId())))
+                .collect(toList());
+    }
+
+    private Map<Long, Product> getProducts(final List<CartItemEntity> cartItemEntities) {
+        final List<Long> productIds = cartItemEntities.stream()
+                .map(CartItemEntity::getProductId)
+                .collect(toList());
+        return productDao.findByIds(productIds).stream()
+                .map(ProductEntity::toDomain)
+                .collect(toMap(Product::getId, Function.identity()));
+    }
+
+    private Member getMember(final Long memberId) {
+        return memberDao.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new)
+                .toDomain();
     }
 }

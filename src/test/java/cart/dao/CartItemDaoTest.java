@@ -105,4 +105,25 @@ class CartItemDaoTest {
         final CartItemEntity result = cartItemDao.findById(updatedCartItemEntity.getId()).get();
         assertThat(result.getQuantity()).isEqualTo(2);
     }
+
+    @Test
+    void 해당멤버_아이디와_장바구니_상품_아이디로_장바구니_상품들을_조회한다() {
+        // given
+        final MemberEntity member = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
+        final ProductEntity product1 = productDao.insert(new ProductEntity("치즈피자1", "1.jpg", 8900L));
+        final ProductEntity product2 = productDao.insert(new ProductEntity("치즈피자2", "2.jpg", 8900L));
+        final ProductEntity product3 = productDao.insert(new ProductEntity("치즈피자3", "3.jpg", 8900L));
+
+        CartItemEntity savedCartItemEntity1 = cartItemDao.insert(new CartItemEntity(member.getId(), product1.getId(), 1));
+        CartItemEntity savedCartItemEntity2 = cartItemDao.insert(new CartItemEntity(member.getId(), product2.getId(), 1));
+        CartItemEntity savedCartItemEntity3 = cartItemDao.insert(new CartItemEntity(member.getId(), product3.getId(), 1));
+
+        // when
+        List<CartItemEntity> result = cartItemDao.findAllByMemberIdAndCartItemIds(member.getId(),
+                List.of(savedCartItemEntity1.getId(), savedCartItemEntity2.getId()));
+
+        // then
+        assertThat(result).usingRecursiveComparison()
+                .isEqualTo(List.of(savedCartItemEntity1, savedCartItemEntity2));
+    }
 }

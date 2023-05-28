@@ -7,6 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +17,8 @@ public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
+
     private final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) -> {
         final Long id = rs.getLong("id");
         final Long memberId = rs.getLong("member_id");
@@ -25,6 +29,7 @@ public class CartItemDao {
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingColumns("quantity", "member_id", "product_id")
@@ -64,5 +69,13 @@ public class CartItemDao {
     public void updateQuantity(final CartItemEntity cartItemEntity) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
+    }
+
+    public List<CartItemEntity> findAllByMemberIdAndCartItemIds(final Long memberId, final List<Long> orderItemIds) {
+        final String sql = "SELECT * FROM cart_item WHERE member_id = :memberId and id IN (:ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("memberId", memberId);
+        parameters.addValue("ids", orderItemIds);
+        return namedJdbcTemplate.query(sql, parameters, rowMapper);
     }
 }
