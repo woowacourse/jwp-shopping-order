@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://monumental-kleicha-ad648a.netlify.app/", "http://localhost:9000", "http://localhost:3000", "http://localhost:8080")
+                .allowedOrigins("https://monumental-kleicha-ad648a.netlify.app/", "http://localhost:9000", "http://localhost:3000", "http://localhost:8080","https://jourzura2.kro.kr")
                 .allowedMethods("*");
     }
 }
