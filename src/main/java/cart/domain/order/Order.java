@@ -5,12 +5,18 @@ import cart.domain.Member;
 
 public class Order {
 
+    private final Long id;
     private final Member member;
     private final CartItems cartItems;
     private final DiscountPolicy discountPolicy;
 
     public Order(final Member member, final CartItems cartItems, final DiscountPolicy discountPolicy) {
+        this(null, member, cartItems, discountPolicy);
+    }
+
+    public Order(final Long id, final Member member, final CartItems cartItems, final DiscountPolicy discountPolicy) {
         validateMember(member, cartItems);
+        this.id = id;
         this.member = member;
         this.cartItems = cartItems;
         this.discountPolicy = discountPolicy;
@@ -22,6 +28,14 @@ public class Order {
         }
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
     public Price getOriginalPrice() {
         return cartItems.sumOfPrice();
     }
@@ -30,4 +44,5 @@ public class Order {
         final Price originalPrice = cartItems.sumOfPrice();
         return discountPolicy.discount(originalPrice);
     }
+
 }
