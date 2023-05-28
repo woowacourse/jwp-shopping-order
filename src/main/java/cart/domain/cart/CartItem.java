@@ -49,7 +49,7 @@ public class CartItem {
         return product;
     }
 
-    public int getFinallyPrice() {
+    public int getFinallyPriceWithOutCoupon() {
         return this.product.getApplyDiscountPrice();
     }
 
@@ -57,7 +57,7 @@ public class CartItem {
         return quantity;
     }
 
-    public int getPrice() {
+    public int getOriginPrice() {
         return this.product.getPrice();
     }
 

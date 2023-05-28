@@ -35,10 +35,6 @@ public class Member {
         return this.password.isPassed(password);
     }
 
-    public boolean hasCoupons() {
-        return this.coupons != null;
-    }
-
     public Long getId() {
         return id;
     }

@@ -1,32 +1,27 @@
 package cart.dto.payment;
 
-import cart.domain.member.Member;
+import cart.domain.cart.Cart;
+import cart.domain.coupon.Coupon;
 import cart.dto.product.DeliveryPayResponse;
+import cart.dto.product.ProductUsingCouponAndSaleResponse;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PaymentUsingCouponsResponse {
 
-    private final List<PaymentUsingCouponResponse> products;
+    private final List<ProductUsingCouponAndSaleResponse> products;
     private final DeliveryPayResponse deliveryPrice;
 
-    public PaymentUsingCouponsResponse(final List<PaymentUsingCouponResponse> products, final DeliveryPayResponse deliveryPrice) {
+    public PaymentUsingCouponsResponse(final List<ProductUsingCouponAndSaleResponse> products, final DeliveryPayResponse deliveryPrice) {
         this.products = products;
         this.deliveryPrice = deliveryPrice;
     }
 
-    public static PaymentUsingCouponsResponse from(final Member member) {
-        List<PaymentUsingCouponResponse> products = member.getCart().getCartItems().stream()
-                .map(PaymentUsingCouponResponse::from)
-                .collect(Collectors.toList());
-
-        DeliveryPayResponse deliveryPayResponse = DeliveryPayResponse.from(member);
-
-        return new PaymentUsingCouponsResponse(products, deliveryPayResponse);
+    public static PaymentUsingCouponsResponse from(final Cart cart, final List<Coupon> requestCoupons) {
+        return new PaymentUsingCouponsResponse(cart.getProductUsingCouponAndSaleResponse(requestCoupons), new DeliveryPayResponse(cart.getDeliveryFee(), cart.calculateDeliveryFeeUsingCoupons(requestCoupons)));
     }
 
-    public List<PaymentUsingCouponResponse> getProducts() {
+    public List<ProductUsingCouponAndSaleResponse> getProducts() {
         return products;
     }
 

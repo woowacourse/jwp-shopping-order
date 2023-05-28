@@ -2,6 +2,7 @@ package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.product.Product;
+import cart.dto.product.ProductUsingCouponAndSaleResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,6 +65,10 @@ public class Cart {
         }
 
         return price;
+    }
+
+    public List<ProductUsingCouponAndSaleResponse> getProductUsingCouponAndSaleResponse(final List<Coupon> requestCoupons) {
+        return cartItems.getProductUsingCouponAndSaleResponse(requestCoupons);
     }
 
     public Long getId() {

@@ -41,7 +41,6 @@ public class PaymentService {
     @Transactional
     public PaymentUsingCouponsResponse applyCoupons(final Member member, final CouponsApplyRequest request) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-
         Coupons memberCoupons = couponRepository.findAllByMemberId(member.getId());
         Coupons requestCoupons = couponRepository.findAllByCouponIds(parseCouponRequestIds(request));
 
@@ -50,7 +49,7 @@ public class PaymentService {
         member.initCart(cart);
         member.initCoupons(requestCoupons);
 
-        return PaymentUsingCouponsResponse.from(member);
+        return PaymentUsingCouponsResponse.from(cart, requestCoupons.getCoupons());
     }
 
     private List<Long> parseCouponRequestIds(final CouponsApplyRequest request) {
