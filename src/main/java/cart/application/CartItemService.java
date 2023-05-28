@@ -1,7 +1,7 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
+import cart.repository.dao.CartItemDao;
+import cart.repository.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
