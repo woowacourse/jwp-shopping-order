@@ -1,19 +1,19 @@
 package cart.dto;
 
-public class CartItemCreatedResponse {
+public class CartItemUpdateRequest {
     private final int quantity;
     private final boolean checked;
 
-    public CartItemCreatedResponse(final int quantity, final boolean checked) {
+    public CartItemUpdateRequest(final int quantity, final boolean checked) {
         this.quantity = quantity;
         this.checked = checked;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
     public boolean isChecked() {
         return checked;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }

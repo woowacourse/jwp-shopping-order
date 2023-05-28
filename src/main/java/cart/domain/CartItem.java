@@ -9,7 +9,7 @@ public class CartItem {
     private int quantity;
     private final Product product;
     private final Member member;
-    private final boolean checked;
+    private boolean checked;
 
     public CartItem(Member member, Product product) {
         this.quantity = 1;
@@ -54,5 +54,9 @@ public class CartItem {
 
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void changeChecked(final boolean checked) {
+        this.checked = checked;
     }
 }

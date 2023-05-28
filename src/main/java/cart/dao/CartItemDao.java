@@ -96,9 +96,9 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void updateQuantity(CartItem cartItem) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    public void update(CartItem cartItem) {
+        String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ?";
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.isChecked(), cartItem.getId());
     }
 
     public void deleteByProductId(final Long productId) {
