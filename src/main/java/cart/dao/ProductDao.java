@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Product;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -27,9 +28,15 @@ public class ProductDao {
         return jdbcTemplate.query(sql, prodcutEntityRowMapper());
     }
 
-    public Product findProductById(final Long productId) {
+    public Optional<Product> findProductById(final Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, prodcutEntityRowMapper(), productId);
+        final List<Product> products = jdbcTemplate.query(sql, prodcutEntityRowMapper(), productId);
+
+        if (products.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(products.get(0));
     }
 
     public Long saveProduct(final Product productEntity) {

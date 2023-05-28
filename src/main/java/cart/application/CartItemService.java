@@ -4,9 +4,11 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.NoSuchDataExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,9 @@ public class CartItemService {
     }
 
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.findProductById(cartItemRequest.getProductId())));
+        final Product productById = productDao.findProductById(cartItemRequest.getProductId())
+                .orElseThrow(NoSuchDataExistException::new);
+        return cartItemDao.save(new CartItem(member, productById));
     }
 
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {

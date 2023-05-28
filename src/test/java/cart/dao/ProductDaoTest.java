@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,10 @@ class ProductDaoTest {
         final Product productEntity = new Product(testProductName, 3_000, "testImageUrl");
         final Long savedProductId = productDao.saveProduct(productEntity);
 
-        final Product productById = productDao.findProductById(savedProductId);
+        final Optional<Product> productById = productDao.findProductById(savedProductId);
 
-        assertThat(productById.getName()).isEqualTo(testProductName);
+        assertThat(productById).isNotEmpty();
+        assertThat(productById.get().getName()).isEqualTo(testProductName);
     }
 
     @Test
@@ -58,8 +60,10 @@ class ProductDaoTest {
 
         productDao.updateProduct(savedProductId, afterProduct);
 
-        final Product updatedProduct = productDao.findProductById(savedProductId);
-        assertThat(updatedProduct.getName()).isEqualTo(afterName);
+        final Optional<Product> updatedProduct = productDao.findProductById(savedProductId);
+        
+        assertThat(updatedProduct).isNotEmpty();
+        assertThat(updatedProduct.get().getName()).isEqualTo(afterName);
     }
 
     @Test

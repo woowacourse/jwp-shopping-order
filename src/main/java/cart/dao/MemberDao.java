@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Member;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -21,26 +22,26 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Member findMemberById(final Long id) {
+    public Optional<Member> findMemberById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
         final List<Member> members = jdbcTemplate.query(sql, memberEntityRowMapper(), id);
 
         if (members.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
 
-        return members.get(0);
+        return Optional.of(members.get(0));
     }
 
-    public Member findMemberByEmail(final String email) {
+    public Optional<Member> findMemberByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
         final List<Member> members = jdbcTemplate.query(sql, memberEntityRowMapper(), email);
 
         if (members.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
 
-        return members.get(0);
+        return Optional.of(members.get(0));
     }
 
     public List<Member> findAllMembers() {

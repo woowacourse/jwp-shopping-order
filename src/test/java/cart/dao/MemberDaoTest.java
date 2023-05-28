@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +44,10 @@ class MemberDaoTest {
         final Member memberEntity = new Member(memberEmail, "password");
         final Long saveMemberId = memberDao.saveMember(memberEntity);
 
-        final Member member = memberDao.findMemberById(saveMemberId);
+        final Optional<Member> member = memberDao.findMemberById(saveMemberId);
 
-        assertThat(member.getEmail()).isEqualTo(memberEmail);
+        assertThat(member).isNotEmpty();
+        assertThat(member.get().getEmail()).isEqualTo(memberEmail);
     }
 
     @Test
@@ -54,16 +56,17 @@ class MemberDaoTest {
         final Member memberEntity = new Member(memberEmail, "password");
         final Long saveMemberId = memberDao.saveMember(memberEntity);
 
-        final Member member = memberDao.findMemberByEmail(memberEmail);
+        final Optional<Member> member = memberDao.findMemberByEmail(memberEmail);
 
-        assertThat(member.getId()).isEqualTo(saveMemberId);
+        assertThat(member).isNotEmpty();
+        assertThat(member.get().getId()).isEqualTo(saveMemberId);
     }
 
     @Test
     void 존재하지_않으면_null을_반환_한다() {
-        final Member member = memberDao.findMemberByEmail("memberEmail");
+        final Optional<Member> member = memberDao.findMemberByEmail("memberEmail");
 
-        assertThat(member).isNull();
+        assertThat(member).isEmpty();
     }
 
     @Test
