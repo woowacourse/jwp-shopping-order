@@ -1,7 +1,7 @@
 package cart.integration;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +31,7 @@ public class MemberIntegrationTest extends IntegrationTest {
         RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
                 .when()
                 .get("members/point")
                 .then().log().all()

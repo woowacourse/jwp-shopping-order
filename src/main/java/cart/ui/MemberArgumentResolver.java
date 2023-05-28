@@ -1,8 +1,8 @@
 package cart.ui;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.exception.authorization.AuthenticationException;
+import cart.domain.member.Member;
+import cart.exception.authorization.InvalidFormatException;
 import cart.exception.authorization.PasswordNotMatchException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -43,7 +43,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String[] credentials = decodedString.split(":");
 
         if (credentials.length != 2) {
-            throw new AuthenticationException();
+            throw new InvalidFormatException();
         }
         String email = credentials[0];
         String password = credentials[1];

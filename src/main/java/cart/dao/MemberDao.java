@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -46,12 +46,12 @@ public class MemberDao {
 
     public void addMember(final Member member) {
         final String sql = "INSERT INTO member(email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+        jdbcTemplate.update(sql, member.getEmailValue(), member.getPasswordValue());
     }
 
     public void updateMember(final Member member) {
         final String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+        jdbcTemplate.update(sql, member.getEmailValue(), member.getPasswordValue(), member.getId());
     }
 
     public void deleteMember(final Long memberId) {
