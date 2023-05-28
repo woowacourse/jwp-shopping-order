@@ -1,7 +1,7 @@
 package cart.acceptance;
 
 import cart.dao.CartItemDao;
-import cart.dto.CartItemRequest;
+import cart.dto.CartItemAddRequest;
 import cart.dto.CartItemUpdateRequest;
 import cart.dto.CartItemUpdateResponse;
 import org.junit.jupiter.api.Test;
@@ -14,19 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class CartItemsAcceptanceTest extends AcceptanceTest {
 
-    private static final String EMAIL = "a@a.com";
-    private static final String PASSWORD = "1234";
-
     @Autowired
     private CartItemDao cartItemDao;
 
     @Test
     void 장바구니_아이템_추가() {
-        final CartItemRequest cartItemRequest = new CartItemRequest(1L);
+        final CartItemAddRequest cartItemAddRequest = new CartItemAddRequest(1L);
 
         final var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartItemRequest)
+                .body(cartItemAddRequest)
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().post("/cart-items")
                 .then().log().all()

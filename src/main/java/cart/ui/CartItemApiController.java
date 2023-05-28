@@ -2,12 +2,19 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
-import cart.dto.CartItemUpdateResponse;
-import cart.dto.CartItemUpdateRequest;
-import cart.dto.CartItemRequest;
+import cart.dto.CartItemAddRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.CartItemUpdateRequest;
+import cart.dto.CartItemUpdateResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
@@ -28,8 +35,8 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<CartItemUpdateResponse> addCartItems(@Auth Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+    public ResponseEntity<CartItemUpdateResponse> addCartItems(@Auth Member member, @RequestBody CartItemAddRequest cartItemAddRequest) {
+        Long cartItemId = cartItemService.add(member, cartItemAddRequest);
         final CartItemResponse response = cartItemService.findById(cartItemId);
         final CartItemUpdateResponse createdResponse = new CartItemUpdateResponse(response.getQuantity(), response.isChecked());
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).body(createdResponse);

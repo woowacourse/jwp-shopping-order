@@ -2,7 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.CartItemRequest;
+import cart.dto.CartItemAddRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
@@ -47,8 +47,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void addCartItemByIllegalMember() {
         Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
+        CartItemAddRequest cartItemAddRequest = new CartItemAddRequest(productId);
+        ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemAddRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -106,11 +106,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemAddRequest cartItemAddRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(cartItemRequest)
+                .body(cartItemAddRequest)
                 .when()
                 .post("/cart-items")
                 .then()
@@ -119,7 +119,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private Long requestAddCartItemAndGetId(Member member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
+        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemAddRequest(productId));
         return getIdFromCreatedResponse(response);
     }
 

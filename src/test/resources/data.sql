@@ -20,3 +20,10 @@ VALUES (1, 2, 4, true);
 
 INSERT INTO cart_item (member_id, product_id, quantity, checked)
 VALUES (2, 3, 5, true);
+
+INSERT INTO orders (member_id, used_points)
+VALUES (1, 1000);
+
+INSERT INTO order_item (order_id, product_name, product_price, product_quantity, product_image_url)
+VALUES (1, '치킨', 10000, 1,
+        'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80')

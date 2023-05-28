@@ -4,9 +4,9 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemUpdateRequest;
-import cart.dto.CartItemRequest;
+import cart.dto.CartItemAddRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.CartItemUpdateRequest;
 import cart.dto.CartItemUpdateResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +30,13 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public CartItemResponse findById(Long cartItemId){
+    public CartItemResponse findById(Long cartItemId) {
         final CartItem cartItem = cartItemDao.findById(cartItemId);
         return CartItemResponse.of(cartItem);
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    public Long add(Member member, CartItemAddRequest cartItemAddRequest) {
+        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemAddRequest.getProductId())));
     }
 
     public CartItemUpdateResponse updateQuantity(Member member, Long id, CartItemUpdateRequest request) {
