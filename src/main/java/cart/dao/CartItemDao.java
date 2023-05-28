@@ -22,7 +22,7 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.checked, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -35,9 +35,10 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
+            boolean checked = rs.getBoolean("cart_item.checked");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            return new CartItem(cartItemId, quantity, product, member, checked);
         });
     }
 
@@ -46,13 +47,14 @@ public class CartItemDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
+                    "INSERT INTO cart_item (member_id, product_id, quantity, checked) VALUES (?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setLong(1, cartItem.getMember().getId());
             ps.setLong(2, cartItem.getProduct().getId());
             ps.setInt(3, cartItem.getQuantity());
+            ps.setBoolean(4, cartItem.isChecked());
 
             return ps;
         }, keyHolder);
@@ -61,7 +63,7 @@ public class CartItemDao {
     }
 
     public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.checked, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -75,9 +77,10 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
+            boolean checked = rs.getBoolean("cart_item.checked");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            return new CartItem(cartItemId, quantity, product, member, checked);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }

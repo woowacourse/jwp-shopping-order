@@ -11,12 +11,12 @@ VALUES ('피자', 13000,
 INSERT INTO member (email, password, points)
 VALUES ('a@a.com', '1234', 1320);
 INSERT INTO member (email, password, points)
-VALUES ('b@b.com', '1234', 1000);
+VALUES ('b@b.com', '1234', 100);
 
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (1, 1, 2);
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (1, 2, 4);
+INSERT INTO cart_item (member_id, product_id, quantity, checked)
+VALUES (1, 1, 2, true);
+INSERT INTO cart_item (member_id, product_id, quantity, checked)
+VALUES (1, 2, 4, true);
 
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (2, 3, 5);
+INSERT INTO cart_item (member_id, product_id, quantity, checked)
+VALUES (2, 3, 5, true);

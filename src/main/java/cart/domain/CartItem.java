@@ -9,18 +9,21 @@ public class CartItem {
     private int quantity;
     private final Product product;
     private final Member member;
+    private final boolean checked;
 
     public CartItem(Member member, Product product) {
         this.quantity = 1;
         this.member = member;
         this.product = product;
+        this.checked = true;
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, int quantity, Product product, Member member, final boolean checked) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+        this.checked = checked;
     }
 
     public Long getId() {
@@ -37,6 +40,10 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public boolean isChecked() {
+        return checked;
     }
 
     public void checkOwner(Member member) {

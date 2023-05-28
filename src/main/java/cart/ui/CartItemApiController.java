@@ -3,6 +3,7 @@ package cart.ui;
 import cart.application.CartItemService;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.dto.CartItemCreatedResponse;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -28,10 +29,11 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(@Auth Member member, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<CartItemCreatedResponse> addCartItems(@Auth Member member, @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
-
-        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+        final CartItemResponse response = cartItemService.findById(cartItemId);
+        final CartItemCreatedResponse createdResponse = new CartItemCreatedResponse(response.getQuantity(), response.isChecked());
+        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).body(createdResponse);
     }
 
     @PatchMapping("/{id}")

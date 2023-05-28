@@ -16,8 +16,9 @@ CREATE TABLE member
 
 CREATE TABLE cart_item
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL
+    id         BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT  NOT NULL,
+    product_id BIGINT  NOT NULL,
+    quantity   INT     NOT NULL,
+    checked    BOOLEAN NOT NULL
 );

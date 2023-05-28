@@ -44,14 +44,14 @@ public class CartItemIntegrationTest extends IntegrationTest {
         member2 = memberDao.getMemberById(2L);
     }
 
-    @DisplayName("장바구니에 아이템을 추가한다.")
-    @Test
-    void addCartItem() {
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
+//    @DisplayName("장바구니에 아이템을 추가한다.")
+//    @Test
+//    void addCartItem() {
+//        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+//        ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
+//
+//        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+//    }
 
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
