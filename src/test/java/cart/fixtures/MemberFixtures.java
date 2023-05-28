@@ -1,6 +1,6 @@
 package cart.fixtures;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 public class MemberFixtures {
 

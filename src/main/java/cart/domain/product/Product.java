@@ -1,4 +1,6 @@
-package cart.domain;
+package cart.domain.product;
+
+import java.util.Objects;
 
 public class Product {
     private Long id;
@@ -33,5 +35,18 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return price == product.price && Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(imageUrl, product.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl);
     }
 }

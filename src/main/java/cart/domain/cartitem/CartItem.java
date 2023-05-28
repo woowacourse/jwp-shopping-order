@@ -1,5 +1,7 @@
-package cart.domain;
+package cart.domain.cartitem;
 
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
@@ -43,6 +45,10 @@ public class CartItem {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new CartItemException.IllegalMember(this, member);
         }
+    }
+
+    public boolean isSameProduct(Product product) {
+        return this.product.equals(product);
     }
 
     public void changeQuantity(int quantity) {
