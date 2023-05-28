@@ -74,8 +74,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
-                .map(CartItemResponse::getId)
+                .map(item -> item.getId())
                 .collect(Collectors.toList());
+
         assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
     }
 

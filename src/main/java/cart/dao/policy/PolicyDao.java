@@ -57,4 +57,14 @@ public class PolicyDao {
         String sql = "DELETE FROM policy WHERE id = ?";
         jdbcTemplate.update(sql, policyId);
     }
+
+    public PolicyEntity findById(final long policyId) {
+        String sql = "SELECT * FROM policy WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{policyId}, (rs, rowNum) -> {
+            long id = rs.getLong("id");
+            boolean isPercentage = rs.getBoolean("isPercentage");
+            int amount = rs.getInt("amount");
+            return new PolicyEntity(id, isPercentage, amount);
+        });
+    }
 }

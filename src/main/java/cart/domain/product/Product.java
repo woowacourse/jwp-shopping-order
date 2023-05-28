@@ -17,7 +17,7 @@ public class Product {
     private boolean isOnSale;
     private Policy policy;
 
-    public Product(String name, int price, String imageUrl) {
+    public Product(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -25,13 +25,13 @@ public class Product {
         this.policy = new PolicyPercentage(0);
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(final Long id, final String name, final int price, final String imageUrl, final boolean isOnSale ,final int amount) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.isOnSale = false;
-        this.policy = new PolicyPercentage(0);
+        this.isOnSale = isOnSale;
+        this.policy = new PolicyPercentage(amount);
     }
 
     public void applySale(int value) {
@@ -54,7 +54,10 @@ public class Product {
     }
 
     public int getSalePrice() {
-        validateIsOnSale();
+        if (!isOnSale) {
+            return 0;
+        }
+
         return price - policy.calculate(price);
     }
 

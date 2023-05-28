@@ -55,17 +55,27 @@ class ProductTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @DisplayName("세일 적용이 되지 않는다면 세일 적용된 가격을 조회할 수 없다.")
+    @DisplayName("세일 적용이 되지 않는다면 세일이 적용된 가격을 조회할 수 없다.")
     @Test
     void throws_exception_when_send_request_of_applied_sale_price_of_un_sale_product() {
         // given
         Product product = createProduct();
 
         // when & then
-        assertThatThrownBy(product::getSalePrice)
-                .isInstanceOf(IllegalArgumentException.class);
-
         assertThatThrownBy(product::getApplyDiscountPrice)
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @DisplayName("세일 중이 아니라면 세일되는 가격을 조회할 때 0원이 나온다.")
+    @Test
+    void returns_zero_won_when_get_price_of_un_applied_product() {
+        // given
+        Product product = createProduct();
+
+        // when
+        int result = product.getSalePrice();;
+
+        // then
+        assertThat(result).isEqualTo(0);
+     }
 }

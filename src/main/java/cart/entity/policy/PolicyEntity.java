@@ -20,6 +20,10 @@ public class PolicyEntity {
         return isPercentage;
     }
 
+    public boolean isOnSale() {
+        return amount != 0;
+    }
+
     public int getAmount() {
         return amount;
     }

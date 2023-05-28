@@ -3,9 +3,11 @@ package cart.repository.product;
 import cart.dao.policy.PolicyDao;
 import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
+import cart.entity.policy.PolicyEntity;
 import cart.entity.product.ProductEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,15 +24,24 @@ public class ProductRepository {
 
     public Product findProductById(final long id) {
         ProductEntity productEntity = productDao.getProductById(id);
-        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
+        PolicyEntity policyEntity = policyDao.findById(productEntity.getPolicyId());
+
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), policyEntity.isOnSale(), policyEntity.getAmount());
     }
 
     public List<Product> findAllProducts() {
         List<ProductEntity> productEntities = productDao.getAllProducts();
-
-        return productEntities.stream()
-                .map(entity -> new Product(entity.getId(), entity.getName(), entity.getPrice(), entity.getImageUrl()))
+        List<PolicyEntity> policyEntities = productEntities.stream()
+                .map(productEntity -> policyDao.findById(productEntity.getPolicyId()))
                 .collect(Collectors.toList());
+
+        List<Product> products = new ArrayList<>();
+
+        for (int i = 0; i < productEntities.size(); i++) {
+            products.add(new Product(productEntities.get(i).getId(), productEntities.get(i).getName(), productEntities.get(i).getPrice(), productEntities.get(i).getImageUrl(), policyEntities.get(i).isOnSale(), policyEntities.get(i).getAmount()));
+        }
+
+        return products;
     }
 
     public Long createProduct(final Product product) {
