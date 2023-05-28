@@ -49,6 +49,10 @@ public class CartItem {
         return product;
     }
 
+    public int getFinallyPrice() {
+        return this.product.getApplyDiscountPrice();
+    }
+
     public int getQuantity() {
         return quantity;
     }

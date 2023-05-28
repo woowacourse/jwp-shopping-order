@@ -25,7 +25,7 @@ public class Product {
         this.policy = new PolicyPercentage(0);
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl, final boolean isOnSale ,final int amount) {
+    public Product(final Long id, final String name, final int price, final String imageUrl, final boolean isOnSale, final int amount) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -49,7 +49,10 @@ public class Product {
     }
 
     public int getApplyDiscountPrice() {
-        validateIsOnSale();
+        if (!isOnSale) {
+            return price;
+        }
+
         return policy.calculate(this.price);
     }
 
@@ -59,12 +62,6 @@ public class Product {
         }
 
         return price - policy.calculate(price);
-    }
-
-    private void validateIsOnSale() {
-        if (!isOnSale) {
-            throw new IllegalArgumentException("세일 적용 중이 아닙니다.");
-        }
     }
 
     public Long getId() {

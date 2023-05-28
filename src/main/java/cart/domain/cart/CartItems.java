@@ -56,9 +56,15 @@ public class CartItems {
                 .anyMatch(item -> item.hasSameId(cartItem.getId()));
     }
 
-    public int getTotalPrice() {
+    public int getTotalPriceWithoutCoupons() {
         return cartItems.stream()
                 .mapToInt(CartItem::getPrice)
+                .sum();
+    }
+
+    public int getTotalPriceUsingCoupons() {
+        return cartItems.stream()
+                .mapToInt(CartItem::getFinallyPrice)
                 .sum();
     }
 

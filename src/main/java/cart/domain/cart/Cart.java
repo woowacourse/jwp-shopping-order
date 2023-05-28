@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 public class Cart {
 
+    private static final int DEFAULT_DELIVERY_FEE = 3000;
+
     private Long id;
     private final Member member;
     private final CartItems cartItems;
@@ -18,7 +20,7 @@ public class Cart {
         this.id = id;
         this.member = member;
         this.cartItems = cartItems;
-        this.deliveryFee = 3000;
+        this.deliveryFee = DEFAULT_DELIVERY_FEE;
     }
 
     public Cart(final Member member, final CartItems cartItems) {
@@ -45,11 +47,11 @@ public class Cart {
 
     // TODO : 유저가 쿠폰을 가지고 있는지 확인하기
     public int calculateOriginPrice() {
-        return cartItems.getTotalPrice();
+        return cartItems.getTotalPriceWithoutCoupons();
     }
 
-    public int calculateItems(final List<Coupon> reqCoupons) {
-        int price = cartItems.getTotalPrice();
+    public int calculateItemsUsingCoupons(final List<Coupon> reqCoupons) {
+        int price = cartItems.getTotalPriceUsingCoupons();
 
         for (Coupon reqCoupon : reqCoupons) {
             price = reqCoupon.calculate(price);
@@ -58,14 +60,14 @@ public class Cart {
         return price;
     }
 
-    public int calculateDeliveryFee(final List<Coupon> reqCoupons) {
+    public int calculateDeliveryFeeUsingCoupons(final List<Coupon> reqCoupons) {
         int price = deliveryFee;
 
-        List<Coupon> collect = reqCoupons.stream()
+        List<Coupon> coupons = reqCoupons.stream()
                 .filter(Coupon::isDeliveryCoupon)
                 .collect(Collectors.toList());
 
-        for (Coupon coupon : collect) {
+        for (Coupon coupon : coupons) {
             price = coupon.calculate(price);
         }
 

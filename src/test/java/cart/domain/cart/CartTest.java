@@ -9,6 +9,7 @@ import java.util.List;
 import static cart.fixture.CartFixture.createCart;
 import static cart.fixture.CouponFixture.createCoupons;
 import static cart.fixture.CouponFixture.createDeliveryCoupon;
+import static cart.fixture.CouponFixture.createDiscountCoupon;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
@@ -35,7 +36,7 @@ class CartTest {
         cart.getMember().initCoupons(createCoupons());
 
         // when
-        int result = cart.calculateItems(createCoupons().getCoupons());
+        int result = cart.calculateItemsUsingCoupons(createCoupons().getCoupons());
 
         // then
         assertThat(result).isEqualTo(26100);
@@ -49,9 +50,24 @@ class CartTest {
         cart.getMember().initCoupons(new Coupons(List.of(createDeliveryCoupon())));
 
         // when
-        int result = cart.calculateDeliveryFee(List.of(createDeliveryCoupon()));
+        int result = cart.calculateDeliveryFeeUsingCoupons(List.of(createDeliveryCoupon()));
 
         // then
         assertThat(result).isEqualTo(0);
+    }
+
+    @DisplayName("상품 할인이 먼저된 후, 쿠폰 적용이 된다.")
+    @Test
+    void calculate_order_is_sale_and_then_applied_coupon() {
+        // given
+        Cart cart = createCart();
+        cart.getCartItems().get(0).getProduct().applySale(100);
+        cart.getMember().initCoupons(new Coupons(List.of(createDiscountCoupon())));
+
+        // when
+        int result = cart.calculateItemsUsingCoupons(List.of(createDiscountCoupon()));
+
+        // then
+        assertThat(result).isEqualTo(9000);
     }
 }
