@@ -49,7 +49,7 @@ public class CartItem {
         return product;
     }
 
-    public int getFinallyPriceWithOutCoupon() {
+    public int getApplyDiscountPrice() {
         return this.product.getApplyDiscountPrice();
     }
 

@@ -60,15 +60,15 @@ public class CartItems {
                 .anyMatch(item -> item.hasSameId(cartItem.getId()));
     }
 
-    public int getTotalPriceWithoutCoupons() {
+    public int getTotalOriginPrice() {
         return cartItems.stream()
                 .mapToInt(CartItem::getOriginPrice)
                 .sum();
     }
 
-    public int getTotalPriceUsingCoupons() {
+    public int getTotalFinallyPrice() {
         return cartItems.stream()
-                .mapToInt(CartItem::getFinallyPriceWithOutCoupon)
+                .mapToInt(CartItem::getApplyDiscountPrice)
                 .sum();
     }
 

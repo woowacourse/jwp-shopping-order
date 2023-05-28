@@ -34,7 +34,7 @@ class CartTest {
         Cart cart = createCart();
 
         // when
-        int result = cart.calculateItemsUsingCoupons(createCoupons().getCoupons());
+        int result = cart.calculateAfterSalePriceWithCoupon(createCoupons().getCoupons());
 
         // then
         assertThat(result).isEqualTo(26100);
@@ -61,7 +61,7 @@ class CartTest {
         cart.getCartItems().get(0).getProduct().applySale(100);
 
         // when
-        int result = cart.calculateItemsUsingCoupons(List.of(createDiscountCoupon()));
+        int result = cart.calculateAfterSalePriceWithCoupon(List.of(createDiscountCoupon()));
 
         // then
         assertThat(result).isEqualTo(9000);

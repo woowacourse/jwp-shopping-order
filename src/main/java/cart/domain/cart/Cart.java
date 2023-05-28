@@ -36,13 +36,19 @@ public class Cart {
     }
 
 
-    // TODO : 유저가 쿠폰을 가지고 있는지 확인하기
     public int calculateOriginPrice() {
-        return cartItems.getTotalPriceWithoutCoupons();
+        // 원래 상품 할인 전 가격 반환
+        return cartItems.getTotalOriginPrice();
     }
 
-    public int calculateItemsUsingCoupons(final List<Coupon> reqCoupons) {
-        int price = cartItems.getTotalPriceUsingCoupons();
+    public int calculateFinallyPrice() {
+        // 최종 가격(미할인, 할인 포함) 반환
+        return cartItems.getTotalFinallyPrice();
+    }
+
+    public int calculateAfterSalePriceWithCoupon(final List<Coupon> reqCoupons) {
+        // 최종 가격 (할인 포함) + 쿠폰을 넣은 가격
+        int price = cartItems.getTotalFinallyPrice();
 
         for (Coupon reqCoupon : reqCoupons) {
             price = reqCoupon.calculate(price);
