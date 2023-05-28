@@ -1,6 +1,7 @@
 package cart.domain.order;
 
 import cart.domain.Member;
+import java.util.List;
 
 public class Order {
 
@@ -27,14 +28,6 @@ public class Order {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
     public Price getOriginalPrice() {
         return orderItems.sumOfPrice();
     }
@@ -44,4 +37,15 @@ public class Order {
         return discountPolicy.discount(originalPrice);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems.getOrderItems();
+    }
 }
