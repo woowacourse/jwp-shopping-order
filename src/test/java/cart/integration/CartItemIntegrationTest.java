@@ -22,7 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import product.application.dto.ProductRequest;
 
-public class CartItemIntegrationTest extends IntegrationTest {
+class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
@@ -32,6 +32,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     private Member member;
     private Member member2;
 
+
     @Override
     @BeforeEach
     void setUp() {
@@ -40,8 +41,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        long member1Id = memberDao.addMember(new Member(null, "email1", "password1"));
+        long member2Id = memberDao.addMember(new Member(null, "email2", "password2"));
+        member = memberDao.getMemberById(member1Id);
+        member2 = memberDao.getMemberById(member2Id);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

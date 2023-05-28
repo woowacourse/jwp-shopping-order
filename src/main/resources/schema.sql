@@ -1,4 +1,4 @@
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
@@ -6,14 +6,14 @@ CREATE TABLE product
     image_url VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE member
+CREATE TABLE IF NOT EXISTS  member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE cart_item
+CREATE TABLE IF NOT EXISTS  cart_item
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE orders
+CREATE TABLE IF NOT EXISTS  orders
 (
     id             BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id      BIGINT    NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE orders
     created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE order_item
+CREATE TABLE IF NOT EXISTS  order_item
 (
     id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id      BIGINT       NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE order_item
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
-CREATE TABLE order_coupon
+CREATE TABLE IF NOT EXISTS  order_coupon
 (
     id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id  BIGINT NOT NULL,
@@ -51,19 +51,19 @@ CREATE TABLE order_coupon
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
-CREATE TABLE discount_condition
+CREATE TABLE IF NOT EXISTS  discount_condition
 (
     id                      BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
     discount_condition_type VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE amount_discount
+CREATE TABLE IF NOT EXISTS  amount_discount
 (
     id   BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     rate INT    NOT NULL
 );
 
-CREATE TABLE discount_type
+CREATE TABLE IF NOT EXISTS  discount_type
 (
     id                 BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
     discount_type      VARCHAR(255) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE discount_type
     FOREIGN KEY (discount_amount_id) REFERENCES amount_discount (id)
 );
 
-CREATE TABLE coupon
+CREATE TABLE IF NOT EXISTS  coupon
 (
     id                    BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name                  VARCHAR(255) NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE coupon
     FOREIGN KEY (discount_type_id) REFERENCES discount_type (id)
 );
 
-CREATE TABLE coupon_member
+CREATE TABLE IF NOT EXISTS  coupon_member
 (
     id        BIGINT  NOT NULL PRIMARY KEY AUTO_INCREMENT,
     used      BOOLEAN NOT NULL,

@@ -34,10 +34,13 @@ class MemberDaoTest {
             Member member = new Member(null, "email", "password");
 
             // when
-            memberDao.addMember(member);
+            long result = memberDao.addMember(member);
 
             // then
-            assertThat(memberDao.getAllMembers()).hasSize(1);
+            assertSoftly(softly -> {
+                softly.assertThat(result).isPositive();
+                softly.assertThat(memberDao.getAllMembers()).hasSize(1);
+            });
         }
     }
 

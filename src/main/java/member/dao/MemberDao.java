@@ -7,15 +7,21 @@ import java.util.Optional;
 import member.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Member getMemberById(Long id) {
@@ -30,9 +36,9 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+    public long addMember(Member member) {
+        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(member);
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     public void updateMember(Member member) {
