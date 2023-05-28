@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.domain.CartItem;
 import cart.domain.Product;
+import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -45,7 +45,7 @@ public class CartItemDao {
 
             final Long cartItemId = rs.getLong("cart_item.id");
             final int quantity = rs.getInt("quantity");
-            return new CartItem(cartItemId, quantity, product, member);
+            return new CartItem(cartItemId, quantity, member, product);
         });
     }
 
@@ -53,7 +53,7 @@ public class CartItemDao {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", cartItem.getMember().getId())
                 .addValue("product_id", cartItem.getProduct().getId())
-                .addValue("quantity", cartItem.getQuantity());
+                .addValue("quantity", cartItem.getQuantityValue());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
@@ -78,7 +78,7 @@ public class CartItemDao {
 
             final Long cartItemId = rs.getLong("cart_item.id");
             final int quantity = rs.getInt("quantity");
-            return new CartItem(cartItemId, quantity, product, member);
+            return new CartItem(cartItemId, quantity, member, product);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
@@ -99,7 +99,7 @@ public class CartItemDao {
     public void updateQuantity(final CartItem cartItem) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+        jdbcTemplate.update(sql, cartItem.getQuantityValue(), cartItem.getId());
     }
 }
 
