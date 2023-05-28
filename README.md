@@ -29,8 +29,6 @@
 4. 결제
 
 
-## 💋 API 명세
-
 ### `GET users/points`
 
 #### Request
