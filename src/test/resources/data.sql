@@ -1,3 +1,12 @@
+set referential_integrity false;
+truncate table product restart identity;
+truncate table member restart identity;
+truncate table cart_item restart identity;
+truncate table orders restart identity;
+truncate table orders_product restart identity;
+truncate table orders_coupon restart identity;
+set referential_integrity true;
+
 INSERT INTO product (name, price, image_url) VALUES ('제네시스 g80', 1000000, 'https://www.genesis.com/content/dam/genesis-p2/kr/assets/utility/sns/genesis-kr-model-g80-02-social-1200x630-ko.jpg');
 INSERT INTO product (name, price, image_url) VALUES ('부가티 시론', 2000000, 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Bugatti_Chiron_%2836559710091%29.jpg/300px-Bugatti_Chiron_%2836559710091%29.jpg');
 INSERT INTO product (name, price, image_url) VALUES ('롤스로이스 펜텀', 13000, 'https://www.motoya.co.kr/news/photo/202205/35313_220048_1952.jpg');
@@ -18,3 +27,5 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 3, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO coupon (name,discount_type,discount_rate,discount_amount,minimum_price) VALUES ('10% 할인', 'percentage',0.1,0,0);

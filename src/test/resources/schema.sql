@@ -19,9 +19,11 @@ CREATE TABLE IF NOT EXISTS cart_item (
     );
 CREATE TABLE IF NOT EXISTS orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
     original_price INT NOT NULL,
     discount_price INT NOT NULL,
-    confirm_state BOOLEAN NOT NULL
+    confirm_state BOOLEAN NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(id)
 );
 CREATE TABLE IF NOT EXISTS coupon (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -38,7 +40,7 @@ CREATE TABLE IF NOT EXISTS orders_coupon(
     FOREIGN KEY (orders_id) REFERENCES orders(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
-CREATE TABLE IF NOT EXISTS order_product(
+CREATE TABLE IF NOT EXISTS orders_product(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,

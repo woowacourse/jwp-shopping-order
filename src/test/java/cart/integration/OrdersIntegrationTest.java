@@ -1,6 +1,6 @@
 package cart.integration;
 
-import cart.dto.OrderRequest;
+import cart.dto.OrdersRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,15 +20,15 @@ public class OrdersIntegrationTest extends IntegrationTest{
     @Test
     @DisplayName("해당 장바구니를 주문한다")
     void orderTest(){
-        final OrderRequest orderRequest = new OrderRequest(List.of(1L,2L,3L),24700,2200,1L);
+        final OrdersRequest ordersRequest = new OrdersRequest(List.of(1L,2L,3L),24700,2200,1L);
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequest)
+                .body(ordersRequest)
                 .when().post("/orders")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("Location",response -> containsString("orders/"));
+                .header("location",is("orders/1"));
     }
 
     // TODO : orders 변수명 확정하기

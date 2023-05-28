@@ -1,25 +1,28 @@
-package cart.dto;
+package cart.domain;
 
 import java.util.List;
 
-public class OrderRequest {
-    private List<Long> cartProductIds;
+public class Orders {
+    private Long memberId;
+    private List<Long> cartId;
     private int originalPrice;
     private int discountPrice;
     private Long couponId;
 
-    private OrderRequest(){
-
-    }
-    public OrderRequest(List<Long> cartProductIds, int originalPrice, int discountPrice, Long couponId) {
-        this.cartProductIds = cartProductIds;
+    public Orders(Long memberId, List<Long> cartId, int originalPrice, int discountPrice, Long couponId) {
+        this.memberId = memberId;
+        this.cartId = cartId;
         this.originalPrice = originalPrice;
         this.discountPrice = discountPrice;
         this.couponId = couponId;
     }
 
-    public List<Long> getCartProductIds() {
-        return cartProductIds;
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public List<Long> getCartId() {
+        return cartId;
     }
 
     public int getOriginalPrice() {
