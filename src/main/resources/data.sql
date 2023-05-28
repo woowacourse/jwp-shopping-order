@@ -9,3 +9,7 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO orders (member_id, total_price, final_price) VALUES (1, 50000, 45000);
+INSERT INTO order_product (order_id, product_id, quantity) VALUES (1, 1, 3);
+INSERT INTO order_product (order_id, product_id, quantity) VALUES (1, 2, 1);
