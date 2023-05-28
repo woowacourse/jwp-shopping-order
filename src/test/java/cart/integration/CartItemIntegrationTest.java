@@ -242,6 +242,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
             final ExtractableResponse<Response> response = given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
                     .body(request)
                     .when()
                     .post("/cart-items/payment")
@@ -263,6 +264,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
             final ExtractableResponse<Response> response = given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
                     .body(request)
                     .when()
                     .post("/cart-items/payment")
@@ -282,6 +284,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
             final ExtractableResponse<Response> response = given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
                     .body(request)
                     .when()
                     .post("/cart-items/payment")

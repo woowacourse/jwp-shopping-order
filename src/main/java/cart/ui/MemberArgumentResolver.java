@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -14,38 +14,38 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     private final MemberDao memberDao;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
+    public MemberArgumentResolver(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
+        final String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new AuthenticationException("인증 정보가 없습니다.");
         }
 
-        String[] authHeader = authorization.split(" ");
+        final String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
+            throw new AuthenticationException("인증 방식이 다릅니다.");
         }
 
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
+        final byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
+        final String decodedString = new String(decodedBytes);
 
-        String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
+        final String[] credentials = decodedString.split(":");
+        final String email = credentials[0];
+        final String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
+        final Member member = memberDao.getMemberByEmail(email);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("사용자를 찾을 수 없습니다.");
         }
         return member;
     }
