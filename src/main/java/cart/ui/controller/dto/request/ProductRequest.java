@@ -1,12 +1,18 @@
 package cart.ui.controller.dto.request;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class ProductRequest {
 
+    @NotBlank(message = "상품 이름은 비어있을 수 없습니다.")
     private String name;
-    private int price;
+    @NotNull(message = "상품 가격은 존재해야 합니다.")
+    private Integer price;
+    @NotNull(message = "상품 이미지는 비어있을 수 없습니다.")
     private String imageUrl;
 
-    public ProductRequest() {
+    private ProductRequest() {
     }
 
     public ProductRequest(String name, int price, String imageUrl) {

@@ -40,4 +40,11 @@ public class ProductException extends RuntimeException {
             super("상품 이미지 URL은 최대 " + maxLength + "글자까지 가능합니다. 현재 길이: " + currentLength);
         }
     }
+
+    public static class NotFound extends ProductException {
+
+        public NotFound() {
+            super("해당 상품이 존재하지 않습니다.");
+        }
+    }
 }

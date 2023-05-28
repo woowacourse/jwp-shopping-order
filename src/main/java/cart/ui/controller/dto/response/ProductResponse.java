@@ -1,6 +1,6 @@
 package cart.ui.controller.dto.response;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductResponse {
 
@@ -16,7 +16,7 @@ public class ProductResponse {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponse of(Product product) {
+    public static ProductResponse from(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
