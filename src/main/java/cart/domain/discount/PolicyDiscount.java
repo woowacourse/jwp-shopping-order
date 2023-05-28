@@ -2,7 +2,7 @@ package cart.domain.discount;
 
 public class PolicyDiscount implements Policy {
 
-    private final int value;
+    private int value;
 
     public PolicyDiscount(final int value) {
         this.value = value;
@@ -15,5 +15,10 @@ public class PolicyDiscount implements Policy {
         }
 
         return price - value;
+    }
+
+    @Override
+    public void updateDiscountValue(final int value) {
+        this.value = value;
     }
 }
