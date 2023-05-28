@@ -24,8 +24,8 @@ CREATE TABLE cart_item
     quantity   INT                                 NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
 
 CREATE TABLE order_history
@@ -37,7 +37,7 @@ CREATE TABLE order_history
     saved_point  INT                                 NOT NULL,
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
 
 CREATE TABLE order_product
@@ -48,6 +48,6 @@ CREATE TABLE order_product
     quantity   INT                                 NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 
-    FOREIGN KEY (order_id) REFERENCES order_history (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    FOREIGN KEY (order_id) REFERENCES order_history (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
