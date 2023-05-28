@@ -105,7 +105,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
-                .get("/ordres")
+                .get("/orders")
                 .then()
                 .log().all()
                 .extract();

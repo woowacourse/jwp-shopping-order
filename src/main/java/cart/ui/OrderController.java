@@ -1,6 +1,7 @@
 package cart.ui;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,5 +38,11 @@ public class OrderController {
     public ResponseEntity<OrderResponse> findOrderById(@PathVariable Long id, Member member) {
         final OrderResponse orderResponse = orderService.findOrderById(id, member);
         return ResponseEntity.ok(orderResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> findOrderByMember(Member member) {
+        final List<OrderResponse> orderResponses = orderService.findOrdersByMember(member);
+        return ResponseEntity.ok(orderResponses);
     }
 }
