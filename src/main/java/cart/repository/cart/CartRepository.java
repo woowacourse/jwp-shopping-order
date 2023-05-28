@@ -1,17 +1,14 @@
 package cart.repository.cart;
 
 import cart.dao.cart.CartDao;
-import cart.dao.member.MemberDao;
 import cart.dao.policy.PolicyDao;
 import cart.dao.product.ProductDao;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItems;
-import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.entity.cart.CartEntity;
 import cart.entity.cart.CartItemEntity;
-import cart.entity.member.MemberEntity;
 import cart.entity.policy.PolicyEntity;
 import cart.entity.product.ProductEntity;
 import cart.exception.CartItemNotFoundException;
@@ -23,13 +20,11 @@ import java.util.stream.Collectors;
 @Repository
 public class CartRepository {
 
-    private final MemberDao memberDao;
     private final CartDao cartDao;
     private final ProductDao productDao;
     private final PolicyDao policyDao;
 
-    public CartRepository(final MemberDao memberDao, final CartDao cartDao, final ProductDao productDao, final PolicyDao policyDao) {
-        this.memberDao = memberDao;
+    public CartRepository(final CartDao cartDao, final ProductDao productDao, final PolicyDao policyDao) {
         this.cartDao = cartDao;
         this.productDao = productDao;
         this.policyDao = policyDao;
@@ -37,9 +32,6 @@ public class CartRepository {
 
     public Cart findCartByMemberId(final long memberId) {
         List<CartItemEntity> cartItemEntities = cartDao.findAllCartItemEntitiesByCartId(memberId);
-
-        MemberEntity memberEntity = memberDao.getMemberById(memberId);
-        Member member = new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
 
         List<CartItem> cartItems = cartItemEntities.stream()
                 .map(cartItemEntity -> {
@@ -53,7 +45,7 @@ public class CartRepository {
                 .collect(Collectors.toList());
 
         CartEntity cartEntity = cartDao.findCartEntityByMemberId(memberId);
-        return new Cart(cartEntity.getId(), member, new CartItems(cartItems));
+        return new Cart(cartEntity.getId(), new CartItems(cartItems));
     }
 
     public Long insertNewCartItem(final Long cartId, final CartItem cartItem) {

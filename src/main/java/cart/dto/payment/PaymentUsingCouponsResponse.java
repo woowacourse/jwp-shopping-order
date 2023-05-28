@@ -1,6 +1,6 @@
 package cart.dto.payment;
 
-import cart.domain.cart.Cart;
+import cart.domain.member.Member;
 import cart.dto.product.DeliveryPayResponse;
 
 import java.util.List;
@@ -16,12 +16,12 @@ public class PaymentUsingCouponsResponse {
         this.deliveryPrice = deliveryPrice;
     }
 
-    public static PaymentUsingCouponsResponse from(final Cart cart) {
-        List<PaymentUsingCouponResponse> products = cart.getCartItems().stream()
+    public static PaymentUsingCouponsResponse from(final Member member) {
+        List<PaymentUsingCouponResponse> products = member.getCart().getCartItems().stream()
                 .map(PaymentUsingCouponResponse::from)
                 .collect(Collectors.toList());
 
-        DeliveryPayResponse deliveryPayResponse = DeliveryPayResponse.from(cart);
+        DeliveryPayResponse deliveryPayResponse = DeliveryPayResponse.from(member);
 
         return new PaymentUsingCouponsResponse(products, deliveryPayResponse);
     }

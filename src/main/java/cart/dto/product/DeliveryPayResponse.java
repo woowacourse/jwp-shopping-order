@@ -1,6 +1,6 @@
 package cart.dto.product;
 
-import cart.domain.cart.Cart;
+import cart.domain.member.Member;
 
 public class DeliveryPayResponse {
 
@@ -12,8 +12,8 @@ public class DeliveryPayResponse {
         this.discountPrice = discountPrice;
     }
 
-    public static DeliveryPayResponse from(final Cart cart) {
-        return new DeliveryPayResponse(cart.getDeliveryFee(), cart.calculateDeliveryFeeUsingCoupons(cart.getMember().getCoupons()));
+    public static DeliveryPayResponse from(final Member member) {
+        return new DeliveryPayResponse(member.getCart().getDeliveryFee(), member.getCart().calculateDeliveryFeeUsingCoupons(member.getCoupons()));
     }
 
     public int getOriginalPrice() {

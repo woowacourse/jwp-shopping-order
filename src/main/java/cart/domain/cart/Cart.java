@@ -1,7 +1,6 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.member.Member;
 import cart.domain.product.Product;
 
 import java.util.List;
@@ -12,20 +11,13 @@ public class Cart {
     private static final int DEFAULT_DELIVERY_FEE = 3000;
 
     private Long id;
-    private final Member member;
     private final CartItems cartItems;
     private int deliveryFee;
 
-    public Cart(final Long id, final Member member, final CartItems cartItems) {
+    public Cart(final Long id, final CartItems cartItems) {
         this.id = id;
-        this.member = member;
         this.cartItems = cartItems;
         this.deliveryFee = DEFAULT_DELIVERY_FEE;
-    }
-
-    public Cart(final Member member, final CartItems cartItems) {
-        this.member = member;
-        this.cartItems = cartItems;
     }
 
     public CartItem addItem(final Product product) {
@@ -76,10 +68,6 @@ public class Cart {
 
     public Long getId() {
         return id;
-    }
-
-    public Member getMember() {
-        return member;
     }
 
     public List<CartItem> getCartItems() {
