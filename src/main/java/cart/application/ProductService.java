@@ -2,14 +2,13 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
 import cart.dao.ProductDao;
-import cart.dto.AuthMember;
-import cart.dto.ProductCartItemResponse;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
+import cart.domain.product.Products;
+import cart.dto.*;
 import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
+    private static final int FIRST_PAGE_ID = 0;
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
     private final MemberDao memberDao;
@@ -39,6 +39,32 @@ public class ProductService {
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
         return ProductResponse.from(product);
+    }
+
+    public ProductPagingResponse getAllPagingProductCartItems(AuthMember authMember,
+                                                              Long lastProductId, int pageItemCount) {
+        Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
+        CartItems cartItems = new CartItems(cartItemDao.selectAllByMemberId(findMember.getId()));
+        if (lastProductId == FIRST_PAGE_ID) {
+            return getFirstPageProduct(pageItemCount, cartItems);
+        }
+        return getNotFirstPageProduct(lastProductId, pageItemCount, cartItems);
+    }
+
+    private ProductPagingResponse getFirstPageProduct(int pageItemCount, CartItems cartItems) {
+        Products products = new Products(productDao.selectFirstProductsByLimit(pageItemCount));
+        Product lastProduct = productDao.selectLastProduct();
+        Boolean isLast = products.isContains(lastProduct);
+        List<ProductCartItemResponse> productCartItems = products.getProductCartItems(cartItems);
+        return new ProductPagingResponse(productCartItems, isLast);
+    }
+
+    private ProductPagingResponse getNotFirstPageProduct(Long lastProductId, int pageItemCount, CartItems cartItems) {
+        Products products = new Products(productDao.selectProductsByIdAndLimit(lastProductId, pageItemCount));
+        List<ProductCartItemResponse> productCartItems = products.getProductCartItems(cartItems);
+        Product lastProduct = productDao.selectLastProduct();
+        Boolean isLast = products.isContains(lastProduct);
+        return new ProductPagingResponse(productCartItems, isLast);
     }
 
     public ProductCartItemResponse findProductCartItems(AuthMember authMember, Long productId) {
