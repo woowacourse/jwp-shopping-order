@@ -16,3 +16,8 @@ INSERT INTO member (id, email, password)
 VALUES (3, 'sangun', '1234');
 INSERT INTO member (id, email, password)
 VALUES (4, 'lopi', '1234');
+
+INSERT INTO cart_item (id, member_id, product_id, quantity)
+VALUES (1, 3, 1, 2);
+INSERT INTO cart_item (id, member_id, product_id, quantity)
+VALUES (2, 3, 2, 4);
