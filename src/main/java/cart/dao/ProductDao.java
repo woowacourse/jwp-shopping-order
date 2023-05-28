@@ -2,7 +2,9 @@ package cart.dao;
 
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -15,35 +17,47 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ProductDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+
+    public ProductDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource,
+                      final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    final RowMapper<Product> productRowMapper = (rs, rowNum) -> {
+        final Long id = rs.getLong("id");
+        final String name = rs.getString("name");
+        final int price = rs.getInt("price");
+        final String imageUrl = rs.getString("image_url");
+
+        return new Product(id, name, price, imageUrl);
+    };
 
     public List<Product> getAllProducts() {
         final String sql = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            final Long productId = rs.getLong("id");
-            final String name = rs.getString("name");
-            final int price = rs.getInt("price");
-            final String imageUrl = rs.getString("image_url");
 
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
     public Product getProductById(final Long productId) {
-        final String sql = "SELECT name, price, image_url FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, productRowMapper, productId);
+    }
+
+    public List<Product> getProductsById(final List<Long> productIds) {
+        final MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", productIds);
+        final String sql = "SELECT id, name, price, image_url " +
+                "FROM product " +
+                "WHERE id IN (:ids)";
+
+        return namedParameterJdbcTemplate.query(sql, parameters, productRowMapper);
     }
 
     public Long createProduct(final Product product) {

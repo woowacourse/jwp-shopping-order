@@ -6,6 +6,7 @@ import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -18,12 +19,16 @@ public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+
+    public CartItemDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource,
+                       final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     final RowMapper<CartItem> cartItemRowMapper = (rs, rowNum) -> {
@@ -73,6 +78,19 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, new Object[]{memberId}, cartItemRowMapper);
     }
 
+
+    public List<CartItem> getCartItemsByIds(final List<Long> cartItemIds) {
+        final MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", cartItemIds);
+
+        final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
+                "p.id, p.name, p.price, p.image_url, ci.quantity " +
+                "FROM cart_item ci " +
+                "INNER JOIN member m ON ci.member_id = m.id " +
+                "INNER JOIN product p ON ci.product_id = p.id " +
+                "WHERE ci.id IN (:ids)";
+        return namedParameterJdbcTemplate.query(sql, parameters, cartItemRowMapper);
+    }
 
     public void delete(final Long memberId, final Long productId) {
         final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";

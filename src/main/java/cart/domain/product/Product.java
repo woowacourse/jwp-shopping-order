@@ -5,19 +5,19 @@ import java.util.Objects;
 public class Product {
 
     private final Long id;
-    private final ProductName name;
-    private final ProductPrice price;
-    private final ProductImageUrl imageUrl;
+    private final ProductName productName;
+    private final ProductPrice productPrice;
+    private final ProductImageUrl productImageUrl;
 
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
+    public Product(final String productName, final int productPrice, final String productImageUrl) {
+        this(null, productName, productPrice, productImageUrl);
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
+    public Product(final Long id, final String productName, final int productPrice, final String productImageUrl) {
         this.id = id;
-        this.name = new ProductName(name);
-        this.price = new ProductPrice(price);
-        this.imageUrl = new ProductImageUrl(imageUrl);
+        this.productName = new ProductName(productName);
+        this.productPrice = new ProductPrice(productPrice);
+        this.productImageUrl = new ProductImageUrl(productImageUrl);
     }
 
     public Long getId() {
@@ -25,15 +25,27 @@ public class Product {
     }
 
     public String getNameValue() {
-        return name.getName();
+        return productName.getName();
+    }
+
+    public ProductName getProductName() {
+        return productName;
     }
 
     public int getPriceValue() {
-        return price.getPrice();
+        return productPrice.getPrice();
+    }
+
+    public ProductPrice getProductPrice() {
+        return productPrice;
     }
 
     public String getImageUrlValue() {
-        return imageUrl.getImageUrl();
+        return productImageUrl.getImageUrl();
+    }
+
+    public ProductImageUrl getProductImageUrl() {
+        return productImageUrl;
     }
 
     @Override

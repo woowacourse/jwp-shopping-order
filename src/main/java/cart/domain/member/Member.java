@@ -20,8 +20,22 @@ public class Member {
         this.point = new MemberPoint(point);
     }
 
+    public Member(final Long id, final MemberEmail email, final MemberPassword password, final MemberPoint point) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
     public boolean checkPassword(String password) {
         return this.password.equals(new MemberPassword(password));
+    }
+
+    public Member updatePoint(final MemberPoint point, final int totalPrice) {
+        final MemberPoint minusPoint = this.point.minus(point);
+        final MemberPoint resultPoint = minusPoint.addPointByTotalPrice(totalPrice);
+
+        return new Member(id, email, password, resultPoint);
     }
 
     public Long getId() {

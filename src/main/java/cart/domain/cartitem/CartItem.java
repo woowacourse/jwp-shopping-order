@@ -46,6 +46,18 @@ public class CartItem {
         return product;
     }
 
+    public Long getProductId(){
+        return product.getId();
+    }
+
+    public int getProductPrice() {
+        return product.getPriceValue();
+    }
+
+    public Quantity getQuantity() {
+        return quantity;
+    }
+
     public int getQuantityValue() {
         return quantity.getQuantity();
     }

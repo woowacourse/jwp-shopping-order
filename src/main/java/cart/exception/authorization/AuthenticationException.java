@@ -1,6 +1,6 @@
 package cart.exception.authorization;
 
-public class AuthenticationException extends RuntimeException {
+public abstract class AuthenticationException extends RuntimeException {
 
     private final String message;
 
