@@ -9,11 +9,11 @@ public class CartItem {
     private final Product product;
     private final Member member;
 
-    public CartItem(Member member, Product product) {
-        this(null, 1, product, member);
+    public CartItem(final int quantity, final Member member, final Product product) {
+        this(null, quantity, product, member);
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(final Long id, final int quantity, final Product product, final Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -36,13 +36,13 @@ public class CartItem {
         return quantity;
     }
 
-    public void checkOwner(Member member) {
+    public void checkOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new CartItemException.IllegalMember(this, member);
         }
     }
 
-    public void changeQuantity(int quantity) {
+    public void changeQuantity(final int quantity) {
         this.quantity = quantity;
     }
 }
