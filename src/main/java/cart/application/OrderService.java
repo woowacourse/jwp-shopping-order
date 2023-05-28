@@ -1,6 +1,7 @@
 package cart.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,5 +48,12 @@ public class OrderService {
     public OrderResponse findOrderById(Long orderId, Member member) {
         final Order order = orderRepository.findOrderById(orderId, member);
         return OrderResponse.of(order);
+    }
+
+    public List<OrderResponse> findOrdersByMember(Member member) {
+        final List<Order> orders = orderRepository.findOrdersByMember(member);
+        return orders.stream()
+                .map(OrderResponse::of)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

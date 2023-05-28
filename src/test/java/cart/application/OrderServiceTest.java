@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.domain.discount.DiscountPriceCalculator;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -84,5 +86,43 @@ class OrderServiceTest {
                 () -> assertThat(result.getCartItems().get(0).getQuantity()).isEqualTo(cartItem1.getQuantity()),
                 () -> assertThat(result.getCartItems().get(1).getQuantity()).isEqualTo(cartItem2.getQuantity())
         );
+    }
+
+    @Test
+    @DisplayName("member를 통해 해당 member의 orderResponse를 반환한다.")
+    void findOrdersByMember() {
+        //given
+        Member member = Fixture.GOLD_MEMBER;
+        final Long id1 = addOrder(member, Fixture.CART_ITEM1);
+        final Long id2 = addOrder(member, Fixture.CART_ITEM2);
+
+        final int expectedPrice1 = discountPriceCalculator.calculateFinalPrice(Fixture.CART_ITEM1.calculateTotalPrice(),
+                member);
+        final int expectedPrice2 = discountPriceCalculator.calculateFinalPrice(Fixture.CART_ITEM2.calculateTotalPrice(),
+                member);
+
+        //when
+        final List<OrderResponse> result = orderService.findOrdersByMember(member);
+        final List<Long> idCollection = result.stream()
+                .map(OrderResponse::getId)
+                .collect(Collectors.toUnmodifiableList());
+        final List<Integer> priceCollect = result.stream()
+                .map(OrderResponse::getTotalPrice)
+                .collect(Collectors.toUnmodifiableList());
+
+        //then
+        Assertions.assertAll(
+                () -> assertThat(result.size()).isEqualTo(2),
+                () -> assertThat(idCollection).containsExactlyInAnyOrder(id1, id2),
+                () -> assertThat(priceCollect).containsExactlyInAnyOrder(expectedPrice1, expectedPrice2)
+        );
+    }
+
+    private Long addOrder(Member member, CartItem cartItem) {
+        final int price = cartItem.calculateTotalPrice();
+
+        List<Long> cartItemId = Arrays.asList(cartItem.getId());
+        OrderRequest orderRequest1 = new OrderRequest(cartItemId);
+        return orderService.order(orderRequest1, member);
     }
 }
