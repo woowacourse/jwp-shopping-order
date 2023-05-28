@@ -1,9 +1,11 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
+import cart.dao.OrderHistoryDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -17,10 +19,12 @@ import java.util.stream.Collectors;
 public class CartItemService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
+    private final OrderHistoryDao orderHistoryDao;
 
-    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao) {
+    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
+        this.orderHistoryDao = orderHistoryDao;
     }
 
     public List<CartItemResponse> findByMember(final Member member) {
@@ -52,12 +56,13 @@ public class CartItemService {
         cartItemDao.deleteById(id);
     }
 
-    public Integer payment(final Member member, final PaymentRequest request) {
+    public Long payment(final Member member, final PaymentRequest request) {
         final List<Long> cartIds = request.getCartItemRequests().stream()
                 .map(CartItemRequest::getProductId)
                 .collect(Collectors.toList());
         final List<CartItem> cartItems = cartItemDao.findByIds(cartIds);
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
-        return 1;
+        final Order order = new Order(member, request.getPoint(), cartItems);
+        return orderHistoryDao.createOrder(order);
     }
 }

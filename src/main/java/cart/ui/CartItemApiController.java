@@ -51,7 +51,7 @@ public class CartItemApiController {
 
     @PostMapping("/payment")
     public ResponseEntity<String> paymentCartItems(final Member member, @Valid @RequestBody final PaymentRequest request) {
-        final int historyId = cartItemService.payment(member, request);
+        final Long historyId = cartItemService.payment(member, request);
 
         return ResponseEntity.created(URI.create("redirect:/orders/histories/" + historyId)).build();
     }
