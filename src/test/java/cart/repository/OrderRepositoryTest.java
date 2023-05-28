@@ -17,6 +17,7 @@ import cart.dao.OrderDao;
 import cart.dao.OrderedItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
+import cart.domain.Member;
 import cart.domain.Order;
 import cart.entity.OrderEntity;
 import cart.fixture.Fixture;
@@ -58,6 +59,33 @@ class OrderRepositoryTest {
                 () -> assertThat(result.getProducts().size()).isEqualTo(2),
                 () -> assertThat(result.getProducts().get(0).getQuantity()).isEqualTo(Fixture.CART_ITEM1.getQuantity()),
                 () -> assertThat(result.getProducts().get(1).getQuantity()).isEqualTo(Fixture.CART_ITEM2.getQuantity())
+        );
+    }
+
+    @Test
+    @DisplayName("member를 인자로 전달받아 member의 order를 조회한다.")
+    void findOrdersByMember() {
+        //given
+        Member member = Fixture.GOLD_MEMBER;
+        final List<CartItem> item1 = List.of(Fixture.CART_ITEM1);
+        final List<CartItem> item2 = List.of(Fixture.CART_ITEM2);
+
+        final Long orderId1 = orderDao.addOrder(new OrderEntity(10000, member.getId()));
+        final Long orderId2 = orderDao.addOrder(new OrderEntity(20000, member.getId()));
+
+        orderedItemDao.saveAll(item1, orderId1);
+        orderedItemDao.saveAll(item2, orderId2);
+
+        //when
+        final List<Order> results = orderRepository.findOrdersByMember(Fixture.GOLD_MEMBER);
+
+        //then
+        Assertions.assertAll(
+                () -> assertThat(results.size()).isEqualTo(2),
+                () -> assertThat(results.get(0).getId()).isEqualTo(orderId1),
+                () -> assertThat(results.get(1).getId()).isEqualTo(orderId2),
+                () -> assertThat(results.get(0).getPrice()).isEqualTo(10000),
+                () -> assertThat(results.get(1).getPrice()).isEqualTo(20000)
         );
     }
 }

@@ -1,5 +1,6 @@
 package cart.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -79,5 +80,16 @@ public class OrderRepository {
         return orderedItems.stream()
                 .map(OrderedItemEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<Order> findOrdersByMember(Member member) {
+        final List<OrderEntity> orders = orderDao.findByMember(member);
+        List<Order> result = new ArrayList<>();
+        for (OrderEntity order : orders) {
+            final List<OrderedItemEntity> items = orderedItemDao.findItemsByOrderId(order.getId());
+            final List<CartItem> cartItems = orderedItemToCartItem(member, items);
+            result.add(new Order(order.getId(), order.getPrice(), member, cartItems));
+        }
+        return result;
     }
 }
