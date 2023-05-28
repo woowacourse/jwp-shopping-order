@@ -37,6 +37,10 @@ public class OrderItems {
         return new Price(sum);
     }
 
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
     public Member getMember() {
         return member;
     }
