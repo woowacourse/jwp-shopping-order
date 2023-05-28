@@ -1,8 +1,8 @@
 package cart.fixtures;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductCartItemResponse;
 
@@ -26,13 +26,24 @@ public class CartItemFixtures {
     }
 
     public static class Dooly_CartItem2 {
-        public static final Long ID = 2L;
+        public static final Long ID = 4L;
         public static final int QUANTITY = 4;
         public static final Product PRODUCT = SALAD.ENTITY;
         public static final Member MEMBER = Dooly.ENTITY;
 
         public static final CartItem ENTITY = new CartItem(ID, QUANTITY, PRODUCT, MEMBER);
         public static final CartItemResponse RESPONSE = CartItemResponse.from(ENTITY);
+    }
+
+    public static class Dooly_CartItem3 {
+        public static final Long ID = 4L;
+        public static final int QUANTITY = 2;
+        public static final Product PRODUCT = CHICKEN.ENTITY;
+        public static final Member MEMBER = Dooly.ENTITY;
+
+        public static final CartItem ENTITY = new CartItem(ID, QUANTITY, PRODUCT, MEMBER);
+        public static final CartItemResponse RESPONSE = CartItemResponse.from(ENTITY);
+        public static final ProductCartItemResponse PRODUCT_CART_ITEM_RESPONSE = ProductCartItemResponse.createContainsCartItem(PRODUCT, ENTITY);
     }
 
     public static class Ber_CartItem1 {

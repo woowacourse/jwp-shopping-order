@@ -23,8 +23,8 @@ INSERT INTO order_item (cart_item_id, cart_order_id) VALUES (3, 3);
 
 -- 아직 주문하지 않은 장바구니 데이터
 
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 1, 5);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (3, 2, 5);
