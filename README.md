@@ -2,16 +2,16 @@
 
 # API
 
-| 기능 | 메소드 | url |
-| --- | --- | --- |
-| 주문하기 | POST | ~/orders |
-| 주문 목록 조회 | GET | ~/orders |
-| 주문 상세 보기 | GET | ~/orders/{id} |
-| 주문 확정 | PATCH | ~/orders/{id}/confirm |
-| 주문 취소 | DELETE | ~/orders/{id} |
-| 유저 쿠폰 발급 | POST | ~/users/coupons |
-| 모든 쿠폰 조회 | GET | ~/coupons |
-| 유저 쿠폰 조회 | GET | ~/users/coupons |
+| 기능 | 메소드 | url | 구현 여부 |
+| --- | --- | --- |-------|
+| 주문하기 | POST | ~/orders | o     |
+| 주문 목록 조회 | GET | ~/orders | x     |
+| 주문 상세 보기 | GET | ~/orders/{id} | x     |
+| 주문 확정 | PATCH | ~/orders/{id}/confirm | x     |
+| 주문 취소 | DELETE | ~/orders/{id} | x     |
+| 유저 쿠폰 발급 | POST | ~/users/coupons | x     |
+| 모든 쿠폰 조회 | GET | ~/coupons | x     |
+| 유저 쿠폰 조회 | GET | ~/users/coupons | x     |
 
 - **[POST] 주문하기 (~/orders)**
 
