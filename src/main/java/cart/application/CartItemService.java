@@ -31,11 +31,12 @@ public class CartItemService {
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         final Product productById = productDao.findProductById(cartItemRequest.getProductId())
                 .orElseThrow(NoSuchDataExistException::new);
-        return cartItemDao.save(new CartItem(member, productById));
+        return cartItemDao.saveCartItem(new CartItem(1, member, productById));
     }
 
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
-        final CartItem cartItem = cartItemDao.findById(id);
+        final CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(NoSuchDataExistException::new);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -44,11 +45,12 @@ public class CartItemService {
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemDao.updateQuantity(cartItem.getId(), request.getQuantity());
     }
 
     public void remove(final Member member, final Long id) {
-        final CartItem cartItem = cartItemDao.findById(id);
+        final CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(NoSuchDataExistException::new);
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
