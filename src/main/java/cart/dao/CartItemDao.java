@@ -44,7 +44,7 @@ public class CartItemDao {
 
         final Long cartItemId = rs.getLong("cart_item.id");
         final int quantity = rs.getInt("quantity");
-        return new CartItem(cartItemId, quantity, member, product);
+        return new CartItem(cartItemId, member, product, quantity);
     };
 
     public Long save(final CartItem cartItem) {
@@ -92,16 +92,10 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.query(sql, parameters, cartItemRowMapper);
     }
 
-    public void delete(final Long memberId, final Long productId) {
-        final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
-    public void deleteById(final Long id) {
+    public void deleteById(final Long cartItemId) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, cartItemId);
     }
 
     public void updateQuantity(final CartItem cartItem) {

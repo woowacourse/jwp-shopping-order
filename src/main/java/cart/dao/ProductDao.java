@@ -38,7 +38,7 @@ public class ProductDao {
         return new Product(id, name, price, imageUrl);
     };
 
-    public Long createProduct(final Product product) {
+    public Long save(final Product product) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", product.getNameValue())
                 .addValue("price", product.getPriceValue())

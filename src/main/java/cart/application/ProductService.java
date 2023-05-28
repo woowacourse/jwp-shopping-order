@@ -38,7 +38,7 @@ public class ProductService {
     public Long createProduct(final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
 
-        return productDao.createProduct(product);
+        return productDao.save(product);
     }
 
     @Transactional

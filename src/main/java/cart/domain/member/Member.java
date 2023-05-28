@@ -9,6 +9,10 @@ public class Member {
     private final MemberPassword password;
     private final MemberPoint point;
 
+    public Member(final String email, final String password) {
+        this(null, email, password);
+    }
+
     public Member(final Long id, final String email, final String password) {
         this(id, email, password, 0);
     }

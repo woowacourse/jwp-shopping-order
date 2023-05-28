@@ -3,8 +3,12 @@ package cart.dao;
 import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,9 +17,13 @@ import java.util.List;
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public MemberDao(final JdbcTemplate jdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id");
     }
 
     private static class MemberRowMapper implements RowMapper<Member> {
@@ -30,6 +38,14 @@ public class MemberDao {
         }
 
     }
+    public Long addMember(final Member member) {
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("email", member.getEmailValue())
+                .addValue("password", member.getPasswordValue());
+
+        return jdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
     public Member getMemberById(final Long memberId) {
         final String sql = "SELECT id, email, password, point FROM member WHERE id = ?";
         final List<Member> members = jdbcTemplate.query(sql, new Object[]{memberId}, new MemberRowMapper());
@@ -42,11 +58,6 @@ public class MemberDao {
         final List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
 
         return members.isEmpty() ? null : members.get(0);
-    }
-
-    public void addMember(final Member member) {
-        final String sql = "INSERT INTO member(email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmailValue(), member.getPasswordValue());
     }
 
     public void updateMember(final Member member) {

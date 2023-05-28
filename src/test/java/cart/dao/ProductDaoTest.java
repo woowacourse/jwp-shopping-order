@@ -31,7 +31,7 @@ public class ProductDaoTest {
     @Test
     void createAndGetProduct() {
         // given
-        final Long productId = productDao.createProduct(product);
+        final Long productId = productDao.save(product);
 
         // when
         final Product findProduct = productDao.getProductById(productId);
@@ -51,9 +51,9 @@ public class ProductDaoTest {
         final Product product1 = new Product("초콜릿1", 501, "초콜릿URL1");
         final Product product2 = new Product("초콜릿2", 502, "초콜릿URL2");
         final Product product3 = new Product("초콜릿3", 503, "초콜릿URL3");
-        final Long productId1 = productDao.createProduct(product1);
-        final Long productId2 = productDao.createProduct(product2);
-        final Long productId3 = productDao.createProduct(product3);
+        final Long productId1 = productDao.save(product1);
+        final Long productId2 = productDao.save(product2);
+        final Long productId3 = productDao.save(product3);
 
         // when
         final List<Product> products = productDao.getProductsByIds(List.of(productId1, productId2, productId3));
@@ -71,7 +71,7 @@ public class ProductDaoTest {
     @Test
     void updateProduct() {
         // given
-        final Long productId = productDao.createProduct(product);
+        final Long productId = productDao.save(product);
         final Product findProduct = productDao.getProductById(productId);
         final Product updateProduct = new Product(findProduct.getId(), "초콜릿아님", findProduct.getPriceValue(), findProduct.getImageUrlValue());
 
@@ -87,7 +87,7 @@ public class ProductDaoTest {
     @Test
     void deleteProduct() {
         // given
-        final Long productId = productDao.createProduct(product);
+        final Long productId = productDao.save(product);
 
         // when
         productDao.deleteProduct(productId);
