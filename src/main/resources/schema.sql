@@ -30,3 +30,19 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
 
+CREATE TABLE policy
+(
+    id           BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name         VARCHAR(255) NOT NULL,
+    isPercentage BOOLEAN      NOT NULL,
+    amount        INT          NOT NULL
+);
+
+CREATE TABLE coupon
+(
+    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    policy_id BIGINT NOT NULL,
+    member_id BIGINT NOT NULL,
+    FOREIGN KEY (policy_id) REFERENCES policy (id),
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
