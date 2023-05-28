@@ -1,6 +1,7 @@
 package cart.domain;
 
 public class Member {
+    private static final int ZERO_POINTS = 0;
     private final Long id;
     private final String email;
     private final String password;
@@ -14,9 +15,13 @@ public class Member {
     }
 
     public Member(final Long id, final String email, final String password) {
-        this(id, email, password, 0);
+        this(id, email, password, ZERO_POINTS);
     }
 
+    public Member updatePoints(final int addedPoints) {
+        final int totalPoints = points + addedPoints;
+        return new Member(id, email, password, totalPoints);
+    }
 
     public Long getId() {
         return id;

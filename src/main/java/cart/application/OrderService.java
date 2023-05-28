@@ -1,12 +1,19 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
+import cart.dao.MemberDao;
 import cart.dao.OrderDao;
+import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.dto.CartItemRequest;
 import cart.dto.OrderCreateRequest;
+import cart.dto.OrderItemResponse;
+import cart.dto.OrderResponse;
+import cart.entity.OrderEntity;
+import cart.entity.OrderItemEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,23 +25,30 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderDao orderDao;
+    private final OrderItemDao orderItemDao;
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
+    private final MemberDao memberDao;
 
-    public OrderService(final OrderDao orderDao, final CartItemDao cartItemDao, final ProductDao productDao) {
+    public OrderService(
+            final OrderDao orderDao,
+            final OrderItemDao orderItemDao,
+            final CartItemDao cartItemDao,
+            final ProductDao productDao,
+            final MemberDao memberDao
+    ) {
         this.orderDao = orderDao;
+        this.orderItemDao = orderItemDao;
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
+        this.memberDao = memberDao;
     }
 
-    //TODO: cartItem Id는 주문 성공시 삭제할 떄 사용, productId로 정보를 불러와서 Order에 저장, quantity 정보가 db와 일치하는지 확인
     public Long createOrder(final OrderCreateRequest orderCreateRequest, final Member member) {
         final List<CartItem> cartItems = cartItemDao.findByMemberIdAndChecked(member.getId());
         final List<CartItemRequest> requests = orderCreateRequest.getCartItems();
 
-        for (final CartItem cartItem : cartItems) {
-            iterateRequests(requests, cartItem);
-        }
+        validateLegalOrder(cartItems, requests);
 
         final List<CartItem> cartItemsByRequest = toCartItems(member, requests);
 
@@ -43,7 +57,20 @@ public class OrderService {
             cartItemDao.deleteById(id);
         }
 
-        return orderDao.createOrder(orderCreateRequest.getUsedPoints(), cartItemsByRequest, member);
+        final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsByRequest);
+        order.validatePoints(member.getPoints());
+
+        final Long id = orderDao.createOrder(orderCreateRequest.getUsedPoints(), cartItemsByRequest, order.getSavingRate(), member);
+
+        updateMember(member, order);
+
+        return id;
+    }
+
+    private void validateLegalOrder(final List<CartItem> cartItems, final List<CartItemRequest> requests) {
+        for (final CartItem cartItem : cartItems) {
+            iterateRequests(requests, cartItem);
+        }
     }
 
     private List<CartItem> toCartItems(final Member member, final List<CartItemRequest> requests) {
@@ -83,5 +110,25 @@ public class OrderService {
 
     private boolean isNotChecked(final CartItem cartItem) {
         return !cartItem.isChecked();
+    }
+
+    private void updateMember(final Member member, final Order order) {
+        final int savingPoints = order.calculateSavingPoints(order.getPoints());
+        final Member updatedMember = member.updatePoints(savingPoints);
+        memberDao.updateMember(updatedMember);
+    }
+
+    public OrderResponse findById(final Long orderId, final Member member) {
+        final OrderEntity orderEntity = orderDao.findById(orderId, member.getId());
+        final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
+        final List<OrderItemResponse> orderItemResponses = orderItemEntities.stream()
+                .map(orderItemEntity -> new OrderItemResponse(
+                        orderItemEntity.getProductId(),
+                        orderItemEntity.getProductName(),
+                        orderItemEntity.getProductPrice(),
+                        orderItemEntity.getProductQuantity(),
+                        orderItemEntity.getProductImageUrl()
+                )).collect(Collectors.toList());
+        return new OrderResponse(orderEntity.getId(), orderEntity.getSavingRate(), orderEntity.getPoints(), orderItemResponses);
     }
 }
