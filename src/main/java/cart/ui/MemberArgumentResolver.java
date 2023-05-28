@@ -2,7 +2,8 @@ package cart.ui;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.exception.AuthenticationException;
+import cart.exception.authorization.AuthenticationException;
+import cart.exception.authorization.PasswordNotMatchException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -42,7 +43,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String[] credentials = decodedString.split(":");
 
         if (credentials.length != 2) {
-            throw new AuthenticationException("이메일과 비밀번호를 모두 입력해야 합니다.");
+            throw new AuthenticationException();
         }
         String email = credentials[0];
         String password = credentials[1];
@@ -50,7 +51,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         // 본인 여부 확인
         Member member = memberDao.getMemberByEmail(email);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new PasswordNotMatchException();
         }
         return member;
     }
