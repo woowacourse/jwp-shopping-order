@@ -287,11 +287,15 @@ public class CartItemIntegrationTest extends IntegrationTest {
                     .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
                     .body(request)
                     .when()
+                    .redirects().follow(false)
                     .post("/cart-items/payment")
                     .then()
                     .extract();
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                    () -> assertThat(response.header("Location")).isEqualTo("redirect:/orders/histories/1")
+            );
         }
 
         @DisplayName("장바구니 아이템을 담은 사용자와 결제 요청 사용자가 다를 경우 bad request를 반환한다.")
