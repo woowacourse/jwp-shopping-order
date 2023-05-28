@@ -3,7 +3,10 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import java.util.Collections;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,9 +19,11 @@ import java.util.Objects;
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
@@ -96,6 +101,31 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public List<CartItem> findByIds(final List<Long> cartItemIds) {
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.id IN (:ids)";
+        Map<String, Object> params = Collections.singletonMap("ids", cartItemIds);
+
+        List<CartItem> cartItems = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            Long memberId = rs.getLong("member_id");
+            String email = rs.getString("email");
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            Long cartItemId = rs.getLong("cart_item.id");
+            int quantity = rs.getInt("cart_item.quantity");
+            Member member = new Member(memberId, email, null);
+            Product product = new Product(productId, name, price, imageUrl);
+            return new CartItem(cartItemId, quantity, product, member);
+        });
+
+        return cartItems;
     }
 }
 
