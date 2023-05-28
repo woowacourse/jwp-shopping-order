@@ -21,6 +21,7 @@ public class OrderProductDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("order_product")
+                .usingColumns("order_id", "product_id", "product_name", "product_price", "product_image_url", "quantity")
                 .usingGeneratedKeyColumns("id");
     }
 

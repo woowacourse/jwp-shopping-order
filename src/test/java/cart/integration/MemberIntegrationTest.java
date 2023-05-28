@@ -33,7 +33,7 @@ public class MemberIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
                 .when()
-                .get("members/point")
+                .get("/members/point")
                 .then().log().all()
                 .body("point", is(10000));
     }

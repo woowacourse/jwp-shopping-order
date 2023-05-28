@@ -54,6 +54,9 @@ public class Member {
         return password.getPassword();
     }
 
+    public MemberPoint getPoint() {
+        return point;
+    }
     public Integer getPointValue() {
         return point.getPoint();
     }

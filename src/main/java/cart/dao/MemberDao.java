@@ -3,17 +3,15 @@ package cart.dao;
 import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@Repository
+@Component
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -23,6 +21,7 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("member")
+                .usingColumns("email", "password", "point")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -38,13 +37,14 @@ public class MemberDao {
         }
 
     }
-    public Long addMember(final Member member) {
+
+   /* public Long addMember(final Member member) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("email", member.getEmailValue())
                 .addValue("password", member.getPasswordValue());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
-    }
+    }*/
 
     public Member getMemberById(final Long memberId) {
         final String sql = "SELECT id, email, password, point FROM member WHERE id = ?";

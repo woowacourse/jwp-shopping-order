@@ -27,6 +27,7 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("cart_item")
+                .usingColumns("member_id", "product_id", "quantity")
                 .usingGeneratedKeyColumns("id");
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
