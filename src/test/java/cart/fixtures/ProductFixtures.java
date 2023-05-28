@@ -1,6 +1,7 @@
 package cart.fixtures;
 
 import cart.domain.Product;
+import cart.dto.ProductCartItemResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 
@@ -52,5 +53,6 @@ public class ProductFixtures {
         public static final Product ENTITY = new Product(ID, NAME, PRICE, IMAGE_URL);
         public static final ProductRequest REQUEST = new ProductRequest(NAME, PRICE, IMAGE_URL);
         public static final ProductResponse RESPONSE = ProductResponse.from(ENTITY);
+        public static final ProductCartItemResponse PRODUCT_CART_ITEM_RESPONSE = ProductCartItemResponse.createOnlyProduct(ENTITY);
     }
 }

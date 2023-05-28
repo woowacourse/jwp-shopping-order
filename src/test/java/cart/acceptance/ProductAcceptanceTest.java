@@ -1,16 +1,19 @@
 package cart.acceptance;
 
-import static cart.fixtures.CartItemFixtures.*;
-import static cart.fixtures.MemberFixtures.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
+import static cart.fixtures.MemberFixtures.Dooly;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
 import cart.fixtures.ProductFixtures;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;

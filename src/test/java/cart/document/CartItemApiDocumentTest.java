@@ -1,14 +1,34 @@
 package cart.document;
 
-import cart.config.WebMvcConfig;
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
+import static cart.fixtures.MemberFixtures.Dooly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
 import cart.application.CartItemService;
+import cart.application.MemberService;
+import cart.config.AuthMemberInterceptor;
+import cart.config.MemberArgumentResolver;
+import cart.config.WebMvcConfig;
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.dto.AuthMember;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.fixtures.ProductFixtures;
 import cart.ui.CartItemApiController;
-import cart.config.MemberArgumentResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -29,30 +49,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 
-import java.util.List;
-
-import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
-import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
-import static cart.fixtures.MemberFixtures.Dooly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(RestDocumentationExtension.class)
 @AutoConfigureRestDocs
 @WebMvcTest(CartItemApiController.class)
@@ -72,6 +68,9 @@ public class CartItemApiDocumentTest {
     private CartItemService cartItemService;
 
     @MockBean
+    private MemberService memberService;
+
+    @MockBean
     private WebMvcConfig webMvcConfig;
 
     @MockBean
@@ -80,6 +79,7 @@ public class CartItemApiDocumentTest {
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
         mockMvc = MockMvcBuilders.standaloneSetup(new CartItemApiController(cartItemService))
+                .addInterceptors(new AuthMemberInterceptor(memberService))
                 .setCustomArgumentResolvers(new MemberArgumentResolver())
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
                 .build();
@@ -89,7 +89,7 @@ public class CartItemApiDocumentTest {
     void 특정_유저의_장바구니_목록_조회_문서화() throws Exception {
         // given
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
-        given(cartItemService.findByMember(Dooly.ENTITY))
+        given(cartItemService.findByMember(any(AuthMember.class)))
                 .willReturn(List.of(Dooly_CartItem1.RESPONSE, Dooly_CartItem2.RESPONSE));
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 
@@ -117,7 +117,7 @@ public class CartItemApiDocumentTest {
         // given
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         final CartItemRequest request = new CartItemRequest(ProductFixtures.CHICKEN.ID);
-        given(cartItemService.add(any(Member.class), any(CartItemRequest.class)))
+        given(cartItemService.add(any(AuthMember.class), any(CartItemRequest.class)))
                 .willReturn(Dooly_CartItem1.ID);
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 
@@ -142,7 +142,7 @@ public class CartItemApiDocumentTest {
         // given
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(10);
-        willDoNothing().given(cartItemService).updateQuantity(Dooly.ENTITY, Dooly_CartItem1.ID, request);
+        willDoNothing().given(cartItemService).updateQuantity(any(AuthMember.class), eq(Dooly_CartItem1.ID), eq(request));
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 
         // when, then
@@ -167,7 +167,7 @@ public class CartItemApiDocumentTest {
     void 특정_유저의_장바구니_상품_삭제_문서화() throws Exception {
         // given
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
-        willDoNothing().given(cartItemService).remove(Dooly.ENTITY, Dooly_CartItem1.ID);
+        willDoNothing().given(cartItemService).remove(any(AuthMember.class), eq(Dooly_CartItem1.ID));
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 
         // when, then

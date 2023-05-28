@@ -4,6 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemResponse;
+import cart.dto.ProductCartItemResponse;
 
 import static cart.fixtures.MemberFixtures.Dooly;
 import static cart.fixtures.MemberFixtures.Ber;
@@ -21,6 +22,7 @@ public class CartItemFixtures {
 
         public static final CartItem ENTITY = new CartItem(ID, QUANTITY, PRODUCT, MEMBER);
         public static final CartItemResponse RESPONSE = CartItemResponse.from(ENTITY);
+        public static final ProductCartItemResponse PRODUCT_CART_ITEM_RESPONSE = ProductCartItemResponse.createContainsCartItem(PRODUCT, ENTITY);
     }
 
     public static class Dooly_CartItem2 {

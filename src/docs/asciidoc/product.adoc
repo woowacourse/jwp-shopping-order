@@ -14,17 +14,28 @@ include::{snippets}/products/getAllProducts/http-response.adoc[]
 include::{snippets}/products/getAllProducts/response-fields.adoc[]
 
 
-==== 2. 특정 상품 조회
+==== 2-1. 특정 상품 조회 (CASE : 장바구니에 상품이 담겨있는 경우)
 
 [discrete]
 ====== 요청
-include::{snippets}/products/getProductById/http-request.adoc[]
-include::{snippets}/products/getProductById/path-parameters.adoc[]
+include::{snippets}/products/getProductCartItems/exist/http-request.adoc[]
+include::{snippets}/products/getProductCartItems/exist/path-parameters.adoc[]
 
 [discrete]
 ====== 응답
-include::{snippets}/products/getProductById/http-response.adoc[]
-include::{snippets}/products/getProductById/response-fields.adoc[]
+include::{snippets}/products/getProductCartItems/exist/http-response.adoc[]
+include::{snippets}/products/getProductCartItems/exist/response-fields.adoc[]
+
+==== 2-2. 특정 상품 조회 (CASE : 장바구니에 상품이 담겨있지 않은 경우)
+[discrete]
+====== 요청
+include::{snippets}/products/getProductCartItems/not-exist/http-request.adoc[]
+include::{snippets}/products/getProductCartItems/not-exist/path-parameters.adoc[]
+
+[discrete]
+====== 응답
+include::{snippets}/products/getProductCartItems/not-exist/http-response.adoc[]
+include::{snippets}/products/getProductCartItems/not-exist/response-fields.adoc[]
 
 
 ==== 3. 상품 추가
