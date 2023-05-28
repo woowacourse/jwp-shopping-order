@@ -28,8 +28,8 @@ public class MemberDao {
                     rs.getInt("point")
             );
         }
-    }
 
+    }
     public Member getMemberById(final Long memberId) {
         final String sql = "SELECT id, email, password, point FROM member WHERE id = ?";
         final List<Member> members = jdbcTemplate.query(sql, new Object[]{memberId}, new MemberRowMapper());

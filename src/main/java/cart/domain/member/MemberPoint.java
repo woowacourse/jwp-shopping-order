@@ -1,5 +1,7 @@
 package cart.domain.member;
 
+import cart.exception.InvalidPointException;
+
 import java.util.Objects;
 
 public class MemberPoint {
@@ -7,7 +9,14 @@ public class MemberPoint {
     private final Integer point;
 
     public MemberPoint(final Integer point) {
+        validatePoint(point);
         this.point = point;
+    }
+
+    private void validatePoint(final Integer point) {
+        if (point < 0) {
+            throw new InvalidPointException();
+        }
     }
 
     public Integer getPoint() {
