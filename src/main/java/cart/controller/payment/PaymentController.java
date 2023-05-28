@@ -5,7 +5,7 @@ import cart.domain.member.Member;
 import cart.dto.coupon.CouponsApplyRequest;
 import cart.dto.payment.PaymentRequest;
 import cart.dto.payment.PaymentResponse;
-import cart.dto.payment.PaymentUsingCouponResponse;
+import cart.dto.payment.PaymentUsingCouponsResponse;
 import cart.service.payment.PaymentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +33,8 @@ public class PaymentController {
     }
 
     @PostMapping("/coupons")
-    public ResponseEntity<PaymentUsingCouponResponse> applyCoupon(@Auth final Member member,
-                                                                  @RequestBody @Valid final CouponsApplyRequest request) {
+    public ResponseEntity<PaymentUsingCouponsResponse> applyCoupon(@Auth final Member member,
+                                                                   @RequestBody @Valid final CouponsApplyRequest request) {
         return ResponseEntity.ok(paymentService.applyCoupons(member, request));
     }
 

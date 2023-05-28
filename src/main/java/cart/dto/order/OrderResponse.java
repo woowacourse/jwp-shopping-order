@@ -1,7 +1,7 @@
 package cart.dto.order;
 
 import cart.dto.coupon.CouponResponse;
-import cart.dto.product.DeliveryPrice;
+import cart.dto.product.DeliveryPriceResponse;
 import cart.dto.product.ProductResponse;
 
 import java.time.LocalDateTime;
@@ -12,10 +12,10 @@ public class OrderResponse {
     private final long orderId;
     private final LocalDateTime orderedTime;
     private final List<ProductResponse> products;
-    private final DeliveryPrice deliveryPrice;
+    private final DeliveryPriceResponse deliveryPrice;
     private final List<CouponResponse> coupons;
 
-    public OrderResponse(final long orderId, final LocalDateTime orderedTime, final List<ProductResponse> products, final DeliveryPrice deliveryPrice, final List<CouponResponse> coupons) {
+    public OrderResponse(final long orderId, final LocalDateTime orderedTime, final List<ProductResponse> products, final DeliveryPriceResponse deliveryPrice, final List<CouponResponse> coupons) {
         this.orderId = orderId;
         this.orderedTime = orderedTime;
         this.products = products;
@@ -35,7 +35,7 @@ public class OrderResponse {
         return products;
     }
 
-    public DeliveryPrice getDeliveryPrice() {
+    public DeliveryPriceResponse getDeliveryPrice() {
         return deliveryPrice;
     }
 

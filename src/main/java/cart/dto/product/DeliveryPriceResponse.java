@@ -1,10 +1,10 @@
 package cart.dto.product;
 
-public class DeliveryPrice {
+public class DeliveryPriceResponse {
 
     private final int deliveryPrice;
 
-    public DeliveryPrice(final int deliveryPrice) {
+    public DeliveryPriceResponse(final int deliveryPrice) {
         this.deliveryPrice = deliveryPrice;
     }
 

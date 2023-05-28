@@ -4,6 +4,8 @@ import cart.domain.discount.Policy;
 import cart.domain.discount.PolicyDiscount;
 import cart.domain.discount.PolicyPercentage;
 
+import java.util.Objects;
+
 public class Coupon {
 
     private final Long id;
@@ -42,5 +44,18 @@ public class Coupon {
 
     public Policy getPolicy() {
         return policy;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Coupon)) return false;
+        Coupon coupon = (Coupon) o;
+        return Objects.equals(id, coupon.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

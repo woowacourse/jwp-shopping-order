@@ -1,24 +1,32 @@
 package cart.dto.payment;
 
-import cart.dto.product.DeliveryPrice;
-
-import java.util.List;
+import cart.domain.cart.CartItem;
 
 public class PaymentUsingCouponResponse {
 
-    private final List<PaymentUsingCouponResponse> products;
-    private final DeliveryPrice deliveryPrice;
+    private final long productId;
+    private final int originPrice;
+    private final int discountPrice;
 
-    public PaymentUsingCouponResponse(final List<PaymentUsingCouponResponse> products, final DeliveryPrice deliveryPrice) {
-        this.products = products;
-        this.deliveryPrice = deliveryPrice;
+    public PaymentUsingCouponResponse(final long productId, final int originPrice, final int discountPrice) {
+        this.productId = productId;
+        this.originPrice = originPrice;
+        this.discountPrice = discountPrice;
     }
 
-    public List<PaymentUsingCouponResponse> getProducts() {
-        return products;
+    public static PaymentUsingCouponResponse from(final CartItem cartItem) {
+        return new PaymentUsingCouponResponse(cartItem.getProduct().getId(), cartItem.getPrice(), cartItem.getPrice() - cartItem.getFinallyPrice());
     }
 
-    public DeliveryPrice getDeliveryPrice() {
-        return deliveryPrice;
+    public long getProductId() {
+        return productId;
+    }
+
+    public int getOriginPrice() {
+        return originPrice;
+    }
+
+    public int getDiscountPrice() {
+        return discountPrice;
     }
 }
