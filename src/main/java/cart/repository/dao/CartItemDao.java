@@ -98,6 +98,13 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
+    public void deleteByIds(List<Long> cartItemIds) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+
+        Map<String, Object> params = Collections.singletonMap("ids", cartItemIds);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
@@ -111,7 +118,7 @@ public class CartItemDao {
                 "WHERE cart_item.id IN (:ids)";
         Map<String, Object> params = Collections.singletonMap("ids", cartItemIds);
 
-        List<CartItem> cartItems = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
+        return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Long productId = rs.getLong("id");
@@ -124,8 +131,6 @@ public class CartItemDao {
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         });
-
-        return cartItems;
     }
 }
 

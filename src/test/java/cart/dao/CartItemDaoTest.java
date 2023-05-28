@@ -51,4 +51,18 @@ class CartItemDaoTest {
         // then
         assertThat(cartItems).hasSize(cartItemIds.size() - 1);
     }
+
+    @DisplayName("여러 ID를 입력받아 해당하는 row를 모두 삭제한다")
+    @Test
+    void deleteByIds() {
+        // given
+        final List<Long> cartItemIds = List.of(1L, 2L, Long.MAX_VALUE);
+
+        // when
+        cartItemDao.deleteByIds(cartItemIds);
+        final List<CartItem> findCartItems = cartItemDao.findByIds(cartItemIds);
+
+        // then
+        assertThat(findCartItems).isEmpty();
+    }
 }
