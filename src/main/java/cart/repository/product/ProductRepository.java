@@ -1,5 +1,6 @@
 package cart.repository.product;
 
+import cart.dao.policy.PolicyDao;
 import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
 import cart.entity.product.ProductEntity;
@@ -12,9 +13,11 @@ import java.util.stream.Collectors;
 public class ProductRepository {
 
     private final ProductDao productDao;
+    private final PolicyDao policyDao;
 
-    public ProductRepository(final ProductDao productDao) {
+    public ProductRepository(final ProductDao productDao, final PolicyDao policyDao) {
         this.productDao = productDao;
+        this.policyDao = policyDao;
     }
 
     public Product findProductById(final long id) {
@@ -31,7 +34,8 @@ public class ProductRepository {
     }
 
     public Long createProduct(final Product product) {
-        return productDao.createProduct(product);
+        long salePolicyId = policyDao.createProductDefaultPolicy();
+        return productDao.createProduct(product, salePolicyId);
     }
 
     public void updateProduct(final Long productId, final Product product) {

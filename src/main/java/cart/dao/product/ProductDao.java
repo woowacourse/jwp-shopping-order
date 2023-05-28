@@ -42,18 +42,20 @@ public class ProductDao {
         });
     }
 
-    public Long createProduct(final Product product) {
+    public Long createProduct(final Product product, final long salePolicyId) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                    "INSERT INTO product (name, price, image_url, isOnSale, policy_id) VALUES (?, ?, ?,?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, product.getName());
             ps.setInt(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
+            ps.setBoolean(4, false);
+            ps.setLong(5, salePolicyId);
 
             return ps;
         }, keyHolder);
