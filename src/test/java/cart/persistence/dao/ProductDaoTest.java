@@ -44,7 +44,8 @@ class ProductDaoTest extends DaoTest {
         // then
         final ProductEntity findProduct = product.get();
         assertThat(findProduct)
-            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice, ProductEntity::getImageUrl)
+            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice,
+                ProductEntity::getImageUrl)
             .containsExactly(저장된_치킨_아이디, "치킨", 20000, "chicken_image_url");
     }
 
@@ -68,7 +69,8 @@ class ProductDaoTest extends DaoTest {
         final Optional<ProductEntity> product = productDao.getProductById(저장된_치킨_아이디);
         final ProductEntity findProduct = product.get();
         assertThat(findProduct)
-            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice, ProductEntity::getImageUrl)
+            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice,
+                ProductEntity::getImageUrl)
             .containsExactly(저장된_치킨_아이디, "치킨", 20000, "chicken_image_url");
     }
 
@@ -85,7 +87,8 @@ class ProductDaoTest extends DaoTest {
         // then
         assertThat(products).hasSize(2);
         assertThat(products)
-            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice, ProductEntity::getImageUrl)
+            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice,
+                ProductEntity::getImageUrl)
             .containsExactly(
                 tuple(저장된_치킨_아이디, "치킨", 20000, "chicken_image_url"),
                 tuple(저장된_피자_아이디, "피자", 30000, "pizza_image_url"));
@@ -107,7 +110,8 @@ class ProductDaoTest extends DaoTest {
 
         assertThat(updatedCount).isEqualTo(1);
         assertThat(findProduct)
-            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice, ProductEntity::getImageUrl)
+            .extracting(ProductEntity::getId, ProductEntity::getName, ProductEntity::getPrice,
+                ProductEntity::getImageUrl)
             .containsExactly(저장된_치킨_아이디, "탕수육", 30000, "pork_image_url");
     }
 
@@ -122,7 +126,7 @@ class ProductDaoTest extends DaoTest {
 
         // then
         final Optional<ProductEntity> product = productDao.getProductById(productId);
-        
+
         assertThat(product).isEmpty();
         assertThat(deletedCount).isEqualTo(1);
     }
