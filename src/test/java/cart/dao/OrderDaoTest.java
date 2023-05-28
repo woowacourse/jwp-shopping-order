@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,5 +58,22 @@ class OrderDaoTest extends DaoTest {
                 () -> assertThat(result.getId()).isEqualTo(savedOrderId),
                 () -> assertThat(result.getPrice()).isEqualTo(10000)
         );
+    }
+
+    @Test
+    @DisplayName("Member의 order를 조회한다.")
+    void findByIds() {
+        //given
+        final Long orderId1 = createOrder(10000, Fixture.GOLD_MEMBER, List.of(Fixture.CART_ITEM1));
+        final Long orderId2 = createOrder(10000, Fixture.GOLD_MEMBER, List.of(Fixture.CART_ITEM2));
+
+        //when
+        final List<OrderEntity> results = orderDao.findByMember(Fixture.GOLD_MEMBER);
+        final List<Long> ids = results.stream()
+                .map(OrderEntity::getId)
+                .collect(Collectors.toUnmodifiableList());
+
+        //then
+        assertThat(ids).containsExactlyInAnyOrder(orderId1, orderId2);
     }
 }

@@ -2,17 +2,26 @@ package cart.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import cart.domain.Member;
 import cart.entity.OrderEntity;
 
 @Repository
 public class OrderDao {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) -> {
+        final long id = rs.getLong("id");
+        final long memberId = rs.getLong("member_id");
+        final int price = rs.getInt("price");
+        return new OrderEntity(id, price, memberId);
+    };
 
     public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,11 +45,11 @@ public class OrderDao {
 
     public OrderEntity findById(Long orderId) {
         final String sql = "SELECT * FROM `order` WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{orderId}, (rs, rowNum) -> {
-            final long id = rs.getLong("id");
-            final long memberId = rs.getLong("member_id");
-            final int price = rs.getInt("price");
-            return new OrderEntity(id, price, memberId);
-        });
+        return jdbcTemplate.queryForObject(sql, rowMapper, orderId);
+    }
+
+    public List<OrderEntity> findByMember(Member member) {
+        final String sql = "SELECT * FROM `order` WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, member.getId());
     }
 }
