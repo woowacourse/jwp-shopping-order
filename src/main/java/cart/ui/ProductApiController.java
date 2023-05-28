@@ -1,17 +1,14 @@
 package cart.ui;
 
+import java.net.URI;
+import java.util.List;
+
 import cart.application.ProductService;
 import cart.config.AuthPrincipal;
-import cart.dto.AuthMember;
-import cart.dto.ProductCartItemResponse;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -31,6 +28,13 @@ public class ProductApiController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
+    }
+
+    @GetMapping("/cart-items")
+    public ResponseEntity<ProductPagingResponse> getAllPagingProductCartItems(@AuthPrincipal AuthMember authMember,
+                                                                              @RequestParam Long lastId, @RequestParam int pageItemCount) {
+        ProductPagingResponse allPagingProductCartItems = productService.getAllPagingProductCartItems(authMember, lastId, pageItemCount);
+        return ResponseEntity.ok(allPagingProductCartItems);
     }
 
     @GetMapping("/{id}/cart-items")
