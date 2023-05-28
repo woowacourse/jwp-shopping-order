@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.dto.OrderProductDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -40,7 +41,6 @@ public class OrderProductDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-
     public Optional<OrderProductDto> findById(final Long id) {
         String sql = "SELECT * from orders_product where id = ?";
 
@@ -49,5 +49,11 @@ public class OrderProductDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<OrderProductDto> findByOrderId(final Long id) {
+        String sql = "SELECT * from orders_product where order_id = ?";
+
+        return jdbcTemplate.query(sql, orderProductDtoRowMapper, id);
     }
 }
