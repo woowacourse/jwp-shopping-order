@@ -7,11 +7,12 @@ INSERT INTO member (email, password, cash) VALUES ('dooly@dooly.com', '1234', 12
 INSERT INTO member (email, password, cash) VALUES ('ber@ber.com', '1234', 850000);
 INSERT INTO member (email, password, cash) VALUES ('bixx@bixx.com', '1234', 1500000);
 
--- 주문한 장바구니 데이터
-
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 1, 5);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (3, 2, 5);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (3, 3, 10);
 
 INSERT INTO cart_order (member_id, total_price) VALUES (1, 20000);
 INSERT INTO cart_order (member_id, total_price) VALUES (2, 50000);
@@ -21,11 +22,4 @@ INSERT INTO order_item (cart_order_id, name, price, image_url, quantity) VALUES 
 INSERT INTO order_item (cart_order_id, name, price, image_url, quantity) VALUES (2, '치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80', 5);
 INSERT INTO order_item (cart_order_id, name, price, image_url, quantity) VALUES (3, '샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80', 5);
 
--- 아직 주문하지 않은 장바구니 데이터
 
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 1, 5);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (3, 2, 5);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (3, 3, 10);
