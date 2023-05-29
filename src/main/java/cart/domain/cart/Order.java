@@ -27,26 +27,16 @@ public class Order {
 
     public OrderResponse pay(final List<Long> productIds, final List<Integer> quantities, final List<Long> couponsId) {
         cart.validateBuying(productIds, quantities);
-        List<ProductHistory> productHistories = cart.buy(productIds, quantities);
-
         member.validateHasCoupons(couponsId);
+
+        List<ProductHistory> productHistories = cart.buy(productIds, quantities);
         List<Coupon> coupons = member.getCouponsByIds(couponsId);
+        applyCoupon(productHistories, coupons);
 
-        int deliveryFee = cart.calculateDeliveryFeeUsingCoupons(coupons);
+        return generateOrderHistory(productHistories, coupons);
+    }
 
-        for (ProductHistory productHistory : productHistories) {
-            int price = productHistory.getPrice();
-            for (Coupon coupon : coupons) {
-                if(coupon.isDeliveryCoupon()) {
-                    continue;
-                }
-                price = coupon.calculate(price);
-            }
-            productHistory.setPrice(price);
-        }
-
-        /////////
-
+    private OrderResponse generateOrderHistory(final List<ProductHistory> productHistories, final List<Coupon> coupons) {
         List<ProductHistoryResponse> productsResponse = productHistories.stream()
                 .map(ProductHistoryResponse::from)
                 .collect(Collectors.toList());
@@ -55,13 +45,31 @@ public class Order {
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
 
+        int deliveryFee = cart.calculateDeliveryFeeUsingCoupons(coupons);
+
         return new OrderResponse(timestamp.toString(), productsResponse, DeliveryFeeResponse.from(deliveryFee), couponsResponse);
-
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    private void applyCoupon(List<ProductHistory> productHistories, List<Coupon> coupons) {
+        List<Coupon> productCoupons = coupons.stream()
+                .filter(coupon -> !coupon.isDeliveryCoupon())
+                .collect(Collectors.toList());
+
+        for (final ProductHistory productHistory : productHistories) {
+            applyCouponsOnProduct(productCoupons, productHistory);
+        }
     }
+
+    private static void applyCouponsOnProduct(final List<Coupon> productCoupons, final ProductHistory productHistory) {
+        int price = productHistory.getPrice();
+
+        for (final Coupon coupon : productCoupons) {
+            price = coupon.calculate(price);
+        }
+
+        productHistory.setPrice(price);
+    }
+
 
     public Member getMember() {
         return member;

@@ -55,8 +55,12 @@ public class CartItem {
         return this.product.isSame(id);
     }
 
-    public boolean hasSameId(final long id) {
+    public boolean isSame(final long id) {
         return this.id == id;
+    }
+
+    public boolean isExistAlready() {
+        return this.id != null;
     }
 
     public void addQuantity() {
@@ -65,10 +69,6 @@ public class CartItem {
 
     public void changeQuantity(final int quantity) {
         this.quantity = quantity;
-    }
-
-    public boolean isExistAlready() {
-        return this.id != null;
     }
 
     public Long getId() {

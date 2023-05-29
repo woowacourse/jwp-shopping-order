@@ -26,7 +26,7 @@ public class Coupons {
                 .collect(Collectors.toList());
     }
 
-    private Coupon findCouponById(Long couponId) {
+    private Coupon findCouponById(final Long couponId) {
         return coupons.stream()
                 .filter(coupon -> coupon.isSame(couponId))
                 .findAny()

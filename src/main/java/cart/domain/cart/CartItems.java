@@ -54,7 +54,7 @@ public class CartItems {
 
     private CartItem findCartItemByCartItemId(final long cartItemId) {
         return cartItems.stream()
-                .filter(item -> item.hasSameId(cartItemId))
+                .filter(item -> item.isSame(cartItemId))
                 .findAny()
                 .orElseThrow(CartItemNotFoundException::new);
     }
@@ -71,7 +71,7 @@ public class CartItems {
 
     public boolean hasCartItem(final CartItem cartItem) {
         return cartItems.stream()
-                .anyMatch(item -> item.hasSameId(cartItem.getId()));
+                .anyMatch(item -> item.isSame(cartItem.getId()));
     }
 
     public int getTotalOriginPrice() {
