@@ -39,11 +39,11 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String decodedString = new String(decodedBytes);
 
         String[] credentials = decodedString.split(":");
-        String email = credentials[0];
+        String name = credentials[0];
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
+        Member member = memberDao.getMemberByName(name);
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }

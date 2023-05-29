@@ -1,6 +1,6 @@
 const selectMember = (member) => {
-    const { email, password } = member;
-    const string = `${email}:${password}`;
+    const { name, password } = member;
+    const string = `${name}:${password}`;
     localStorage.setItem('credentials', btoa(string));
-    alert(`${email} 사용자로 설정 했습니다.`);
+    alert(`${name} 사용자로 설정 했습니다.`);
 }

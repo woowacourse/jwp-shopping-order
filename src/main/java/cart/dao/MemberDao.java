@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -25,20 +24,20 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public Member getMemberByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
+    public Member getMemberByName(String name) {
+        String sql = "SELECT * FROM member WHERE name = ?";
+        List<Member> members = jdbcTemplate.query(sql, new Object[]{name}, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
     public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+        String sql = "INSERT INTO member (name, password) VALUES (?, ?)";
+        jdbcTemplate.update(sql, member.getName(), member.getPassword());
     }
 
     public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+        String sql = "UPDATE member SET name = ?, password = ? WHERE id = ?";
+        jdbcTemplate.update(sql, member.getName(), member.getPassword(), member.getId());
     }
 
     public void deleteMember(Long id) {
@@ -54,7 +53,7 @@ public class MemberDao {
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(rs.getLong("id"), rs.getString("name"), rs.getString("password"));
         }
     }
 }
