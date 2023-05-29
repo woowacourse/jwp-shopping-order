@@ -1,8 +1,12 @@
 package cart.acceptance;
 
 import cart.dto.CartItemRequest;
+import cart.dto.CartPointsResponse;
 import cart.dto.OrderCreateRequest;
+import cart.dto.OrderResponse;
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,7 +14,10 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class OrderAcceptanceTest extends AcceptanceTest {
 
@@ -32,21 +39,57 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 단일_주문을_조회한다() {
-        RestAssured.given()
+        final ExtractableResponse<Response> response = given()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
                 .get("/orders/1")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .extract();
+
+        final OrderResponse orderResponse = response.as(OrderResponse.class);
+
+        assertAll(
+                () -> assertThat(orderResponse.getCartItems().get(0).getName()).isEqualTo("치킨"),
+                () -> assertThat(orderResponse.getCartItems().get(0).getPrice()).isEqualTo(10000),
+                () -> assertThat(orderResponse.getCartItems().get(0).getQuantity()).isEqualTo(1),
+                () -> assertThat(orderResponse.getPoints()).isEqualTo(1000),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
     }
 
     @Test
     void 전체_주문을_조회한다() {
-        RestAssured.given()
+        final ExtractableResponse<Response> response = given()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
                 .get("/orders")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .extract();
+
+        final List<OrderResponse> orderResponses = response.jsonPath().getList(".", OrderResponse.class);
+
+        System.out.println(orderResponses);
+
+        assertAll(
+                () -> assertThat(orderResponses).hasSize(1),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
+    }
+
+    @Test
+    void 현재_장바구니에서_얻을_수_있는_포인트_조회() {
+        final ExtractableResponse<Response> response = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .get("/cart-points")
+                .then().log().all()
+                .extract();
+
+        final CartPointsResponse cartPointsResponse = response.as(CartPointsResponse.class);
+
+        assertAll(
+                () -> assertThat(cartPointsResponse.getPoints()).isEqualTo(10000),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
     }
 }
