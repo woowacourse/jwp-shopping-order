@@ -25,4 +25,20 @@ public class Coupon {
         }
         return afterDiscountPayment;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public CouponType getType() {
+        return type;
+    }
+
+    public int getDiscountAmount() {
+        return discountAmount;
+    }
 }
