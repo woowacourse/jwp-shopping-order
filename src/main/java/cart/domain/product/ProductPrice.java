@@ -2,13 +2,13 @@ package cart.domain.product;
 
 import cart.exception.GlobalException;
 
-public class Price {
+public class ProductPrice {
     private static final int MIN_PRICE = 1;
     private static final int MAX_PRICE = 10_000_000;
 
     private final int price;
 
-    public Price(int price) {
+    public ProductPrice(int price) {
         validate(price);
         this.price = price;
     }
