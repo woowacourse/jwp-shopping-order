@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
+import cart.domain.member.MemberName;
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -39,7 +40,7 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, memberName, null);
+            Member member = new Member(memberId, new MemberName(memberName), null);
             Product product = new Product(productId, productName, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         });
@@ -79,7 +80,7 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, memberName, null);
+            Member member = new Member(memberId, new MemberName(memberName), null);
             Product product = new Product(productId, productName, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         });
