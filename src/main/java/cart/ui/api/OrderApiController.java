@@ -30,13 +30,15 @@ public final class OrderApiController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findAll(final Member member) {
-        final List<OrderResponse> orders = orderService.findAllOrdersByMember(member);
+        final List<OrderResponse> orders = orderService.findAllByMember(member);
 
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> findBy(final Member member, @PathVariable Long id) {
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<OrderResponse> findByOrderId(final Member member, @PathVariable Long id) {
+        final OrderResponse order = orderService.findById(id);
+
+        return ResponseEntity.ok(order);
     }
 }

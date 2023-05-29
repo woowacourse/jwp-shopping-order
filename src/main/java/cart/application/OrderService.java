@@ -47,10 +47,15 @@ public class OrderService {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
 
-    public List<OrderResponse> findAllOrdersByMember(final Member member) {
+    public List<OrderResponse> findAllByMember(final Member member) {
         final List<Order> orders = orderDao.findAllByMemberId(member.getId());
         return orders.stream()
                 .map(OrderResponse::from)
                 .collect(toList());
+    }
+
+    public OrderResponse findById(final Long id) {
+        final Order order = orderDao.findById(id);
+        return OrderResponse.from(order);
     }
 }

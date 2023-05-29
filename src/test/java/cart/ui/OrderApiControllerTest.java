@@ -74,11 +74,22 @@ class OrderApiControllerTest {
     void getOrder() {
         //given
         final Member member = createMember();
+        final CartItem cartItem = createCartItem(member);
+
+        final String location = given()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(new OrderRequest(List.of(cartItem.getId())))
+                .post("/orders")
+                .then()
+                .extract()
+                .header("Location");
+        final long orderId = Long.parseLong(location.split("/")[2]);
 
         RestAssured.given()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .get("/orders/{id}", 1)
-                .then()
+                .get("/orders/{id}", orderId)
+                .then().log().all()
                 .statusCode(OK.value());
     }
 
