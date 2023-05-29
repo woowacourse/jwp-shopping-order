@@ -11,4 +11,6 @@ public interface MemberRepository {
     Member findByEmail(String email);
 
     List<Member> findAll();
+
+    void update(Member updatedMember);
 }
