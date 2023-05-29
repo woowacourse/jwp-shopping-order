@@ -7,6 +7,7 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
     private final OrderHistoryDao orderHistoryDao;
@@ -31,15 +33,21 @@ public class CartItemService {
         this.orderProductDao = orderProductDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(final Member member) {
-        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItemDao.findByMemberId(member.getId()).stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        final Product product = productDao.getProductById(cartItemRequest.getProductId());
+        final CartItem cartItem = new CartItem(member, product);
+        return cartItemDao.save(cartItem);
     }
 
+    @Transactional(readOnly = true)
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
         final CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
@@ -53,6 +61,7 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
+    @Transactional(readOnly = true)
     public void remove(final Member member, final Long id) {
         final CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
@@ -62,14 +71,23 @@ public class CartItemService {
 
     @Transactional
     public Long payment(final Member member, final PaymentRequest request) {
-        final List<Long> cartIds = request.getCartItemRequests().stream()
-                .map(CartItemRequest::getProductId)
-                .collect(Collectors.toList());
-        final List<CartItem> cartItems = cartItemDao.findByIds(cartIds);
-        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+        final List<Long> cartIds = extractCartIds(request);
+        final List<CartItem> cartItems = getCartItems(member, cartIds);
         final Order order = new Order(member, request.getPoint(), cartItems);
         final Long orderId = orderHistoryDao.createOrder(order);
         orderProductDao.createProducts(orderId, order.getProducts());
         return orderId;
+    }
+
+    private List<Long> extractCartIds(final PaymentRequest request) {
+        return request.getCartItemRequests().stream()
+                .map(CartItemRequest::getProductId)
+                .collect(Collectors.toList());
+    }
+
+    private List<CartItem> getCartItems(final Member member, final List<Long> cartIds) {
+        final List<CartItem> cartItems = cartItemDao.findByIds(cartIds);
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+        return cartItems;
     }
 }
