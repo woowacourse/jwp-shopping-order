@@ -3,19 +3,27 @@ package cart.dao.entity;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class CartProductItemEntity {
+public class CartItemEntity {
 
     private final Long id;
-    private final Long memberId;
+    private final MemberEntity memberEntity;
     private final ProductEntity productEntity;
     private final Integer quantity;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public CartProductItemEntity(Long id, Long memberId, ProductEntity productEntity, Integer quantity, LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+    public CartItemEntity(MemberEntity memberEntity, ProductEntity productEntity, Integer quantity) {
+        this(null, memberEntity, productEntity, quantity, null, null);
+    }
+
+    public CartItemEntity(Long id, MemberEntity memberEntity, ProductEntity productEntity, Integer quantity) {
+        this(id, memberEntity, productEntity, quantity, null, null);
+    }
+
+    public CartItemEntity(Long id, MemberEntity memberEntity, ProductEntity productEntity, Integer quantity,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.memberId = memberId;
+        this.memberEntity = memberEntity;
         this.productEntity = productEntity;
         this.quantity = quantity;
         this.createdAt = createdAt;
@@ -26,12 +34,20 @@ public class CartProductItemEntity {
         return id;
     }
 
+    public MemberEntity getMemberEntity() {
+        return memberEntity;
+    }
+
     public Long getMemberId() {
-        return memberId;
+        return memberEntity.getId();
     }
 
     public ProductEntity getProductEntity() {
         return productEntity;
+    }
+
+    public Long getProductId() {
+        return productEntity.getId();
     }
 
     public Integer getQuantity() {
@@ -54,7 +70,7 @@ public class CartProductItemEntity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CartProductItemEntity that = (CartProductItemEntity) o;
+        CartItemEntity that = (CartItemEntity) o;
         return Objects.equals(getId(), that.getId());
     }
 

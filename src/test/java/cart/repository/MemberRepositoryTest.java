@@ -33,8 +33,8 @@ class MemberRepositoryTest {
                 new MemberEntity(1L, "a@a.com", "password1", 0, LocalDateTime.now(), LocalDateTime.now());
         MemberEntity memberBEntity =
                 new MemberEntity(2L, "b@b.com", "password2", 0, LocalDateTime.now(), LocalDateTime.now());
-        memberDao.addMember(memberAEntity);
-        memberDao.addMember(memberBEntity);
+        Long memberIdA = memberDao.addMember(memberAEntity);
+        Long memberIdB = memberDao.addMember(memberBEntity);
 
         List<Member> result = memberRepository.getAllMembers();
 
@@ -42,8 +42,14 @@ class MemberRepositoryTest {
         Member memberB = MemberMapper.toDomain(memberBEntity);
         assertAll(
                 () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(memberA),
-                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(memberB)
+                () -> assertThat(result.get(0).getId()).isEqualTo(memberIdA),
+                () -> assertThat(result.get(0)).usingRecursiveComparison()
+                        .ignoringFields("id")
+                        .isEqualTo(memberA),
+                () -> assertThat(result.get(1).getId()).isEqualTo(memberIdB),
+                () -> assertThat(result.get(1)).usingRecursiveComparison()
+                        .ignoringFields("id")
+                        .isEqualTo(memberB)
         );
     }
 
