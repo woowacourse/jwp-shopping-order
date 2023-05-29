@@ -74,7 +74,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
-                .map(CartItemResponse::getId)
+                .map(CartItemResponse::getCartItemId)
                 .collect(Collectors.toList());
         assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
     }
@@ -92,7 +92,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
                 .getList(".", CartItemResponse.class)
                 .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
+                .filter(cartItemResponse -> cartItemResponse.getCartItemId().equals(cartItemId))
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isTrue();
@@ -112,7 +112,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
                 .getList(".", CartItemResponse.class)
                 .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
+                .filter(cartItemResponse -> cartItemResponse.getCartItemId().equals(cartItemId))
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
@@ -142,7 +142,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
                 .getList(".", CartItemResponse.class)
                 .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
+                .filter(cartItemResponse -> cartItemResponse.getCartItemId().equals(cartItemId))
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();

@@ -63,7 +63,7 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .jsonPath()
                 .getObject(".", ProductResponse.class);
 
-        assertThat(responseProduct.getId()).isNotNull();
+        assertThat(responseProduct.getProductId()).isNotNull();
         assertThat(responseProduct.getName()).isEqualTo("피자");
         assertThat(responseProduct.getPrice()).isEqualTo(15_000);
     }

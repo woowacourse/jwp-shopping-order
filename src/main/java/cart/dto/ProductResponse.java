@@ -3,13 +3,13 @@ package cart.dto;
 import cart.domain.Product;
 
 public class ProductResponse {
-    private Long id;
+    private Long productId;
     private String name;
     private int price;
     private String imageUrl;
 
-    private ProductResponse(Long id, String name, int price, String imageUrl) {
-        this.id = id;
+    private ProductResponse(Long productId, String name, int price, String imageUrl) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -19,8 +19,8 @@ public class ProductResponse {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {

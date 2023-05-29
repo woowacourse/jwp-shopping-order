@@ -3,12 +3,12 @@ package cart.dto;
 import cart.domain.CartItem;
 
 public class CartItemResponse {
-    private Long id;
+    private Long cartItemId;
     private int quantity;
     private ProductResponse product;
 
-    private CartItemResponse(Long id, int quantity, ProductResponse product) {
-        this.id = id;
+    private CartItemResponse(Long cartItemId, int quantity, ProductResponse product) {
+        this.cartItemId = cartItemId;
         this.quantity = quantity;
         this.product = product;
     }
@@ -21,8 +21,8 @@ public class CartItemResponse {
         );
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartItemId() {
+        return cartItemId;
     }
 
     public int getQuantity() {
