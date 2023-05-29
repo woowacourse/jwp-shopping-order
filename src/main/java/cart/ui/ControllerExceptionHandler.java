@@ -29,4 +29,9 @@ public class ControllerExceptionHandler {
         final FieldError fieldError = bindingResult.getFieldError();
         return ResponseEntity.badRequest().body(fieldError.getDefaultMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handlerIllegalArgumentException(final IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

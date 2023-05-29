@@ -281,9 +281,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
             );
         }
 
-        @DisplayName("장바구니에 담긴 아이템을 결제한다.")
+        @DisplayName("사용자의 보유 포인트보다 사용 포인트가 클 경우 bad request를 반환한다.")
         @Test
-        void paymentCartItems() {
+        void overPointUsePayment() {
             final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 100);
 
             final ExtractableResponse<Response> response = given()
@@ -291,14 +291,13 @@ public class CartItemIntegrationTest extends IntegrationTest {
                     .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
                     .body(request)
                     .when()
-                    .redirects().follow(false)
                     .post("/cart-items/payment")
                     .then()
                     .extract();
 
             assertAll(
-                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                    () -> assertThat(response.header("Location")).isEqualTo("redirect:/orders/histories/1")
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                    () -> assertThat(response.asString()).isEqualTo("포인트가 부족합니다.")
             );
         }
 
@@ -319,6 +318,27 @@ public class CartItemIntegrationTest extends IntegrationTest {
             assertAll(
                     () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value()),
                     () -> assertThat(response.asString()).isEqualTo("장바구니 아이템 소유자와 사용자가 다릅니다.")
+            );
+        }
+
+        @DisplayName("장바구니에 담긴 아이템을 결제한다.")
+        @Test
+        void paymentCartItems() {
+            final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 0);
+
+            final ExtractableResponse<Response> response = given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                    .body(request)
+                    .when()
+                    .redirects().follow(false)
+                    .post("/cart-items/payment")
+                    .then()
+                    .extract();
+
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                    () -> assertThat(response.header("Location")).isEqualTo("redirect:/orders/histories/1")
             );
         }
     }

@@ -32,4 +32,8 @@ public class Member {
     public boolean checkPassword(final String password) {
         return this.password.equals(password);
     }
+
+    public boolean isAbleToUse(final Integer usingPoint) {
+        return point >= usingPoint;
+    }
 }
