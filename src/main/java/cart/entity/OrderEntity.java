@@ -3,11 +3,7 @@ package cart.entity;
 import cart.domain.Order;
 
 public class OrderEntity {
-//        `id`           long PRIMARY KEY NOT NULL AUTO_INCREMENT,
-//    `delivery_fee` long             NOT NULL,
-//            `coupon_id`    long,
-//            `member_id`    long             NOT NULL,
-//
+
     private final Long id;
     private final long deliveryFee;
     private final Long couponId;

@@ -4,6 +4,7 @@ import cart.domain.OrderItem;
 import cart.entity.CartItemEntity;
 import cart.entity.OrderItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,12 +12,21 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class OrderItemDao {
 
     private final SimpleJdbcInsert jdbcInsert;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private final RowMapper<OrderItemEntity> rowMapper = (rs, rowNum) -> new OrderItemEntity(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("image_url"),
+            rs.getLong("price"),
+            rs.getInt("quantity"),
+            rs.getLong("order_id")
+    );
 
     public OrderItemDao(final DataSource dataSource) {
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
@@ -49,5 +59,12 @@ public class OrderItemDao {
         sqlParameterSource.addValue("order_id", orderItemEntity.getOrderId());
 
         namedJdbcTemplate.update(sql, sqlParameterSource);
+    }
+
+    public List<OrderItemEntity> findByOrderId(final Long orderId) {
+        String sql = "SELECT * FROM order_item WHERE order_id = :id";
+        final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", orderId);
+        return namedJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
     }
 }

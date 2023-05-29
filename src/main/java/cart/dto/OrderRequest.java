@@ -1,19 +1,22 @@
 package cart.dto;
 
-import cart.dto.OrderItem;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
+@Schema(description = "주문 Request")
 public class OrderRequest {
-    private final List<OrderItem> orderItems;
+    @Schema(description = "주문 상품")
+    private final List<OrderItemIdDto> orderItems;
+    @Schema(description = "쿠폰 Id", example = "1")
     private final Long couponId;
 
-    public OrderRequest(final List<OrderItem> orderItems, final Long couponId) {
+    public OrderRequest(final List<OrderItemIdDto> orderItems, final Long couponId) {
         this.orderItems = orderItems;
         this.couponId = couponId;
     }
 
-    public List<OrderItem> getOrderItems() {
+    public List<OrderItemIdDto> getOrderItems() {
         return orderItems;
     }
 

@@ -1,10 +1,10 @@
 package cart.domain.coupon.discountPolicy;
 
-import cart.domain.OrderPrice;
+import cart.domain.TotalPrice;
 
 public interface DiscountPolicy {
 
-    OrderPrice discount(final OrderPrice orderPrice);
+    TotalPrice discount(final TotalPrice orderPrice);
 
     String getName();
 

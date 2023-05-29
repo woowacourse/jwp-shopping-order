@@ -31,6 +31,10 @@ public class OrderItemEntity {
                 );
     }
 
+    public OrderItem toDomain() {
+        return new OrderItem(id, name, imageUrl, price, quantity);
+    }
+
     public Long getId() {
         return id;
     }

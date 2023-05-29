@@ -1,6 +1,6 @@
 package cart.domain.coupon.discountCondition;
 
-import cart.domain.OrderPrice;
+import cart.domain.TotalPrice;
 
 public class TotalItemsPriceCondition implements DiscountCondition {
 
@@ -11,8 +11,8 @@ public class TotalItemsPriceCondition implements DiscountCondition {
     }
 
     @Override
-    public boolean isCondition(final OrderPrice orderPrice) {
-        return orderPrice.getTotalItemsPrice() >= minimumPrice;
+    public boolean isCondition(final TotalPrice totalPrice) {
+        return totalPrice.getOrderPrice() >= minimumPrice;
     }
 
     @Override

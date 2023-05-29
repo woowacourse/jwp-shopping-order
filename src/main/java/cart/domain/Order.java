@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.InvalidOrderOwnerException;
 import cart.exception.InvalidOrderSizeException;
 
 import java.util.List;
@@ -36,8 +37,19 @@ public class Order {
         }
     }
 
-    public long getTotalItemsPrice() {
+    public TotalPrice calculateDiscountPrice() {
+        final TotalPrice orderPrice = memberCoupon.calculatePrice(new TotalPrice(calculateOrderPrice(), deliveryFee));
+        return memberCoupon.calculateDiscountedPrice(orderPrice);
+    }
+
+    public long calculateOrderPrice() {
         return orderItems.calculateTotalPrice();
+    }
+
+    public void checkOwner(final Member member) {
+        if (!this.member.equals(member)) {
+            throw new InvalidOrderOwnerException();
+        }
     }
 
     public long getDeliveryFee() {

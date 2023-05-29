@@ -5,8 +5,10 @@ import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.exception.MemberCouponNotFoundException;
 import cart.exception.MemberNotFoundException;
+import cart.exception.OrderNotFoundException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -59,5 +62,23 @@ public class OrderService {
                 .orElseThrow(MemberCouponNotFoundException::new);
         final MemberCoupon usedCoupon = memberCoupon.use();
         return memberCouponRepository.save(usedCoupon);
+    }
+
+    public List<OrderResponse> findAll(final Long memberId) {
+        final List<Order> orders = orderRepository.findByMemberId(memberId);
+
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public OrderResponse findById(final Long memberId, final Long id) {
+        final Order order = orderRepository.findById(id)
+                .orElseThrow(OrderNotFoundException::new);
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        order.checkOwner(member);
+
+        return OrderResponse.from(order);
     }
 }

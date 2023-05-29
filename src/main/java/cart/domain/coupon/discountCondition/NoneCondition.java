@@ -1,10 +1,10 @@
 package cart.domain.coupon.discountCondition;
 
-import cart.domain.OrderPrice;
+import cart.domain.TotalPrice;
 
 public class NoneCondition implements DiscountCondition {
     @Override
-    public boolean isCondition(final OrderPrice orderPrice) {
+    public boolean isCondition(final TotalPrice orderPrice) {
         return true;
     }
 

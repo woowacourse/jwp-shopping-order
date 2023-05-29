@@ -28,8 +28,12 @@ public class MemberCoupon {
         return new MemberCoupon(id, member, coupon, true);
     }
 
-    public OrderPrice calculatePrice(final OrderPrice orderPrice) {
+    public TotalPrice calculatePrice(final TotalPrice orderPrice) {
         return coupon.apply(orderPrice);
+    }
+
+    public TotalPrice calculateDiscountedPrice(final TotalPrice orderPrice) {
+        return coupon.calculateDiscountedPrice(orderPrice);
     }
 
     public Long getId() {

@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.OrderPrice;
+import cart.domain.TotalPrice;
 import cart.domain.coupon.discountCondition.DiscountCondition;
 import cart.domain.coupon.discountPolicy.DiscountPolicy;
 
@@ -18,11 +18,15 @@ public class Coupon {
         this.discountCondition = discountCondition;
     }
 
-    public OrderPrice apply(final OrderPrice orderPrice) {
+    public TotalPrice apply(final TotalPrice orderPrice) {
         if (discountCondition.isCondition(orderPrice)) {
             return discountPolicy.discount(orderPrice);
         }
         return orderPrice;
+    }
+
+    public TotalPrice calculateDiscountedPrice(final TotalPrice totalPrice) {
+        return totalPrice.subOrderPrice(discountPolicy.discount(totalPrice));
     }
 
     public Long getId() {
@@ -40,4 +44,5 @@ public class Coupon {
     public DiscountCondition getDiscountCondition() {
         return discountCondition;
     }
+
 }

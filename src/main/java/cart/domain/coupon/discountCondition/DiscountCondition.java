@@ -1,10 +1,10 @@
 package cart.domain.coupon.discountCondition;
 
-import cart.domain.OrderPrice;
+import cart.domain.TotalPrice;
 
 public interface DiscountCondition {
 
-    boolean isCondition(final OrderPrice orderPrice);
+    boolean isCondition(final TotalPrice orderPrice);
 
     long getMinimumPrice();
 }

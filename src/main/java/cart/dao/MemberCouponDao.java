@@ -62,4 +62,13 @@ public class MemberCouponDao {
         String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
+
+    public Optional<MemberCouponEntity> findById(final Long id) {
+        String sql = "SELECT * FROM member_coupon WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
 }

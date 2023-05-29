@@ -1,16 +1,9 @@
 package cart.dto;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.discountPolicy.PolicyType;
 
 public class CouponResponse {
-//    				"id": 1,
-//                            "name": "생일 쿠폰"
-//                            "type": "percent"
-//                            "discountPrice": 0,
-//                            "discountPercent": 10,
-//                            "discountDeliveryFee": false,
-//                            "minimumPrice": 0
+
     private final Long id;
     private final String name;
     private final String type;
