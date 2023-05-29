@@ -1,4 +1,4 @@
-package cart.integration;
+package cart.acceptance;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CartItemIntegrationTest extends IntegrationTest {
+public class CartItemAcceptanceTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;

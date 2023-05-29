@@ -1,4 +1,4 @@
-package cart.integration;
+package cart.acceptance;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestContext;

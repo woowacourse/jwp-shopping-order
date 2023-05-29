@@ -1,4 +1,4 @@
-package cart.integration;
+package cart.acceptance;
 
 import cart.dto.CouponIssueRequest;
 import io.restassured.response.ExtractableResponse;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class CouponIntegrationTest extends IntegrationTest {
+public class CouponAcceptanceTest extends IntegrationTest {
 
     /**
      * given 쿠폰 ID와 사용자 정보를 가지고

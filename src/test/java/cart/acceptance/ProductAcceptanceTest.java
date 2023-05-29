@@ -1,4 +1,4 @@
-package cart.integration;
+package cart.acceptance;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProductIntegrationTest extends IntegrationTest {
+public class ProductAcceptanceTest extends IntegrationTest {
 
     @Test
     public void getProducts() {

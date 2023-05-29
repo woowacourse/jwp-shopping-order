@@ -1,4 +1,4 @@
-package cart.integration;
+package cart.acceptance;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
