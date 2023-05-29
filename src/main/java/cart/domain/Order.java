@@ -1,24 +1,26 @@
 package cart.domain;
 
-import java.util.Map;
+import java.util.List;
 
 public class Order {
 
     private Long id;
+    private int savedPoint;
     private final int usedPoint;
-    private final Map<Product, Integer> products;
+    private final List<OrderItem> productCounts;
     private final Member member;
 
-    public Order(int usedPoint, Map<Product, Integer> products, Member member) {
+    public Order(int usedPoint, List<OrderItem> productCounts, Member member) {
         this.usedPoint = usedPoint;
-        this.products = products;
+        this.productCounts = productCounts;
         this.member = member;
     }
 
-    public Order(Long id, int usedPoint, Map<Product, Integer> products, Member member) {
+    public Order(Long id, int savedPoint, int usedPoint, List<OrderItem> productCounts, Member member) {
         this.id = id;
+        this.savedPoint = savedPoint;
         this.usedPoint = usedPoint;
-        this.products = products;
+        this.productCounts = productCounts;
         this.member = member;
     }
 
@@ -26,12 +28,16 @@ public class Order {
         return id;
     }
 
+    public int getSavedPoint() {
+        return savedPoint;
+    }
+
     public int getUsedPoint() {
         return usedPoint;
     }
 
-    public Map<Product, Integer> getProducts() {
-        return products;
+    public List<OrderItem> getProductCounts() {
+        return productCounts;
     }
 
     public Member getMember() {
