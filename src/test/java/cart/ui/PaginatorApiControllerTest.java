@@ -37,7 +37,7 @@ import cart.domain.Member;
     @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class)})
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class OrdersApiControllerTest {
+class PaginatorApiControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String encodedAuth = Base64.getEncoder()

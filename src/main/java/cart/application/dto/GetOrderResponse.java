@@ -1,7 +1,15 @@
 package cart.application.dto;
 
-import java.time.LocalDateTime;
+import static java.util.stream.Collectors.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import cart.domain.Order;
+import cart.domain.Product;
+import cart.domain.QuantityAndProduct;
+
+// TODO: 주문 상태 관련
 public class GetOrderResponse {
 
     private final Long orderId;
@@ -20,6 +28,20 @@ public class GetOrderResponse {
         this.productName = productName;
         this.productImageUrl = productImageUrl;
         this.totalProductCount = totalProductCount;
+    }
+
+    public static List<GetOrderResponse> from(List<Order> orders) {
+        return orders.stream()
+            .map(order -> {
+                List<QuantityAndProduct> quantityAndProducts = order.getProducts();
+                int totalProductCount = (int) quantityAndProducts.stream()
+                    .mapToInt(QuantityAndProduct::getQuantity)
+                    .count();
+                Product representative = quantityAndProducts.get(0).getProduct();
+                return new GetOrderResponse(order.getOrderId(), order.getPayAmount(), order.getOrderAt(),
+                    representative.getName(), representative.getImageUrl(), totalProductCount);
+            })
+            .collect(toList());
     }
 
     public Long getOrderId() {
