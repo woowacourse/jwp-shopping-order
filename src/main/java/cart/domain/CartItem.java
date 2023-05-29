@@ -5,18 +5,16 @@ import cart.exception.CartItemException;
 public class CartItem {
     private final Product product;
     private final Member member;
-    private Long id;
-    private int quantity;
+    private final Long id;
+    private final Quantity quantity;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
+        this(null, 0, product, member);
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
         this.id = id;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
         this.product = product;
         this.member = member;
     }
@@ -34,7 +32,7 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 
     public void checkOwner(Member member) {
@@ -43,7 +41,7 @@ public class CartItem {
         }
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+    public CartItem changeQuantity(int quantity) {
+        return new CartItem(id, quantity, product, member);
     }
 }
