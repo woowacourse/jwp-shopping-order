@@ -6,7 +6,7 @@ public final class Money {
 
     public static final Money ZERO = new Money(0);
     private static final int MIN_VALUE = 0;
-    
+
     private final long value;
 
     public Money(long value) {
@@ -30,6 +30,14 @@ public final class Money {
 
     public Money subtractAmountByPercentage(int percentage) {
         return new Money(value - (value * percentage / 100));
+    }
+
+    public Money add(Money money) {
+        return new Money(value + money.value);
+    }
+
+    public boolean isBiggerThan(Money money) {
+        return value > money.value;
     }
 
     @Override
