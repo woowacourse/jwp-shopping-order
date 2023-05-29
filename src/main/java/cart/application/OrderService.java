@@ -6,11 +6,14 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
 import cart.domain.Product;
+import cart.dto.OrderPreviewResponse;
 import cart.dto.OrderResponse;
 import cart.dto.ProductInOrderResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.NoSuchDataExistException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +42,21 @@ public class OrderService {
         return toOrderResponse(order, productInOrderResponses);
     }
 
+    public List<OrderPreviewResponse> findAllOrdersByMember(final Member member) {
+        final Map<Order, List<OrderProduct>> ordersWithProduct = orderProductDao.findByMemberId(member.getId())
+                .stream()
+                .collect(Collectors.groupingBy(OrderProduct::getOrder));
+
+        final List<OrderPreviewResponse> results = new ArrayList<>();
+        for (final Order order : ordersWithProduct.keySet()) {
+            final List<OrderProduct> orderProducts = ordersWithProduct.get(order);
+            final Product mainProduct = orderProducts.get(0).getProduct();
+            results.add(toOrderPreviewResponse(order, orderProducts.size() - 1, mainProduct));
+        }
+
+        return results;
+    }
+
     private ProductInOrderResponse toProductInOrderResponse(final OrderProduct orderProduct) {
         final Product product = orderProduct.getProduct();
         return new ProductInOrderResponse(
@@ -52,5 +70,20 @@ public class OrderService {
 
     private OrderResponse toOrderResponse(final Order order, final List<ProductInOrderResponse> productsResponses) {
         return new OrderResponse(order.getTotalPrice(), order.getFinalPrice(), productsResponses);
+    }
+
+    private OrderPreviewResponse toOrderPreviewResponse(
+            final Order order,
+            final int extraProductCount,
+            final Product mainProduct
+    ) {
+        return new OrderPreviewResponse(
+                order.getId(),
+                mainProduct.getName(),
+                mainProduct.getImageUrl(),
+                extraProductCount,
+                order.getCreatedAt(),
+                order.getFinalPrice()
+        );
     }
 }
