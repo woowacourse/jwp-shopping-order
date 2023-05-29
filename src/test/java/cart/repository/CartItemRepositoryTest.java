@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
 import cart.repository.mapper.MemberMapper;
@@ -23,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RepositoryTest
 class CartItemRepositoryTest {
 
-    private MemberEntity member;
+    private Member member;
     private Product product;
     private CartItem cartItem;
 
@@ -38,17 +39,18 @@ class CartItemRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        member = new MemberEntity("a@a.com", "password1", 10);
-        Long memberId = memberDao.addMember(member);
-        member = member.assignId(memberId);
+        MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
+        Long memberId = memberDao.addMember(memberEntity);
+        member = MemberMapper.toDomain(memberEntity);
+        member.assignId(memberId);
 
         product = new Product("치킨", 10000, "http://chicken.com");
         Long productId = productRepository.createProduct(product);
-        product = product.assignId(productId);
+        product.assignId(productId);
 
-        cartItem = new CartItem(MemberMapper.toDomain(member).assignId(memberId), product.assignId(productId));
+        cartItem = new CartItem(member, product);
         Long cartItemId = cartItemRepository.save(cartItem);
-        cartItem = cartItem.assignId(cartItemId);
+        cartItem.assignId(cartItemId);
     }
 
     @Test
@@ -56,14 +58,15 @@ class CartItemRepositoryTest {
     void findByMemberId() {
         Product otherProduct = new Product("피자", 20000, "http://pizza.com");
         Long otherProductId = productRepository.createProduct(otherProduct);
-        otherProduct = otherProduct.assignId(otherProductId);
+        otherProduct.assignId(otherProductId);
 
         MemberEntity otherMember = new MemberEntity("b@b.com", "password2", 20);
         Long otherMemberId = memberDao.addMember(otherMember);
         otherMember = otherMember.assignId(otherMemberId);
 
-        CartItem myCartItem = new CartItem(MemberMapper.toDomain(member), otherProduct);
+        CartItem myCartItem = new CartItem(member, otherProduct);
         Long myCartItemId = cartItemRepository.save(myCartItem);
+        myCartItem.assignId(myCartItemId);
         CartItem otherCartItem = new CartItem(MemberMapper.toDomain(otherMember), otherProduct);
         cartItemRepository.save(otherCartItem);
 
@@ -76,7 +79,7 @@ class CartItemRepositoryTest {
                         .isEqualTo(cartItem),
                 () -> assertThat(result.get(1)).usingRecursiveComparison()
                         .ignoringFieldsOfTypes(LocalDateTime.class)
-                        .isEqualTo(myCartItem.assignId(myCartItemId))
+                        .isEqualTo(myCartItem)
         );
     }
 
@@ -148,12 +151,14 @@ class CartItemRepositoryTest {
     void save() {
         Product newProduct = new Product("피자", 20000, "http://pizza.com");
         Long newProductId = productRepository.createProduct(newProduct);
-        CartItem newCartItem = new CartItem(MemberMapper.toDomain(member), newProduct.assignId(newProductId));
+        newProduct.assignId(newProductId);
+        CartItem newCartItem = new CartItem(member, newProduct);
 
         Long newCartItemId = cartItemRepository.save(newCartItem);
 
+        newCartItem.assignId(newCartItemId);
         CartItem result = cartItemRepository.findById(newCartItemId);
-        assertThat(result).usingRecursiveComparison().isEqualTo(newCartItem.assignId(newCartItemId));
+        assertThat(result).usingRecursiveComparison().isEqualTo(newCartItem);
     }
 
     @Test

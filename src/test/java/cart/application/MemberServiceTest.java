@@ -29,15 +29,15 @@ class MemberServiceTest {
         Member memberB = new Member("b@b.com", "password2", 0);
         Long memberIdA = memberDao.addMember(MemberMapper.toEntity(memberA));
         Long memberIdB = memberDao.addMember(MemberMapper.toEntity(memberB));
+        memberA.assignId(memberIdA);
+        memberB.assignId(memberIdB);
 
         List<MemberResponse> response = memberService.getAllMembers();
 
         assertAll(
                 () -> assertThat(response).hasSize(2),
-                () -> assertThat(response.get(0)).usingRecursiveComparison()
-                        .isEqualTo(MemberResponse.from(memberA.assignId(memberIdA))),
-                () -> assertThat(response.get(1)).usingRecursiveComparison()
-                        .isEqualTo(MemberResponse.from(memberB.assignId(memberIdB)))
+                () -> assertThat(response.get(0)).usingRecursiveComparison().isEqualTo(MemberResponse.from(memberA)),
+                () -> assertThat(response.get(1)).usingRecursiveComparison().isEqualTo(MemberResponse.from(memberB))
         );
     }
 

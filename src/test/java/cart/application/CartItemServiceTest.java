@@ -46,15 +46,16 @@ class CartItemServiceTest {
     void setUp() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
         Long memberId = memberDao.addMember(memberEntity);
-        member = MemberMapper.toDomain(memberEntity).assignId(memberId);
+        member = MemberMapper.toDomain(memberEntity);
+        member.assignId(memberId);
 
         product = new Product("치킨", 13000, "http://chicken.com");
         Long productId = productRepository.createProduct(product);
-        product = product.assignId(productId);
+        product.assignId(productId);
 
         cartItem = new CartItem(member, product);
         Long cartItemId = cartItemRepository.save(cartItem);
-        cartItem = cartItem.assignId(cartItemId);
+        cartItem.assignId(cartItemId);
     }
 
     @Test
@@ -62,16 +63,18 @@ class CartItemServiceTest {
     void findByMember() {
         Product newProduct = new Product("피자", 20000, "http://pizza.com");
         Long newProductId = productRepository.createProduct(newProduct);
+        newProduct.assignId(newProductId);
 
-        CartItem newCartItem = new CartItem(member, newProduct.assignId(newProductId));
+        CartItem newCartItem = new CartItem(member, newProduct);
         Long newCartItemId = cartItemRepository.save(newCartItem);
+        newCartItem.assignId(newCartItemId);
 
         List<CartItemResponse> result = cartItemService.findByMember(member);
 
         assertThat(result).usingRecursiveComparison().isEqualTo(
                 List.of(
                         CartItemResponse.from(cartItem),
-                        CartItemResponse.from(newCartItem.assignId(newCartItemId))
+                        CartItemResponse.from(newCartItem)
                 )
         );
     }
@@ -111,12 +114,11 @@ class CartItemServiceTest {
         void notOwner() {
             MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 0);
             Long newMemberId = memberDao.addMember(newMemberEntity);
+            Member newMember = MemberMapper.toDomain(newMemberEntity);
+            newMember.assignId(newMemberId);
 
             assertThatThrownBy(
-                    () -> cartItemService.updateQuantity(
-                            MemberMapper.toDomain(newMemberEntity).assignId(newMemberId),
-                            cartItem.getId(),
-                            new CartItemQuantityUpdateRequest(10)))
+                    () -> cartItemService.updateQuantity(newMember, cartItem.getId(), new CartItemQuantityUpdateRequest(10)))
                     .isInstanceOf(CartItemException.class)
                     .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
         }
@@ -158,9 +160,10 @@ class CartItemServiceTest {
         void notOwner() {
             MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 0);
             Long newMemberId = memberDao.addMember(newMemberEntity);
+            Member newMember = MemberMapper.toDomain(newMemberEntity);
+            newMember.assignId(newMemberId);
 
-            assertThatThrownBy(
-                    () -> cartItemService.remove(MemberMapper.toDomain(newMemberEntity).assignId(newMemberId), cartItem.getId()))
+            assertThatThrownBy(() -> cartItemService.remove(newMember, cartItem.getId()))
                     .isInstanceOf(CartItemException.class)
                     .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
         }

@@ -4,10 +4,13 @@ import cart.domain.member.Member;
 
 public class MemberResponse {
 
-    private final Long id;
-    private final String email;
-    private final String password;
-    private final int point;
+    private Long id;
+    private String email;
+    private String password;
+    private int point;
+
+    private MemberResponse() {
+    }
 
     private MemberResponse(Long id, String email, String password, int point) {
         this.id = id;

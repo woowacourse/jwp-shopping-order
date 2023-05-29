@@ -28,14 +28,17 @@ class ProductRepositoryTest {
         Long productIdA = productRepository.createProduct(productA);
         Long productIdB = productRepository.createProduct(productB);
         Long productIdC = productRepository.createProduct(productC);
+        productA.assignId(productIdA);
+        productB.assignId(productIdB);
+        productC.assignId(productIdC);
 
         List<Product> result = productRepository.getAllProducts();
 
         assertAll(
                 () -> assertThat(result).hasSize(3),
-                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(productA.assignId(productIdA)),
-                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(productB.assignId(productIdB)),
-                () -> assertThat(result.get(2)).usingRecursiveComparison().isEqualTo(productC.assignId(productIdC))
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(productA),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(productB),
+                () -> assertThat(result.get(2)).usingRecursiveComparison().isEqualTo(productC)
         );
     }
 
@@ -81,10 +84,11 @@ class ProductRepositoryTest {
         void getProduct() {
             Product product = new Product("치킨", 10000, "http://chicken.com");
             Long savedProductId = productRepository.createProduct(product);
+            product.assignId(savedProductId);
 
             Product result = productRepository.getProductById(savedProductId);
 
-            assertThat(result).usingRecursiveComparison().isEqualTo(product.assignId(savedProductId));
+            assertThat(result).usingRecursiveComparison().isEqualTo(product);
         }
     }
 }

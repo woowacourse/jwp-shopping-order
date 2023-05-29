@@ -29,7 +29,7 @@ class ProductServiceTest {
     void setUp() {
         product = new Product("치킨", 10000, "http://chicken.com");
         Long productId = productRepository.createProduct(product);
-        product = product.assignId(productId);
+        product.assignId(productId);
     }
 
     @Test
@@ -37,15 +37,14 @@ class ProductServiceTest {
     void getAllProducts() {
         Product otherProduct = new Product("피자", 13000, "http://pizza.com");
         Long otherProductId = productRepository.createProduct(otherProduct);
+        otherProduct.assignId(otherProductId);
 
         List<ProductResponse> result = productService.getAllProducts();
 
         assertAll(
                 () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0)).usingRecursiveComparison()
-                        .isEqualTo(ProductResponse.from(product)),
-                () -> assertThat(result.get(1)).usingRecursiveComparison()
-                        .isEqualTo(ProductResponse.from(otherProduct.assignId(otherProductId)))
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(ProductResponse.from(product)),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(ProductResponse.from(otherProduct))
         );
 
     }

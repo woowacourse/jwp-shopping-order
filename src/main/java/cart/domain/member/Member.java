@@ -2,10 +2,13 @@ package cart.domain.member;
 
 public class Member {
 
-    private final Long id;
-    private final Email email;
-    private final Password password;
-    private final Point point;
+    private Long id;
+    private Email email;
+    private Password password;
+    private Point point;
+
+    private Member() {
+    }
 
     public Member(String email, String password, int point) {
         this(null, email, password, point);
@@ -18,15 +21,8 @@ public class Member {
         this.point = new Point(point);
     }
 
-    private Member(Long id, Email email, Password password, Point point) {
+    public void assignId(Long id) {
         this.id = id;
-        this.email = email;
-        this.password = password;
-        this.point = point;
-    }
-
-    public Member assignId(Long id) {
-        return new Member(id, email, password, point);
     }
 
     public Long getId() {
