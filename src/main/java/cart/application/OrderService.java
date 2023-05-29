@@ -52,10 +52,10 @@ public class OrderService {
 
         final List<CartItem> cartItemsByRequest = toCartItems(member, requests);
 
-        for (final CartItem cartItem : cartItemsByRequest) {
-            final Long id = cartItem.getId();
-            cartItemDao.deleteById(id);
-        }
+        final List<Long> cartItemIds = cartItemsByRequest.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+        cartItemDao.deleteAll(cartItemIds);
 
         final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsByRequest);
         order.validatePoints(member.getPoints());
@@ -114,7 +114,7 @@ public class OrderService {
 
     private void updateMember(final Member member, final Order order) {
         final int savingPoints = order.calculateSavingPoints(order.getPoints());
-        final Member updatedMember = member.updatePoints(savingPoints);
+        final Member updatedMember = member.updatePoints(savingPoints, order.getPoints());
         memberDao.updateMember(updatedMember);
     }
 

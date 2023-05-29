@@ -1,6 +1,7 @@
 package cart.domain;
 
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 public class Order {
     private static final int savingRate = 10;
@@ -23,12 +24,15 @@ public class Order {
 
     public int calculateSavingPoints(final int usedPoints) {
         final int totalPrice = cartItems.stream()
-                .map(CartItem::getProduct)
-                .mapToInt(Product::getPrice)
+                .mapToInt(calculateTotalItemPrice())
                 .sum();
         final int usedMoney = totalPrice - usedPoints;
 
         return usedMoney * savingRate / TOTAL_PORTION;
+    }
+
+    private ToIntFunction<CartItem> calculateTotalItemPrice() {
+        return cartItem -> cartItem.getQuantity() * cartItem.getProduct().getPrice();
     }
 
     public void validatePoints(final int memberPoints) {

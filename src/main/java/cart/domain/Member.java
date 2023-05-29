@@ -18,8 +18,8 @@ public class Member {
         this(id, email, password, ZERO_POINTS);
     }
 
-    public Member updatePoints(final int addedPoints) {
-        final int totalPoints = points + addedPoints;
+    public Member updatePoints(final int addedPoints, final int usedPoints) {
+        final int totalPoints = points + addedPoints - usedPoints;
         return new Member(id, email, password, totalPoints);
     }
 
