@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
+
+    private static final int QUANTITY_MAX = 10;
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -28,20 +31,36 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
+        validateDuplicate(member.getId(), cartItemRequest.getProductId());
         return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    }
+
+    private void validateDuplicate(Long memberId, Long productId) {
+        if (cartItemDao.isExist(memberId, productId)) {
+            throw new IllegalArgumentException("이미 장바구니에 존재하는 상품입니다..");
+        }
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
-        if (request.getQuantity() == 0) {
+        int quantity = request.getQuantity();
+        validateQuantityMax(quantity);
+
+        if (quantity == 0) {
             cartItemDao.deleteById(id);
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
+        cartItem.changeQuantity(quantity);
         cartItemDao.updateQuantity(cartItem);
+    }
+
+    private void validateQuantityMax(int quantity) {
+        if (quantity > QUANTITY_MAX) {
+            throw new IllegalArgumentException("장바구니에 담을 수 있는 최대 수량은 10개입니다.");
+        }
     }
 
     public void remove(Member member, Long id) {
