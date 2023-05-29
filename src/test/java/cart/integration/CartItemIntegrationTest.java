@@ -74,7 +74,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        final Member illegalMember = new Member(member1.getId(), member1.getEmail(), member1.getPassword() + "asdf");
+        final Member illegalMember = new Member(member1.getId(), member1.getEmail(), member1.getPassword() + "asdf", member1.getPoint());
         final CartItemRequest cartItemRequest = new CartItemRequest(product1.getId());
         final ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 

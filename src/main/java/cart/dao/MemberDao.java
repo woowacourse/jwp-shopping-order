@@ -16,7 +16,8 @@ public class MemberDao {
     private static final RowMapper<Member> MEMBER_MAPPER = (rs, rowNum) -> new Member(
             rs.getLong("id"),
             rs.getString("email"),
-            rs.getString("password")
+            rs.getString("password"),
+            rs.getInt("point")
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -30,12 +31,12 @@ public class MemberDao {
     }
 
     public Member getMemberById(final Long id) {
-        final String sql = "SELECT id, email, password FROM member WHERE id = ?";
+        final String sql = "SELECT id, email, password, point FROM member WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, MEMBER_MAPPER, id);
     }
 
     public Member getMemberByEmail(final String email) {
-        final String sql = "SELECT * FROM member WHERE email = ?";
+        final String sql = "SELECT id, email, password, point FROM member WHERE email = ?";
         return jdbcTemplate.queryForObject(sql, MEMBER_MAPPER, email);
     }
 
@@ -57,7 +58,7 @@ public class MemberDao {
     }
 
     public List<Member> getAllMembers() {
-        final String sql = "SELECT * from member";
+        final String sql = "SELECT id, email, password, point from member";
         return jdbcTemplate.query(sql, MEMBER_MAPPER);
     }
 }

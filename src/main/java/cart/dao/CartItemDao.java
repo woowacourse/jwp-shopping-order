@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public class CartItemDao {
     private static final RowMapper<CartItem> CART_ITEM_MAPPER = (rs, rowNum) -> {
-        final Member member = new Member(rs.getLong("member_id"), null, null);
+        final Member member = new Member(rs.getLong("member_id"), null, null, null);
         final Product product = new Product(
                 rs.getLong("id"),
                 rs.getString("name"),
