@@ -13,6 +13,23 @@ public class CartItem {
         this(null, quantity, product, member);
     }
 
+    public CartItem(final Long id, final int quantity, final Product product, final Member member) {
+        this.id = id;
+        this.quantity = quantity;
+        this.product = product;
+        this.member = member;
+    }
+
+    public void checkOwner(final Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new CartItemException.IllegalMember(this, member);
+        }
+    }
+
+    public void changeQuantity(final int quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -32,13 +49,6 @@ public class CartItem {
         return Objects.hash(getId(), getQuantity(), getProduct(), getMember());
     }
 
-    public CartItem(final Long id, final int quantity, final Product product, final Member member) {
-        this.id = id;
-        this.quantity = quantity;
-        this.product = product;
-        this.member = member;
-    }
-
     public Long getId() {
         return id;
     }
@@ -53,15 +63,5 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public void checkOwner(final Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
-    }
-
-    public void changeQuantity(final int quantity) {
-        this.quantity = quantity;
     }
 }
