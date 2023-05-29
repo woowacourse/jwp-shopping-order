@@ -1,6 +1,6 @@
-package cart.infrastructure.repository.dao;
+package cart.persistence.dao;
 
-import cart.infrastructure.entity.ProductEntity;
+import cart.persistence.entity.ProductEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;

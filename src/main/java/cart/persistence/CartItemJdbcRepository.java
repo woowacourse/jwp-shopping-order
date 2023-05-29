@@ -1,4 +1,4 @@
-package cart.infrastructure.repository;
+package cart.persistence;
 
 import cart.application.mapper.CartItemMapper;
 import cart.application.mapper.ProductMapper;
@@ -7,11 +7,11 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.exception.ProductNotFoundException;
-import cart.infrastructure.entity.CartItemEntity;
-import cart.infrastructure.entity.ProductEntity;
-import cart.infrastructure.repository.dao.CartItemDao;
-import cart.infrastructure.repository.dao.MemberDao;
-import cart.infrastructure.repository.dao.ProductDao;
+import cart.persistence.dao.CartItemDao;
+import cart.persistence.dao.MemberDao;
+import cart.persistence.dao.ProductDao;
+import cart.persistence.entity.CartItemEntity;
+import cart.persistence.entity.ProductEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

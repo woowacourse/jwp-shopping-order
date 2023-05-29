@@ -1,6 +1,7 @@
-package cart.infrastructure.entity;
+package cart.persistence.entity;
 
 public class MemberEntity {
+
     private Long id;
     private String email;
     private String password;

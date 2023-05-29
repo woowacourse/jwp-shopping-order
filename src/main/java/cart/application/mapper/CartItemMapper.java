@@ -1,7 +1,7 @@
 package cart.application.mapper;
 
 import cart.domain.CartItem;
-import cart.infrastructure.entity.CartItemEntity;
+import cart.persistence.entity.CartItemEntity;
 
 public class CartItemMapper {
 

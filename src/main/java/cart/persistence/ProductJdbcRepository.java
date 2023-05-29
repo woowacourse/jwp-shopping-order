@@ -1,10 +1,10 @@
-package cart.infrastructure.repository;
+package cart.persistence;
 
 import cart.application.mapper.ProductMapper;
 import cart.application.repository.ProductRepository;
 import cart.domain.Product;
-import cart.infrastructure.entity.ProductEntity;
-import cart.infrastructure.repository.dao.ProductDao;
+import cart.persistence.dao.ProductDao;
+import cart.persistence.entity.ProductEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

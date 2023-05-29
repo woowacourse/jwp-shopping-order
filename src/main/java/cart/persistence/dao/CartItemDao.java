@@ -1,7 +1,10 @@
-package cart.infrastructure.repository.dao;
+package cart.persistence.dao;
 
-import cart.domain.CartItem;
-import cart.infrastructure.entity.CartItemEntity;
+import cart.persistence.entity.CartItemEntity;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,13 +13,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
-
 @Repository
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) ->

@@ -1,6 +1,7 @@
-package cart.infrastructure.entity;
+package cart.persistence.entity;
 
 public class ProductEntity {
+
     private Long id;
     private String name;
     private int price;

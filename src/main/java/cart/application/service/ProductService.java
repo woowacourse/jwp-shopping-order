@@ -3,15 +3,12 @@ package cart.application.service;
 import cart.application.mapper.ProductMapper;
 import cart.application.repository.ProductRepository;
 import cart.domain.Product;
-import cart.exception.ProductNotFoundException;
-import cart.infrastructure.repository.dao.ProductDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import java.util.Optional;
-import org.springframework.stereotype.Service;
-
+import cart.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {

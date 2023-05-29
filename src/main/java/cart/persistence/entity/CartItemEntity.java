@@ -1,9 +1,7 @@
-package cart.infrastructure.entity;
-
-import cart.exception.CartItemException;
-import java.util.Objects;
+package cart.persistence.entity;
 
 public class CartItemEntity {
+
     private Long id;
     private long memberId;
     private long productId;
