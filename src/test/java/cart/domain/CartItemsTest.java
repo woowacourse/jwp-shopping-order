@@ -36,7 +36,7 @@ class CartItemsTest {
         // when, then
         assertThatThrownBy(() -> new CartItems(Collections.emptyList(), member))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("장바구니 상품이 존재하지 않습니다.");
+                .hasMessage("장바구니 상품이 존재하지 않습니다");
     }
 
 }

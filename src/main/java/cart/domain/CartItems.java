@@ -16,7 +16,7 @@ public class CartItems {
 
     private void validateItemsLength(final List<CartItem> cartItems) {
         if (cartItems.isEmpty()) {
-            throw new IllegalArgumentException("장바구니 상품이 존재하지 않습니다.");
+            throw new IllegalArgumentException("장바구니 상품이 존재하지 않습니다");
         }
     }
 
