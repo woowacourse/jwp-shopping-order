@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS  order_item
     order_id      BIGINT       NOT NULL,
     product_id    BIGINT       NOT NULL,
     product_name  VARCHAR(255) NOT NULL,
+    product_image VARCHAR(255) NOT NULL,
     product_price INT          NOT NULL,
     quantity      INT          NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id)
