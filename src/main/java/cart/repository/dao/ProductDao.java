@@ -1,23 +1,27 @@
 package cart.repository.dao;
 
 import cart.domain.Product;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<Product> getAllProducts() {
@@ -40,6 +44,20 @@ public class ProductDao {
             String imageUrl = rs.getString("image_url");
             boolean isDeleted = rs.getBoolean("is_deleted");
             return new Product(productId, name, price, imageUrl, isDeleted);
+        });
+    }
+
+    public List<Product> getProductByIds(List<Long> productIds) {
+        String sql = "SELECT id, name, price, image_url, is_deleted FROM product WHERE id IN (:ids)";
+
+        Map<String, Object> params = Collections.singletonMap("ids", productIds);
+
+        return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            final Long id = rs.getLong("id");
+            final String name = rs.getString("name");
+            final int price = rs.getInt("price");
+            final String imageUrl = rs.getString("image_url");
+            return new Product(id, name, price, imageUrl);
         });
     }
 
