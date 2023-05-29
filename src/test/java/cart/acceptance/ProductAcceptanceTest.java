@@ -196,6 +196,7 @@ public class ProductAcceptanceTest {
         void success() {
             // given
             Long productId = CHICKEN.ID;
+            String bodyEmpty = "";
 
             // when, then
             Response response = RestAssured.given().log().all()
@@ -204,7 +205,7 @@ public class ProductAcceptanceTest {
                     .extract().response();
 
             // then
-            assertThat(response.getBody().asString()).isEqualTo("");
+            assertThat(response.getBody().asString()).isEqualTo(bodyEmpty);
         }
     }
 

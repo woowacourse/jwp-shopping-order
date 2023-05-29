@@ -105,4 +105,17 @@ class ProductDaoTest {
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("최근 상품이 존재하지 않습니다.");
     }
+
+    @Test
+    @DisplayName("받은 상품 ID에 해당하는 행을 제거한다.")
+    void deleteProduct() {
+        // given
+        Long deleteProductId = 1L;
+
+        // when
+        productDao.deleteProduct(deleteProductId);
+
+        // then
+        assertThat(productDao.isNotExistById(deleteProductId)).isTrue();
+    }
 }

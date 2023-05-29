@@ -2,6 +2,8 @@ package cart.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,5 +50,16 @@ class ProductApiControllerTest {
                         .content(request))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/products/1"));
+    }
+
+    @Test
+    @DisplayName("DELETE /products/{id} URI로 삭제할 상품 ID를 담아서 요청을 보내면 204 NO_CONTENT를 응답한다.")
+    void deleteProduct() throws Exception {
+        // given
+        willDoNothing().given(productService).deleteProduct(1L);
+
+        // when
+        mockMvc.perform(delete("/products/1"))
+                .andExpect(status().isNoContent());
     }
 }

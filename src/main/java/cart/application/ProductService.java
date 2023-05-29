@@ -95,6 +95,7 @@ public class ProductService {
     }
 
     public void deleteProduct(Long productId) {
+        checkProductExist(productId);
         productDao.deleteProduct(productId);
     }
 }
