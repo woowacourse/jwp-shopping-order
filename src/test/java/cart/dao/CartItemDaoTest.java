@@ -100,6 +100,19 @@ public class CartItemDaoTest {
         assertThat(cartItemDao.findById(cartItem.getId())).isEmpty();
     }
 
+    @DisplayName("List<Long> ids에 해당하는 장바구니 상품을 모두 제거할 수 있다.")
+    @Test
+    void deleteByIds() {
+        // given
+        final List<Long> ids = List.of(1L, 2L);
+
+        //when
+        cartItemDao.deleteByIds(ids);
+
+        // when, then
+        assertThat(cartItemDao.findAllByIds(ids)).isEmpty();
+    }
+
     @DisplayName("장바구니 상품의 수량을 변경할 수 있다.")
     @Test
     void updateQuantity() {

@@ -4,6 +4,7 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +14,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,6 +105,21 @@ public class CartItemDao {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByIds(final List<Long> ids) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                ps.setLong(1, ids.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return ids.size();
+            }
+        });
     }
 
     public void updateQuantity(final CartItem cartItem) {

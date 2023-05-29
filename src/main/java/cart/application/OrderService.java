@@ -51,7 +51,7 @@ public class OrderService {
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
         memberDao.update(updatedMember);
 
-        return orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
+        return orderRepository.order(cartItems, updatedMember, new MemberPoint(request.getPoint()));
     }
 
     public OrderDetailResponse getOrderDetail(final Long orderId) {

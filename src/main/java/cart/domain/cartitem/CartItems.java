@@ -46,6 +46,12 @@ public class CartItems {
                 .collect(Collectors.toList());
     }
 
+    public List<Long> getCartItemIds() {
+        return cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+    }
+
     public List<CartItem> getCartItems() {
         return cartItems;
     }

@@ -62,14 +62,13 @@ public class OrderServiceTest {
             private final int quantity1 = 1;
             private final int quantity2 = 2;
             private final int usedPoint = 1000;
-            private Long orderId;
 
             @BeforeEach
             void setUp() {
                 final Long cartItemId1 = cartItemDao.insert(new CartItem(member, product1, quantity1));
                 final Long cartItemId2 = cartItemDao.insert(new CartItem(member, product2, quantity2));
                 final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId1, cartItemId2), usedPoint);
-                orderId = orderService.order(member, orderRequest);
+                final Long orderId = orderService.order(member, orderRequest);
             }
 
             @DisplayName("배송비 3천원을 할인해준다.")
@@ -92,14 +91,13 @@ public class OrderServiceTest {
             private final int quantity1 = 1;
             private final int quantity2 = 1;
             private final int usedPoint = 1000;
-            private Long orderId;
 
             @BeforeEach
             void setUp() {
                 final Long cartItemId1 = cartItemDao.insert(new CartItem(member, product1, quantity1));
                 final Long cartItemId2 = cartItemDao.insert(new CartItem(member, product2, quantity2));
                 final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId1, cartItemId2), usedPoint);
-                orderId = orderService.order(member, orderRequest);
+                orderService.order(member, orderRequest);
             }
 
             @DisplayName("배송비 3천원을 할인해주지 않는다.")
@@ -149,6 +147,19 @@ public class OrderServiceTest {
                         () -> assertThat(orderProducts.get(1).getProductPrice()).isEqualTo(new ProductPrice(20000)),
                         () -> assertThat(orderProducts.get(1).getProductImageUrlValue()).startsWith("https://images.unsplash.com/photo-1512621776951-a57141f2eefd"),
                         () -> assertThat(orderProducts.get(1).getQuantity()).isEqualTo(new Quantity(4))
+                );
+            }
+
+            @DisplayName("장바구니에 있었던 상품은 제거된다.")
+            @Test
+            void cart_items_are_deleted() {
+                // given
+                final List<CartItem> cartItems = cartItemDao.findAllByMemberId(member.getId());
+
+                // when, then
+                assertThat(cartItems).doesNotContain(
+                        new CartItem(1L, null, null, 0),
+                        new CartItem(2L, null, null, 0)
                 );
             }
         }
