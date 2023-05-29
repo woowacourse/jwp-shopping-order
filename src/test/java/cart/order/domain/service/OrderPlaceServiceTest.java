@@ -7,17 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.doNothing;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.times;
 
 import cart.cartitem.domain.CartItem;
+import cart.cartitem.domain.CartItemRepository;
 import cart.common.execption.BaseExceptionType;
 import cart.member.domain.Member;
-import cart.order.domain.Order;
-import cart.order.domain.OrderItem;
+import cart.order.domain.OrderRepository;
 import cart.order.domain.OrderValidator;
 import cart.order.exception.OrderException;
 import cart.product.domain.Product;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -34,6 +36,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class OrderPlaceServiceTest {
 
     @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
+    private CartItemRepository cartItemRepository;
+
+    @Mock
     private OrderValidator orderValidator;
 
     @InjectMocks
@@ -43,18 +51,18 @@ class OrderPlaceServiceTest {
     void 장바구니_상품을_주문한다() {
         // given
         doNothing().when(orderValidator).validate(eq(1L), any());
+        given(orderRepository.save(any())).willReturn(1L);
         Product product = new Product(1L, "말랑", 1000, "image");
         Member member = new Member(1L, "email", "1234");
         CartItem cartItem = new CartItem(2L, 10, product, member);
 
         // when
-        Order order = orderPlaceService.placeOrder(member.getId(), of(cartItem));
+        Long id = orderPlaceService.placeOrder(member.getId(), of(cartItem));
 
         // then
-        List<OrderItem> orderItems = of(new OrderItem(10, 1L, "말랑", 1000, "image"));
-        assertThat(order.getOrderItems()).usingRecursiveComparison()
-                .ignoringExpectedNullFields()
-                .isEqualTo(orderItems);
+        assertThat(id).isEqualTo(1L);
+        then(cartItemRepository).should(times(1))
+                .deleteById(any());
     }
 
     @Test

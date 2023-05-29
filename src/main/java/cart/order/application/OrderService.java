@@ -3,7 +3,6 @@ package cart.order.application;
 import cart.cartitem.domain.CartItem;
 import cart.cartitem.domain.CartItemRepository;
 import cart.order.application.dto.PlaceOrderCommand;
-import cart.order.domain.Order;
 import cart.order.domain.OrderRepository;
 import cart.order.domain.service.OrderPlaceService;
 import java.util.List;
@@ -33,8 +32,6 @@ public class OrderService {
         List<CartItem> cartItems = command.getCartItemIds().stream()
                 .map(cartItemRepository::findById)
                 .collect(Collectors.toList());
-        // TODO  생성 이후 장바구니 비워주기
-        Order order = orderPlaceService.placeOrder(command.getMemberId(), cartItems);
-        return orderRepository.save(order);
+        return orderPlaceService.placeOrder(command.getMemberId(), cartItems);
     }
 }

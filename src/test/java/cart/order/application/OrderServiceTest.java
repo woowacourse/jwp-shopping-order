@@ -6,9 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 import cart.cartitem.domain.CartItem;
 import cart.cartitem.domain.CartItemRepository;
@@ -34,7 +36,8 @@ class OrderServiceTest {
     private final OrderRepository orderRepository = mock(OrderRepository.class);
     private final CartItemRepository cartItemRepository = mock(CartItemRepository.class);
     private final OrderValidator orderValidator = mock(OrderValidator.class);
-    private final OrderPlaceService orderPlaceService = new OrderPlaceService(orderValidator);
+    private final OrderPlaceService orderPlaceService =
+            new OrderPlaceService(orderRepository, cartItemRepository, orderValidator);
 
     private final OrderService orderService = new OrderService(orderRepository, orderPlaceService, cartItemRepository);
 
@@ -77,5 +80,31 @@ class OrderServiceTest {
 
         // then
         assertThat(baseExceptionType).isEqualTo(MISMATCH_PRODUCT);
+    }
+
+    @Test
+    void 주문_이후_장바구니를_비운다() {
+        // given
+        doNothing().when(orderValidator).validate(eq(1L), any());
+        PlaceOrderCommand command = new PlaceOrderCommand(1L, List.of(
+                1L, 2L
+        ));
+        Product product1 = new Product("말랑", 1000, "image");
+        Product product2 = new Product("코코닥", 2000, "image2");
+        Member member = new Member(1L, "email", "1234");
+        CartItem cartItem1 = new CartItem(product1, member);
+        CartItem cartItem2 = new CartItem(product2, member);
+        given(cartItemRepository.findById(1L)).willReturn(cartItem1);
+        given(cartItemRepository.findById(2L)).willReturn(cartItem2);
+        given(orderRepository.save(any())).willReturn(1L);
+
+        // when
+        Long place = orderService.place(command);
+
+        // then
+        assertThat(place).isEqualTo(1L);
+        then(cartItemRepository)
+                .should(times(2))
+                .deleteById(any());
     }
 }

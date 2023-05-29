@@ -1,6 +1,7 @@
 package cart.acceptance.order;
 
 import static cart.acceptance.cartitem.CartItemSteps.장바구니_상품_수량_변경_요청;
+import static cart.acceptance.cartitem.CartItemSteps.장바구니_상품_전체_조회_요청;
 import static cart.acceptance.cartitem.CartItemSteps.장바구니_상품_추가_요청;
 import static cart.acceptance.common.CommonAcceptanceSteps.생성된_ID;
 import static cart.acceptance.common.CommonAcceptanceSteps.응답을_검증한다;
@@ -14,6 +15,7 @@ import static cart.acceptance.order.OrderSteps.주문들_정보;
 import static cart.acceptance.order.OrderSteps.주문들_정보_검증;
 import static cart.acceptance.order.OrderSteps.회원의_주문_정보_조회_요청;
 import static cart.acceptance.product.ProductSteps.상품_생성_요청;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.acceptance.AcceptanceTest;
 import cart.member.domain.Member;
@@ -60,6 +62,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         // then
         응답을_검증한다(응답, 정상_생성);
+        assertThat(장바구니_상품_전체_조회_요청(회원)).isEmpty();
     }
 
     @Test
