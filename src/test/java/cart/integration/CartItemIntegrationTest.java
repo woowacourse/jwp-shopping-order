@@ -1,6 +1,6 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
+import cart.infrastructure.repository.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;

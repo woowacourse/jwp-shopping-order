@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.application.ProductService;
+import cart.application.service.ProductService;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.springframework.http.HttpStatus;

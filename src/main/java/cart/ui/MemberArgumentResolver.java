@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.exception.AuthenticationException;
-import cart.dao.MemberDao;
+import cart.infrastructure.repository.dao.MemberDao;
 import cart.domain.Member;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;

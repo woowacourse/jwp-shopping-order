@@ -1,12 +1,16 @@
-package cart.application;
+package cart.application.service;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
+import cart.application.repository.ProductRepository;
+import cart.domain.Product;
+import cart.exception.ProductNotFoundException;
+import cart.infrastructure.repository.dao.CartItemDao;
+import cart.infrastructure.repository.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +18,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
-    private final ProductDao productDao;
+
+    private final ProductRepository productRepository;
     private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
+    public CartItemService(final ProductRepository productRepository, final CartItemDao cartItemDao) {
+        this.productRepository = productRepository;
         this.cartItemDao = cartItemDao;
     }
 
@@ -28,7 +33,9 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Product product = productRepository.findById(cartItemRequest.getProductId())
+                .orElseThrow(ProductNotFoundException::new);
+        return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

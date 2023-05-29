@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.infrastructure.repository.dao;
 
 import cart.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
