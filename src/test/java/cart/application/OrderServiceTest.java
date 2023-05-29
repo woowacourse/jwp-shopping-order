@@ -65,8 +65,8 @@ public class OrderServiceTest {
 
             @BeforeEach
             void setUp() {
-                final Long cartItemId1 = cartItemDao.save(new CartItem(member, product1, quantity1));
-                final Long cartItemId2 = cartItemDao.save(new CartItem(member, product2, quantity2));
+                final Long cartItemId1 = cartItemDao.insert(new CartItem(member, product1, quantity1));
+                final Long cartItemId2 = cartItemDao.insert(new CartItem(member, product2, quantity2));
                 final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId1, cartItemId2), usedPoint);
                 orderId = orderService.order(member, orderRequest);
             }
@@ -95,8 +95,8 @@ public class OrderServiceTest {
 
             @BeforeEach
             void setUp() {
-                final Long cartItemId1 = cartItemDao.save(new CartItem(member, product1, quantity1));
-                final Long cartItemId2 = cartItemDao.save(new CartItem(member, product2, quantity2));
+                final Long cartItemId1 = cartItemDao.insert(new CartItem(member, product1, quantity1));
+                final Long cartItemId2 = cartItemDao.insert(new CartItem(member, product2, quantity2));
                 final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId1, cartItemId2), usedPoint);
                 orderId = orderService.order(member, orderRequest);
             }

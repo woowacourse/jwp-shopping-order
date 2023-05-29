@@ -4,6 +4,7 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.exception.CartItemNotFoundException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -11,12 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
@@ -41,10 +40,11 @@ public class CartItemDaoTest {
         final CartItem cartItem = new CartItem(member, product, 3);
 
         // when
-        final Long cartItemId = cartItemDao.save(cartItem);
+        final Long cartItemId = cartItemDao.insert(cartItem);
 
         // then
-        final CartItem findCartItem = cartItemDao.findById(cartItemId);
+        final CartItem findCartItem = cartItemDao.findById(cartItemId)
+                .orElseThrow(() -> new CartItemNotFoundException(cartItemId));
         assertAll(
                 () -> assertThat(findCartItem.getMember()).isEqualTo(member),
                 () -> assertThat(findCartItem.getProduct()).isEqualTo(product),
@@ -76,7 +76,7 @@ public class CartItemDaoTest {
     @Test
     void getCartItemsByIds() {
         // given, when
-        final List<CartItem> cartItems = cartItemDao.getCartItemsByIds(List.of(1L, 2L, 3L));
+        final List<CartItem> cartItems = cartItemDao.findAllByIds(List.of(1L, 2L, 3L));
 
         // then
         assertAll(
@@ -91,28 +91,27 @@ public class CartItemDaoTest {
     @Test
     void deleteById() {
         // given
-        final CartItem cartItem = cartItemDao.findById(1L);
+        final CartItem cartItem = cartItemDao.findById(1L).orElseThrow(CartItemNotFoundException::new);
 
         // when
-        cartItemDao.deleteById(cartItem.getId());
+        cartItemDao.delete(cartItem.getId());
 
         // then
-        assertThatThrownBy(() -> cartItemDao.findById(cartItem.getId()))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(cartItemDao.findById(cartItem.getId())).isEmpty();
     }
 
     @DisplayName("장바구니 상품의 수량을 변경할 수 있다.")
     @Test
     void updateQuantity() {
         // given
-        final CartItem cartItem = cartItemDao.findById(1L);
+        final CartItem cartItem = cartItemDao.findById(1L).orElseThrow(CartItemNotFoundException::new);
 
         // when
         final CartItem updateCartItem = new CartItem(cartItem.getId(), cartItem.getMember(), cartItem.getProduct(), 5);
         cartItemDao.updateQuantity(updateCartItem);
 
         // then
-        final CartItem result = cartItemDao.findById(1L);
+        final CartItem result = cartItemDao.findById(1L).orElseThrow(CartItemNotFoundException::new);
         assertThat(result.getQuantity()).isEqualTo(new Quantity(5));
     }
 }

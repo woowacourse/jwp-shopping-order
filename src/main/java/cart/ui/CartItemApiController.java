@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart-items")
@@ -29,29 +30,33 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+    public ResponseEntity<List<CartItemResponse>> showCartItems(final Member member) {
+        final List<CartItemResponse> cartItemResponses = cartItemService.getCartItemsByMember(member)
+                .stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(cartItemResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
-
+    public ResponseEntity<Void> addCartItems(Member member,
+                                             @RequestBody CartItemRequest cartItemRequest) {
+        final Long cartItemId = cartItemService.addCartItems(member, cartItemRequest);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{cartItemId}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long cartItemId,
+    public ResponseEntity<Void> updateCartItemQuantity(final Member member,
+                                                       @PathVariable Long cartItemId,
                                                        @RequestBody CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, cartItemId, request);
-
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long cartItemId) {
+    public ResponseEntity<Void> removeCartItems(Member member,
+                                                @PathVariable Long cartItemId) {
         cartItemService.remove(member, cartItemId);
-
         return ResponseEntity.noContent().build();
     }
 }

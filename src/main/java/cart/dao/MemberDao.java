@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.member.Member;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -46,7 +46,7 @@ public class MemberDao {
         final String sql = "SELECT id, email, password, point FROM member WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, id));
-        } catch (final DataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
@@ -55,7 +55,7 @@ public class MemberDao {
         final String sql = "SELECT id, email, password, point FROM member WHERE email = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, email));
-        } catch (final DataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
@@ -75,4 +75,3 @@ public class MemberDao {
         return jdbcTemplate.query(sql, memberRowMapper);
     }
 }
-

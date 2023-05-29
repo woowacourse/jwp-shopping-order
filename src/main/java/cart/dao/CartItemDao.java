@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CartItemDao {
@@ -48,7 +50,7 @@ public class CartItemDao {
         return new CartItem(cartItemId, member, product, quantity);
     };
 
-    public Long save(final CartItem cartItem) {
+    public Long insert(final CartItem cartItem) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", cartItem.getMemberId())
                 .addValue("product_id", cartItem.getProductId())
@@ -57,15 +59,18 @@ public class CartItemDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public CartItem findById(final Long cartItemId) {
+    public Optional<CartItem> findById(final Long id) {
         final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
                 "p.id, p.name, p.price, p.image_url, ci.quantity " +
                 "FROM cart_item ci " +
                 "INNER JOIN member m ON ci.member_id = m.id " +
                 "INNER JOIN product p ON ci.product_id = p.id " +
                 "WHERE ci.id = ?";
-
-        return jdbcTemplate.queryForObject(sql, cartItemRowMapper, cartItemId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartItemRowMapper, id));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<CartItem> findByMemberId(final Long memberId) {
@@ -80,9 +85,9 @@ public class CartItemDao {
     }
 
 
-    public List<CartItem> getCartItemsByIds(final List<Long> cartItemIds) {
+    public List<CartItem> findAllByIds(final List<Long> ids) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("ids", cartItemIds);
+        parameters.addValue("ids", ids);
         final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
                 "p.id, p.name, p.price, p.image_url, ci.quantity " +
                 "FROM cart_item ci " +
@@ -93,10 +98,10 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.query(sql, parameters, cartItemRowMapper);
     }
 
-    public void deleteById(final Long cartItemId) {
+    public void delete(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
-        jdbcTemplate.update(sql, cartItemId);
+        jdbcTemplate.update(sql, id);
     }
 
     public void updateQuantity(final CartItem cartItem) {
@@ -105,4 +110,3 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItem.getQuantityValue(), cartItem.getId());
     }
 }
-

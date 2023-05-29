@@ -35,8 +35,8 @@ public class OrderApiController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDetailResponse> orderDetail(final Member member,
-                                                           @PathVariable final Long orderId) {
+    public ResponseEntity<OrderDetailResponse> orderDetail(Member member,
+                                                           @PathVariable Long orderId) {
 
         final OrderDetailResponse orderDetail = orderService.getOrderDetail(member, orderId);
 
@@ -44,7 +44,7 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDetailResponse>> orderDetails(final Member member) {
+    public ResponseEntity<List<OrderDetailResponse>> orderDetails(Member member) {
         final List<OrderDetailResponse> orderDetails = orderService.getAllOrderDetails(member);
 
         return ResponseEntity.ok(orderDetails);

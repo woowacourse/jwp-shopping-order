@@ -44,7 +44,7 @@ public class OrderService {
         if (findMember.getPointValue() < request.getPoint()) {
             throw new PointAbusedException(member.getPointValue(), request.getPoint());
         }
-        final List<CartItem> cartItems1 = cartItemDao.getCartItemsByIds(request.getCartItemIds());
+        final List<CartItem> cartItems1 = cartItemDao.findAllByIds(request.getCartItemIds());
         final CartItems cartItems = new CartItems(cartItems1);
         final int totalPrice = cartItems.calculateTotalPrice();
         if (totalPrice < request.getPoint()) {
