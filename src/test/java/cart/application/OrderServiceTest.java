@@ -113,6 +113,7 @@ class OrderServiceTest {
         final CartItem cartItemB = new CartItem(1, member, testProductB);
         given(cartItemDao.findByIds(any())).willReturn(List.of(cartItemA, cartItemB));
         given(orderDao.saveOrder(any())).willReturn(1L);
+        given(orderDao.findById(1L)).willReturn(Optional.of(new Order(1L, null, member, 50_000, 45_000)));
         doNothing().when(orderProductDao).saveOrderProducts(any());
         doNothing().when(cartItemDao).deleteById(anyList());
 
@@ -130,6 +131,8 @@ class OrderServiceTest {
         final CartItem cartItemA = new CartItem(3, member, testProductA);
         final CartItem cartItemB = new CartItem(1, member, testProductB);
         given(cartItemDao.findByIds(any())).willReturn(List.of(cartItemA, cartItemB));
+        given(orderDao.saveOrder(any())).willReturn(1L);
+        given(orderDao.findById(1L)).willReturn(Optional.of(new Order(1L, null, member, 50_000, 45_000)));
 
         //when, then
         assertThatThrownBy(() -> orderService.addOrder(member, request))

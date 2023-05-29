@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.application.MemberService;
 import cart.domain.Member;
+import cart.dto.OrderPostRequest;
 import cart.dto.ProductInOrderResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -61,5 +62,36 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.jsonPath().getString("[0].mainProductName")).isEqualTo("치킨");
         assertThat(response.jsonPath().getInt("[0].extraProductCount")).isEqualTo(1);
         assertThat(response.jsonPath().getInt("[0].price")).isEqualTo(45_000);
+    }
+
+    @Test
+    void 주문_등록_테스트() {
+        final Member member = memberService.findMemberById(1L);
+        final OrderPostRequest request = new OrderPostRequest(List.of(1L, 2L), 95_000);
+
+        final ExtractableResponse<Response> response = given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .header(HttpHeaders.ORIGIN, "http://www.example.com") // check CORS
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/orders")
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        final long locationId = Long.parseLong(response.header("Location").split("/")[2]);
+
+        final ExtractableResponse<Response> findOrderResponse = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .header(HttpHeaders.ORIGIN, "http://www.example.com") // check CORS
+                .when()
+                .get("/orders/{id}", locationId)
+                .then().log().all()
+                .extract();
+
+        assertThat(findOrderResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(findOrderResponse.jsonPath().getInt("priceAfterDiscount")).isEqualTo(95_000);
     }
 }

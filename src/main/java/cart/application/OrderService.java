@@ -104,11 +104,10 @@ public class OrderService {
         validateFinalPrice(order.getFinalPrice(), request.getFinalPrice());
 
         final List<OrderProduct> orderProducts = createOrderProducts(cartItemsByIds, order);
-        final Long savedOrderId = orderDao.saveOrder(order);
         orderProductDao.saveOrderProducts(orderProducts);
         cartItemDao.deleteById(collectCartItemIds(cartItemsByIds));
 
-        return savedOrderId;
+        return order.getId();
     }
 
     private void validateIsMemberCartItems(final Member member, final List<CartItem> cartItems) {
@@ -127,7 +126,9 @@ public class OrderService {
                 .sum();
 
         final int finalPrice = discountPolicy.discountAmountByPrice(totalPrice);
-        return new Order(member, totalPrice, finalPrice);
+        final Long savedOrderId = orderDao.saveOrder(new Order(member, totalPrice, finalPrice));
+        return orderDao.findById(savedOrderId)
+                .orElseThrow(NoSuchDataExistException::new);
     }
 
     private void validateFinalPrice(final int finalPrice, final int requestPrice) {
