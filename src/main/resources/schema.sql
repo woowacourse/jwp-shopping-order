@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `PRODUCT`
     `price`      long             NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS `MEMBER`
 (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `MEMBER`
     `password`   varchar(255)        NOT NULL,
     `created_at` timestamp           NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp           NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS `CART_ITEM`
 (
@@ -25,9 +25,9 @@ CREATE TABLE IF NOT EXISTS `CART_ITEM`
     `quantity`   long             NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-);
+    );
 
-CREATE TABLE IF NOT EXISTS `ORDER`
+CREATE TABLE IF NOT EXISTS `ORDERS`
 (
     `id`           long PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `delivery_fee` long             NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `ORDER`
     `member_id`    long             NOT NULL,
     `created_at`   timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at`   timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS `ORDER_ITEM`
 (
@@ -47,21 +47,21 @@ CREATE TABLE IF NOT EXISTS `ORDER_ITEM`
     `order_id`   long             NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS `COUPON`
 (
-    `id`                  long PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `name`                varchar(255)     NOT NULL,
-    `policyType`          varchar(255)     NOT NULL,
-    `discountPrice`       long             NOT NULL,
-    `discountPercent`     long             NOT NULL,
-    `discountDeliveryFee` boolean          NOT NULL,
-    `conditionType`       varchar(255)     NOT NULL,
-    `minimumPrice`        long             NOT NULL,
-    `created_at`          timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    `updated_at`          timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-);
+    `id`                    long PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `name`                  varchar(255)     NOT NULL,
+    `policy_type`           varchar(255)     NOT NULL,
+    `discount_price`        long             NOT NULL,
+    `discount_percent`      int              NOT NULL,
+    `discount_delivery_fee` boolean          NOT NULL,
+    `condition_type`        varchar(255)     NOT NULL,
+    `minimum_price`         long             NOT NULL,
+    `created_at`            timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at`            timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
+    );
 
 CREATE TABLE IF NOT EXISTS `MEMBER_COUPON`
 (
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `MEMBER_COUPON`
     `used`       boolean          NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-);
+    );
 
 ALTER TABLE `CART_ITEM`
     ADD FOREIGN KEY (`member_id`) REFERENCES `MEMBER` (`id`);
@@ -79,14 +79,14 @@ ALTER TABLE `CART_ITEM`
 ALTER TABLE `CART_ITEM`
     ADD FOREIGN KEY (`product_id`) REFERENCES `PRODUCT` (`id`);
 
-ALTER TABLE `ORDER`
+ALTER TABLE `ORDERS`
     ADD FOREIGN KEY (`member_id`) REFERENCES `MEMBER` (`id`);
 
 ALTER TABLE `ORDER_ITEM`
-    ADD FOREIGN KEY (`order_id`) REFERENCES `ORDER` (`id`);
+    ADD FOREIGN KEY (`order_id`) REFERENCES `ORDERS` (`id`);
 
 ALTER TABLE `MEMBER_COUPON`
-    ADD FOREIGN KEY (`coupon_id`) REFERENCES `MEMBER` (`id`);
+    ADD FOREIGN KEY (`coupon_id`) REFERENCES `COUPON` (`id`);
 
 ALTER TABLE `MEMBER_COUPON`
     ADD FOREIGN KEY (`member_id`) REFERENCES `MEMBER` (`id`);
