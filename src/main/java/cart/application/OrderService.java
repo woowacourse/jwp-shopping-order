@@ -52,7 +52,8 @@ public class OrderService {
     }
 
     public List<OrderPreviewResponse> findAllOrdersByMember(final Member member) {
-        final Map<Order, List<OrderProduct>> ordersWithProduct = orderProductDao.findByMemberId(member.getId())
+        final List<OrderProduct> byMemberId = orderProductDao.findByMemberId(member.getId());
+        final Map<Order, List<OrderProduct>> ordersWithProduct = byMemberId
                 .stream()
                 .collect(Collectors.groupingBy(OrderProduct::getOrder));
 

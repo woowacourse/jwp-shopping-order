@@ -25,7 +25,7 @@ public class OrderApiController {
         this.orderService = orderService;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<OrderPreviewResponse>> findAllOrdersByMember(final Member member) {
         final List<OrderPreviewResponse> allOrdersByMember = orderService.findAllOrdersByMember(member);
 

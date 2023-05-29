@@ -11,20 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert insertAction;
 
     public OrderProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("order_product")
-                .usingGeneratedKeyColumns("id");
     }
 
     public List<OrderProduct> findAll() {
