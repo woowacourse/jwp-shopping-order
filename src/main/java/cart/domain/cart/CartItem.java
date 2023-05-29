@@ -1,24 +1,26 @@
-package cart.domain;
+package cart.domain.cart;
 
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
 
 public class CartItem {
     private Long id;
-    private int quantity;
+    private Quantity quantity;
     private final Product product;
-    private final Member member;
+    private final Member member; // TODO: 2023-05-29 Member 필요없음
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
+        this.quantity = new Quantity(1);
         this.member = member;
         this.product = product;
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
         this.id = id;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
         this.product = product;
         this.member = member;
     }
@@ -36,7 +38,7 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getQuantity();
     }
 
     public void checkOwner(Member member) {
@@ -46,6 +48,6 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 }

@@ -1,6 +1,6 @@
 package cart.domain.member;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 
 import java.util.ArrayList;
 import java.util.List;
