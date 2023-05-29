@@ -4,7 +4,9 @@ import java.util.Objects;
 
 public final class Money {
 
+    public static final Money ZERO = new Money(0);
     private static final int MIN_VALUE = 0;
+    
     private final long value;
 
     public Money(long value) {

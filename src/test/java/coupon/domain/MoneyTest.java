@@ -65,6 +65,16 @@ class MoneyTest {
     }
 
     @Test
+    void ZERO_금액은_0_원이다() {
+        // given
+        // when
+        Money money = Money.ZERO;
+
+        // then
+        assertThat(money.getValue()).isZero();
+    }
+
+    @Test
     void 같은_금액이면_같은_객체다() {
         // given
         Money money1 = new Money(10000);
