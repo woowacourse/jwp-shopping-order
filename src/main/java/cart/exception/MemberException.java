@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class MemberException extends RuntimeException {
+public class MemberException extends ShoppingException {
 
     public MemberException(String message) {
         super(message);

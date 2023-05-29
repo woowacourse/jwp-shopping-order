@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class ProductException extends RuntimeException {
+public class ProductException extends ShoppingException {
 
     public ProductException(String message) {
         super(message);
