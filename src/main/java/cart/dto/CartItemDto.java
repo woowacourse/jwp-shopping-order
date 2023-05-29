@@ -8,7 +8,6 @@ public class CartItemDto {
 
     @Schema(description = "장바구니 상품 id", example = "1")
     private Long id;
-
     @Schema(description = "장바구니 상품 수량", example = "1")
     private Integer quantity;
     private ProductDto product;
