@@ -4,6 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,7 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
+        final RowMapper<CartItem> cartItemRowMapper = (rs, rowNum) -> {
             String email = rs.getString("email");
             Long productId = rs.getLong("product.id");
             String name = rs.getString("name");
@@ -38,7 +39,8 @@ public class CartItemDao {
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
-        });
+        };
+        return jdbcTemplate.query(sql, new Object[]{memberId}, cartItemRowMapper);
     }
 
     public Long save(CartItem cartItem) {
