@@ -60,13 +60,20 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public int updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(Long productId) {
+    public int deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        return jdbcTemplate.update(sql, productId);
+    }
+
+    public int countByProduct(final Product product) {
+        String sql = "SELECT COUNT(*) AS count " +
+                "FROM product " +
+                "WHERE name = ? AND price = ? AND image_url = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, product.getName(), product.getPrice(), product.getImageUrl());
     }
 }

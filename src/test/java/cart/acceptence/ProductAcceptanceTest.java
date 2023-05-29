@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cart.acceptence.fixtures.ProductFixtures.존재하지_않는_상품_아이디;
 import static cart.acceptence.fixtures.ProductFixtures.치킨_10000원;
 import static cart.acceptence.fixtures.ProductFixtures.피자_15000원;
 import static cart.acceptence.fixtures.ProductFixtures.피자_18000원;
@@ -39,19 +40,19 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             assertThat(상품_생성_결과.header("Location")).isNotBlank();
         }
 
-/*        @Test
+        @Test
         void 중복된_상품은_추가할_수_없다() {
             //given
-            상품_추가_요청(피자);
+            상품_추가_요청(피자_15000원);
 
             // when
-            ExtractableResponse<Response> 상품_추가_결과 = 상품_추가_요청(피자);
+            ExtractableResponse<Response> 상품_추가_결과 = 상품_추가_요청(피자_15000원);
 
             // then
             assertThat(상품_추가_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(상품_추가_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("[ERROR] 이미 등록된 상품입니다.");
-        }*/
+                    .isEqualTo("이미 등록된 상품입니다.");
+        }
 
     }
 
@@ -103,7 +104,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             assertThat(상품_수정_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
         }
 
-/*        @Test
+        @Test
         void 다른_상품과_중복되게_수정할_수_없다() {
             //given
             상품_추가_요청(치킨_10000원);
@@ -115,8 +116,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             // then
             assertThat(상품_수정_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(상품_수정_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("[ERROR] 이미 등록된 상품입니다.");
-        }*/
+                    .isEqualTo("이미 등록된 상품입니다.");
+        }
     }
 
     @Nested
@@ -135,7 +136,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         }
 
-/*        @Test
+        @Test
         void 존재하지_않는_상품_아이디면_삭제할_수_없다() {
             //when
             ExtractableResponse<Response> 상품_삭제_결과 = 상품_삭제_요청(존재하지_않는_상품_아이디);
@@ -143,8 +144,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             //then
             assertThat(상품_삭제_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(상품_삭제_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("[ERROR] 존재하지 않는 상품입니다.");
-        }*/
+                    .isEqualTo("존재하지 않는 상품입니다.");
+        }
     }
 
 }
