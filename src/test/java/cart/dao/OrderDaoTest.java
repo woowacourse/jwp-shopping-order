@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 
@@ -59,6 +60,39 @@ class OrderDaoTest {
         });
     }
 
+    @DisplayName("주문 Id로 주문을 조회할 수 있다")
+    @Test
+    void findById() {
+        //given
+        final Member member = createMember();
+        final Product product = createProduct();
+
+        final Long cartItemId1 = cartItemDao.save(new CartItem(member, product));
+        final Long cartItemId2 = cartItemDao.save(new CartItem(member, product));
+        final List<CartItem> cartItems = cartItemDao.findAllByIds(List.of(cartItemId1, cartItemId2));
+
+        final Order order = new Order(member, 1000, cartItems);
+        final Order persisted = orderDao.save(order);
+
+        //when
+        final Order result = orderDao.findById(persisted.getId());
+
+        //then
+        assertSoftly(soft -> {
+            assertThat(result.getMember()).isEqualTo(member);
+            assertThat(result.getTotalPrice()).isEqualTo(1000);
+            assertThat(result.getCartItems()).hasSize(2);
+        });
+    }
+
+    @DisplayName("존재하지 않는 주문 Id로 주문을 조회하면 예외가 발생한다")
+    @Test
+    void findById_notExist() {
+        assertThatThrownBy(() -> orderDao.findById(0L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 주문 정보입니다.");
+    }
+
     @DisplayName("유저의 모든 주문 정보들을 조회할 수 있다")
     @Test
     void findAllByMemberId() {
@@ -85,6 +119,19 @@ class OrderDaoTest {
             assertThat(orders).allMatch(o -> o.getTotalPrice() == 1000);
             assertThat(orders).allMatch(o -> o.getCartItems().size() == 2);
         });
+    }
+
+    @DisplayName("유저의 주문 정보가 없을 때 주문 목록을 조회하면 빈 목록이 조회된다")
+    @Test
+    void findAllByMemberId_notExist() {
+        //given
+        final Member member = createMember();
+
+        //when
+        final List<Order> orders = orderDao.findAllByMemberId(member.getId());
+
+        //then
+        assertThat(orders).isEmpty();
     }
 
     private Member createMember() {

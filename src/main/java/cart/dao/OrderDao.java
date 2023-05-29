@@ -64,6 +64,38 @@ public final class OrderDao {
         return new Order(key, order.getMember(), order.getTotalPrice(), order.getCartItems());
     }
 
+    public Order findById(final Long orderId) {
+        final String sql = "SELECT " +
+                "o.id AS order_id, " +
+                "o.price AS total_price, " +
+                "m.id AS member_id, " +
+                "m.email, " +
+                "m.password, " +
+                "op.quantity, " +
+                "p.id AS product_id, " +
+                "p.name, " +
+                "p.price, " +
+                "p.image_url " +
+                "FROM `order` o " +
+                "JOIN member m on o.member_id = m.id " +
+                "JOIN ordered_product op on o.id = op.order_id " +
+                "JOIN product p on op.product_id = p.id " +
+                "WHERE o.id = ?;";
+
+        final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"));
+            final Product product = new Product(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url"));
+            final CartItem item = new CartItem(member, product);
+
+            return new OrderEntity(rs.getLong("order_id"), rs.getInt("total_price"), item);
+        }, orderId);
+
+        if (orderEntities.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 주문 정보입니다.");
+        }
+        return toOrder(orderEntities);
+    }
+
     public List<Order> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT " +
                 "o.id AS order_id, " +
