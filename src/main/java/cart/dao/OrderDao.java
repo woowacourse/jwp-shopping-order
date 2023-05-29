@@ -33,11 +33,9 @@ public class OrderDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Order insert(final Order order, final Long discountedPrice) {
+    public Order insert(final Order order) {
         final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("member_id", order.getMemberId());
-        params.addValue("total_price", order.getTotalPrice());
-        params.addValue("discounted_price", discountedPrice);
 
         final long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return Order.persisted(orderId, order.getMember(), new OrderItems(order.getOrderItems()));

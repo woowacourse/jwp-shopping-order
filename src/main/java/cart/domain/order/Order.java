@@ -39,7 +39,7 @@ public class Order {
         return orderItems.getItems();
     }
 
-    public Long getTotalPrice() {
+    public Long getProductPrice() {
         return orderItems.getTotalPrice();
     }
 }

@@ -1,11 +1,13 @@
 package cart.application;
 
+import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.delivery.DeliveryPolicy;
 import cart.domain.discount.DiscountPolicy;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
@@ -28,29 +30,67 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final MemberDao memberDao;
+    private final CartItemDao cartItemDao;
     private final OrderDao orderDao;
     private final ProductDao productDao;
     private final OrderItemDao orderItemDao;
     private final DiscountPolicy discountPolicy;
+    private final DeliveryPolicy deliveryPolicy;
 
-    public OrderService(final MemberDao memberDao, final OrderDao orderDao, final ProductDao productDao,
-        final OrderItemDao orderItemDao, final DiscountPolicy discountPolicy) {
+    public OrderService(final MemberDao memberDao, final CartItemDao cartItemDao, final OrderDao orderDao,
+        final ProductDao productDao,
+        final OrderItemDao orderItemDao, final DiscountPolicy discountPolicy, final DeliveryPolicy deliveryPolicy) {
         this.memberDao = memberDao;
+        this.cartItemDao = cartItemDao;
         this.orderDao = orderDao;
         this.productDao = productDao;
         this.orderItemDao = orderItemDao;
         this.discountPolicy = discountPolicy;
+        this.deliveryPolicy = deliveryPolicy;
     }
 
     public OrderResponse createOrder(final Long memberId, final OrderRequest orderRequest) {
         final Member member = findExistMemberById(memberId);
         final Order order = Order.beforePersisted(member, generateOrderItems(orderRequest));
-        final Order persistOrder = orderDao.insert(order, discountPolicy.calculate(order.getTotalPrice()));
+        final Order persistOrder = orderDao.insert(order);
+
         saveOrderItems(persistOrder);
-        final List<OrderItemResponse> orderProducts = OrderItemResponse.of(persistOrder.getOrderItems());
-        //TODO : 주문한 상품 cartItem에서 제외 추가
-        return new OrderResponse(persistOrder.getId(), orderProducts,
-            persistOrder.getTotalPrice(), discountPolicy.calculate(persistOrder.getTotalPrice()));
+        deleteCartItems(persistOrder);
+
+        return generateOrderResponse(persistOrder);
+    }
+
+    private void saveOrderItems(final Order order) {
+        for (OrderItem orderItem : order.getOrderItems()) {
+            orderItemDao.insert(order.getId(), OrderItem.notPersisted(orderItem.getProduct(), orderItem.getQuantity()));
+        }
+    }
+
+    private void deleteCartItems(final Order order) {
+        final List<Long> productIds = order.getOrderItems()
+            .stream()
+            .map((orderItem -> orderItem.getProduct().getId()))
+            .collect(Collectors.toList());
+        cartItemDao.deleteByMemberIdAndProductIds(order.getMemberId(), productIds);
+    }
+
+    private OrderResponse generateOrderResponse(final Order order) {
+        final Long productPrice = order.getProductPrice();
+        final Long discountPrice = discountPolicy.calculate(productPrice);
+        final Long deliveryFee = deliveryPolicy.getDeliveryFee(productPrice);
+
+        return new OrderResponse(
+            order.getId(),
+            OrderItemResponse.of(order.getOrderItems()),
+            productPrice,
+            discountPrice,
+            deliveryFee,
+            calculateTotalPrice(productPrice, discountPrice, deliveryFee)
+        );
+    }
+
+    private Long calculateTotalPrice(final Long productPrice, final Long discountPrice, final Long deliveryFee) {
+        return productPrice - discountPrice + deliveryFee;
     }
 
     private OrderItems generateOrderItems(final OrderRequest orderRequest) {
@@ -65,19 +105,12 @@ public class OrderService {
         return new OrderItems(orderItems);
     }
 
-    private void saveOrderItems(final Order order) {
-        for (OrderItem orderItem : order.getOrderItems()) {
-            orderItemDao.insert(order.getId(), OrderItem.notPersisted(orderItem.getProduct(), orderItem.getQuantity()));
-        }
-    }
-
     public OrderResponse getOrderById(final Long memberId, final Long orderId) {
         final Member member = findExistMemberById(memberId);
         final List<OrderDto> orderDtos = orderDao.findByOrderId(orderId);
         final Order order = makeOrder(orderId, member, orderDtos);
-        final Long totalPrice = order.getTotalPrice();
-        return new OrderResponse(orderId, OrderItemResponse.of(order.getOrderItems()), totalPrice,
-            discountPolicy.calculate(totalPrice));
+
+        return generateOrderResponse(order);
     }
 
     private Order makeOrder(final Long orderId, final Member member, final List<OrderDto> orderDtos) {
@@ -95,9 +128,7 @@ public class OrderService {
         final List<OrderResponse> orderResponses = memberOrderDtos.entrySet().stream()
             .map((entry) -> {
                 final Order order = makeOrder(entry.getKey(), member, entry.getValue());
-                final Long totalPrice = order.getTotalPrice();
-                return new OrderResponse(order.getId(), OrderItemResponse.of(order.getOrderItems()),
-                    totalPrice, discountPolicy.calculate(totalPrice));
+                return generateOrderResponse(order);
             })
             .collect(Collectors.toList());
 

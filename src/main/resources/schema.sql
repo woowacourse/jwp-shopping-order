@@ -25,10 +25,8 @@ CREATE TABLE cart_item
 
 CREATE TABLE shopping_order
 (
-    id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id        BIGINT NOT NULL,
-    total_price      BIGINT NOT NULL,
-    discounted_price BIGINT NOT NULL,
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 

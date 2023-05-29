@@ -6,15 +6,20 @@ public class OrderResponse {
 
     private Long orderId;
     private List<OrderItemResponse> items;
+    private Long productPrice;
+    private Long discountPrice;
+    private Long deliveryFee;
     private Long totalPrice;
-    private Long discountedPrice;
 
-    public OrderResponse(final Long orderId, final List<OrderItemResponse> items, final Long totalPrice,
-        final Long discountedPrice) {
+    public OrderResponse(final Long orderId, final List<OrderItemResponse> items, final Long productPrice,
+        final Long discountPrice,
+        final Long deliveryFee, final Long totalPrice) {
         this.orderId = orderId;
         this.items = items;
+        this.productPrice = productPrice;
+        this.discountPrice = discountPrice;
+        this.deliveryFee = deliveryFee;
         this.totalPrice = totalPrice;
-        this.discountedPrice = discountedPrice;
     }
 
     public Long getOrderId() {
@@ -25,11 +30,19 @@ public class OrderResponse {
         return items;
     }
 
-    public Long getTotalPrice() {
-        return totalPrice;
+    public Long getProductPrice() {
+        return productPrice;
     }
 
-    public Long getDiscountedPrice() {
-        return discountedPrice;
+    public Long getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public Long getDeliveryFee() {
+        return deliveryFee;
+    }
+
+    public Long getTotalPrice() {
+        return totalPrice;
     }
 }
