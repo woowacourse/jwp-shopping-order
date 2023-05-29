@@ -3,6 +3,7 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.application.mapper.MemberMapper;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -39,8 +40,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = MemberMapper.toMember(memberDao.findMemberById(1L).get());
+        member2 = MemberMapper.toMember(memberDao.findMemberById(2L).get());
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

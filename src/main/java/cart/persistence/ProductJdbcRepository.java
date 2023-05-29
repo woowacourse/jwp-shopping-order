@@ -37,11 +37,11 @@ public class ProductJdbcRepository implements ProductRepository {
 
     @Override
     public Optional<Product> findById(final long id) {
-        Optional<ProductEntity> entity = productDao.findById(id);
-        if (entity.isEmpty()) {
+        Optional<ProductEntity> optionalProductEntity = productDao.findById(id);
+        if (optionalProductEntity.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(ProductMapper.toProduct(entity.get()));
+        return Optional.of(ProductMapper.toProduct(optionalProductEntity.get()));
     }
 
     @Override

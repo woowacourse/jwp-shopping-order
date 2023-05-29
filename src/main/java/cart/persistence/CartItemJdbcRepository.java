@@ -1,16 +1,19 @@
 package cart.persistence;
 
 import cart.application.mapper.CartItemMapper;
+import cart.application.mapper.MemberMapper;
 import cart.application.mapper.ProductMapper;
 import cart.application.repository.CartItemRepository;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.exception.MemberNotFoundException;
 import cart.exception.ProductNotFoundException;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dao.MemberDao;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.CartItemEntity;
+import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
 import java.util.List;
 import java.util.Map;
@@ -60,13 +63,15 @@ public class CartItemJdbcRepository implements CartItemRepository {
         }
         CartItemEntity cartItemEntity = optionalCartItemEntity.get();
 
-        Member member = memberDao.getMemberById(cartItemEntity.getMemberId());
+        MemberEntity memberEntity = memberDao.findMemberById(cartItemEntity.getMemberId())
+                .orElseThrow(MemberNotFoundException::new);
 
         ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId())
                 .orElseThrow(ProductNotFoundException::new);
 
         return Optional.of(
-                new CartItem(id, cartItemEntity.getQuantity(), ProductMapper.toProduct(productEntity), member));
+                new CartItem(id, cartItemEntity.getQuantity(), ProductMapper.toProduct(productEntity),
+                        MemberMapper.toMember(memberEntity)));
     }
 
     @Override

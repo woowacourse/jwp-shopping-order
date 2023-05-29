@@ -25,7 +25,7 @@ public class PageController {
 
     @GetMapping("/settings")
     public String members(Model model) {
-        model.addAttribute("members", memberDao.getAllMembers());
+        model.addAttribute("members", memberDao.findAll());
         return "settings";
     }
 }
