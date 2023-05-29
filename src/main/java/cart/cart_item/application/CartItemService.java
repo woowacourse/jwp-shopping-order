@@ -27,6 +27,10 @@ public class CartItemService {
     return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
   }
 
+  public List<CartItem> findCartItemByCartIds(final List<Long> cartItemIds, final Member member) {
+    return cartItemDao.findByIdsIn(cartItemIds, member.getId());
+  }
+
   public Long add(Member member, CartItemRequest cartItemRequest) {
     return cartItemDao.save(
         new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
