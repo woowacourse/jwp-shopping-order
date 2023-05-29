@@ -2,11 +2,11 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.CartItemResponse;
-import cart.dto.OrderSelectResponse;
-import cart.repository.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
+import cart.dto.OrderItemSelectResponse;
+import cart.dto.OrderSelectResponse;
+import cart.repository.dao.MemberDao;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -68,7 +68,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(orderSelectResponse.getOriginalPrice()).isEqualTo(100_000);
         assertThat(orderSelectResponse.getDiscountPrice()).isEqualTo(5_000);
         assertThat(orderSelectResponse.getDiscountedPrice()).isEqualTo(totalPrice);
-        assertThat(orderSelectResponse.getCartItems()).map(CartItemResponse::getId)
+        assertThat(orderSelectResponse.getCartItems()).map(OrderItemSelectResponse::getId)
                 .isEqualTo(cartItemIds);
     }
 

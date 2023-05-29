@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.order.Order;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -8,14 +9,14 @@ public class OrderSelectResponse {
     private final int originalPrice;
     private final int discountPrice;
     private final int discountedPrice;
-    private final List<CartItemResponse> cartItems;
+    private final List<OrderItemSelectResponse> cartItems;
     private final LocalDateTime createdAt;
 
-    public OrderSelectResponse(final Long id,
+    private OrderSelectResponse(final Long id,
                                final int originalPrice,
                                final int discountPrice,
                                final int discountedPrice,
-                               final List<CartItemResponse> cartItems,
+                               final List<OrderItemSelectResponse> cartItems,
                                final LocalDateTime createdAt) {
         this.id = id;
         this.originalPrice = originalPrice;
@@ -23,6 +24,17 @@ public class OrderSelectResponse {
         this.discountedPrice = discountedPrice;
         this.cartItems = cartItems;
         this.createdAt = createdAt;
+    }
+
+    public static OrderSelectResponse from(Order order) {
+        return new OrderSelectResponse(
+                order.getId(),
+                order.getOriginalPrice().getValue(),
+                order.getOriginalPrice().getValue() - order.getDiscountedPrice().getValue(),
+                order.getDiscountedPrice().getValue(),
+                OrderItemSelectResponse.from(order.getOrderItems()),
+                order.getCreatedAt()
+        );
     }
 
     public Long getId() {
@@ -41,7 +53,7 @@ public class OrderSelectResponse {
         return discountedPrice;
     }
 
-    public List<CartItemResponse> getCartItems() {
+    public List<OrderItemSelectResponse> getCartItems() {
         return cartItems;
     }
 

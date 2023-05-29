@@ -9,6 +9,7 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderItems;
 import cart.domain.order.Price;
 import cart.dto.OrderCreateRequest;
+import cart.dto.OrderSelectResponse;
 import cart.repository.OrderRepository;
 import cart.repository.dao.CartItemDao;
 import java.util.List;
@@ -46,5 +47,12 @@ public class OrderService {
         if (!order.getDiscountedPrice().equals(requestPrice)) {
             throw new IllegalArgumentException("계산된 금액이 일치하지 않습니다");
         }
+    }
+
+    public OrderSelectResponse getOrder(final Member member, final Long orderId) {
+        Order order = orderRepository.findById(member, orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문 내역을 찾을 수 없습니다"));
+
+        return OrderSelectResponse.from(order);
     }
 }
