@@ -18,4 +18,11 @@ public class CartItemsFixture {
 
         return new CartItems(cartItems);
     }
+
+    public static CartItems createSimpleCartItems() {
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(createCartItem());
+
+        return new CartItems(cartItems);
+    }
 }

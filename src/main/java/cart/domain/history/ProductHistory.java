@@ -1,4 +1,4 @@
-package cart.domain.order;
+package cart.domain.history;
 
 public class ProductHistory {
 

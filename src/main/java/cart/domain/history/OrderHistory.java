@@ -1,11 +1,11 @@
-package cart.domain.order;
+package cart.domain.history;
 
 import cart.domain.cart.DeliveryFee;
 
 import java.util.List;
 import java.util.Objects;
 
-public class Order {
+public class OrderHistory {
 
     private final Long id;
     private final String orderTime;
@@ -13,7 +13,7 @@ public class Order {
     private final DeliveryFee deliveryFee;
     private final List<CouponHistory> coupons;
 
-    public Order(final Long id, final List<ProductHistory> products, final int deliveryFee, final List<CouponHistory> coupons, final String orderTime) {
+    public OrderHistory(final Long id, final List<ProductHistory> products, final int deliveryFee, final List<CouponHistory> coupons, final String orderTime) {
         this.id = id;
         this.products = products;
         this.deliveryFee = DeliveryFee.from(deliveryFee);
@@ -44,9 +44,9 @@ public class Order {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof Order)) return false;
-        Order order = (Order) o;
-        return Objects.equals(id, order.id);
+        if (!(o instanceof OrderHistory)) return false;
+        OrderHistory that = (OrderHistory) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override

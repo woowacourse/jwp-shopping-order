@@ -3,10 +3,10 @@ package cart.repository.order;
 import cart.dao.coupon.CouponHistoryDao;
 import cart.dao.order.OrderDao;
 import cart.dao.order.OrderItemHistoryDao;
+import cart.domain.history.CouponHistory;
+import cart.domain.history.OrderHistory;
+import cart.domain.history.ProductHistory;
 import cart.domain.member.Member;
-import cart.domain.order.CouponHistory;
-import cart.domain.order.Order;
-import cart.domain.order.ProductHistory;
 import cart.dto.order.OrderResponse;
 import cart.entity.coupon.CouponHistoryEntity;
 import cart.entity.order.OrderItemHistoryEntity;
@@ -52,9 +52,9 @@ public class OrderRepository {
         return orderDao.save(member.getId(), deliveryFee);
     }
 
-    public List<Order> findAllByMemberId(final Long memberId) {
+    public List<OrderHistory> findAllByMemberId(final Long memberId) {
         List<OrderTableEntity> orderEntities = orderDao.findAllOrderEntitiesByMemberId(memberId);
-        List<Order> orders = new ArrayList<>();
+        List<OrderHistory> orders = new ArrayList<>();
 
         for (OrderTableEntity orderTableEntity : orderEntities) {
             Long orderId = orderTableEntity.getId();
@@ -69,13 +69,13 @@ public class OrderRepository {
                     .map(history -> new CouponHistory(history.getId(), history.getName()))
                     .collect(Collectors.toList());
 
-            orders.add(new Order(orderId, productHistories, orderTableEntity.getDeliveryFee(), couponHistories, orderTableEntity.getCreateAt()));
+            orders.add(new OrderHistory(orderId, productHistories, orderTableEntity.getDeliveryFee(), couponHistories, orderTableEntity.getCreateAt()));
         }
 
         return orders;
     }
 
-    public Order findById(final Long orderId) {
+    public OrderHistory findById(final Long orderId) {
         OrderTableEntity orderTableEntity = orderDao.findById(orderId);
 
         List<OrderItemHistoryEntity> orderItemHistoryEntities = orderItemHistoryDao.findAllByOrderId(orderId);
@@ -89,6 +89,6 @@ public class OrderRepository {
                 .map(history -> new CouponHistory(history.getId(), history.getName()))
                 .collect(Collectors.toList());
 
-        return new Order(orderId, productHistories, orderTableEntity.getDeliveryFee(), couponHistories, orderTableEntity.getCreateAt());
+        return new OrderHistory(orderId, productHistories, orderTableEntity.getDeliveryFee(), couponHistories, orderTableEntity.getCreateAt());
     }
 }

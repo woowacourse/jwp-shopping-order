@@ -1,6 +1,6 @@
 package cart.dto.order;
 
-import cart.domain.order.Order;
+import cart.domain.history.OrderHistory;
 import cart.dto.coupon.CouponResponse;
 import cart.dto.product.DeliveryFeeResponse;
 import cart.entity.order.ProductHistoryResponse;
@@ -31,7 +31,7 @@ public class OrderResponse {
         this.coupons = coupons;
     }
 
-    public static OrderResponse from(final Order order) {
+    public static OrderResponse from(final OrderHistory order) {
         List<ProductHistoryResponse> products = order.getProducts().stream()
                 .map(ProductHistoryResponse::from)
                 .collect(Collectors.toList());

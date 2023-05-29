@@ -1,8 +1,8 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.history.ProductHistory;
 import cart.domain.member.Member;
-import cart.domain.order.ProductHistory;
 import cart.dto.coupon.CouponResponse;
 import cart.dto.order.OrderResponse;
 import cart.dto.product.DeliveryFeeResponse;

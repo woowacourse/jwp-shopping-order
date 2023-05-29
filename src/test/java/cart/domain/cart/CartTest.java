@@ -1,7 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupons;
-import cart.domain.order.ProductHistory;
+import cart.domain.history.ProductHistory;
 import cart.domain.product.Product;
 import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 import org.junit.jupiter.api.DisplayName;

@@ -1,7 +1,7 @@
 package cart.dto.coupon;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.order.CouponHistory;
+import cart.domain.history.CouponHistory;
 
 public class CouponResponse {
 

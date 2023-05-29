@@ -1,6 +1,6 @@
 package cart.dto.order;
 
-import cart.domain.order.Order;
+import cart.domain.history.OrderHistory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +13,7 @@ public class OrdersResponse {
         this.orders = orders;
     }
 
-    public static OrdersResponse from(final List<Order> orders) {
+    public static OrdersResponse from(final List<OrderHistory> orders) {
         List<OrderResponse> ordersResponse = orders.stream()
                 .map(OrderResponse::from)
                 .collect(Collectors.toList());
