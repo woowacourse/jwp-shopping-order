@@ -30,3 +30,12 @@ CREATE TABLE if not exists coupon
     discount_type VARCHAR(255) NOT NULL,
     amount        INT          NOT NULL
 );
+
+CREATE TABLE if not exists member_coupon
+(
+    member_id BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id),
+    PRIMARY KEY (member_id, coupon_id)
+);

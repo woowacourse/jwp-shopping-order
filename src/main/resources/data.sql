@@ -9,3 +9,9 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO coupon (name, discount_type, amount) VALUES ('오픈 기념 쿠폰', 'rate', 10);
+INSERT INTO coupon (name, discount_type, amount) VALUES ('오픈 기념 쿠폰', 'price', 1000);
+
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 1);
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 2);
