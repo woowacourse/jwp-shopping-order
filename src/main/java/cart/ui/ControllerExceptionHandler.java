@@ -34,30 +34,40 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
         body.put("messages", errors);
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(body);
     }
 
     @ExceptionHandler
     public ResponseEntity<Void> handleException(Exception e) {
         logger.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .build();
     }
 
     @ExceptionHandler
     public ResponseEntity<Void> handleException(AuthenticationException e) {
         logger.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .build();
     }
 
     @ExceptionHandler
     public ResponseEntity<Void> handleException(CartItemException.InvalidMember e) {
         logger.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .build();
     }
 
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<Void> handleBadRequestException(RuntimeException e) {
         logger.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
     }
 }
