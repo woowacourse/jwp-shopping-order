@@ -23,7 +23,7 @@ class ProductTest {
 
         // then
         assertAll(
-                () -> assertThat(product.getApplyDiscountPrice()).isEqualTo(14000),
+                () -> assertThat(product.getAppliedDiscountPrice()).isEqualTo(14000),
                 () -> assertThat(product.getSalePrice()).isEqualTo(6000),
                 () -> assertThat(product.isOnSale()).isEqualTo(true)
         );
@@ -62,7 +62,7 @@ class ProductTest {
         Product product = createProduct();
 
         // when
-        int result = product.getApplyDiscountPrice();
+        int result = product.getAppliedDiscountPrice();
 
         // then
         assertThat(result).isEqualTo(product.getPrice());

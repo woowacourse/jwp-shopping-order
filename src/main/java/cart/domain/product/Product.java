@@ -48,7 +48,7 @@ public class Product {
         this.isOnSale = false;
     }
 
-    public int getApplyDiscountPrice() {
+    public int getAppliedDiscountPrice() {
         if (!isOnSale) {
             return price;
         }
@@ -62,6 +62,10 @@ public class Product {
         }
 
         return price - policy.calculate(price);
+    }
+
+    public boolean isSame(final Long id) {
+        return Objects.equals(this.id, id);
     }
 
     public Long getId() {

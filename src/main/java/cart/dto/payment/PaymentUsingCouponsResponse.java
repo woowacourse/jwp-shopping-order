@@ -18,7 +18,14 @@ public class PaymentUsingCouponsResponse {
     }
 
     public static PaymentUsingCouponsResponse from(final Cart cart, final List<Coupon> requestCoupons) {
-        return new PaymentUsingCouponsResponse(cart.getProductUsingCouponAndSaleResponse(requestCoupons), new DeliveryPayResponse(cart.getDeliveryFee(), cart.calculateDeliveryFeeUsingCoupons(requestCoupons)));
+        int deliveryFee = cart.getDeliveryFee();
+        int deliveryFeeUsingCoupons = deliveryFee - cart.calculateDeliveryFeeUsingCoupons(requestCoupons);
+        DeliveryPayResponse deliveryPayResponse = new DeliveryPayResponse(deliveryFee, deliveryFeeUsingCoupons);
+
+        return new PaymentUsingCouponsResponse(
+                cart.getProductUsingCouponAndSaleResponse(requestCoupons),
+                deliveryPayResponse
+        );
     }
 
     public List<ProductUsingCouponAndSaleResponse> getProducts() {

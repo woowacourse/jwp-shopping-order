@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class OrderResponse {
 
-    private final long orderId;
+    private Long orderId;
     private final String orderedTime;
     private final List<ProductHistoryResponse> products;
     private final DeliveryFeeResponse deliveryPrice;
@@ -18,6 +18,13 @@ public class OrderResponse {
 
     private OrderResponse(final long orderId, final String orderedTime, final List<ProductHistoryResponse> products, final DeliveryFeeResponse deliveryPrice, final List<CouponResponse> coupons) {
         this.orderId = orderId;
+        this.orderedTime = orderedTime;
+        this.products = products;
+        this.deliveryPrice = deliveryPrice;
+        this.coupons = coupons;
+    }
+
+    public OrderResponse(final String orderedTime, final List<ProductHistoryResponse> products, final DeliveryFeeResponse deliveryPrice, final List<CouponResponse> coupons) {
         this.orderedTime = orderedTime;
         this.products = products;
         this.deliveryPrice = deliveryPrice;

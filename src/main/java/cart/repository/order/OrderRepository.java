@@ -3,13 +3,11 @@ package cart.repository.order;
 import cart.dao.coupon.CouponHistoryDao;
 import cart.dao.order.OrderDao;
 import cart.dao.order.OrderItemHistoryDao;
-import cart.domain.cart.Cart;
-import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import cart.domain.order.CouponHistory;
 import cart.domain.order.Order;
 import cart.domain.order.ProductHistory;
-import cart.dto.product.ProductUsingCouponAndSaleResponse;
+import cart.dto.order.OrderResponse;
 import cart.entity.coupon.CouponHistoryEntity;
 import cart.entity.order.OrderItemHistoryEntity;
 import cart.entity.order.OrderTableEntity;
@@ -32,16 +30,19 @@ public class OrderRepository {
         this.couponHistoryDao = couponHistoryDao;
     }
 
-    public long save(final Member member, final Cart cart, final List<Coupon> coupons) {
-        Long orderTableId = createOrderTable(member, cart.calculateDeliveryFeeUsingCoupons(coupons));
+    public long save(final Member member, final OrderResponse orderHistory) {
+        Long orderTableId = createOrderTable(member, orderHistory.getDeliveryPrice().getDeliveryPrice());
 
-        List<OrderItemHistoryEntity> orderItemHistoryEntities = makeOrderItemHistoryEntities(cart, coupons, orderTableId);
-
-        List<CouponHistoryEntity> couponHistoryEntities = coupons.stream()
-                .map(coupon -> new CouponHistoryEntity(coupon.getId(), coupon.getName(), orderTableId))
+        List<OrderItemHistoryEntity> orderItemHistoryEntities = orderHistory.getProducts().stream()
+                .map(i -> new OrderItemHistoryEntity(null, i.getProductId(), i.getProductName(), i.getPrice(), i.getQuantity(), orderTableId))
                 .collect(Collectors.toList());
 
         orderItemHistoryDao.saveAll(orderItemHistoryEntities);
+
+        List<CouponHistoryEntity> couponHistoryEntities = orderHistory.getCoupons().stream()
+                .map(i -> new CouponHistoryEntity(i.getCouponId(), i.getCouponName(), orderTableId))
+                .collect(Collectors.toList());
+
         couponHistoryDao.saveAll(couponHistoryEntities);
 
         return orderTableId;
@@ -49,18 +50,6 @@ public class OrderRepository {
 
     private Long createOrderTable(final Member member, final int deliveryFee) {
         return orderDao.save(member.getId(), deliveryFee);
-    }
-
-    private List<OrderItemHistoryEntity> makeOrderItemHistoryEntities(final Cart cart, final List<Coupon> coupons, final Long orderTableId) {
-        List<ProductUsingCouponAndSaleResponse> priceHistories = cart.getProductUsingCouponAndSaleResponse(coupons);
-        List<String> productNames = cart.getProductNames();
-
-        List<OrderItemHistoryEntity> orderItemHistoryEntities = new ArrayList<>();
-        for (int i = 0; i < priceHistories.size(); i++) {
-            ProductUsingCouponAndSaleResponse priceHistory = priceHistories.get(i);
-            orderItemHistoryEntities.add(new OrderItemHistoryEntity(priceHistory.getProductId(), priceHistory.getProductId(), productNames.get(i), priceHistory.getDiscountPrice(), orderTableId));
-        }
-        return orderItemHistoryEntities;
     }
 
     public List<Order> findAllByMemberId(final Long memberId) {
@@ -73,7 +62,7 @@ public class OrderRepository {
             List<CouponHistoryEntity> couponHistoryEntities = couponHistoryDao.findAllByOrderId(orderId);
 
             List<ProductHistory> productHistories = orderItemHistoryEntities.stream()
-                    .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getPrice()))
+                    .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getQuantity(), history.getPrice()))
                     .collect(Collectors.toList());
 
             List<CouponHistory> couponHistories = couponHistoryEntities.stream()
@@ -93,7 +82,7 @@ public class OrderRepository {
         List<CouponHistoryEntity> couponHistoryEntities = couponHistoryDao.findAllByOrderId(orderId);
 
         List<ProductHistory> productHistories = orderItemHistoryEntities.stream()
-                .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getPrice()))
+                .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getQuantity(), history.getPrice()))
                 .collect(Collectors.toList());
 
         List<CouponHistory> couponHistories = couponHistoryEntities.stream()

@@ -28,20 +28,21 @@ public class OrderItemHistoryDao {
                     rs.getLong("product_id"),
                     rs.getString("product_name"),
                     rs.getInt("price"),
+                    rs.getInt("quantity"),
                     rs.getLong("order_table_id")
             );
 
 
     public void saveAll(final List<OrderItemHistoryEntity> historyEntities) {
-        String sql = "INSERT INTO order_item_history (id, product_id, product_name, price, order_table_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO order_item_history (product_id, product_name, price, quantity, order_table_id) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 OrderItemHistoryEntity entity = historyEntities.get(i);
-                ps.setLong(1, entity.getId());
-                ps.setLong(2, entity.getProductId());
-                ps.setString(3, entity.getProductName());
-                ps.setInt(4, entity.getPrice());
+                ps.setLong(1, entity.getProductId());
+                ps.setString(2, entity.getProductName());
+                ps.setInt(3, entity.getPrice());
+                ps.setInt(4, entity.getQuantity());
                 ps.setLong(5, entity.getOrderTableId());
             }
 

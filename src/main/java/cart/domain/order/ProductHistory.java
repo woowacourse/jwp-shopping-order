@@ -4,11 +4,13 @@ public class ProductHistory {
 
     private final Long id;
     private final String productName;
-    private final int price;
+    private final int quantity;
+    private int price;
 
-    public ProductHistory(final Long id, final String productName, final int price) {
+    public ProductHistory(final Long id, final String productName, final int quantity, final int price) {
         this.id = id;
         this.productName = productName;
+        this.quantity = quantity;
         this.price = price;
     }
 
@@ -20,7 +22,15 @@ public class ProductHistory {
         return productName;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
     public int getPrice() {
         return price;
+    }
+
+    public void setPrice(final int price) {
+        this.price = price;
     }
 }
