@@ -1,8 +1,9 @@
 package cart.order_item.dao;
 
 import cart.order_item.dao.entity.OrderItemEntity;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,7 @@ public class OrderItemDao {
         .usingGeneratedKeyColumns("id");
   }
 
-  public void save(final OrderItemEntity orderItemEntity) {
-    simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(orderItemEntity));
+  public void save(final List<OrderItemEntity> orderItemEntities) {
+    simpleJdbcInsert.executeBatch(SqlParameterSourceUtils.createBatch(orderItemEntities));
   }
 }
