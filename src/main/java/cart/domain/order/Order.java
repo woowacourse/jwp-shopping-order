@@ -1,6 +1,7 @@
 package cart.domain.order;
 
 import cart.domain.Member;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order {
@@ -9,17 +10,24 @@ public class Order {
     private final Member member;
     private final OrderItems orderItems;
     private final DiscountPolicy discountPolicy;
+    private final LocalDateTime createdAt;
 
     public Order(final Member member, final OrderItems orderItems, final DiscountPolicy discountPolicy) {
-        this(null, member, orderItems, discountPolicy);
+        this(null, member, orderItems, discountPolicy, null);
     }
 
     public Order(final Long id, final Member member, final OrderItems orderItems, final DiscountPolicy discountPolicy) {
+        this(id, member, orderItems, discountPolicy, null);
+    }
+
+    public Order(final Long id, final Member member, final OrderItems orderItems, final DiscountPolicy discountPolicy,
+                 final LocalDateTime createdAt) {
         validateMember(member, orderItems);
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
         this.discountPolicy = discountPolicy;
+        this.createdAt = createdAt;
     }
 
     private void validateMember(final Member member, final OrderItems orderItems) {
@@ -47,5 +55,9 @@ public class Order {
 
     public List<OrderItem> getOrderItems() {
         return orderItems.getOrderItems();
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
