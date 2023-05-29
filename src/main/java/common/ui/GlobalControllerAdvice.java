@@ -3,6 +3,9 @@ package common.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,4 +27,24 @@ public class GlobalControllerAdvice {
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(e.getMessage()));
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> processValidationError(MethodArgumentNotValidException exception) {
+        BindingResult bindingResult = exception.getBindingResult();
+
+        StringBuilder message = new StringBuilder();
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            message.append("[");
+            message.append(fieldError.getField());
+            message.append("](은)는 ");
+            message.append(fieldError.getDefaultMessage());
+            message.append(" 입력된 값: [");
+            message.append(fieldError.getRejectedValue());
+            message.append("]");
+        }
+
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponse(message.toString()));
+    }
+
 }
