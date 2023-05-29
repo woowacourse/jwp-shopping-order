@@ -3,19 +3,20 @@ package cart.acceptance;
 import cart.dao.MemberDao;
 import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Import(MemberDao.class)
@@ -64,13 +65,38 @@ public class CouponAcceptanceTest extends IntegrationTest {
         final ExtractableResponse<Response> response = 쿠폰을_재발급_한다(request, 1L);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(OK.value());
     }
 
     private ExtractableResponse<Response> 쿠폰을_재발급_한다(final CouponReissueRequest request, final long couponId) {
         return givenBasic()
                 .body(request)
                 .patch("/coupons/{couponId}", couponId)
+                .then().log().all()
+                .extract();
+    }
+
+    /**
+     * when 회원이 쿠폰 조회를 요청하면
+     * then 해당 회원이 가지고 있는 쿠폰 전부를 반환한다.
+     */
+    @Test
+    void 회원이_소유한_있는_쿠폰을_반환한다() {
+        // when
+        final ExtractableResponse<Response> 회원_쿠폰 = 회원이_소유한_쿠폰을_찾는다();
+
+        // then
+        final JsonPath result = 회원_쿠폰.jsonPath();
+        assertAll(
+                () -> assertThat(회원_쿠폰.statusCode()).isEqualTo(OK.value()),
+                () -> assertThat(result.getList("id", Long.class)).hasSize(3),
+                () -> assertThat(result.getList("discountAmount", Integer.class)).containsExactly(1000, 3000, 5000)
+        );
+    }
+
+    private ExtractableResponse<Response> 회원이_소유한_쿠폰을_찾는다() {
+        return givenBasic()
+                .get("/coupons/member")
                 .then().log().all()
                 .extract();
     }

@@ -2,8 +2,15 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.entity.CouponEntity;
+import cart.dao.entity.CouponTypeCouponEntity;
+import cart.domain.Coupon;
+import cart.domain.Coupons;
 import cart.domain.Member;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Repository
 public class CouponJdbcRepository implements CouponRepository {
@@ -20,12 +27,32 @@ public class CouponJdbcRepository implements CouponRepository {
         return couponDao.issue(couponEntity);
     }
 
+    private CouponEntity toEntity(final Member member, final Long couponId) {
+        return CouponEntity.of(member.getId(), couponId);
+    }
+
     @Override
     public void changeStatus(final Long couponId, final Long memberId) {
         couponDao.changeStatus(couponId, memberId);
     }
 
-    private CouponEntity toEntity(final Member member, final Long couponId) {
-        return CouponEntity.of(member.getId(), couponId);
+    @Override
+    public Coupons findCouponsByMemberId(final Long memberId) {
+        final List<CouponTypeCouponEntity> couponTypeCouponEntities = couponDao.findByMemberId(memberId);
+        final List<Coupon> coupons = couponTypeCouponEntities.stream()
+                .map(CouponJdbcRepository::toDomain)
+                .collect(toList());
+
+        return new Coupons(coupons);
+    }
+
+    private static Coupon toDomain(final CouponTypeCouponEntity entity) {
+        return new Coupon(
+                entity.getCouponId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getDiscountAmount(),
+                entity.getUsageStatus()
+        );
     }
 }
