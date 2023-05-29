@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static cart.fixture.Fixture.ORDERS;
+
 
 
 @JdbcTest
@@ -20,6 +20,6 @@ class OrdersDaoTest {
     @Test
     @DisplayName("주문을 받는다")
     void createOrder(){
-        Assertions.assertThat(ordersDao.createOrders(ORDERS.getMemberId(),ORDERS.getOriginalPrice(),ORDERS.getDiscountPrice())).isEqualTo(1L);
+        Assertions.assertThat(ordersDao.createOrders(1L,2000,1000)).isEqualTo(3L);
     }
 }

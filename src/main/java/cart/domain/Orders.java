@@ -3,37 +3,43 @@ package cart.domain;
 import java.util.List;
 
 public class Orders {
-    private Long memberId;
-    private List<Long> cartId;
-    private int originalPrice;
-    private int discountPrice;
-    private Long couponId;
+    private Long id;
+    private Member member;
+    private List<CartItem> cartItems;
+    private Integer originalPrice;
+    private Integer discountPrice;
+    private List<Coupon> coupons;
 
-    public Orders(Long memberId, List<Long> cartId, int originalPrice, int discountPrice, Long couponId) {
-        this.memberId = memberId;
-        this.cartId = cartId;
+    public Orders(Long id, Member member, List<CartItem> cartItems, Integer originalPrice, Integer discountPrice, List<Coupon> coupons) {
+        this.id = id;
+        this.member = member;
+        this.cartItems = cartItems;
         this.originalPrice = originalPrice;
         this.discountPrice = discountPrice;
-        this.couponId = couponId;
+        this.coupons = coupons;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Long getId() {
+        return id;
     }
 
-    public List<Long> getCartId() {
-        return cartId;
+    public Member getMember() {
+        return member;
     }
 
-    public int getOriginalPrice() {
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public Integer getOriginalPrice() {
         return originalPrice;
     }
 
-    public int getDiscountPrice() {
+    public Integer getDiscountPrice() {
         return discountPrice;
     }
 
-    public Long getCouponId() {
-        return couponId;
+    public List<Coupon> getCoupons() {
+        return coupons;
     }
 }

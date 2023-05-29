@@ -20,8 +20,7 @@ public class OrdersService {
         final List<Long> cartIds = ordersRequest.getCartProductIds();
         final int originalPrice = ordersRequest.getOriginalPrice();
         final int discountPrice = ordersRequest.getDiscountPrice();
-        final long couponId = ordersRequest.getCouponId();
-        final Orders orders = new Orders(member.getId(),cartIds,originalPrice,discountPrice,couponId);
-        return ordersRepository.takeOrders(orders);
+        final List<Long> coupons = List.of(ordersRequest.getCouponId());
+        return ordersRepository.takeOrders(member.getId(),cartIds,originalPrice,discountPrice,coupons);
     }
 }

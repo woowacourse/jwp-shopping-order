@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.entity.CartItemEntity;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
@@ -96,6 +97,17 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+    public CartItemEntity findProductIdByCartId(final long cartId){
+        final String sql = "SELECT * FROM cart_item WHERE id =?";
+        return jdbcTemplate.queryForObject(sql,(rs,rowNum)->
+                new CartItemEntity(
+                        rs.getLong("id"),
+                        rs.getLong("member_id"),
+                        rs.getLong("product_id"),
+                        rs.getInt("quantity")
+                )
+                ,cartId);
     }
 }
 
