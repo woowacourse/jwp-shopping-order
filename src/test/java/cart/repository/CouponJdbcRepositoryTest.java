@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
@@ -27,5 +28,12 @@ class CouponJdbcRepositoryTest {
 
         // then
         assertThat(saveId).isNotNull();
+    }
+
+    @Test
+    void 쿠폰_상태를_변경한다 () {
+        // when, then
+        assertThatCode(() -> couponJdbcRepository.changeStatus(1L, 1L))
+                .doesNotThrowAnyException();
     }
 }

@@ -1,11 +1,15 @@
 package cart.acceptance;
 
+import cart.dao.MemberDao;
 import cart.dto.CouponIssueRequest;
+import cart.dto.CouponReissueRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
@@ -14,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @SuppressWarnings("NonAsciiCharacters")
+@Import(MemberDao.class)
 public class CouponAcceptanceTest extends IntegrationTest {
 
     /**
@@ -45,7 +50,32 @@ public class CouponAcceptanceTest extends IntegrationTest {
                 .extract();
     }
 
-    private static RequestSpecification givenBasic() {
+    /**
+     * given 쿠폰 아이디와 회원 정보를 주어지면
+     * when 사용한 쿠폰을 재발급 요청하면
+     * then 쿠폰이 재발급 된다.
+     */
+    @Test
+    void 사용한_쿠폰을_재발급_한다() {
+        // given
+        final CouponReissueRequest request = new CouponReissueRequest(1L, "a@a.com", "1234");
+
+        // when
+        final ExtractableResponse<Response> response = 쿠폰을_재발급_한다(request, 1L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    private ExtractableResponse<Response> 쿠폰을_재발급_한다(final CouponReissueRequest request, final long couponId) {
+        return givenBasic()
+                .body(request)
+                .patch("/coupons/{couponId}", couponId)
+                .then().log().all()
+                .extract();
+    }
+
+    private RequestSpecification givenBasic() {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic("a@a.com", "1234");

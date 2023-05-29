@@ -3,7 +3,10 @@ package cart.controller;
 import cart.application.CouponService;
 import cart.domain.Member;
 import cart.dto.CouponIssueRequest;
+import cart.dto.CouponReissueRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +33,11 @@ public class CouponController {
                 .buildAndExpand(couponId)
                 .toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @PatchMapping("/{couponId}")
+    public ResponseEntity<Void> reissueCoupon(@PathVariable final Long couponId, @RequestBody final CouponReissueRequest request) {
+        couponService.reissueCoupon(couponId, request);
+        return ResponseEntity.ok().build();
     }
 }

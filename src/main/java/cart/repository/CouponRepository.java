@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CouponRepository {
 
-    public Long issue(final Member member, final Long couponId);
+    Long issue(final Member member, final Long couponId);
+
+    void changeStatus(Long couponId, Long memberId);
 }

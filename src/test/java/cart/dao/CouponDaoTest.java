@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.CouponEntity;
+import cart.dao.entity.CouponTypeCouponEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
@@ -38,5 +41,27 @@ class CouponDaoTest {
 
         // then
         assertThat(saveId).isNotNull();
+    }
+
+    @Test
+    void 회원_아이디로_쿠폰을_조회한다() {
+        // when
+        final List<CouponTypeCouponEntity> results = couponDao.findByMemberId(1L);
+
+        // then
+        assertThat(results).hasSize(3);
+    }
+
+    @Test
+    void 쿠폰의_상태를_변경한다() {
+        // when
+        couponDao.changeStatus(1L, 1L);
+
+        // then
+        final List<CouponTypeCouponEntity> results = couponDao.findByMemberId(1L);
+        assertAll(
+                () -> assertThat(results).hasSize(3),
+                () -> assertThat(results.get(1).getUsageStatus()).isFalse()
+        );
     }
 }

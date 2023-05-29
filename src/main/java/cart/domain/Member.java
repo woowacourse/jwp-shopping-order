@@ -1,14 +1,28 @@
 package cart.domain;
 
 public class Member {
-    private Long id;
-    private String email;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final Coupons coupons;
 
-    public Member(Long id, String email, String password) {
+    public Member(final Long id, final String email, final String password) {
+        this(id, email, password, Coupons.empty());
+    }
+
+    public Member(final Long id, final String email, final String password, final Coupons coupons) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.coupons = coupons;
+    }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
+
+    public Coupon findCoupon(final Long couponId) {
+        return coupons.findCoupon(couponId);
     }
 
     public Long getId() {
@@ -23,7 +37,7 @@ public class Member {
         return password;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public Coupons getCoupons() {
+        return coupons;
     }
 }

@@ -20,6 +20,11 @@ public class CouponJdbcRepository implements CouponRepository {
         return couponDao.issue(couponEntity);
     }
 
+    @Override
+    public void changeStatus(final Long couponId, final Long memberId) {
+        couponDao.changeStatus(couponId, memberId);
+    }
+
     private CouponEntity toEntity(final Member member, final Long couponId) {
         return CouponEntity.of(member.getId(), couponId);
     }
