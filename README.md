@@ -1,7 +1,7 @@
 # jwp-shopping-order
 
 ## 해야 할 일
-- [ ] DB 구조 짜기
+- [x] DB 구조 짜기
 - [ ] aws ec2 mysql db에 연결
   - 이때, test는 h2로 진행
 - [ ] 기능 구현
