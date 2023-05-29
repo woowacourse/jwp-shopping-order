@@ -3,13 +3,13 @@ package cart.domain;
 public class Product {
     private Long id;
     private String name;
-    private int price;
+    private Price price;
     private String imageUrl;
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(Long id, String name, long price, String imageUrl) {
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.price = Price.from(price);
         this.imageUrl = imageUrl;
     }
 
@@ -25,7 +25,7 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public Price getPrice() {
         return price;
     }
 
@@ -37,7 +37,7 @@ public class Product {
     public static final class Builder {
         private Long id;
         private String name;
-        private int price;
+        private long price;
         private String imageUrl;
 
         public Builder() {
@@ -53,7 +53,7 @@ public class Product {
             return this;
         }
 
-        public Builder price(int price) {
+        public Builder price(long price) {
             this.price = price;
             return this;
         }

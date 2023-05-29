@@ -51,7 +51,7 @@ public class ProductDao {
             );
 
             ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
+            ps.setLong(2, product.getPrice().getAmount());
             ps.setString(3, product.getImageUrl());
 
             return ps;
