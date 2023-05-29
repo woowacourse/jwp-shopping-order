@@ -27,17 +27,231 @@
 
 ## API 명세
 
-## 회원 가입
+## 상품
+
+### **상품 목록 조회**
 
 ### Request
 
 ```
+GET /products HTTP/1.1
+```
+
+### Response
+
+``` json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        "id": 1,
+        "name": "치킨",
+        "price": 10000,
+        "imageUrl": "http://example.com/chicken.jpg"
+    },
+    {
+        "id": 2,
+        "name": "피자",
+        "price": 20000,
+        "imageUrl": "http://example.com/pizza.jpg"
+    }
+]
+
+```
+
+### 상품 조회
+
+### Request
+
+```
+GET /products/{productId} HTTP/1.1
+```
+
+### Response
+
+``` json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "치킨",
+    "price": 10000,
+    "imageUrl": "http://example.com/chicken.jpg"
+}
+```
+
+### 상품 추가
+
+### Request
+
+``` json
+POST /products HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "부리또",
+    "price": 30000,
+    "imageUrl": "http://example.com/burrito.jpg"
+}
+
+```
+
+### Response
+
+```
+HTTP/1.1 201 Created
+Location: /products/{productId}
+```
+
+### 상품 수정
+
+### Request
+
+``` json
+PUT /products/{productId} HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "부리또",
+    "price": 30000,
+    "imageUrl": "http://example.com/burrito.jpg"
+}
+
+```
+
+### Response
+
+```
+HTTP/1.1 200 OK
+```
+
+### 상품 삭제
+
+### Request
+
+``` 
+DELETE /products/{productId} HTTP/1.1
+```
+
+### Response
+
+```
+HTTP/1.1 204 No Content
+```
+
+---
+
+## 장바구니
+
+### 장바구니 아이템 목록 조회
+
+### Request
+
+``` 
+GET /cart-items HTTP/1.1
+Authorization: Basic ${credentials}
+```
+
+### Response
+
+``` json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        "id": 1,
+        "quantity": 5,
+        "product": {
+            "id": 1,
+            "price": 10000,
+            "name": "치킨",
+            "imageUrl": "http://example.com/chicken.jpg"
+        }
+    },
+    {
+        "id": 2,
+        "quantity": 1,
+        "product": {
+            "id": 2,
+            "price": 20000,
+            "name": "피자",
+            "imageUrl": "http://example.com/pizza.jpg"
+        }
+    }
+]
+
+```
+
+### 장바구니 아이템 추가
+
+### Request
+
+```
+POST /cart-items HTTP/1.1
+Authorization: Basic ${credentials}
+Content-Type: application/json
+
+{
+    "productId": 1
+}
+```
+
+### Response
+
+```
+HTTP/1.1 201 Created
+Location: /cart-items/{cartItemId}
+```
+
+### 장바구니 아이템 수량 변경
+
+### Request
+
+``` json
+PATCH /cart-items/{cartItemId} HTTP/1.1
+Authorization: Basic ${credentials}
+Content-Type: application/json
+
+{
+    "quantity": 3
+}
+```
+
+### Response
+
+```
+HTTP/1.1 200 OK
+```
+
+### 장바구니 아이템 삭제
+
+### Request
+
+```
+DELETE /cart-items/{cartItemId}
+Authorization: Basic ${credentials}
+```
+
+### Response
+
+```
+HTTP/1.1 204 No Content
+```
+
+## 회원 가입
+
+### Request
+
+``` json
 POST /users/join HTTP/1.1
 Content-Type: application/json
 
 {
-	"name": "jourzura",
-	"password": "1q2w3e4r!"
+    "name": "jourzura",
+    "password": "1q2w3e4r!"
 }
 ```
 
@@ -52,22 +266,22 @@ Authorization: Basic 93290uf9ewfiod
 
 ### Response
 
-```
+``` json
 HTTP/1.1 200 OK
 Content-Type: application/json
 [
-	  {
+    {
         "id": 1,
-	    "name": "신규 가입 쿠폰",
-	    "discountRate": 20,
-	    "expirationPeriod": "2023-05-30T15:30:44"
-	  },
-	  {
-        "id": 2,
-	    "name": "첫 주문 감사 쿠폰",
-	    "discountRate": 15,
-	    "expirationPeriod": "2023-05-30T15:30:44"
-	  }
+        "name": "신규 가입 쿠폰",
+        "discountRate": 20,
+        "expirationPeriod": "2023-05-30T15:30:44"
+    },
+    {
+    	"id": 2,
+        "name": "첫 주문 감사 쿠폰",
+        "discountRate": 15,
+        "expirationPeriod": "2023-05-30T15:30:44"
+    }
 ]
 ```
 
@@ -75,25 +289,26 @@ Content-Type: application/json
 
 ### Request
 
-```
+``` json
 POST /orders HTTP/1.1
 Authorization: Basic 93290uf9ewfiod
 Content-Type: application/json
 
 {
-	items: [
+    items: [
         {
-        "product":{
-        	"id": 1,
-        	"quantity": 5
-        }		
+            "product": {
+                "id": 1,
+                "quantity": 5
+            }		
         },
-        "product":{
-        	"id": 2,
-        	"quantity": 100
+            "product": {
+                "id": 2,
+                "quantity": 100
+            }
         }
-		],
-	couponId: 1
+    ],
+    couponId: 1
 }
 ```
 
@@ -115,54 +330,54 @@ Authorization: Basic 93290uf9ewfiod
 
 ### Response
 
-```
+``` json
 HTTP/1.1 200 OK
 [
     {
-    "orderId": 1,
-    "items": [
-        	{
-        	"product": {
-        	    "id": 1,
-        	    "name": "하이",
-        	    "price": 1000,
-        	    "quantity": 20,
-        	    "imagaeUrl": "sample"
-        	    }
-        	},
-        	{
-        	"product": {
-        	    "id": 2,
-        	    "name": "하이2",
-        	    "price": 2000,
-        	    "quantity": 30,
-        	    "imagaeUrl": "sample"
-                }
-            }
-        ]
+        "orderId": 1,
+        "items": [
+                    {
+                        "product": {
+                            "id": 1,
+                            "name": "하이",
+                            "price": 1000,
+                            "quantity": 20,
+                            "imagaeUrl": "sample"
+                        }
+                    },
+					{
+                        "product": {
+                            "id": 2,
+                            "name": "하이2",
+                            "price": 2000,
+                            "quantity": 30,
+                            "imagaeUrl": "sample"
+                        }
+                    }
+                ]
     },
     {
-    "orderId": 2,
-    "items": [
-        	{
-        	"product": {
-        	    "id": 3,
-        	    "name": "하이3",
-        	    "price": 1000,
-        	    "quantity": 20,
-        	    "imagaeUrl": "sample"
-        	    }
-        	},
-        	{
-        	"product": {
-        	    "id": 4,
-        	    "name": "하이4",
-        	    "price": 2000,
-        	    "quantity": 30,
-        	    "imagaeUrl": "sample"
-            	}
-            }
-        ]
+        "orderId": 2,
+        "items": [
+                    {
+                        "product": {
+                            "id": 3,
+                            "name": "하이3",
+                            "price": 1000,
+                            "quantity": 20,
+                            "imagaeUrl": "sample"
+                        }
+                    },
+                    {
+                        "product": {
+                            "id": 4,
+                            "name": "하이4",
+                            "price": 2000,
+                            "quantity": 30,
+                            "imagaeUrl": "sample"
+                        }
+                    }
+                ]
     }
 ]
 ```
@@ -178,68 +393,31 @@ Authorization: Basic 93290uf9ewfiod
 
 ### Response
 
-```
+``` json
 HTTP/1.1 200 OK
 
 {
     "orderId": 1,
     "items": [
-    {
-        "proudct": {
-            "id": 1,
-            "name": "하이",
-            "price": 1000,
-            "qunatity": 20,
-            "imageUrl": "sample"
-           }
-       },
-    {
-        "proudct": {
-            "id": 2,
-            "name": "하이2",
-            "price": 1000,
-            "qunatity": 20,
-            "imageUrl": "sample"
-           }
-       }
-    ]
-}
-```
-
-## 장바구니 조회
-
-### Request
-
-```
-GET /cart-items HTTP/1.1
-Authorization: Basic 93290uf9ewfiod
-```
-
-### Response
-
-```
-HTTP/1.1 200 OK
-
-{
-    "items": [
         {
-        "product": {
-        	"id": 1,
-        	"name": "치킨",
-        	"price": 10000,
-        	"quantity": 5
+            "proudct": {
+                "id": 1,
+                "name": "하이",
+                "price": 1000,
+                "qunatity": 20,
+                "imageUrl": "sample"
             }
         },
         {
-        "product": {
-        	"id": 2,
-        	"name": "치킨",
-        	"price": 10000,
-        	"quantity": 5
+            "proudct": {
+                "id": 2,
+                "name": "하이2",
+                "price": 1000,
+                "qunatity": 20,
+                "imageUrl": "sample"
             }
         }
-    ],
-    "deliveryPrice": 3000
+    ]
 }
 ```
 
@@ -247,7 +425,7 @@ HTTP/1.1 200 OK
 
 ### Request
 
-```
+``` json
 POST /users/login HTTP/1.1
 Content-Type: application/json
 
@@ -259,7 +437,7 @@ Content-Type: application/json
 
 ### Response
 
-```
+``` json
 HTTP/1.1 200 OK
 
 {
