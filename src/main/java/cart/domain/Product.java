@@ -4,13 +4,13 @@ public class Product {
     private final Long id;
     private final Name name;
     private final Money price;
-    private final String imageUrl;
+    private final ImageUrl imageUrl;
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = new Name(name);
         this.price = new Money(price);
-        this.imageUrl = imageUrl;
+        this.imageUrl = new ImageUrl(imageUrl);
     }
 
     public Product(final String name, final int price, final String imageUrl) {
@@ -29,6 +29,10 @@ public class Product {
         return price;
     }
 
+    public ImageUrl getImageUrl() {
+        return imageUrl;
+    }
+
     public String getNameValue() {
         return name.getName();
     }
@@ -37,7 +41,7 @@ public class Product {
         return price.getMoneyValue();
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageUrlValue() {
+        return imageUrl.getImageUrl();
     }
 }
