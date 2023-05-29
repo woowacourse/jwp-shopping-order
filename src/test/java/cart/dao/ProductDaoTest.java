@@ -118,4 +118,22 @@ class ProductDaoTest {
         // then
         assertThat(productDao.isNotExistById(deleteProductId)).isTrue();
     }
+
+    @Test
+    @DisplayName("받은 상품 ID에 해당하는 행을 수정한다.")
+    void updateProduct() {
+        // given
+        Long productId = CHICKEN.ID;
+        String nameToUpdate = CHICKEN.NAME + "UPDATE";
+        int priceToUpdate = CHICKEN.PRICE + 10000;
+        Product productToUpdate = new Product(nameToUpdate, priceToUpdate, CHICKEN.IMAGE_URL);
+
+        // when
+        productDao.updateProduct(productId, productToUpdate);
+        Product productAfterUpdate = productDao.getProductById(productId);
+
+        // then
+        assertThat(productAfterUpdate).usingRecursiveComparison()
+                .ignoringFieldsOfTypes(Long.class).isEqualTo(productToUpdate);
+    }
 }

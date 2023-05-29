@@ -90,6 +90,7 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
+        checkProductExist(productId);
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         productDao.updateProduct(productId, product);
     }

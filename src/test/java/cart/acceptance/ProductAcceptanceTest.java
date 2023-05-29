@@ -235,6 +235,182 @@ public class ProductAcceptanceTest {
         }
     }
 
+    @Nested
+    @DisplayName("상품 수정 시")
+    class updateProduct {
+
+        @Test
+        @DisplayName("수정할 상품 ID가 존재하지 않으면 예외가 발생한다.")
+        void throws_when_product_id_not_exist() {
+            // given
+            Long notExistId = -1L;
+            ProductRequest request = new ProductRequest(CHICKEN.NAME, CHICKEN.PRICE + 1, CHICKEN.IMAGE_URL);
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(request)
+                    .when()
+                    .put("/products/{id}", notExistId)
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("상품 ID에 해당하는 상품을 찾을 수 없습니다.")
+            );
+        }
+
+        @Nested
+        @DisplayName("수정할 상품 ID가 존재할 때")
+        class productIdExist {
+
+            @ParameterizedTest
+            @ValueSource(strings = {" ", ""})
+            @DisplayName("상품 이름이 빈 값이면 예외가 발생한다.")
+            void throws_when_name_blank(String productName) {
+                // given
+                Long updateProductId = CHICKEN.ID;
+                ProductRequest productRequest = new ProductRequest(productName, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .put("/products/{id}", updateProductId)
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).containsAnyOf("상품 이름을 입력해주세요.", "상품 이름은 한글 또는 영어여야합니다.")
+                );
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = {"@!@E", "1234", "@3121$"})
+            @DisplayName("상품 이름이 한글과 영어가 아니면 예외가 발생한다.")
+            void throws_when_wrong_product_name(String productName) {
+                // given
+                Long updateProductId = CHICKEN.ID;
+                ProductRequest productRequest = new ProductRequest(productName, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .put("/products/{id}", updateProductId)
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo("상품 이름은 한글 또는 영어여야합니다.")
+                );
+            }
+
+            @ParameterizedTest
+            @ValueSource(ints = {0, -1})
+            @DisplayName("상품 가격이 0이하이면 예외가 발생한다.")
+            void throws_when_price_not_positive(int productPrice) {
+                // given
+                Long updateProductId = CHICKEN.ID;
+                ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, productPrice, CHICKEN.IMAGE_URL);
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .put("/products/{id}", updateProductId)
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo("가격은 양수여야합니다.")
+                );
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = {" ", ""})
+            @DisplayName("상품 이미지 URL이 빈 값이면 예외가 발생한다.")
+            void throws_when_image_url_blank(String productImageUrl) {
+                // given
+                Long updateProductId = CHICKEN.ID;
+                ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, CHICKEN.PRICE, productImageUrl);
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .put("/products/{id}", updateProductId)
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).containsAnyOf("상품 이미지 URL을 입력해주세요.", "올바른 URL 형식으로 입력해주세요.")
+                );
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = {"aaa://", "shop.com"})
+            @DisplayName("상품 이미지 URL이 올바른 형식이 아니면 예외가 발생한다.")
+            void throws_when_image_url_wrong_pattern(String productImageUrl) {
+                // given
+                Long updateProductId = CHICKEN.ID;
+                ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, CHICKEN.PRICE, productImageUrl);
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .put("/products/{id}", updateProductId)
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo("올바른 URL 형식으로 입력해주세요.")
+                );
+            }
+
+            @Test
+            @DisplayName("정상적으로 상품이 수정된다.")
+            void success() {
+                // given
+                Long updateProductId = CHICKEN.ID;
+                ProductRequest productRequest = new ProductRequest(CHICKEN.NAME + "UPDATE", CHICKEN.PRICE + 1000, CHICKEN.IMAGE_URL);
+                String emptyBody = "";
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .put("/products/{id}", updateProductId)
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo(emptyBody)
+                );
+            }
+        }
+    }
 
     @Nested
     @DisplayName("상품 목록 조회 시")
