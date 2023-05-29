@@ -32,12 +32,12 @@ public class MemberDao {
 
     public void addMember(Member member) {
         String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPasswordValue());
+        jdbcTemplate.update(sql, member.getEmailValue(), member.getPasswordValue());
     }
 
     public void updateMember(Member member) {
         String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPasswordValue(), member.getId());
+        jdbcTemplate.update(sql, member.getEmailValue(), member.getPasswordValue(), member.getId());
     }
 
     public void deleteMember(Long id) {

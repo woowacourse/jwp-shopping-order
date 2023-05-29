@@ -3,12 +3,12 @@ package cart.domain;
 public class Member {
 
     private final Long id;
-    private final String email;
+    private final Email email;
     private final Password password;
 
     public Member(final Long id, final String email, final String password) {
         this.id = id;
-        this.email = email;
+        this.email = new Email(email);
         this.password = new Password(password);
     }
 
@@ -16,19 +16,23 @@ public class Member {
         return this.password.equals(password);
     }
 
+    public String getEmailValue() {
+        return email.getAddress();
+    }
+
+    public String getPasswordValue() {
+        return password.getValue();
+    }
+
     public Long getId() {
         return id;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
     public Password getPassword() {
         return password;
-    }
-
-    public String getPasswordValue() {
-        return password.getValue();
     }
 }
