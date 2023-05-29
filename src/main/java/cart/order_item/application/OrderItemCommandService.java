@@ -5,6 +5,7 @@ import cart.cart_item.domain.CartItem;
 import cart.member.domain.Member;
 import cart.order_item.dao.OrderItemDao;
 import cart.order_item.dao.entity.OrderItemEntity;
+import cart.order_item.exception.CanNotOrderNotInCart;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,8 @@ public class OrderItemCommandService {
     final List<CartItem> cartItems = cartItemService.findCartItemByCartIds(cartItemIds,
         member);
 
+    validateAllCartItemInOrder(cartItemIds, cartItems);
+
     final List<OrderItemEntity> orderItemEntities = cartItems.stream()
         .map(it -> new OrderItemEntity(
             orderId,
@@ -41,5 +44,14 @@ public class OrderItemCommandService {
         .collect(Collectors.toList());
 
     orderItemDao.save(orderItemEntities);
+  }
+
+  private void validateAllCartItemInOrder(
+      final List<Long> cartItemIds,
+      final List<CartItem> cartItems
+  ) {
+    if (cartItemIds.size() != cartItems.size()) {
+      throw new CanNotOrderNotInCart("장바구니에 담지 않은 물품은 주문할 수 없습니다.");
+    }
   }
 }

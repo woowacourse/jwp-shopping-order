@@ -1,9 +1,11 @@
 package cart.order_item.application;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
+import cart.order_item.exception.CanNotOrderNotInCart;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,5 +32,19 @@ class OrderItemCommandServiceTest {
     //when & then
     assertDoesNotThrow(
         () -> orderItemCommandService.registerOrderItem(cartIdemIds, orderId, member));
+  }
+
+  @Test
+  @DisplayName("registerOrderItem() : 장바구니에 담지 않은 물품을 주문할 경우에는 CanNotOrderNotInCart이 발생합니다.")
+  void test_registerOrderItem_CanNotOrderNotInCart() throws Exception {
+    //given
+    final long orderId = 1L;
+    final List<Long> cartIdemIds = List.of(1L, 2L, 3L);
+    final Member member = memberDao.getMemberById(1L);
+
+    //when & then
+    assertThatThrownBy(
+        () -> orderItemCommandService.registerOrderItem(cartIdemIds, orderId, member))
+        .isInstanceOf(CanNotOrderNotInCart.class);
   }
 }
