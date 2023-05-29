@@ -28,9 +28,9 @@ class ProductDaoTest {
     @Test
     void 상품_저장_테스트() {
         final String testProductName = "testProductA";
-        final Product productEntity = new Product(testProductName, 3_000, "testImageUrl");
+        final Product product = new Product(testProductName, 3_000, "testImageUrl");
 
-        productDao.saveProduct(productEntity);
+        productDao.saveProduct(product);
 
         final List<Product> allProducts = productDao.findAllProducts();
         assertThat(allProducts).hasSize(1);
@@ -40,8 +40,8 @@ class ProductDaoTest {
     @Test
     void 상품_식별자_조회_테스트() {
         final String testProductName = "testProductA";
-        final Product productEntity = new Product(testProductName, 3_000, "testImageUrl");
-        final Long savedProductId = productDao.saveProduct(productEntity);
+        final Product product = new Product(testProductName, 3_000, "testImageUrl");
+        final Long savedProductId = productDao.saveProduct(product);
 
         final Optional<Product> productById = productDao.findProductById(savedProductId);
 
@@ -61,19 +61,34 @@ class ProductDaoTest {
         productDao.updateProduct(savedProductId, afterProduct);
 
         final Optional<Product> updatedProduct = productDao.findProductById(savedProductId);
-        
+
         assertThat(updatedProduct).isNotEmpty();
         assertThat(updatedProduct.get().getName()).isEqualTo(afterName);
     }
 
     @Test
     void 상품_삭제_테스트() {
-        final Product productEntity = new Product("testProductA", 3_000, "testImageUrl");
-        final Long savedProductId = productDao.saveProduct(productEntity);
+        final Product product = new Product("testProductA", 3_000, "testImageUrl");
+        final Long savedProductId = productDao.saveProduct(product);
         assertThat(productDao.findAllProducts()).hasSize(1);
 
         productDao.deleteProduct(savedProductId);
 
         assertThat(productDao.findAllProducts()).isEmpty();
+    }
+
+    @Test
+    void 상품_선택_조회_테스트() {
+        final Product productA = new Product("testProductA", 3_000, "testImageUrl");
+        final Product productB = new Product("testProductB", 2_000, "testImageUrl");
+        final Product productC = new Product("testProductC", 1_000, "testImageUrl");
+        final Long savedProductAId = productDao.saveProduct(productA);
+        productDao.saveProduct(productB);
+        final Long savedProductCId = productDao.saveProduct(productC);
+
+        final List<Product> productsById = productDao.findByIds(List.of(savedProductAId, savedProductCId));
+
+        assertThat(productsById).hasSize(2);
+        assertThat(productsById).extracting("name").doesNotContain("testProductB");
     }
 }

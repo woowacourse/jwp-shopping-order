@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
@@ -14,23 +15,31 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
-
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<Product> findAllProducts() {
         final String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, prodcutEntityRowMapper());
+        return jdbcTemplate.query(sql, prodcutRowMapper());
+    }
+
+    public List<Product> findByIds(final List<Long> ids) {
+        final String findByIdsQuery = "SELECT * FROM product WHERE id IN (:productIds)";
+        final MapSqlParameterSource parameters = new MapSqlParameterSource("productIds", ids);
+
+        return namedParameterJdbcTemplate.query(findByIdsQuery, parameters, prodcutRowMapper());
     }
 
     public Optional<Product> findProductById(final Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        final List<Product> products = jdbcTemplate.query(sql, prodcutEntityRowMapper(), productId);
+        final List<Product> products = jdbcTemplate.query(sql, prodcutRowMapper(), productId);
 
         if (products.isEmpty()) {
             return Optional.empty();
@@ -65,7 +74,7 @@ public class ProductDao {
         jdbcTemplate.update(deleteProductQuery, productId);
     }
 
-    private RowMapper<Product> prodcutEntityRowMapper() {
+    private RowMapper<Product> prodcutRowMapper() {
         return (rs, rowNum) -> {
             final Long productId = rs.getLong("id");
             final String name = rs.getString("name");
