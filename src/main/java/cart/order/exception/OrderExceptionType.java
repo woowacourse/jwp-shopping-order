@@ -30,6 +30,11 @@ public enum OrderExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "상품 정보가 변경되었습니다."
     ),
+    NO_AUTHORITY_QUERY_ORDER(
+            105,
+            HttpStatus.FORBIDDEN,
+            "자신의 주문만 조회할 수 있습니다."
+    ),
     ;
 
     private final int errorCode;
