@@ -11,7 +11,6 @@ import cart.domain.Member;
 import cart.domain.Product;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
-import cart.exception.InvalidCartItemOwnerException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.ProductNotFoundException;
 import java.util.List;
@@ -77,19 +76,7 @@ public class CartItemRepository {
         cartItemDao.deleteById(cartItemId, memberId);
     }
 
-    public List<CartItem> findAllByMemberIdAndCartItemIds(final Long memberId, final List<Long> orderItemIds) {
-        List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberIdAndCartItemIds(memberId,
-                orderItemIds);
-
-        if (cartItemEntities.size() != orderItemIds.size()) {
-            throw new InvalidCartItemOwnerException();
-        }
-        final Member member = getMember(memberId);
-        final Map<Long, Product> products = getProducts(cartItemEntities);
-        return makeCartItems(cartItemEntities, member, products);
-    }
-
-    private static List<CartItem> makeCartItems(final List<CartItemEntity> cartItemEntities, final Member member,
+    private List<CartItem> makeCartItems(final List<CartItemEntity> cartItemEntities, final Member member,
                                              final Map<Long, Product> products) {
         return cartItemEntities.stream()
                 .map(it -> new CartItem(it.getId(), it.getQuantity(), member, products.get(it.getProductId())))
@@ -109,5 +96,12 @@ public class CartItemRepository {
         return memberDao.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new)
                 .toDomain();
+    }
+
+    public List<CartItem> findAllByCartItemIds(final Long memberId, final List<Long> orderItemIds) {
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByCartItemIds(orderItemIds);
+        final Member member = getMember(memberId);
+        final Map<Long, Product> products = getProducts(cartItemEntities);
+        return makeCartItems(cartItemEntities, member, products);
     }
 }

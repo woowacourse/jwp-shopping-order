@@ -35,7 +35,22 @@ public class OrderService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
         final List<CartItem> findCartItems = getCartItems(memberId, request);
-        final List<OrderItem> orderItems = findCartItems.stream()
+        for (CartItem findCartItem : findCartItems) {
+            findCartItem.checkOwner(member);
+        }
+        final List<OrderItem> orderItems = getOrderItems(findCartItems);
+
+        final Orders newOrders = new Orders(null, member, orderItems);
+
+        final Long savedOrderId = orderRepository.save(newOrders).getId();
+        for (CartItem findCartItem : findCartItems) {
+            cartItemRepository.deleteById(findCartItem.getId(), memberId);
+        }
+        return savedOrderId;
+    }
+
+    private List<OrderItem> getOrderItems(final List<CartItem> findCartItems) {
+        return findCartItems.stream()
                 .map(it -> {
                     String productName = it.getProduct().getName();
                     long price = it.getProduct().getPrice();
@@ -45,22 +60,13 @@ public class OrderService {
                     return new OrderItem(productName, price, imageUrl, quantity);
                 })
                 .collect(Collectors.toList());
-
-        final Orders newOrders = new Orders(null, member, orderItems);
-
-        Long savedOrderId = orderRepository.save(newOrders).getId();
-        for (CartItem findCartItem : findCartItems) {
-            cartItemRepository.deleteById(findCartItem.getId(), memberId);
-        }
-        return savedOrderId;
     }
 
     private List<CartItem> getCartItems(final Long memberId, final OrderSaveRequest request) {
         final List<Long> orderItemIds = request.getOrderItems().stream()
                 .map(OrderItemIdDto::getId)
                 .collect(Collectors.toList());
-        return cartItemRepository.findAllByMemberIdAndCartItemIds(memberId,
-                orderItemIds);
+        return cartItemRepository.findAllByCartItemIds(memberId, orderItemIds);
     }
 
     public OrdersDto findByOrderId(final Long memberId, final Long orderId) {

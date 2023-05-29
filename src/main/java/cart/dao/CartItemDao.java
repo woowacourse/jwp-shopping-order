@@ -71,11 +71,9 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
     }
 
-    public List<CartItemEntity> findAllByMemberIdAndCartItemIds(final Long memberId, final List<Long> orderItemIds) {
-        final String sql = "SELECT * FROM cart_item WHERE member_id = :memberId and id IN (:ids)";
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("memberId", memberId);
-        parameters.addValue("ids", orderItemIds);
+    public List<CartItemEntity> findAllByCartItemIds(final List<Long> orderItemIds) {
+        final String sql = "SELECT * FROM cart_item WHERE id IN (:ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("ids", orderItemIds);
         return namedJdbcTemplate.query(sql, parameters, rowMapper);
     }
 }

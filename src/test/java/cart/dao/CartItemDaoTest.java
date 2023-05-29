@@ -119,7 +119,7 @@ class CartItemDaoTest {
         CartItemEntity savedCartItemEntity3 = cartItemDao.insert(new CartItemEntity(member.getId(), product3.getId(), 1));
 
         // when
-        List<CartItemEntity> result = cartItemDao.findAllByMemberIdAndCartItemIds(member.getId(),
+        List<CartItemEntity> result = cartItemDao.findAllByCartItemIds(
                 List.of(savedCartItemEntity1.getId(), savedCartItemEntity2.getId()));
 
         // then
