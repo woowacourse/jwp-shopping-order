@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
+    private static final int EMPTY = 0;
+
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
 
@@ -29,9 +31,7 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(final Member member) {
-        Cart cart = cartRepository.findCartByMemberId(member.getId());
-
-        return cart.getCartItems().stream()
+        return cartRepository.findCartByMemberId(member.getId()).getCartItems().stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toList());
     }
@@ -40,7 +40,6 @@ public class CartService {
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
         Product product = productRepository.findProductById(cartItemRequest.getProductId());
-
         CartItem cartItem = cart.addItem(product);
 
         if (cartItem.isExistAlready()) {
@@ -55,10 +54,9 @@ public class CartService {
     public void updateQuantity(final Member member, final Long cartItemId, final CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-
         validateOwner(cart, cartItem);
 
-        if (request.getQuantity() == 0) {
+        if (request.getQuantity() == EMPTY) {
             cart.removeItem(cartItem);
             cartRepository.removeCartItem(cartItem);
             return;
@@ -73,9 +71,10 @@ public class CartService {
     public void remove(final Member member, final Long cartItemId) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-        validateOwner(cart, cartItem);
 
+        validateOwner(cart, cartItem);
         cart.removeItem(cartItem);
+
         cartRepository.deleteCartItemById(cartItem.getId());
     }
 

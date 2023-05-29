@@ -15,7 +15,7 @@ public class PaymentUsingCouponResponse {
     }
 
     public static PaymentUsingCouponResponse from(final CartItem cartItem) {
-        return new PaymentUsingCouponResponse(cartItem.getProduct().getId(), cartItem.getOriginPrice(), cartItem.getOriginPrice() - cartItem.getApplyDiscountPrice());
+        return new PaymentUsingCouponResponse(cartItem.getProduct().getId(), cartItem.getOriginPrice(), cartItem.getOriginPrice() - cartItem.calculatePriceWithDiscount());
     }
 
     public long getProductId() {

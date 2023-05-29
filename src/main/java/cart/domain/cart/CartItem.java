@@ -1,10 +1,14 @@
 package cart.domain.cart;
 
 import cart.domain.product.Product;
+import cart.exception.QuantityExceedsCartException;
 
 import java.util.Objects;
 
 public class CartItem {
+
+    private static final int DEFAULT_QUANTITY = 1;
+    private static final int EMPTY = 0;
 
     private Long id;
     private final Product product;
@@ -12,7 +16,7 @@ public class CartItem {
 
     public CartItem(final Product product) {
         this.product = product;
-        this.quantity = 1;
+        this.quantity = DEFAULT_QUANTITY;
     }
 
     public CartItem(final Long id, final Product product, final int quantity) {
@@ -27,16 +31,20 @@ public class CartItem {
 
     public void validateQuantity(final int quantity) {
         if (this.quantity < quantity) {
-            throw new IllegalArgumentException("요청하신 수량이 장바구니에 담긴 수량보다 큽니다.");
+            throw new QuantityExceedsCartException();
         }
     }
 
-    public int getFinallyPrice(final int quantity) {
+    public int calculatePriceWithDiscount(final int quantity) {
         return this.product.getAppliedDiscountPrice() * quantity;
     }
 
+    public int calculatePriceWithDiscount() {
+        return this.product.getAppliedDiscountPrice();
+    }
+
     public boolean isEmptyQuantity() {
-        return this.quantity == 0;
+        return this.quantity == EMPTY;
     }
 
     public void buy(final int quantity) {
@@ -69,10 +77,6 @@ public class CartItem {
 
     public Product getProduct() {
         return product;
-    }
-
-    public int getApplyDiscountPrice() {
-        return this.product.getAppliedDiscountPrice();
     }
 
     public int getQuantity() {

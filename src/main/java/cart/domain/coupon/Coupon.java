@@ -8,6 +8,8 @@ import java.util.Objects;
 
 public class Coupon {
 
+    private static final String DELIVERY_COUPON = "DELIVERY";
+
     private final Long id;
     private final String name;
     private final Policy policy;
@@ -30,12 +32,12 @@ public class Coupon {
         return new Coupon(null, name, new PolicyDiscount(value));
     }
 
-    public int calculate(final int total) {
-        return policy.calculate(total);
+    public int calculate(final int price) {
+        return policy.calculate(price);
     }
 
     public boolean isDeliveryCoupon() {
-        return name.startsWith("DELIVERY");
+        return name.startsWith(DELIVERY_COUPON);
     }
 
     public Long getId() {

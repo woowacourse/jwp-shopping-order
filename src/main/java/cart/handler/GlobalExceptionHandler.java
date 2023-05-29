@@ -2,9 +2,11 @@ package cart.handler;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemNotFoundException;
+import cart.exception.CouponNotFoundException;
 import cart.exception.EmailInvalidException;
 import cart.exception.MemberNotOwnerException;
 import cart.exception.PasswordInvalidException;
+import cart.exception.QuantityExceedsCartException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +38,11 @@ public class GlobalExceptionHandler {
         return responseNotFound(exception.getMessage());
     }
 
+    @ExceptionHandler(CouponNotFoundException.class)
+    public ResponseEntity<String> handlerCouponNotFoundException(final CouponNotFoundException exception) {
+        return responseNotFound(exception.getMessage());
+    }
+
     @ExceptionHandler(EmailInvalidException.class)
     public ResponseEntity<String> handleEmailInvalidException(final EmailInvalidException exception) {
         return responseBadRequest(exception.getMessage());
@@ -43,6 +50,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PasswordInvalidException.class)
     public ResponseEntity<String> handlePasswordInvalidException(final PasswordInvalidException exception) {
+        return responseBadRequest(exception.getMessage());
+    }
+
+    @ExceptionHandler(QuantityExceedsCartException.class)
+    public ResponseEntity<String> handleQuantityExceedsCartException(final QuantityExceedsCartException exception) {
         return responseBadRequest(exception.getMessage());
     }
 

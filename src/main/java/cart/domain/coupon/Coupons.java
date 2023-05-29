@@ -1,7 +1,10 @@
 package cart.domain.coupon;
 
-import java.util.ArrayList;
+import cart.exception.CouponNotFoundException;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Coupons {
 
@@ -11,31 +14,27 @@ public class Coupons {
         this.coupons = coupons;
     }
 
-    public void validateCoupons(final List<Long> couponsId) {
-        for (Long couponId : couponsId) {
-            coupons.stream()
-                    .filter(coupon -> coupon.isSame(couponId))
-                    .findAny()
-                    .orElseThrow(() -> new IllegalArgumentException("쿠폰을 찾을 수 없습니다."));
+    public void validateHasCoupons(final List<Long> couponsId) {
+        for (final Long couponId : couponsId) {
+            findCouponById(couponId);
         }
     }
 
-    public List<Coupon> getCouponsByIds(final List<Long> couponsIds) {
-        List<Coupon> result = new ArrayList<>();
-
-        for (Long couponId : couponsIds) {
-            Coupon coupon = coupons.stream()
-                    .filter(it -> it.isSame(couponId))
-                    .findAny()
-                    .orElseThrow(() -> new IllegalArgumentException("쿠폰을 찾을 수 없습니다."));
-
-            result.add(coupon);
-        }
-
-        return result;
+    public List<Coupon> findCouponsByIds(final List<Long> couponsIds) {
+        return couponsIds.stream()
+                .map(this::findCouponById)
+                .collect(Collectors.toList());
     }
+
+    private Coupon findCouponById(Long couponId) {
+        return coupons.stream()
+                .filter(coupon -> coupon.isSame(couponId))
+                .findAny()
+                .orElseThrow(CouponNotFoundException::new);
+    }
+
 
     public List<Coupon> getCoupons() {
-        return coupons;
+        return Collections.unmodifiableList(coupons);
     }
 }

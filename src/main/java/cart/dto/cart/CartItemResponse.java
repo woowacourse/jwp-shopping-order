@@ -5,7 +5,7 @@ import cart.dto.product.ProductResponse;
 
 public class CartItemResponse {
 
-    private Long id;
+    private Long cartItemId;
     private int quantity;
     private ProductResponse product;
 
@@ -13,8 +13,8 @@ public class CartItemResponse {
 
     }
 
-    private CartItemResponse(final Long id, final int quantity, final ProductResponse product) {
-        this.id = id;
+    private CartItemResponse(final Long CartItemId, final int quantity, final ProductResponse product) {
+        this.cartItemId = CartItemId;
         this.quantity = quantity;
         this.product = product;
     }
@@ -27,8 +27,8 @@ public class CartItemResponse {
         );
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartItemId() {
+        return cartItemId;
     }
 
     public int getQuantity() {

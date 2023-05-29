@@ -3,12 +3,13 @@ package cart.domain.member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class Member {
 
-    private Long id;
+    private final Long id;
     private final Email email;
     private final Password password;
     private Coupons coupons;
@@ -28,12 +29,12 @@ public class Member {
         return this.password.isPassed(password);
     }
 
-    public void validateCoupons(final List<Long> couponsId) {
-        coupons.validateCoupons(couponsId);
+    public void validateHasCoupons(final List<Long> couponsId) {
+        coupons.validateHasCoupons(couponsId);
     }
 
     public List<Coupon> getCouponsByIds(final List<Long> couponsIds) {
-        return coupons.getCouponsByIds(couponsIds);
+        return Collections.unmodifiableList(coupons.findCouponsByIds(couponsIds));
     }
 
     public Long getId() {

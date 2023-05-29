@@ -2,6 +2,8 @@ package cart.domain.discount;
 
 public class PolicyDiscount implements Policy {
 
+    private static final int FREE = 0;
+    
     private int value;
 
     public PolicyDiscount(final int value) {
@@ -11,7 +13,7 @@ public class PolicyDiscount implements Policy {
     @Override
     public int calculate(final int price) {
         if (price < value) {
-            return 0;
+            return FREE;
         }
 
         return price - value;

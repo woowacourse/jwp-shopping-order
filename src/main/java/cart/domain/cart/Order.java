@@ -29,7 +29,7 @@ public class Order {
         cart.validateBuying(productIds, quantities);
         List<ProductHistory> productHistories = cart.buy(productIds, quantities);
 
-        member.validateCoupons(couponsId);
+        member.validateHasCoupons(couponsId);
         List<Coupon> coupons = member.getCouponsByIds(couponsId);
 
         int deliveryFee = cart.calculateDeliveryFeeUsingCoupons(coupons);
