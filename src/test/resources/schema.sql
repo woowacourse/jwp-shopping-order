@@ -6,18 +6,22 @@ DROP TABLE IF EXISTS `member`;
 
 CREATE TABLE `product`
 (
-    `id`        BIGINT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `name`      VARCHAR(255)  NOT NULL,
-    `price`     INT           NOT NULL,
-    `image_url` VARCHAR(255)  NOT NULL
+    `id`         BIGINT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`       VARCHAR(255)  NOT NULL,
+    `price`      INT           NOT NULL,
+    `image_url`  VARCHAR(255)  NOT NULL,
+    `created_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE `member`
 (
-    `id`       BIGINT UNIQUE NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `email`    VARCHAR(255)  NOT NULL UNIQUE,
-    `password` VARCHAR(255)  NOT NULL,
-    `point`    INT DEFAULT 0
+    `id`         BIGINT UNIQUE NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `email`      VARCHAR(255)  NOT NULL UNIQUE,
+    `password`   VARCHAR(255)  NOT NULL,
+    `point`      INT                    DEFAULT 0,
+    `created_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE `cart_item`
@@ -38,6 +42,7 @@ CREATE TABLE `orders`
     `member_id`  BIGINT        NOT NULL,
     `used_point` INT           NOT NULL,
     `created_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP),
     FOREIGN KEY (`member_id`) REFERENCES `member` (`id`)
 );
 
@@ -50,6 +55,8 @@ CREATE TABLE `order_product`
     `product_price`     INT           NOT NULL,
     `product_image_url` VARCHAR(255)  NOT NULL,
     `quantity`          INT           NOT NULL,
+    `created_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP),
     FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
     FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
 );
