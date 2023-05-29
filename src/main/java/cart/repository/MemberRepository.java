@@ -20,14 +20,14 @@ public class MemberRepository {
 
     public Member findById(Long id) {
         MemberEntity memberEntity = memberDao.findById(id)
-                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER.getMessage()));
+                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
 
         return toDomain(memberEntity);
     }
 
     public Member findByEmail(final String email) {
         MemberEntity memberEntity = memberDao.findByEmail(email)
-                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER.getMessage()));
+                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
 
         return toDomain(memberEntity);
     }
