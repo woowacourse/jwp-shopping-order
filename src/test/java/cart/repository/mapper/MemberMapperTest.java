@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class MemberMapperTest {
 
     @Test
-    @DisplayName("엔티티를 도메인으로 변환한다.")
+    @DisplayName("toDomain 메서드는 엔티티를 도메인으로 변환한다.")
     void convertFromEntityToDomain() {
         MemberEntity entity = new MemberEntity(1L, "a@a.com", "password1", 0);
 
@@ -26,7 +26,7 @@ class MemberMapperTest {
     }
 
     @Test
-    @DisplayName("도메인을 엔티티로 변환한다.")
+    @DisplayName("toEntity 메서드는 도메인을 엔티티로 변환한다.")
     void convertFromDomainToEntity() {
         Member domain = new Member(1L, "a@a.com", "password1", 0);
 

@@ -1,8 +1,5 @@
 package cart.exception;
 
-import cart.domain.cartitem.CartItem;
-import cart.domain.member.Member;
-
 public class CartItemException extends ShoppingException {
 
     public CartItemException(String message) {
@@ -11,8 +8,8 @@ public class CartItemException extends ShoppingException {
 
     public static class IllegalMember extends CartItemException {
 
-        public IllegalMember(CartItem cartItem, Member member) {
-            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
+        public IllegalMember() {
+            super("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
         }
     }
 
@@ -20,6 +17,13 @@ public class CartItemException extends ShoppingException {
 
         public QuantityShortage(int currentQuantity, int limit) {
             super("장바구니 상품 수량은 최소 " + limit + "개부터 가능합니다. 현재 개수: " + currentQuantity);
+        }
+    }
+
+    public static class NotFound extends CartItemException {
+
+        public NotFound() {
+            super("해당 장바구니 상품이 존재하지 않습니다.");
         }
     }
 }

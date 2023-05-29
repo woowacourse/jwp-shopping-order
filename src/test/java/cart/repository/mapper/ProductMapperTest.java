@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class ProductMapperTest {
 
     @Test
-    @DisplayName("엔티티를 도메인으로 변환한다.")
+    @DisplayName("toDomain 메서드는 엔티티를 도메인으로 변환한다.")
     void convertFromEntityToDomain() {
         ProductEntity entity = new ProductEntity(1L, "치킨", 13000, "http://chicken.com");
 
@@ -26,7 +26,7 @@ class ProductMapperTest {
     }
 
     @Test
-    @DisplayName("도메인을 엔티티로 변환한다.")
+    @DisplayName("toEntity 메서드는 도메인을 엔티티로 변환한다.")
     void convertFromDomainToEntity() {
         Product domain = new Product(1L, "치킨", 13000, "http://chicken.com");
 

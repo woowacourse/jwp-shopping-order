@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class CartItem {
 
-    private Long id;
-    private Quantity quantity;
+    private final Long id;
+    private final Quantity quantity;
     private final Member member;
     private final Product product;
 
@@ -53,11 +53,11 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalMember(this, member);
+            throw new IllegalMember();
         }
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = new Quantity(quantity);
+    public CartItem changeQuantity(int quantity) {
+        return new CartItem(id, quantity, member, product);
     }
 }
