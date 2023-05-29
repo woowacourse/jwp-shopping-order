@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -92,6 +94,17 @@ public class CartItemDao {
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);
+    }
+
+    public void deleteByMemberIdAndProductIds(final Long memberId, final List<Long> productIds) {
+        final String inSql = IntStream.range(0, productIds.size())
+            .mapToObj((i) -> "?")
+            .collect(Collectors.joining(", ", "(", ")"));
+
+        final String sql = String.format("DELETE FROM cart_item WHERE member_id = %d AND product_id IN " + inSql,
+            memberId);
+        System.out.println("sql = " + sql);
+        System.out.println(jdbcTemplate.update(sql, productIds.toArray()));
     }
 
     public void deleteById(Long id) {
