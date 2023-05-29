@@ -26,7 +26,7 @@ class OrdersRepositoryTest {
     @Test
     @DisplayName("주문을 받는다")
     void takeOrders() {
-        Mockito.when(ordersDao.createOrders(ORDERS)).thenReturn(1L);
+        Mockito.when(ordersDao.createOrders(ORDERS.getMemberId(),ORDERS.getOriginalPrice(),ORDERS.getDiscountPrice())).thenReturn(1L);
         Assertions.assertThat(ordersRepository.takeOrders(ORDERS)).isEqualTo(1L);
         for (long id : ORDERS.getCartId()) {
             Mockito.verify(cartItemDao, times(1)).deleteById(id);

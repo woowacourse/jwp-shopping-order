@@ -19,6 +19,6 @@ public class OrdersRepository {
         for(Long cartId: orders.getCartId()){
             cartItemDao.deleteById(cartId);
         }
-        return ordersDao.createOrders(orders);
+        return ordersDao.createOrders(orders.getMemberId(),orders.getOriginalPrice(),orders.getDiscountPrice());
     }
 }

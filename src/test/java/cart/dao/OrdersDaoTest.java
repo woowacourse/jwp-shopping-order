@@ -20,6 +20,6 @@ class OrdersDaoTest {
     @Test
     @DisplayName("주문을 받는다")
     void createOrder(){
-        Assertions.assertThat(ordersDao.createOrders(ORDERS)).isEqualTo(1L);
+        Assertions.assertThat(ordersDao.createOrders(ORDERS.getMemberId(),ORDERS.getOriginalPrice(),ORDERS.getDiscountPrice())).isEqualTo(1L);
     }
 }

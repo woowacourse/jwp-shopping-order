@@ -17,12 +17,11 @@ public class OrdersDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long createOrders(final Orders orders){
+    public Long createOrders(final long memberId, final int originalPrice, final  int discountPrice){
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("member_id",orders.getMemberId())
-                .addValue("original_price",orders.getOriginalPrice())
-                .addValue("discount_price",orders.getDiscountPrice())
-                .addValue("coupon_id", orders.getCouponId())
+                .addValue("member_id",memberId)
+                .addValue("original_price",originalPrice)
+                .addValue("discount_price",discountPrice)
                 .addValue("confirm_state",false);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
