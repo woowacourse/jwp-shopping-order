@@ -4,6 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -26,11 +27,15 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Product product = productDao.getProductById(cartItemRequest.getProductId());
+
+        return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
@@ -66,6 +71,7 @@ public class CartItemService {
         if (count != ids.size()) {
             throw new CartItemException("유효하지 않은 상품 ID 입니다.");
         }
+
         cartItemDao.deleteByIdsAndMemberId(member.getId(), ids);
     }
 }
