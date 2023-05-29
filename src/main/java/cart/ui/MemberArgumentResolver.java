@@ -1,8 +1,10 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
+import cart.dao.AuthDao;
 import cart.domain.Member;
+import cart.entity.MemberEntity;
 import cart.exception.AuthenticationException;
+import java.util.NoSuchElementException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -13,19 +15,19 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberDao memberDao;
+    private final AuthDao authDao;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(final AuthDao authDao) {
+        this.authDao = authDao;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
             return null;
@@ -44,7 +46,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
+        final MemberEntity memberEntity = authDao.findByEmail(email).orElseThrow(() -> new AuthenticationException());
+        final Member member = memberEntity.toMember();
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }

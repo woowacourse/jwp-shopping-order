@@ -1,17 +1,17 @@
-package cart.domain;
+package cart.entity;
 
-public class Product {
+public class ProductEntity {
 
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
-    public Product(final String name, int price, final String imageUrl) {
+    public ProductEntity(final String name, final int price, final String imageUrl) {
         this(null, name, price, imageUrl);
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public ProductEntity(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
