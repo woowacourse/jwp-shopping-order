@@ -16,7 +16,7 @@ public class Member {
     private final String password;
 
     public Member(Long id, String email, String password) {
-        validateId(id);
+        validate(id, email, password);
         this.id = id;
 
         validateEmail(email);
@@ -24,6 +24,12 @@ public class Member {
 
         validatePassword(password);
         this.password = password;
+    }
+
+    private void validate(Long id, String email, String password) {
+        validateId(id);
+        validateEmail(email);
+        validatePassword(password);
     }
 
     private void validateId(Long id) {

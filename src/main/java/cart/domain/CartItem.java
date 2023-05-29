@@ -7,6 +7,7 @@ import java.util.Objects;
 public class CartItem {
 
     public static final int MINIMUM_QUANTITY = 1;
+    private static final int MINUMUM_QUANTITY = 1;
 
     private Long id;
     private int quantity;
@@ -14,27 +15,29 @@ public class CartItem {
     private final Member member;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
-
-        validateMember(member);
+        validate(member, product);
+        this.quantity = MINUMUM_QUANTITY;
         this.member = member;
-
-        validateProduct(product);
         this.product = product;
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
-        validateId(id);
+        validate(id, quantity, member, product);
         this.id = id;
-
-        validateQuantity(quantity);
         this.quantity = quantity;
-
-        validateProduct(product);
         this.product = product;
-
-        validateMember(member);
         this.member = member;
+    }
+
+    private void validate(Member member, Product product) {
+        validateMember(member);
+        validateProduct(product);
+    }
+
+    private void validate(long id, int quantity, Member member, Product product) {
+        validateId(id);
+        validateQuantity(quantity);
+        validate(member, product);
     }
 
     private void validateId(Long id) {

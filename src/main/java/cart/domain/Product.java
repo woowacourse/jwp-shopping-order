@@ -18,28 +18,29 @@ public class Product {
     private String imageUrl;
 
     public Product(Long id, String name, int price, String imageUrl) {
-        validateId(id);
+        validate(id, name, price, imageUrl);
         this.id = id;
-
-        validateName(name);
         this.name = name;
-
-        validatePrice(price);
         this.price = price;
-
-        validateImageUrl(imageUrl);
         this.imageUrl = imageUrl;
     }
 
     public Product(String name, int price, String imageUrl) {
-        validateName(name);
+        validate(name, price, imageUrl);
         this.name = name;
-
-        validatePrice(price);
         this.price = price;
-
-        validateImageUrl(imageUrl);
         this.imageUrl = imageUrl;
+    }
+
+    private void validate(String name, int price, String imageUrl) {
+        validateName(name);
+        validatePrice(price);
+        validateImageUrl(imageUrl);
+    }
+
+    private void validate(Long id, String name, int price, String imageUrl) {
+        validateId(id);
+        validate(name, price, imageUrl);
     }
 
     private void validateId(Long id) {
