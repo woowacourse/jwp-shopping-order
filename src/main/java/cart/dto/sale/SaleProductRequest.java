@@ -9,6 +9,10 @@ public class SaleProductRequest {
     @Max(value = 100, message = "최대 할인은 100% 입니다.")
     private int amount;
 
+    public SaleProductRequest(final int amount) {
+        this.amount = amount;
+    }
+
     public SaleProductRequest() {
 
     }

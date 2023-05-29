@@ -1,0 +1,89 @@
+= Product
+:toc: left
+:source-highlighter: highlightjs
+:sectlinks:
+
+== 책 생성
+
+=== 요청
+
+include::{snippets}/product-controller-unit-test/create_product/request-headers.adoc[]
+include::{snippets}/product-controller-unit-test/create_product/request-fields.adoc[]
+include::{snippets}/product-controller-unit-test/create_product/request-body.adoc[]
+
+=== 응답
+
+include::{snippets}/product-controller-unit-test/create_product/response-headers.adoc[]
+include::{snippets}/product-controller-unit-test/create_product/http-response.adoc[]
+
+== 상품 전체 조회
+
+=== 요청
+
+include::{snippets}/product-controller-unit-test/find_all_products/request-headers.adoc[]
+
+=== 응답
+
+include::{snippets}/product-controller-unit-test/find_all_products/http-response.adoc[]
+include::{snippets}/product-controller-unit-test/find_all_products/response-fields.adoc[]
+
+== 상품 단건 조회
+
+=== 요청
+
+include::{snippets}/product-controller-unit-test/find_product_by_id/request-headers.adoc[]
+include::{snippets}/product-controller-unit-test/find_product_by_id/path-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/product-controller-unit-test/find_product_by_id/http-response.adoc[]
+include::{snippets}/product-controller-unit-test/find_product_by_id/response-fields.adoc[]
+
+== 상품 수정
+
+=== 요청
+
+/products/id
+
+include::{snippets}/product-controller-unit-test/update_product/http-request.adoc[]
+include::{snippets}/product-controller-unit-test/update_product/request-headers.adoc[]
+include::{snippets}/product-controller-unit-test/update_product/request-fields.adoc[]
+include::{snippets}/product-controller-unit-test/update_product/request-body.adoc[]
+
+=== 응답
+include::{snippets}/product-controller-unit-test/update_product/http-response.adoc[]
+
+
+
+== 상품 삭제
+=== 요청
+include::{snippets}/product-controller-unit-test/delete_product/request-headers.adoc[]
+include::{snippets}/product-controller-unit-test/delete_product/http-request.adoc[]
+
+
+=== 응답
+include::{snippets}/product-controller-unit-test/delete_product/response-headers.adoc[]
+include::{snippets}/product-controller-unit-test/delete_product/http-response.adoc[]
+
+
+
+== 상품 세일 적용
+=== 요청
+include::{snippets}/product-controller-unit-test/apply_sale/request-headers.adoc[]
+include::{snippets}/product-controller-unit-test/apply_sale/request-fields.adoc[]
+include::{snippets}/product-controller-unit-test/apply_sale/request-body.adoc[]
+
+=== 응답
+include::{snippets}/product-controller-unit-test/apply_sale/response-headers.adoc[]
+include::{snippets}/product-controller-unit-test/apply_sale/http-response.adoc[]
+
+
+
+== 상품 세일 제거
+=== 요청
+include::{snippets}/product-controller-unit-test/unapply_sale/request-headers.adoc[]
+include::{snippets}/product-controller-unit-test/unapply_sale/http-request.adoc[]
+
+=== 응답
+include::{snippets}/product-controller-unit-test/unapply_sale/response-headers.adoc[]
+include::{snippets}/product-controller-unit-test/unapply_sale/http-response.adoc[]

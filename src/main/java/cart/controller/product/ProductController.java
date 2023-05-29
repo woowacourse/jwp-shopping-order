@@ -30,12 +30,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> findAllProducts() {
         return ResponseEntity.ok(productService.findAllProducts());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable("id") final Long productId) {
+    public ResponseEntity<ProductResponse> findProductById(@PathVariable("id") final Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 
@@ -68,6 +68,6 @@ public class ProductController {
     @DeleteMapping("/sales/{id}")
     public ResponseEntity<Void> unapplySale(@PathVariable("id") final Long productId) {
         long id = productService.unapplySale(productId);
-        return ResponseEntity.created(URI.create("/products/" + id)).build();
+        return ResponseEntity.ok().location(URI.create("/products/" + id)).build();
     }
 }
