@@ -1,9 +1,9 @@
 package cart.acceptence.steps;
 
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

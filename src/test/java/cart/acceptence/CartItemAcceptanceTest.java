@@ -2,7 +2,7 @@ package cart.acceptence;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.CartItemResponse;
+import cart.dto.response.CartItemResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

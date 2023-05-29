@@ -1,6 +1,6 @@
 package cart.acceptence.fixtures;
 
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class ProductFixtures {

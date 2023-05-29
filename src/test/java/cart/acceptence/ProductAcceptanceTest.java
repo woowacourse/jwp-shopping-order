@@ -1,6 +1,6 @@
 package cart.acceptence;
 
-import cart.dto.ProductResponse;
+import cart.dto.response.ProductResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
