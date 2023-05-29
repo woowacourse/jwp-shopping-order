@@ -15,6 +15,15 @@ public class Member {
         this.password = password;
     }
 
+    public boolean checkPassword(final String password) {
+        return this.password.equals(password);
+    }
+
+    public boolean matchMemberByInfo(final Member other) {
+        return this.password.equals(other.password)
+                && this.email.equals(other.email);
+    }
+
     public Long getId() {
         return id;
     }
@@ -25,9 +34,5 @@ public class Member {
 
     public String getPassword() {
         return password;
-    }
-
-    public boolean checkPassword(final String password) {
-        return this.password.equals(password);
     }
 }
