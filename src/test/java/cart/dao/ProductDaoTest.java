@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Product;
 import cart.repository.dao.ProductDao;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +62,18 @@ class ProductDaoTest {
 
         // then
         assertThat(findProduct.isDeleted()).isTrue();
+    }
+
+    @Test
+    void getProductByIds() {
+        // given
+        final List<Long> ids = List.of(1L, 3L);
+
+        // when
+        final List<Product> findProducts = productDao.getProductByIds(ids);
+
+        // then
+        assertThat(findProducts).map(Product::getId)
+                .isEqualTo(ids);
     }
 }
