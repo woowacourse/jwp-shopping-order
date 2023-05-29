@@ -59,6 +59,34 @@ class OrderDaoTest {
         });
     }
 
+    @DisplayName("유저의 모든 주문 정보들을 조회할 수 있다")
+    @Test
+    void findAllByMemberId() {
+        //given
+        final Member member = createMember();
+        final Product product = createProduct();
+
+        final Long cartItemId1 = cartItemDao.save(new CartItem(member, product));
+        final Long cartItemId2 = cartItemDao.save(new CartItem(member, product));
+        final List<CartItem> cartItems = cartItemDao.findAllByIds(List.of(cartItemId1, cartItemId2));
+
+        final Order order = new Order(member, 1000, cartItems);
+
+        orderDao.save(order);
+        orderDao.save(order);
+
+        //when
+        final List<Order> orders = orderDao.findAllByMemberId(member.getId());
+
+        //then
+        assertSoftly(soft -> {
+            assertThat(orders).hasSize(2);
+            assertThat(orders).allMatch(o -> o.getMember().equals(member));
+            assertThat(orders).allMatch(o -> o.getTotalPrice() == 1000);
+            assertThat(orders).allMatch(o -> o.getCartItems().size() == 2);
+        });
+    }
+
     private Member createMember() {
         memberDao.addMember(new Member("abcd@naver.com", "1234"));
         return memberDao.getMemberByEmail("abcd@naver.com");
