@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.dao.MemberDao;
-import cart.dto.MemberResponse;
+import cart.dto.response.MemberResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
