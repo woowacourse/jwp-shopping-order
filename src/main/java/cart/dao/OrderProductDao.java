@@ -21,7 +21,7 @@ public class OrderProductDao {
     private final JdbcTemplate jdbcTemplate;
 
     public OrderProductDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     final RowMapper<OrderProduct> orderProductRowMapper = (result, rowNum) -> {

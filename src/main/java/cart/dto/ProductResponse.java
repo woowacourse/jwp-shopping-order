@@ -3,10 +3,10 @@ package cart.dto;
 import cart.domain.product.Product;
 
 public class ProductResponse {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     private ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;

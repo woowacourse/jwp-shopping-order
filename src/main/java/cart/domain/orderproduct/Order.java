@@ -11,7 +11,7 @@ public class Order {
     private Long id;
     private final Member member;
     private final MemberPoint usedPoint;
-//    private final ProductPrice totalPrice;
+    //    private final ProductPrice totalPrice;
     private LocalDateTime createdAt;
 
     public Order(final Member member, final MemberPoint usedPoint) {

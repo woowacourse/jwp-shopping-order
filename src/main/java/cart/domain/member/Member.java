@@ -57,6 +57,7 @@ public class Member {
     public MemberPoint getPoint() {
         return point;
     }
+
     public Integer getPointValue() {
         return point.getPoint();
     }

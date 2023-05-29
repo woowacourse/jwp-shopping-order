@@ -33,7 +33,7 @@
              201 CREATED
              Location : orders/3
           ```
-- [ ] 사용자는 전체 주문 내역을 조회할 수 있다.
+- [x] 사용자는 전체 주문 내역을 조회할 수 있다.
   - 요청
     ```text
         Authorization: Basic ${credentials}

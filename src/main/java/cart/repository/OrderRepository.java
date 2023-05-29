@@ -40,19 +40,11 @@ public class OrderRepository {
         return orderDao.findById(orderId);
     }
 
-    public OrderProduct findOrderProductByOrderId(final Long orderProductId) {
-
-//        return orderProductDao.findByOrderProductId(orderProductId);
-        return null;
-    }
-
-    public List<OrderProduct> findAllOrderProductsByMemberId(final Long memberId) {
-
-        return orderProductDao.findByMemberId(memberId);
-    }
-
     public List<OrderProduct> findAllOrderProductsByOrderId(final Long orderId) {
-
         return orderProductDao.findByOrderId(orderId);
+    }
+
+    public List<Order> findOrdersByMemberId(final Long memberId) {
+        return orderDao.findAllByMemberId(memberId);
     }
 }

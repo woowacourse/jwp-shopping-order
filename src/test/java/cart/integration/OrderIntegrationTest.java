@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class OrderIntegrationTest extends IntegrationTest {
 
@@ -50,9 +51,10 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
     @DisplayName("단일 주문에 대한 주문 상품들을 볼 수 있다.")
     @Test
-    void getAllOrderDetails() {
+    void getSingleOrderDetail() {
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
@@ -65,5 +67,42 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .body("products", hasSize(2))
                 .body("products[0].productId", is(1))
                 .body("products[1].productId", is(2));
+    }
+
+    @DisplayName("사용자가 주문한 모든 주문 내역을 확인할 수 있다.")
+    @Test
+    void getAllOrderDetail() {
+        final OrderRequest orderRequest = new OrderRequest(List.of(3L, 4L, 5L), 0);
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
+                .body(orderRequest).log().all()
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/orders/2");
+
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
+                .when().get("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("[0].orderId", is(1))
+                .body("[0].totalPrice", is(100_000))
+                .body("[0].usedPoint", is(1_000))
+                .body("[0].createdAt", notNullValue())
+                .body("[0].products", hasSize(2))
+                .body("[0].products[0].productId", is(1))
+                .body("[0].products[1].productId", is(2))
+
+                .body("[1].orderId", is(2))
+                .body("[1].totalPrice", is(82_000))
+                .body("[1].usedPoint", is(0))
+                .body("[1].createdAt", notNullValue())
+                .body("[1].products", hasSize(3))
+                .body("[1].products[0].productId", is(2))
+                .body("[1].products[1].productId", is(3))
+                .body("[1].products[2].productId", is(4));
     }
 }

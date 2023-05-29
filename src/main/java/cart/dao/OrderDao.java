@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Component
 public class OrderDao {
@@ -62,5 +63,15 @@ public class OrderDao {
                 "WHERE o.id = ?";
 
         return jdbcTemplate.queryForObject(sql, orderMapper, id);
+    }
+
+    public List<Order> findAllByMemberId(final Long memberId) {
+        final String sql = "SELECT o.id, o.used_point, o.created_at, " +
+                "m.id, m.email, m.point " +
+                "FROM orders o " +
+                "JOIN member m ON m.id = o.member_id " +
+                "WHERE o.member_id = ?";
+
+        return jdbcTemplate.query(sql, orderMapper, memberId);
     }
 }

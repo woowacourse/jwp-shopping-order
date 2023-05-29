@@ -17,6 +17,7 @@ import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,23 +77,29 @@ public class OrderService {
     }
 
     public List<OrderDetailResponse> getAllOrderDetails(final Member member) {
-        final List<OrderProduct> orderProducts = orderRepository.findAllOrderProductsByMemberId(member.getId());
-        return orderProducts.stream()
-                .map(orderProduct -> new OrderDetailResponse(
-                        orderProduct.getOrderId(),
-                        orderProducts.stream()
-                                .mapToInt(OrderProduct::getProductPriceValue)
-                                .sum(),
-                        orderProduct.getOrder().getUsedPointValue(),
-                        orderProduct.getOrder().getCreatedAt(),
-                        orderProducts.stream()
-                                .map(m -> new OrderProductDto(
-                                        m.getProductId(),
-                                        m.getProductNameValue(),
-                                        m.getProductPriceValue(),
-                                        m.getProductImageUrlValue(),
-                                        m.getQuantityValue())
-                                ).collect(Collectors.toList())
-                )).collect(Collectors.toList());
+        final List<Order> orders = orderRepository.findOrdersByMemberId(member.getId());
+//        final List<OrderProduct> orderProducts = orderRepository.findAllOrderProductsByMemberId(member.getId());
+        final List<OrderDetailResponse> result = new ArrayList<>();
+        for (Order order : orders) {
+            final List<OrderProduct> orderProducts = orderRepository.findAllOrderProductsByOrderId(order.getId());
+            final OrderDetailResponse orderDetailResponse = new OrderDetailResponse(
+                    order.getId(),
+                    orderProducts.stream()
+                            .mapToInt(orderProduct -> orderProduct.getProductPriceValue() * orderProduct.getQuantityValue())
+                            .sum(),
+                    order.getUsedPointValue(),
+                    order.getCreatedAt(),
+                    orderProducts.stream()
+                            .map(m -> new OrderProductDto(
+                                    m.getProductId(),
+                                    m.getProductNameValue(),
+                                    m.getProductPriceValue(),
+                                    m.getProductImageUrlValue(),
+                                    m.getQuantityValue())
+                            ).collect(Collectors.toList())
+            );
+            result.add(orderDetailResponse);
+        }
+        return result;
     }
 }

@@ -45,6 +45,7 @@ public class CartItem {
     public Long getMemberId() {
         return member.getId();
     }
+
     public Member getMember() {
         return member;
     }
@@ -53,7 +54,7 @@ public class CartItem {
         return product;
     }
 
-    public Long getProductId(){
+    public Long getProductId() {
         return product.getId();
     }
 
