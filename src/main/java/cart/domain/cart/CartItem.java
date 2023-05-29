@@ -35,12 +35,12 @@ public class CartItem {
         }
     }
 
-    public int calculatePriceWithDiscount(final int quantity) {
-        return this.product.getAppliedDiscountPrice() * quantity;
+    public int getResultPrice(final int quantity) {
+        return this.product.getResultPrice() * quantity;
     }
 
-    public int calculatePriceWithDiscount() {
-        return this.product.getAppliedDiscountPrice();
+    public int getResultPrice() {
+        return this.product.getResultPrice();
     }
 
     public boolean isEmptyQuantity() {

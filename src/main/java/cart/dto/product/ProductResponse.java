@@ -14,7 +14,7 @@ public class ProductResponse {
     public ProductResponse() {
     }
 
-    public ProductResponse(final long id, final String name, final int price, final String imageUrl, final Boolean isOnSale, final int salePrice) {
+    private ProductResponse(final long id, final String name, final int price, final String imageUrl, final Boolean isOnSale, final int salePrice) {
         this.id = id;
         this.name = name;
         this.price = price;

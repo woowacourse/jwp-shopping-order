@@ -21,26 +21,26 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getAllProducts() {
+    public List<ProductResponse> findAllProducts() {
         return productRepository.findAllProducts().stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProductById(final Long productId) {
+    public ProductResponse findProductById(final Long productId) {
         return ProductResponse.from(productRepository.findProductById(productId));
     }
 
     @Transactional
-    public Long createProduct(final ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+    public long createProduct(final ProductRequest productRequest) {
+        Product product = new Product(productRequest.getProductName(), productRequest.getProductPrice(), productRequest.getImageUrl());
         return productRepository.createProduct(product);
     }
 
     @Transactional
     public void updateProduct(final Long productId, final ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = new Product(productRequest.getProductName(), productRequest.getProductPrice(), productRequest.getImageUrl());
         productRepository.updateProduct(productId, product);
     }
 

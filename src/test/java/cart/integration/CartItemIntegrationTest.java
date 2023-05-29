@@ -185,6 +185,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()
+                .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()

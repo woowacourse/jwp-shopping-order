@@ -1,5 +1,6 @@
 package cart.domain.product;
 
+import cart.exception.SalePercentageInvalidRangeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,7 @@ class ProductTest {
 
         // then
         assertAll(
-                () -> assertThat(product.getAppliedDiscountPrice()).isEqualTo(14000),
+                () -> assertThat(product.getResultPrice()).isEqualTo(14000),
                 () -> assertThat(product.getSalePrice()).isEqualTo(6000),
                 () -> assertThat(product.isOnSale()).isEqualTo(true)
         );
@@ -43,7 +44,7 @@ class ProductTest {
         assertThat(product.isOnSale()).isEqualTo(false);
     }
 
-    @DisplayName("상품의 세일 적용시 최대 1~100%까지 가능하다.")
+    @DisplayName("상품의 세일 적용시 1~100% 까지 가능하다.")
     @ValueSource(ints = {-1, 0, 101})
     @ParameterizedTest
     void throws_exception_when_sale_value_invalid_range(final int value) {
@@ -52,7 +53,7 @@ class ProductTest {
 
         // when & then
         assertThatThrownBy(() -> product.applySale(value))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SalePercentageInvalidRangeException.class);
     }
 
     @DisplayName("세일 적용이 되지 않고, 세일 적용 후 금액을 조회하면 원래 가격이 나온다.")
@@ -62,7 +63,7 @@ class ProductTest {
         Product product = createProduct();
 
         // when
-        int result = product.getAppliedDiscountPrice();
+        int result = product.getResultPrice();
 
         // then
         assertThat(result).isEqualTo(product.getPrice());
@@ -75,9 +76,10 @@ class ProductTest {
         Product product = createProduct();
 
         // when
-        int result = product.getSalePrice();;
+        int result = product.getSalePrice();
+        ;
 
         // then
         assertThat(result).isEqualTo(0);
-     }
+    }
 }

@@ -2,6 +2,7 @@ package cart.domain.product;
 
 import cart.domain.discount.Policy;
 import cart.domain.discount.PolicyPercentage;
+import cart.exception.SalePercentageInvalidRangeException;
 
 import java.util.Objects;
 
@@ -9,13 +10,14 @@ public class Product {
 
     private static final int MAXIMUM_SALE_PERCENT = 100;
     private static final int MINIMUM_SALE_PERCENT = 1;
+    private static final int UN_APPLIED_SALE_VALUE = 0;
 
     private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
     private boolean isOnSale;
-    private Policy policy;
+    private final Policy policy;
 
     public Product(final String name, final int price, final String imageUrl) {
         this.name = name;
@@ -34,21 +36,25 @@ public class Product {
         this.policy = new PolicyPercentage(amount);
     }
 
-    public void applySale(int value) {
-        if (value > MAXIMUM_SALE_PERCENT || value < MINIMUM_SALE_PERCENT) {
-            throw new IllegalArgumentException("상품 세일은 최대 1~100%까지 가능합니다.");
+    public void applySale(int percentage) {
+        if (validateRangeOfSalePercentage(percentage)) {
+            throw new SalePercentageInvalidRangeException();
         }
 
-        policy.updateDiscountValue(value);
+        policy.updateDiscountValue(percentage);
         this.isOnSale = true;
     }
 
+    private boolean validateRangeOfSalePercentage(final int value) {
+        return value > MAXIMUM_SALE_PERCENT || value < MINIMUM_SALE_PERCENT;
+    }
+
     public void unApplySale() {
-        policy.updateDiscountValue(0);
+        policy.updateDiscountValue(UN_APPLIED_SALE_VALUE);
         this.isOnSale = false;
     }
 
-    public int getAppliedDiscountPrice() {
+    public int getResultPrice() {
         if (!isOnSale) {
             return price;
         }

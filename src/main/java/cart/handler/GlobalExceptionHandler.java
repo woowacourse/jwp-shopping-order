@@ -7,6 +7,7 @@ import cart.exception.EmailInvalidException;
 import cart.exception.MemberNotOwnerException;
 import cart.exception.PasswordInvalidException;
 import cart.exception.QuantityExceedsCartException;
+import cart.exception.SalePercentageInvalidRangeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -55,6 +56,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(QuantityExceedsCartException.class)
     public ResponseEntity<String> handleQuantityExceedsCartException(final QuantityExceedsCartException exception) {
+        return responseBadRequest(exception.getMessage());
+    }
+
+    @ExceptionHandler(SalePercentageInvalidRangeException.class)
+    public ResponseEntity<String> handleSalePercentageInvalidRangeException(final SalePercentageInvalidRangeException exception) {
         return responseBadRequest(exception.getMessage());
     }
 

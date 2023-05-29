@@ -82,7 +82,7 @@ public class CartItems {
 
     public int getTotalFinallyPrice() {
         return cartItems.stream()
-                .mapToInt(CartItem::calculatePriceWithDiscount)
+                .mapToInt(CartItem::getResultPrice)
                 .sum();
     }
 
@@ -90,7 +90,7 @@ public class CartItems {
         List<ProductUsingCouponAndSaleResponse> result = new ArrayList<>();
 
         List<Integer> originPrices = cartItems.stream()
-                .map(CartItem::calculatePriceWithDiscount)
+                .map(CartItem::getResultPrice)
                 .collect(Collectors.toList());
 
         List<Integer> afterPrices = new ArrayList<>();
@@ -120,7 +120,7 @@ public class CartItems {
                 .orElseThrow(() -> new IllegalArgumentException("요청하신 상품을 찾을 수 없습니다."));
 
         // 2. 최종 가격 * quantity 가격을 가져온다.
-        int totalPrice = cartItem.calculatePriceWithDiscount(quantity);
+        int totalPrice = cartItem.getResultPrice(quantity);
 
         // 3. 도메인에서 상품의 수량을 낮춘다.
         cartItem.buy(quantity);
