@@ -68,11 +68,6 @@ public class CartItemDao {
         return cartItemEntities.isEmpty() ? null : cartItemEntities.get(0);
     }
 
-    public void delete(final Long memberId, final Long productId) {
-        final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
     public void deleteById(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
@@ -82,5 +77,13 @@ public class CartItemDao {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
     }
+
+    public void deleteAllById(final List<Long> ids) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.batchUpdate(sql, ids, ids.size(), ((ps, id) -> {
+            ps.setLong(1, id);
+        }));
+    }
+
 }
 

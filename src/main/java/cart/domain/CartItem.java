@@ -33,6 +33,14 @@ public class CartItem {
         return product;
     }
 
+    public Long getProductId() {
+        return product.getId();
+    }
+
+    public int getTotalPrice() {
+        return product.getPrice() * quantity;
+    }
+
     public int getQuantity() {
         return quantity;
     }
