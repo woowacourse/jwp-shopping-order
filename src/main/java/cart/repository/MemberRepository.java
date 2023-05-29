@@ -26,8 +26,8 @@ public class MemberRepository {
     }
 
     public Member getMemberByEmailAndPassword(String email, String password) {
-        MemberEntity memberEntity = memberDao.getMemberByEmailAndPassword(email, password)
-                .orElseThrow(() -> new NotFound());
-        return MemberMapper.toDomain(memberEntity);
+        return memberDao.getMemberByEmailAndPassword(email, password)
+                .map(MemberMapper::toDomain)
+                .orElseThrow(NotFound::new);
     }
 }

@@ -42,7 +42,7 @@ public class MemberDao {
     public Optional<MemberEntity> getMemberById(Long id) {
         String sql = "SELECT id, email, password, point, created_at, updated_at FROM member WHERE id = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -51,7 +51,7 @@ public class MemberDao {
     public Optional<MemberEntity> getMemberByEmailAndPassword(String email, String password) {
         String sql = "SELECT id, email, password, point, created_at, updated_at FROM member WHERE email = ? and password = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, email, password));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, email, password));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

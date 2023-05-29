@@ -42,7 +42,7 @@ public class ProductDao {
     public Optional<ProductEntity> getProductById(Long productId) {
         String sql = "SELECT id, name, price, image_url, created_at, updated_at FROM product WHERE id = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, productId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, productId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
