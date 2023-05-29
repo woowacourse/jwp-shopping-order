@@ -18,15 +18,6 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("id")
-                .withTableName("cart_item")
-                .usingColumns("member_id", "product_id", "quantity");
-    }
-
     private final RowMapper<CartItemWithMemberAndProductEntity> cartItemEntityRowMapper = (rs, rowNum) -> {
         CartItemEntity cartItemEntity = new CartItemEntity(
                 rs.getLong("cart_id"),
@@ -50,6 +41,14 @@ public class CartItemDao {
         );
         return new CartItemWithMemberAndProductEntity(cartItemEntity, memberEntity, productEntity);
     };
+
+    public CartItemDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .usingGeneratedKeyColumns("id")
+                .withTableName("cart_item")
+                .usingColumns("member_id", "product_id", "quantity");
+    }
 
     public Long save(CartItemEntity cartItemEntity) {
         return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(cartItemEntity)).longValue();

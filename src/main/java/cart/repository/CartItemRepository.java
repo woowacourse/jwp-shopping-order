@@ -65,7 +65,7 @@ public class CartItemRepository {
         Member member = cartItem.getMember();
         Product product = cartItem.getProduct();
 
-        return new CartItemEntity(null,
+        return new CartItemEntity(cartItem.getId(),
                 member.getId(),
                 product.getId(),
                 cartItem.getQuantity(),
