@@ -18,7 +18,7 @@ CREATE TABLE cart_item
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL,
+    quantity   INT    NOT NULL
 );
 
 CREATE TABLE orders
