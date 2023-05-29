@@ -17,4 +17,7 @@ public enum CouponType {
                 .findAny()
                 .orElseThrow();
     }
+    public String value(){
+        return this.value;
+    }
 }

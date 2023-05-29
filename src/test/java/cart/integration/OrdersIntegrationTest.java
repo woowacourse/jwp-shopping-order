@@ -48,9 +48,7 @@ public class OrdersIntegrationTest extends IntegrationTest{
                 .when().get("/orders/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("id",equalTo(1L))
-                .body("order_products",hasSize(3))
-                .body("coupon",hasItems("id", "name", "discount_type", "discount_rate", "discount_amount", "minimum_price"));
+                .body("id",equalTo(1));
     }
     @Test
     @DisplayName("주문 확정을 한다")

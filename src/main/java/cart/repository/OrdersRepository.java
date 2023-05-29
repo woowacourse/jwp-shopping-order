@@ -70,4 +70,7 @@ public class OrdersRepository {
     private CartItem findProductWithCartItems(Member member,final OrdersCartItemEntity ordersCartItem){
         return new CartItem(member,productDao.getProductById(ordersCartItem.getProductId()));
     }
+    public Orders findOrdersById(final Member member,final long id){
+        return makeOrders(ordersDao.findById(id),member);
+    }
 }

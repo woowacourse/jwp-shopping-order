@@ -42,4 +42,15 @@ public class OrdersDao {
         final String sql = "SELECT * FROM orders WHERE member_id = ?";
         return jdbcTemplate.query(sql,ordersEntityRowMapper,memberId);
     }
+    public OrdersEntity findById(final long id){
+        final String sql = "SELECT * FROM orders WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql,(rs, rowNum) ->
+                new OrdersEntity(
+                        rs.getLong("id"),
+                        rs.getLong("member_id"),
+                        rs.getInt("original_price"),
+                        rs.getInt("discount_price"),
+                        rs.getBoolean("confirm_state")
+                ),id);
+    }
 }

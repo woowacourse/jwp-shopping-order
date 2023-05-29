@@ -16,4 +16,28 @@ public class Coupon {
         this.discountAmount = discountAmount;
         this.minimumPrice = minimumPrice;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public CouponType getCouponType() {
+        return couponType;
+    }
+
+    public float getDiscountRate() {
+        return discountRate;
+    }
+
+    public int getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public int getMinimumPrice() {
+        return minimumPrice;
+    }
 }
