@@ -11,7 +11,7 @@ public class OrderEntity {
     private final int discountedPrice;
     private final LocalDateTime createdAt;
 
-    private OrderEntity(final Long id,
+    public OrderEntity(final Long id,
                        final Long memberId,
                        final int originalPrice,
                        final int discountedPrice,
