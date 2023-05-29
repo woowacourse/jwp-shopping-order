@@ -2,7 +2,6 @@ package cart.domain.discount;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,14 +9,15 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import cart.domain.Member;
-import cart.domain.discount.grade.GradeDiscountPolicy;
-import cart.domain.discount.price.PriceDiscountPolicy;
+import cart.domain.discount.grade.BasicGradeDiscountPolicy;
+import cart.domain.discount.price.BasicPriceDiscountPolicy;
 import cart.fixture.Fixture;
 
 class DiscountPriceCalculatorTest {
     DiscountPriceCalculator discountPriceCalculator = new DiscountPriceCalculator(
-            new DefaultDiscountPolicy(List.of(new GradeDiscountPolicy(), new PriceDiscountPolicy()))
+            new DefaultDiscountPolicy(new BasicGradeDiscountPolicy(), new BasicPriceDiscountPolicy())
     );
+
 
     @ParameterizedTest(name = "price와 member를 통해 최종계산 금액을 계산한다.")
     @MethodSource("provideParamsAndExpected")

@@ -1,4 +1,5 @@
 SET REFERENTIAL_INTEGRITY FALSE;
+truncate table ordered_item restart identity ;
 truncate table `order` restart identity ;
 truncate table cart_item restart identity ;
 truncate table product restart identity ;

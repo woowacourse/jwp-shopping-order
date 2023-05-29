@@ -1,21 +1,27 @@
 package cart.domain.discount;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
 
 import cart.domain.Member;
+import cart.domain.discount.grade.GradeDiscountPolicy;
+import cart.domain.discount.price.PriceDiscountPolicy;
 
+@Component
 public class DefaultDiscountPolicy implements DiscountPolicy{
+    private final GradeDiscountPolicy gradeDiscountPolicy;
+    private final PriceDiscountPolicy priceDiscountPolicy;
 
-    private final List<DiscountPolicy> policies;
-
-    public DefaultDiscountPolicy(List<DiscountPolicy> policies) {
-        this.policies = policies;
+    public DefaultDiscountPolicy(
+            GradeDiscountPolicy gradeDiscountPolicy,
+            PriceDiscountPolicy priceDiscountPolicy
+    ) {
+        this.gradeDiscountPolicy = gradeDiscountPolicy;
+        this.priceDiscountPolicy = priceDiscountPolicy;
     }
 
     @Override
     public Integer calculateDiscountPrice(Integer price, Member member) {
-        return policies.stream()
-                .mapToInt(policy -> policy.calculateDiscountPrice(price, member))
-                .sum();
+        return gradeDiscountPolicy.calculateDiscountPrice(price, member)
+                + priceDiscountPolicy.calculateDiscountPrice(price);
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Order;
 import cart.domain.discount.DiscountPriceCalculator;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;

@@ -11,14 +11,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 import cart.domain.Member;
 import cart.fixture.Fixture;
 
-class GradeDiscountPolicyTest {
-    GradeDiscountPolicy gradeDiscountPolicy = new GradeDiscountPolicy();
+class BasicGradeDiscountPolicyTest {
+    BasicGradeDiscountPolicy basicGradeDiscountPolicy = new BasicGradeDiscountPolicy();
 
     @ParameterizedTest(name = "멤버의 등급별 할인 금액을 계산한다.")
     @MethodSource("provideMemberAndPrice")
     void calculateDiscountPrice(Integer price, Member member, Integer expected) {
         //when
-        final int result = gradeDiscountPolicy.calculateDiscountPrice(price, member);
+        final int result = basicGradeDiscountPolicy.calculateDiscountPrice(price, member);
 
         //then
         assertThat(result).isEqualTo(expected);
