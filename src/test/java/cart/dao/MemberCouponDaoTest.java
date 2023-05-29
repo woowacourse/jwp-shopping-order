@@ -41,8 +41,8 @@ class MemberCouponDaoTest {
         ));
         final MemberEntity memberEntity = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(
-                couponEntity.getId(),
                 memberEntity.getId(),
+                couponEntity.getId(),
                 false
         );
 
@@ -65,13 +65,13 @@ class MemberCouponDaoTest {
         final MemberEntity memberEntity1 = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
         final MemberEntity memberEntity2 = memberDao.insert(new MemberEntity("pizza2@pizza.com", "password"));
         final MemberCouponEntity memberCouponEntity1 = new MemberCouponEntity(
-                couponEntity.getId(),
                 memberEntity1.getId(),
+                couponEntity.getId(),
                 false
         );
         final MemberCouponEntity memberCouponEntity2 = new MemberCouponEntity(
-                couponEntity.getId(),
                 memberEntity2.getId(),
+                couponEntity.getId(),
                 false
         );
 
@@ -97,13 +97,13 @@ class MemberCouponDaoTest {
         ));
         final MemberEntity memberEntity = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
         final MemberCouponEntity memberCouponEntity = memberCouponDao.insert(new MemberCouponEntity(
-                couponEntity.getId(),
                 memberEntity.getId(),
+                couponEntity.getId(),
                 false
         ));
         final MemberCouponEntity updateMemberCouponEntity = new MemberCouponEntity(
-                couponEntity.getId(),
                 memberEntity.getId(),
+                couponEntity.getId(),
                 true
         );
 
@@ -134,16 +134,16 @@ class MemberCouponDaoTest {
         ));
         final MemberEntity memberEntity = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
         final MemberCouponEntity memberCouponEntity1 = memberCouponDao.insert(new MemberCouponEntity(
-                couponEntity1.getId(),
                 memberEntity.getId(),
+                couponEntity1.getId(),
                 false
         ));
         final MemberCouponEntity memberCouponEntity2 = memberCouponDao.insert(new MemberCouponEntity(
-                couponEntity2.getId(),
                 memberEntity.getId(),
+                couponEntity2.getId(),
                 false
         ));
-        memberCouponDao.insert(new MemberCouponEntity(couponEntity3.getId(), memberEntity.getId(), true));
+        memberCouponDao.insert(new MemberCouponEntity(memberEntity.getId(), couponEntity3.getId(), true));
 
         // when
         final List<MemberCouponEntity> result = memberCouponDao.findAllUnusedMemberCouponByMemberId(

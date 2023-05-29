@@ -63,8 +63,8 @@ class CouponRepositoryTest {
                 new MinimumPriceDiscountCondition(30000)
         ));
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        memberCouponDao.insert(new MemberCouponEntity(coupon1.getId(), member.getId(), false));
-        memberCouponDao.insert(new MemberCouponEntity(coupon2.getId(), member.getId(), false));
+        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon1.getId(), false));
+        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon2.getId(), false));
 
         // when
         final List<Coupon> result = couponRepository.findAllByMemberId(member.getId());
@@ -101,7 +101,7 @@ class CouponRepositoryTest {
                 new NoneDiscountCondition()
         ));
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        memberCouponDao.insert(new MemberCouponEntity(coupon.getId(), member.getId(), false));
+        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon.getId(), false));
 
         // when
         final Optional<Coupon> result = couponRepository.findByIdAndMemberId(coupon.getId(), member.getId());

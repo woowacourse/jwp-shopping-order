@@ -16,8 +16,8 @@ public class MemberCouponDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<MemberCouponEntity> rowMapper = (resultSet, rowNum) -> new MemberCouponEntity(
             resultSet.getLong("id"),
-            resultSet.getLong("coupon_id"),
             resultSet.getLong("member_id"),
+            resultSet.getLong("coupon_id"),
             resultSet.getBoolean("used")
     );
 
@@ -25,7 +25,7 @@ public class MemberCouponDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member_coupon")
-                .usingColumns("coupon_id", "member_id", "used")
+                .usingColumns("member_id", "coupon_id", "used")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -34,8 +34,8 @@ public class MemberCouponDao {
         final long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return new MemberCouponEntity(
                 id,
-                memberCouponEntity.getCouponId(),
                 memberCouponEntity.getMemberId(),
+                memberCouponEntity.getCouponId(),
                 memberCouponEntity.isUsed()
         );
     }

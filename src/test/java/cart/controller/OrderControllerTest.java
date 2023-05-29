@@ -83,7 +83,7 @@ class OrderControllerTest {
                 new AmountDiscountPolicy(2000L),
                 new NoneDiscountCondition()
         ));
-        memberCouponDao.insert(new MemberCouponEntity(coupon.getId(), member.getId(), false));
+        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon.getId(), false));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
                 List.of(new ItemIdDto(cartItem1.getId()), new ItemIdDto(cartItem2.getId())),
                 coupon.getId()

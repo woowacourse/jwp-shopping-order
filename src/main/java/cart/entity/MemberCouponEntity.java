@@ -1,21 +1,36 @@
 package cart.entity;
 
+import cart.domain.cart.MemberCoupon;
+
 public class MemberCouponEntity {
 
     private final Long id;
-    private final Long couponId;
     private final Long memberId;
+    private final Long couponId;
     private final boolean used;
 
-    public MemberCouponEntity(final Long couponId, final Long memberId, final boolean used) {
-        this(null, couponId, memberId, used);
+    public MemberCouponEntity(final Long memberId, final Long couponId, final boolean used) {
+        this(null, memberId, couponId, used);
     }
 
-    public MemberCouponEntity(final Long id, final Long couponId, final Long memberId, final boolean used) {
+    public MemberCouponEntity(final Long id, final Long memberId, final Long couponId, final boolean used) {
         this.id = id;
-        this.couponId = couponId;
         this.memberId = memberId;
+        this.couponId = couponId;
         this.used = used;
+    }
+
+    public static MemberCouponEntity from(final MemberCoupon memberCoupon) {
+        return new MemberCouponEntity(
+                memberCoupon.getId(),
+                memberCoupon.getMemberId(),
+                memberCoupon.getCouponId(),
+                memberCoupon.isUsed()
+        );
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getCouponId() {

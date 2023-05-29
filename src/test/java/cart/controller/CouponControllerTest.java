@@ -59,8 +59,8 @@ public class CouponControllerTest {
                 new MinimumPriceDiscountCondition(30000)
         ));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        memberCouponDao.insert(new MemberCouponEntity(coupon1.getId(), member.getId(), false));
-        memberCouponDao.insert(new MemberCouponEntity(coupon2.getId(), member.getId(), false));
+        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon1.getId(), false));
+        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon2.getId(), false));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // expect
