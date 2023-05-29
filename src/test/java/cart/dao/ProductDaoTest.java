@@ -76,7 +76,7 @@ public class ProductDaoTest {
         final Product updateProduct = new Product(findProduct.getId(), "초콜릿아님", findProduct.getPriceValue(), findProduct.getImageUrlValue());
 
         // when
-        productDao.updateProduct(productId, updateProduct);
+        productDao.update(productId, updateProduct);
         final Product updatedProduct = productDao.getProductById(productId);
 
         // then
@@ -90,7 +90,7 @@ public class ProductDaoTest {
         final Long productId = productDao.save(product);
 
         // when
-        productDao.deleteProduct(productId);
+        productDao.delete(productId);
 
         // then
         assertThatThrownBy(() -> productDao.getProductById(productId))

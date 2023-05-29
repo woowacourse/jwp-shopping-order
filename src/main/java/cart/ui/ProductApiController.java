@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -29,22 +30,27 @@ public class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+        final List<ProductResponse> productResponses = productService.getAllProducts().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(productResponses);
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long productId) {
-        return ResponseEntity.ok(productService.getProductById(productId));
+        final ProductResponse productResponse = ProductResponse.from(productService.getProductById(productId));
+        return ResponseEntity.ok(productResponse);
     }
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        Long productId = productService.createProduct(productRequest);
+        final Long productId = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> updateProduct(@PathVariable Long productId,
+                                              @RequestBody ProductRequest productRequest) {
         productService.updateProduct(productId, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -54,5 +60,4 @@ public class ProductApiController {
         productService.deleteProduct(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }
