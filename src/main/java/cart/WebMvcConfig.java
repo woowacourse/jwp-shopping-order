@@ -29,7 +29,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "https://solo5star.github.io/react-shopping-cart-prod",
                         "https://naveowo.github.io/react-shopping-cart-prod",
-                        "http://localhost:3000"
+                        "http://localhost:3000",
+                        "http://13.124.87.248"
                 )
                 .allowedMethods("*")
                 .exposedHeaders(HttpHeaders.LOCATION);
