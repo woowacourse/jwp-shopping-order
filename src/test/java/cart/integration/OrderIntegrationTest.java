@@ -2,6 +2,8 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dto.CartItemResponse;
+import cart.dto.OrderSelectResponse;
 import cart.repository.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
@@ -37,10 +39,41 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final List<Long> cartItemIds = List.of(1L, 2L);
         final int totalPrice = 95_000;
-        final OrderCreateRequest orderCreateRequest = new OrderCreateRequest(cartItemIds, totalPrice);
+        final OrderCreateRequest request = new OrderCreateRequest(cartItemIds, totalPrice);
 
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+        final ExtractableResponse<Response> response = orderCreateRequest(request);
+        final Long saveId = Long.parseLong(response.header("Location").split("/")[2]);
+
+        // then
+        assertThat(saveId).isNotNull();
+    }
+
+    @DisplayName("주문을 단건 조회한다")
+    @Test
+    void showOrderById() {
+        // given
+        final List<Long> cartItemIds = List.of(1L, 2L);
+        final int totalPrice = 95_000;
+        final OrderCreateRequest orderCreateRequest = new OrderCreateRequest(cartItemIds, totalPrice);
+        final ExtractableResponse<Response> createResponse = orderCreateRequest(orderCreateRequest);
+        final Long saveId = Long.parseLong(createResponse.header("Location").split("/")[2]);
+
+        // when
+        final ExtractableResponse<Response> response = orderSelectRequest(saveId);
+        final OrderSelectResponse orderSelectResponse = response.as(OrderSelectResponse.class);
+
+        // then
+        assertThat(orderSelectResponse.getId()).isEqualTo(saveId);
+        assertThat(orderSelectResponse.getOriginalPrice()).isEqualTo(100_000);
+        assertThat(orderSelectResponse.getDiscountPrice()).isEqualTo(5_000);
+        assertThat(orderSelectResponse.getDiscountedPrice()).isEqualTo(totalPrice);
+        assertThat(orderSelectResponse.getCartItems()).map(CartItemResponse::getId)
+                .isEqualTo(cartItemIds);
+    }
+
+    private ExtractableResponse<Response> orderCreateRequest(final OrderCreateRequest orderCreateRequest) {
+        return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(orderCreateRequest)
@@ -48,10 +81,15 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
-        final String locationHeader = response.header("Location");
+    }
 
-        // then
-        assertThat(locationHeader).isNotNull();
+    private ExtractableResponse<Response> orderSelectRequest(final Long saveId) {
+        return RestAssured.given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/orders/" + saveId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
     }
 
 }
