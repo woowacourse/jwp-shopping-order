@@ -30,6 +30,10 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public int calculateTotalPrice() {
+        return product.getPrice() * quantity;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

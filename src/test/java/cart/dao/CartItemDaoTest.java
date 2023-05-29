@@ -136,6 +136,26 @@ class CartItemDaoTest {
         assertThat(cartItemsByIds.get(1).getProduct().getName()).isNotEqualTo("testProductC");
     }
 
+    @Test
+    void 장바구니_상품_선택_삭제_테스트() {
+        //given
+        final Member memberFixture = getSavedMemberFixture("testEmail");
+        final Product productFixtureA = getSavedProductFixture("testProductA");
+        final Product productFixtureB = getSavedProductFixture("testProductB");
+        final Product productFixtureC = getSavedProductFixture("testProductC");
+        final Long savedCartItemAId = cartItemDao.saveCartItem(new CartItem(3, memberFixture, productFixtureA));
+        final Long savedCartItemBId = cartItemDao.saveCartItem(new CartItem(1, memberFixture, productFixtureB));
+        cartItemDao.saveCartItem(new CartItem(5, memberFixture, productFixtureC));
+
+        //when
+        cartItemDao.deleteById(List.of(savedCartItemAId, savedCartItemBId));
+
+        //then
+        final List<CartItem> all = cartItemDao.findAll();
+        assertThat(all).hasSize(1);
+        assertThat(all.get(0).getProduct().getName()).isEqualTo("testProductC");
+    }
+
     private Member getSavedMemberFixture(final String email) {
         final Member member = new Member(email, "password");
         final Long saveMemberId = memberDao.saveMember(member);

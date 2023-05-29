@@ -85,6 +85,13 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
+    public void deleteById(final List<Long> ids) {
+        final String deleteByIdQuery = "DELETE FROM cart_item WHERE id IN (:cartItemIds)";
+        final MapSqlParameterSource parameters = new MapSqlParameterSource("cartItemIds", ids);
+
+        namedParameterJdbcTemplate.update(deleteByIdQuery, parameters);
+    }
+
     public void updateQuantity(final Long id, final int quantity) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, quantity, id);
