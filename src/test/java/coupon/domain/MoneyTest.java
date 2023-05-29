@@ -53,6 +53,18 @@ class MoneyTest {
     }
 
     @Test
+    void 금액_비율만큼_금액을_감한다() {
+        // given
+        Money money = new Money(10000);
+
+        // when
+        Money result = money.subtractAmountByPercentage(10);
+
+        // then
+        assertThat(result.getValue()).isEqualTo(9000);
+    }
+
+    @Test
     void 같은_금액이면_같은_객체다() {
         // given
         Money money1 = new Money(10000);

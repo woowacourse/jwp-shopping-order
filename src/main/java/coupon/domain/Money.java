@@ -26,6 +26,10 @@ public final class Money {
         return new Money(value * percentage / 100);
     }
 
+    public Money subtractAmountByPercentage(int percentage) {
+        return new Money(value - (value * percentage / 100));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
