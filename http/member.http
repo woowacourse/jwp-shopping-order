@@ -1,0 +1,15 @@
+### 사용자 생성
+POST {{host}}/users/join
+Content-Type: application/json
+
+{
+  "name": "journey",
+  "password": "test1234"
+}
+
+### 사용자 단일 조회
+GET {{host}}/users/1
+
+### 사용자 전체 조회
+GET {{host}}/users
+
