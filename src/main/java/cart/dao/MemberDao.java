@@ -34,7 +34,7 @@ public class MemberDao {
             rs.getInt("point")
     );
 
-    public Long addMember(final Member member) {
+    public Long insert(final Member member) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("email", member.getEmailValue())
                 .addValue("password", member.getPasswordValue());

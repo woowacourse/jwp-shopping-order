@@ -4,17 +4,16 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductImageUrl;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
+import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
@@ -31,10 +30,10 @@ public class ProductDaoTest {
     @Test
     void createAndGetProduct() {
         // given
-        final Long productId = productDao.save(product);
+        final Long productId = productDao.insert(product);
 
         // when
-        final Product findProduct = productDao.getProductById(productId);
+        final Product findProduct = productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
 
         // then
         assertAll(
@@ -51,12 +50,12 @@ public class ProductDaoTest {
         final Product product1 = new Product("초콜릿1", 501, "초콜릿URL1");
         final Product product2 = new Product("초콜릿2", 502, "초콜릿URL2");
         final Product product3 = new Product("초콜릿3", 503, "초콜릿URL3");
-        final Long productId1 = productDao.save(product1);
-        final Long productId2 = productDao.save(product2);
-        final Long productId3 = productDao.save(product3);
+        final Long productId1 = productDao.insert(product1);
+        final Long productId2 = productDao.insert(product2);
+        final Long productId3 = productDao.insert(product3);
 
         // when
-        final List<Product> products = productDao.getProductsByIds(List.of(productId1, productId2, productId3));
+        final List<Product> products = productDao.findAllByIds(List.of(productId1, productId2, productId3));
 
         // then
         assertAll(
@@ -71,13 +70,13 @@ public class ProductDaoTest {
     @Test
     void updateProduct() {
         // given
-        final Long productId = productDao.save(product);
-        final Product findProduct = productDao.getProductById(productId);
+        final Long productId = productDao.insert(product);
+        final Product findProduct = productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
         final Product updateProduct = new Product(findProduct.getId(), "초콜릿아님", findProduct.getPriceValue(), findProduct.getImageUrlValue());
 
         // when
         productDao.update(productId, updateProduct);
-        final Product updatedProduct = productDao.getProductById(productId);
+        final Product updatedProduct = productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
 
         // then
         assertThat(updatedProduct.getProductName()).isEqualTo(new ProductName("초콜릿아님"));
@@ -87,13 +86,12 @@ public class ProductDaoTest {
     @Test
     void deleteProduct() {
         // given
-        final Long productId = productDao.save(product);
+        final Long productId = productDao.insert(product);
 
         // when
         productDao.delete(productId);
 
         // then
-        assertThatThrownBy(() -> productDao.getProductById(productId))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(productDao.findById(productId)).isEmpty();
     }
 }

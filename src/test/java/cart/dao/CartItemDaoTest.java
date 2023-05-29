@@ -5,6 +5,7 @@ import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.MemberNotFoundException;
+import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class CartItemDaoTest {
     void saveAndGet() {
         // given
         final Member member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
-        final Product product = productDao.getProductById(1L);
+        final Product product = productDao.findById(1L).orElseThrow(ProductNotFoundException::new);
 
         final CartItem cartItem = new CartItem(member, product, 3);
 

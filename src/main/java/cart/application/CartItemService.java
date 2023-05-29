@@ -4,9 +4,11 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +35,9 @@ public class CartItemService {
 
     @Transactional
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        final Product findProduct = productDao.findById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new ProductNotFoundException(cartItemRequest.getProductId()));
+        return cartItemDao.save(new CartItem(member, findProduct));
     }
 
     @Transactional

@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.product.Product;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProductDao {
@@ -39,7 +41,7 @@ public class ProductDao {
         return new Product(id, name, price, imageUrl);
     };
 
-    public Long save(final Product product) {
+    public Long insert(final Product product) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", product.getNameValue())
                 .addValue("price", product.getPriceValue())
@@ -48,21 +50,24 @@ public class ProductDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> findAll() {
         final String sql = "SELECT id, name, price, image_url FROM product";
 
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
-    public Product getProductById(final Long productId) {
+    public Optional<Product> findById(final Long id) {
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
-
-        return jdbcTemplate.queryForObject(sql, productRowMapper, productId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productRowMapper, id));
+        } catch (final DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public List<Product> getProductsByIds(final List<Long> productIds) {
+    public List<Product> findAllByIds(final List<Long> ids) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("ids", productIds);
+        parameters.addValue("ids", ids);
         final String sql = "SELECT id, name, price, image_url " +
                 "FROM product " +
                 "WHERE id IN (:ids)";

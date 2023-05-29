@@ -17,6 +17,7 @@ import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
 import cart.dto.OrderRequest;
 import cart.exception.MemberNotFoundException;
+import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -51,8 +52,8 @@ public class OrderServiceTest {
     @DisplayName("상품을 주문할 때에는")
     class DescribeOrderMethodTest1 {
         private final Member member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
-        private final Product product1 = productDao.getProductById(1L);
-        private final Product product2 = productDao.getProductById(2L);
+        private final Product product1 = productDao.findById(1L).orElseThrow(ProductNotFoundException::new);
+        private final Product product2 = productDao.findById(2L).orElseThrow(ProductNotFoundException::new);
 
         @Nested
         @DisplayName("만약 총 주문 가격이 5이상 초과이라면")

@@ -29,7 +29,7 @@ public class OrderRepository {
     public Long save(final CartItems cartItems, final Member member, final MemberPoint usedPoint) {
         final Long orderId = orderDao.save(new Order(member, usedPoint));
         final Order findOrder = orderDao.findById(orderId);
-        final List<Product> products = productDao.getProductsByIds(cartItems.getProductIds());
+        final List<Product> products = productDao.findAllByIds(cartItems.getProductIds());
         final List<OrderProduct> orderProducts = cartItems.toOrderProducts(findOrder, products);
         orderProductDao.save(orderProducts);
 
