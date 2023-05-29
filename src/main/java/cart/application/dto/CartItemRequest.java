@@ -1,10 +1,14 @@
 package cart.application.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class CartItemRequest {
 
-    private Long productId;
+    @NotNull(message = "상품 아이디는 비어있을 수 없습니다.")
+    private final Long productId;
 
     public CartItemRequest() {
+        this(null);
     }
 
     public CartItemRequest(Long productId) {

@@ -48,7 +48,7 @@ class CartDaoTest extends DaoTest {
         final Long 저장된_장바구니_아이디 = cartItemDao.insert(장바구니);
 
         // then
-        final CartItemDto cart = cartItemDao.findById(저장된_장바구니_아이디);
+        final CartItemDto cart = cartItemDao.findById(저장된_장바구니_아이디).get();
         assertThat(cart)
             .extracting(CartItemDto::getCartId, CartItemDto::getMemberId, CartItemDto::getMemberName,
                 CartItemDto::getProductId, CartItemDto::getProductName, CartItemDto::getProductPrice,
@@ -94,7 +94,7 @@ class CartDaoTest extends DaoTest {
         final Long 저장된_장바구니_아이디 = cartItemDao.insert(장바구니);
 
         // when
-        final CartItemDto cart = cartItemDao.findById(저장된_장바구니_아이디);
+        final CartItemDto cart = cartItemDao.findById(저장된_장바구니_아이디).get();
 
         // then
         assertThat(cart)
@@ -118,7 +118,7 @@ class CartDaoTest extends DaoTest {
         cartItemDao.updateQuantity(저장된_장바구니_아이디, 10);
 
         // then
-        final CartItemDto cart = cartItemDao.findById(저장된_장바구니_아이디);
+        final CartItemDto cart = cartItemDao.findById(저장된_장바구니_아이디).get();
 
         // then
         assertThat(cart)

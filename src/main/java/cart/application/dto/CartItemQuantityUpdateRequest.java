@@ -1,13 +1,17 @@
 package cart.application.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class CartItemQuantityUpdateRequest {
 
-    private int quantity;
+    @NotNull(message = "수량 정보는 비어있을 수 없습니다.")
+    private final Integer quantity;
 
     public CartItemQuantityUpdateRequest() {
+        this(null);
     }
 
-    public CartItemQuantityUpdateRequest(int quantity) {
+    public CartItemQuantityUpdateRequest(Integer quantity) {
         this.quantity = quantity;
     }
 

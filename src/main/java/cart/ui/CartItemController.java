@@ -7,6 +7,7 @@ import cart.application.dto.CartItemResponse;
 import cart.common.auth.MemberName;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/cart-items")
-public class CartItemRestController {
+public class CartItemController {
 
     private final CartItemService cartItemService;
 
-    public CartItemRestController(CartItemService cartItemService) {
+    public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 
@@ -35,7 +36,7 @@ public class CartItemRestController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(@MemberName String memberName,
-                                             @RequestBody CartItemRequest cartItemRequest) {
+                                             @RequestBody @Valid CartItemRequest cartItemRequest) {
         final long cartItemId = cartItemService.addCart(memberName, cartItemRequest);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }

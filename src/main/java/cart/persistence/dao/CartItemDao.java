@@ -5,6 +5,8 @@ import cart.persistence.entity.CartEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -48,10 +50,11 @@ public class CartItemDao {
     }
 
     public long insert(final CartEntity cartEntity) {
-        final String query = "INSERT INTO cart_item(member_id, product_id, quantity) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO cart_item(member_id, product_id, quantity) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(connection -> {
-            final PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
+            final PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, cartEntity.getMemberId());
             ps.setLong(2, cartEntity.getProductId());
             ps.setLong(3, cartEntity.getQuantity());
@@ -60,14 +63,18 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public CartItemDto findById(final Long id) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.name AS member_name, "
-            + "product.id, product.name AS product_name, product.price, product.image_url, cart_item.quantity " +
-            "FROM cart_item " +
-            "INNER JOIN member ON cart_item.member_id = member.id " +
-            "INNER JOIN product ON cart_item.product_id = product.id " +
-            "WHERE cart_item.id = ?";
-        return jdbcTemplate.queryForObject(sql, cartItemDtoRowMapper, id);
+    public Optional<CartItemDto> findById(final Long id) {
+        try {
+            final String sql = "SELECT cart_item.id, cart_item.member_id, member.name AS member_name, "
+                + "product.id, product.name AS product_name, product.price, product.image_url, cart_item.quantity " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(sql, cartItemDtoRowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public int updateQuantity(final Long id, final int quantity) {
@@ -93,8 +100,17 @@ public class CartItemDao {
     }
 
     public int deleteByIdsAndMemberId(final List<Long> ids, final Long memberId) {
-        final String sql = "DELETE FROM cart_item WHERE cart_item.id IN "
-            + " (SELECT cart_item.id FROM cart_item JOIN member ON cart_item.member_id = member.id and cart_item.id in (:ids) AND member.id = (:memberId))";
+        final String sql = "DELETE FROM cart_item AS c "
+            + "WHERE c.id "
+            + "IN ("
+            + "    SELECT cart_item_temp.id"
+            + "    FROM"
+            + "    ("
+            + "        SELECT ci.id AS id FROM cart_item AS ci"
+            + "        JOIN member AS m ON ci.member_id = m.id"
+            + "        AND ci.id IN (:ids) AND m.id = :memberId"
+            + "    ) cart_item_temp"
+            + ")";
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("ids", ids);
         mapSqlParameterSource.addValue("memberId", memberId);

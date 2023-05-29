@@ -63,7 +63,8 @@ public class CartItemRepositoryImpl implements CartItemRepository {
 
     @Override
     public CartItem findById(final Long cartItemId) {
-        final CartItemDto cartItemDto = cartItemDao.findById(cartItemId);
+        final CartItemDto cartItemDto = cartItemDao.findById(cartItemId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.CART_NOT_FOUND));
         return convertCartItem(cartItemDto);
     }
 
