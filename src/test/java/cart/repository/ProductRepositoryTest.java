@@ -48,6 +48,31 @@ class ProductRepositoryTest {
         );
     }
 
+    @Test
+    @DisplayName("updateProduct 메서드는 상품 정보를 수정한다.")
+    void updateProduct() {
+        Product product = new Product("치킨", 10000, "http://chicken.com");
+        Long savedProductId = productRepository.createProduct(product);
+        Product updateProduct = new Product(savedProductId, "피자", 13000, "http://pizza.com");
+
+        productRepository.updateProduct(updateProduct);
+
+        Product result = productRepository.getProductById(savedProductId);
+        assertThat(result).usingRecursiveComparison().isEqualTo(updateProduct);
+    }
+
+    @Test
+    @DisplayName("deleteProduct 메서드는 상품을 삭제한다.")
+    void deleteProduct() {
+        Product product = new Product("치킨", 10000, "http://chicken.com");
+        Long savedProductId = productRepository.createProduct(product);
+
+        productRepository.deleteProduct(savedProductId);
+
+        List<Product> result = productRepository.getAllProducts();
+        assertThat(result).isEmpty();
+    }
+
     @Nested
     @DisplayName("getProductById 메서드는 ")
     class GetProductById {
@@ -75,30 +100,5 @@ class ProductRepositoryTest {
                             .isEqualTo(product)
             );
         }
-    }
-
-    @Test
-    @DisplayName("updateProduct 메서드는 상품 정보를 수정한다.")
-    void updateProduct() {
-        Product product = new Product("치킨", 10000, "http://chicken.com");
-        Long savedProductId = productRepository.createProduct(product);
-        Product updateProduct = new Product(savedProductId, "피자", 13000, "http://pizza.com");
-
-        productRepository.updateProduct(updateProduct);
-
-        Product result = productRepository.getProductById(savedProductId);
-        assertThat(result).usingRecursiveComparison().isEqualTo(updateProduct);
-    }
-
-    @Test
-    @DisplayName("deleteProduct 메서드는 상품을 삭제한다.")
-    void deleteProduct() {
-        Product product = new Product("치킨", 10000, "http://chicken.com");
-        Long savedProductId = productRepository.createProduct(product);
-
-        productRepository.deleteProduct(savedProductId);
-
-        List<Product> result = productRepository.getAllProducts();
-        assertThat(result).isEmpty();
     }
 }

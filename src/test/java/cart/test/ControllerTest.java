@@ -16,14 +16,13 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @ContextConfiguration(classes = JwpCartApplication.class)
 public class ControllerTest {
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @MockBean
-    private MemberService memberService;
-
     protected MockMvc mockMvc;
     protected ObjectMapper objectMapper = buildObjectMapper();
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+    @MockBean
+    private MemberService memberService;
 
     @BeforeEach
     void setUp() {

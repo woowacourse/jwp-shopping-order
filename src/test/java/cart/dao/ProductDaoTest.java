@@ -35,36 +35,6 @@ class ProductDaoTest {
         );
     }
 
-    @Nested
-    @DisplayName("getProductById 메서드는 ")
-    class GetProductById {
-
-        @Test
-        @DisplayName("조회 시 ID에 해당하는 상품이 존재하면 해당 상품 데이터를 반환한다.")
-        void getProduct() {
-            ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://image.com");
-            Long savedProductId = productDao.createProduct(productEntity);
-
-            Optional<ProductEntity> result = productDao.getProductById(savedProductId);
-
-            assertAll(
-                    () -> assertThat(result).isNotEmpty(),
-                    () -> assertThat(result.get().getId()).isEqualTo(savedProductId),
-                    () -> assertThat(productEntity).usingRecursiveComparison().ignoringActualNullFields().isEqualTo(result.get()),
-                    () -> assertThat(result.get().getCreatedAt()).isNotNull(),
-                    () -> assertThat(result.get().getUpdatedAt()).isNotNull()
-            );
-        }
-
-        @Test
-        @DisplayName("조회 시 ID에 해당하는 상품이 존재하지 않으면 빈 값을 반환한다.")
-        void getEmpty() {
-            Optional<ProductEntity> result = productDao.getProductById(-1L);
-
-            assertThat(result).isEmpty();
-        }
-    }
-
     @Test
     @DisplayName("updateProduct 메서드는 상품 데이터를 수정한다.")
     void updateProduct() {
@@ -93,5 +63,35 @@ class ProductDaoTest {
 
         Optional<ProductEntity> result = productDao.getProductById(savedProductId);
         assertThat(result).isEmpty();
+    }
+
+    @Nested
+    @DisplayName("getProductById 메서드는 ")
+    class GetProductById {
+
+        @Test
+        @DisplayName("조회 시 ID에 해당하는 상품이 존재하면 해당 상품 데이터를 반환한다.")
+        void getProduct() {
+            ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://image.com");
+            Long savedProductId = productDao.createProduct(productEntity);
+
+            Optional<ProductEntity> result = productDao.getProductById(savedProductId);
+
+            assertAll(
+                    () -> assertThat(result).isNotEmpty(),
+                    () -> assertThat(result.get().getId()).isEqualTo(savedProductId),
+                    () -> assertThat(productEntity).usingRecursiveComparison().ignoringActualNullFields().isEqualTo(result.get()),
+                    () -> assertThat(result.get().getCreatedAt()).isNotNull(),
+                    () -> assertThat(result.get().getUpdatedAt()).isNotNull()
+            );
+        }
+
+        @Test
+        @DisplayName("조회 시 ID에 해당하는 상품이 존재하지 않으면 빈 값을 반환한다.")
+        void getEmpty() {
+            Optional<ProductEntity> result = productDao.getProductById(-1L);
+
+            assertThat(result).isEmpty();
+        }
     }
 }
