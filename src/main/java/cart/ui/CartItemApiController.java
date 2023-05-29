@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.application.dto.CartItemQuantityUpdateRequest;
+import cart.application.dto.CartItemRequest;
+import cart.application.dto.CartItemResponse;
 
 @RestController
 public class CartItemApiController {
