@@ -5,7 +5,7 @@ import cart.ui.controller.dto.request.ProductRequest;
 import cart.ui.controller.dto.response.ProductResponse;
 import java.net.URI;
 import java.util.List;
-import org.springframework.http.HttpStatus;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequestMapping("/products")
+@RestController
 public class ProductApiController {
 
     private final ProductService productService;
@@ -37,21 +37,20 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         Long id = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
-
 }
