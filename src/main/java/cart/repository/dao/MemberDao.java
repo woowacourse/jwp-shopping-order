@@ -30,7 +30,7 @@ public class MemberDao {
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("id", "created_at", "updated_at")
+                .usingGeneratedKeyColumns("id")
                 .withTableName("member")
                 .usingColumns("email", "password", "point");
     }
