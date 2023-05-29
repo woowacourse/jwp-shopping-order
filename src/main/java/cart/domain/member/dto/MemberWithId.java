@@ -3,6 +3,7 @@ package cart.domain.member.dto;
 import cart.domain.member.Member;
 
 public class MemberWithId {
+
     private final Long id;
     private final Member member;
 

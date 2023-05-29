@@ -4,6 +4,7 @@ import cart.domain.member.dto.MemberWithId;
 import java.util.List;
 
 public interface MemberRepository {
+
     long insert(final Member member);
 
     Member findById(final Long id);
