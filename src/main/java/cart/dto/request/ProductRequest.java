@@ -1,13 +1,14 @@
-package cart.dto;
+package cart.dto.request;
+
+import java.beans.ConstructorProperties;
 
 public class ProductRequest {
+
     private String name;
     private int price;
     private String imageUrl;
 
-    public ProductRequest() {
-    }
-
+    @ConstructorProperties(value = {"name", "price", "imageUrl"})
     public ProductRequest(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
