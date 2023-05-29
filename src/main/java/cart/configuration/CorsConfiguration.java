@@ -8,9 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfiguration implements WebMvcConfigurer {
 
-    @Value("${test}")
-    private String test;
-
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
