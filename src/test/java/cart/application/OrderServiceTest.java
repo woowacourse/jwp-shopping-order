@@ -16,12 +16,11 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
 import cart.dto.OrderRequest;
+import cart.exception.MemberNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Transactional
 @SpringBootTest
 public class OrderServiceTest {
-
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private OrderService orderService;
@@ -53,7 +50,7 @@ public class OrderServiceTest {
     @Nested
     @DisplayName("상품을 주문할 때에는")
     class DescribeOrderMethodTest1 {
-        private final Member member = memberDao.getMemberById(1L);
+        private final Member member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
         private final Product product1 = productDao.getProductById(1L);
         private final Product product2 = productDao.getProductById(2L);
 
@@ -76,7 +73,7 @@ public class OrderServiceTest {
             @DisplayName("배송비 3천원을 할인해준다.")
             @Test
             void it_returns_discounted_delivery_fee() {
-                final Member updatedMember = memberDao.getMemberById(1L);
+                final Member updatedMember = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
 
                 int remainPoint = member.getPointValue() - usedPoint;
                 final int cartItemPrice1 = product1.getPriceValue() * quantity1;
@@ -106,7 +103,7 @@ public class OrderServiceTest {
             @DisplayName("배송비 3천원을 할인해주지 않는다.")
             @Test
             void it_returns_discounted_delivery_fee() {
-                final Member updatedMember = memberDao.getMemberById(1L);
+                final Member updatedMember = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
 
                 int remainPoint = member.getPointValue() - usedPoint;
                 final int cartItemPrice1 = product1.getPriceValue() * quantity1;

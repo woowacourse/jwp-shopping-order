@@ -3,6 +3,7 @@ package cart.integration;
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
 import cart.dto.OrderRequest;
+import cart.exception.MemberNotFoundException;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +30,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
-        member = memberDao.getMemberById(1L);
+        member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
 
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

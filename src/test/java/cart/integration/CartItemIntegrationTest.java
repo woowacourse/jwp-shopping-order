@@ -6,6 +6,7 @@ import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
+import cart.exception.MemberNotFoundException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,8 +41,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
+        member2 = memberDao.findById(2L).orElseThrow(MemberNotFoundException::new);
     }
 
     private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {

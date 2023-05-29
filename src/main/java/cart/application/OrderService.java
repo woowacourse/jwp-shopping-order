@@ -11,6 +11,7 @@ import cart.domain.orderproduct.OrderProduct;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderProductDto;
 import cart.dto.OrderRequest;
+import cart.exception.MemberNotFoundException;
 import cart.exception.point.InvalidPointUseException;
 import cart.exception.point.PointAbusedException;
 import cart.repository.OrderRepository;
@@ -38,7 +39,8 @@ public class OrderService {
 
     @Transactional
     public Long order(final Member member, final OrderRequest request) {
-        final Member findMember = memberDao.getMemberByEmail(member.getEmailValue());
+        final Member findMember = memberDao.findByEmail(member.getEmailValue())
+                .orElseThrow(() -> new MemberNotFoundException(member.getEmailValue()));
         if (findMember.getPointValue() < request.getPoint()) {
             throw new PointAbusedException(member.getPointValue(), request.getPoint());
         }
@@ -49,7 +51,7 @@ public class OrderService {
             throw new InvalidPointUseException(totalPrice, request.getPoint());
         }
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
-        memberDao.updateMember(updatedMember);
+        memberDao.update(updatedMember);
 
         return orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
     }

@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
+import cart.exception.MemberNotFoundException;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,7 @@ public class MemberIntegrationTest extends IntegrationTest {
     @Test
     void getPoint() {
         // given
-        final Member member = memberDao.getMemberById(1L);
+        final Member member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
 
         // when, then
         RestAssured

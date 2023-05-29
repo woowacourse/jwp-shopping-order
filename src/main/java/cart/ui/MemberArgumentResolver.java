@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
+import cart.exception.MemberNotFoundException;
 import cart.exception.authorization.InvalidFormatException;
 import cart.exception.authorization.PasswordNotMatchException;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -49,7 +50,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
+        Member member = memberDao.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(email));
         if (!member.checkPassword(password)) {
             throw new PasswordNotMatchException();
         }
