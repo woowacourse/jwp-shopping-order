@@ -3,13 +3,13 @@ package cart.domain;
 import cart.exception.MemberException;
 
 import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Member {
 
     public static final int MINIMUM_PASSWORD_LENGTH = 1;
     private static final String EMAIL_REGEX = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
 
     private final Long id;
     private final String email;
@@ -18,11 +18,7 @@ public class Member {
     public Member(Long id, String email, String password) {
         validate(id, email, password);
         this.id = id;
-
-        validateEmail(email);
         this.email = email;
-
-        validatePassword(password);
         this.password = password;
     }
 
@@ -43,8 +39,7 @@ public class Member {
             throw new MemberException.InvalidEmailByNull();
         }
 
-        Matcher matcher = Pattern.compile(EMAIL_REGEX).matcher(email);
-        if (!matcher.matches()) {
+        if (!pattern.matcher(email).matches()) {
             throw new MemberException.InvalidEmail();
         }
     }
