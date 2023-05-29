@@ -51,7 +51,7 @@ public class ProductDao {
             );
 
             ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
+            ps.setInt(2, product.getPriceValue());
             ps.setString(3, product.getImageUrl());
 
             return ps;
@@ -62,7 +62,7 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getName(), product.getPriceValue(), product.getImageUrl(), productId);
     }
 
     public void deleteProduct(Long productId) {
