@@ -4,21 +4,21 @@ import java.util.Objects;
 
 public class Product {
     private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final ProductName productName;
+    private final ProductPrice productPrice;
+    private final ProductImageUrl productImageUrl;
 
     public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.productName = new ProductName(name);
+        this.productPrice = new ProductPrice(price);
+        this.productImageUrl = new ProductImageUrl(imageUrl);
     }
 
     public Product(Long id, String name, int price, String imageUrl) {
         this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.productName = new ProductName(name);
+        this.productPrice = new ProductPrice(price);
+        this.productImageUrl = new ProductImageUrl(imageUrl);
     }
 
     public Long getId() {
@@ -26,15 +26,15 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return productName.getName();
     }
 
     public int getPrice() {
-        return price;
+        return productPrice.getPrice();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return productImageUrl.getImageUrl();
     }
 
     @Override
@@ -42,11 +42,11 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return price == product.price && Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(imageUrl, product.imageUrl);
+        return productPrice == product.productPrice && Objects.equals(id, product.id) && Objects.equals(productName, product.productName) && Objects.equals(productImageUrl, product.productImageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, imageUrl);
+        return Objects.hash(id, productName, productPrice, productImageUrl);
     }
 }

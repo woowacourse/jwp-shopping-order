@@ -1,24 +1,22 @@
 package cart.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Objects;
 
 import cart.domain.product.Product;
 import cart.exception.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    private RowMapper<Product> rowMapper = (rs, rowNum) -> {
+    private final RowMapper<Product> rowMapper = (rs, rowNum) -> {
         long productId = rs.getLong("id");
         String name = rs.getString("name");
         int price = rs.getInt("price");
@@ -28,6 +26,8 @@ public class ProductDao {
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product").usingGeneratedKeyColumns("id");
     }
 
     public List<Product> getAllProducts() {
@@ -57,23 +57,12 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, productId);
     }
 
-    public Long createProduct(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    public Long insertProduct(Product product) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", product.getName())
+                .addValue("price", product.getPrice())
+                .addValue("image_url", product.getImageUrl());
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public Boolean isNotExistById(Long id) {

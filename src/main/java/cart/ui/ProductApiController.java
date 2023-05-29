@@ -3,6 +3,8 @@ package cart.ui;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import cart.application.ProductService;
 import cart.config.AuthPrincipal;
 import cart.dto.*;
@@ -44,7 +46,7 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         Long id = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }

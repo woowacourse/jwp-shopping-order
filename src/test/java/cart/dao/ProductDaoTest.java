@@ -29,6 +29,16 @@ class ProductDaoTest {
     }
 
     @Test
+    @DisplayName("받은 상품을 삽입한다.")
+    void insertProduct() {
+        // given
+        Product product = CHICKEN.DOMAIN;
+
+        // when, then
+        assertThat(productDao.insertProduct(product)).isNotNull();
+    }
+
+    @Test
     @DisplayName("상품들을 Limit에 맞게 조회한다.")
     void selectFirstProductsByLimit() {
         // given

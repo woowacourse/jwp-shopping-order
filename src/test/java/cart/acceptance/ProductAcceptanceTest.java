@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.Map;
 
 import cart.domain.product.Product;
+import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -38,6 +41,135 @@ public class ProductAcceptanceTest {
     }
 
     @Nested
+    @DisplayName("상품 추가 시")
+    class createProduct {
+
+        @Nested
+        @DisplayName("상품 정보를 검증한다.")
+        class validateProduct {
+
+            @ParameterizedTest
+            @ValueSource(strings = {" ", ""})
+            @DisplayName("상품 이름이 빈 값이면 예외가 발생한다.")
+            void throws_when_name_blank(String productName) {
+                // given
+                ProductRequest productRequest = new ProductRequest(productName, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+
+                // when
+                String responseBody = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .post("/products")
+                        .then().log().all()
+                        .extract().body().asString();
+
+                // then
+                assertThat(responseBody).isEqualTo("상품 이름을 입력해주세요.");
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = {"@!@E", "1234", "@3121$"})
+            @DisplayName("상품 이름이 한글과 영어가 아니면 예외가 발생한다.")
+            void throws_when_wrong_product_name(String productName) {
+                // given
+                ProductRequest productRequest = new ProductRequest(productName, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+
+                // when
+                String responseBody = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .post("/products")
+                        .then().log().all()
+                        .extract().body().asString();
+
+                // then
+                assertThat(responseBody).isEqualTo("상품 이름은 한글 또는 영어여야합니다.");
+            }
+
+            @ParameterizedTest
+            @ValueSource(ints = {0, -1})
+            @DisplayName("상품 가격이 0이하이면 예외가 발생한다.")
+            void throws_when_price_not_positive(int productPrice) {
+                // given
+                ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, productPrice, CHICKEN.IMAGE_URL);
+
+                // when
+                String responseBody = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .post("/products")
+                        .then().log().all()
+                        .extract().body().asString();
+
+                // then
+                assertThat(responseBody).isEqualTo("가격은 양수여야합니다.");
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = {" ", ""})
+            @DisplayName("상품 이미지 URL이 빈 값이면 예외가 발생한다.")
+            void throws_when_image_url_blank(String productImageUrl) {
+                // given
+                ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, CHICKEN.PRICE, productImageUrl);
+
+                // when
+                String responseBody = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .post("/products")
+                        .then().log().all()
+                        .extract().body().asString();
+
+                // then
+                assertThat(responseBody).isEqualTo("상품 이미지 URL을 입력해주세요.");
+            }
+
+            @ParameterizedTest
+            @ValueSource(strings = {"aaa://", "shop.com"})
+            @DisplayName("상품 이미지 URL이 올바른 형식이 아니면 예외가 발생한다.")
+            void throws_when_image_url_wrong_pattern(String productImageUrl) {
+                // given
+                ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, CHICKEN.PRICE, productImageUrl);
+
+                // when
+                String responseBody = RestAssured.given().log().all()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(productRequest)
+                        .when()
+                        .post("/products")
+                        .then().log().all()
+                        .extract().body().asString();
+
+                // then
+                assertThat(responseBody).isEqualTo("올바른 URL 형식으로 입력해주세요.");
+            }
+        }
+
+        @Test
+        @DisplayName("정상적으로 상품이 추가된다.")
+        void success() {
+            // given
+            ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequest)
+                    .when()
+                    .post("/products")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertThat(response.getHeader("Location")).contains("/products/");
+        }
+    }
+
+    @Nested
     @DisplayName("상품 목록 조회 시")
     class getAllProductCartItems {
 
@@ -51,7 +183,6 @@ public class ProductAcceptanceTest {
                     .then().log().all()
                     .extract().response();
 
-            System.out.println(response.getStatusCode());
             assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.");
         }
 
@@ -165,7 +296,6 @@ public class ProductAcceptanceTest {
                     .then().log().all()
                     .extract().response();
 
-            System.out.println(response.getStatusCode());
             assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.");
         }
 
