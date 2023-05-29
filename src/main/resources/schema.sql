@@ -21,11 +21,18 @@ CREATE TABLE cart_item (
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
--- CREATE TABLE sale (
---     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
---     product_id BIGINT NOT NULL,
---     discount_percent INT NOT NULL,
---     FOREIGN KEY (product_id) REFERENCES product(id)
--- );
+CREATE TABLE coupon (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    discount_percent INT NOT NULL
+);
+
+CREATE TABLE coupon_box (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(id),
+    FOREIGN KEY (coupon_id) REFERENCES coupon(id)
+);
 
 
