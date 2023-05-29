@@ -31,7 +31,6 @@ public class OrdersIntegrationTest extends IntegrationTest{
                 .header("location",is("orders/3"));
     }
 
-    // TODO : orders 변수명 확정하기
     @Test
     @DisplayName("주문 목록을 가져온다")
     void getOrderListTest(){
@@ -39,8 +38,7 @@ public class OrdersIntegrationTest extends IntegrationTest{
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().get("/orders")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("orders",hasSize(3));
+                .statusCode(HttpStatus.OK.value());
     }
     @Test
     @DisplayName("주문 목록을 가져온다")

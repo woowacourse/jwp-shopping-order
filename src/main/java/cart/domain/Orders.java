@@ -9,14 +9,16 @@ public class Orders {
     private Integer originalPrice;
     private Integer discountPrice;
     private List<Coupon> coupons;
+    private boolean confirmState;
 
-    public Orders(Long id, Member member, List<CartItem> cartItems, Integer originalPrice, Integer discountPrice, List<Coupon> coupons) {
+    public Orders(Long id, Member member, List<CartItem> cartItems, Integer originalPrice, Integer discountPrice, List<Coupon> coupons, boolean confirmState) {
         this.id = id;
         this.member = member;
         this.cartItems = cartItems;
         this.originalPrice = originalPrice;
         this.discountPrice = discountPrice;
         this.coupons = coupons;
+        this.confirmState = confirmState;
     }
 
     public Long getId() {
@@ -41,5 +43,9 @@ public class Orders {
 
     public List<Coupon> getCoupons() {
         return coupons;
+    }
+
+    public boolean isConfirmState() {
+        return confirmState;
     }
 }
