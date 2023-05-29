@@ -30,7 +30,7 @@ public class PolicyDao {
                     rs.getInt("amount")
             );
 
-    public Long createProductDefaultPolicy() {
+    public long createProductDefaultPolicy() {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

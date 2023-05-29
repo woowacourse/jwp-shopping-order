@@ -4,13 +4,13 @@ import cart.dao.coupon.CouponDao;
 import cart.dao.policy.PolicyDao;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
+import cart.domain.discount.Policy;
 import cart.domain.discount.PolicyDiscount;
 import cart.domain.discount.PolicyPercentage;
 import cart.entity.coupon.CouponEntity;
 import cart.entity.policy.PolicyEntity;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,6 @@ public class CouponRepository {
         return makeCoupons(couponEntities);
     }
 
-
     public Coupons findAllByCouponIds(final List<Long> couponIds) {
         List<CouponEntity> couponEntities = couponIds.stream()
                 .map(couponDao::findById)
@@ -41,25 +40,27 @@ public class CouponRepository {
     }
 
     private Coupons makeCoupons(final List<CouponEntity> couponEntities) {
-        List<PolicyEntity> policyEntities = couponEntities.stream()
-                .map(couponEntity -> policyDao.findById(couponEntity.getPolicyId()))
+        List<Coupon> coupons = couponEntities.stream()
+                .map(this::createCoupon)
                 .collect(Collectors.toList());
-
-        List<Coupon> coupons = new ArrayList<>();
-
-        for (int i = 0; i < couponEntities.size(); i++) {
-            boolean isPercentage = policyEntities.get(i).isPercentage();
-
-            if (isPercentage) {
-                coupons.add(new Coupon(couponEntities.get(i).getId(), couponEntities.get(i).getName(), new PolicyPercentage(policyEntities.get(i).getAmount())));
-                continue;
-            }
-
-            coupons.add(new Coupon(couponEntities.get(i).getId(), couponEntities.get(i).getName(), new PolicyDiscount(policyEntities.get(i).getAmount())));
-        }
 
         return new Coupons(coupons);
     }
+
+    private Coupon createCoupon(final CouponEntity couponEntity) {
+        PolicyEntity policyEntity = policyDao.findById(couponEntity.getPolicyId());
+        Policy policy = determinePolicy(policyEntity);
+        return new Coupon(couponEntity.getId(), couponEntity.getName(), policy);
+    }
+
+    private Policy determinePolicy(final PolicyEntity policyEntity) {
+        if (policyEntity.isPercentage()) {
+            return new PolicyPercentage(policyEntity.getAmount());
+        }
+
+        return new PolicyDiscount(policyEntity.getAmount());
+    }
+
 
     public void deleteById(final long couponId) {
         couponDao.deleteById(couponId);

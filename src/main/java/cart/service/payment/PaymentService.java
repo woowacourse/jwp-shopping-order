@@ -46,8 +46,7 @@ public class PaymentService {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
         Coupons requestCoupons = couponRepository.findAllByCouponIds(parseCouponRequestIds(request.getCoupons()));
 
-        // TODO: validate member and request coupons equals or diff
-        member.initCoupons(requestCoupons);
+        member.validateHasCoupons(parseCouponRequestIds(request.getCoupons()));
 
         return PaymentUsingCouponsResponse.from(cart, requestCoupons.getCoupons());
     }
