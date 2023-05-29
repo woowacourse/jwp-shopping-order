@@ -5,7 +5,7 @@
 | 기능 | 메소드 | url | 구현 여부 |
 | --- | --- | --- |-------|
 | 주문하기 | POST | ~/orders | o     |
-| 주문 목록 조회 | GET | ~/orders | x     |
+| 주문 목록 조회 | GET | ~/orders | o     |
 | 주문 상세 보기 | GET | ~/orders/{id} | x     |
 | 주문 확정 | PATCH | ~/orders/{id}/confirm | x     |
 | 주문 취소 | DELETE | ~/orders/{id} | x     |
