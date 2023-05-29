@@ -34,7 +34,7 @@ public class OrderRepository {
         Long orderTableId = createOrderTable(member, orderHistory.getDeliveryPrice().getDeliveryPrice());
 
         List<OrderItemHistoryEntity> orderItemHistoryEntities = orderHistory.getProducts().stream()
-                .map(i -> new OrderItemHistoryEntity(null, i.getProductId(), i.getProductName(), i.getPrice(), i.getQuantity(), orderTableId))
+                .map(i -> new OrderItemHistoryEntity(null, i.getProductId(), i.getProductName(), i.getImgUrl(), i.getPrice(), i.getQuantity(), orderTableId))
                 .collect(Collectors.toList());
 
         orderItemHistoryDao.saveAll(orderItemHistoryEntities);
@@ -62,7 +62,7 @@ public class OrderRepository {
             List<CouponHistoryEntity> couponHistoryEntities = couponHistoryDao.findAllByOrderId(orderId);
 
             List<ProductHistory> productHistories = orderItemHistoryEntities.stream()
-                    .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getQuantity(), history.getPrice()))
+                    .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getImgUrl(), history.getQuantity(), history.getPrice()))
                     .collect(Collectors.toList());
 
             List<CouponHistory> couponHistories = couponHistoryEntities.stream()
@@ -82,7 +82,7 @@ public class OrderRepository {
         List<CouponHistoryEntity> couponHistoryEntities = couponHistoryDao.findAllByOrderId(orderId);
 
         List<ProductHistory> productHistories = orderItemHistoryEntities.stream()
-                .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getQuantity(), history.getPrice()))
+                .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getImgUrl(), history.getQuantity(), history.getPrice()))
                 .collect(Collectors.toList());
 
         List<CouponHistory> couponHistories = couponHistoryEntities.stream()

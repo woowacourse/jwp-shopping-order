@@ -64,6 +64,7 @@ CREATE TABLE order_item_history
     id             BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id     BIGINT       NOT NULL,
     product_name   VARCHAR(255) NOT NULL,
+    image_url      VARCHAR(255) NOT NULL,
     price          INT          NOT NULL,
     quantity       INT          NOT NULL,
     order_table_id BIGINT       NOT NULL,

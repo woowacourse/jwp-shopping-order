@@ -137,7 +137,7 @@ public class CartItems {
 
         cartItem.buy(quantity);
 
-        return new ProductHistory(productId, cartItem.getProduct().getName(), quantity, totalPrice);
+        return new ProductHistory(productId, cartItem.getProduct().getName(), cartItem.getProduct().getImageUrl(), quantity, totalPrice);
     }
 
     private CartItem getCartItemByProductId(final Long productId) {
