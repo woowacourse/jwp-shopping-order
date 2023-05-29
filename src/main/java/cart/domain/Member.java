@@ -16,6 +16,8 @@ public class Member {
     private final String password;
 
     public Member(Long id, String email, String password) {
+        email = email.strip();
+        password = password.strip();
         validate(id, email, password);
         this.id = id;
         this.email = email;
