@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.application.repository.MemberRepository;
 import cart.domain.Member;
+import cart.dto.PointResponse;
 import cart.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,10 @@ public class MemberService {
 
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
+    }
+
+    public PointResponse getPoint(Member member) {
+        return new PointResponse(member.getPoint());
     }
 
     public void validateMemberProfile(String email, String password) {
