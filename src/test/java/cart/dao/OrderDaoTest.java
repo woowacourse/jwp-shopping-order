@@ -14,6 +14,7 @@ import cart.repository.dao.CartItemDao;
 import cart.repository.dao.MemberDao;
 import cart.repository.dao.OrderDao;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,23 @@ class OrderDaoTest {
 
         // then
         assertThat(saveId).isNotNull();
+    }
+
+    @Test
+    void findById() {
+        // given
+        final Member findMember = memberDao.getMemberById(1L);
+        final List<CartItem> findCartItems = cartItemDao.findByMemberId(findMember.getId());
+        final CartItems cartItems = new CartItems(findCartItems, findMember);
+        final OrderItems orderItems = OrderItems.from(cartItems);
+        DiscountPolicy discountPolicy = FixedDiscountPolicy.from(orderItems.sumOfPrice());
+        final Order order = new Order(findMember, orderItems, discountPolicy);
+        final Long saveId = orderDao.createOrder(OrderEntity.from(order));
+
+        // when
+        final Optional<OrderEntity> findOrder = orderDao.findById(saveId);
+
+        // then
+        assertThat(findOrder).isPresent();
     }
 }
