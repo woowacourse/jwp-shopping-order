@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.member;
 
 public class Member {
 

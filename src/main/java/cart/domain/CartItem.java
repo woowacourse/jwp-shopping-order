@@ -1,14 +1,16 @@
 package cart.domain;
 
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
-    private int quantity;
     private final Product product;
     private final Member member;
+    private Long id;
+    private int quantity;
 
     public CartItem(Member member, Product product) {
         this.quantity = 1;

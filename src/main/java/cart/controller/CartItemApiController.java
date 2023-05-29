@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;

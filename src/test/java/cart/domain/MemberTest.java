@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.domain.member.Member;
+import cart.domain.member.Password;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
