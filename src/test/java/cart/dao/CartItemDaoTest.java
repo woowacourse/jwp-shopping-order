@@ -77,7 +77,7 @@ class CartItemDaoTest {
         final CartItemEntity cartItemEntity = new CartItemEntity(member.getId(), product.getId(), 1);
 
         // when
-        cartItemDao.deleteById(cartItemEntity.getId(), member.getId());
+        cartItemDao.deleteById(cartItemEntity.getId());
 
         // then
         assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty();

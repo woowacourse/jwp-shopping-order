@@ -7,6 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +17,7 @@ public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) -> {
         final Long id = rs.getLong("id");
         final Long memberId = rs.getLong("member_id");
@@ -29,6 +32,7 @@ public class CartItemDao {
                 .withTableName("cart_item")
                 .usingColumns("quantity", "member_id", "product_id")
                 .usingGeneratedKeyColumns("id");
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public CartItemEntity insert(final CartItemEntity cartItemEntity) {
@@ -56,13 +60,19 @@ public class CartItemDao {
         }
     }
 
-    public int deleteById(final Long cartItemId, final Long memberId) {
-        final String sql = "DELETE FROM cart_item WHERE id = ? AND member_id = ?";
-        return jdbcTemplate.update(sql, cartItemId, memberId);
+    public int deleteById(final Long cartItemId) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        return jdbcTemplate.update(sql, cartItemId);
     }
 
     public void updateQuantity(final CartItemEntity cartItemEntity) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
+    }
+
+    public void deleteByIdIn(final List<Long> ids) {
+        final String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+        final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource("ids", ids);
+        namedJdbcTemplate.update(sql, mapSqlParameterSource);
     }
 }

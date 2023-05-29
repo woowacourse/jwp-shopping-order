@@ -79,7 +79,14 @@ public class CartItemRepository {
         return Optional.of(new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), member, product));
     }
 
-    public void deleteById(final Long cartItemId, final Long memberId) {
-        cartItemDao.deleteById(cartItemId, memberId);
+    public void deleteAll(final List<CartItem> cartItems) {
+        final List<Long> ids = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(toList());
+        cartItemDao.deleteByIdIn(ids);
+    }
+
+    public void delete(final CartItem cartItem) {
+        cartItemDao.deleteById(cartItem.getId());
     }
 }

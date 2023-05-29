@@ -61,14 +61,18 @@ class CartItemRepositoryTest {
     }
 
     @Test
-    void 사용자_아이디와_삭제할_장바구니의_상품_아이디를_받아_장바구니_항목을_제거한다() {
+    void 모든_장바구니_항목을_제거한다() {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final Product product1 = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
+        final Product product2 = productRepository.save(new Product("치즈피자2", "2.jpg", 9900L));
+        final Product product3 = productRepository.save(new Product("치즈피자3", "3.jpg", 10900L));
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final CartItem cartItem3 = cartItemRepository.save(new CartItem(member, product3));
 
         // when
-        cartItemRepository.deleteById(cartItem.getId(), member.getId());
+        cartItemRepository.deleteAll(List.of(cartItem1, cartItem2, cartItem3));
 
         // then
         assertThat(cartItemRepository.findAllByMemberId(member.getId())).isEmpty();
