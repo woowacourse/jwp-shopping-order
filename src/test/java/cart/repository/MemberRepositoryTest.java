@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.exception.MemberException;
 import cart.repository.mapper.MemberMapper;
 import cart.test.RepositoryTest;

@@ -1,26 +1,27 @@
-package cart.domain.product;
+package cart.domain.member;
 
-import cart.exception.ProductException.NameEmpty;
-import cart.exception.ProductException.NameOverLength;
+import static cart.exception.MemberException.EmailEmpty;
+
+import cart.exception.MemberException.EmailOverLength;
 import org.apache.logging.log4j.util.Strings;
 
-class Name {
+class Email {
 
     private static final int MAXIMUM_LENGTH = 255;
 
     private final String value;
 
-    public Name(String value) {
+    public Email(String value) {
         validate(value);
         this.value = value;
     }
 
     private void validate(String value) {
         if (Strings.isBlank(value)) {
-            throw new NameEmpty();
+            throw new EmailEmpty();
         }
         if (value.length() > MAXIMUM_LENGTH) {
-            throw new NameOverLength(value.length(), MAXIMUM_LENGTH);
+            throw new EmailOverLength(value.length(), MAXIMUM_LENGTH);
         }
     }
 

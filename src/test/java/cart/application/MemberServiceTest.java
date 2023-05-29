@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.repository.mapper.MemberMapper;
 import cart.test.ServiceTest;
 import cart.ui.controller.dto.response.MemberResponse;

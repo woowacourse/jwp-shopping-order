@@ -1,7 +1,7 @@
 package cart.domain.product;
 
 import cart.exception.ProductException.ImageEmpty;
-import cart.exception.ProductException.ImageLength;
+import cart.exception.ProductException.ImageOverLength;
 import org.apache.logging.log4j.util.Strings;
 
 class ImageUrl {
@@ -20,7 +20,7 @@ class ImageUrl {
             throw new ImageEmpty();
         }
         if (value.length() > MAXIMUM_LENGTH) {
-            throw new ImageLength(value.length(), MAXIMUM_LENGTH);
+            throw new ImageOverLength(value.length(), MAXIMUM_LENGTH);
         }
     }
 

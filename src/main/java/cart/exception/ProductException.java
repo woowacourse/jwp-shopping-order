@@ -13,9 +13,9 @@ public class ProductException extends ShoppingException {
         }
     }
 
-    public static class NameLength extends ProductException {
+    public static class NameOverLength extends ProductException {
 
-        public NameLength(int currentLength, int maxLength) {
+        public NameOverLength(int currentLength, int maxLength) {
             super("상품 이름은 최대 " + maxLength + "글자까지 가능합니다. 현재 길이: " + currentLength);
         }
     }
@@ -34,9 +34,9 @@ public class ProductException extends ShoppingException {
         }
     }
 
-    public static class ImageLength extends ProductException {
+    public static class ImageOverLength extends ProductException {
 
-        public ImageLength(int currentLength, int maxLength) {
+        public ImageOverLength(int currentLength, int maxLength) {
             super("상품 이미지 URL은 최대 " + maxLength + "글자까지 가능합니다. 현재 길이: " + currentLength);
         }
     }

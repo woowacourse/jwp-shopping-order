@@ -1,7 +1,7 @@
 package cart.repository.mapper;
 
 import cart.dao.entity.MemberEntity;
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 public class MemberMapper {
 

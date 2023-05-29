@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.repository.MemberRepository;
 import cart.ui.controller.dto.response.MemberResponse;
 import java.util.List;

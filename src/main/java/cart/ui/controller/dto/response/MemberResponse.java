@@ -1,6 +1,6 @@
 package cart.ui.controller.dto.response;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 public class MemberResponse {
 

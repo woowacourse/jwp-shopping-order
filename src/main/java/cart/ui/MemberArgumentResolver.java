@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.MemberService;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.ui.controller.dto.response.MemberResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
