@@ -29,17 +29,17 @@ public class ProductService {
     }
 
     @Transactional
-    public Long createProduct(final ProductRequest productRequest) {
-        final Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+    public Long createProduct(final ProductRequest request) {
+        final Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl());
         return productDao.insert(product);
     }
 
     @Transactional
-    public void updateProduct(final Long productId, final ProductRequest productRequest) {
+    public void updateProduct(final Long productId, final ProductRequest request) {
         final Product product = new Product(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImageUrl());
+                request.getName(),
+                request.getPrice(),
+                request.getImageUrl());
         productDao.update(productId, product);
     }
 

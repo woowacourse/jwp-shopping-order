@@ -9,6 +9,7 @@ import cart.domain.member.MemberPoint;
 import cart.domain.orderproduct.Order;
 import cart.domain.orderproduct.OrderProduct;
 import cart.domain.product.Product;
+import cart.exception.OrderNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,21 +28,23 @@ public class OrderRepository {
     }
 
     public Long save(final CartItems cartItems, final Member member, final MemberPoint usedPoint) {
-        final Long orderId = orderDao.save(new Order(member, usedPoint));
-        final Order findOrder = orderDao.findById(orderId);
+        final Long orderId = orderDao.insert(new Order(member, usedPoint));
+        final Order findOrder = orderDao.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
         final List<Product> products = productDao.findAllByIds(cartItems.getProductIds());
         final List<OrderProduct> orderProducts = cartItems.toOrderProducts(findOrder, products);
-        orderProductDao.save(orderProducts);
+        orderProductDao.insertAll(orderProducts);
 
         return orderId;
     }
 
     public Order findOrderById(final Long orderId) {
-        return orderDao.findById(orderId);
+        return orderDao.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
     public List<OrderProduct> findAllOrderProductsByOrderId(final Long orderId) {
-        return orderProductDao.findByOrderId(orderId);
+        return orderProductDao.findAllByOrderId(orderId);
     }
 
     public List<Order> findOrdersByMemberId(final Long memberId) {

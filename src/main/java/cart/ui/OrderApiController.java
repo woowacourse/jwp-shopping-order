@@ -30,23 +30,19 @@ public class OrderApiController {
     public ResponseEntity<Void> order(final Member member,
                                       @Valid @RequestBody OrderRequest request) {
         final Long orderId = orderService.order(member, request);
-
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDetailResponse> orderDetail(Member member,
                                                            @PathVariable Long orderId) {
-
-        final OrderDetailResponse orderDetail = orderService.getOrderDetail(member, orderId);
-
+        final OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
         return ResponseEntity.ok(orderDetail);
     }
 
     @GetMapping
     public ResponseEntity<List<OrderDetailResponse>> orderDetails(Member member) {
         final List<OrderDetailResponse> orderDetails = orderService.getAllOrderDetails(member);
-
         return ResponseEntity.ok(orderDetails);
     }
 }

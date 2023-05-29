@@ -24,7 +24,7 @@ public class OrderProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    final RowMapper<OrderProduct> orderProductRowMapper = (result, rowNum) -> {
+    private final RowMapper<OrderProduct> orderProductRowMapper = (result, rowNum) -> {
         final Member member = new Member(
                 result.getLong("member.id"),
                 result.getString("email"),
@@ -49,7 +49,7 @@ public class OrderProductDao {
                 new Quantity(result.getInt("order_product.quantity")));
     };
 
-    public void save(final List<OrderProduct> orderProducts) {
+    public void insertAll(final List<OrderProduct> orderProducts) {
         final String sql = "INSERT INTO order_product(order_id, product_id, product_name, product_price, product_image_url, quantity) " +
                 "VALUES(?, ?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -71,7 +71,7 @@ public class OrderProductDao {
         });
     }
 
-    public List<OrderProduct> findByMemberId(final Long memberId) {
+    public List<OrderProduct> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT op.id, op.quantity, " +
                 "m.id, m.email, " +
                 "o.id, o.used_point, o.created_at, " +
@@ -85,7 +85,7 @@ public class OrderProductDao {
         return jdbcTemplate.query(sql, orderProductRowMapper, memberId);
     }
 
-    public List<OrderProduct> findByOrderId(final Long orderId) {
+    public List<OrderProduct> findAllByOrderId(final Long orderId) {
         final String sql = "SELECT op.id, op.quantity, " +
                 "m.id, m.email, " +
                 "o.id, o.used_point, o.created_at, " +

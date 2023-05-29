@@ -40,13 +40,13 @@ public class CartItemApiController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member,
-                                             @RequestBody CartItemRequest cartItemRequest) {
-        final Long cartItemId = cartItemService.addCartItems(member, cartItemRequest);
+                                             @RequestBody CartItemRequest request) {
+        final Long cartItemId = cartItemService.addCartItems(member, request);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{cartItemId}")
-    public ResponseEntity<Void> updateCartItemQuantity(final Member member,
+    public ResponseEntity<Void> updateCartItemQuantity(Member member,
                                                        @PathVariable Long cartItemId,
                                                        @RequestBody CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, cartItemId, request);

@@ -27,13 +27,13 @@ public class CartItemService {
     }
 
     public List<CartItem> getCartItemsByMember(final Member member) {
-        return cartItemDao.findByMemberId(member.getId());
+        return cartItemDao.findAllByMemberId(member.getId());
     }
 
     @Transactional
-    public Long addCartItems(final Member member, final CartItemRequest cartItemRequest) {
-        final Product product = productDao.findById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException(cartItemRequest.getProductId()));
+    public Long addCartItems(final Member member, final CartItemRequest request) {
+        final Product product = productDao.findById(request.getProductId())
+                .orElseThrow(() -> new ProductNotFoundException(request.getProductId()));
         return cartItemDao.insert(new CartItem(member, product));
     }
 
@@ -55,7 +55,6 @@ public class CartItemService {
         final CartItem cartItem = cartItemDao.findById(cartItemId)
                 .orElseThrow(() -> new CartItemNotFoundException(cartItemId));
         cartItem.checkOwner(member);
-
         cartItemDao.delete(cartItemId);
     }
 }

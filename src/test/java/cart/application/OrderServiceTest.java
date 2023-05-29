@@ -17,6 +17,7 @@ import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
 import cart.dto.OrderRequest;
 import cart.exception.MemberNotFoundException;
+import cart.exception.OrderNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -124,13 +125,13 @@ public class OrderServiceTest {
             void setUp() {
                 final OrderRequest orderRequest = new OrderRequest(List.of(1L, 2L), 1000);
                 final Long orderId = orderService.order(member, orderRequest);
-                order = orderDao.findById(orderId);
+                order = orderDao.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
             }
 
             @DisplayName("주문 내역을 볼 수 있다.")
             @Test
             void it_returns_orderProducts() {
-                final List<OrderProduct> orderProducts = orderProductDao.findByMemberId(member.getId());
+                final List<OrderProduct> orderProducts = orderProductDao.findAllByMemberId(member.getId());
 
                 assertAll(
                         () -> assertThat(orderProducts).hasSize(2),

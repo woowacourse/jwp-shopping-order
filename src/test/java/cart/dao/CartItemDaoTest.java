@@ -59,7 +59,7 @@ public class CartItemDaoTest {
         final Member member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
 
         // when
-        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        final List<CartItem> cartItems = cartItemDao.findAllByMemberId(member.getId());
 
         // then
         assertAll(

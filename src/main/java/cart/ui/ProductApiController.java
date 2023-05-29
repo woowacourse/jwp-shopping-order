@@ -43,15 +43,15 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        final Long productId = productService.createProduct(productRequest);
+    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest request) {
+        final Long productId = productService.createProduct(request);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<Void> updateProduct(@PathVariable Long productId,
-                                              @RequestBody ProductRequest productRequest) {
-        productService.updateProduct(productId, productRequest);
+                                              @RequestBody ProductRequest request) {
+        productService.updateProduct(productId, request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

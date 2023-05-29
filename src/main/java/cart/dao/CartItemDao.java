@@ -10,13 +10,13 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Component
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -73,7 +73,7 @@ public class CartItemDao {
         }
     }
 
-    public List<CartItem> findByMemberId(final Long memberId) {
+    public List<CartItem> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
                 "p.id, p.name, p.price, p.image_url, ci.quantity " +
                 "FROM cart_item ci " +
