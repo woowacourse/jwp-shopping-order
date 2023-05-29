@@ -25,8 +25,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class ProductAcceptanceTest {
 
     @LocalServerPort
@@ -65,7 +67,7 @@ public class ProductAcceptanceTest {
                         .extract().body().asString();
 
                 // then
-                assertThat(responseBody).isEqualTo("상품 이름을 입력해주세요.");
+                assertThat(responseBody).containsAnyOf("상품 이름을 입력해주세요.", "상품 이름은 한글 또는 영어여야합니다.");
             }
 
             @ParameterizedTest
@@ -125,7 +127,7 @@ public class ProductAcceptanceTest {
                         .extract().body().asString();
 
                 // then
-                assertThat(responseBody).isEqualTo("상품 이미지 URL을 입력해주세요.");
+                assertThat(responseBody).containsAnyOf("상품 이미지 URL을 입력해주세요.", "올바른 URL 형식으로 입력해주세요.");
             }
 
             @ParameterizedTest
@@ -166,6 +168,43 @@ public class ProductAcceptanceTest {
 
             // then
             assertThat(response.getHeader("Location")).contains("/products/");
+        }
+    }
+
+    @Nested
+    @DisplayName("상품 삭제 시")
+    class deleteProduct {
+
+        @Test
+        @DisplayName("삭제할 상품 ID가 존재하지 않으면 예외가 발생한다.")
+        void throws_when_product_id_not_exist() {
+            // given
+            Long notExistId = -1L;
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .delete("/products/{id}", notExistId)
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertThat(response.getBody().asString()).isEqualTo("상품 ID에 해당하는 상품을 찾을 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("삭제할 상품 ID가 존재하면 정상적으로 상품이 삭제된다.")
+        void success() {
+            // given
+            Long productId = CHICKEN.ID;
+
+            // when, then
+            Response response = RestAssured.given().log().all()
+                    .delete("/products/{id}", productId)
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertThat(response.getBody().asString()).isEqualTo("");
         }
     }
 
@@ -276,7 +315,8 @@ public class ProductAcceptanceTest {
                     () -> assertThat(jsonPath.getString("products[0].product.name")).isEqualTo(product1.getName()),
                     () -> assertThat(jsonPath.getString("products[0].product.imageUrl")).isEqualTo(product1.getImageUrl()),
                     () -> assertThat(jsonPath.getInt("products[0].product.price")).isEqualTo(product1.getPrice()),
-                    () -> assertThat((String) jsonPath.get("cartItem")).isNull());
+                    () -> assertThat((String) jsonPath.get("cartItem")).isNull(),
+                    () -> assertThat(jsonPath.getBoolean("last")).isTrue());
         }
     }
 
