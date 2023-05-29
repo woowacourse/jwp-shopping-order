@@ -43,4 +43,23 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(productsResponse).hasSize(2);
         assertThat(productsResponse).extracting("name").contains("치킨", "샐러드");
     }
+
+    @Test
+    void 주문_목록_조회_테스트() {
+        final Member member = memberService.findMemberById(1L);
+
+        final ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .header(HttpHeaders.ORIGIN, "http://www.example.com") // check CORS
+                .when()
+                .get("/orders")
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getString("[0].mainProductName")).isEqualTo("치킨");
+        assertThat(response.jsonPath().getInt("[0].extraProductCount")).isEqualTo(1);
+        assertThat(response.jsonPath().getInt("[0].price")).isEqualTo(45_000);
+    }
 }

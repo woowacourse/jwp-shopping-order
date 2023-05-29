@@ -2,7 +2,9 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.dto.OrderPreviewResponse;
 import cart.dto.OrderResponse;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,13 @@ public class OrderApiController {
 //
 //        return ResponseEntity.created();
 //    }
+
+    @GetMapping()
+    public ResponseEntity<List<OrderPreviewResponse>> findAllOrdersByMember(final Member member) {
+        final List<OrderPreviewResponse> allOrdersByMember = orderService.findAllOrdersByMember(member);
+
+        return ResponseEntity.ok(allOrdersByMember);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> findOrderById(final Member member, @PathVariable final Long id) {
