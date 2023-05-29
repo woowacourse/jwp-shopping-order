@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -58,16 +59,19 @@ public class ProductAcceptanceTest {
                 ProductRequest productRequest = new ProductRequest(productName, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
 
                 // when
-                String responseBody = RestAssured.given().log().all()
+                Response response = RestAssured.given().log().all()
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .body(productRequest)
                         .when()
                         .post("/products")
                         .then().log().all()
-                        .extract().body().asString();
+                        .extract().response();
 
                 // then
-                assertThat(responseBody).containsAnyOf("상품 이름을 입력해주세요.", "상품 이름은 한글 또는 영어여야합니다.");
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).containsAnyOf("상품 이름을 입력해주세요.", "상품 이름은 한글 또는 영어여야합니다.")
+                );
             }
 
             @ParameterizedTest
@@ -78,16 +82,19 @@ public class ProductAcceptanceTest {
                 ProductRequest productRequest = new ProductRequest(productName, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
 
                 // when
-                String responseBody = RestAssured.given().log().all()
+                Response response = RestAssured.given().log().all()
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .body(productRequest)
                         .when()
                         .post("/products")
                         .then().log().all()
-                        .extract().body().asString();
+                        .extract().response();
 
                 // then
-                assertThat(responseBody).isEqualTo("상품 이름은 한글 또는 영어여야합니다.");
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo("상품 이름은 한글 또는 영어여야합니다.")
+                );
             }
 
             @ParameterizedTest
@@ -98,16 +105,19 @@ public class ProductAcceptanceTest {
                 ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, productPrice, CHICKEN.IMAGE_URL);
 
                 // when
-                String responseBody = RestAssured.given().log().all()
+                Response response = RestAssured.given().log().all()
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .body(productRequest)
                         .when()
                         .post("/products")
                         .then().log().all()
-                        .extract().body().asString();
+                        .extract().response();
 
                 // then
-                assertThat(responseBody).isEqualTo("가격은 양수여야합니다.");
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo("가격은 양수여야합니다.")
+                );
             }
 
             @ParameterizedTest
@@ -118,16 +128,19 @@ public class ProductAcceptanceTest {
                 ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, CHICKEN.PRICE, productImageUrl);
 
                 // when
-                String responseBody = RestAssured.given().log().all()
+                Response response = RestAssured.given().log().all()
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .body(productRequest)
                         .when()
                         .post("/products")
                         .then().log().all()
-                        .extract().body().asString();
+                        .extract().response();
 
                 // then
-                assertThat(responseBody).containsAnyOf("상품 이미지 URL을 입력해주세요.", "올바른 URL 형식으로 입력해주세요.");
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).containsAnyOf("상품 이미지 URL을 입력해주세요.", "올바른 URL 형식으로 입력해주세요.")
+                );
             }
 
             @ParameterizedTest
@@ -138,16 +151,19 @@ public class ProductAcceptanceTest {
                 ProductRequest productRequest = new ProductRequest(CHICKEN.NAME, CHICKEN.PRICE, productImageUrl);
 
                 // when
-                String responseBody = RestAssured.given().log().all()
+                Response response = RestAssured.given().log().all()
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .body(productRequest)
                         .when()
                         .post("/products")
                         .then().log().all()
-                        .extract().body().asString();
+                        .extract().response();
 
                 // then
-                assertThat(responseBody).isEqualTo("올바른 URL 형식으로 입력해주세요.");
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo("올바른 URL 형식으로 입력해주세요.")
+                );
             }
         }
 
@@ -167,7 +183,11 @@ public class ProductAcceptanceTest {
                     .extract().response();
 
             // then
-            assertThat(response.getHeader("Location")).contains("/products/");
+
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                    () -> assertThat(response.getHeader("Location")).contains("/products/")
+            );
         }
     }
 
@@ -188,7 +208,10 @@ public class ProductAcceptanceTest {
                     .extract().response();
 
             // then
-            assertThat(response.getBody().asString()).isEqualTo("상품 ID에 해당하는 상품을 찾을 수 없습니다.");
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("상품 ID에 해당하는 상품을 찾을 수 없습니다.")
+            );
         }
 
         @Test
@@ -205,9 +228,13 @@ public class ProductAcceptanceTest {
                     .extract().response();
 
             // then
-            assertThat(response.getBody().asString()).isEqualTo(bodyEmpty);
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo(bodyEmpty)
+            );
         }
     }
+
 
     @Nested
     @DisplayName("상품 목록 조회 시")
@@ -223,7 +250,10 @@ public class ProductAcceptanceTest {
                     .then().log().all()
                     .extract().response();
 
-            assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.");
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
+            );
         }
 
         @Test
@@ -241,7 +271,10 @@ public class ProductAcceptanceTest {
                     .then().log().all()
                     .extract().response();
 
-            assertThat(response.getBody().asString()).isEqualTo("인증된 사용자가 아닙니다.");
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증된 사용자가 아닙니다.")
+            );
         }
 
         @Test
@@ -268,6 +301,8 @@ public class ProductAcceptanceTest {
             JsonPath jsonPath = response.jsonPath();
             // then
             assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+
                     () -> assertThat(jsonPath.getLong("products[0].product.id")).isEqualTo(product1.getId()),
                     () -> assertThat(jsonPath.getString("products[0].product.name")).isEqualTo(product1.getName()),
                     () -> assertThat(jsonPath.getString("products[0].product.imageUrl")).isEqualTo(product1.getImageUrl()),
@@ -312,6 +347,8 @@ public class ProductAcceptanceTest {
 
             // then
             assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+
                     () -> assertThat(jsonPath.getLong("products[0].product.id")).isEqualTo(product1.getId()),
                     () -> assertThat(jsonPath.getString("products[0].product.name")).isEqualTo(product1.getName()),
                     () -> assertThat(jsonPath.getString("products[0].product.imageUrl")).isEqualTo(product1.getImageUrl()),
@@ -337,7 +374,11 @@ public class ProductAcceptanceTest {
                     .then().log().all()
                     .extract().response();
 
-            assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.");
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
+            );
         }
 
         @Test
@@ -356,7 +397,10 @@ public class ProductAcceptanceTest {
                     .then().log().all()
                     .extract().response();
 
-            assertThat(response.getBody().asString()).isEqualTo("인증된 사용자가 아닙니다.");
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증된 사용자가 아닙니다.")
+            );
         }
 
         @Test
@@ -373,7 +417,10 @@ public class ProductAcceptanceTest {
                     .then().log().all()
                     .extract().response();
 
-            assertThat(response.getBody().asString()).isEqualTo("상품 ID에 해당하는 상품을 찾을 수 없습니다.");
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("상품 ID에 해당하는 상품을 찾을 수 없습니다.")
+            );
         }
 
         @Nested
@@ -396,6 +443,8 @@ public class ProductAcceptanceTest {
 
                 // then
                 assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+
                         () -> assertThat(jsonPath.getLong("product.id")).isEqualTo(product.getId()),
                         () -> assertThat(jsonPath.getString("product.name")).isEqualTo(product.getName()),
                         () -> assertThat(jsonPath.getString("product.imageUrl")).isEqualTo(product.getImageUrl()),
@@ -421,6 +470,8 @@ public class ProductAcceptanceTest {
 
                 // then
                 assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+
                         () -> assertThat(jsonPath.getLong("product.id")).isEqualTo(product.getId()),
                         () -> assertThat(jsonPath.getString("product.name")).isEqualTo(product.getName()),
                         () -> assertThat(jsonPath.getString("product.imageUrl")).isEqualTo(product.getImageUrl()),
