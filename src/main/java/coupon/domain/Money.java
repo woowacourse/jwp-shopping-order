@@ -36,6 +36,10 @@ public final class Money {
         return new Money(value + money.value);
     }
 
+    public Money subtract(Money discountAmount) {
+        return new Money(value - discountAmount.value);
+    }
+
     public boolean isBiggerThan(Money money) {
         return value > money.value;
     }

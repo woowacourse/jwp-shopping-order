@@ -77,6 +77,19 @@ class MoneyTest {
         assertThat(result.getValue()).isEqualTo(30000);
     }
 
+    @Test
+    void 금액을_뺀다() {
+        // given
+        Money money1 = new Money(10000);
+        Money money2 = new Money(20000);
+
+        // when
+        Money result = money2.subtract(money1);
+
+        // then
+        assertThat(result.getValue()).isEqualTo(10000);
+    }
+
     @ParameterizedTest
     @CsvSource(value = {"10000, 20000, false", "20000, 10000, true"})
     void 금액이_더_큰지_확인한다(int target, int input, boolean expected) {
