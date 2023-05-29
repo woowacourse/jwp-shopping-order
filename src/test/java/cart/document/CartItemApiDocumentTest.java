@@ -116,7 +116,7 @@ public class CartItemApiDocumentTest {
     void 특정_유저의_장바구니_상품_추가_문서화() throws Exception {
         // given
         given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
-        final CartItemRequest request = new CartItemRequest(ProductFixtures.CHICKEN.ID);
+        final CartItemRequest request = new CartItemRequest(ProductFixtures.CHICKEN.ID, 2);
         given(cartItemService.add(any(AuthMember.class), any(CartItemRequest.class)))
                 .willReturn(Dooly_CartItem1.ID);
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
@@ -131,7 +131,8 @@ public class CartItemApiDocumentTest {
                 .andDo(document("cart-items/addCartItems",
                                 preprocessRequest(prettyPrint()),
                                 requestFields(
-                                        fieldWithPath("productId").type(JsonFieldType.NUMBER).description("장바구니에 추가할 상품 아이디")
+                                        fieldWithPath("productId").type(JsonFieldType.NUMBER).description("장바구니에 추가할 상품 아이디"),
+                                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("장바구니에 추가할 상품 수량")
                                 )
                         )
                 );
