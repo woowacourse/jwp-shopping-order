@@ -1,5 +1,6 @@
 package cart.domain.product;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class ProductImageUrl {
@@ -32,5 +33,25 @@ public class ProductImageUrl {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductImageUrl that = (ProductImageUrl) o;
+        return Objects.equals(imageUrl, that.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(imageUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "ProductImageUrl{" +
+                "imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

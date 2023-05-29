@@ -42,11 +42,21 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return productPrice == product.productPrice && Objects.equals(id, product.id) && Objects.equals(productName, product.productName) && Objects.equals(productImageUrl, product.productImageUrl);
+        return Objects.equals(id, product.id) && Objects.equals(productName, product.productName) && Objects.equals(productPrice, product.productPrice) && Objects.equals(productImageUrl, product.productImageUrl);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, productName, productPrice, productImageUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", productName=" + productName +
+                ", productPrice=" + productPrice +
+                ", productImageUrl=" + productImageUrl +
+                '}';
     }
 }
