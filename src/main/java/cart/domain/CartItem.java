@@ -13,6 +13,25 @@ public class CartItem {
         this(null, quantity, product, member);
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final CartItem cartItem = (CartItem) o;
+        return getQuantity() == cartItem.getQuantity() && Objects.equals(getId(), cartItem.getId())
+                && Objects.equals(getProduct(), cartItem.getProduct()) && Objects.equals(getMember(),
+                cartItem.getMember());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getQuantity(), getProduct(), getMember());
+    }
+
     public CartItem(final Long id, final int quantity, final Product product, final Member member) {
         this.id = id;
         this.quantity = quantity;

@@ -1,6 +1,7 @@
 package cart.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Order {
     private final Long id;
@@ -20,6 +21,25 @@ public class Order {
         this.member = member;
         this.totalPrice = totalPrice;
         this.finalPrice = finalPrice;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Order order = (Order) o;
+        return getTotalPrice() == order.getTotalPrice() && getFinalPrice() == order.getFinalPrice()
+                && Objects.equals(getId(), order.getId()) && Objects.equals(getCreatedAt(),
+                order.getCreatedAt()) && Objects.equals(getMember(), order.getMember());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCreatedAt(), getMember(), getTotalPrice(), getFinalPrice());
     }
 
     public Long getId() {
