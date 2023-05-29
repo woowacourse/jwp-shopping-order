@@ -19,7 +19,6 @@ INSERT INTO member (id, email, password) VALUES (2, 'b@b.com', '1234');
 INSERT INTO coupon (id, name, policy_id, member_id) VALUES (1, '전체 10% 할인 쿠폰', 5, 1);
 INSERT INTO coupon (id, name, policy_id, member_id) VALUES (2, '전체 2000원 할인 쿠폰', 6, 1);
 INSERT INTO coupon (id, name, policy_id, member_id) VALUES (3, 'DELIVERY_FREE', 7, 1);
-INSERT INTO coupon (id, name, policy_id, member_id) VALUES (4, 'DELIVERY_FREE', 7, 2);
 
 INSERT INTO cart (id, member_id) values ('1', '1');
 INSERT INTO cart (id, member_id) values ('2', '2');

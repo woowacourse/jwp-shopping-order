@@ -38,16 +38,12 @@ public class PaymentService {
     @Transactional(readOnly = true)
     public PaymentResponse findPaymentPage(final Member member) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-        Coupons coupons = couponRepository.findAllByMemberId(member.getId());
-        member.initCoupons(coupons);
-
         return PaymentResponse.from(member, cart);
     }
 
     @Transactional
     public PaymentUsingCouponsResponse applyCoupons(final Member member, final CouponsApplyRequest request) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-        Coupons memberCoupons = couponRepository.findAllByMemberId(member.getId());
         Coupons requestCoupons = couponRepository.findAllByCouponIds(parseCouponRequestIds(request.getCoupons()));
 
         // TODO: validate member and request coupons equals or diff
@@ -77,7 +73,7 @@ public class PaymentService {
     @Transactional
     public long pay(final Member member, final PaymentRequest paymentRequest) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-        Coupons memberCoupons = couponRepository.findAllByMemberId(member.getId());
+
         Coupons requestCoupons = couponRepository.findAllByCouponIds(parseCouponRequestIds(paymentRequest.getCoupons()));
         member.initCoupons(requestCoupons);
 

@@ -1,6 +1,6 @@
 package cart.controller.cart;
 
-import cart.config.auth.Auth;
+import cart.config.auth.guard.basic.Auth;
 import cart.domain.member.Member;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;

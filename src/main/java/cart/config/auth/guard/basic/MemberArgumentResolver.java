@@ -1,4 +1,4 @@
-package cart.config.auth;
+package cart.config.auth.guard.basic;
 
 import cart.domain.member.Member;
 import cart.exception.AuthenticationException;

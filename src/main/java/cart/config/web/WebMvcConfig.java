@@ -1,6 +1,8 @@
 package cart.config.web;
 
-import cart.config.auth.MemberArgumentResolver;
+import cart.config.auth.guard.basic.MemberArgumentResolver;
+import cart.config.auth.guard.order.MemberOrderArgumentResolver;
+import cart.repository.coupon.CouponRepository;
 import cart.repository.member.MemberRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,14 +15,17 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final MemberRepository memberRepository;
+    private final CouponRepository couponRepository;
 
-    public WebMvcConfig(final MemberRepository memberRepository) {
+    public WebMvcConfig(final MemberRepository memberRepository, final CouponRepository couponRepository) {
         this.memberRepository = memberRepository;
+        this.couponRepository = couponRepository;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberArgumentResolver(memberRepository));
+        resolvers.add(new MemberOrderArgumentResolver(memberRepository, couponRepository));
     }
 
     @Override

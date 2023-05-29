@@ -1,6 +1,6 @@
 package cart.controller.payment;
 
-import cart.config.auth.Auth;
+import cart.config.auth.guard.order.OrderAuth;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponsApplyRequest;
 import cart.dto.payment.PaymentRequest;
@@ -28,18 +28,18 @@ public class PaymentController {
     }
 
     @GetMapping
-    public ResponseEntity<PaymentResponse> findPaymentPage(@Auth final Member member) {
+    public ResponseEntity<PaymentResponse> findPaymentPage(@OrderAuth final Member member) {
         return ResponseEntity.ok(paymentService.findPaymentPage(member));
     }
 
     @PostMapping("/coupons")
-    public ResponseEntity<PaymentUsingCouponsResponse> applyCoupon(@Auth final Member member,
+    public ResponseEntity<PaymentUsingCouponsResponse> applyCoupon(@OrderAuth final Member member,
                                                                    @RequestBody @Valid final CouponsApplyRequest request) {
         return ResponseEntity.ok(paymentService.applyCoupons(member, request));
     }
 
     @PostMapping
-    public ResponseEntity<Void> pay(@Auth final Member member,
+    public ResponseEntity<Void> pay(@OrderAuth final Member member,
                                     @RequestBody @Valid final PaymentRequest request) {
         long id = paymentService.pay(member, request);
         return ResponseEntity.created(URI.create("/payments/" + id)).build();

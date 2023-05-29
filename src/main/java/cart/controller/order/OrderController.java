@@ -1,6 +1,6 @@
 package cart.controller.order;
 
-import cart.config.auth.Auth;
+import cart.config.auth.guard.basic.Auth;
 import cart.domain.member.Member;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
