@@ -4,9 +4,9 @@ import static cart.domain.coupon.Coupon.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.MemberCouponDao;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Item;
+import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
 import cart.domain.cart.Product;
 import cart.domain.coupon.AmountDiscountPolicy;
@@ -17,9 +17,9 @@ import cart.dto.ItemDto;
 import cart.dto.ItemIdDto;
 import cart.dto.OrderResponse;
 import cart.dto.OrderSaveRequest;
-import cart.entity.MemberCouponEntity;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
+import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import cart.repository.ProductRepository;
@@ -56,7 +56,7 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
 
     @Autowired
-    private MemberCouponDao memberCouponDao;
+    private MemberCouponRepository memberCouponRepository;
 
     @Test
     void 상품을_주문한다() {
@@ -71,7 +71,7 @@ class OrderServiceTest {
                 new AmountDiscountPolicy(2000L),
                 new NoneDiscountCondition()
         ));
-        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon.getId(), false));
+        memberCouponRepository.saveAll(List.of(new MemberCoupon(member, coupon)));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
                 List.of(new ItemIdDto(cartItem1.getId()), new ItemIdDto(cartItem2.getId())),
                 coupon.getId()

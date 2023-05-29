@@ -3,14 +3,13 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.MemberCouponDao;
+import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DeliveryFeeDiscountPolicy;
 import cart.domain.coupon.MinimumPriceDiscountCondition;
 import cart.domain.coupon.NoneDiscountCondition;
 import cart.domain.member.Member;
-import cart.entity.MemberCouponEntity;
 import cart.test.RepositoryTest;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ class CouponRepositoryTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private MemberCouponDao memberCouponDao;
+    private MemberCouponRepository memberCouponRepository;
 
     @Test
     void 쿠폰을_저장한다() {
@@ -63,8 +62,7 @@ class CouponRepositoryTest {
                 new MinimumPriceDiscountCondition(30000)
         ));
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon1.getId(), false));
-        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon2.getId(), false));
+        memberCouponRepository.saveAll(List.of(new MemberCoupon(member, coupon1), new MemberCoupon(member, coupon2)));
 
         // when
         final List<Coupon> result = couponRepository.findAllByMemberId(member.getId());
@@ -95,13 +93,13 @@ class CouponRepositoryTest {
     @Test
     void 단일_쿠폰을_사용자_아이디와_함께_조회한다() {
         // given
+        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
         final Coupon coupon = couponRepository.save(new Coupon(
                 "30000원 이상 2000원 할인 쿠폰",
                 new AmountDiscountPolicy(2000L),
                 new NoneDiscountCondition()
         ));
-        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon.getId(), false));
+        memberCouponRepository.saveAll(List.of(new MemberCoupon(member, coupon)));
 
         // when
         final Optional<Coupon> result = couponRepository.findByIdAndMemberId(coupon.getId(), member.getId());

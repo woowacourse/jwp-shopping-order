@@ -6,17 +6,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dao.MemberCouponDao;
+import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DeliveryFeeDiscountPolicy;
 import cart.domain.coupon.MinimumPriceDiscountCondition;
 import cart.domain.coupon.NoneDiscountCondition;
 import cart.domain.member.Member;
-import cart.entity.MemberCouponEntity;
 import cart.repository.CouponRepository;
+import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
 import java.util.Base64;
+import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class CouponControllerTest {
     private CouponRepository couponRepository;
 
     @Autowired
-    private MemberCouponDao memberCouponDao;
+    private MemberCouponRepository memberCouponRepository;
 
     @Test
     void 사용자의_모든_쿠폰을_조회한다() throws Exception {
@@ -59,8 +60,7 @@ public class CouponControllerTest {
                 new MinimumPriceDiscountCondition(30000)
         ));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon1.getId(), false));
-        memberCouponDao.insert(new MemberCouponEntity(member.getId(), coupon2.getId(), false));
+        memberCouponRepository.saveAll(List.of(new MemberCoupon(member, coupon1), new MemberCoupon(member, coupon2)));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // expect
