@@ -50,7 +50,7 @@ class CartItemServiceTest {
         ));
 
         // when
-        List<CartItemResponse> carItemResponses = cartItemService.findByMember(member);
+        List<CartItemResponse> carItemResponses = cartItemService.findAllCartItems(member);
 
         // then
         assertThat(carItemResponses.get(0).getId()).isEqualTo(1L);
@@ -65,7 +65,7 @@ class CartItemServiceTest {
         when(cartItemRepository.insert(any())).thenReturn(1L);
 
         // when
-        Long cartItemId = cartItemService.add(member, request);
+        Long cartItemId = cartItemService.createCartItem(member, request);
 
         // then
         assertThat(cartItemId).isEqualTo(1L);

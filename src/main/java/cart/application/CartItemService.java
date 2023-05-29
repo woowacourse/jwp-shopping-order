@@ -24,14 +24,14 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
+    public List<CartItemResponse> findAllCartItems(Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         return cartItems.stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
+    public Long createCartItem(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId());
         return cartItemRepository.insert(new CartItem(null, 1, product, member));
     }

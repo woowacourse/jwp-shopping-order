@@ -23,13 +23,13 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        List<CartItemResponse> cartItemResponses = cartItemService.findByMember(member);
+        List<CartItemResponse> cartItemResponses = cartItemService.findAllCartItems(member);
         return ResponseEntity.ok(cartItemResponses);
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest request) {
-        Long cartItemId = cartItemService.add(member, request);
+        Long cartItemId = cartItemService.createCartItem(member, request);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
