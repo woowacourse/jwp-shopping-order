@@ -4,6 +4,7 @@ import static cart.order.exception.OrderExceptionType.MISMATCH_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doNothing;
@@ -40,7 +41,7 @@ class OrderServiceTest {
     @Test
     void 상품을_주문한다() {
         // given
-        doNothing().when(orderValidator).validate(any());
+        doNothing().when(orderValidator).validate(eq(1L), any());
         PlaceOrderCommand command = new PlaceOrderCommand(1L, List.of(
                 1L, 2L
         ));
@@ -64,7 +65,7 @@ class OrderServiceTest {
     void 상품_정보가_변경되었으면_주문할_수_없다() {
         // given
         willThrow(new OrderException(MISMATCH_PRODUCT))
-                .given(orderValidator).validate(any());
+                .given(orderValidator).validate(eq(1L), any());
         PlaceOrderCommand command = new PlaceOrderCommand(1L, List.of(
                 1L, 2L
         ));

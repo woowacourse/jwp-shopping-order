@@ -35,6 +35,11 @@ public enum OrderExceptionType implements BaseExceptionType {
             HttpStatus.FORBIDDEN,
             "자신의 주문만 조회할 수 있습니다."
     ),
+    NO_AUTHORITY_ORDER_ITEM(
+            106,
+            HttpStatus.FORBIDDEN,
+            "자신의 장바구니에 들어있지 않은 항목은 주문할 수 없습니다."
+    ),
     ;
 
     private final int errorCode;

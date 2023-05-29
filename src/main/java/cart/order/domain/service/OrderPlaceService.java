@@ -18,7 +18,7 @@ public class OrderPlaceService {
     }
 
     public Order placeOrder(Long memberId, List<CartItem> cartItems) {
-        orderValidator.validate(cartItems);
+        orderValidator.validate(memberId, cartItems);
         List<OrderItem> orderItems = cartItems.stream()
                 .map(OrderItem::from)
                 .collect(Collectors.toList());

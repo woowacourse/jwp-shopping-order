@@ -33,7 +33,7 @@ public class OrderService {
         List<CartItem> cartItems = command.getCartItemIds().stream()
                 .map(cartItemRepository::findById)
                 .collect(Collectors.toList());
-        // TODO 본인의 장바구니 상품이 맞는가 + 생성 이후 장바구니 비워주기
+        // TODO  생성 이후 장바구니 비워주기
         Order order = orderPlaceService.placeOrder(command.getMemberId(), cartItems);
         return orderRepository.save(order);
     }

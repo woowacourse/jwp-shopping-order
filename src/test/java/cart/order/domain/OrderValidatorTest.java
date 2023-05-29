@@ -1,6 +1,7 @@
 package cart.order.domain;
 
 import static cart.order.exception.OrderExceptionType.MISMATCH_PRODUCT;
+import static cart.order.exception.OrderExceptionType.NO_AUTHORITY_ORDER_ITEM;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,7 +40,7 @@ class OrderValidatorTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                orderValidator.validate(List.of(cartItem))
+                orderValidator.validate(1L, List.of(cartItem))
         ).exceptionType();
 
         // then
@@ -59,7 +60,7 @@ class OrderValidatorTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                orderValidator.validate(List.of(cartItem))
+                orderValidator.validate(1L, List.of(cartItem))
         ).exceptionType();
 
         // then
@@ -79,11 +80,29 @@ class OrderValidatorTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                orderValidator.validate(List.of(cartItem))
+                orderValidator.validate(1L, List.of(cartItem))
         ).exceptionType();
 
         // then
         assertThat(baseExceptionType).isEqualTo(MISMATCH_PRODUCT);
+    }
+
+    @Test
+    void 자신의_장바구니에_들어있지_않은_상품의_경우_예외() {
+        // given
+        Member member = new Member(1L, "email", "1234");
+        Member member2 = new Member(2L, "email2", "1234");
+        Product origin = new Product("말랑", 10000, "image1");
+        Long id = productRepository.save(origin);
+        CartItem cartItem = new CartItem(productRepository.findById(id), member);
+
+        // when
+        BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
+                orderValidator.validate(member2.getId(), List.of(cartItem))
+        ).exceptionType();
+
+        // then
+        assertThat(baseExceptionType).isEqualTo(NO_AUTHORITY_ORDER_ITEM);
     }
 
     @Test
@@ -99,6 +118,6 @@ class OrderValidatorTest {
 
         // when & then
         assertDoesNotThrow(() ->
-                orderValidator.validate(List.of(cartItem)));
+                orderValidator.validate(1L, List.of(cartItem)));
     }
 }

@@ -1,6 +1,7 @@
 package cart.order.domain;
 
 import static cart.order.exception.OrderExceptionType.MISMATCH_PRODUCT;
+import static cart.order.exception.OrderExceptionType.NO_AUTHORITY_ORDER_ITEM;
 
 import cart.cartitem.domain.CartItem;
 import cart.order.exception.OrderException;
@@ -18,7 +19,7 @@ public class OrderValidator {
         this.productRepository = productRepository;
     }
 
-    public void validate(List<CartItem> cartItems) {
+    public void validate(Long memberId, List<CartItem> cartItems) {
         for (CartItem cartItem : cartItems) {
             Product product = productRepository.findById(cartItem.getProductId());
             if (!cartItem.getName().equals(product.getName())) {
@@ -29,6 +30,9 @@ public class OrderValidator {
             }
             if (!cartItem.getImageUrl().equals(product.getImageUrl())) {
                 throw new OrderException(MISMATCH_PRODUCT);
+            }
+            if (!cartItem.getMemberId().equals(memberId)) {
+                throw new OrderException(NO_AUTHORITY_ORDER_ITEM);
             }
         }
     }

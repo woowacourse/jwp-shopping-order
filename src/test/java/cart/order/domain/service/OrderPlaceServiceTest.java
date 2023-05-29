@@ -5,6 +5,7 @@ import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.doNothing;
 import static org.mockito.BDDMockito.willThrow;
 
@@ -41,7 +42,7 @@ class OrderPlaceServiceTest {
     @Test
     void 장바구니_상품을_주문한다() {
         // given
-        doNothing().when(orderValidator).validate(any());
+        doNothing().when(orderValidator).validate(eq(1L), any());
         Product product = new Product(1L, "말랑", 1000, "image");
         Member member = new Member(1L, "email", "1234");
         CartItem cartItem = new CartItem(2L, 10, product, member);
@@ -60,7 +61,7 @@ class OrderPlaceServiceTest {
     void 상품이_변경되었으면_주문할_수_없다() {
         // given
         willThrow(new OrderException(MISMATCH_PRODUCT))
-                .given(orderValidator).validate(any());
+                .given(orderValidator).validate(eq(1L), any());
         Product product = new Product(1L, "말랑", 1000, "image");
         Member member = new Member(1L, "email", "1234");
         CartItem cartItem = new CartItem(2L, 10, product, member);
