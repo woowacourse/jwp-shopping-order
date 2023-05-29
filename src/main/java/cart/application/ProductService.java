@@ -1,44 +1,54 @@
 package cart.application;
 
-import cart.domain.Product;
-import cart.dao.ProductDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import cart.domain.Product;
+import cart.domain.ProductStock;
+import cart.domain.Stock;
+import cart.dto.ProductRequest;
+import cart.dto.ProductStockResponse;
+import cart.exception.ProductNotFoundException;
+import cart.repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+    public ProductStockResponse createProduct(final ProductRequest productRequest) {
+        final Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        final Stock stock = new Stock(productRequest.getStock());
+        final ProductStock productStock = productRepository.createProduct(product, stock);
+        return ProductStockResponse.of(productStock);
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
-        return ProductResponse.of(product);
+    public List<ProductStockResponse> getAllProductStockResponses() {
+        final List<ProductStock> productStocks = productRepository.getAllProductStocks();
+        return productStocks.stream()
+                .map(ProductStockResponse::of)
+                .collect(Collectors.toList());
     }
 
-    public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+    public ProductStockResponse getProductStockResponseById(final Long id) {
+        final Optional<ProductStock> productStock = productRepository.getProductStockById(id);
+        return ProductStockResponse.of(productStock.orElseThrow(() -> new ProductNotFoundException(id)));
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+    public ProductStockResponse updateProduct(final Long id, final ProductRequest productRequest) {
+        final Product product = new Product(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        final Stock stock = new Stock(productRequest.getStock());
+        final Optional<ProductStock> productStock = productRepository.updateProductStock(product, stock);
+        return ProductStockResponse.of(productStock.orElseThrow(() -> new ProductNotFoundException(id)));
     }
 
-    public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+    public void deleteProduct(final Long id) {
+        productRepository.deleteProductById(id);
     }
 }
