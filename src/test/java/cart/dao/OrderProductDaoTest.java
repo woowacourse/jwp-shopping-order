@@ -77,6 +77,28 @@ class OrderProductDaoTest {
         assertThat(byOrderId.get(0).getOrder().getId()).isEqualTo(orderFixtureA.getId());
     }
 
+    @Test
+    void 사용자_주문_상품_조회_테스트() {
+        //given
+        final Member memberFixtureA = getSavedMemberFixture("testMemberA");
+        final Member memberFixtureB = getSavedMemberFixture("testMemberB");
+        final Product testProductA = getSavedProductFixture("testProductA");
+        final Order orderFixtureA = getSavedOrderFixture(memberFixtureA);
+        final Order orderFixtureB = getSavedOrderFixture(memberFixtureB);
+        final List<OrderProduct> orderProducts = List.of(
+                new OrderProduct(orderFixtureA, testProductA, 3),
+                new OrderProduct(orderFixtureB, testProductA, 4)
+        );
+        orderProductDao.saveOrderProducts(orderProducts);
+
+        //when
+        final List<OrderProduct> byOrderId = orderProductDao.findByMemberId(memberFixtureA.getId());
+
+        //then
+        assertThat(byOrderId).hasSize(1);
+        assertThat(byOrderId.get(0).getOrder().getMember().getId()).isEqualTo(memberFixtureA.getId());
+    }
+
     private Member getSavedMemberFixture(final String email) {
         final Member member = new Member(email, "password");
         final Long saveMemberId = memberDao.saveMember(member);

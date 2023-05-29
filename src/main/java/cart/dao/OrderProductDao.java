@@ -56,7 +56,7 @@ public class OrderProductDao {
     }
 
     public List<OrderProduct> findByOrderId(final Long orderId) {
-        final String findAllQuery =
+        final String findByOrderIdQuery =
                 "SELECT order_product.id, order_product.quantity, "
                         + "orders.id, orders.created_at, orders.total_price, orders.final_price, "
                         + "product.id, product.name, product.price, product.image_url, "
@@ -67,7 +67,23 @@ public class OrderProductDao {
                         + "INNER JOIN member ON orders.member_id = member.id "
                         + "WHERE order_product.order_id = ?";
 
-        return jdbcTemplate.query(findAllQuery, orderProductRowMapper(), orderId);
+        return jdbcTemplate.query(findByOrderIdQuery, orderProductRowMapper(), orderId);
+    }
+
+
+    public List<OrderProduct> findByMemberId(final Long memberId) {
+        final String findAllQuery =
+                "SELECT order_product.id, order_product.quantity, "
+                        + "orders.id, orders.created_at, orders.total_price, orders.final_price, "
+                        + "product.id, product.name, product.price, product.image_url, "
+                        + "member.id, member.email, member.password "
+                        + "FROM order_product "
+                        + "INNER JOIN orders ON order_product.order_id = orders.id "
+                        + "INNER JOIN product ON order_product.product_id = product.id "
+                        + "INNER JOIN member ON orders.member_id = member.id "
+                        + "WHERE member.id = ?";
+
+        return jdbcTemplate.query(findAllQuery, orderProductRowMapper(), memberId);
     }
 
     private RowMapper<OrderProduct> orderProductRowMapper() {
