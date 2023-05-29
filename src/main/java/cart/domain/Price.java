@@ -7,11 +7,34 @@ public class Price {
     private final BigDecimal amount;
 
     private Price(BigDecimal amount) {
+        validate(amount.longValue());
         this.amount = amount;
     }
 
-    public Price from(long amount) {
+    public static Price from(long amount) {
         return new Price(BigDecimal.valueOf(amount));
+    }
+
+    private static void validate(long amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("금액은 음수가 될 수 없습니다.");
+        }
+    }
+
+    public Price plus(Price price) {
+        return new Price(this.amount.add(price.amount));
+    }
+
+    public Price minus(Price price) {
+        return new Price(this.amount.subtract(price.amount));
+    }
+
+    public Price multiply(int factor) {
+        return new Price(this.amount.multiply(BigDecimal.valueOf(factor)));
+    }
+
+    public long getAmount() {
+        return amount.longValue();
     }
 
     @Override
