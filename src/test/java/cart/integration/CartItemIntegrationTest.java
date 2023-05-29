@@ -16,7 +16,6 @@ import cart.exception.ErrorMessage;
 import cart.repository.MemberRepository;
 import cart.repository.dao.MemberDao;
 import cart.repository.entity.MemberEntity;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -72,9 +71,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         );
     }
 
-    @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     @Test
-    void getCartItems() {
+    void 사용자가_담은_장바구니_상품을_조회한다() {
         // given
         Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
 
@@ -96,9 +94,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         );
     }
 
-    @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     @Test
-    void increaseCartItemQuantity() {
+    void 장바구니에_담긴_상품의_수량을_변경한다() {
         // given
         Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
 
@@ -118,9 +115,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         );
     }
 
-    @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     @Test
-    void decreaseCartItemQuantityToZero() {
+    void 장바구니에_담긴_상품의_수량을_0으로_변경하면_장바구니에서_상품이_삭제된다() {
         // given
         Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
 
@@ -136,9 +132,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(응답.jsonPath().getList(".", CartItemResponse.class)).isEmpty();
     }
 
-    @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     @Test
-    void updateOtherMembersCartItem() {
+    void 다른_사용자가_담은_장바구니_상품의_수량을_변경하려_하면_실패한다() {
         // given
         Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
 
@@ -157,9 +152,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         );
     }
 
-    @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     @Test
-    void removeCartItem() {
+    void 장바구니에_담긴_아이템을_삭제한다() {
         // given
         Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
 
