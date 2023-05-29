@@ -122,9 +122,24 @@
 - 이를 해결하고자 Repository 계층을 두었고, Dao에서는 join하지 않고 DB의 값 그대로를 담은 엔티티 객체로 내보낸다. 그리고 객체로 조립하는 과정은 Repository 계층에서 하도록 설계하였다.
   - Repository 계층과 엔티티 객체의 필요성에 대해서 느끼게 된 것 같다.
 
+- ORDERS 테이블을 생성할 때, CREATE_AT 필드에 default 값을 넣어줬다. 하지만, 막상 데이터를 넣고 보니 create_at 필드가 null로 돼있는 문제를 발견함
+  - INSERT INTO ORDERS(col1, col2) VALUES(val1, val2)와 같이 컬럼을 제한하지 않고, INSERT INTO ORDERS VALUES(val1, val2)와 같이 넣게 되면, 남은 컬럼은 값이 null로 들어간다.
+  - SimpleJdbcInsert의 경우, 설정을 따로 하지 않으면 후자처럼 쿼리가 날라가는 것 같다. 
+    - id를 제외하고 4개의 컬럼이 있다. 그중에 create_at을 제외한 3개 컬럼의 값만 Map에 넣어서 insert 했을때 created_at이 null로 들어갔음을 확인
+    - 즉, 제공한 파라미터로만 insert 문을 실행한다.
+    - https://stackoverflow.com/questions/20497985/why-does-springs-jdbc-templates-doesnt-use-the-tables-default-value
+  - 해결방법은 다음 두가지다.
+    1. SimpleJdbcInsert를 사용할 때, 자동 생성되는 column을 제외한 column을 명시해준다. (usingColumns() 메서드를 통해 명시해줄 수 있다)
+       - 근데 이렇게 귀찮게 설정해줘야 한다면 SimpleJdbcInsert를 왜 써야 되나 의문이 생기긴 한다..
+    2. SimpleJdbcInsert를 사용하지 않는다. 대신 키를 반환하기 위해서 KeyHolder를 이용해야 될 것 같다.
+      - KeyHolder를 사용할 때도 key에 id,created_at 두 개가 모두 들어가는 것을 확인함. 자동 생성되는 값을 KeyHolder가 받아주는 듯함..
+      - KeyHolder를 사용할 때의 문제점은 getKeys().get("id") 와 같이 id만 뽑아서 사용하던가, JdbcTemplate.update() 매개변수로 new String[]{"id"}를 넣어주며 id만 받을 것이라고 명시해주며 해결할 수 있다.
+      - https://shanepark.tistory.com/383
+
 ## 추후 리팩토링
 - [ ] Dao 중복 코드 제거
 - [ ] Dao 레벨에선 엔티티만 다루도록 수정 + Repository 레벨에서 객체 조립 후 반환
 
 ## 할일
 - [x] 주문 생성 기능 서비스 테스트 작성
+- [ ] 주문 내역 조회시, response의 키 값 cartItems -> orderItems로 바꾸는 거 어떤지 팀원과 논의한 후에 변경하기
