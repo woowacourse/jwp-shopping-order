@@ -1,6 +1,7 @@
 package cart.integration;
 
 import static cart.integration.steps.CommonStep.헤더_ID_값_파싱;
+import static cart.integration.steps.ProductStep.상품_삭제_요청;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +31,8 @@ public class ProductIntegrationTest extends IntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final ProductEntity 상품 = new ProductEntity(null, "피자", 100000, "https://example.com/pizza.jpg",
+    private final ProductEntity 상품 = new ProductEntity(null,
+            "피자", 100000, "https://example.com/pizza.jpg",
             null, null);
 
     @Test
@@ -91,15 +93,6 @@ public class ProductIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 상품_삭제_요청(상품_ID);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    private ExtractableResponse<Response> 상품_삭제_요청(final Long 상품_ID) {
-        return given()
-                .contentType(JSON)
-                .when().delete("/products/" + 상품_ID)
-                .then()
-                .log().all()
-                .extract();
     }
 
     @Test
