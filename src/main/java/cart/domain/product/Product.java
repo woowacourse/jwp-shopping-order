@@ -18,6 +18,17 @@ public class Product {
         this.imageUrl = new ImageUrl(imageUrl);
     }
 
+    private Product(Long id, Name name, Price price, ImageUrl imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product assignId(Long id) {
+        return new Product(id, name, price, imageUrl);
+    }
+
     public Long getId() {
         return id;
     }

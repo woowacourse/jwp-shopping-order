@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 class ProductServiceTest {
 
     private Product product;
-    private Long productId;
 
     @Autowired
     private ProductService productService;
@@ -29,7 +28,8 @@ class ProductServiceTest {
     @BeforeEach
     void setUp() {
         product = new Product("치킨", 10000, "http://chicken.com");
-        productId = productRepository.createProduct(product);
+        Long productId = productRepository.createProduct(product);
+        product = product.assignId(productId);
     }
 
     @Test
@@ -42,14 +42,10 @@ class ProductServiceTest {
 
         assertAll(
                 () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0).getId()).isEqualTo(productId),
                 () -> assertThat(result.get(0)).usingRecursiveComparison()
-                        .ignoringFields("id")
                         .isEqualTo(ProductResponse.from(product)),
-                () -> assertThat(result.get(1).getId()).isEqualTo(otherProductId),
                 () -> assertThat(result.get(1)).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(ProductResponse.from(otherProduct))
+                        .isEqualTo(ProductResponse.from(otherProduct.assignId(otherProductId)))
         );
 
     }
@@ -59,12 +55,7 @@ class ProductServiceTest {
     void getProductById() {
         ProductResponse result = productService.getProductById(1L);
 
-        assertAll(
-                () -> assertThat(result.getId()).isEqualTo(productId),
-                () -> assertThat(result).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(ProductResponse.from(product))
-        );
+        assertThat(result).usingRecursiveComparison().isEqualTo(ProductResponse.from(product));
     }
 
     @Test
@@ -72,11 +63,11 @@ class ProductServiceTest {
     void updateProduct() {
         ProductRequest request = new ProductRequest("피자", 13000, "http://pizza.com");
 
-        productService.updateProduct(productId, request);
+        productService.updateProduct(product.getId(), request);
 
-        ProductResponse result = productService.getProductById(productId);
+        ProductResponse result = productService.getProductById(product.getId());
         assertAll(
-                () -> assertThat(result.getId()).isEqualTo(productId),
+                () -> assertThat(result.getId()).isEqualTo(product.getId()),
                 () -> assertThat(result.getName()).isEqualTo(request.getName()),
                 () -> assertThat(result.getPrice()).isEqualTo(request.getPrice()),
                 () -> assertThat(result.getImageUrl()).isEqualTo(request.getImageUrl())
@@ -86,7 +77,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("deleteProduct 메서드는 상품을 삭제한다.")
     void deleteProduct() {
-        productService.deleteProduct(productId);
+        productService.deleteProduct(product.getId());
 
         List<ProductResponse> result = productService.getAllProducts();
         assertThat(result).isEmpty();

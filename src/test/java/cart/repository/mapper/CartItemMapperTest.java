@@ -42,8 +42,8 @@ class CartItemMapperTest {
         CartItem domain = new CartItem(
                 1L,
                 10,
-                new Product(1L, "치킨", 13000, "http://chicken.com"),
-                new Member(1L, "a@a.com", "password1", 0)
+                new Member(1L, "a@a.com", "password1", 0),
+                new Product(1L, "치킨", 13000, "http://chicken.com")
         );
 
         CartItemEntity result = CartItemMapper.toEntity(domain);

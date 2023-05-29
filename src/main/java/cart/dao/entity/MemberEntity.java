@@ -29,6 +29,10 @@ public class MemberEntity {
         this.updatedAt = updatedAt;
     }
 
+    public MemberEntity assignId(Long id) {
+        return new MemberEntity(id, email, password, point, createdAt, updatedAt);
+    }
+
     public Long getId() {
         return id;
     }

@@ -19,6 +19,10 @@ public class OrderEntity {
         this.updatedAt = updatedAt;
     }
 
+    public OrderEntity assignId(Long id) {
+        return new OrderEntity(id, memberId, usedPoint, createdAt, updatedAt);
+    }
+
     public Long getId() {
         return id;
     }

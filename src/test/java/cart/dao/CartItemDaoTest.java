@@ -19,11 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RepositoryTest
 class CartItemDaoTest {
 
-    private Long memberId;
     private MemberEntity member;
-    private Long productId;
     private ProductEntity product;
-    private Long cartItemId;
     private CartItemEntity cartItem;
 
     @Autowired
@@ -38,15 +35,14 @@ class CartItemDaoTest {
     @BeforeEach
     void setUp() {
         member = new MemberEntity("a@a.com", "password1", 10);
-        memberId = memberDao.addMember(member);
+        Long memberId = memberDao.addMember(member);
+        member = member.assignId(memberId);
         product = new ProductEntity("치킨", 10000, "http://chicken.com");
-        productId = productDao.createProduct(product);
-        cartItem = new CartItemEntity(
-                new MemberEntity(memberId, member.getEmail(), member.getPassword(), member.getPoint()),
-                new ProductEntity(productId, product.getName(), product.getPrice(), product.getImageUrl()),
-                1
-        );
-        cartItemId = cartItemDao.save(cartItem);
+        Long productId = productDao.createProduct(product);
+        product = product.assignId(productId);
+        cartItem = new CartItemEntity(member, product, 1);
+        Long cartItemId = cartItemDao.save(cartItem);
+        cartItem = cartItem.assignId(cartItemId);
     }
 
     @Test
@@ -54,35 +50,24 @@ class CartItemDaoTest {
     void findByMemberId() {
         MemberEntity otherMember = new MemberEntity("b@b.com", "password2", 20);
         Long otherMemberId = memberDao.addMember(otherMember);
-        CartItemEntity myCartItem = new CartItemEntity(
-                new MemberEntity(memberId, member.getEmail(), member.getPassword(), member.getPoint()),
-                new ProductEntity(productId, product.getName(), product.getPrice(), product.getImageUrl()),
-                1
-        );
-        CartItemEntity otherCartItem = new CartItemEntity(
-                new MemberEntity(otherMemberId, otherMember.getEmail(), otherMember.getPassword(), otherMember.getPoint()),
-                new ProductEntity(productId, product.getName(), product.getPrice(), product.getImageUrl()),
-                1
-        );
+        otherMember = otherMember.assignId(otherMemberId);
+        CartItemEntity myCartItem = new CartItemEntity(member, product, 1);
+        CartItemEntity otherCartItem = new CartItemEntity(otherMember, product, 1);
         Long myCartItemId = cartItemDao.save(myCartItem);
         cartItemDao.save(otherCartItem);
 
-        List<CartItemEntity> result = cartItemDao.findByMemberId(memberId);
+        List<CartItemEntity> result = cartItemDao.findByMemberId(member.getId());
 
         assertAll(
                 () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0).getId()).isEqualTo(cartItemId),
                 () -> assertThat(result.get(0)).usingRecursiveComparison()
-                        .ignoringFields("id")
                         .ignoringFieldsOfTypes(LocalDateTime.class)
                         .isEqualTo(cartItem),
                 () -> assertThat(result.get(0).getCreatedAt()).isNotNull(),
                 () -> assertThat(result.get(0).getUpdatedAt()).isNotNull(),
-                () -> assertThat(result.get(1).getId()).isEqualTo(myCartItemId),
                 () -> assertThat(result.get(1)).usingRecursiveComparison()
-                        .ignoringFields("id")
                         .ignoringFieldsOfTypes(LocalDateTime.class)
-                        .isEqualTo(myCartItem),
+                        .isEqualTo(myCartItem.assignId(myCartItemId)),
                 () -> assertThat(result.get(1).getCreatedAt()).isNotNull(),
                 () -> assertThat(result.get(1).getUpdatedAt()).isNotNull()
         );
@@ -103,7 +88,7 @@ class CartItemDaoTest {
         @Test
         @DisplayName("멤버 ID는 일치하지 않고, 상품 ID는 일치한다면 빈 값을 반환한다.")
         void notMatchMember() {
-            Optional<CartItemEntity> result = cartItemDao.findByMemberIdAndProductId(-1L, productId);
+            Optional<CartItemEntity> result = cartItemDao.findByMemberIdAndProductId(-1L, product.getId());
 
             assertThat(result).isEmpty();
         }
@@ -111,7 +96,7 @@ class CartItemDaoTest {
         @Test
         @DisplayName("멤버 ID는 일치하고, 상품 ID는 일치하지 않으면 빈 값을 반환한다.")
         void notMatchProduct() {
-            Optional<CartItemEntity> result = cartItemDao.findByMemberIdAndProductId(memberId, -1L);
+            Optional<CartItemEntity> result = cartItemDao.findByMemberIdAndProductId(member.getId(), -1L);
 
             assertThat(result).isEmpty();
         }
@@ -119,13 +104,11 @@ class CartItemDaoTest {
         @Test
         @DisplayName("멤버 ID, 상품 ID가 일치한다면 장바구니 상품을 조회한다.")
         void matchMemberAndProduct() {
-            Optional<CartItemEntity> result = cartItemDao.findByMemberIdAndProductId(memberId, productId);
+            Optional<CartItemEntity> result = cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId());
 
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
-                    () -> assertThat(result.get().getId()).isEqualTo(cartItemId),
                     () -> assertThat(result.get()).usingRecursiveComparison()
-                            .ignoringFields("id")
                             .ignoringFieldsOfTypes(LocalDateTime.class)
                             .isEqualTo(cartItem),
                     () -> assertThat(result.get().getCreatedAt()).isNotNull(),
@@ -149,13 +132,11 @@ class CartItemDaoTest {
         @Test
         @DisplayName("ID에 해당하는 장바구니 상품이 존재하면 장바구니 상품을 조회한다.")
         void getCartItem() {
-            Optional<CartItemEntity> result = cartItemDao.findById(cartItemId);
+            Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
 
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
-                    () -> assertThat(result.get().getId()).isEqualTo(cartItemId),
                     () -> assertThat(result.get()).usingRecursiveComparison()
-                            .ignoringFields("id")
                             .ignoringFieldsOfTypes(LocalDateTime.class)
                             .isEqualTo(cartItem),
                     () -> assertThat(result.get().getCreatedAt()).isNotNull(),
@@ -167,16 +148,11 @@ class CartItemDaoTest {
     @Test
     @DisplayName("updateQuantity 메서드는 장바구니 상품 수량을 수정한다.")
     void updateQuantity() {
-        CartItemEntity updateCartItem = new CartItemEntity(
-                cartItemId,
-                new MemberEntity(memberId, member.getEmail(), member.getPassword(), member.getPoint()),
-                new ProductEntity(productId, product.getName(), product.getPrice(), product.getImageUrl()),
-                5
-        );
+        CartItemEntity updateCartItem = new CartItemEntity(cartItem.getId(), member, product, 5);
 
         cartItemDao.updateQuantity(updateCartItem);
 
-        Optional<CartItemEntity> result = cartItemDao.findById(cartItemId);
+        Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
         assertAll(
                 () -> assertThat(result).isNotEmpty(),
                 () -> assertThat(result.get().getQuantity()).isEqualTo(5)
@@ -186,9 +162,9 @@ class CartItemDaoTest {
     @Test
     @DisplayName("deleteById 메서드는 장바구니 상품을 삭제한다.")
     void deleteById() {
-        cartItemDao.deleteById(cartItemId);
+        cartItemDao.deleteById(cartItem.getId());
 
-        Optional<CartItemEntity> result = cartItemDao.findById(cartItemId);
+        Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
         assertThat(result).isEmpty();
     }
 }

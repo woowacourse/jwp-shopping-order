@@ -23,7 +23,7 @@ class CartItemTest {
             Product product = new Product("치킨", 10000, "http://chicken.com");
             Member member = new Member("a@a.com", "password1", 10);
 
-            assertThatThrownBy(() -> new CartItem(1L, quantity, product, member))
+            assertThatThrownBy(() -> new CartItem(1L, quantity, member, product))
                     .isInstanceOf(CartItemException.class)
                     .hasMessage("장바구니 상품 수량은 최소 1개부터 가능합니다. 현재 개수: " + quantity);
         }

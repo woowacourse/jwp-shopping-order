@@ -18,6 +18,17 @@ public class Member {
         this.point = new Point(point);
     }
 
+    private Member(Long id, Email email, Password password, Point point) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
+    public Member assignId(Long id) {
+        return new Member(id, email, password, point);
+    }
+
     public Long getId() {
         return id;
     }

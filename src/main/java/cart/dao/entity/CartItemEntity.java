@@ -30,6 +30,10 @@ public class CartItemEntity {
         this.updatedAt = updatedAt;
     }
 
+    public CartItemEntity assignId(Long id) {
+        return new CartItemEntity(id, memberEntity, productEntity, quantity, createdAt, updatedAt);
+    }
+
     public Long getId() {
         return id;
     }

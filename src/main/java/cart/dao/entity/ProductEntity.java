@@ -29,6 +29,10 @@ public class ProductEntity {
         this.updatedAt = updatedAt;
     }
 
+    public ProductEntity assignId(Long id) {
+        return new ProductEntity(id, name, price, imageUrl, createdAt, updatedAt);
+    }
+
     public Long getId() {
         return id;
     }

@@ -34,27 +34,23 @@ class MemberServiceTest {
 
         assertAll(
                 () -> assertThat(response).hasSize(2),
-                () -> assertThat(response.get(0).getId()).isEqualTo(memberIdA),
                 () -> assertThat(response.get(0)).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(MemberResponse.from(memberA)),
-                () -> assertThat(response.get(1).getId()).isEqualTo(memberIdB),
+                        .isEqualTo(MemberResponse.from(memberA.assignId(memberIdA))),
                 () -> assertThat(response.get(1)).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(MemberResponse.from(memberB))
+                        .isEqualTo(MemberResponse.from(memberB.assignId(memberIdB)))
         );
     }
 
     @Test
     @DisplayName("getMemberByEmailAndPassword 메서드는 이메일, 비밀번호를 통해 멤버를 응답한다.")
     void GetMemberByEmailAndPassword() {
-        Member member = new Member(1L, "a@a.com", "password1", 0);
-        memberDao.addMember(MemberMapper.toEntity(member));
+        Member member = new Member("a@a.com", "password1", 0);
+        Long memberId = memberDao.addMember(MemberMapper.toEntity(member));
 
         MemberResponse response = memberService.getMemberByEmailAndPassword("a@a.com", "password1");
 
         assertAll(
-                () -> assertThat(response.getId()).isEqualTo(member.getId()),
+                () -> assertThat(response.getId()).isEqualTo(memberId),
                 () -> assertThat(response.getEmail()).isEqualTo(member.getEmail()),
                 () -> assertThat(response.getPassword()).isEqualTo(member.getPassword()),
                 () -> assertThat(response.getPoint()).isEqualTo(member.getPoint())

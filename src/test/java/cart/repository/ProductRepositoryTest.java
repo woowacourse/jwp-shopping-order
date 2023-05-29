@@ -33,18 +33,9 @@ class ProductRepositoryTest {
 
         assertAll(
                 () -> assertThat(result).hasSize(3),
-                () -> assertThat(result.get(0).getId()).isEqualTo(productIdA),
-                () -> assertThat(result.get(0)).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(productA),
-                () -> assertThat(result.get(1).getId()).isEqualTo(productIdB),
-                () -> assertThat(result.get(1)).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(productB),
-                () -> assertThat(result.get(2).getId()).isEqualTo(productIdC),
-                () -> assertThat(result.get(2)).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(productC)
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(productA.assignId(productIdA)),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(productB.assignId(productIdB)),
+                () -> assertThat(result.get(2)).usingRecursiveComparison().isEqualTo(productC.assignId(productIdC))
         );
     }
 
@@ -93,12 +84,7 @@ class ProductRepositoryTest {
 
             Product result = productRepository.getProductById(savedProductId);
 
-            assertAll(
-                    () -> assertThat(result.getId()).isEqualTo(savedProductId),
-                    () -> assertThat(result).usingRecursiveComparison()
-                            .ignoringFields("id")
-                            .isEqualTo(product)
-            );
+            assertThat(result).usingRecursiveComparison().isEqualTo(product.assignId(savedProductId));
         }
     }
 }

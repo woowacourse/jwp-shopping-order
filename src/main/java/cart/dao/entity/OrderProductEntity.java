@@ -28,6 +28,20 @@ public class OrderProductEntity {
         this.updatedAt = updatedAt;
     }
 
+    public OrderProductEntity assignId(Long id) {
+        return new OrderProductEntity(
+                id,
+                orderId,
+                productId,
+                orderProductName,
+                orderProductPrice,
+                orderProductImageUrl,
+                quantity,
+                createdAt,
+                updatedAt
+        );
+    }
+
     public Long getId() {
         return id;
     }

@@ -9,8 +9,8 @@ public class CartItemMapper {
         return new CartItem(
                 cartItemEntity.getId(),
                 cartItemEntity.getQuantity(),
-                ProductMapper.toDomain(cartItemEntity.getProductEntity()),
-                MemberMapper.toDomain(cartItemEntity.getMemberEntity())
+                MemberMapper.toDomain(cartItemEntity.getMemberEntity()),
+                ProductMapper.toDomain(cartItemEntity.getProductEntity())
         );
     }
 

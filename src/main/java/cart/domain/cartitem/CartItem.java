@@ -13,15 +13,26 @@ public class CartItem {
     private final Member member;
     private final Product product;
 
-    public CartItem(Product product, Member member) {
-        this(null, 1, product, member);
+    public CartItem(Member member, Product product) {
+        this(null, 1, member, product);
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, int quantity, Member member, Product product) {
         this.id = id;
         this.quantity = new Quantity(quantity);
-        this.product = product;
         this.member = member;
+        this.product = product;
+    }
+
+    private CartItem(Long id, Quantity quantity, Member member, Product product) {
+        this.id = id;
+        this.quantity = quantity;
+        this.member = member;
+        this.product = product;
+    }
+
+    public CartItem assignId(Long id) {
+        return new CartItem(id, quantity, member, product);
     }
 
     public Long getId() {

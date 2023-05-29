@@ -35,6 +35,8 @@ class MemberRepositoryTest {
                 new MemberEntity(2L, "b@b.com", "password2", 0, LocalDateTime.now(), LocalDateTime.now());
         Long memberIdA = memberDao.addMember(memberAEntity);
         Long memberIdB = memberDao.addMember(memberBEntity);
+        memberAEntity = memberAEntity.assignId(memberIdA);
+        memberBEntity = memberBEntity.assignId(memberIdB);
 
         List<Member> result = memberRepository.getAllMembers();
 
@@ -42,14 +44,8 @@ class MemberRepositoryTest {
         Member memberB = MemberMapper.toDomain(memberBEntity);
         assertAll(
                 () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0).getId()).isEqualTo(memberIdA),
-                () -> assertThat(result.get(0)).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(memberA),
-                () -> assertThat(result.get(1).getId()).isEqualTo(memberIdB),
-                () -> assertThat(result.get(1)).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(memberB)
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(memberA),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(memberB)
         );
     }
 
@@ -62,15 +58,14 @@ class MemberRepositoryTest {
         void getMember() {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
             Long savedMemberId = memberDao.addMember(memberEntity);
+            memberEntity = memberEntity.assignId(savedMemberId);
 
             Member result = memberRepository.getMemberByEmailAndPassword("a@a.com", "password1");
 
             Member member = MemberMapper.toDomain(memberEntity);
             assertAll(
                     () -> assertThat(result.getId()).isEqualTo(savedMemberId),
-                    () -> assertThat(result).usingRecursiveComparison()
-                            .ignoringFields("id")
-                            .isEqualTo(member)
+                    () -> assertThat(result).usingRecursiveComparison().isEqualTo(member)
             );
 
         }
