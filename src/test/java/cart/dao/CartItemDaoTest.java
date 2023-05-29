@@ -37,9 +37,11 @@ class CartItemDaoTest {
         member = new MemberEntity("a@a.com", "password1", 10);
         Long memberId = memberDao.addMember(member);
         member = member.assignId(memberId);
+
         product = new ProductEntity("치킨", 10000, "http://chicken.com");
         Long productId = productDao.createProduct(product);
         product = product.assignId(productId);
+
         cartItem = new CartItemEntity(member, product, 1);
         Long cartItemId = cartItemDao.save(cartItem);
         cartItem = cartItem.assignId(cartItemId);
@@ -51,6 +53,7 @@ class CartItemDaoTest {
         MemberEntity otherMember = new MemberEntity("b@b.com", "password2", 20);
         Long otherMemberId = memberDao.addMember(otherMember);
         otherMember = otherMember.assignId(otherMemberId);
+
         CartItemEntity myCartItem = new CartItemEntity(member, product, 1);
         CartItemEntity otherCartItem = new CartItemEntity(otherMember, product, 1);
         Long myCartItemId = cartItemDao.save(myCartItem);

@@ -53,6 +53,7 @@ class ProductApiControllerTest extends ControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
+
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         List<ProductResponse> result = objectMapper.readValue(jsonResponse,
                 new TypeReference<List<ProductResponse>>() {
@@ -86,6 +87,7 @@ class ProductApiControllerTest extends ControllerTest {
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn();
+
             String jsonResponse = mvcResult.getResponse().getContentAsString();
             ProductResponse result = objectMapper.readValue(jsonResponse, ProductResponse.class);
             assertThat(result).usingRecursiveComparison().isEqualTo(response);

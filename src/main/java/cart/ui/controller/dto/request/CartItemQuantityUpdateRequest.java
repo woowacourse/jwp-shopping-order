@@ -1,17 +1,20 @@
 package cart.ui.controller.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class CartItemQuantityUpdateRequest {
 
-    private int quantity;
+    @NotNull(message = "장바구니 상품 수량은 필수로 입력해야 합니다.")
+    private Integer quantity;
 
-    public CartItemQuantityUpdateRequest() {
+    private CartItemQuantityUpdateRequest() {
     }
 
-    public CartItemQuantityUpdateRequest(int quantity) {
+    public CartItemQuantityUpdateRequest(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 }

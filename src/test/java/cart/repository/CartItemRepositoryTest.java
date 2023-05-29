@@ -41,9 +41,11 @@ class CartItemRepositoryTest {
         member = new MemberEntity("a@a.com", "password1", 10);
         Long memberId = memberDao.addMember(member);
         member = member.assignId(memberId);
+
         product = new Product("치킨", 10000, "http://chicken.com");
         Long productId = productRepository.createProduct(product);
         product = product.assignId(productId);
+
         cartItem = new CartItem(MemberMapper.toDomain(member).assignId(memberId), product.assignId(productId));
         Long cartItemId = cartItemRepository.save(cartItem);
         cartItem = cartItem.assignId(cartItemId);
@@ -55,9 +57,11 @@ class CartItemRepositoryTest {
         Product otherProduct = new Product("피자", 20000, "http://pizza.com");
         Long otherProductId = productRepository.createProduct(otherProduct);
         otherProduct = otherProduct.assignId(otherProductId);
+
         MemberEntity otherMember = new MemberEntity("b@b.com", "password2", 20);
         Long otherMemberId = memberDao.addMember(otherMember);
         otherMember = otherMember.assignId(otherMemberId);
+
         CartItem myCartItem = new CartItem(MemberMapper.toDomain(member), otherProduct);
         Long myCartItemId = cartItemRepository.save(myCartItem);
         CartItem otherCartItem = new CartItem(MemberMapper.toDomain(otherMember), otherProduct);
