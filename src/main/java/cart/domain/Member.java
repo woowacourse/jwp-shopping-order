@@ -8,6 +8,10 @@ public class Member {
     private final String password;
     private final Point point;
 
+    public Member(String email, String password, final int point) {
+        this(null, email, password, point);
+    }
+
     public Member(Long id, String email, String password, final int point) {
         this.id = id;
         this.email = email;

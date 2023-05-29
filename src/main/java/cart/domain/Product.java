@@ -1,15 +1,13 @@
 package cart.domain;
 
 public class Product {
-    private Long id;
+    private final Long id;
     private final String name;
     private final int price;
     private final String imageUrl;
 
     public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this(null, name, price, imageUrl);
     }
 
     public Product(Long id, String name, int price, String imageUrl) {
