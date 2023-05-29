@@ -40,6 +40,13 @@ public class MemberCouponDao {
         );
     }
 
+    public void insertAll(final List<MemberCouponEntity> memberCouponEntities) {
+        final BeanPropertySqlParameterSource[] parameterSources = memberCouponEntities.stream()
+                .map(BeanPropertySqlParameterSource::new)
+                .toArray(BeanPropertySqlParameterSource[]::new);
+        jdbcInsert.executeBatch(parameterSources);
+    }
+
     public List<MemberCouponEntity> findAllUnusedMemberCouponByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM member_coupon WHERE member_id = ? and used = false";
         return jdbcTemplate.query(sql, rowMapper, memberId);

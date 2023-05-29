@@ -5,6 +5,7 @@ import static cart.domain.coupon.DiscountConditionType.NONE;
 import static cart.domain.coupon.DiscountPolicyType.DELIVERY;
 import static cart.domain.coupon.DiscountPolicyType.PRICE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
@@ -49,7 +50,41 @@ class MemberCouponDaoTest {
         memberCouponDao.insert(memberCouponEntity);
 
         // then
-        assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberCouponEntity.getMemberId())).hasSize(1);
+        assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberCouponEntity.getMemberId()))
+                .hasSize(1);
+    }
+
+    @Test
+    void 사용자_쿠폰을_전부_저장한다() {
+        // given
+        final CouponEntity couponEntity = couponDao.insert(new CouponEntity(
+                "30000원 이상 3000원 할인 쿠폰",
+                PRICE.name(), 30000, 0, false,
+                MINIMUM_PRICE.name(), 20000
+        ));
+        final MemberEntity memberEntity1 = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
+        final MemberEntity memberEntity2 = memberDao.insert(new MemberEntity("pizza2@pizza.com", "password"));
+        final MemberCouponEntity memberCouponEntity1 = new MemberCouponEntity(
+                couponEntity.getId(),
+                memberEntity1.getId(),
+                false
+        );
+        final MemberCouponEntity memberCouponEntity2 = new MemberCouponEntity(
+                couponEntity.getId(),
+                memberEntity2.getId(),
+                false
+        );
+
+        // when
+        memberCouponDao.insertAll(List.of(memberCouponEntity1, memberCouponEntity2));
+
+        // then
+        assertAll(
+                () -> assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberCouponEntity1.getMemberId()))
+                        .hasSize(1),
+                () -> assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberCouponEntity2.getMemberId()))
+                        .hasSize(1)
+        );
     }
 
     @Test
@@ -112,7 +147,8 @@ class MemberCouponDaoTest {
 
         // when
         final List<MemberCouponEntity> result = memberCouponDao.findAllUnusedMemberCouponByMemberId(
-                memberEntity.getId());
+                memberEntity.getId()
+        );
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(memberCouponEntity1, memberCouponEntity2));
