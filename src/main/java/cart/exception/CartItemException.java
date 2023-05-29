@@ -9,8 +9,14 @@ public class CartItemException extends RuntimeException {
     }
 
     public static class IllegalMember extends CartItemException {
-        public IllegalMember(CartItem cartItem, Member member) {
-            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
+        public IllegalMember() {
+            super("잘못된 접근입니다.");
+        }
+    }
+
+    public static class DuplicatedCartItem extends CartItemException {
+        public DuplicatedCartItem() {
+            super("이미 장바구니에 담긴 상품입니다.");
         }
     }
 }

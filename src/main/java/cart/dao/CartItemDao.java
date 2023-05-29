@@ -97,5 +97,12 @@ public class CartItemDao {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
+
+    public int countByMemberIdAndProductId(final long memberId, long productId) {
+        String sql = "SELECT COUNT(*) AS count " +
+                "FROM cart_item " +
+                "WHERE member_id = ? AND product_id = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId);
+    }
 }
 

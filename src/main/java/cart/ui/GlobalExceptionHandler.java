@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ExceptionResponse> handlerAuthenticationException(AuthenticationException e) {
@@ -20,6 +20,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(CartItemException.IllegalMember.class)
     public ResponseEntity<ExceptionResponse> handleException(CartItemException.IllegalMember e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(CartItemException.class)
+    public ResponseEntity<ExceptionResponse> handleException(CartItemException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler(ProductException.class)

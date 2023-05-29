@@ -33,7 +33,7 @@ public class ProductService {
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        if(productDao.countByProduct(product) == 1){
+        if(productDao.countByProduct(product) != 0){
             throw new DuplicatedProduct();
         }
         return productDao.createProduct(product);
@@ -41,7 +41,7 @@ public class ProductService {
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        if(productDao.countByProduct(product) == 1){
+        if(productDao.countByProduct(product) != 0){
             throw new DuplicatedProduct();
         }
         int updatedProductCount = productDao.updateProduct(productId, product);

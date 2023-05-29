@@ -61,7 +61,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             assertThat(장바구니_아이템_추가_결과.header("Location")).isNotBlank();
         }
 
-/*        @Test
+        @Test
         void 장바구니에_이미_담긴_상품은_추가할_수_없다() {
             //given
             long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
@@ -74,7 +74,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             assertThat(장바구니_아이템_추가_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(장바구니_아이템_추가_결과.jsonPath().getObject("message", String.class))
                     .isEqualTo("이미 장바구니에 담긴 상품입니다.");
-        }*/
+        }
 
         @Test
         void 사용자_정보가_잘못되었다면_추가할_수_없다() {
@@ -86,8 +86,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             ExtractableResponse<Response> 장바구니_아이템_추가_결과 = 장바구니_아이템_추가_요청(잘못된_사용자, 피자_아이디);
 
             assertThat(장바구니_아이템_추가_결과.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-/*            assertThat(장바구니_아이템_추가_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("존재하지 않는 사용자입니다.");*/
+            assertThat(장바구니_아이템_추가_결과.jsonPath().getObject("message", String.class))
+                    .isEqualTo("존재하지 않는 사용자입니다.");
         }
 
     }
@@ -170,8 +170,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
             // then
             assertThat(장바구니_아이템_수정_결과.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-/*            assertThat(장바구니_아이템_수정_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("잘못된 접근입니다.");*/
+            assertThat(장바구니_아이템_수정_결과.jsonPath().getObject("message", String.class))
+                    .isEqualTo("잘못된 접근입니다.");
         }
 
     }
@@ -205,8 +205,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
             // then
             assertThat(장바구니_아이템_삭제_결과.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-/*            assertThat(장바구니_아이템_삭제_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("잘못된 접근입니다.");*/
+            assertThat(장바구니_아이템_삭제_결과.jsonPath().getObject("message", String.class))
+                    .isEqualTo("잘못된 접근입니다.");
         }
     }
 }
