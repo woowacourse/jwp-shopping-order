@@ -5,6 +5,7 @@ import cart.domain.member.Member;
 import cart.dto.OrderRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(final Member member, @Valid final OrderRequest request) {
+    public ResponseEntity<Void> order(final Member member, @Valid @RequestBody final OrderRequest request) {
         final Long orderId = orderService.order(member, request);
 
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();

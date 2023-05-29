@@ -136,6 +136,7 @@ public class OrderServiceTest {
 
                 assertAll(
                         () -> assertThat(orderProducts).hasSize(2),
+
                         () -> assertThat(orderProducts.get(0).getOrder()).isEqualTo(order),
                         () -> assertThat(orderProducts.get(0).getProduct()).isEqualTo(product1),
                         () -> assertThat(orderProducts.get(0).getProductName()).isEqualTo(new ProductName("치킨")),
