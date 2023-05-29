@@ -1,6 +1,9 @@
 package cart.dto;
 
+import cart.domain.Order;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class OrderResponse {
     private final Long orderId;
@@ -11,6 +14,14 @@ public final class OrderResponse {
         this.orderId = orderId;
         this.totalPrice = totalPrice;
         this.cartItems = cartItems;
+    }
+
+    public static OrderResponse from(final Order order) {
+        final List<CartItemResponse> items = order.getCartItems().stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
+
+        return new OrderResponse(order.getId(), order.getTotalPrice(), items);
     }
 
     public Long getOrderId() {

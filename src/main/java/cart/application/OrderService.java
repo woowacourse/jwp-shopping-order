@@ -6,6 +6,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,5 +45,12 @@ public class OrderService {
 
     private void validateMember(final Member member, final List<CartItem> cartItems) {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+    }
+
+    public List<OrderResponse> findAllOrdersByMember(final Member member) {
+        final List<Order> orders = orderDao.findAllByMemberId(member.getId());
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(toList());
     }
 }
