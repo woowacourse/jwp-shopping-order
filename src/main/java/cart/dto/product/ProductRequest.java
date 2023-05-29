@@ -1,28 +1,35 @@
-package cart.dto;
+package cart.dto.product;
 
 public class ProductRequest {
+
     private String name;
-    private int price;
+    private long price;
     private String imageUrl;
+    private long stock;
 
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, int price, String imageUrl) {
+    public ProductRequest(String name, long price, String imageUrl, long stock) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.stock = stock;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public long getStock() {
+        return stock;
     }
 }

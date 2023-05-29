@@ -1,6 +1,6 @@
 package cart;
 
-import cart.dao.MemberDao;
+import cart.dao.JdbcTemplateMemberDao;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -10,14 +10,14 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final MemberDao memberDao;
+    private final JdbcTemplateMemberDao jdbcTemplateMemberDao;
 
-    public WebMvcConfig(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public WebMvcConfig(JdbcTemplateMemberDao jdbcTemplateMemberDao) {
+        this.jdbcTemplateMemberDao = jdbcTemplateMemberDao;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberDao));
+        resolvers.add(new MemberArgumentResolver(jdbcTemplateMemberDao));
     }
 }
