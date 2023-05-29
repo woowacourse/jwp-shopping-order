@@ -48,6 +48,7 @@ public class OrderService {
         final Order persistOrder = orderDao.insert(order, discountPolicy.calculate(order.getTotalPrice()));
         saveOrderItems(persistOrder);
         final List<OrderItemResponse> orderProducts = OrderItemResponse.of(persistOrder.getOrderItems());
+        //TODO : 주문한 상품 cartItem에서 제외 추가
         return new OrderResponse(persistOrder.getId(), orderProducts,
             persistOrder.getTotalPrice(), discountPolicy.calculate(persistOrder.getTotalPrice()));
     }

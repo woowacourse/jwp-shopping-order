@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.CartItemService;
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
@@ -33,10 +34,10 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+    public ResponseEntity<CartItem> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
+        final CartItem persistedCartItem = cartItemService.add(member, cartItemRequest);
 
-        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+        return ResponseEntity.created(URI.create("/cart-items/" + persistedCartItem.getId())).body(persistedCartItem);
     }
 
     @PatchMapping("/{id}")
