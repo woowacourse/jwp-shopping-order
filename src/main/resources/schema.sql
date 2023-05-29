@@ -65,6 +65,7 @@ CREATE TABLE order_item_history
     product_id     BIGINT       NOT NULL,
     product_name   VARCHAR(255) NOT NULL,
     price          INT          NOT NULL,
+    quantity       INT          NOT NULL,
     order_table_id BIGINT       NOT NULL,
     FOREIGN KEY (order_table_id) REFERENCES order_table (id)
 );
