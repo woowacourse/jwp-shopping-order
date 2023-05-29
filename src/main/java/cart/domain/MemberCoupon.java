@@ -32,8 +32,8 @@ public class MemberCoupon {
         return coupon.apply(orderPrice);
     }
 
-    public TotalPrice calculateDiscountedPrice(final TotalPrice orderPrice) {
-        return coupon.calculateDiscountedPrice(orderPrice);
+    public TotalPrice calculateDiscountPrice(final TotalPrice orderPrice) {
+        return coupon.calculateDiscountPrice(orderPrice);
     }
 
     public Long getId() {

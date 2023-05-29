@@ -72,11 +72,11 @@ public class OrderRepository {
         }
 
         return orderEntities.stream()
-                .map(this::toOrder)
+                .map(this::mapToOrder)
                 .collect(Collectors.toList());
     }
 
-    private Order toOrder(final OrderEntity orderEntity) {
+    private Order mapToOrder(final OrderEntity orderEntity) {
         final List<OrderItem> orderItems = getOrderItems(orderEntity.getId());
         final Member member = getMember(orderEntity.getMemberId());
         MemberCoupon memberCoupon = getMemberCoupon(orderEntity.getCouponId(), member);
@@ -109,6 +109,6 @@ public class OrderRepository {
 
     public Optional<Order> findById(final Long id) {
         return orderDao.findById(id)
-                .map(this::toOrder);
+                .map(this::mapToOrder);
     }
 }

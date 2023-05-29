@@ -38,12 +38,12 @@ public class Order {
     }
 
     public TotalPrice calculateDiscountPrice() {
-        final TotalPrice orderPrice = memberCoupon.calculatePrice(new TotalPrice(calculateOrderPrice(), deliveryFee));
-        return memberCoupon.calculateDiscountedPrice(orderPrice);
+        final TotalPrice totalPrice = memberCoupon.calculatePrice(new TotalPrice(calculateOrderPrice(), deliveryFee));
+        return memberCoupon.calculateDiscountPrice(totalPrice);
     }
 
     public long calculateOrderPrice() {
-        return orderItems.calculateTotalPrice();
+        return orderItems.sumPrice();
     }
 
     public void checkOwner(final Member member) {

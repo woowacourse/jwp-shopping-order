@@ -25,7 +25,7 @@ public class Coupon {
         return orderPrice;
     }
 
-    public TotalPrice calculateDiscountedPrice(final TotalPrice totalPrice) {
+    public TotalPrice calculateDiscountPrice(final TotalPrice totalPrice) {
         return totalPrice.subOrderPrice(discountPolicy.discount(totalPrice));
     }
 

@@ -18,7 +18,7 @@ public class OrderItems {
                 .collect(Collectors.toList()));
     }
 
-    public long calculateTotalPrice() {
+    public long sumPrice() {
         return orderItems.stream()
                 .mapToLong(OrderItem::getPrice)
                 .sum();
