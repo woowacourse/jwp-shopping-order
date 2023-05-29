@@ -1,4 +1,4 @@
-package coupon.domain;
+package coupon.domain.discountcondition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

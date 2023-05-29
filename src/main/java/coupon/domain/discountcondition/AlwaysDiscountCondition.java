@@ -1,4 +1,6 @@
-package coupon.domain;
+package coupon.domain.discountcondition;
+
+import coupon.domain.Order;
 
 public class AlwaysDiscountCondition implements DiscountCondition {
 
