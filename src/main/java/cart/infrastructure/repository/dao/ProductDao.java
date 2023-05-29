@@ -1,24 +1,26 @@
 package cart.infrastructure.repository.dao;
 
 import cart.infrastructure.entity.ProductEntity;
-import java.util.Optional;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
             new ProductEntity(
                     rs.getLong("id"),
@@ -30,6 +32,7 @@ public class ProductDao {
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<ProductEntity> findAll() {
@@ -46,6 +49,13 @@ public class ProductDao {
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<ProductEntity> findByIds(final List<Long> ids) {
+        String sql = "SELECT * FROM product WHERE id IN (:ids)";
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+        return namedParameterJdbcTemplate.query(sql, parameters, rowMapper);
+
     }
 
     public Long create(final ProductEntity product) {
