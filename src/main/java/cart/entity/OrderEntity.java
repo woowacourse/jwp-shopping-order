@@ -1,6 +1,9 @@
 package cart.entity;
 
+import cart.domain.Member;
+import cart.domain.order.DiscountPolicy;
 import cart.domain.order.Order;
+import cart.domain.order.OrderItems;
 import java.time.LocalDateTime;
 
 public class OrderEntity {
@@ -31,6 +34,10 @@ public class OrderEntity {
                 order.getDiscountedPrice().getValue(),
                 null
         );
+    }
+
+    public Order toDomain(Member member, OrderItems orderItems, DiscountPolicy discountPolicy) {
+        return new Order(this.id, member, orderItems, discountPolicy, this.createdAt);
     }
 
     public Long getId() {

@@ -3,6 +3,7 @@ package cart.domain.order;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.entity.OrderItemEntity;
 
 public class OrderItem {
 
@@ -11,11 +12,11 @@ public class OrderItem {
     private final Product product;
     private final Member member;
 
-    public OrderItem(final int quantity, final Product product, final Member member) {
+    private OrderItem(final int quantity, final Product product, final Member member) {
         this(null, quantity, product, member);
     }
 
-    public OrderItem(final Long id, final int quantity, final Product product, final Member member) {
+    private OrderItem(final Long id, final int quantity, final Product product, final Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -24,6 +25,10 @@ public class OrderItem {
 
     public static OrderItem from(CartItem cartItem) {
         return new OrderItem(cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
+    }
+
+    public static OrderItem of(OrderItemEntity orderItemEntity, Product product, Member member) {
+        return new OrderItem(orderItemEntity.getId(), orderItemEntity.getQuantity(), product, member);
     }
 
     public int getPrice() {

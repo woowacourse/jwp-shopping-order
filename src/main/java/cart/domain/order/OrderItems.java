@@ -2,6 +2,9 @@ package cart.domain.order;
 
 import cart.domain.CartItems;
 import cart.domain.Member;
+import cart.domain.Product;
+import cart.entity.OrderItemEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,22 @@ public class OrderItems {
                 .collect(Collectors.toUnmodifiableList());
 
         return new OrderItems(orderItems, cartItems.getMember());
+    }
+
+    public static OrderItems of(final List<OrderItemEntity> orderItemEntities, List<Product> products, Member member) {
+        validateSameSize(orderItemEntities, products);
+        List<OrderItem> items = new ArrayList<>();
+        for (int index = 0; index < orderItemEntities.size(); index++) {
+            final OrderItem orderItem = OrderItem.of(orderItemEntities.get(index), products.get(index), member);
+            items.add(orderItem);
+        }
+        return new OrderItems(items, member);
+    }
+
+    private static void validateSameSize(final List<OrderItemEntity> orderItemEntities, final List<Product> products) {
+        if (orderItemEntities.size() != products.size()) {
+            throw new IllegalArgumentException("주문에 포함된 상품 수와 조회된 상품 수가 일치하지 않습니다");
+        }
     }
 
     public Price sumOfPrice() {
