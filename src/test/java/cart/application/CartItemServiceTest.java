@@ -39,7 +39,7 @@ class CartItemServiceTest {
     @BeforeEach
     void setup() {
         member = new Member(1L, "teo", "1234");
-        pizza = new Product(1L, "피자", 20000, "https://a.com");
+        pizza = new Product(1L, "피자", 20000, "https://a.com", 0, false);
     }
 
     @Test
@@ -60,8 +60,7 @@ class CartItemServiceTest {
     void 멤버정보를_통해_장바구니에_품목을_넣을_수_있다() {
         // given
         CartItemRequest request = new CartItemRequest(1L);
-        Product product = new Product(1L, "teo", 10000, "https://");
-        when(productRepository.findById(1L)).thenReturn(product);
+        when(productRepository.findById(1L)).thenReturn(pizza);
         when(cartItemRepository.insert(any())).thenReturn(1L);
 
         // when

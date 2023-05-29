@@ -33,8 +33,8 @@ class ProductServiceTest {
 
     @BeforeEach
     void setup() {
-        pizza = new Product(1L, "피자", 20000, "https://a.com");
-        chicken = new Product(2L, "치킨", 30000, "https://b.com");
+        pizza = new Product(1L, "피자", 20000, "https://a.com", 10.0, true);
+        chicken = new Product(2L, "치킨", 30000, "https://b.com", 0.0, false);
     }
 
     @Test
@@ -66,7 +66,7 @@ class ProductServiceTest {
     void 상품을_생성할_수_있다() {
         // given
         when(productRepository.insert(any())).thenReturn(3L);
-        ProductRequest request = new ProductRequest("오이", 2000, "https://oi.com");
+        ProductRequest request = new ProductRequest("오이", 2000, "https://oi.com", 0.0, false);
 
         // when
         Long productId = productService.createProduct(request);
