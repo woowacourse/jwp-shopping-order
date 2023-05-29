@@ -2,9 +2,7 @@ package cart;
 
 import cart.dao.MemberDao;
 import cart.ui.MemberArgumentResolver;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,22 +24,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(new MemberArgumentResolver(memberDao));
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(final CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("*")
-                        .exposedHeaders(LOCATION)
-                        .allowedOrigins(
-                                "http://localhost:3000",
-                                "https://nlom0218.github.io",
-                                "https://tkdrb12.github.io"
-                        )
-                        .maxAge(3600);
-            }
-        };
+    @Override
+    public void addCorsMappings(final CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("*")
+                .exposedHeaders(LOCATION)
+                .allowedOrigins(
+                        "http://localhost:3000",
+                        "https://nlom0218.github.io",
+                        "https://tkdrb12.github.io"
+                )
+                .maxAge(3600);
     }
-
 }

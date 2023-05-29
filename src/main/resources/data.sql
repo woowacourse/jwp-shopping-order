@@ -23,3 +23,8 @@ INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO coupon_type (name, description, discount_amount) VALUES ('1,000원 할인 쿠폰', '1,000원이 할인됩니다.', 1000) ;
+INSERT INTO coupon_type (name, description, discount_amount) VALUES ('3,000원 할인 쿠폰', '3,000원이 할인됩니다.', 3000) ;
+INSERT INTO coupon_type (name, description, discount_amount) VALUES ('5,000원 할인 쿠폰', '5,000원이 할인됩니다.', 5000) ;
+INSERT INTO coupon_type (name, description, discount_amount) VALUES ('10,000원 할인 쿠폰', '10,000원이 할인됩니다.', 10000) ;

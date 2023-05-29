@@ -41,7 +41,7 @@ CREATE TABLE coupon_type
 CREATE TABLE coupon
 (
     id             BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    usage_status   VARCHAR(1) NOT NULL,
+    usage_status   TINYINT NOT NULL,
     member_id      BIGINT  NOT NULL,
     coupon_type_id BIGINT  NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
