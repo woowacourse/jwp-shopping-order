@@ -1,8 +1,10 @@
 package cart.ui;
 
 import cart.application.MemberService;
-import cart.application.dto.MemberResponse;
-import cart.application.dto.MemberSaveRequest;
+import cart.application.dto.member.MemberLoginRequest;
+import cart.application.dto.member.MemberLoginResponse;
+import cart.application.dto.member.MemberResponse;
+import cart.application.dto.member.MemberSaveRequest;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
@@ -30,14 +32,19 @@ public class MemberController {
         return ResponseEntity.created(URI.create("/users/" + savedMemberId)).build();
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<MemberLoginResponse> login(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
+        final MemberLoginResponse response = memberService.login(memberLoginRequest);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{id}")
-    public MemberResponse getMember(@PathVariable Long id) {
-        return memberService.getById(id);
+    public ResponseEntity<MemberResponse> getMember(@PathVariable final Long id) {
+        return ResponseEntity.ok(memberService.getById(id));
     }
 
     @GetMapping
-    public List<MemberResponse> getMembers() {
-        return memberService.getMembers();
+    public ResponseEntity<List<MemberResponse>> getMembers() {
+        return ResponseEntity.ok(memberService.getMembers());
     }
-
 }

@@ -6,8 +6,8 @@ import static org.hamcrest.Matchers.is;
 
 import cart.application.dto.CartItemQuantityUpdateRequest;
 import cart.application.dto.CartItemRequest;
-import cart.application.dto.MemberLoginRequest;
-import cart.application.dto.MemberSaveRequest;
+import cart.application.dto.member.MemberLoginRequest;
+import cart.application.dto.member.MemberSaveRequest;
 import cart.application.dto.ProductRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

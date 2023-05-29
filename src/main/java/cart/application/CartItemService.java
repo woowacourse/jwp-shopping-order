@@ -37,7 +37,7 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(final String memberName) {
         final Member member = memberRepository.findByName(memberName);
-        final List<CartItemWithId> cartItems = cartItemRepository.findByMemberName(member.getName());
+        final List<CartItemWithId> cartItems = cartItemRepository.findByMemberName(member.name());
         return cartItems.stream()
             .map(this::convertCartItemResponse)
             .collect(Collectors.toUnmodifiableList());

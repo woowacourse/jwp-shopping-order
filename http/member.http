@@ -13,3 +13,11 @@ GET {{host}}/users/1
 ### 사용자 전체 조회
 GET {{host}}/users
 
+### 사용자 로그인
+POST {{host}}/users/login
+Content-Type: application/json
+
+{
+  "name": "journey",
+  "password": "test1234"
+}

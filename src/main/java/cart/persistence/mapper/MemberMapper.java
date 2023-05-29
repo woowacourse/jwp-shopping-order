@@ -8,7 +8,7 @@ import cart.persistence.entity.MemberEntity;
 public class MemberMapper {
 
     public static Member convertMember(final MemberEntity memberEntity) {
-        return Member.create(memberEntity.getName(), memberEntity.getPassword());
+        return Member.createWithEncodedPassword(memberEntity.getName(), memberEntity.getPassword());
     }
 
     public static MemberWithId convertMemberRes(final MemberEntity memberEntity) {

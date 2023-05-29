@@ -2,7 +2,13 @@ package cart.exception;
 
 public class DBException extends RuntimeException {
 
+    private final ErrorCode errorCode;
+
     public DBException(final ErrorCode errorCode) {
-        super(errorCode.getMessage());
+        this.errorCode = errorCode;
+    }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 }

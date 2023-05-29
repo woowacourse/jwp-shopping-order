@@ -1,58 +1,36 @@
 package cart.domain.member;
 
-import static cart.exception.ErrorCode.MEMBER_NAME_LENGTH;
-import static cart.exception.ErrorCode.MEMBER_PASSWORD_LENGTH;
-
-import cart.exception.BadRequestException;
-
 public class Member {
 
-    private static final int NAME_MIN_LENGTH = 4, NAME_MAX_LENGTH = 10;
-    private static final int PASSWORD_MIN_LENGTH = 4, PASSWORD_MAX_LENGTH = 10;
+    private final MemberName name;
+    private final MemberPassword password;
 
-    private final String name;
-    private final String password;
-
-    private Member(final String name) {
+    private Member(final MemberName name) {
         this(name, null);
     }
 
-    private Member(String name, String password) {
+    private Member(final MemberName name, final MemberPassword password) {
         this.name = name;
         this.password = password;
     }
 
     public static Member create(final String name) {
-        return new Member(name);
+        return new Member(MemberName.create(name));
     }
 
     public static Member create(final String name, final String password) {
-        validateName(name);
-        validatePassword(password);
-        return new Member(name, password);
+        return new Member(MemberName.create(name), MemberPassword.create(password));
     }
 
-    private static void validateName(final String name) {
-        if (name.length() < NAME_MIN_LENGTH || name.length() > NAME_MAX_LENGTH) {
-            throw new BadRequestException(MEMBER_NAME_LENGTH);
-        }
+    public static Member createWithEncodedPassword(final String name, final String password) {
+        return new Member(MemberName.create(name), MemberPassword.createWithEncodedPassword(password));
     }
 
-    private static void validatePassword(final String nickname) {
-        if (nickname.length() < PASSWORD_MIN_LENGTH || nickname.length() > PASSWORD_MAX_LENGTH) {
-            throw new BadRequestException(MEMBER_PASSWORD_LENGTH);
-        }
+    public String name() {
+        return name.getName();
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
+    public String password() {
+        return password.getPassword();
     }
 }

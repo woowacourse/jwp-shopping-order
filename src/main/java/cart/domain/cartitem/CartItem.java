@@ -30,7 +30,7 @@ public class CartItem {
     }
 
     public void checkOwner(final Long cartItemId, final String memberName) {
-        if (!Objects.equals(this.member.getName(), memberName)) {
+        if (!Objects.equals(this.member.name(), memberName)) {
             throw new ForbiddenException(String.valueOf(cartItemId), memberName);
         }
     }

@@ -1,9 +1,13 @@
 package cart.application;
 
-import cart.application.dto.MemberResponse;
-import cart.application.dto.MemberSaveRequest;
+import cart.application.dto.member.MemberLoginRequest;
+import cart.application.dto.member.MemberLoginResponse;
+import cart.application.dto.member.MemberResponse;
+import cart.application.dto.member.MemberSaveRequest;
+import cart.common.auth.BasicTokenProvider;
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
+import cart.domain.security.SHA256Service;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import java.util.List;
@@ -30,20 +34,34 @@ public class MemberService {
         return memberRepository.insert(member);
     }
 
+    public MemberLoginResponse login(final MemberLoginRequest memberLoginRequest) {
+        final String name = memberLoginRequest.getName();
+        final String password = memberLoginRequest.getPassword();
+
+        final Member member = memberRepository.findByName(name);
+        final String encodedPassword = SHA256Service.encrypt(password);
+
+        if (!encodedPassword.equals(member.password())) {
+            throw new BadRequestException(ErrorCode.MEMBER_PASSWORD_INVALID);
+        }
+        final String basicToken = BasicTokenProvider.createToken(name, password);
+        return new MemberLoginResponse(basicToken);
+    }
+
     public MemberResponse getById(final Long id) {
         final Member member = memberRepository.findById(id);
-        return new MemberResponse(id, member.getName(), member.getPassword());
+        return new MemberResponse(id, member.name(), member.password());
     }
 
     public MemberResponse getByName(final String memberName) {
         final Member member = memberRepository.findByName(memberName);
-        return new MemberResponse(member.getName(), member.getPassword());
+        return new MemberResponse(member.name(), member.password());
     }
 
     public List<MemberResponse> getMembers() {
         return memberRepository.findAll().stream()
-            .map(memberWithId -> new MemberResponse(memberWithId.getId(), memberWithId.getMember().getName(),
-                memberWithId.getMember().getPassword()))
+            .map(memberWithId -> new MemberResponse(memberWithId.getId(), memberWithId.getMember().name(),
+                memberWithId.getMember().password()))
             .collect(Collectors.toUnmodifiableList());
     }
 }

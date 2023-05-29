@@ -1,7 +1,8 @@
 package cart.common.auth;
 
 import cart.application.MemberService;
-import cart.application.dto.MemberResponse;
+import cart.application.dto.member.MemberResponse;
+import cart.domain.security.SHA256Service;
 import cart.exception.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,8 @@ public class MemberNameArgumentResolver implements HandlerMethodArgumentResolver
         final String memberPassword = memberToken.split(DELIMITER)[1];
 
         final MemberResponse memberResponse = memberService.getByName(memberName);
-        if (!memberResponse.getPassword().equals(memberPassword)) {
+        final String encodedPassword = SHA256Service.encrypt(memberPassword);
+        if (!memberResponse.getPassword().equals(encodedPassword)) {
             throw new AuthenticationException();
         }
         return memberName;

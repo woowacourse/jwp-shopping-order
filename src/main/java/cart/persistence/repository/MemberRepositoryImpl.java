@@ -25,7 +25,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public long insert(final Member member) {
-        final MemberEntity memberEntity = new MemberEntity(member.getName(), member.getPassword());
+        final MemberEntity memberEntity = new MemberEntity(member.name(), member.password());
         return memberDao.insert(memberEntity);
     }
 
