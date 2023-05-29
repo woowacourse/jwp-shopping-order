@@ -1,7 +1,9 @@
 package cart.application;
 
 import cart.dao.MemberDao;
+import cart.domain.Member;
 import cart.dto.response.MemberResponse;
+import cart.dto.response.PointResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,5 +24,11 @@ public class MemberService {
         return memberDao.getAllMembers().stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    public PointResponse checkPoint(final Member member) {
+        return new PointResponse(
+                memberDao.getMemberById(member.getId()).getPoint()
+        );
     }
 }
