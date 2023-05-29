@@ -1,37 +1,70 @@
 package cart.domain;
 
-import java.awt.Point;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class Order {
     private Long id;
+    private Member member;
     private List<OrderItem> orderItems;
-    private LocalDateTime createdAt;
     private Point spendPoint;
+    private LocalDateTime createdAt;
 
-    public Order(Long id, List<OrderItem> orderItems, LocalDateTime createdAt, Point spendPoint) {
+    public Order(Long id, Member member, List<OrderItem> orderItems, Point spendPoint, LocalDateTime createdAt) {
         this.id = id;
+        this.member = member;
         this.orderItems = orderItems;
-        this.createdAt = createdAt;
         this.spendPoint = spendPoint;
+        this.createdAt = createdAt;
+    }
+
+    public String getThumbnailUrl() {
+        return orderItems.stream()
+                .map(OrderItem::getProduct)
+                .map(Product::getImageUrl)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new); // TODO
+    }
+
+    public Price calculateTotalPrice() {
+        return orderItems.stream()
+                .map(OrderItem::calculatePrice)
+                .reduce(Price::plus)
+                .orElseThrow(IllegalArgumentException::new); // TODO
+    }
+
+    public Price calculateSpendPrice() {
+        Price totalPrice = calculateTotalPrice();
+        return totalPrice.minus(Price.from(spendPoint.getAmount()));
+    }
+
+    public Point calculateRewardPoint(double percent) {
+        Price spendPrice = calculateSpendPrice();
+        long amount = spendPrice.getAmount();
+        double reward = amount * (percent / 100);
+        return new Point((long) Math.ceil(reward));
     }
 
     public Long getId() {
         return id;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
+    public Member getMember() {
+        return member;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public List<OrderItem> getOrderItems() {
+        return Collections.unmodifiableList(orderItems);
     }
 
     public Point getSpendPoint() {
         return spendPoint;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     @Override
