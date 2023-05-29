@@ -1,12 +1,10 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class PageController {
@@ -29,5 +27,20 @@ public class PageController {
     public String settings(final Model model) {
         model.addAttribute("members", memberService.findAll());
         return "settings";
+    }
+
+    @GetMapping("/priceCoupon")
+    public String priceCoupon(final Model model) {
+        return "priceCoupon";
+    }
+
+    @GetMapping("/percentCoupon")
+    public String percentCoupon(final Model model) {
+        return "percentCoupon";
+    }
+
+    @GetMapping("/deliveryFeeCoupon")
+    public String deliveryFeeCoupon(final Model model) {
+        return "deliveryFeeCoupon";
     }
 }
