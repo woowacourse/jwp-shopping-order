@@ -8,10 +8,10 @@ import static cart.fixture.ProductFixture.createProduct2;
 public class CartItemFixture {
 
     public static CartItem createCartItem() {
-        return new CartItem(1L, createProduct(), 1);
+        return new CartItem(1L, createProduct(), 10);
     }
 
     public static CartItem createCartItem2() {
-        return new CartItem(2L, createProduct2(), 2);
+        return new CartItem(2L, createProduct2(), 10);
     }
 }

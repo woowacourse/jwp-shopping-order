@@ -56,39 +56,41 @@ public class PaymentService {
         return PaymentUsingCouponsResponse.from(cart, requestCoupons.getCoupons());
     }
 
-    private List<Long> parseCouponRequestIds(final List<CouponIdRequest> request) {
-        return request.stream()
+    private List<Long> parseCouponRequestIds(final List<CouponIdRequest> couponIds) {
+        return couponIds.stream()
                 .map(CouponIdRequest::getId)
                 .collect(Collectors.toList());
     }
 
-    public List<Long> parseProductIds(final List<ProductIdRequest> request) {
-        return request.stream()
+    public List<Long> parseProductIds(final List<ProductIdRequest> productIds) {
+        return productIds.stream()
                 .map(ProductIdRequest::getId)
                 .collect(Collectors.toList());
     }
 
-    public List<Integer> parseProductQuantities(final List<ProductIdRequest> request) {
-        return request.stream()
+    public List<Integer> parseProductQuantities(final List<ProductIdRequest> quantities) {
+        return quantities.stream()
                 .map(ProductIdRequest::getQuantity)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public long pay(final Member member, final PaymentRequest request) {
+    public long pay(final Member member, final PaymentRequest paymentRequest) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
         Coupons memberCoupons = couponRepository.findAllByMemberId(member.getId());
-        Coupons requestCoupons = couponRepository.findAllByCouponIds(parseCouponRequestIds(request.getCoupons()));
+        Coupons requestCoupons = couponRepository.findAllByCouponIds(parseCouponRequestIds(paymentRequest.getCoupons()));
         member.initCoupons(requestCoupons);
 
         Order order = new Order(member, cart);
-        OrderResponse orderHistory = order.pay(parseProductIds(request.getProducts()), parseProductQuantities(request.getProducts()), parseCouponRequestIds(request.getCoupons()));
+        OrderResponse orderHistory = order.pay(parseProductIds(paymentRequest.getProducts()), parseProductQuantities(paymentRequest.getProducts()), parseCouponRequestIds(paymentRequest.getCoupons()));
 
+        updateCartItems(order);
+        deleteUsedCoupons(orderHistory);
 
-        // 2. 이제 DB 영억
-        long orderId = orderRepository.save(member, orderHistory);
+        return orderRepository.save(member, orderHistory);
+    }
 
-        // 2-1 기존 품목 업데이트
+    private void updateCartItems(final Order order) {
         for (CartItem cartItem : order.getCart().getCartItems()) {
             if (cartItem.isEmptyQuantity()) {
                 cartRepository.deleteCartItemById(cartItem.getId());
@@ -96,12 +98,11 @@ public class PaymentService {
             }
             cartRepository.updateCartItemQuantity(cartItem);
         }
+    }
 
-        // 3. 사용한 유저의 쿠폰 삭제
+    private void deleteUsedCoupons(final OrderResponse orderHistory) {
         for (CouponResponse coupon : orderHistory.getCoupons()) {
             couponRepository.deleteById(coupon.getCouponId());
         }
-
-        return orderId;
     }
 }

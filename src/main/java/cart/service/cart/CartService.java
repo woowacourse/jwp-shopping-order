@@ -79,7 +79,7 @@ public class CartService {
     }
 
     private void validateOwner(final Cart cart, final CartItem cartItem) {
-        if (!cart.hasItem(cartItem)) {
+        if (!cart.hasCartItem(cartItem)) {
             throw new MemberNotOwnerException();
         }
     }

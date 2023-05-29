@@ -1,5 +1,6 @@
 package cart.domain.cart;
 
+import cart.domain.order.ProductHistory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -36,5 +37,23 @@ class CartTest {
 
         // then
         assertThat(result).isEqualTo(0);
+    }
+
+    @DisplayName("요청한 상품을 구매한다.")
+    @Test
+    void buy_product() {
+        // given
+        List<Long> productIds = List.of(1L, 2L);
+        List<Integer> quantities = List.of(1, 1);
+
+        Cart cart = createCart();
+
+        // when
+        List<ProductHistory> productHistories = cart.buy(productIds, quantities);
+        for (ProductHistory productHistory : productHistories) {
+            System.out.println(productHistory.getProductName() + " " + productHistory.getQuantity() + " " + productHistory.getPrice());
+        }
+
+        // then
     }
 }

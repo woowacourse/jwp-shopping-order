@@ -3,11 +3,11 @@ package cart.domain.cart;
 import cart.domain.coupon.Coupon;
 import cart.domain.order.ProductHistory;
 import cart.domain.product.Product;
-import cart.dto.product.ProductUsingCouponAndSaleResponse;
+import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Cart {
 
@@ -33,32 +33,34 @@ public class Cart {
         cartItems.changeQuantity(cartItemId, quantity);
     }
 
-    public boolean hasItem(final CartItem cartItem) {
-        return cartItems.hasItem(cartItem);
+    public boolean hasCartItem(final CartItem cartItem) {
+        return cartItems.hasCartItem(cartItem);
     }
 
-
     public int calculateOriginPrice() {
-        // 원래 상품 할인 전 가격 반환
         return cartItems.getTotalOriginPrice();
     }
 
-    public int calculateDeliveryFeeUsingCoupons(final List<Coupon> reqCoupons) {
+    public int calculateDeliveryFeeUsingCoupons(final List<Coupon> usingCoupons) {
         int price = deliveryFee.getFee();
 
-        List<Coupon> coupons = reqCoupons.stream()
-                .filter(Coupon::isDeliveryCoupon)
-                .collect(Collectors.toList());
+        for (final Coupon coupon : usingCoupons) {
+            price = useDeliveryCoupon(price, coupon);
+        }
 
-        for (Coupon coupon : coupons) {
+        return price;
+    }
+
+    private int useDeliveryCoupon(int price, final Coupon coupon) {
+        if (coupon.isDeliveryCoupon()) {
             price = coupon.calculate(price);
         }
 
         return price;
     }
 
-    public List<ProductUsingCouponAndSaleResponse> getProductUsingCouponAndSaleResponse(final List<Coupon> requestCoupons) {
-        return cartItems.getProductUsingCouponAndSaleResponse(requestCoupons);
+    public List<ProductPriceAppliedAllDiscountResponse> getProductUsingCouponAndSaleResponses(final List<Coupon> usingCoupons) {
+        return cartItems.getProductPricesAppliedAllDiscount(usingCoupons);
     }
 
     public void validateBuying(final List<Long> productIds, final List<Integer> quantities) {
@@ -66,17 +68,9 @@ public class Cart {
     }
 
     public List<ProductHistory> buy(final List<Long> productIds, final List<Integer> quantities) {
-        List<ProductHistory> productHistories = new ArrayList<>();
-
-        for (int i = 0; i < productIds.size(); i++) {
-            Long productId = productIds.get(i);
-            int quantity = quantities.get(i);
-
-            ProductHistory productHistory = cartItems.buy(productId, quantity);
-            productHistories.add(productHistory);
-        }
-
-        return productHistories;
+        return IntStream.range(0, productIds.size())
+                .mapToObj(index -> cartItems.buy(productIds.get(index), quantities.get(index)))
+                .collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -85,12 +79,6 @@ public class Cart {
 
     public List<CartItem> getCartItems() {
         return cartItems.getCartItems();
-    }
-
-    public List<String> getProductNames() {
-        return cartItems.getCartItems().stream()
-                .map(cartItem -> cartItem.getProduct().getName())
-                .collect(Collectors.toList());
     }
 
     public int getDeliveryFee() {

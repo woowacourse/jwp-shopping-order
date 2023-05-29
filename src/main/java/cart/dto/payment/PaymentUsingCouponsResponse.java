@@ -3,16 +3,16 @@ package cart.dto.payment;
 import cart.domain.cart.Cart;
 import cart.domain.coupon.Coupon;
 import cart.dto.product.DeliveryPayResponse;
-import cart.dto.product.ProductUsingCouponAndSaleResponse;
+import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 
 import java.util.List;
 
 public class PaymentUsingCouponsResponse {
 
-    private final List<ProductUsingCouponAndSaleResponse> products;
+    private final List<ProductPriceAppliedAllDiscountResponse> products;
     private final DeliveryPayResponse deliveryPrice;
 
-    public PaymentUsingCouponsResponse(final List<ProductUsingCouponAndSaleResponse> products, final DeliveryPayResponse deliveryPrice) {
+    public PaymentUsingCouponsResponse(final List<ProductPriceAppliedAllDiscountResponse> products, final DeliveryPayResponse deliveryPrice) {
         this.products = products;
         this.deliveryPrice = deliveryPrice;
     }
@@ -23,12 +23,12 @@ public class PaymentUsingCouponsResponse {
         DeliveryPayResponse deliveryPayResponse = new DeliveryPayResponse(deliveryFee, deliveryFeeUsingCoupons);
 
         return new PaymentUsingCouponsResponse(
-                cart.getProductUsingCouponAndSaleResponse(requestCoupons),
+                cart.getProductUsingCouponAndSaleResponses(requestCoupons),
                 deliveryPayResponse
         );
     }
 
-    public List<ProductUsingCouponAndSaleResponse> getProducts() {
+    public List<ProductPriceAppliedAllDiscountResponse> getProducts() {
         return products;
     }
 

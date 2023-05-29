@@ -54,7 +54,7 @@ public class Product {
         this.isOnSale = false;
     }
 
-    public int getResultPrice() {
+    public int getAppliedDiscountOrOriginPrice() {
         if (!isOnSale) {
             return price;
         }

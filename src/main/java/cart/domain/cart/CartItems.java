@@ -3,7 +3,7 @@ package cart.domain.cart;
 import cart.domain.coupon.Coupon;
 import cart.domain.order.ProductHistory;
 import cart.domain.product.Product;
-import cart.dto.product.ProductUsingCouponAndSaleResponse;
+import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 import cart.exception.CartItemNotFoundException;
 
 import java.util.ArrayList;
@@ -34,7 +34,6 @@ public class CartItems {
 
         CartItem insertItem = new CartItem(product);
         cartItems.add(insertItem);
-
         return insertItem;
     }
 
@@ -43,10 +42,7 @@ public class CartItems {
     }
 
     public void changeQuantity(final long cartItemId, final int quantity) {
-        CartItem cartItem = cartItems.stream()
-                .filter(item -> item.hasSameId(cartItemId))
-                .findAny()
-                .orElseThrow(CartItemNotFoundException::new);
+        CartItem cartItem = findCartItemByCartItemId(cartItemId);
 
         if (quantity == EMPTY_COUNT) {
             this.remove(cartItem);
@@ -56,20 +52,24 @@ public class CartItems {
         cartItem.changeQuantity(quantity);
     }
 
+    private CartItem findCartItemByCartItemId(final long cartItemId) {
+        return cartItems.stream()
+                .filter(item -> item.hasSameId(cartItemId))
+                .findAny()
+                .orElseThrow(CartItemNotFoundException::new);
+    }
+
     public void validateBuyingProduct(final List<Long> productIds, final List<Integer> quantities) {
         for (int i = 0; i < productIds.size(); i++) {
             Long productId = productIds.get(i);
 
-            CartItem cartItem = cartItems.stream()
-                    .filter(it -> it.hasProduct(productId))
-                    .findAny()
-                    .orElseThrow(() -> new IllegalArgumentException("요청하신 상품을 찾을 수 없습니다."));
+            CartItem cartItem = getCartItemByProductId(productId);
 
             cartItem.validateQuantity(quantities.get(i));
         }
     }
 
-    public boolean hasItem(final CartItem cartItem) {
+    public boolean hasCartItem(final CartItem cartItem) {
         return cartItems.stream()
                 .anyMatch(item -> item.hasSameId(cartItem.getId()));
     }
@@ -80,52 +80,71 @@ public class CartItems {
                 .sum();
     }
 
-    public int getTotalFinallyPrice() {
-        return cartItems.stream()
-                .mapToInt(CartItem::getResultPrice)
-                .sum();
+    public List<ProductPriceAppliedAllDiscountResponse> getProductPricesAppliedAllDiscount(final List<Coupon> usingCoupons) {
+        List<Integer> originPrices = getOriginPrices();
+        List<Integer> afterPrices = calculateAfterPrices(originPrices, usingCoupons);
+
+        return generateProductResultPrices(originPrices, afterPrices);
     }
 
-    public List<ProductUsingCouponAndSaleResponse> getProductUsingCouponAndSaleResponse(final List<Coupon> reqCoupon) {
-        List<ProductUsingCouponAndSaleResponse> result = new ArrayList<>();
-
-        List<Integer> originPrices = cartItems.stream()
-                .map(CartItem::getResultPrice)
+    private List<Integer> getOriginPrices() {
+        return cartItems.stream()
+                .map(CartItem::getAppliedDiscountOrOriginPrice)
                 .collect(Collectors.toList());
+    }
 
-        List<Integer> afterPrices = new ArrayList<>();
-        for (Integer originPrice : originPrices) {
-            int afterPrice = originPrice;
+    private List<Integer> calculateAfterPrices(final List<Integer> originPrices, final List<Coupon> usingCoupons) {
+        List<Coupon> usableCoupons = getUsableCoupons(usingCoupons);
 
-            for (Coupon coupon : reqCoupon) {
-                if (!coupon.isDeliveryCoupon()) {
-                    afterPrice = coupon.calculate(afterPrice);
-                }
-            }
-            afterPrices.add(afterPrice);
+        return originPrices.stream()
+                .map(originPrice -> calculateAppliedCouponsPrice(originPrice, usableCoupons))
+                .collect(Collectors.toList());
+    }
+
+    private List<Coupon> getUsableCoupons(final List<Coupon> usingCoupons) {
+        return usingCoupons.stream()
+                .filter(coupon -> !coupon.isDeliveryCoupon())
+                .collect(Collectors.toList());
+    }
+
+    private int calculateAppliedCouponsPrice(final int originPrice, final List<Coupon> usableCoupons) {
+        int price = originPrice;
+
+        for (final Coupon coupon : usableCoupons) {
+            price = coupon.calculate(price);
         }
 
+        return price;
+    }
+
+    private List<ProductPriceAppliedAllDiscountResponse> generateProductResultPrices(final List<Integer> originPrices, final List<Integer> afterPrices) {
+        List<ProductPriceAppliedAllDiscountResponse> result = new ArrayList<>();
+
         for (int i = 0; i < cartItems.size(); i++) {
-            result.add(new ProductUsingCouponAndSaleResponse(cartItems.get(i).getId(), originPrices.get(i), originPrices.get(i) - afterPrices.get(i)));
+            int originPrice = originPrices.get(i);
+            int afterPrice = afterPrices.get(i);
+            int discount = originPrice - afterPrice;
+
+            result.add(new ProductPriceAppliedAllDiscountResponse(cartItems.get(i).getId(), originPrice, discount));
         }
 
         return result;
     }
 
     public ProductHistory buy(final Long productId, final int quantity) {
-        // 1. CartItem 을 찾아온다.
-        CartItem cartItem = cartItems.stream()
-                .filter(item -> item.hasProduct(productId))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("요청하신 상품을 찾을 수 없습니다."));
+        CartItem cartItem = getCartItemByProductId(productId);
+        int totalPrice = cartItem.getAppliedDiscountOrOriginPrice(quantity);
 
-        // 2. 최종 가격 * quantity 가격을 가져온다.
-        int totalPrice = cartItem.getResultPrice(quantity);
-
-        // 3. 도메인에서 상품의 수량을 낮춘다.
         cartItem.buy(quantity);
 
         return new ProductHistory(productId, cartItem.getProduct().getName(), quantity, totalPrice);
+    }
+
+    private CartItem getCartItemByProductId(final Long productId) {
+        return cartItems.stream()
+                .filter(item -> item.hasProduct(productId))
+                .findAny()
+                .orElseThrow(CartItemNotFoundException::new);
     }
 
     public List<CartItem> getCartItems() {
