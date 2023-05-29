@@ -1,13 +1,20 @@
-package cart.integration;
+package cart.acceptance;
 
-import cart.member.infrastructure.persistence.dao.MemberDao;
-import cart.member.domain.Member;
-import cart.cartitem.presentation.dto.UpdateCartItemQuantityRequest;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.cartitem.presentation.dto.AddCartItemRequest;
 import cart.cartitem.presentation.dto.CartItemResponse;
+import cart.cartitem.presentation.dto.UpdateCartItemQuantityRequest;
+import cart.member.domain.Member;
+import cart.member.infrastructure.persistence.dao.MemberDao;
 import cart.product.presentation.dto.UpdateProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,15 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class CartItemIntegrationTest extends IntegrationTest {
+public class CartItemAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private MemberDao memberDao;

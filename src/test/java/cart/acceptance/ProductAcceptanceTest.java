@@ -1,15 +1,15 @@
-package cart.integration;
-
-import cart.product.presentation.dto.UpdateProductRequest;
-import cart.product.presentation.dto.ProductResponse;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+package cart.acceptance;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProductIntegrationTest extends IntegrationTest {
+import cart.product.presentation.dto.ProductResponse;
+import cart.product.presentation.dto.UpdateProductRequest;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+public class ProductAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void getProducts() {
