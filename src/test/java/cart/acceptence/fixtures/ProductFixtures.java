@@ -2,6 +2,7 @@ package cart.acceptence.fixtures;
 
 import cart.dto.ProductRequest;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class ProductFixtures {
 
     public static final ProductRequest 치킨_10000원 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");

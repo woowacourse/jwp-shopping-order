@@ -60,8 +60,8 @@ public class CartItemSteps {
                 .then()
                 .extract();
     }
-    
-    public static Optional<CartItemResponse> 장바구니_조회하고_특정_아이템이_존재하면_반환(final Member member, final long cartItemId){
+
+    public static Optional<CartItemResponse> 장바구니_조회하고_특정_아이템이_존재하면_반환(final Member member, final long cartItemId) {
         ExtractableResponse<Response> 장바구니_조회_결과 = 장바구니_조회_요청(member);
         return 장바구니_조회_결과.jsonPath()
                 .getList(".", CartItemResponse.class)

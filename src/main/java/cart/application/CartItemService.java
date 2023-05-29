@@ -7,7 +7,6 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import cart.exception.CartItemException;
 import cart.exception.CartItemException.DuplicatedCartItem;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        if(cartItemDao.countByMemberIdAndProductId(member.getId(), cartItemRequest.getProductId()) != 0) {
+        if (cartItemDao.countByMemberIdAndProductId(member.getId(), cartItemRequest.getProductId()) != 0) {
             throw new DuplicatedCartItem();
         }
         CartItem cartItem = new CartItem(member, productDao.getProductById(cartItemRequest.getProductId()));
