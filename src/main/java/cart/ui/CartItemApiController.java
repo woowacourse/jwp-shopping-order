@@ -3,6 +3,8 @@ package cart.ui;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import cart.application.CartItemService;
 import cart.config.AuthPrincipal;
 import cart.dto.AuthMember;
@@ -28,7 +30,7 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(@AuthPrincipal AuthMember authMember, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<Void> addCartItems(@AuthPrincipal AuthMember authMember, @Valid @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(authMember, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();

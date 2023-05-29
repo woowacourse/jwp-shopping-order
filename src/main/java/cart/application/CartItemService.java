@@ -1,6 +1,7 @@
 package cart.application;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import cart.dao.CartItemDao;
@@ -12,6 +13,7 @@ import cart.dto.AuthMember;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,8 +36,27 @@ public class CartItemService {
     }
 
     public Long add(AuthMember authMember, CartItemRequest cartItemRequest) {
+        Long productId = cartItemRequest.getProductId();
         Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
-        return cartItemDao.save(new CartItem(findMember, productDao.getProductById(cartItemRequest.getProductId())));
+        checkProductExist(productId);
+        Optional<CartItem> nullableCartItem = cartItemDao.selectByMemberIdAndProductId(findMember.getId(), productId);
+        if (nullableCartItem.isPresent()) {
+            CartItem cartItem = nullableCartItem.get();
+            return addQuantityCurrentCartItem(cartItemRequest, cartItem);
+        }
+        return cartItemDao.save(new CartItem(cartItemRequest.getQuantity(), findMember, productDao.getProductById(cartItemRequest.getProductId())));
+    }
+
+    private void checkProductExist(Long id) {
+        if (productDao.isNotExistById(id)) {
+            throw new ProductNotFoundException("상품 ID에 해당하는 상품을 찾을 수 없습니다.");
+        }
+    }
+
+    private Long addQuantityCurrentCartItem(CartItemRequest cartItemRequest, CartItem cartItem) {
+        cartItem.addQuantity(cartItemRequest.getQuantity());
+        cartItemDao.updateQuantity(cartItem);
+        return cartItem.getId();
     }
 
     public void updateQuantity(AuthMember authMember, Long id, CartItemQuantityUpdateRequest request) {

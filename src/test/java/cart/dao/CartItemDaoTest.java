@@ -1,7 +1,6 @@
 package cart.dao;
 
 import static cart.fixtures.CartItemFixtures.*;
-import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -14,8 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
 @JdbcTest
+@ActiveProfiles("test")
 class CartItemDaoTest {
 
     @Autowired
@@ -26,6 +27,25 @@ class CartItemDaoTest {
     @BeforeEach
     void setUp() {
         this.cartItemDao = new CartItemDao(jdbcTemplate);
+    }
+
+    @Test
+    @DisplayName("해당하는 장바구니 상품의 수량을 변경한다")
+    void updateQuantity() {
+        // given
+        CartItem currentCartItem = Dooly_CartItem1.ENTITY;
+        int currentQuantity = currentCartItem.getQuantity();
+        int quantityToAdd = 5;
+        currentCartItem.addQuantity(quantityToAdd);
+        int addedQuantity = currentQuantity + quantityToAdd;
+
+        // when
+        cartItemDao.updateQuantity(currentCartItem);
+        System.out.println("cartItemQ = " + currentCartItem.getQuantity());
+        CartItem updatedCartItem = cartItemDao.findById(currentCartItem.getId());
+
+        // then
+        assertThat(updatedCartItem.getQuantity()).isEqualTo(addedQuantity);
     }
 
     @Test
@@ -46,14 +66,14 @@ class CartItemDaoTest {
     @DisplayName("장바구니 상품 조회 시 멤버 ID와 상품 ID에 해당하는 장바구니 상품이 존재하면 장바구니 상품을 반환한다.")
     void selectByMemberIdAndProductId() {
         // given
-        Long memberId = Dooly_CartItem1.MEMBER.getId();
-        Long productId = Dooly_CartItem1.PRODUCT.getId();
+        Long memberId = Dooly_CartItem2.MEMBER.getId();
+        Long productId = Dooly_CartItem2.PRODUCT.getId();
 
         // when
         Optional<CartItem> cartItem = cartItemDao.selectByMemberIdAndProductId(memberId, productId);
 
         // then
-        assertThat(cartItem.get()).usingRecursiveComparison().isEqualTo(Dooly_CartItem1.ENTITY);
+        assertThat(cartItem.get()).usingRecursiveComparison().isEqualTo(Dooly_CartItem2.ENTITY);
     }
 
     @Test

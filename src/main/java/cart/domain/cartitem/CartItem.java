@@ -8,19 +8,19 @@ import java.util.Objects;
 
 public class CartItem {
     private Long id;
-    private int quantity;
+    private Quantity quantity;
     private final Product product;
     private final Member member;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
+    public CartItem(int quantity, Member member, Product product) {
+        this.quantity = new Quantity(quantity);
         this.member = member;
         this.product = product;
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
         this.id = id;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
         this.product = product;
         this.member = member;
     }
@@ -38,7 +38,7 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getQuantity();
     }
 
     public void checkOwner(Member member) {
@@ -51,7 +51,11 @@ public class CartItem {
         return this.product.equals(product);
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+    public void changeQuantity(int quantityToChange) {
+        this.quantity = quantity.changeQuantity(quantityToChange);
+    }
+
+    public void addQuantity(int quantityToAdd) {
+        this.quantity = quantity.addQuantity(quantityToAdd);
     }
 }
