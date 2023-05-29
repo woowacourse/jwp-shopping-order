@@ -28,7 +28,8 @@ class BasicGradeDiscountPolicyTest {
         return Stream.of(
                 Arguments.of(20000, Fixture.GOLD_MEMBER, 1000),
                 Arguments.of(20000, Fixture.SILVER_MEMBER, 600),
-                Arguments.of(20000, Fixture.BRONZE_MEMBER, 200)
+                Arguments.of(20000, Fixture.BRONZE_MEMBER, 200),
+                Arguments.of(100000, Fixture.GOLD_MEMBER, 5000)
         );
     }
 }

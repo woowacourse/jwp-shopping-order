@@ -33,7 +33,8 @@ class DefaultDiscountPolicyTest {
         return Stream.of(
                 Arguments.of(10000, Fixture.GOLD_MEMBER, 700),
                 Arguments.of(20000, Fixture.SILVER_MEMBER, 1200),
-                Arguments.of(30000, Fixture.BRONZE_MEMBER, 1500)
+                Arguments.of(30000, Fixture.BRONZE_MEMBER, 1500),
+                Arguments.of(100000, Fixture.GOLD_MEMBER, 15000)
         );
     }
 }

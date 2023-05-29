@@ -12,7 +12,7 @@ public class BasicPriceDiscountPolicy implements PriceDiscountPolicy {
 
     @Override
     public Integer calculateDiscountPrice(Integer price) {
-        if (price > MAX_PRICE) {
+        if (price >= MAX_PRICE) {
             return (int) (MAX_PRICE * MAXIMUM_DISCOUNT_RATE);
         }
         final double discountRate = Math.floor((double) price / STANDARD_PRICE) * MINIMUM_DISCOUNT_RATE + MINIMUM_DISCOUNT_RATE;
