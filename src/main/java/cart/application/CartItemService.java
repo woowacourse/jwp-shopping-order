@@ -13,6 +13,7 @@ import cart.dto.AuthMember;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -61,16 +62,21 @@ public class CartItemService {
 
     public void updateQuantity(AuthMember authMember, Long id, CartItemQuantityUpdateRequest request) {
         Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
+        checkCartItemExist(id);
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(findMember);
-
         if (request.getQuantity() == 0) {
             cartItemDao.deleteById(id);
             return;
         }
-
         cartItem.changeQuantity(request.getQuantity());
         cartItemDao.updateQuantity(cartItem);
+    }
+
+    private void checkCartItemExist(Long id) {
+        if (cartItemDao.isNotExistById(id)) {
+            throw new CartItemNotFoundException("장바구니 상품 ID에 해당하는 장바구니 상품을 찾을 수 없습니다.");
+        }
     }
 
     public void remove(AuthMember authMember, Long id) {

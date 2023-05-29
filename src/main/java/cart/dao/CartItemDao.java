@@ -110,6 +110,11 @@ public class CartItemDao {
         jdbcTemplate.update(sql, memberId, productId);
     }
 
+    public Boolean isNotExistById(Long id) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM cart_item WHERE id=?)";
+        return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
+
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);

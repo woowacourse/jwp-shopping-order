@@ -23,9 +23,9 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleCartItemException(CartItemException.IllegalMember e) {
+    public ResponseEntity<String> handleCartItemException(CartItemException.IllegalMember e) {
         log.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)

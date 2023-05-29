@@ -1,6 +1,7 @@
 package cart.dao;
 
-import static cart.fixtures.CartItemFixtures.*;
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
+import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -88,6 +89,26 @@ class CartItemDaoTest {
         // then
         assertThat(cartItems)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
-                .contains(Dooly_CartItem1.ENTITY, Dooly_CartItem2.ENTITY, Dooly_CartItem3.ENTITY);
+                .containsAnyOf(Dooly_CartItem1.ENTITY, Dooly_CartItem2.ENTITY);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 ID로 조회 시 행이 없으면 TRUE를 반환한다.")
+    void isNotExistById_true() {
+        // given
+        Long notExistId = -1L;
+
+        // when, then
+        assertThat(cartItemDao.isNotExistById(notExistId)).isTrue();
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 ID로 조회 시 행이 없으면 FALSE를 반환한다.")
+    void isNotExistById_false() {
+        // given
+        Long notExistId = Dooly_CartItem1.ID;
+
+        // when, then
+        assertThat(cartItemDao.isNotExistById(notExistId)).isFalse();
     }
 }

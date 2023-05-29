@@ -7,7 +7,9 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dto.AuthMember;
+import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
+import cart.exception.CartItemNotFoundException;
 import cart.exception.ProductNotFoundException;
 import cart.fixtures.MemberFixtures;
 import org.junit.jupiter.api.DisplayName;
@@ -45,5 +47,20 @@ class CartItemServiceTest {
         assertThatThrownBy(() -> cartItemService.add(authMember, request))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("상품 ID에 해당하는 상품을 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("수정할 장바구니 상품 ID가 존재하지 않으면 예외가 발생한다.")
+    void updateQuantity_throws_when_cartItemId_notExist() {
+        // given
+        AuthMember authMember = new AuthMember(MemberFixtures.Dooly.EMAIL, MemberFixtures.Dooly.PASSWORD);
+        Long notExistId = -1L;
+        CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(3);
+        given(cartItemDao.isNotExistById(notExistId)).willReturn(true);
+
+        // when, then
+        assertThatThrownBy(() -> cartItemService.updateQuantity(authMember, notExistId, request))
+                .isInstanceOf(CartItemNotFoundException.class)
+                .hasMessage("장바구니 상품 ID에 해당하는 장바구니 상품을 찾을 수 없습니다.");
     }
 }
