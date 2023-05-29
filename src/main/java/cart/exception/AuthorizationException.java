@@ -1,7 +1,7 @@
 package cart.exception;
 
-public class AuthenticationException extends RuntimeException {
-    public AuthenticationException(String message) {
+public class AuthorizationException extends RuntimeException {
+    public AuthorizationException(String message) {
         super(message);
     }
 
