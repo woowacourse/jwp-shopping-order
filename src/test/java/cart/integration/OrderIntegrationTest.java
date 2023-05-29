@@ -36,7 +36,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void createOrder() {
         // given
         final List<Long> cartItemIds = List.of(1L, 2L);
-        final int totalPrice = 25000;
+        final int totalPrice = 95_000;
         final OrderCreateRequest orderCreateRequest = new OrderCreateRequest(cartItemIds, totalPrice);
 
         // when
