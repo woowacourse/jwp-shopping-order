@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 
 import cart.application.dto.CartItemQuantityUpdateRequest;
 import cart.application.dto.CartItemRequest;
+import cart.application.dto.coupon.CouponRequest;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberSaveRequest;
 import cart.application.dto.ProductRequest;
@@ -32,7 +33,7 @@ public class IntegrationTest {
     final String LOCATION = "Location";
 
     void 사용자_저장(final MemberSaveRequest 사용자_저장_요청) {
-        given()
+        given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(사용자_저장_요청)
             .when()
@@ -42,7 +43,7 @@ public class IntegrationTest {
     }
 
     void 상품_저장(ProductRequest 상품_저장_요청) {
-        given()
+        given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(상품_저장_요청)
             .when()
@@ -73,5 +74,15 @@ public class IntegrationTest {
             .patch("/cart-items/{cartItemId}", cartItemId)
             .then()
             .statusCode(HttpStatus.OK.value());
+    }
+
+    void 쿠폰_저장(final CouponRequest 쿠폰_등록_요청) {
+        given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(쿠폰_등록_요청)
+            .when()
+            .post("/coupons")
+            .then()
+            .statusCode(HttpStatus.CREATED.value());
     }
 }
