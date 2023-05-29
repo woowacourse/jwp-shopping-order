@@ -1,5 +1,8 @@
 package cart.dao;
 
+import static cart.fixture.MemberFixture.MEMBER;
+import static cart.fixture.ProductFixture.CHICKEN;
+import static cart.fixture.ProductFixture.PIZZA;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartItem;
@@ -20,10 +23,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @DisplayName("CartItemDao 은(는)")
 @JdbcTest
 class CartItemDaoTest {
-
-    private static final Member MEMBER = new Member(1L, "aaa@naver.com", "password");
-    private static final Product CHICKEN = new Product(1L, "치킨", 10_000, "www.naver.com");
-    private static final Product PIZZA = new Product(2L, "피자", 20_000, "www.kakao.com");
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -115,6 +114,7 @@ class CartItemDaoTest {
         insertProduct(CHICKEN);
         Long cartItemId = cartItemDao.save(new CartItem(CHICKEN, MEMBER.getId()));
         CartItem expected = new CartItem(cartItemId, 10, CHICKEN, MEMBER.getId());
+
         // when
         cartItemDao.updateQuantity(expected);
 

@@ -1,6 +1,8 @@
 package cart.application;
 
+import static cart.fixture.ProductFixture.CHICKEN;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -22,6 +24,8 @@ import org.junit.jupiter.api.Test;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("ProductService 은(는)")
 class ProductServiceTest {
+
+    private static final ProductRequest PRODUCT_REQUEST = new ProductRequest("치킨", 10_000, "www.naver.com");
 
     private ProductDao productDao = mock(ProductDao.class);
     private ProductService productService = new ProductService(productDao);
@@ -74,14 +78,54 @@ class ProductServiceTest {
     @Test
     void 상품을_생성한다() {
         // given
-        ProductRequest given = new ProductRequest("치킨", 10_000, "www.naver.com");
         given(productDao.save(any()))
                 .willReturn(1L);
 
         // when
-        Long actual = productService.createProduct(given);
+        Long actual = productService.createProduct(PRODUCT_REQUEST);
 
         // then
         assertThat(actual).isEqualTo(1L);
+    }
+
+    @Test
+    void 상품을_갱신한다() {
+        // given
+        given(productDao.findById(1L))
+                .willReturn(Optional.of(CHICKEN));
+
+        // when & then
+        assertThatNoException().isThrownBy(() -> productService.updateProduct(1L, PRODUCT_REQUEST));
+    }
+
+    @Test
+    void 상품을_갱신시_상품이_없으면_예외() {
+        // given
+        given(productDao.findById(1L))
+                .willReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> productService.updateProduct(1L, PRODUCT_REQUEST))
+                .isInstanceOf(ProductNotFound.class);
+    }
+
+    @Test
+    void 상품을_삭제한다() {
+        given(productDao.findById(1L))
+                .willReturn(Optional.of(CHICKEN));
+
+        // when && then
+        assertThatNoException().isThrownBy(() -> productService.deleteProduct(1L));
+    }
+
+    @Test
+    void 상품을_삭제시_상품이_없으면_예외() {
+        // given
+        given(productDao.findById(1L))
+                .willReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> productService.deleteProduct(1L))
+                .isInstanceOf(ProductNotFound.class);
     }
 }

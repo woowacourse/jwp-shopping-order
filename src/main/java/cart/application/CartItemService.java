@@ -18,12 +18,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class CartItemService {
 
-    private final ProductDao productDao;
     private final CartItemDao cartItemDao;
+    private final ProductDao productDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
+    public CartItemService(CartItemDao cartItemDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
+        this.productDao = productDao;
+    }
+
+    public Long add(Member member, CartItemRequest cartItemRequest) {
+        Product product = productDao.findById(cartItemRequest.getProductId())
+                .orElseThrow(ProductNotFound::new);
+        CartItem cartItem = new CartItem(product, member.getId());
+        return cartItemDao.save(cartItem);
     }
 
     public List<CartItemResponse> findByMember(Member member) {
@@ -33,11 +40,9 @@ public class CartItemService {
                 .collect(toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productDao.findById(cartItemRequest.getProductId())
-                .orElseThrow(ProductNotFound::new);
-        CartItem cartItem = new CartItem(product, member.getId());
-        return cartItemDao.save(cartItem);
+    private CartItem findCartItemById(Long id) {
+        return cartItemDao.findById(id)
+                .orElseThrow(CartItemException::new);
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
@@ -51,11 +56,6 @@ public class CartItemService {
 
         cartItem.changeQuantity(request.getQuantity());
         cartItemDao.updateQuantity(cartItem);
-    }
-
-    private CartItem findCartItemById(Long id) {
-        return cartItemDao.findById(id)
-                .orElseThrow(CartItemException::new);
     }
 
     public void remove(Member member, Long id) {

@@ -1,5 +1,7 @@
 package cart.dao;
 
+import static cart.fixture.ProductFixture.CHICKEN_NO_ID;
+import static cart.fixture.ProductFixture.PIZZA_NO_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -21,9 +23,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class ProductDaoTest {
 
-    private static final Product 치킨 = new Product("치킨", 10_000, "www.naver.com");
-    private static final Product 피자 = new Product("피자", 15_000, "www.kakao.com");
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -37,7 +36,7 @@ class ProductDaoTest {
     @Test
     void 상품을_추가한다() {
         // when
-        Long actual = productDao.save(치킨);
+        Long actual = productDao.save(CHICKEN_NO_ID);
 
         // then
         assertThat(actual).isPositive();
@@ -46,14 +45,14 @@ class ProductDaoTest {
     @Test
     void 단일_상품을_조회한다() {
         // given
-        Long given = productDao.save(치킨);
+        Long given = productDao.save(CHICKEN_NO_ID);
 
         // when
         Optional<Product> actual = productDao.findById(given);
 
         // then
         assertThat(actual).isPresent();
-        상품_검증(actual.get(), 치킨);
+        상품_검증(actual.get(), CHICKEN_NO_ID);
     }
 
     @Test
@@ -68,40 +67,40 @@ class ProductDaoTest {
     @Test
     void 모든_상품을_조회한다() {
         // given
-        productDao.save(치킨);
-        productDao.save(피자);
+        productDao.save(CHICKEN_NO_ID);
+        productDao.save(PIZZA_NO_ID);
 
         // when
         List<Product> products = productDao.findAll();
 
         // then
-        상품_검증(products.get(0), 치킨);
-        상품_검증(products.get(1), 피자);
+        상품_검증(products.get(0), CHICKEN_NO_ID);
+        상품_검증(products.get(1), PIZZA_NO_ID);
     }
 
     @Test
     void 상품을_삭제한다() {
         // given
-        Long 치킨_ID = productDao.save(치킨);
+        Long CHICKEN_NO_ID_ID = productDao.save(CHICKEN_NO_ID);
 
         // when
-        productDao.deleteById(치킨_ID);
+        productDao.deleteById(CHICKEN_NO_ID_ID);
 
         // then
-        assertThat(productDao.findById(치킨_ID)).isEmpty();
+        assertThat(productDao.findById(CHICKEN_NO_ID_ID)).isEmpty();
     }
 
     @Test
     void 상품을_변경한다() {
         // given
-        Long id = productDao.save(치킨);
+        Long id = productDao.save(CHICKEN_NO_ID);
 
         // when
-        productDao.updateById(id, 피자);
+        productDao.updateById(id, PIZZA_NO_ID);
 
         // then
         Product actual = productDao.findById(id).get();
-        상품_검증(actual, 피자);
+        상품_검증(actual, PIZZA_NO_ID);
     }
 
     private void 상품_검증(Product actualProduct, Product expectedProduct) {

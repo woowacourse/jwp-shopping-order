@@ -43,12 +43,20 @@ public class ProductService {
 
     @Transactional
     public void updateProduct(Long productId, ProductRequest productRequest) {
+        checkProduct(productId);
         Product product = productRequest.toEntity();
         productDao.updateById(productId, product);
     }
 
+    private void checkProduct(Long productId) {
+        if (productDao.findById(productId).isEmpty()) {
+            throw new ProductNotFound();
+        }
+    }
+
     @Transactional
     public void deleteProduct(Long productId) {
+        checkProduct(productId);
         productDao.deleteById(productId);
     }
 }

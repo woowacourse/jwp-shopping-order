@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.ItemOwnerNotMatchException;
 import java.util.Objects;
 
 public class CartItem {
@@ -40,7 +41,7 @@ public class CartItem {
 
     public void checkOwner(Long memberId) {
         if (!Objects.equals(memberId, this.memberId)) {
-            throw new IllegalArgumentException();
+            throw new ItemOwnerNotMatchException();
         }
     }
 
