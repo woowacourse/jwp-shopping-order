@@ -28,6 +28,14 @@ public class Member {
         return this.password.isPassed(password);
     }
 
+    public void validateCoupons(final List<Long> couponsId) {
+        coupons.validateCoupons(couponsId);
+    }
+
+    public List<Coupon> getCouponsByIds(final List<Long> couponsIds) {
+        return coupons.getCouponsByIds(couponsIds);
+    }
+
     public Long getId() {
         return id;
     }

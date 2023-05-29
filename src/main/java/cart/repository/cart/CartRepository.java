@@ -64,7 +64,7 @@ public class CartRepository {
     }
 
     public void removeCartItem(final CartItem cartItem) {
-        cartDao.removeCartItem(cartItem.getId());
+        cartDao.removeCartItemByCartITemId(cartItem.getId());
     }
 
     public void updateCartItemQuantity(final CartItem cartItem) {
@@ -72,7 +72,7 @@ public class CartRepository {
     }
 
     public void deleteCartItemById(final Long cartItemId) {
-        cartDao.removeCartItem(cartItemId);
+        cartDao.removeCartItemByCartITemId(cartItemId);
     }
 
     public void deleteAllByMemberId(final long cartId) {

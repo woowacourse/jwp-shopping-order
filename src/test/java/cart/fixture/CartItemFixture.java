@@ -12,6 +12,6 @@ public class CartItemFixture {
     }
 
     public static CartItem createCartItem2() {
-        return new CartItem(2L, createProduct2(), 1);
+        return new CartItem(2L, createProduct2(), 2);
     }
 }

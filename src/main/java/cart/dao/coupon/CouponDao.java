@@ -36,4 +36,9 @@ public class CouponDao {
         String sql = "SELECT * FROM coupon WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, couponId);
     }
+
+    public void deleteById(final long couponId) {
+        String sql = "DELETE FROM coupon WHERE id = ?";
+        jdbcTemplate.update(sql, couponId);
+    }
 }

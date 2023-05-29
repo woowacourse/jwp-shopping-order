@@ -25,6 +25,28 @@ public class CartItem {
         return this.product.equals(product);
     }
 
+    public void validateQuantity(final int quantity) {
+        if (this.quantity < quantity) {
+            throw new IllegalArgumentException("요청하신 수량이 장바구니에 담긴 수량보다 큽니다.");
+        }
+    }
+
+    public int getFinallyPrice(final int quantity) {
+        return this.product.getAppliedDiscountPrice() * quantity;
+    }
+
+    public boolean isEmptyQuantity() {
+        return this.quantity == 0;
+    }
+
+    public void buy(final int quantity) {
+        this.quantity -= quantity;
+    }
+
+    public boolean hasProduct(final Long id) {
+        return this.product.isSame(id);
+    }
+
     public boolean hasSameId(final long id) {
         return this.id == id;
     }
@@ -50,7 +72,7 @@ public class CartItem {
     }
 
     public int getApplyDiscountPrice() {
-        return this.product.getApplyDiscountPrice();
+        return this.product.getAppliedDiscountPrice();
     }
 
     public int getQuantity() {

@@ -60,4 +60,8 @@ public class CouponRepository {
 
         return new Coupons(coupons);
     }
+
+    public void deleteById(final long couponId) {
+        couponDao.deleteById(couponId);
+    }
 }

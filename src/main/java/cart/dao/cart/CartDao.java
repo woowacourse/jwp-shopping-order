@@ -74,16 +74,9 @@ public class CartDao {
         jdbcTemplate.update(sql, quantity, cartItemId);
     }
 
-    public void removeCartItem(final Long id) {
+    public void removeCartItemByCartITemId(final Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    public boolean isExistCartItem(final long cartItemId) {
-        String sql = "SELECT COUNT(*) FROM cart_item WHERE id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cartItemId);
-
-        return count != null && count > 0;
     }
 
     public void deleteAllByCartId(final long cartId) {

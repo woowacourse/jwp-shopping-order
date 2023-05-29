@@ -18,6 +18,10 @@ public class Coupon {
         this.policy = policy;
     }
 
+    public boolean isSame(final Long id) {
+        return Objects.equals(this.id, id);
+    }
+
     public static Coupon from(final String name, final boolean isPercentage, final int value) {
         if (isPercentage) {
             return new Coupon(null, name, new PolicyPercentage(value));

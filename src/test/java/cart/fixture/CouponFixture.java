@@ -21,6 +21,10 @@ public class CouponFixture {
         return new Coupons(List.of(createDiscountCoupon(), createPercentageCoupon()));
     }
 
+    public static Coupons createCouponsWithDeliveryFree() {
+        return new Coupons(List.of(createDiscountCoupon(), createPercentageCoupon(), createDeliveryCoupon()));
+    }
+
     public static Coupon createDeliveryCoupon() {
         return new Coupon(3L, "DELIVERY_전액", new PolicyDiscount(3000));
     }

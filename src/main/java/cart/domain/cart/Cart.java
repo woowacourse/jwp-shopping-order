@@ -1,17 +1,19 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.order.ProductHistory;
 import cart.domain.product.Product;
 import cart.dto.product.ProductUsingCouponAndSaleResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Cart {
 
-    private Long id;
+    private final Long id;
     private final CartItems cartItems;
-    private DeliveryFee deliveryFee;
+    private final DeliveryFee deliveryFee;
 
     public Cart(final Long id, final CartItems cartItems) {
         this.id = id;
@@ -41,22 +43,6 @@ public class Cart {
         return cartItems.getTotalOriginPrice();
     }
 
-    public int calculateFinallyPrice() {
-        // 최종 가격(미할인, 할인 포함) 반환
-        return cartItems.getTotalFinallyPrice();
-    }
-
-    public int calculateAfterSalePriceWithCoupon(final List<Coupon> reqCoupons) {
-        // 최종 가격 (할인 포함) + 쿠폰을 넣은 가격
-        int price = cartItems.getTotalFinallyPrice();
-
-        for (Coupon reqCoupon : reqCoupons) {
-            price = reqCoupon.calculate(price);
-        }
-
-        return price;
-    }
-
     public int calculateDeliveryFeeUsingCoupons(final List<Coupon> reqCoupons) {
         int price = deliveryFee.getFee();
 
@@ -73,6 +59,24 @@ public class Cart {
 
     public List<ProductUsingCouponAndSaleResponse> getProductUsingCouponAndSaleResponse(final List<Coupon> requestCoupons) {
         return cartItems.getProductUsingCouponAndSaleResponse(requestCoupons);
+    }
+
+    public void validateBuying(final List<Long> productIds, final List<Integer> quantities) {
+        cartItems.validateBuyingProduct(productIds, quantities);
+    }
+
+    public List<ProductHistory> buy(final List<Long> productIds, final List<Integer> quantities) {
+        List<ProductHistory> productHistories = new ArrayList<>();
+
+        for (int i = 0; i < productIds.size(); i++) {
+            Long productId = productIds.get(i);
+            int quantity = quantities.get(i);
+
+            ProductHistory productHistory = cartItems.buy(productId, quantity);
+            productHistories.add(productHistory);
+        }
+
+        return productHistories;
     }
 
     public Long getId() {
