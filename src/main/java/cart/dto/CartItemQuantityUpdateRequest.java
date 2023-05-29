@@ -3,7 +3,7 @@ package cart.dto;
 public class CartItemQuantityUpdateRequest {
     private int quantity;
 
-    public CartItemQuantityUpdateRequest() {
+    private CartItemQuantityUpdateRequest() {
     }
 
     public CartItemQuantityUpdateRequest(int quantity) {
