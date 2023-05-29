@@ -41,7 +41,7 @@ public class ProductRepository {
         int updatedRow = productDao.update(productEntity);
 
         if (updatedRow == 0) {
-            throw new ProductException(NOT_FOUND_PRODUCT.getMessage());
+            throw new ProductException(NOT_FOUND_PRODUCT);
         }
     }
 
@@ -55,7 +55,7 @@ public class ProductRepository {
 
     public Product findById(Long id) {
         ProductEntity productEntity = productDao.findById(id)
-                .orElseThrow(() -> new ProductException(NOT_FOUND_PRODUCT.getMessage()));
+                .orElseThrow(() -> new ProductException(NOT_FOUND_PRODUCT));
 
         return toDomain(productEntity);
     }
@@ -64,7 +64,7 @@ public class ProductRepository {
         int deletedRow = productDao.deleteId(id);
 
         if (deletedRow == 0) {
-            throw new ProductException(NOT_FOUND_PRODUCT.getMessage());
+            throw new ProductException(NOT_FOUND_PRODUCT);
         }
     }
 

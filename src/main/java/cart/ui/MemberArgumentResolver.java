@@ -1,5 +1,6 @@
 package cart.ui;
 
+import static cart.exception.ErrorMessage.INVALID_AUTHORIZATION_INFORMATION;
 import static cart.exception.ErrorMessage.UNAUTHORIZED_MEMBER;
 
 import cart.domain.Member;
@@ -44,7 +45,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String[] credentials = decodedString.split(":");
 
         if (credentials.length != 2) {
-            throw new AuthenticationException("이메일과 비밀번호를 모두 입력해야 합니다.");
+            throw new AuthenticationException(INVALID_AUTHORIZATION_INFORMATION);
         }
         String email = credentials[0];
         String password = credentials[1];
@@ -52,7 +53,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         // 본인 여부 확인
         Member member = memberRepository.findByEmail(email);
         if (!member.isSamePassword(password)) {
-            throw new AuthenticationException(UNAUTHORIZED_MEMBER.getMessage());
+            throw new AuthenticationException(UNAUTHORIZED_MEMBER);
         }
         return member;
     }

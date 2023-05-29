@@ -39,7 +39,7 @@ public class CartItemRepository {
 
     public CartItem findById(Long id) {
         CartItemWithMemberAndProductEntity cartItemWithMemberAndProductEntity = cartItemDao.findById(id)
-                .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM.getMessage()));
+                .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
 
         return toDomain(cartItemWithMemberAndProductEntity);
     }
@@ -49,7 +49,7 @@ public class CartItemRepository {
 
         int updatedRow = cartItemDao.updateQuantity(cartItemEntity);
         if (updatedRow == 0) {
-            throw new CartItemException(NOT_FOUND_CART_ITEM.getMessage());
+            throw new CartItemException(NOT_FOUND_CART_ITEM);
         }
     }
 
@@ -57,7 +57,7 @@ public class CartItemRepository {
         int deletedRow = cartItemDao.deleteById(id);
 
         if (deletedRow == 0) {
-            throw new CartItemException(NOT_FOUND_CART_ITEM.getMessage());
+            throw new CartItemException(NOT_FOUND_CART_ITEM);
         }
     }
 

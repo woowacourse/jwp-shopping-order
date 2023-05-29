@@ -2,7 +2,7 @@ package cart.exception;
 
 public class AuthenticationException extends CustomException {
 
-    public AuthenticationException(final String message) {
+    public AuthenticationException(final ErrorMessage message) {
         super(message);
     }
 }

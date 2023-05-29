@@ -14,7 +14,7 @@ public class Quantity {
 
     private void validate(int value) {
         if (value < 0) {
-            throw new CartItemException(ErrorMessage.INVALID_QUANTITY.getMessage());
+            throw new CartItemException(ErrorMessage.INVALID_QUANTITY);
         }
     }
 

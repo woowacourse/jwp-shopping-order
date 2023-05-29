@@ -1,14 +1,20 @@
 package cart.exception;
 
-public class CustomException extends RuntimeException {
-    private final String message;
+import org.springframework.http.HttpStatus;
 
-    public CustomException(final String message) {
+public class CustomException extends RuntimeException {
+    private final ErrorMessage message;
+
+    public CustomException(final ErrorMessage message) {
         this.message = message;
+    }
+
+    public HttpStatus getStatus() {
+        return message.getHttpStatus();
     }
 
     @Override
     public String getMessage() {
-        return message;
+        return message.getMessage();
     }
 }

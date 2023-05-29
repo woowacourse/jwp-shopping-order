@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
+import cart.exception.ErrorMessage;
 
 public class CartItem {
     private final Product product;
@@ -37,7 +38,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!this.member.equals(member)) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new CartItemException(ErrorMessage.INVALID_CART_ITEM_OWNER);
         }
     }
 
