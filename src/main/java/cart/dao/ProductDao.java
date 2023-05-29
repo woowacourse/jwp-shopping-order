@@ -57,7 +57,7 @@ public class ProductDao {
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
     }
 
     public void updateProduct(Long productId, Product product) {

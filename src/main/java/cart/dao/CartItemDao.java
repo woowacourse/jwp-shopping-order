@@ -57,7 +57,7 @@ public class CartItemDao {
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
     }
 
     public CartItem findById(Long id) {
@@ -81,7 +81,6 @@ public class CartItemDao {
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
-
 
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
