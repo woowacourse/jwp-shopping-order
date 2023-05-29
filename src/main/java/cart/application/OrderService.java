@@ -1,11 +1,14 @@
 package cart.application;
 
+import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
 import cart.domain.Product;
+import cart.dto.OrderPostRequest;
 import cart.dto.OrderPreviewResponse;
 import cart.dto.OrderResponse;
 import cart.dto.ProductInOrderResponse;
@@ -16,15 +19,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
     private final OrderDao orderDao;
     private final OrderProductDao orderProductDao;
+    private final CartItemDao cartItemDao;
+    private final DiscountPolicy discountPolicy;
 
-    public OrderService(final OrderDao orderDao, final OrderProductDao orderProductDao) {
+    public OrderService(final OrderDao orderDao, final OrderProductDao orderProductDao, final CartItemDao cartItemDao,
+                        final DiscountPolicy discountPolicy) {
         this.orderDao = orderDao;
         this.orderProductDao = orderProductDao;
+        this.cartItemDao = cartItemDao;
+        this.discountPolicy = discountPolicy;
     }
 
     public OrderResponse findOrderById(final Member member, final Long orderId) {
@@ -85,5 +94,55 @@ public class OrderService {
                 order.getCreatedAt(),
                 order.getFinalPrice()
         );
+    }
+
+    @Transactional
+    public Long addOrder(final Member member, final OrderPostRequest request) {
+        final List<CartItem> cartItemsByIds = cartItemDao.findByIds(request.getCartItems());
+        validateIsMemberCartItems(member, cartItemsByIds);
+        final Order order = createOrder(member, cartItemsByIds);
+        validateFinalPrice(order.getFinalPrice(), request.getFinalPrice());
+
+        final List<OrderProduct> orderProducts = createOrderProducts(cartItemsByIds, order);
+        final Long savedOrderId = orderDao.saveOrder(order);
+        orderProductDao.saveOrderProducts(orderProducts);
+        cartItemDao.deleteById(collectCartItemIds(cartItemsByIds));
+
+        return savedOrderId;
+    }
+
+    private void validateIsMemberCartItems(final Member member, final List<CartItem> cartItems) {
+        final boolean isMembersCartItem = cartItems.stream()
+                .map(CartItem::getMember)
+                .allMatch(member::matchMemberByInfo);
+
+        if (!isMembersCartItem) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private Order createOrder(final Member member, final List<CartItem> cartItemsByIds) {
+        final int totalPrice = cartItemsByIds.stream()
+                .mapToInt(CartItem::calculateTotalPrice)
+                .sum();
+
+        final int finalPrice = discountPolicy.discountAmountByPrice(totalPrice);
+        return new Order(member, totalPrice, finalPrice);
+    }
+
+    private void validateFinalPrice(final int finalPrice, final int requestPrice) {
+        if (finalPrice != requestPrice) {
+            throw new IllegalStateException(); // 요청 금액과 실제 정책 계산 금액이 다른 경우
+        }
+    }
+
+    private List<OrderProduct> createOrderProducts(final List<CartItem> cartItemsByIds, final Order order) {
+        return cartItemsByIds.stream()
+                .map(cartItem -> new OrderProduct(order, cartItem.getProduct(), cartItem.getQuantity()))
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> collectCartItemIds(final List<CartItem> cartItemsByIds) {
+        return cartItemsByIds.stream().map(CartItem::getId).collect(Collectors.toList());
     }
 }

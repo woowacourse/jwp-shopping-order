@@ -1,19 +1,27 @@
 package cart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 
+import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
 import cart.domain.Product;
+import cart.dto.OrderPostRequest;
 import cart.dto.OrderPreviewResponse;
 import cart.dto.OrderResponse;
 import cart.dto.ProductInOrderResponse;
+import cart.exception.AuthenticationException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,13 +40,18 @@ class OrderServiceTest {
     @Mock
     private OrderProductDao orderProductDao;
 
+    @Mock
+    private CartItemDao cartItemDao;
+
     private OrderService orderService;
 
     @BeforeEach
     void setUp() {
         orderService = new OrderService(
                 orderDao,
-                orderProductDao
+                orderProductDao,
+                cartItemDao,
+                new DiscountPolicy()
         );
     }
 
@@ -87,5 +100,56 @@ class OrderServiceTest {
         assertThat(allOrdersByMember).hasSize(2);
         assertThat(allOrdersByMember).extracting("mainProductName").contains("testProductA");
         assertThat(allOrdersByMember).extracting("extraProductCount").contains(0, 1);
+    }
+
+    @Test
+    void 주문_등록_테스트() {
+        //given
+        final OrderPostRequest request = new OrderPostRequest(Collections.emptyList(), 45_000);
+        final Member member = new Member("testMember", "password");
+        final Product testProductA = new Product("testProductA", 10_000, "testImageA");
+        final Product testProductB = new Product("testProductB", 20_000, "testImageB");
+        final CartItem cartItemA = new CartItem(3, member, testProductA);
+        final CartItem cartItemB = new CartItem(1, member, testProductB);
+        given(cartItemDao.findByIds(any())).willReturn(List.of(cartItemA, cartItemB));
+        given(orderDao.saveOrder(any())).willReturn(1L);
+        doNothing().when(orderProductDao).saveOrderProducts(any());
+        doNothing().when(cartItemDao).deleteById(anyList());
+
+        //when
+        orderService.addOrder(member, request);
+    }
+
+    @Test
+    void 주문_등록시_금액이_일치하지_않으면_예외발생() {
+        //given
+        final OrderPostRequest request = new OrderPostRequest(Collections.emptyList(), 47_000);
+        final Member member = new Member("testMember", "password");
+        final Product testProductA = new Product("testProductA", 10_000, "testImageA");
+        final Product testProductB = new Product("testProductB", 20_000, "testImageB");
+        final CartItem cartItemA = new CartItem(3, member, testProductA);
+        final CartItem cartItemB = new CartItem(1, member, testProductB);
+        given(cartItemDao.findByIds(any())).willReturn(List.of(cartItemA, cartItemB));
+
+        //when, then
+        assertThatThrownBy(() -> orderService.addOrder(member, request))
+                .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void 주문_등록시_사용자의_상품이_아닌경우_예외발생() {
+        //given
+        final OrderPostRequest request = new OrderPostRequest(Collections.emptyList(), 47_000);
+        final Member member = new Member("testMember", "password");
+        final Member memberB = new Member("testMemberB", "password");
+        final Product testProductA = new Product("testProductA", 10_000, "testImageA");
+        final Product testProductB = new Product("testProductB", 20_000, "testImageB");
+        final CartItem cartItemA = new CartItem(3, member, testProductA);
+        final CartItem cartItemB = new CartItem(1, member, testProductB);
+        given(cartItemDao.findByIds(any())).willReturn(List.of(cartItemA, cartItemB));
+
+        //when, then
+        assertThatThrownBy(() -> orderService.addOrder(memberB, request))
+                .isInstanceOf(AuthenticationException.class);
     }
 }
