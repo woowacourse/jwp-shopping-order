@@ -1,5 +1,6 @@
 package cart.domain.cartitem;
 
+import cart.domain.orderproduct.Order;
 import cart.domain.orderproduct.OrderProduct;
 import cart.domain.product.Product;
 
@@ -9,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class CartItems {
 
-    private static final int SHIPPING_FEE = 3000;
+    public static final int SHIPPING_FEE = 3000;
 
     private final List<CartItem> cartItems;
 
@@ -27,11 +28,11 @@ public class CartItems {
         return totalPrice;
     }
 
-    public List<OrderProduct> toOrderProducts(final Long orderId, final List<Product> products) {
-        return IntStream.range(0, cartItems.size())
+    public List<OrderProduct> toOrderProducts(final Order order, final List<Product> products) {
+        return IntStream.range(0, products.size())
                 .mapToObj(index -> new OrderProduct(
-                        orderId,
-                        products.get(index).getId(),
+                        order,
+                        products.get(index),
                         products.get(index).getProductName(),
                         products.get(index).getProductPrice(),
                         products.get(index).getProductImageUrl(),

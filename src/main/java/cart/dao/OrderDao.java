@@ -10,12 +10,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.time.LocalDateTime;
 
-@Repository
+@Component
 public class OrderDao {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -37,14 +36,12 @@ public class OrderDao {
                 result.getString("email"),
                 null,
                 result.getInt("point"));
-        final MemberPoint usedPoint = new MemberPoint(result.getInt("used_point"));
 
-        final LocalDateTime createdAt = result.getTimestamp("orders.created_at").toLocalDateTime();
         final Order order = new Order(
                 result.getLong("orders.id"),
                 member,
-                usedPoint,
-                createdAt);
+                new MemberPoint(result.getInt("used_point")),
+                result.getTimestamp("orders.created_at").toLocalDateTime());
 
         return order;
     };
@@ -52,7 +49,7 @@ public class OrderDao {
     public Long save(final Order order) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", order.getMemberId())
-                .addValue("used_point", order.getUsedPoint());
+                .addValue("used_point", order.getUsedPointValue());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }

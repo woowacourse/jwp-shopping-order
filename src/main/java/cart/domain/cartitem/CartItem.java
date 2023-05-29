@@ -42,6 +42,9 @@ public class CartItem {
         return id;
     }
 
+    public Long getMemberId() {
+        return member.getId();
+    }
     public Member getMember() {
         return member;
     }
@@ -81,5 +84,15 @@ public class CartItem {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                ", member=" + member +
+                '}';
     }
 }

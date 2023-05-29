@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
+import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
@@ -11,6 +12,8 @@ import cart.exception.point.PointAbusedException;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional(readOnly = true)
 @Service
@@ -33,7 +36,8 @@ public class OrderService {
         if (findMember.getPointValue() < request.getPoint()) {
             throw new PointAbusedException(member.getPointValue(), request.getPoint());
         }
-        final CartItems cartItems = new CartItems(cartItemDao.getCartItemsByIds(request.getCartItemIds()));
+        final List<CartItem> cartItems1 = cartItemDao.getCartItemsByIds(request.getCartItemIds());
+        final CartItems cartItems = new CartItems(cartItems1);
         final int totalPrice = cartItems.calculateTotalPrice();
         if (totalPrice < request.getPoint()) {
             throw new InvalidPointUseException(totalPrice, request.getPoint());

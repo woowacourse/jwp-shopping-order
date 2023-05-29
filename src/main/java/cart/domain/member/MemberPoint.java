@@ -26,7 +26,7 @@ public class MemberPoint {
     }
 
     public MemberPoint addPointByTotalPrice(final int totalPrice) {
-        return new MemberPoint(this.point + (int) Math.ceil((totalPrice * APPLICATION_RATE)));
+        return new MemberPoint(this.point + (int) (totalPrice * APPLICATION_RATE));
     }
 
     public Integer getPoint() {

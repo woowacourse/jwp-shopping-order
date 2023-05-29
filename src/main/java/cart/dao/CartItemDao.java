@@ -32,26 +32,26 @@ public class CartItemDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    final RowMapper<CartItem> cartItemRowMapper = (rs, rowNum) -> {
-        final Long memberId = rs.getLong("member.id");
-        final String email = rs.getString("email");
+    final RowMapper<CartItem> cartItemRowMapper = (result, rowNum) -> {
+        final Long memberId = result.getLong("member.id");
+        final String email = result.getString("member.email");
         final Member member = new Member(memberId, email, null);
 
-        final Long productId = rs.getLong("product.id");
-        final String productName = rs.getString("name");
-        final int productPrice = rs.getInt("price");
-        final String productImageUrl = rs.getString("image_url");
+        final Long productId = result.getLong("product.id");
+        final String productName = result.getString("product.name");
+        final int productPrice = result.getInt("product.price");
+        final String productImageUrl = result.getString("product.image_url");
         final Product product = new Product(productId, productName, productPrice, productImageUrl);
 
-        final Long cartItemId = rs.getLong("cart_item.id");
-        final int quantity = rs.getInt("quantity");
+        final Long cartItemId = result.getLong("cart_item.id");
+        final int quantity = result.getInt("cart_item.quantity");
         return new CartItem(cartItemId, member, product, quantity);
     };
 
     public Long save(final CartItem cartItem) {
         final SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("member_id", cartItem.getMember().getId())
-                .addValue("product_id", cartItem.getProduct().getId())
+                .addValue("member_id", cartItem.getMemberId())
+                .addValue("product_id", cartItem.getProductId())
                 .addValue("quantity", cartItem.getQuantityValue());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
@@ -76,20 +76,20 @@ public class CartItemDao {
                 "INNER JOIN product p ON ci.product_id = p.id " +
                 "WHERE ci.member_id = ?";
 
-        return jdbcTemplate.query(sql, new Object[]{memberId}, cartItemRowMapper);
+        return jdbcTemplate.query(sql, cartItemRowMapper, memberId);
     }
 
 
     public List<CartItem> getCartItemsByIds(final List<Long> cartItemIds) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", cartItemIds);
-
         final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
                 "p.id, p.name, p.price, p.image_url, ci.quantity " +
                 "FROM cart_item ci " +
                 "INNER JOIN member m ON ci.member_id = m.id " +
                 "INNER JOIN product p ON ci.product_id = p.id " +
                 "WHERE ci.id IN (:ids)";
+
         return namedParameterJdbcTemplate.query(sql, parameters, cartItemRowMapper);
     }
 

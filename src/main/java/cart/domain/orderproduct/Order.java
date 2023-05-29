@@ -37,7 +37,11 @@ public class Order {
         return member.getId();
     }
 
-    public Integer getUsedPoint() {
+    public MemberPoint getUsedPoint() {
+        return usedPoint;
+    }
+
+    public Integer getUsedPointValue() {
         return usedPoint.getPoint();
     }
 

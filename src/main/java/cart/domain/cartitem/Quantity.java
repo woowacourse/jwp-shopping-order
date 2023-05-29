@@ -30,4 +30,11 @@ public class Quantity {
     public int hashCode() {
         return Objects.hash(quantity);
     }
+
+    @Override
+    public String toString() {
+        return "Quantity{" +
+                "quantity=" + quantity +
+                '}';
+    }
 }
