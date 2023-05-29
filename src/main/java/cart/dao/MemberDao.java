@@ -1,14 +1,14 @@
 package cart.dao;
 
 import cart.domain.Member;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class MemberDao {
@@ -19,16 +19,32 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Member getMemberById(Long id) {
-        String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+    public Optional<Member> getMemberById(Long id) {
+        String sql = "SELECT member.id, member.email, member.password, member_point.point " +
+                "FROM member " +
+                "JOIN member_point ON member_point.member_id = member.id " +
+                "WHERE member.id = ? ";
+        try {
+            Member member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), id);
+            return Optional.ofNullable(member);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
-    public Member getMemberByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+    public Optional<Member> getMemberByEmail(String email) {
+        String sql = "SELECT member.id, member.email, member.password, member_point.point " +
+                "FROM member " +
+                "JOIN member_point ON member_point.member_id = member.id " +
+                "WHERE member.email = ? ";
+        try {
+            Member member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), email);
+            return Optional.ofNullable(member);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     public void addMember(Member member) {
@@ -47,14 +63,17 @@ public class MemberDao {
     }
 
     public List<Member> getAllMembers() {
-        String sql = "SELECT * from member";
+        String sql = "SELECT member.id, member.email, member.password, member_point.point " +
+                "FROM member " +
+                "JOIN member_point ON member_point.member_id = member.id ";
+
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(rs.getLong("member.id"), rs.getString("member.email"), rs.getString("member.password"), rs.getLong("member_point.point"));
         }
     }
 }

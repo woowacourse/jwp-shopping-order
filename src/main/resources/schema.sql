@@ -11,6 +11,13 @@ CREATE TABLE member (
      password VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE member_point (
+     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     member_id BIGINT NOT NULL,
+     point BIGINT NOT NULL,
+     FOREIGN KEY (member_id) REFERENCES member(id)
+);
+
 CREATE TABLE cart_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,

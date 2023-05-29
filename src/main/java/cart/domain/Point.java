@@ -17,4 +17,12 @@ public class Point {
     public long getAmount() {
         return amount;
     }
+
+    public Point plus(Point point) {
+        return new Point(this.amount + point.amount);
+    }
+
+    public Point minus(Point point) {
+        return new Point(this.amount - point.amount);
+    }
 }

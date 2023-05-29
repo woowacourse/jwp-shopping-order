@@ -23,6 +23,7 @@ import cart.dto.CartItemResponse;
 import cart.helper.RestDocsHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,11 @@ class CartItemApiControllerTest {
     void showCartItems() throws Exception {
 
         Product product = new Product(1L, "곰돌이", 10000, "http:localhost:8080");
-        Member member = new Member(1L, "aa@aaa.com", "1234");
+        Member member = new Member(1L, "aa@aaa.com", "1234", 1000);
         CartItem cartItem = new CartItem(1L, 3, product, member);
         CartItemResponse cartItemResponse = CartItemResponse.of(cartItem);
         given(cartItemService.findByMember(any(Member.class))).willReturn(List.of(cartItemResponse));
-        given(memberDao.getMemberByEmail(any())).willReturn(member);
+        given(memberDao.getMemberByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(get("/cart-items")
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0"))
@@ -72,10 +73,10 @@ class CartItemApiControllerTest {
     @Test
     @DisplayName("회원의 장바구니에 품목을 등록한다.")
     void addCartItems() throws Exception {
-        Member member = new Member(1L, "aaa@google.com", "1234");
+        Member member = new Member(1L, "aaa@google.com", "1234", 1000);
         CartItemRequest cartItemRequest = new CartItemRequest(1L);
         given(cartItemService.add(any(Member.class), any(CartItemRequest.class))).willReturn(1L);
-        given(memberDao.getMemberByEmail(any())).willReturn(member);
+        given(memberDao.getMemberByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/cart-items")
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
@@ -92,10 +93,10 @@ class CartItemApiControllerTest {
     @DisplayName("회원의 장바구니 수량을 변경한다.")
     void updateCartItemQuantity() throws Exception {
         CartItemQuantityUpdateRequest updateRequest = new CartItemQuantityUpdateRequest(10);
-        Member member = new Member(1L, "aaa@google.com", "1234");
+        Member member = new Member(1L, "aaa@google.com", "1234", 1000);
         willDoNothing().given(cartItemService)
                 .updateQuantity(any(Member.class), anyLong(), any(CartItemQuantityUpdateRequest.class));
-        given(memberDao.getMemberByEmail(any())).willReturn(member);
+        given(memberDao.getMemberByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.patch("/cart-items/{id}", 1L)
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
@@ -117,10 +118,10 @@ class CartItemApiControllerTest {
     @Test
     @DisplayName("회원의 장바구니 품목을 삭제한다.")
     void deleteCartItemQuantity() throws Exception {
-        Member member = new Member(1L, "aaa@google.com", "1234");
+        Member member = new Member(1L, "aaa@google.com", "1234", 1000);
         willDoNothing().given(cartItemService)
                 .remove(any(Member.class), anyLong());
-        given(memberDao.getMemberByEmail(any())).willReturn(member);
+        given(memberDao.getMemberByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/cart-items/{id}", 1L)
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0"))
