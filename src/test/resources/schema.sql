@@ -40,10 +40,11 @@ CREATE TABLE IF NOT EXISTS orders_coupon(
     FOREIGN KEY (orders_id) REFERENCES orders(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
-CREATE TABLE IF NOT EXISTS orders_product(
+CREATE TABLE IF NOT EXISTS orders_cart_item(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    quantity int NOT NULL,
     FOREIGN KEY (orders_id) REFERENCES orders(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
