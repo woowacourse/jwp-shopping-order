@@ -5,6 +5,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
+import java.beans.ConstructorProperties;
+
 @Schema(description = "상품 저장 Request")
 public class ProductSaveRequest {
 
@@ -21,6 +23,7 @@ public class ProductSaveRequest {
     @Range(message = "가격은 최소 {min}원 이상, {max}원 이하여야 합니다.")
     private final long price;
 
+    @ConstructorProperties({"name", "imageUrl", "price"})
     public ProductSaveRequest(final String name, final String imageUrl, final long price) {
         this.name = name;
         this.imageUrl = imageUrl;
