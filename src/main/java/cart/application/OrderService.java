@@ -8,7 +8,9 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.PointPolicy;
 import cart.dto.CartItemRequest;
+import cart.dto.CartPointsResponse;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderItemResponse;
 import cart.dto.OrderResponse;
@@ -31,13 +33,7 @@ public class OrderService {
     private final ProductDao productDao;
     private final MemberDao memberDao;
 
-    public OrderService(
-            final OrderDao orderDao,
-            final OrderItemDao orderItemDao,
-            final CartItemDao cartItemDao,
-            final ProductDao productDao,
-            final MemberDao memberDao
-    ) {
+    public OrderService(final OrderDao orderDao, final OrderItemDao orderItemDao, final CartItemDao cartItemDao, final ProductDao productDao, final MemberDao memberDao) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.cartItemDao = cartItemDao;
@@ -61,7 +57,7 @@ public class OrderService {
         final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsByRequest);
         order.validatePoints(member.getPoints());
 
-        final Long id = orderDao.createOrder(orderCreateRequest.getUsedPoints(), cartItemsByRequest, order.getSavingRate(), member);
+        final Long id = orderDao.createOrder(orderCreateRequest.getUsedPoints(), cartItemsByRequest, PointPolicy.getSavingRate(), member);
 
         updateMember(member, order);
 
@@ -114,7 +110,7 @@ public class OrderService {
     }
 
     private void updateMember(final Member member, final Order order) {
-        final int savingPoints = order.calculateSavingPoints(order.getPoints());
+        final int savingPoints = PointPolicy.calculateSavingPoints(order.getPoints(), order.getCartItems());
         final Member updatedMember = member.updatePoints(savingPoints, order.getPoints());
         memberDao.updateMember(updatedMember);
     }
@@ -152,5 +148,12 @@ public class OrderService {
             ));
         }
         return orderResponses;
+    }
+
+    public CartPointsResponse calculatePoints(final Member member) {
+        final List<CartItem> cartItems = cartItemDao.findByMemberIdAndChecked(member.getId());
+        final int savingPoints = PointPolicy.calculateSavingPoints(0, cartItems);
+
+        return new CartPointsResponse(PointPolicy.getSavingRate(), savingPoints);
     }
 }
