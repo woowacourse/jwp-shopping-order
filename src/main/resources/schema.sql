@@ -24,7 +24,18 @@ CREATE TABLE orders (
    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    member_id BIGINT NOT NULL,
    used_point INT NOT NULL,
+   create_at DATE NOT NULL DEFAULT (CURRENT_TIMESTAMP),
    FOREIGN KEY (member_id) REFERENCES member(id)
+);
+
+CREATE TABLE orders_item (
+     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     orders_id BIGINT NOT NULL,
+     product_id BIGINT NOT NULL,
+     quantity INT NOT NULL,
+     total_price INT NOT NULL,
+     FOREIGN KEY (orders_id) REFERENCES orders(id),
+     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
 CREATE TABLE point (
@@ -38,14 +49,4 @@ CREATE TABLE point (
     status TINYINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (orders_id) REFERENCES orders(id)
-);
-
-CREATE TABLE orders_item (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    orders_id BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
-    total_price INT NOT NULL,
-    FOREIGN KEY (orders_id) REFERENCES orders(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
 );

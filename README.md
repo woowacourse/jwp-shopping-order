@@ -94,9 +94,9 @@
 				"name": "피자",
 				"imageUrl": "http://example.com/pizza.jpg"
 			}
-			}
-		]
-	}
+        }
+    ]
+}
 ```
 
 ### 주문 페이지 내에서 사용할 포인트 조회 -> /points
