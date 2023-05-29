@@ -18,19 +18,27 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<ProductResponse> getAllProducts() {
+    public List<ProductResponse> findAllProducts() {
         final List<Product> products = productDao.findAllProducts();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(final Long productId) {
+    public ProductResponse findProductById(final Long productId) {
         final Product product = productDao.findProductById(productId)
                 .orElseThrow(NoSuchDataExistException::new);
 
         return ProductResponse.of(product);
     }
 
-    public Long createProduct(final ProductRequest productRequest) {
+    public List<ProductResponse> findProductById(final List<Long> productIds) {
+        final List<Product> products = productDao.findByIds(productIds);
+
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    public Long saveProduct(final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl());
         return productDao.saveProduct(product);

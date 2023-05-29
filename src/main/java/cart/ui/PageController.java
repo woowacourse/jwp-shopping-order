@@ -18,7 +18,7 @@ public class PageController {
 
     @GetMapping("/admin")
     public String admin(final Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.findAllProducts());
         return "admin";
     }
 
