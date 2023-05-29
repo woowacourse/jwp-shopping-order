@@ -2,8 +2,6 @@ package cart.ui;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,8 +20,6 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
