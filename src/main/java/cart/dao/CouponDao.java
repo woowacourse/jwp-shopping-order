@@ -16,6 +16,7 @@ import java.util.Optional;
 public class CouponDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final RowMapper<CouponEntity> rowMapper = (rs, rowNum) -> {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
@@ -30,6 +31,7 @@ public class CouponDao {
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public Optional<CouponEntity> findById(final Long id) {
@@ -39,6 +41,13 @@ public class CouponDao {
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<CouponEntity> findByIds(final List<Long> ids) {
+        String sql = "SELECT * FROM coupon WHERE id IN (:ids)";
+        final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("ids", ids);
+        return namedJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
     }
 
     public void deleteById(final Long id) {

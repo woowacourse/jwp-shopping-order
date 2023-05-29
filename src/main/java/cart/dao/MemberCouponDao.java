@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -55,5 +56,10 @@ public class MemberCouponDao {
     public void update(final MemberCouponEntity memberCouponEntity) {
         String sql = "UPDATE member_coupon SET used = ? WHERE id = ?";
         jdbcTemplate.update(sql, memberCouponEntity.isUsed(), memberCouponEntity.getId());
+    }
+
+    public List<MemberCouponEntity> findByMemberId(final Long memberId) {
+        String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

@@ -1,9 +1,9 @@
 package cart.service;
 
-import cart.dao.CouponDao;
 import cart.domain.coupon.Coupon;
 import cart.dto.CouponResponse;
 import cart.repository.CouponRepository;
+import cart.repository.MemberCouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +20,11 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
-    public List<CouponResponse> findAll() {
-        final List<Coupon> coupons = couponRepository.findAll();
+    public List<CouponResponse> findAllByMemberId(final Long memberId) {
+        final List<Coupon> coupons = couponRepository.findAllByMemberId(memberId);
         return coupons.stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
     }
+
 }
