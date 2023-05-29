@@ -132,7 +132,7 @@ public class OrderServiceTest {
             @DisplayName("주문 내역을 볼 수 있다.")
             @Test
             void it_returns_orderProducts() {
-                final List<OrderProduct> orderProducts = orderProductDao.findByOrderId(order.getId());
+                final List<OrderProduct> orderProducts = orderProductDao.findByMemberId(member.getId());
 
                 assertAll(
                         () -> assertThat(orderProducts).hasSize(2),

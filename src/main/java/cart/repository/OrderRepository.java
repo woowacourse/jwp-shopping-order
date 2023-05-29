@@ -39,4 +39,20 @@ public class OrderRepository {
     public Order findOrderById(final Long orderId) {
         return orderDao.findById(orderId);
     }
+
+    public OrderProduct findOrderProductByOrderId(final Long orderProductId) {
+
+//        return orderProductDao.findByOrderProductId(orderProductId);
+        return null;
+    }
+
+    public List<OrderProduct> findAllOrderProductsByMemberId(final Long memberId) {
+
+        return orderProductDao.findByMemberId(memberId);
+    }
+
+    public List<OrderProduct> findAllOrderProductsByOrderId(final Long orderId) {
+
+        return orderProductDao.findByOrderId(orderId);
+    }
 }

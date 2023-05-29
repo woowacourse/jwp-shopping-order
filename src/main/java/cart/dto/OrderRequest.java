@@ -7,9 +7,12 @@ import java.util.List;
 public class OrderRequest {
 
     @NotEmpty
-    private final List<Long> cartItemIds;
+    private List<Long> cartItemIds;
     @PositiveOrZero
-    private final Integer point;
+    private Integer point;
+
+    public OrderRequest() {
+    }
 
     public OrderRequest(final List<Long> cartItemIds, final Integer point) {
         this.cartItemIds = cartItemIds;

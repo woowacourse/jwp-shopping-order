@@ -71,6 +71,20 @@ public class OrderProductDao {
         });
     }
 
+    public List<OrderProduct> findByMemberId(final Long memberId) {
+        final String sql = "SELECT op.id, op.quantity, " +
+                "m.id, m.email, " +
+                "o.id, o.used_point, o.created_at, " +
+                "p.id, p.name, p.price, p.image_url, " +
+                "FROM order_product op " +
+                "JOIN orders o ON o.id = op.order_id " +
+                "JOIN product p ON p.id = op.product_id " +
+                "JOIN member m ON m.id = o.member_id " +
+                "WHERE m.id = ?";
+
+        return jdbcTemplate.query(sql, orderProductRowMapper, memberId);
+    }
+
     public List<OrderProduct> findByOrderId(final Long orderId) {
         final String sql = "SELECT op.id, op.quantity, " +
                 "m.id, m.email, " +
@@ -80,7 +94,7 @@ public class OrderProductDao {
                 "JOIN orders o ON o.id = op.order_id " +
                 "JOIN product p ON p.id = op.product_id " +
                 "JOIN member m ON m.id = o.member_id " +
-                "WHERE op.order_id = ?";
+                "WHERE o.id = ?";
 
         return jdbcTemplate.query(sql, orderProductRowMapper, orderId);
     }

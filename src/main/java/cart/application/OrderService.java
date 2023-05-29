@@ -6,6 +6,10 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
+import cart.domain.orderproduct.Order;
+import cart.domain.orderproduct.OrderProduct;
+import cart.dto.OrderDetailResponse;
+import cart.dto.OrderProductDto;
 import cart.dto.OrderRequest;
 import cart.exception.point.InvalidPointUseException;
 import cart.exception.point.PointAbusedException;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -46,5 +51,48 @@ public class OrderService {
         memberDao.updateMember(updatedMember);
 
         return orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
+    }
+
+    public OrderDetailResponse getOrderDetail(final Member member, final Long orderId) {
+        final Order order = orderRepository.findOrderById(orderId);
+        final List<OrderProduct> orderProducts = orderRepository.findAllOrderProductsByOrderId(orderId);
+
+        return new OrderDetailResponse(
+                order.getId(),
+                orderProducts.stream()
+                        .mapToInt(orderProduct -> orderProduct.getProductPriceValue() * orderProduct.getQuantityValue())
+                        .sum(),
+                order.getUsedPointValue(),
+                order.getCreatedAt(),
+                orderProducts.stream()
+                        .map(m -> new OrderProductDto(
+                                m.getProductId(),
+                                m.getProductNameValue(),
+                                m.getProductPriceValue(),
+                                m.getProductImageUrlValue(),
+                                m.getQuantityValue()
+                        )).collect(Collectors.toList())
+        );
+    }
+
+    public List<OrderDetailResponse> getAllOrderDetails(final Member member) {
+        final List<OrderProduct> orderProducts = orderRepository.findAllOrderProductsByMemberId(member.getId());
+        return orderProducts.stream()
+                .map(orderProduct -> new OrderDetailResponse(
+                        orderProduct.getOrderId(),
+                        orderProducts.stream()
+                                .mapToInt(OrderProduct::getProductPriceValue)
+                                .sum(),
+                        orderProduct.getOrder().getUsedPointValue(),
+                        orderProduct.getOrder().getCreatedAt(),
+                        orderProducts.stream()
+                                .map(m -> new OrderProductDto(
+                                        m.getProductId(),
+                                        m.getProductNameValue(),
+                                        m.getProductPriceValue(),
+                                        m.getProductImageUrlValue(),
+                                        m.getQuantityValue())
+                                ).collect(Collectors.toList())
+                )).collect(Collectors.toList());
     }
 }
