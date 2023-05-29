@@ -113,10 +113,11 @@ public class CartItemDao {
             + "FROM cart_item "
             + "INNER JOIN member ON cart_item.member_id = member.id "
             + "INNER JOIN product ON cart_item.product_id = product.id "
-            + "WHERE cart_item.id IN (:ids)";
+            + "WHERE member.id = :memberId and cart_item.id IN (:ids)";
 
     final MapSqlParameterSource parameterSource =
-        new MapSqlParameterSource().addValue("ids", cartItemIds);
+        new MapSqlParameterSource().addValue("memberId", memberId)
+            .addValue("ids", cartItemIds);
 
     return namedParameterJdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> {
       String email = rs.getString("email");
