@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
+public class GlobalExceptionHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
