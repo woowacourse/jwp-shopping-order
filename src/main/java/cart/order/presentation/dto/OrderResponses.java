@@ -7,7 +7,10 @@ import java.util.stream.Collectors;
 
 public class OrderResponses {
 
-    private final List<OrderResponse> orders;
+    private List<OrderResponse> orders;
+
+    public OrderResponses() {
+    }
 
     public OrderResponses(List<OrderResponse> orders) {
         this.orders = orders;
