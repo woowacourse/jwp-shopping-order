@@ -16,7 +16,7 @@ public class ProductResponse {
     }
 
     public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPriceValue(), product.getImageUrl());
+        return new ProductResponse(product.getId(), product.getNameValue(), product.getPriceValue(), product.getImageUrl());
     }
 
     public Long getId() {

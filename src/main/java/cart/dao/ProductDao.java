@@ -50,7 +50,7 @@ public class ProductDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setString(1, product.getName());
+            ps.setString(1, product.getNameValue());
             ps.setInt(2, product.getPriceValue());
             ps.setString(3, product.getImageUrl());
 
@@ -62,7 +62,7 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPriceValue(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getNameValue(), product.getPriceValue(), product.getImageUrl(), productId);
     }
 
     public void deleteProduct(Long productId) {
