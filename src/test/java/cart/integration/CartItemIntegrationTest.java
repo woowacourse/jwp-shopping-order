@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -19,15 +18,13 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql({"classpath:deleteAll.sql", "classpath:insertMember.sql"})
 class CartItemIntegrationTest extends IntegrationTest {
-
-    @Autowired
-    private MemberDao memberDao;
-
+    
     private Long productId;
     private Long productId2;
     private Member member;
@@ -41,8 +38,8 @@ class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 10));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 10));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = new Member(1L, "odo1@woowa.com", "1234");
+        member2 = new Member(2L, "odo2@woowa.com", "1234");
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
