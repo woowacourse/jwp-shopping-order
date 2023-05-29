@@ -62,4 +62,9 @@ public class OrderDao {
         String sql = "SELECT * FROM orders WHERE id = ? AND member_id = ?";
         return jdbcTemplate.queryForObject(sql, orderRowMapper, id, memberId);
     }
+
+    public List<OrderEntity> findAll(final Long memberId) {
+        String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, orderRowMapper, memberId);
+    }
 }

@@ -17,6 +17,7 @@ import cart.entity.OrderItemEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -121,7 +122,12 @@ public class OrderService {
     public OrderResponse findById(final Long orderId, final Member member) {
         final OrderEntity orderEntity = orderDao.findById(orderId, member.getId());
         final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
-        final List<OrderItemResponse> orderItemResponses = orderItemEntities.stream()
+        final List<OrderItemResponse> orderItemResponses = parseOrderItemEntitiesToResponses(orderItemEntities);
+        return new OrderResponse(orderEntity.getId(), orderEntity.getSavingRate(), orderEntity.getPoints(), orderItemResponses);
+    }
+
+    private List<OrderItemResponse> parseOrderItemEntitiesToResponses(final List<OrderItemEntity> orderItemEntities) {
+        return orderItemEntities.stream()
                 .map(orderItemEntity -> new OrderItemResponse(
                         orderItemEntity.getProductId(),
                         orderItemEntity.getProductName(),
@@ -129,6 +135,22 @@ public class OrderService {
                         orderItemEntity.getProductQuantity(),
                         orderItemEntity.getProductImageUrl()
                 )).collect(Collectors.toList());
-        return new OrderResponse(orderEntity.getId(), orderEntity.getSavingRate(), orderEntity.getPoints(), orderItemResponses);
+    }
+
+    public List<OrderResponse> findAll(final Member member) {
+        List<OrderEntity> orderEntities = orderDao.findAll(member.getId());
+
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (final OrderEntity orderEntity : orderEntities) {
+            List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderEntity.getId());
+            final List<OrderItemResponse> orderItemResponses = parseOrderItemEntitiesToResponses(orderItemEntities);
+            orderResponses.add(new OrderResponse(
+                    orderEntity.getId(),
+                    orderEntity.getSavingRate(),
+                    orderEntity.getPoints(),
+                    orderItemResponses
+            ));
+        }
+        return orderResponses;
     }
 }

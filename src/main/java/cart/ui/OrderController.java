@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RequestMapping("/orders")
 @RestController
@@ -37,4 +38,9 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> findAllOrders(@Auth Member member) {
+        final List<OrderResponse> orderResponses = orderService.findAll(member);
+        return ResponseEntity.ok(orderResponses);
+    }
 }

@@ -39,4 +39,14 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
+    @Test
+    void 전체_주문을_조회한다() {
+        RestAssured.given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .get("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 }
