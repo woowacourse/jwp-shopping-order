@@ -1,3 +1,7 @@
+drop table cart_item;
+drop table product;
+drop table member;
+
 CREATE TABLE if not exists product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
