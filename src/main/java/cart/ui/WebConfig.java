@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private static final List<String> MAPPING_URLS = List.of("/products/**", "/cart-items/**");
-    private static final String[] ALLOWED_ORIGINS = {"localhost:3000", "https://feb-dain.github.io"};
+    private static final String[] ALLOWED_ORIGINS = {"*"};
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
