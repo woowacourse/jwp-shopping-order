@@ -73,7 +73,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
+        List<Long> resultCartItemIds = response.jsonPath().getList("result", CartItemResponse.class).stream()
                 .map(CartItemResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
@@ -90,7 +90,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
+                .getList("result", CartItemResponse.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
@@ -110,7 +110,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
+                .getList("result", CartItemResponse.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
@@ -135,12 +135,12 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         ExtractableResponse<Response> response = requestDeleteCartItem(cartItemId);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
+                .getList("result", CartItemResponse.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
