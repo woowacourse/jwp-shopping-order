@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -17,17 +18,21 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<CartItem> findByMemberId(final Long memberId) {
         final String sql =
-                "SELECT cart_item.id, cart_item.quantity, product.id, product.name, product.price, product.image_url, member.id, member.email, member.password "
+                "SELECT cart_item.id, cart_item.quantity, "
+                        + "product.id, product.name, product.price, product.image_url, "
+                        + "member.id, member.email, member.password "
                         + "FROM cart_item "
                         + "INNER JOIN member ON cart_item.member_id = member.id "
                         + "INNER JOIN product ON cart_item.product_id = product.id "
@@ -46,7 +51,9 @@ public class CartItemDao {
 
     public Optional<CartItem> findById(final Long id) {
         final String sql =
-                "SELECT cart_item.id, cart_item.quantity, product.id, product.name, product.price, product.image_url, member.id, member.email, member.password "
+                "SELECT cart_item.id, cart_item.quantity, "
+                        + "product.id, product.name, product.price, product.image_url, "
+                        + "member.id, member.email, member.password "
                         + "FROM cart_item "
                         + "INNER JOIN member ON cart_item.member_id = member.id "
                         + "INNER JOIN product ON cart_item.product_id = product.id "
@@ -57,6 +64,20 @@ public class CartItemDao {
             return Optional.empty();
         }
         return Optional.of(cartItems.get(0));
+    }
+
+    public List<CartItem> findByIds(final List<Long> ids) {
+        final String findByIdsQuery =
+                "SELECT cart_item.id, cart_item.quantity, "
+                        + "product.id, product.name, product.price, product.image_url, "
+                        + "member.id, member.email, member.password "
+                        + "FROM cart_item "
+                        + "INNER JOIN member ON cart_item.member_id = member.id "
+                        + "INNER JOIN product ON cart_item.product_id = product.id "
+                        + "WHERE cart_item.id IN (:cartItemIds)";
+        final MapSqlParameterSource parameters = new MapSqlParameterSource("cartItemIds", ids);
+
+        return namedParameterJdbcTemplate.query(findByIdsQuery, parameters, cartItemRowMapper());
     }
 
     public void deleteById(final Long id) {
