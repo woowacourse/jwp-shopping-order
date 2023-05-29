@@ -13,6 +13,6 @@ public class RateDiscountPolicy implements DiscountPolicy {
 
     @Override
     public Money calculateDiscountAmount(Order order) {
-        return order.getOriginalPrice().subtractAmountByPercentage(discountRate);
+        return order.getOriginalPrice().getMoneyByPercentage(discountRate);
     }
 }

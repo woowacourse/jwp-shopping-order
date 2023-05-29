@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 class RateDiscountPolicyTest {
 
     @ParameterizedTest
-    @CsvSource(value = {"10000, 9000", "20000, 18000", "30000, 27000"})
+    @CsvSource(value = {"10000, 1000", "20000, 2000", "30000, 3000"})
     void 할인_금액을_계산한다(int input, int expected) {
         // given
         RateDiscountPolicy discountPolicy = new RateDiscountPolicy(10);
