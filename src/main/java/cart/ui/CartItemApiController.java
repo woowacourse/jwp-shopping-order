@@ -3,6 +3,7 @@ package cart.ui;
 import cart.application.CartItemService;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.dto.CartItemDeleteRequest;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -41,9 +42,9 @@ public class CartItemApiController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
-        cartItemService.remove(member, id);
+    @DeleteMapping
+    public ResponseEntity<Void> removeCartItems(Member member, @RequestBody CartItemDeleteRequest cartItemDeleteRequest) {
+        cartItemService.remove(member, cartItemDeleteRequest.getCartItemIds());
 
         return ResponseEntity.noContent().build();
     }

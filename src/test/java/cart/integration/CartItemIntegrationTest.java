@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.dto.CartItemDeleteRequest;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -133,7 +134,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void removeCartItem() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestDeleteCartItem(cartItemId);
+        ExtractableResponse<Response> response = requestDeleteCartItem(member, List.of(cartItemId));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
@@ -146,6 +147,16 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
+    }
+
+    @DisplayName("다른 사용자가 담은 장바구니에 담긴 아이템을 삭제하려 하면 실패한다.")
+    @Test
+    void removeOtherMembersCartItem() {
+        Long cartItemId = requestAddCartItemAndGetId(member, productId);
+
+        ExtractableResponse<Response> response = requestDeleteCartItem(member2, List.of(cartItemId));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     private Long createProduct(ProductRequest productRequest) {
@@ -206,12 +217,14 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> requestDeleteCartItem(Long cartItemId) {
+    private ExtractableResponse<Response> requestDeleteCartItem(Member member, List<Long> cartItemIds) {
+        CartItemDeleteRequest deleteRequest = new CartItemDeleteRequest(cartItemIds);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
-                .delete("/cart-items/{cartItemId}", cartItemId)
+                .body(deleteRequest)
+                .delete("/cart-items")
                 .then()
                 .log().all()
                 .extract();

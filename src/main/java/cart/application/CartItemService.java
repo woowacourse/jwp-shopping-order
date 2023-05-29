@@ -7,10 +7,14 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
+import cart.exception.CartItemException.IllegalId;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartItemService {
@@ -59,14 +63,23 @@ public class CartItemService {
 
     private void validateQuantityMax(int quantity) {
         if (quantity > QUANTITY_MAX) {
-            throw new IllegalArgumentException("장바구니에 담을 수 있는 최대 수량은 10개입니다.");
+            throw new CartItemException.IllegalQuantity(quantity, QUANTITY_MAX);
         }
     }
 
-    public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
+    public void remove(Member member, List<Long> ids) {
+        List<CartItem> cartItems = cartItemDao.findByIds(ids);
+        for (Long id : ids) {
+            validateId(member, id, cartItems);
+        }
+        cartItemDao.deleteByIds(ids);
+    }
 
-        cartItemDao.deleteById(id);
+    private void validateId(Member member, Long id, List<CartItem> cartItems) {
+        CartItem cartItem = cartItems.stream()
+                .filter(item -> Objects.equals(item.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalId(id));
+        cartItem.checkOwner(member);
     }
 }
