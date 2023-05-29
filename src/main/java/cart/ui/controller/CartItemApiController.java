@@ -1,7 +1,7 @@
 package cart.ui.controller;
 
 import cart.application.CartItemService;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.ui.controller.dto.request.CartItemQuantityUpdateRequest;
 import cart.ui.controller.dto.request.CartItemRequest;
 import cart.ui.controller.dto.response.CartItemResponse;

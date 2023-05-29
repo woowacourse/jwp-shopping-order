@@ -1,6 +1,6 @@
 package cart.ui.controller.dto.response;
 
-import cart.domain.CartItem;
+import cart.domain.cartitem.CartItem;
 
 public class CartItemResponse {
 
@@ -18,7 +18,7 @@ public class CartItemResponse {
         return new CartItemResponse(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
+                ProductResponse.from(cartItem.getProduct())
         );
     }
 

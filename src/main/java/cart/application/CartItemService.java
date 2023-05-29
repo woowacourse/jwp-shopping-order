@@ -2,8 +2,9 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.repository.ProductRepository;
 import cart.ui.controller.dto.request.CartItemQuantityUpdateRequest;
 import cart.ui.controller.dto.request.CartItemRequest;
 import cart.ui.controller.dto.response.CartItemResponse;
@@ -16,10 +17,12 @@ public class CartItemService {
 
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
+    private final ProductRepository productRepository;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
+    public CartItemService(ProductDao productDao, CartItemDao cartItemDao, ProductRepository productRepository) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
+        this.productRepository = productRepository;
     }
 
     public List<CartItemResponse> findByMember(Member member) {
@@ -28,7 +31,7 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(new CartItem(productRepository.getProductById(cartItemRequest.getProductId()), member));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
