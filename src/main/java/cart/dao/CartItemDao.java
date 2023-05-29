@@ -71,6 +71,22 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 
+    public Optional<CartItemEntity> findByMemberIdAndProductId(Long memberId, Long productId) {
+        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, cart_item.created_at, cart_item.updated_at,"
+                + " member.id, member.email, member.password, member.point, member.created_at, member.updated_at,"
+                + " product.id, product.name, product.price, product.image_url, product.created_at, product.updated_at"
+                + " FROM cart_item"
+                + " INNER JOIN member ON cart_item.member_id = member.id"
+                + " INNER JOIN product ON cart_item.product_id = product.id"
+                + " WHERE cart_item.member_id = ?"
+                + " and cart_item.product_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, memberId, productId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<CartItemEntity> findById(Long id) {
         String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, cart_item.created_at, cart_item.updated_at,"
                 + " member.id, member.email, member.password, member.point, member.created_at, member.updated_at,"
@@ -80,7 +96,7 @@ public class CartItemDao {
                 + " INNER JOIN product ON cart_item.product_id = product.id"
                 + " WHERE cart_item.id = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
