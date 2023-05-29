@@ -23,7 +23,7 @@ public class PaymentResponse {
 
     public static PaymentResponse from(final Member member, final Cart cart) {
         List<ProductPayResponse> productPayResponses = cart.getCartItems().stream()
-                .map(cartItem -> ProductPayResponse.from(cartItem.getProduct()))
+                .map(cartItem -> ProductPayResponse.from(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(Collectors.toList());
 
         DeliveryFeeResponse deliveryPrice = DeliveryFeeResponse.from(cart.getDeliveryFee());
