@@ -46,6 +46,21 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void 사용자가_담은_장바구니_아이템을_조회한다() {
+        final Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
+        final Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
+
+        final ExtractableResponse<Response> response = requestGetCartItems(member);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+
+        final List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
+                .map(CartItemResponse::getId)
+                .collect(Collectors.toList());
+        assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
+    }
+
+    @Test
     void 장바구니에_아이템을_추가한다() {
         final CartItemRequest cartItemRequest = new CartItemRequest(productId);
         final ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
@@ -60,21 +75,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
         final ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    @Test
-    void 사용자가_담은_장바구니_아이템을_조회한다() {
-        final Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
-        final Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
-
-        final ExtractableResponse<Response> response = requestGetCartItems(member);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-
-        final List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
-                .map(CartItemResponse::getId)
-                .collect(Collectors.toList());
-        assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
     }
 
     @Test
