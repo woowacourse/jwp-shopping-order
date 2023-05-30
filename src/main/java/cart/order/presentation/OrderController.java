@@ -4,10 +4,7 @@ import cart.common.auth.Auth;
 import cart.member.Member;
 import cart.order.application.OrderService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -29,5 +26,11 @@ public class OrderController {
     public ResponseEntity<OrdersResponse> findOrders(@Auth Member member) {
         final var orderHistories = orderService.findOrderHistories(member.getId());
         return ResponseEntity.ok(orderHistories);
+    }
+
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<OrderResponse> findOrder(@Auth Member member, @PathVariable long orderId) {
+        final var orderHistory = orderService.findOrderHistory(orderId);
+        return ResponseEntity.ok(orderHistory);
     }
 }
