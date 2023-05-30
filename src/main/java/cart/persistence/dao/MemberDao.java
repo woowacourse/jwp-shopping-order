@@ -1,5 +1,6 @@
 package cart.persistence.dao;
 
+import cart.persistence.dao.dto.MemberCouponDto;
 import cart.persistence.entity.MemberEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -58,5 +59,28 @@ public class MemberDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<MemberCouponDto> findMyCouponsByName(final String memberName) {
+        final String query = "SELECT m.id AS memberId, m.name AS memberName, m.password, "
+            + " c.id AS couponId, c.name AS couponName, c.discount_rate, c.period, mc.expired_date, "
+            + " mc.issued_date, mc.is_used"
+            + " FROM member m"
+            + " LEFT JOIN member_coupon mc ON mc.member_id = m.id"
+            + " LEFT JOIN coupon c on mc.coupon_id = c.id"
+            + " WHERE m.name = ?";
+        return jdbcTemplate.query(query, (rs, count) ->
+            new MemberCouponDto(
+                rs.getLong("memberId"),
+                rs.getString("memberName"),
+                rs.getString("password"),
+                rs.getLong("couponId"),
+                rs.getString("couponName"),
+                rs.getInt("period"),
+                rs.getInt("discount_rate"),
+                rs.getTimestamp("expired_date").toLocalDateTime(),
+                rs.getTimestamp("issued_date").toLocalDateTime(),
+                rs.getBoolean("is_used")
+            ), memberName);
     }
 }

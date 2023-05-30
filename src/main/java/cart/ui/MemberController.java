@@ -1,10 +1,12 @@
 package cart.ui;
 
 import cart.application.MemberService;
+import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberLoginResponse;
 import cart.application.dto.member.MemberResponse;
 import cart.application.dto.member.MemberSaveRequest;
+import cart.common.auth.MemberName;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
@@ -46,5 +48,10 @@ public class MemberController {
     @GetMapping
     public ResponseEntity<List<MemberResponse>> getMembers() {
         return ResponseEntity.ok(memberService.getMembers());
+    }
+
+    @GetMapping("/me/coupons")
+    public ResponseEntity<List<MemberCouponResponse>> getMyCoupons(@MemberName final String name) {
+        return ResponseEntity.ok(memberService.getByCoupons(name));
     }
 }

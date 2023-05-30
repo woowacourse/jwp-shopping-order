@@ -8,11 +8,14 @@ public class MemberCoupon {
     private final CouponWithId coupon;
     private final LocalDateTime issuedDate;
     private final LocalDateTime expiredDate;
+    private final boolean isUsed;
 
-    public MemberCoupon(final CouponWithId coupon, final LocalDateTime issuedDate, final LocalDateTime expiredDate) {
+    public MemberCoupon(final CouponWithId coupon, final LocalDateTime issuedDate, final LocalDateTime expiredDate,
+                        final boolean isUsed) {
         this.coupon = coupon;
         this.issuedDate = issuedDate;
         this.expiredDate = expiredDate;
+        this.isUsed = isUsed;
     }
 
     public CouponWithId getCoupon() {
@@ -25,5 +28,9 @@ public class MemberCoupon {
 
     public LocalDateTime getExpiredDate() {
         return expiredDate;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
     }
 }

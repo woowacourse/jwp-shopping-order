@@ -22,14 +22,15 @@ public class MemberCouponDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO member_coupon (member_id, coupon_id, issued_date, expired_date) "
-                    + "VALUES (?, ?, ?, ?)",
+                "INSERT INTO member_coupon (member_id, coupon_id, issued_date, expired_date, is_used) "
+                    + "VALUES (?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
             );
             ps.setLong(1, memberCoupon.getMemberId());
             ps.setLong(2, memberCoupon.getCouponId());
             ps.setTimestamp(3, Timestamp.valueOf(memberCoupon.getIssuedDate()));
             ps.setTimestamp(4, Timestamp.valueOf(memberCoupon.getExpiredDate()));
+            ps.setBoolean(5, memberCoupon.isUsed());
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();

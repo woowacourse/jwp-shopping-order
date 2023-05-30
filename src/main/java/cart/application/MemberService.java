@@ -1,13 +1,15 @@
 package cart.application;
 
-import cart.application.dto.coupon.CouponResponse;
+import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberLoginResponse;
 import cart.application.dto.member.MemberResponse;
 import cart.application.dto.member.MemberSaveRequest;
 import cart.common.auth.BasicTokenProvider;
 import cart.domain.coupon.CouponSaveEvent;
+import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.Member;
+import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberRepository;
 import cart.domain.security.SHA256Service;
 import cart.exception.BadRequestException;
@@ -71,5 +73,17 @@ public class MemberService {
             .map(memberWithId -> new MemberResponse(memberWithId.getId(), memberWithId.getMember().name(),
                 memberWithId.getMember().password()))
             .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<MemberCouponResponse> getByCoupons(final String memberName) {
+        final Member member = memberRepository.findMyCouponsByName(memberName);
+        final List<MemberCoupon> memberCoupons = member.memberCoupons();
+        return memberCoupons.stream()
+            .map(memberCoupon -> {
+                final CouponWithId coupon = memberCoupon.getCoupon();
+                return new MemberCouponResponse(
+                    coupon.getId(), coupon.getName(), coupon.getDiscountRate(), coupon.getExpiredDate(),
+                    memberCoupon.isUsed());
+            }).collect(Collectors.toUnmodifiableList());
     }
 }

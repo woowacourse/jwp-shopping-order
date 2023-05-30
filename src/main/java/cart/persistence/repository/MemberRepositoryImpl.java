@@ -1,13 +1,17 @@
 package cart.persistence.repository;
 
 import static cart.persistence.mapper.MemberMapper.convertMember;
+import static cart.persistence.mapper.MemberMapper.convertMemberCoupons;
 
+import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.Member;
+import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberRepository;
 import cart.domain.member.dto.MemberWithId;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
 import cart.persistence.dao.MemberDao;
+import cart.persistence.dao.dto.MemberCouponDto;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.mapper.MemberMapper;
 import java.util.List;
@@ -53,5 +57,13 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public boolean existByName(final String memberName) {
         return memberDao.findByName(memberName).isPresent();
+    }
+
+    @Override
+    public Member findMyCouponsByName(final String memberName) {
+        final List<MemberCouponDto> myCouponsByName = memberDao.findMyCouponsByName(memberName);
+        final List<MemberCoupon> memberCoupons = convertMemberCoupons(myCouponsByName);
+        return Member.createWithEncodedPassword(myCouponsByName.get(0).getMemberName(),
+            myCouponsByName.get(0).getMemberPassword(), memberCoupons);
     }
 }

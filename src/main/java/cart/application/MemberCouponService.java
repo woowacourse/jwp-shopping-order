@@ -34,7 +34,7 @@ public class MemberCouponService {
         if (coupon.getExpiredDate().isBefore(issuedDate)) {
             throw new BadRequestException(ErrorCode.COUPON_EXPIRED);
         }
-        final MemberCoupon memberCoupon = new MemberCoupon(coupon, issuedDate, issuedDate.plusDays(coupon.getPeriod()));
+        final MemberCoupon memberCoupon = new MemberCoupon(coupon, issuedDate, issuedDate.plusDays(coupon.getPeriod()), false);
         memberCouponRepository.save(memberId, memberCoupon);
     }
 }

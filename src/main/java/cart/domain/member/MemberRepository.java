@@ -14,4 +14,6 @@ public interface MemberRepository {
     List<MemberWithId> findAll();
 
     boolean existByName(final String memberName);
+
+    Member findMyCouponsByName(final String memberName);
 }

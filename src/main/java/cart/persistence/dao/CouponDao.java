@@ -39,7 +39,7 @@ public class CouponDao {
     }
 
     public Optional<CouponEntity> findById(final Long couponId) {
-        String sql = "SELECT * FROM coupon WHERE id = ?";
+        final String sql = "SELECT * FROM coupon WHERE id = ?";
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, couponEntityRowMapper, couponId));
         } catch (EmptyResultDataAccessException exception) {
@@ -74,10 +74,10 @@ public class CouponDao {
         return count > 0;
     }
 
-    public Optional<CouponEntity> findByName(final String name) {
-        String sql = "SELECT * FROM coupon WHERE name = ?";
+    public Optional<CouponEntity> findByNameAndDiscountRate(final String name, final int discountRate) {
+        final String sql = "SELECT * FROM coupon WHERE name = ? and discount_rate = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, couponEntityRowMapper, name));
+            return Optional.of(jdbcTemplate.queryForObject(sql, couponEntityRowMapper, name, discountRate));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
