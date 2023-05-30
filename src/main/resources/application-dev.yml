@@ -1,8 +1,8 @@
 spring:
   sql:
     init:
-      schema-locations: classpath:test-schema.sql
-      data-locations: classpath:dev-data.sql
+      schema-locations: classpath:local-schema.sql
+      data-locations: classpath:local-data.sql
       mode: always
   datasource:
     hikari:

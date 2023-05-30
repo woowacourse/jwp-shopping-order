@@ -1,21 +1,22 @@
 package cart.domain;
 
-public class Product {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+import cart.domain.vo.Amount;
 
-    public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+public class Product {
+
+    private final Long id;
+    private final String name;
+    private final Amount amount;
+    private final String imageUrl;
+
+    public Product(final String name, final Amount amount, final String imageUrl) {
+        this(null, name, amount, imageUrl);
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(final Long id, final String name, final Amount amount, final String imageUrl) {
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.amount = amount;
         this.imageUrl = imageUrl;
     }
 
@@ -27,8 +28,8 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
-        return price;
+    public Amount getAmount() {
+        return amount;
     }
 
     public String getImageUrl() {
