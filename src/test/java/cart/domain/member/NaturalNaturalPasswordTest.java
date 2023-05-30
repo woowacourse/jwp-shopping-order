@@ -7,18 +7,18 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-class PasswordTest {
+class NaturalNaturalPasswordTest {
 
     @ParameterizedTest(name = "비밀번호는 4글자 이상, 10글자 이하여야 한다.")
     @ValueSource(strings = {"1", "123", "", "이것은 열한글자입니다"})
-    void createMemberPasswordTest1(String password) {
-        assertThatThrownBy(() -> new Password(password))
+    void createNaturalPasswordTest1(String password) {
+        assertThatThrownBy(() -> new NaturalPassword(password))
                 .isInstanceOf(GlobalException.class);
     }
 
     @ParameterizedTest(name = "비밀번호는 4글자 이상, 10글자 이하여야 한다.")
     @ValueSource(strings = {"네글자다", "이것은 열글자입니다"})
-    void createMemberPasswordTest2(String password) {
-        assertDoesNotThrow(() -> new Password(password));
+    void createNaturalPasswordTest2(String password) {
+        assertDoesNotThrow(() -> new NaturalPassword(password));
     }
 }
