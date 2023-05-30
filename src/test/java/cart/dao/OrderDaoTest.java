@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
@@ -50,7 +51,7 @@ class OrderDaoTest extends DaoTest {
         final Long savedOrderId = createOrder(10000, Fixture.GOLD_MEMBER, List.of(Fixture.CART_ITEM1));
 
         //when
-        final OrderEntity result = orderDao.findById(savedOrderId);
+        final OrderEntity result = orderDao.findById(savedOrderId).get();
 
         //then
         Assertions.assertAll(
@@ -58,6 +59,13 @@ class OrderDaoTest extends DaoTest {
                 () -> assertThat(result.getId()).isEqualTo(savedOrderId),
                 () -> assertThat(result.getPrice()).isEqualTo(10000)
         );
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 id를 통해 조회하는 경우 Optional.empty를 반환한다.")
+    void findOrderByIdFailByUnExistedOrderId() {
+        assertThat(orderDao.findById(30000L)).isEqualTo(Optional.empty());
     }
 
     @Test

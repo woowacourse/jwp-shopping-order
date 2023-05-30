@@ -4,6 +4,7 @@ import cart.dto.ErrorResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.InvalidGradeException;
+import cart.exception.InvalidOrderException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,12 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(InvalidGradeException.class)
     public ResponseEntity<ErrorResponse> handleInvalidGradeException(InvalidGradeException exception) {
+        final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidOrderException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidOrderException(InvalidOrderException exception) {
         final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }

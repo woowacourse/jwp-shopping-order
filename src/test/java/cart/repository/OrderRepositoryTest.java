@@ -1,6 +1,8 @@
 package cart.repository;
 
+import static cart.fixture.Fixture.GOLD_MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.entity.OrderEntity;
+import cart.exception.InvalidOrderException;
 import cart.fixture.Fixture;
 
 @JdbcTest
@@ -50,7 +53,7 @@ class OrderRepositoryTest {
         orderedItemDao.saveAll(items, orderId);
 
         //when
-        final Order result = orderRepository.findOrderById(orderId, Fixture.GOLD_MEMBER);
+        final Order result = orderRepository.findOrderById(orderId, GOLD_MEMBER);
 
         //then
         Assertions.assertAll(
@@ -63,10 +66,18 @@ class OrderRepositoryTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 orderId를 통해 조회를 하는 경우 예외를 던진다.")
+    void findOrderByIdFailByUnExistedOrderId() {
+        assertThatThrownBy(() -> orderRepository.findOrderById(30000L, GOLD_MEMBER))
+                .isInstanceOf(InvalidOrderException.class)
+                .hasMessageContaining("OrderId is not existed;");
+    }
+
+    @Test
     @DisplayName("member를 인자로 전달받아 member의 order를 조회한다.")
     void findOrdersByMember() {
         //given
-        Member member = Fixture.GOLD_MEMBER;
+        Member member = GOLD_MEMBER;
         final List<CartItem> item1 = List.of(Fixture.CART_ITEM1);
         final List<CartItem> item2 = List.of(Fixture.CART_ITEM2);
 
@@ -77,7 +88,7 @@ class OrderRepositoryTest {
         orderedItemDao.saveAll(item2, orderId2);
 
         //when
-        final List<Order> results = orderRepository.findOrdersByMember(Fixture.GOLD_MEMBER);
+        final List<Order> results = orderRepository.findOrdersByMember(GOLD_MEMBER);
 
         //then
         Assertions.assertAll(

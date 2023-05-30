@@ -94,6 +94,26 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("orderId를 통해 주문내역을 조회한다.")
+    void findOrderByIdFailByUnExistedOrderId() {
+        //given
+        final Long invalidOrderId = 30000L;
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders/" + invalidOrderId)
+                .then()
+                .log().all()
+                .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     @DisplayName("회원의 모든 결제내역을 반환한다.")
     void findOrdersByMember() {
         //given

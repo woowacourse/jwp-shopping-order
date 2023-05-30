@@ -3,7 +3,9 @@ package cart.dao;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -43,9 +45,13 @@ public class OrderDao {
         return keyHolder.getKey().longValue();
     }
 
-    public OrderEntity findById(Long orderId) {
-        final String sql = "SELECT * FROM `order` WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, orderId);
+    public Optional<OrderEntity> findById(Long orderId) {
+        try {
+            final String sql = "SELECT * FROM `order` WHERE id = ?";
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, orderId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public List<OrderEntity> findByMember(Member member) {

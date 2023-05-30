@@ -20,6 +20,7 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.entity.OrderEntity;
 import cart.entity.OrderedItemEntity;
+import cart.exception.InvalidOrderException;
 
 @Repository
 @Transactional(readOnly = true)
@@ -51,7 +52,8 @@ public class OrderRepository {
     }
 
     public Order findOrderById(Long orderId, Member member) {
-        final OrderEntity orderEntity = orderDao.findById(orderId);
+        final OrderEntity orderEntity = orderDao.findById(orderId)
+                .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = "+ orderId));
         List<OrderedItemEntity> orderedItems = orderedItemDao.findItemsByOrderId(orderId);
         final List<CartItem> items = orderedItemToCartItem(member, orderedItems);
         return new Order(orderEntity.getId(), orderEntity.getPrice(), member, items);
