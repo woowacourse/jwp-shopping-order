@@ -22,7 +22,7 @@ public class CartItemDao {
     private final RowMapper<CartItem> defaultRowMapper = (rs, rowNum) -> {
         Long memberId = rs.getLong("member_id");
         String email = rs.getString("email");
-        Long productId = rs.getLong("id");
+        Long productId = rs.getLong("product.id");
         String name = rs.getString("name");
         int price = rs.getInt("price");
         String imageUrl = rs.getString("image_url");
