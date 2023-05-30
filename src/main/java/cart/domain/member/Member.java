@@ -26,12 +26,14 @@ public class Member {
         return this.password.equals(password);
     }
 
-    public boolean canConsume(final Point point) {
+    public boolean canUsePoint(final Point point) {
         return this.point.isMoreThan(point);
     }
 
-    public Member calculatePoint(final Point point) {
-        return new Member(id, email, password, this.point.reduce(point));
+    public Member calculatePoint(final Point usePoint, final Point savePoint) {
+        final Point reducedPoint = this.point.reduce(usePoint);
+        final Point newPoint = reducedPoint.save(savePoint);
+        return new Member(id, email, password, newPoint);
     }
 
     public String getEmailValue() {
@@ -52,6 +54,10 @@ public class Member {
 
     public Password getPassword() {
         return password;
+    }
+
+    public Point getPoint() {
+        return point;
     }
 
     @Override

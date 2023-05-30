@@ -58,9 +58,23 @@ class MemberTest {
         final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!", 1000);
 
         //when
-        final boolean actual = member.canConsume(Point.valueOf(point));
+        final boolean actual = member.canUsePoint(Point.valueOf(point));
 
         //then
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void 포인트를_계산한다() {
+        //given
+        final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!", 1000);
+        final Point savePoint = Point.valueOf(100);
+        final Point usePoint = Point.valueOf(500);
+
+        //when
+        final Member newMember = member.calculatePoint(usePoint, savePoint);
+
+        //then
+        assertThat(newMember.getPoint()).isEqualTo(Point.valueOf(600));
     }
 }
