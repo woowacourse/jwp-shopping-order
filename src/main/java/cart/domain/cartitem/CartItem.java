@@ -9,7 +9,7 @@ import java.util.Objects;
 public class CartItem {
 
     private final Long id;
-    private Quantity quantity;
+    private final Quantity quantity;
     private final Product product;
     private final Member member;
 

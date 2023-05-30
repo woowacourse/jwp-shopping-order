@@ -4,6 +4,7 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductImageUrl;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
+import cart.exception.MemberNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -84,7 +85,7 @@ public class ProductDaoTest {
 
     @DisplayName("상품을 삭제할 수 있다.")
     @Test
-    void deleteProduct() {
+    void deleteProduct1() {
         // given
         final Long productId = productDao.insert(product);
 
@@ -93,5 +94,18 @@ public class ProductDaoTest {
 
         // then
         assertThat(productDao.findById(productId)).isEmpty();
+    }
+
+    @DisplayName("사용자가 장바구니에 추가한 상품을 삭제할 수 있다.")
+    @Test
+    void deleteProduct2() {
+        // given
+        final Product product = productDao.findById(1L).orElseThrow(MemberNotFoundException::new);
+
+        // when
+//        productDao.delete(product.getId());
+
+        // then
+//        assertThat(productDao.findById(productId)).isEmpty();
     }
 }

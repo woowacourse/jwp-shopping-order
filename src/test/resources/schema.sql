@@ -9,7 +9,7 @@ CREATE TABLE `product`
     `id`         BIGINT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `name`       VARCHAR(255)  NOT NULL,
     `price`      INT           NOT NULL,
-    `image_url`  VARCHAR(255)  NOT NULL,
+    `image_url`  VARCHAR(2048)  NOT NULL,
     `created_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
 );
@@ -53,7 +53,7 @@ CREATE TABLE `order_product`
     `product_id`        BIGINT        NOT NULL,
     `product_name`      VARCHAR(255)  NOT NULL,
     `product_price`     INT           NOT NULL,
-    `product_image_url` VARCHAR(255)  NOT NULL,
+    `product_image_url` VARCHAR(2048)  NOT NULL,
     `quantity`          INT           NOT NULL,
     `created_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` TIMESTAMP     NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP),
