@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS member_coupon
     coupon_id INT UNSIGNED NOT NULL,
     issued_date DATETIME NOT NULL,
     expired_date DATETIME NOT NULL,
+    is_used TINYINT(1) NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)

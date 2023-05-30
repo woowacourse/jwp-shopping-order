@@ -32,7 +32,13 @@
   </appender>
 
   <root level="INFO">
-    <appender-ref ref="FILE"/>
-    <appender-ref ref="CONSOLE"/>
+    <springProfile name="local">
+      <appender-ref ref="FILE"/>
+      <appender-ref ref="CONSOLE"/>
+    </springProfile>
+    <springProfile name="prod">
+      <appender-ref ref="FILE"/>
+      <appender-ref ref="CONSOLE"/>
+    </springProfile>
   </root>
 </configuration>
