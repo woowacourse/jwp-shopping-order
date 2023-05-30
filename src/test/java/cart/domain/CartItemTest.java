@@ -37,7 +37,7 @@ class CartItemTest {
     void changeQuantityTest(final int expectQuantity) {
         final CartItem cartItem = new CartItem(member1, product);
 
-        cartItem.changeQuantity(expectQuantity);
+        cartItem.updateQuantity(expectQuantity);
 
         assertThat(cartItem.getQuantity()).isEqualTo(expectQuantity);
     }
@@ -48,6 +48,6 @@ class CartItemTest {
     void illegalChangeQuantityTest(final int expectQuantity) {
         final CartItem cartItem = new CartItem(member1, product);
 
-        assertThrows(IllegalArgumentException.class, () -> cartItem.changeQuantity(expectQuantity));
+        assertThrows(IllegalArgumentException.class, () -> cartItem.updateQuantity(expectQuantity));
     }
 }

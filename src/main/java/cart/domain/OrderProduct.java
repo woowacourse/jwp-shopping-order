@@ -4,12 +4,12 @@ public class OrderProduct {
 
     private final Product product;
     private final Integer purchasedPrice;
-    private final Integer quantity;
+    private final Quantity quantity;
 
-    public OrderProduct(final Product product, final Integer purchasedPrice, final Integer quantity) {
+    public OrderProduct(final Product product, final Integer purchasedPrice, final int quantity) {
         this.product = product;
         this.purchasedPrice = purchasedPrice;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 
     public Product getProduct() {
@@ -20,7 +20,7 @@ public class OrderProduct {
         return purchasedPrice;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public int getQuantity() {
+        return quantity.getValue();
     }
 }

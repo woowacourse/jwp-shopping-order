@@ -53,7 +53,7 @@ public class CartItemService {
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
+        cartItem.updateQuantity(request.getQuantity());
         cartItemDao.updateQuantity(cartItem);
     }
 
