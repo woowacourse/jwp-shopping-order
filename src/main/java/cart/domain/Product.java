@@ -5,35 +5,47 @@ public class Product {
     private String name;
     private Integer price;
     private String imageUrl;
-    private Integer pointRatio;
-    private Boolean point_available;
-
-    public Product(String name, int price, String imageUrl) {
+    private Double pointRatio;
+    private Boolean pointAvailable;
+    
+    public Product(final String name, final Integer price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.pointRatio = pointRatio;
+        this.pointAvailable = pointAvailable;
     }
-
-    public Product(Long id, String name, int price, String imageUrl) {
+    
+    public Product(final Long id, final String name, final Integer price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.pointRatio = pointRatio;
+        this.pointAvailable = pointAvailable;
     }
-
+    
     public Long getId() {
         return id;
     }
-
+    
     public String getName() {
         return name;
     }
-
-    public int getPrice() {
+    
+    public Integer getPrice() {
         return price;
     }
-
+    
     public String getImageUrl() {
         return imageUrl;
+    }
+    
+    public Double getPointRatio() {
+        return pointRatio;
+    }
+    
+    public Boolean getPointAvailable() {
+        return pointAvailable;
     }
 }

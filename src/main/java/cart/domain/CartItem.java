@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class CartItem {
     private Long id;
-    private int quantity;
+    private Integer quantity;
     private final Product product;
     private final Member member;
 
