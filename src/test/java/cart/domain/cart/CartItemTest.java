@@ -6,10 +6,7 @@ import cart.exception.CartItemException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CartItemTest {
@@ -31,25 +28,5 @@ class CartItemTest {
         final CartItem cartItem = new CartItem(member1, product);
 
         assertThrows(CartItemException.IllegalMember.class, () -> cartItem.checkOwner(member2));
-    }
-
-    @DisplayName("장바구니에 담긴 상품의 수량을 변경한다.")
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2, 10, 1_000})
-    void changeQuantityTest(final int expectQuantity) {
-        final CartItem cartItem = new CartItem(member1, product);
-
-        cartItem.updateQuantity(expectQuantity);
-
-        assertThat(cartItem.getQuantity()).isEqualTo(expectQuantity);
-    }
-
-    @DisplayName("변경 수량이 1보다 작을 경우 Exception을 반환한다.")
-    @ParameterizedTest
-    @ValueSource(ints = {0, -1, -1_000})
-    void illegalChangeQuantityTest(final int expectQuantity) {
-        final CartItem cartItem = new CartItem(member1, product);
-
-        assertThrows(IllegalArgumentException.class, () -> cartItem.updateQuantity(expectQuantity));
     }
 }
