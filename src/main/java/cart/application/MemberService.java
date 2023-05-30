@@ -20,7 +20,6 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-
     public void add(final MemberRequest memberRequest) {
         String encryptedPassword = encrypt(memberRequest.getPassword());
         memberDao.addMember(new Member(memberRequest.getName(), encryptedPassword));
