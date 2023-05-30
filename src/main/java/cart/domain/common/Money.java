@@ -35,7 +35,7 @@ public class Money {
     }
 
     public boolean isMoreThan(final Money money) {
-        return this.money.compareTo(money.money) > 0;
+        return this.money.compareTo(money.money) >= 0;
     }
 
     public Money getPartial(final double rate) {

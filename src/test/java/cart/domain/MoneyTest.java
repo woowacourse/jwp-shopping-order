@@ -59,8 +59,8 @@ class MoneyTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"999, true", "1000, false", "1001, false"})
-    void 돈이_더_많은지_비교한다(final int amount, final boolean expected) {
+    @CsvSource({"999, true", "1000, true", "1001, false"})
+    void 입력한_돈_이상인지_확인한다(final int amount, final boolean expected) {
         //given
         final Money money = Money.valueOf(1000);
 

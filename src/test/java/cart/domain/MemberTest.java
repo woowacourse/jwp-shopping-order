@@ -52,7 +52,7 @@ class MemberTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"999, true", "1000, false", "1001, false"})
+    @CsvSource({"999, true", "1000, true", "1001, false"})
     void 포인트를_사용할_수_있는지_확인한다(final int point, final boolean expected) {
         //given
         final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!", 1000);

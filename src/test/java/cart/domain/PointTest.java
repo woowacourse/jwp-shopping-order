@@ -25,8 +25,8 @@ class PointTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"999, true", "1000, false", "1001, false"})
-    void 포인트가_더_많은지_비교한다(final int amount, final boolean expected) {
+    @CsvSource({"999, true", "1000, true", "1001, false"})
+    void 입력한_포인트_이상인지_확인한다(final int amount, final boolean expected) {
         //given
         final Point point = Point.valueOf(1000);
 
@@ -36,7 +36,7 @@ class PointTest {
         //then
         assertThat(actual).isEqualTo(expected);
     }
-    
+
     @Test
     void 포인트를_적립한다() {
         //given
