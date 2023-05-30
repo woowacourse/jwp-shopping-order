@@ -1,5 +1,11 @@
 # jwp-shopping-order
 
+## API 명세서
+
+http://localhost:8080/docs/index.html
+
+---
+
 ## 기능 구현 목록
 
 ### 기획
@@ -33,14 +39,14 @@
       보내주어, 0원이면 프론트 서버에서 처리한다.
 
 - 쿠폰
-  - 배달료 감면 쿠폰은 %할인이 아니라 x원 할인이다. 또한 이름의 시작은 `DELIVERY_XX`로 시작한다.
+    - 배달료 감면 쿠폰은 %할인이 아니라 x원 할인이다. 또한 이름의 시작은 `DELIVERY_XX`로 시작한다.
 
 ### 도메인
 
-- Member(id, email, password, Coupons)
-    - email & password는 원시값포장 및 유효성 검사를 진행한다.
+- Member(id, Email, Password, Coupons)
+    - email & password 원시값포장 및 유효성 검사를 진행한다.
 
-- Cart(id, Member, CartItems)
+- Cart(id, CartItems, DeliveryFee)
 
 - CartItems(List<CartItem>)
 
@@ -50,14 +56,18 @@
 - Product(id, name, price, imageUrl, isOnSale, Policy)
     - 상품 이름이 공백 혹은 빈 값인지 확인한다.
     - 가격이 양수인지 확인한다.
+    - 상품 할인은 정책상 %할인 밖에 안된다.
 
 - Coupons(id, List<Coupon>)
 
 - Coupon(id, name, Policy)
     - 쿠폰 이름이 공백 혹은 빈 값이 아닌지 확인한다.
 
-- Policy(id, PricePolicy_ENUM)
+- Policy_interface
+    - PolicyDiscount
+        - 가격을 `일정 가격`만큼 감소시킨다.
+    - PolicyPercentage
+        - 가격을 '일정 %'만큼 감소시킨다.
 
-- PricePolicy_ENUM(percentage)
-
-- History(id, LocalDateTime, Member, Cart)
+- Order (Member, Cart)
+    - 장바구니와 멤버를 이어주며, 구매시 구매 내역을 반환한다.
