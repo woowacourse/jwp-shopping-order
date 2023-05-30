@@ -4,10 +4,10 @@
 ## *P1*
 
 ### 환경 설정
-- [ ] test, local, prod 환경 분리
-- [ ] local mysql db 만들기
-- [ ] prod mysql db 만들기
-- [ ] 기존 test 코드 리팩터링
+- [x] test, local, prod 환경 분리
+- [x] local mysql db 만들기
+- [x] prod mysql db 만들기
+- [x] 기존 test 코드 리팩터링
 
 ### 데이터베이스
 - [ ] table 설계
