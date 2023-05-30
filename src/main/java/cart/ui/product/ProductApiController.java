@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.application.product.ProductService;
+import cart.application.product.ProductCommandService;
+import cart.application.product.ProductQueryService;
 import cart.application.product.dto.ProductDto;
 import cart.ui.product.dto.ProductRequest;
 import cart.ui.product.dto.ProductResponse;
@@ -30,15 +31,18 @@ import cart.ui.product.dto.ProductResponse;
 @RequestMapping("/products")
 public class ProductApiController {
 
-	private final ProductService productService;
+	private final ProductQueryService productQueryService;
+	private final ProductCommandService productCommandService;
 
-	public ProductApiController(ProductService productService) {
-		this.productService = productService;
+	public ProductApiController(final ProductQueryService productQueryService,
+		final ProductCommandService productCommandService) {
+		this.productQueryService = productQueryService;
+		this.productCommandService = productCommandService;
 	}
 
 	@GetMapping
 	public ResponseEntity<List<ProductResponse>> getAllProducts() {
-		final List<ProductDto> allProducts = productService.getAllProducts();
+		final List<ProductDto> allProducts = productQueryService.getAllProducts();
 		final List<ProductResponse> productResponses = allProducts.stream()
 			.map(ProductResponse::from)
 			.collect(Collectors.toList());
@@ -48,7 +52,7 @@ public class ProductApiController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
-		final ProductDto productDto = productService.getProductById(id);
+		final ProductDto productDto = productQueryService.getProductById(id);
 		final ProductResponse productResponse = ProductResponse.from(productDto);
 
 		return ResponseEntity.ok(productResponse);
@@ -57,7 +61,7 @@ public class ProductApiController {
 	@PostMapping
 	public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
 		final ProductDto productDto = ProductDto.of(null, productRequest);
-		Long id = productService.createProduct(productDto);
+		Long id = productCommandService.createProduct(productDto);
 
 		return ResponseEntity.created(URI.create("/products/" + id)).build();
 	}
@@ -65,13 +69,13 @@ public class ProductApiController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
 		final ProductDto productDto = ProductDto.of(id, productRequest);
-		productService.updateProduct(productDto);
+		productCommandService.updateProduct(productDto);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-		productService.deleteProduct(id);
+		productCommandService.deleteProduct(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 

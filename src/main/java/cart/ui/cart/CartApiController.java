@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.application.cart.CartService;
+import cart.application.cart.CartCommandService;
+import cart.application.cart.CartQueryService;
 import cart.application.cart.dto.CartDto;
 import cart.application.cart.dto.CartItemDto;
 import cart.domain.member.Member;
@@ -32,16 +33,18 @@ import cart.ui.cart.dto.CartItemResponse;
 @RequestMapping("/cart-items")
 public class CartApiController {
 
-	private final CartService cartService;
+	private final CartCommandService cartCommandService;
+	private final CartQueryService cartQueryService;
 
-	public CartApiController(CartService cartService) {
-		this.cartService = cartService;
+	public CartApiController(final CartCommandService cartCommandService, final CartQueryService cartQueryService) {
+		this.cartCommandService = cartCommandService;
+		this.cartQueryService = cartQueryService;
 	}
 
 	@GetMapping
 	public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
 		final List<CartItemResponse> cartItemResponses =
-			cartService.findByMember(member.getId()).stream()
+			cartQueryService.findByMember(member.getId()).stream()
 				.map(CartItemResponse::from)
 				.collect(Collectors.toList());
 
@@ -54,7 +57,7 @@ public class CartApiController {
 
 		final CartDto cartDto = new CartDto(member.getId(), cartItemDto);
 
-		Long cartItemId = cartService.add(cartDto);
+		Long cartItemId = cartCommandService.add(cartDto);
 
 		return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
 	}
@@ -63,7 +66,7 @@ public class CartApiController {
 	public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,
 		@RequestBody CartItemQuantityUpdateRequest request) {
 		final CartDto cartDto = new CartDto(member.getId(), new CartItemDto(id, request.getQuantity(), null));
-		cartService.updateQuantity(cartDto);
+		cartCommandService.updateQuantity(cartDto);
 
 		return ResponseEntity.ok().build();
 	}
@@ -71,7 +74,7 @@ public class CartApiController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
 		final CartDto cartDto = new CartDto(member.getId(), new CartItemDto(id, 0, null));
-		cartService.remove(cartDto);
+		cartCommandService.remove(cartDto);
 
 		return ResponseEntity.noContent().build();
 	}

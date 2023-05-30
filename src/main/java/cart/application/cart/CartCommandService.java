@@ -1,9 +1,9 @@
 package cart.application.cart;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cart.application.cart.dto.CartDto;
 import cart.application.cart.dto.CartItemDto;
@@ -15,26 +15,19 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
 import cart.error.exception.CartItemException;
 
+@Transactional
 @Service
-public class CartService {
-	private final ProductRepository productRepository;
+public class CartCommandService {
+
 	private final CartRepository cartRepository;
 	private final CartItemRepository cartItemRepository;
+	private final ProductRepository productRepository;
 
-	public CartService(final ProductRepository productRepository, final CartRepository cartRepository,
+	public CartCommandService(final ProductRepository productRepository, final CartRepository cartRepository,
 		final CartItemRepository cartItemRepository) {
 		this.productRepository = productRepository;
 		this.cartRepository = cartRepository;
 		this.cartItemRepository = cartItemRepository;
-	}
-
-	public List<CartItemDto> findByMember(Long memberId) {
-		final Cart cart = cartRepository.findByMemberId(memberId);
-		final List<CartItem> cartItems = cart.getCartItems();
-
-		return cartItems.stream()
-			.map(CartItemDto::from)
-			.collect(Collectors.toList());
 	}
 
 	public Long add(CartDto cartDto) {

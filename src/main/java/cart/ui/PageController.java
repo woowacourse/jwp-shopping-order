@@ -4,22 +4,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import cart.application.product.ProductService;
+import cart.application.product.ProductQueryService;
 import cart.domain.member.MemberRepository;
 
 @Controller
 public class PageController {
-	private final ProductService productService;
+	private final ProductQueryService productQueryService;
 	private final MemberRepository memberRepository;
 
-	public PageController(ProductService productService, MemberRepository memberRepository) {
-		this.productService = productService;
+	public PageController(ProductQueryService productQueryService, MemberRepository memberRepository) {
+		this.productQueryService = productQueryService;
 		this.memberRepository = memberRepository;
 	}
 
 	@GetMapping("/admin")
 	public String admin(Model model) {
-		model.addAttribute("products", productService.getAllProducts());
+		model.addAttribute("products", productQueryService.getAllProducts());
 		return "admin";
 	}
 
