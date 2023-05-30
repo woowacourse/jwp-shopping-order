@@ -1,21 +1,23 @@
 package cart.domain.common;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class Money {
 
     private static final int MINIMUM_PRICE = 0;
+    private static final int DEFAULT_SCALE = 0;
 
-    private final BigInteger money;
+    private final BigDecimal money;
 
-    public Money(final BigInteger money) {
+    public Money(final BigDecimal money) {
         this.money = money;
     }
 
     public static Money valueOf(final int money) {
         validate(money);
-        return new Money(new BigInteger(Integer.toString(money)));
+        return new Money(new BigDecimal(Integer.toString(money)));
     }
 
     private static void validate(final int price) {
@@ -36,7 +38,11 @@ public class Money {
         return this.money.compareTo(money.money) > 0;
     }
 
-    public BigInteger getMoney() {
+    public Money getPartial(final double rate) {
+        return new Money(money.multiply(BigDecimal.valueOf(rate)).setScale(DEFAULT_SCALE, RoundingMode.DOWN));
+    }
+
+    public BigDecimal getMoney() {
         return money;
     }
 
@@ -59,5 +65,12 @@ public class Money {
     @Override
     public int hashCode() {
         return Objects.hash(money);
+    }
+
+    @Override
+    public String toString() {
+        return "Money{" +
+                "money=" + money +
+                '}';
     }
 }

@@ -70,4 +70,17 @@ class MoneyTest {
         //then
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    void 일정_비율의_돈을_얻는다() {
+        //given
+        final Money money = Money.valueOf(1000);
+        final double rate = 0.1;
+
+        //when
+        final Money partialMoney = money.getPartial(rate);
+
+        //then
+        assertThat(partialMoney).isEqualTo(Money.valueOf(100));
+    }
 }
