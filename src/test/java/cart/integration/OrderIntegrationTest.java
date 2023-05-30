@@ -88,12 +88,21 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("장바구니 정보와 다른 사용자 정보로 주문 정보 추가 요청시 실패한다.")
+    @DisplayName("다른 사용자의 장바구니 정보로 주문 정보 추가 요청시 실패한다.")
     @Test
     void addCartItemByDifferentMember() {
         final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId, cartItemId2));
         final ExtractableResponse<Response> response = 주문_정보_추가(member2, orderRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("잘못된 장바구니 아이템 정보로 주문 정보 추가 요청시 실패한다.")
+    @Test
+    void addNotExistingCartItem() {
+        final OrderRequest orderRequest = new OrderRequest(List.of(-1L));
+        final ExtractableResponse<Response> response = 주문_정보_추가(member, orderRequest);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }
