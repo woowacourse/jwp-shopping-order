@@ -7,6 +7,7 @@ import cart.ui.controller.dto.request.CartItemRequest;
 import cart.ui.controller.dto.response.CartItemResponse;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequestMapping("/cart-items")
+@RestController
 public class CartItemApiController {
 
     private final CartItemService cartItemService;
@@ -33,9 +34,8 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<Void> addCartItems(Member member, @RequestBody @Valid CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
-
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
@@ -43,17 +43,15 @@ public class CartItemApiController {
     public ResponseEntity<Void> updateCartItemQuantity(
             Member member,
             @PathVariable Long id,
-            @RequestBody CartItemQuantityUpdateRequest request
+            @RequestBody @Valid CartItemQuantityUpdateRequest request
     ) {
         cartItemService.updateQuantity(member, id, request);
-
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
-
         return ResponseEntity.noContent().build();
     }
 }
