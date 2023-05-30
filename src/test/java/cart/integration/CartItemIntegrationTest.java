@@ -51,6 +51,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        final var cartItemId = response.jsonPath().get("cartItemId");
+        assertThat(cartItemId).isInstanceOf(Number.class);
     }
 
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
