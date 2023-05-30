@@ -1,22 +1,25 @@
-package cart.persistence.dto;
+package cart.persistence.dao.dto;
 
 public class CartItemDto {
 
     private final Long cartId;
     private final Long memberId;
     private final String memberName;
+    private final String memberPassword;
     private final Long productId;
     private final String productName;
     private final String productImageUrl;
     private final int productPrice;
     private final int productQuantity;
 
-    public CartItemDto(final Long cartId, final Long memberId, final String memberName, final Long productId,
-                       final String productName,
-                       final String productImageUrl, final int productPrice, final int productQuantity) {
+    public CartItemDto(final Long cartId, final Long memberId, final String memberName, final String memberPassword,
+                       final Long productId,
+                       final String productName, final String productImageUrl, final int productPrice,
+                       final int productQuantity) {
         this.cartId = cartId;
         this.memberId = memberId;
         this.memberName = memberName;
+        this.memberPassword = memberPassword;
         this.productId = productId;
         this.productName = productName;
         this.productImageUrl = productImageUrl;
@@ -34,6 +37,10 @@ public class CartItemDto {
 
     public String getMemberName() {
         return memberName;
+    }
+
+    public String getMemberPassword() {
+        return memberPassword;
     }
 
     public Long getProductId() {

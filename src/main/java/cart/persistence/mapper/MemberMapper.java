@@ -21,7 +21,7 @@ public class MemberMapper {
     }
 
     public static Member convertMember(final CartItemDto cartItemDto) {
-        return Member.create(cartItemDto.getMemberName(), cartItemDto.getMemberPassword());
+        return Member.createWithEncodedPassword(cartItemDto.getMemberName(), cartItemDto.getMemberPassword());
     }
 
     public static List<MemberCoupon> convertMemberCoupons(final List<MemberCouponDto> myCouponsByName) {

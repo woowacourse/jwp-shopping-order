@@ -1,6 +1,6 @@
 package cart.persistence.dao;
 
-import cart.persistence.dto.CartItemDto;
+import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.entity.CartEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -25,11 +25,12 @@ public class CartItemDao {
         final Long memberId = rs.getLong("member_id");
         final Long productId = rs.getLong("id");
         final String memberName = rs.getString("member_name");
+        final String memberPassword = rs.getString("password");
         final String productName = rs.getString("product_name");
         final int productPrice = rs.getInt("price");
         final String productImageUrl = rs.getString("image_url");
         final int productQuantity = rs.getInt("cart_item.quantity");
-        return new CartItemDto(cartItemId, memberId, memberName, productId, productName,
+        return new CartItemDto(cartItemId, memberId, memberName, memberPassword, productId, productName,
             productImageUrl, productPrice, productQuantity);
     };
 
@@ -40,7 +41,7 @@ public class CartItemDao {
     }
 
     public List<CartItemDto> findByMemberName(final String memberName) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.name AS member_name, "
+        final String sql = "SELECT cart_item.id, cart_item.member_id, member.name AS member_name, member.password, "
             + "product.id, product.name AS product_name, product.price, product.image_url, cart_item.quantity " +
             "FROM cart_item " +
             "INNER JOIN member ON cart_item.member_id = member.id " +
@@ -65,7 +66,7 @@ public class CartItemDao {
 
     public Optional<CartItemDto> findById(final Long id) {
         try {
-            final String sql = "SELECT cart_item.id, cart_item.member_id, member.name AS member_name, "
+            final String sql = "SELECT cart_item.id, cart_item.member_id, member.name AS member_name, member.password, "
                 + "product.id, product.name AS product_name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +

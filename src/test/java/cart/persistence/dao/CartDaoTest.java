@@ -3,7 +3,7 @@ package cart.persistence.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import cart.persistence.dto.CartItemDto;
+import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
@@ -51,9 +51,9 @@ class CartDaoTest extends DaoTest {
         final CartItemDto cart = cartItemDao.findById(저장된_장바구니_아이디).get();
         assertThat(cart)
             .extracting(CartItemDto::getCartId, CartItemDto::getMemberId, CartItemDto::getMemberName,
-                CartItemDto::getProductId, CartItemDto::getProductName, CartItemDto::getProductPrice,
+                CartItemDto::getMemberPassword, CartItemDto::getProductId, CartItemDto::getProductName, CartItemDto::getProductPrice,
                 CartItemDto::getProductImageUrl, CartItemDto::getProductQuantity)
-            .containsExactly(저장된_장바구니_아이디, 져장된_져니_아이디, "journey", 저장된_치킨_아이디,
+            .containsExactly(저장된_장바구니_아이디, 져장된_져니_아이디, "journey", "password", 저장된_치킨_아이디,
                 "치킨", 20000, "chicken_image_url", 1);
     }
 

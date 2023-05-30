@@ -6,16 +6,14 @@ import static org.hamcrest.Matchers.is;
 
 import cart.application.dto.CartItemQuantityUpdateRequest;
 import cart.application.dto.CartItemRequest;
+import cart.application.dto.ProductRequest;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberSaveRequest;
-import cart.application.dto.ProductRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
-@Sql("classpath:/init.sql")
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @DisplayName("장바구니에 아이템을 추가한다.")
@@ -32,7 +30,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         // expected
         final CartItemRequest 장바구니_저장_요청 = new CartItemRequest(1L);
-        given().log().all()
+        given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(져니_등록_요청.getName(), 져니_등록_요청.getPassword())
             .body(장바구니_저장_요청)
@@ -52,7 +50,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         // expected
         final CartItemRequest 장바구니_저장_요청 = new CartItemRequest(1L);
-        given().log().all()
+        given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(져니_등록_요청.getName(), "test123")
             .body(장바구니_저장_요청)
@@ -84,7 +82,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         장바구니_상품_수량_수정(져니_로그인_요청, 장바구니_수량_수정_요청, 1L);
 
         // expected
-        given().log().all()
+        given()
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .when()
             .get("/cart-items")
@@ -121,7 +119,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         // expected
         final CartItemQuantityUpdateRequest 장바구니_수량_수정_요청 = new CartItemQuantityUpdateRequest(10);
-        given().log().all()
+        given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .when()
@@ -150,7 +148,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         장바구니_상품_수량_수정(져니_로그인_요청, 장바구니_수량_수정_요청, 1L);
 
         // expected
-        given().log().all()
+        given()
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .when()
             .get("/cart-items")
@@ -177,7 +175,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         // expected
         final CartItemQuantityUpdateRequest 장바구니_수량_수정_요청 = new CartItemQuantityUpdateRequest(10);
-        given().log().all()
+        given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(라온_등록_요청.getName(), 라온_등록_요청.getPassword())
             .when()
@@ -203,7 +201,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
 
         // when
-        given().log().all()
+        given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .when()
@@ -211,7 +209,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .then();
 
         // then
-        given().log().all()
+        given()
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .when()
             .get("/cart-items")
@@ -239,7 +237,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         장바구니_상품_저장(져니_로그인_요청, 피자_장바구니_저장_요청);
 
         // when
-        given().log().all()
+        given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .when()
@@ -247,7 +245,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .then();
 
         // then
-        given().log().all()
+        given()
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .when()
             .get("/cart-items")
