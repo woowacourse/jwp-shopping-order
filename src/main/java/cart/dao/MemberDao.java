@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.domain.Rank;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,7 @@ public class MemberDao {
 
     public void addMember(Member member) {
         String sql = "INSERT INTO member (email, password, rank, total_purchase_amount) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), "normal", 0);
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), "NORMAL", 0);
     }
 
     public void updateMember(Member member) {
@@ -53,7 +54,7 @@ public class MemberDao {
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"), Rank.valueOf(rs.getString("rank")));
         }
     }
 }

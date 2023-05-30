@@ -7,15 +7,17 @@ public class Member {
     private Long id;
     private Email email;
     private Password password;
+    private Rank rank;
 
-    public Member(final Long id, final Email email, final Password password) {
+    public Member(final Long id, final Email email, final Password password, final Rank rank) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.rank = rank;
     }
 
-    public Member(final Long id, final String email, final String password) {
-        this(id, new Email(email), new Password(password));
+    public Member(final Long id, final String email, final String password, final Rank rank) {
+        this(id, new Email(email), new Password(password), rank);
     }
 
     public Long getId() {
