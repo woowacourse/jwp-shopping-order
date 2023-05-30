@@ -1,6 +1,7 @@
 package cart.order_item.dao;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.order_item.dao.entity.OrderItemEntity;
 import java.math.BigDecimal;
@@ -47,5 +48,18 @@ class OrderItemDaoTest {
 
     //when & then
     assertDoesNotThrow(() -> orderItemDao.save(orderItemEntities));
+  }
+
+  @Test
+  @DisplayName("findByOrderId() : order Id를 통해 주문된 상품들을 조회할 수 있다.")
+  void test_findByOrderId() throws Exception {
+    //given
+    final Long orderId = 1L;
+
+    //when
+    final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
+
+    //then
+    assertEquals(3, orderItemEntities.size());
   }
 }
