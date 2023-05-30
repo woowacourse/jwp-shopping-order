@@ -24,12 +24,6 @@ CREATE TABLE cart_item (
 CREATE TABLE coupon (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
-    discount_percent INT NOT NULL
-);
-
-CREATE TABLE coupon1 (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE,
     discount_policy_name VARCHAR(255) NOT NULL UNIQUE,
     discount_value INT NOT NULL
 );

@@ -5,16 +5,22 @@ import cart.domain.Coupon;
 public class CouponResponse {
     private final Long id;
     private final String name;
-    private final int discountPercent;
+    private final String discountPolicyName;
+    private final int discountValue;
 
-    public CouponResponse(Long id, String name, int discountPercent) {
+    public CouponResponse(Long id, String name, String discountPolicyName, int discountValue) {
         this.id = id;
         this.name = name;
-        this.discountPercent = discountPercent;
+        this.discountPolicyName = discountPolicyName;
+        this.discountValue = discountValue;
     }
 
     public static CouponResponse of(Coupon coupon) {
-        return new CouponResponse(coupon.getId(), coupon.getName(), coupon.getDiscountPercent().getValue());
+        return new CouponResponse(
+                coupon.getId(),
+                coupon.getName(),
+                coupon.getDiscountPolicyName(),
+                coupon.getDiscountValue());
     }
 
     public Long getId() {
@@ -25,7 +31,11 @@ public class CouponResponse {
         return name;
     }
 
-    public int getDiscountPercent() {
-        return discountPercent;
+    public String getDiscountPolicyName() {
+        return discountPolicyName;
+    }
+
+    public int getDiscountValue() {
+        return discountValue;
     }
 }

@@ -1,25 +1,20 @@
 package cart.domain;
 
+import cart.domain.policy.DiscountPolicy;
+
 public class Coupon {
     private final Long id;
     private final String name;
-    private final Percent discountPercent;
+    private final DiscountPolicy discountPolicy;
 
-    public Coupon(Long id, String name, int discountPercent) {
-        validatePercent(discountPercent);
+    public Coupon(Long id, String name, DiscountPolicy discountPolicy) {
         this.id = id;
         this.name = name;
-        this.discountPercent = new Percent(discountPercent);
+        this.discountPolicy = discountPolicy;
     }
 
-    public Coupon(String name, int discountPercent) {
-        this(null, name, discountPercent);
-    }
-
-    private void validatePercent(int discountPercent) {
-        if (discountPercent == 0) {
-            throw new IllegalArgumentException("쿠폰의 할인퍼센트는 0퍼센트가 될 수 없습니다.");
-        }
+    public Coupon(String name, DiscountPolicy discountPolicy) {
+        this(null, name, discountPolicy);
     }
 
     public Long getId() {
@@ -30,7 +25,12 @@ public class Coupon {
         return name;
     }
 
-    public Percent getDiscountPercent() {
-        return discountPercent;
+    public String getDiscountPolicyName() {
+        return discountPolicy.getName();
     }
+
+    public int getDiscountValue() {
+        return discountPolicy.getValue();
+    }
+
 }

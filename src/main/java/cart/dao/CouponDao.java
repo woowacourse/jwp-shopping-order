@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.domain.Coupon;
+import cart.domain.policy.DiscountPolicy;
+import cart.domain.policy.DiscountPolicyResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,16 +18,18 @@ import java.util.Objects;
 public class CouponDao {
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Coupon> rowMapper = (rs, rowNum) -> {
-        Coupon coupon = new Coupon(rs.getLong("id"),
-                rs.getString("name"),
-                rs.getInt("discount_percent"));
-        return coupon;
-    };
-
     public CouponDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<Coupon> rowMapper = (rs, rowNum) -> {
+        Long id = rs.getLong("id");
+        String name = rs.getString("name");
+        String discount_policy_name = rs.getString("discount_policy_name");
+        int discountValue = rs.getInt("discount_value");
+        DiscountPolicy discountPolicy = DiscountPolicyResolver.of(discount_policy_name, discountValue);
+        return new Coupon(id, name, discountPolicy);
+    };
 
     public Coupon getCouponById(Long id) {
         String sql = "SELECT * FROM coupon WHERE id = ?";
@@ -33,12 +37,13 @@ public class CouponDao {
     }
 
     public Long createCoupon(Coupon coupon) {
-        String sql = "INSERT INTO coupon (name, discount_percent) VALUES (?,?)";
+        String sql = "INSERT INTO coupon (name, discount_policy_name, discount_value) VALUES (?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, coupon.getName());
-            ps.setInt(2, coupon.getDiscountPercent().getValue());
+            ps.setString(2, coupon.getDiscountPolicyName());
+            ps.setInt(3, coupon.getDiscountValue());
             return ps;
         }, keyHolder);
 
@@ -51,15 +56,8 @@ public class CouponDao {
     }
 
     public List<Coupon> findByMemberId(Long memberId) {
-        String sql = "SELECT coupon.id, coupon.name, coupon.discount_percent, coupon_box.member_id " +
+        String sql = "SELECT coupon.id, coupon.name, coupon.discount_policy_name, coupon.discount_value, coupon_box.member_id " +
                 "FROM coupon_box JOIN coupon ON coupon_box.coupon_id = coupon.id WHERE coupon_box.member_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long couponId = rs.getLong("coupon.id");
-            String couponName = rs.getString("coupon.name");
-            int discountPercent = rs.getInt("coupon.discount_percent");
-            return new Coupon(couponId, couponName, discountPercent);
-        }, memberId);
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
-
-
 }
