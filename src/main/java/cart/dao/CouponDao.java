@@ -3,6 +3,7 @@ package cart.dao;
 import cart.dao.entity.CouponEntity;
 import cart.dao.entity.CouponTypeCouponEntity;
 import cart.dao.entity.CouponTypeEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,6 +16,7 @@ import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class CouponDao {
@@ -81,5 +83,36 @@ public class CouponDao {
         final String sql = "SELECT id, name, description, discount_amount FROM coupon_type";
 
         return jdbcTemplate.query(sql, couponTypeEntityRowMapper);
+    }
+
+    public Optional<CouponTypeCouponEntity> findByCouponIdAndMemberId(final Long couponId, final Long memberId) {
+        final String sql = "SELECT c.id couponId, " +
+                "ct.id couponTypeId, " +
+                "ct.name name, " +
+                "ct.description description, " +
+                "ct.discount_amount discountAmount, " +
+                "c.usage_status usageStatus " +
+                "FROM coupon c " +
+                "JOIN coupon_type ct ON c.coupon_type_id = ct.id " +
+                "WHERE c.member_id = :memberId " +
+                "AND c.coupon_type_id = :couponId";
+
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("couponId", couponId);
+
+        try {
+            final CouponTypeCouponEntity couponTypeCouponEntity = jdbcTemplate.queryForObject(sql, params, couponTypeCouponEntityRowMapper);
+            return Optional.ofNullable(couponTypeCouponEntity);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public void deleteCoupon(final Long id) {
+        final String sql = "DELETE FROM coupon WHERE id = :id";
+
+        final Map<String, Long> params = Collections.singletonMap("id", id);
+        jdbcTemplate.update(sql, params);
     }
 }

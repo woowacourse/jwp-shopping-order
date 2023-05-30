@@ -6,6 +6,7 @@ import cart.domain.Member;
 import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
 import cart.exception.CannotChangeCouponStatusException;
+import cart.exception.CannotDeleteCouponException;
 import cart.repository.CouponRepository;
 import cart.repository.MemberJdbcRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +22,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
 
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
@@ -86,6 +89,43 @@ class CouponServiceTest {
             // when, then
             assertThatThrownBy(() -> couponService.reissueCoupon(couponId, request))
                     .isInstanceOf(CannotChangeCouponStatusException.class);
+        }
+    }
+
+    @Nested
+    class 쿠폰_삭제할_때 {
+
+        private long couponId;
+        private long memberId;
+
+        @BeforeEach
+        void setUp() {
+            couponId = 1L;
+            memberId = 1L;
+        }
+
+        @Test
+        void 성공한다() {
+            // given
+            final Coupon coupon = new Coupon(couponId, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, true);
+            given(couponRepository.findCouponByCouponIdAndMemberId(anyLong(), anyLong())).willReturn(coupon);
+
+            // when
+            couponService.deleteCoupon(couponId, memberId);
+
+            // then
+            then(couponRepository).should(times(1)).deleteCoupon(anyLong());
+        }
+
+        @Test
+        void 사용하지_않은_쿠폰이면_실패한다() {
+            // given
+            final Coupon coupon = new Coupon(couponId, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, false);
+            given(couponRepository.findCouponByCouponIdAndMemberId(anyLong(), anyLong())).willReturn(coupon);
+
+            // when, then
+            assertThatThrownBy(() -> couponService.deleteCoupon(couponId, memberId))
+                    .isInstanceOf(CannotDeleteCouponException.class);
         }
     }
 }

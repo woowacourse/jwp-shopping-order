@@ -10,10 +10,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -77,5 +79,15 @@ class CouponJdbcRepositoryTest {
                     assertThat(discountAmounts).containsExactly(1000, 3000, 5000, 10000);
                 }
         );
+    }
+
+    @Test
+    void 쿠폰을_삭제한다() {
+        // when
+        couponJdbcRepository.deleteCoupon(2L);
+
+        // then
+        assertThatThrownBy(() -> couponJdbcRepository.findCouponByCouponIdAndMemberId(2L, 1L))
+                .isInstanceOf(NoSuchElementException.class);
     }
 }

@@ -49,5 +49,4 @@ public class CouponProvider {
     private static CouponTypeResponse toCouponTypeResponse(final Coupon coupon) {
         return new CouponTypeResponse(coupon.getId(), coupon.getName(), coupon.getDiscountAmount(), coupon.getDescription());
     }
-
 }

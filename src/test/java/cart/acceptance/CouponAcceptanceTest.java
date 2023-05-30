@@ -16,6 +16,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -120,7 +121,33 @@ public class CouponAcceptanceTest extends IntegrationTest {
 
     private ExtractableResponse<Response> 전체_쿠폰을_조회한다() {
         return givenBasic()
+                .when()
                 .get("/coupons")
+                .then().log().all()
+                .extract();
+    }
+
+    /**
+     * given 쿠폰 아이디가 주어졌을 때
+     * when 쿠폰 삭제 요청을 하면
+     * then 쿠폰이 삭제된다.
+     */
+    @Test
+    void 쿠폰을_삭제한다() {
+        // given
+        final long couponId = 1L;
+
+        // when
+        final ExtractableResponse<Response> 쿠폰_삭제_결과 = 쿠폰을_삭제한다(couponId);
+
+        // then
+        assertThat(쿠폰_삭제_결과.statusCode()).isEqualTo(NO_CONTENT.value());
+    }
+
+    private ExtractableResponse<Response> 쿠폰을_삭제한다(final long couponId) {
+        return givenBasic()
+                .when()
+                .delete("/coupons/{couponId}", couponId)
                 .then().log().all()
                 .extract();
     }

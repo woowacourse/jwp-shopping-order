@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
 import cart.exception.CannotChangeCouponStatusException;
+import cart.exception.CannotDeleteCouponException;
 import cart.repository.CouponRepository;
 import cart.repository.MemberJdbcRepository;
 import cart.repository.MemberRepository;
@@ -36,5 +37,15 @@ public class CouponService {
         }
 
         couponRepository.changeStatus(couponId, member.getId());
+    }
+
+    public void deleteCoupon(final Long couponId, final Long memberId) {
+        final Coupon coupon = couponRepository.findCouponByCouponIdAndMemberId(couponId, memberId);
+
+        if (coupon.isNotUsed()) {
+            throw new CannotDeleteCouponException();
+        }
+
+        couponRepository.deleteCoupon(coupon.getId());
     }
 }

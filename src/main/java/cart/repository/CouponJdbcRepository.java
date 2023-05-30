@@ -10,6 +10,7 @@ import cart.domain.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static java.util.stream.Collectors.toList;
 
@@ -64,5 +65,17 @@ public class CouponJdbcRepository implements CouponRepository {
                 .map(it -> Coupon.createCouponType(it.getId(), it.getName(), it.getDescription(), it.getDiscountAmount()))
                 .collect(toList());
         return new Coupons(coupons);
+    }
+
+    @Override
+    public Coupon findCouponByCouponIdAndMemberId(final Long couponId, final Long memberId) {
+        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findByCouponIdAndMemberId(couponId, memberId)
+                .orElseThrow(() -> new NoSuchElementException("쿠폰을 찾을 수 없습니다."));
+        return toDomain(couponTypeCouponEntity);
+    }
+
+    @Override
+    public void deleteCoupon(final Long id) {
+        couponDao.deleteCoupon(id);
     }
 }

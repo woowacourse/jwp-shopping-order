@@ -68,7 +68,7 @@ class CouponDaoTest {
     }
 
     @Test
-    void 전체_쿠폰_조회를_한다() {
+    void 전체_쿠폰_조회한다() {
         // when
         final List<CouponTypeEntity> couponTypeEntities = couponDao.findAll();
 
@@ -79,5 +79,26 @@ class CouponDaoTest {
                         .map(CouponTypeEntity::getDiscountAmount)
                         .collect(toList())).containsExactly(1000, 3000, 5000, 10000)
         );
+    }
+
+    @Test
+    void 쿠폰을_회원아이디와_쿠폰아이디로_조회한다() {
+        // when
+        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findByCouponIdAndMemberId(1L, 1L).get();
+
+        // then
+        assertThat(couponTypeCouponEntity.getCouponId()).isNotNull();
+    }
+
+    @Test
+    void 쿠폰을_삭제한다() {
+        // given
+        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findByCouponIdAndMemberId(1L, 1L).get();
+
+        // when
+        couponDao.deleteCoupon(couponTypeCouponEntity.getCouponId());
+
+        // then
+        assertThat(couponDao.findByCouponIdAndMemberId(1L, 1L)).isNotPresent();
     }
 }
