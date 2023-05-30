@@ -11,3 +11,31 @@ INSERT INTO MEMBER (email, password)
 VALUES ('pizza1@pizza.com', 'pizza');
 INSERT INTO MEMBER (email, password)
 VALUES ('pizza2@pizza.com', 'pizza');
+
+INSERT INTO COUPON (name, policy_type, discount_price, discount_percent, discount_delivery_fee, condition_type,
+                    minimum_price)
+VALUES ('30000원 이상 3000원 할인 쿠폰', 'PRICE', 3000, 0, false, 'MINIMUM_PRICE', 30000);
+INSERT INTO COUPON (name, policy_type, discount_price, discount_percent, discount_delivery_fee, condition_type,
+                    minimum_price)
+VALUES ('30000원 이상 4000원 할인 쿠폰', 'PRICE', 4000, 0, false, 'MINIMUM_PRICE', 30000);
+
+INSERT INTO COUPON (name, policy_type, discount_price, discount_percent, discount_delivery_fee, condition_type,
+                    minimum_price)
+VALUES ('10퍼센트 할인', 'RATE', 0, 10, false, 'MINIMUM_PRICE', 0);
+
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (1, 1, false);
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (2, 1, false);
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (3, 1, false);
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (1, 2, false);
+INSERT INTO MEMBER_COUPON (coupon_id, member_id, used)
+values (2, 2, false);
+
+INSERT INTO ORDERS (delivery_fee, coupon_id, member_id)
+values (3000, 3, 1);
+
+INSERT INTO ORDER_ITEM (name, image_url, price, quantity, order_id)
+values ('피자스쿨 치즈피자', 'https://t1.daumcdn.net/cfile/tistory/2647BE3754B7E8B733', 8900, 1, 1);
