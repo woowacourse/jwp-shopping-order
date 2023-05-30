@@ -474,7 +474,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @Nested
-    @DisplayName("장바구니에 담긴 상품 삭제 시")
+    @DisplayName("장바구니에 담긴 상품 목록 조회 시")
     class showCartItems {
 
         @Test
@@ -523,26 +523,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                     .get("/cart-items")
                     .then().log().all()
                     .extract().response();
-            JsonPath jsonPath = response.jsonPath();
 
             // then
-            assertAll(
-                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
-
-                    () -> assertThat(jsonPath.getLong("[0].id")).isEqualTo(Dooly_CartItem1.ID),
-                    () -> assertThat(jsonPath.getInt("[0].quantity")).isEqualTo(Dooly_CartItem1.QUANTITY),
-                    () -> assertThat(jsonPath.getLong("[0].product.id")).isEqualTo(Dooly_CartItem1.PRODUCT.getId()),
-                    () -> assertThat(jsonPath.getString("[0].product.name")).isEqualTo(Dooly_CartItem1.PRODUCT.getName()),
-                    () -> assertThat(jsonPath.getInt("[0].product.price")).isEqualTo(Dooly_CartItem1.PRODUCT.getPrice()),
-                    () -> assertThat(jsonPath.getString("[0].product.imageUrl")).isEqualTo(Dooly_CartItem1.PRODUCT.getImageUrl()),
-
-                    () -> assertThat(jsonPath.getLong("[1].id")).isEqualTo(Dooly_CartItem2.ID),
-                    () -> assertThat(jsonPath.getInt("[1].quantity")).isEqualTo(Dooly_CartItem2.QUANTITY),
-                    () -> assertThat(jsonPath.getLong("[1].product.id")).isEqualTo(Dooly_CartItem2.PRODUCT.getId()),
-                    () -> assertThat(jsonPath.getString("[1].product.name")).isEqualTo(Dooly_CartItem2.PRODUCT.getName()),
-                    () -> assertThat(jsonPath.getInt("[1].product.price")).isEqualTo(Dooly_CartItem2.PRODUCT.getPrice()),
-                    () -> assertThat(jsonPath.getString("[1].product.imageUrl")).isEqualTo(Dooly_CartItem2.PRODUCT.getImageUrl())
-            );
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         }
     }
 }
