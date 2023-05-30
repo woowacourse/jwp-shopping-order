@@ -17,10 +17,10 @@ public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<MemberEntity> memberEntityRowMapper = (rs, rowNum) -> new MemberEntity(
-                    rs.getLong("id"),
-                    rs.getString("email"),
-                    rs.getString("password")
-            );
+            rs.getLong("id"),
+            rs.getString("email"),
+            rs.getString("password")
+    );
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

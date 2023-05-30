@@ -31,7 +31,7 @@ public class CouponDao {
                     rs.getString("description"),
                     rs.getInt("discountAmount"),
                     rs.getBoolean("usageStatus")
-    );
+            );
     private final RowMapper<CouponTypeEntity> couponTypeEntityRowMapper = (rs, num) ->
             new CouponTypeEntity(
                     rs.getLong("id"),

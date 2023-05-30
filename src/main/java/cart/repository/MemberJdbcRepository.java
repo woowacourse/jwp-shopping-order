@@ -47,12 +47,11 @@ public class MemberJdbcRepository implements MemberRepository {
     private static List<Coupon> mapToCoupon(final List<CouponTypeCouponEntity> couponTypeCouponEntities) {
         return couponTypeCouponEntities.stream()
                 .map(entity -> new Coupon(
-                                entity.getCouponId(),
-                                entity.getName(),
-                                entity.getDescription(),
-                                entity.getDiscountAmount(),
-                                entity.getUsageStatus()
-                        ))
+                        entity.getCouponId(),
+                        entity.getName(),
+                        entity.getDescription(),
+                        entity.getDiscountAmount(),
+                        entity.getUsageStatus()))
                 .collect(toList());
     }
 }
