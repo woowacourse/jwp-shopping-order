@@ -9,7 +9,11 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProducts;
 import cart.domain.product.Product;
-import cart.persistence.dao.*;
+import cart.persistence.dao.CartItemDao;
+import cart.persistence.dao.MemberDao;
+import cart.persistence.dao.OrderHistoryDao;
+import cart.persistence.dao.OrderProductDao;
+import cart.persistence.repository.CartItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,14 +23,14 @@ import java.util.stream.Collectors;
 @Service
 public class CartItemService {
 
-    private final ProductDao productDao;
+    private final CartItemRepository cartItemRepository;
     private final CartItemDao cartItemDao;
     private final OrderHistoryDao orderHistoryDao;
     private final OrderProductDao orderProductDao;
     private final MemberDao memberDao;
 
-    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao, final MemberDao memberDao) {
-        this.productDao = productDao;
+    public CartItemService(final CartItemRepository cartItemRepository, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao, final MemberDao memberDao) {
+        this.cartItemRepository = cartItemRepository;
         this.cartItemDao = cartItemDao;
         this.orderHistoryDao = orderHistoryDao;
         this.orderProductDao = orderProductDao;
@@ -42,7 +46,7 @@ public class CartItemService {
 
     @Transactional(readOnly = true)
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
-        final Product product = productDao.getProductById(cartItemRequest.getProductId());
+        final Product product = cartItemRepository.getProductById(cartItemRequest.getProductId());
         final CartItem cartItem = new CartItem(member, product);
         return cartItemDao.save(cartItem);
     }

@@ -1,10 +1,9 @@
 package cart.persistence.dao;
 
-import cart.domain.product.Product;
+import cart.persistence.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -13,11 +12,12 @@ import java.util.List;
 @Repository
 public class ProductDao {
 
-    private static final RowMapper<Product> PRODUCT_MAPPER = (rs, rowNum) -> new Product(
+    private static final RowMapper<ProductEntity> PRODUCT_MAPPER = (rs, rowNum) -> new ProductEntity(
             rs.getLong("id"),
             rs.getString("name"),
             rs.getInt("price"),
-            rs.getString("image_url")
+            rs.getString("image_url"),
+            null
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -30,28 +30,30 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductEntity> getAllProducts() {
         final String sql = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(sql, PRODUCT_MAPPER);
     }
 
-    public Product getProductById(final Long productId) {
+    public ProductEntity getProductById(final Long productId) {
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, PRODUCT_MAPPER, productId);
     }
 
-    public Long createProduct(final Product product) {
-        final SqlParameterSource source = new MapSqlParameterSource()
-                .addValue("name", product.getName())
-                .addValue("price", product.getPrice())
-                .addValue("image_url", product.getImageUrl());
-
+    public Long createProduct(final ProductEntity productEntity) {
+        final BeanPropertySqlParameterSource source = new BeanPropertySqlParameterSource(productEntity);
         return jdbcInsert.executeAndReturnKey(source).longValue();
     }
 
-    public void updateProduct(final Long productId, final Product product) {
+    public void updateProduct(final ProductEntity productEntity) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(
+                sql,
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl(),
+                productEntity.getId()
+        );
     }
 
     public void deleteProduct(final Long productId) {
