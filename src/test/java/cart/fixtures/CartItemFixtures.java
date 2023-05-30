@@ -1,6 +1,7 @@
 package cart.fixtures;
 
 import static cart.fixtures.MemberFixtures.*;
+import static cart.fixtures.ProductFixtures.*;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.SALAD;
 
@@ -37,6 +38,16 @@ public class CartItemFixtures {
         public static final Long ID = 3L;
         public static final int QUANTITY = 5;
         public static final Product PRODUCT = CHICKEN.ENTITY;
+        public static final Member MEMBER = Ber.ENTITY;
+
+        public static final CartItem ENTITY = new CartItem(ID, QUANTITY, PRODUCT, MEMBER);
+        public static final CartItemResponse RESPONSE = CartItemResponse.from(ENTITY);
+    }
+
+    public static class Ber_CartItem2 {
+        public static final Long ID = 4L;
+        public static final int QUANTITY = 5;
+        public static final Product PRODUCT = PIZZA.ENTITY;
         public static final Member MEMBER = Ber.ENTITY;
 
         public static final CartItem ENTITY = new CartItem(ID, QUANTITY, PRODUCT, MEMBER);

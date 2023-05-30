@@ -1,16 +1,13 @@
 package cart.acceptance;
 
 import static cart.fixtures.CartItemFixtures.*;
-import static cart.fixtures.MemberFixtures.Bixx;
-import static cart.fixtures.MemberFixtures.Dooly;
-import static cart.fixtures.ProductFixtures.PANCAKE;
-import static cart.fixtures.ProductFixtures.SALAD;
+import static cart.fixtures.MemberFixtures.*;
+import static cart.fixtures.ProductFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.fixtures.ProductFixtures.CHICKEN;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -349,6 +346,130 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
             // then
             assertThat(jsonPath.getInt("cartItem.quantity")).isEqualTo(quantity);
+        }
+    }
+
+    @Nested
+    @DisplayName("장바구니에 담긴 상품 삭제 시")
+    class deleteCartItem {
+
+        @Test
+        @DisplayName("인증 정보가 없으면 예외가 발생한다.")
+        void throws_when_not_found_authentication() {
+            // given
+            Long cartItemId = Dooly_CartItem1.ID;
+            CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(2);
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(request)
+                    .delete("/cart-items/{id}", cartItemId)
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("인증된 사용자가 아니면 예외가 발생한다.")
+        void throws_when_not_authentication_user() {
+            // given
+            String email = "notExist@email.com";
+            String password = "notExistPassword";
+            Long cartItemId = Dooly_CartItem1.ID;
+            CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(2);
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(email, password)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(request)
+                    .delete("/cart-items/{id}", cartItemId)
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증된 사용자가 아닙니다.")
+            );
+        }
+
+        @Nested
+        @DisplayName("인증된 사용자와 삭제할 장바구니 상품 ID를 담아서 요청한다.")
+        class requestWithAuthMemberAndCartItemId {
+
+            @Test
+            @DisplayName("삭제할 장바구니 상품 ID가 존재하지 않으면 예외가 발생한다.")
+            void throws_when_cartItem_not_exist() {
+                // given
+                Long notExistCartItemId = -1L;
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .auth().preemptive().basic(Dooly.EMAIL, Dooly.PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .delete("/cart-items/{id}", notExistCartItemId)
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo("장바구니 상품 ID에 해당하는 장바구니 상품을 찾을 수 없습니다.")
+                );
+            }
+
+            @Test
+            @DisplayName("사용자가 가진 장바구니 상품이 아니면 예외가 발생한다.")
+            void throws_when_cartItem_wrong_owner() {
+                // given
+                Long cartItemId = Bixx_CartItem1.ID;
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .auth().preemptive().basic(Dooly.EMAIL, Dooly.PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .delete("/cart-items/{id}", cartItemId)
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN.value()),
+                        () -> assertThat(response.getBody().asString()).isEqualTo("해당 사용자의 장바구니에 담긴 상품이 아닙니다.")
+                );
+            }
+
+            @Test
+            @DisplayName("정상적으로 장바구니 상품이 삭제된다.")
+            void success() {
+                // given
+                Long cartItemId = Ber_CartItem2.ID;
+
+                // when
+                RestAssured.given().log().all()
+                        .auth().preemptive().basic(Ber.EMAIL, Ber.PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .delete("/cart-items/{id}", cartItemId)
+                        .then().log().all();
+
+                Response response = RestAssured.given().log().all()
+                        .auth().preemptive().basic(Ber.EMAIL, Ber.PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .get("products/{id}/cart-items", PIZZA.ID)
+                        .then().log().all()
+                        .extract().response();
+                JsonPath jsonPath = response.jsonPath();
+
+                // then
+                assertThat(jsonPath.getObject("cartItem", Object.class)).isNull();
+            }
         }
     }
 }

@@ -43,7 +43,7 @@ public class ProductService {
 
     public ProductPagingResponse getAllPagingProductCartItems(AuthMember authMember,
                                                               Long lastProductId, int pageItemCount) {
-        Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         CartItems cartItems = new CartItems(cartItemDao.selectAllByMemberId(findMember.getId()));
         if (lastProductId == FIRST_PAGE_ID) {
             return getFirstPageProduct(pageItemCount, cartItems);
@@ -68,7 +68,7 @@ public class ProductService {
     }
 
     public ProductCartItemResponse findProductCartItems(AuthMember authMember, Long productId) {
-        Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         checkProductExist(productId);
         Product findProduct = productDao.getProductById(productId);
         Optional<CartItem> cartItem = cartItemDao.selectByMemberIdAndProductId(findMember.getId(), findProduct.getId());

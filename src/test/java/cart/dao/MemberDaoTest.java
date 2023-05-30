@@ -2,7 +2,10 @@ package cart.dao;
 
 import static cart.fixtures.MemberFixtures.Dooly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.domain.member.Member;
+import cart.exception.MemberNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -48,6 +51,36 @@ class MemberDaoTest {
 
             // when, then
             assertThat(memberDao.isNotExistByEmailAndPassword(email, password)).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("이메일로 멤버 조회 시")
+    class selectMemberByEmail {
+
+        @Test
+        @DisplayName("멤버가 존재하면 멤버를 반환한다.")
+        void isExist() {
+            // given
+            String email = Dooly.EMAIL;
+
+            // when
+            Member findMember = memberDao.selectMemberByEmail(email);
+
+            // then
+            assertThat(findMember).usingRecursiveComparison().isEqualTo(Dooly.ENTITY);
+        }
+
+        @Test
+        @DisplayName("멤버가 존재하지 않으면 예외가 발생한다.")
+        void throws_when_not_exist_member() {
+            // given
+            String email = "notExist@email.com";
+
+            // when, then
+            assertThatThrownBy(() -> memberDao.selectMemberByEmail(email))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessage("이메일에 해당하는 멤버를 찾을 수 없습니다.");
         }
     }
 }

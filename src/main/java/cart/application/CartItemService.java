@@ -31,14 +31,14 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(AuthMember authMember) {
-        Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         List<CartItem> cartItems = cartItemDao.findByMemberId(findMember.getId());
         return cartItems.stream().map(CartItemResponse::from).collect(Collectors.toList());
     }
 
     public Long add(AuthMember authMember, CartItemRequest cartItemRequest) {
         Long productId = cartItemRequest.getProductId();
-        Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         checkProductExist(productId);
         Optional<CartItem> nullableCartItem = cartItemDao.selectByMemberIdAndProductId(findMember.getId(), productId);
         if (nullableCartItem.isPresent()) {
@@ -61,7 +61,7 @@ public class CartItemService {
     }
 
     public void updateQuantity(AuthMember authMember, Long id, CartItemQuantityUpdateRequest request) {
-        Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         checkCartItemExist(id);
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(findMember);
@@ -80,7 +80,8 @@ public class CartItemService {
     }
 
     public void remove(AuthMember authMember, Long id) {
-        Member findMember = memberDao.getMemberByEmail(authMember.getEmail());
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
+        checkCartItemExist(id);
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(findMember);
 

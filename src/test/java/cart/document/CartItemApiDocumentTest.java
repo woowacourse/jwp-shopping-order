@@ -88,7 +88,7 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_목록_조회_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         given(cartItemService.findByMember(any(AuthMember.class)))
                 .willReturn(List.of(Dooly_CartItem1.RESPONSE, Dooly_CartItem2.RESPONSE));
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
@@ -115,7 +115,7 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_추가_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         final CartItemRequest request = new CartItemRequest(ProductFixtures.CHICKEN.ID, 2);
         given(cartItemService.add(any(AuthMember.class), any(CartItemRequest.class)))
                 .willReturn(Dooly_CartItem1.ID);
@@ -141,7 +141,7 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_수정_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(10);
         willDoNothing().given(cartItemService).updateQuantity(any(AuthMember.class), eq(Dooly_CartItem1.ID), eq(request));
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
@@ -167,7 +167,7 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_삭제_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
         willDoNothing().given(cartItemService).remove(any(AuthMember.class), eq(Dooly_CartItem1.ID));
         final String encodeAuthInfo = Base64Utils.encodeToString((Dooly.EMAIL + ":" + Dooly.PASSWORD).getBytes());
 

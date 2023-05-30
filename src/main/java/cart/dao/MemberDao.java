@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import cart.domain.member.Member;
+import cart.exception.MemberNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,13 @@ import org.springframework.stereotype.Repository;
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Member> rowMapper = (rs, rowNum) -> {
+        long memberId = rs.getLong("id");
+        String email = rs.getString("email");
+        String password = rs.getString("password");
+        return new Member(memberId, email, password);
+    };
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -24,10 +32,11 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public Member getMemberByEmail(String email) {
+    public Member selectMemberByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        return jdbcTemplate.query(sql, rowMapper, email).stream()
+                .findAny()
+                .orElseThrow(() -> new MemberNotFoundException("이메일에 해당하는 멤버를 찾을 수 없습니다."));
     }
 
     public Boolean isNotExistByEmailAndPassword(String email, String password) {
