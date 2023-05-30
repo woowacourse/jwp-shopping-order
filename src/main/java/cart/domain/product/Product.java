@@ -11,7 +11,7 @@ public class Product {
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = new Name(name);
-        this.price = new Money(price);
+        this.price = Money.valueOf(price);
         this.imageUrl = new ImageUrl(imageUrl);
     }
 

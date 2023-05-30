@@ -9,15 +9,23 @@ public class Money {
 
     private final BigInteger money;
 
-    public Money(final int money) {
-        validate(money);
-        this.money = new BigInteger(Integer.toString(money));
+    public Money(final BigInteger money) {
+        this.money = money;
     }
 
-    private void validate(final int price) {
+    public static Money valueOf(final int money) {
+        validate(money);
+        return new Money(new BigInteger(Integer.toString(money)));
+    }
+
+    private static void validate(final int price) {
         if (price < MINIMUM_PRICE) {
             throw new IllegalArgumentException("돈은 " + MINIMUM_PRICE + " 미만일 수 없습니다.");
         }
+    }
+
+    public Money subtract(final Money money) {
+        return new Money(this.money.subtract(money.money));
     }
 
     public BigInteger getMoney() {
