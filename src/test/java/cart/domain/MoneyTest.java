@@ -4,6 +4,8 @@ import cart.domain.common.Money;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -33,7 +35,19 @@ class MoneyTest {
     }
 
     @Test
-    void 뺄셈한다() {
+    void 돈을_더한다() {
+        //given
+        final Money money = Money.valueOf(1000);
+
+        //when
+        final Money addedMoney = money.add(Money.valueOf(100));
+
+        //then
+        assertThat(addedMoney).isEqualTo(Money.valueOf(1100));
+    }
+
+    @Test
+    void 돈을_뺀다() {
         //given
         final Money money = Money.valueOf(1000);
 
@@ -42,5 +56,18 @@ class MoneyTest {
 
         //then
         assertThat(subtractedMoney).isEqualTo(Money.valueOf(900));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"999, true", "1000, false", "1001, false"})
+    void 돈이_더_많은지_비교한다(final int amount, final boolean expected) {
+        //given
+        final Money money = Money.valueOf(1000);
+
+        //when
+        final boolean actual = money.isMoreThan(Money.valueOf(amount));
+
+        //then
+        assertThat(actual).isEqualTo(expected);
     }
 }

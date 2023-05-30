@@ -24,8 +24,16 @@ public class Money {
         }
     }
 
+    public Money add(final Money money) {
+        return new Money(this.money.add(money.money));
+    }
+
     public Money subtract(final Money money) {
         return new Money(this.money.subtract(money.money));
+    }
+
+    public boolean isMoreThan(final Money money) {
+        return this.money.compareTo(money.money) > 0;
     }
 
     public BigInteger getMoney() {
