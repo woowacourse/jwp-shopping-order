@@ -13,7 +13,7 @@ public class OrderedItems {
 
   public Money calculateAllItemPrice() {
     return orderItems.stream()
-        .map(OrderItem::getPrice)
+        .map(it -> it.getPrice().multiply(it.getQuantity()))
         .reduce(Money.ZERO, (Money::add));
   }
 }

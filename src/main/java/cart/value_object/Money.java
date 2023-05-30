@@ -21,6 +21,10 @@ public class Money {
     return new Money(value.add(other.getValue()));
   }
 
+  public Money multiply(final double multiplicand) {
+    return new Money(value.multiply(BigDecimal.valueOf(multiplicand)));
+  }
+
   public boolean isNotSame(final Money other) {
     return !this.equals(other);
   }

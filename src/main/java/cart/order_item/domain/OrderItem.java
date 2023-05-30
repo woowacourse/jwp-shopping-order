@@ -42,7 +42,27 @@ public class OrderItem {
     this.quantity = quantity;
   }
 
+  public Long getId() {
+    return id;
+  }
+
+  public Order getOrder() {
+    return order;
+  }
+
+  public String getName() {
+    return name;
+  }
+
   public Money getPrice() {
     return price;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public int getQuantity() {
+    return quantity;
   }
 }
