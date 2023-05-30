@@ -150,23 +150,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
     }
 
-    private Long createProduct(ProductRequest productRequest) {
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when()
-                .post("/products")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract();
-
-        return getIdFromCreatedResponse(response);
-    }
-
-    private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
-        return Long.parseLong(response.header("Location").split("/")[2]);
-    }
-
     private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
