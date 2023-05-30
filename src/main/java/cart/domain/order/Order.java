@@ -1,31 +1,53 @@
 package cart.domain.order;
 
 
+import cart.domain.Member;
+
+import java.util.List;
+
 public class Order {
 
     private final Long id;
-    private final Long MemberId;
-    private final int totalPrice;
+    private final Member member;
+    private final Long shippingFee;
+    private final Long totalPrice;
+    private final List<OrderItem> orderItems;
+    private final String createdAt;
 
-    public Order(Long memberId, int totalPrice) {
-        this(null, memberId, totalPrice);
+    public Order(Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, String createdAt) {
+        this(null, member, shippingFee, totalPrice, orderItems, createdAt);
     }
 
-    public Order(Long id, Long memberId, int totalPrice) {
+    public Order(Long id, Member member, Long shippingFee, Long totalPrice, List<OrderItem> orderItems, String createdAt) {
         this.id = id;
-        MemberId = memberId;
+        this.member = member;
+        this.shippingFee = shippingFee;
         this.totalPrice = totalPrice;
+        this.orderItems = orderItems;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return MemberId;
+    public Member getMember() {
+        return member;
     }
 
-    public int getTotalPrice() {
+    public Long getShippingFee() {
+        return shippingFee;
+    }
+
+    public Long getTotalPrice() {
         return totalPrice;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 }

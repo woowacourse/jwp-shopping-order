@@ -9,7 +9,7 @@ public class OrderItemRequest {
     public OrderItemRequest() {
     }
 
-    public OrderItemRequest(List<OrderItemDto> orderItemDtoList) {
+    public OrderItemRequest(final List<OrderItemDto> orderItemDtoList) {
         this.orderItemDtoList = orderItemDtoList;
     }
 

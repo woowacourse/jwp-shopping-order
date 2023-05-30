@@ -2,13 +2,13 @@ package cart.dto;
 
 public class ProductRequest {
     private String name;
-    private int price;
+    private Long price;
     private String imageUrl;
 
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, int price, String imageUrl) {
+    public ProductRequest(final String name, final Long price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -18,7 +18,7 @@ public class ProductRequest {
         return name;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 

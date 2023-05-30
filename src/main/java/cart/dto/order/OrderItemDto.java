@@ -3,12 +3,12 @@ package cart.dto.order;
 public class OrderItemDto {
 
     private Long cartItemId;
-    private int quantity;
+    private Long quantity;
 
     public OrderItemDto() {
     }
 
-    public OrderItemDto(Long cartItemId, int quantity) {
+    public OrderItemDto(final Long cartItemId, final Long quantity) {
         this.cartItemId = cartItemId;
         this.quantity = quantity;
     }
@@ -17,7 +17,7 @@ public class OrderItemDto {
         return cartItemId;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 }

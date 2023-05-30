@@ -31,10 +31,10 @@ public class CartItemDao {
             String email = rs.getString("email");
             Long productId = rs.getLong("product.id");
             String name = rs.getString("name");
-            int price = rs.getInt("price");
+            Long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
+            Long quantity = rs.getLong("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
@@ -52,7 +52,7 @@ public class CartItemDao {
 
             ps.setLong(1, cartItem.getMember().getId());
             ps.setLong(2, cartItem.getProduct().getId());
-            ps.setInt(3, cartItem.getQuantity());
+            ps.setLong(3, cartItem.getQuantity());
 
             return ps;
         }, keyHolder);
@@ -71,10 +71,10 @@ public class CartItemDao {
             String email = rs.getString("email");
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
-            int price = rs.getInt("price");
+            Long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
+            Long quantity = rs.getLong("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);

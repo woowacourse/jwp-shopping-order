@@ -1,47 +1,54 @@
-CREATE TABLE product (
+create table if not exists product
+(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    price INT NOT NULL,
+    price BIGINT NOT NULL,
     image_url VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE member (
+create table if not exists member
+(
      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) NOT NULL UNIQUE,
      password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE cart_item (
+create table if not exists cart_item
+(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    quantity INT NOT NULL
 );
 
-CREATE TABLE orders (
+create table if not exists orders
+(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	member_id BIGINT NOT NULL,
-	total_price INT NOT NULL,
-	FOREIGN KEY (member_id) REFERENCES member(id)
+	shipping_fee BIGINT NOT NULL,
+	total_price BIGINT NOT NULL,
+	created_at timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
 
-CREATE TABLE order_item (
+create table if not exists order_item
+(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    orders_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    price BIGINT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    quantity BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
-    FOREIGN KEY (orders_id) REFERENCES orders(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    orders_id BIGINT NOT NULL
 );
 
-CREATE TABLE shipping_fee (
+create table if not exists shipping_fee
+(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	fee int NOT NULL
 );
 
-CREATE TABLE shipping_discount_policy (
+create table if not exists shipping_discount_policy
+(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	threshold BIGINT NOT NULL
 );
