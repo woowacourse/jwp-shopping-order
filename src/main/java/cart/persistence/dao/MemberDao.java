@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
-
     private final RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
             new MemberEntity(
                     rs.getLong("id"),

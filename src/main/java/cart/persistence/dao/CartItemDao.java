@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
-
     private final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) ->
             new CartItemEntity(
                     rs.getLong("id"),
