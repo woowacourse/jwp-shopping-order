@@ -1,11 +1,14 @@
 package cart.integration;
 
 import cart.dao.MemberDao;
+import cart.dao.MemberEntity;
+import cart.domain.member.Email;
 import cart.domain.member.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +30,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
+    @Autowired
+    private MemberRepository memberRepository;
 
     private Long productId;
     private Long productId2;
@@ -40,8 +45,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        memberDao.addMember(new MemberEntity("huchu@woowahan.com", "1234567a!", 0));
+        memberDao.addMember(new MemberEntity("hamad@woowahan.com", "1234567a!", 0));
+
+        member = memberRepository.getMemberByEmail(new Email("huchu@woowahan.com"));
+        member2 = memberRepository.getMemberByEmail(new Email("hamad@woowahan.com"));
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

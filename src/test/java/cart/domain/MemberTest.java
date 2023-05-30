@@ -21,7 +21,7 @@ class MemberTest {
         final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!");
 
         //when
-        final boolean actual = member.checkPassword(new Password(password));
+        final boolean actual = member.hasSamePassword(new Password(password));
 
         //then
         assertThat(actual).isEqualTo(expected);
