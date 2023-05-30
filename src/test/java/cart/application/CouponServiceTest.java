@@ -7,7 +7,7 @@ import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
 import cart.exception.CannotChangeCouponStatusException;
 import cart.repository.CouponRepository;
-import cart.repository.MemberRepository;
+import cart.repository.MemberJdbcRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class CouponServiceTest {
     private CouponRepository couponRepository;
 
     @Mock
-    private MemberRepository memberRepository;
+    private MemberJdbcRepository memberJdbcRepository;
 
     @Test
     void 쿠폰을_발급한다() {
@@ -68,7 +68,7 @@ class CouponServiceTest {
         void 성공한다() {
             // given
             final Coupon coupon = new Coupon(couponId, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, true);
-            given(memberRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(coupon))));
+            given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(coupon))));
 
             // when
             couponService.reissueCoupon(couponId, request);
@@ -81,7 +81,7 @@ class CouponServiceTest {
         void 사용하지_않은_쿠폰이면_실패한다() {
             // given
             final Coupon coupon = new Coupon(couponId, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, false);
-            given(memberRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(coupon))));
+            given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(coupon))));
 
             // when, then
             assertThatThrownBy(() -> couponService.reissueCoupon(couponId, request))

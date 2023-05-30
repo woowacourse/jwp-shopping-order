@@ -1,58 +1,8 @@
 package cart.repository;
 
-import cart.dao.CouponDao;
-import cart.dao.MemberDao;
-import cart.dao.entity.CouponTypeCouponEntity;
-import cart.dao.entity.MemberEntity;
-import cart.domain.Coupon;
-import cart.domain.Coupons;
 import cart.domain.Member;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+public interface MemberRepository {
 
-import static java.util.stream.Collectors.toList;
-
-@Repository
-public class MemberRepository {
-
-    private final MemberDao memberDao;
-    private final CouponDao couponDao;
-
-    public MemberRepository(final MemberDao memberDao, final CouponDao couponDao) {
-        this.memberDao = memberDao;
-        this.couponDao = couponDao;
-    }
-
-    public Member findMemberByMemberIdWithCoupons(final Long memberId) {
-        final MemberEntity memberEntity = memberDao.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다."));
-        final List<CouponTypeCouponEntity> couponTypeCouponEntities = couponDao.findByMemberId(memberId);
-
-        return toDomain(memberEntity, couponTypeCouponEntities);
-    }
-
-    private Member toDomain(final MemberEntity memberEntity, final List<CouponTypeCouponEntity> couponTypeCouponEntities) {
-        final List<Coupon> coupons = mapToCoupon(couponTypeCouponEntities);
-
-        return new Member(
-                memberEntity.getId(),
-                memberEntity.getEmail(),
-                memberEntity.getPassword(),
-                new Coupons(coupons)
-        );
-    }
-
-    private static List<Coupon> mapToCoupon(final List<CouponTypeCouponEntity> couponTypeCouponEntities) {
-        return couponTypeCouponEntities.stream()
-                .map(entity -> new Coupon(
-                                entity.getCouponId(),
-                                entity.getName(),
-                                entity.getDescription(),
-                                entity.getDiscountAmount(),
-                                entity.getUsageStatus()
-                        ))
-                .collect(toList());
-    }
+    Member findMemberByMemberIdWithCoupons(final Long memberId);
 }
