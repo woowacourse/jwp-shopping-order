@@ -1,7 +1,10 @@
-package cart.dao;
+package cart.persistence.product;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,8 +19,18 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
+    }
+
+    public Long createProduct(ProductEntity productEntity) {
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(productEntity);
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     public List<Product> getAllProducts() {
@@ -41,7 +54,7 @@ public class ProductDao {
         });
     }
 
-    public Long createProduct(Product product) {
+    public Long createProduct2(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
