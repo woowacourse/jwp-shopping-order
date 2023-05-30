@@ -39,18 +39,4 @@ class MemberTest {
                     .hasMessageContaining("이메일 형식을 확인해주세요.");
         }
     }
-
-    @Test
-    void 비밀번호를_입력하지_않으면_예외를_던진다() {
-        assertThatThrownBy(() -> new Member(validId, validEmail, null))
-                .isInstanceOf(MemberException.InvalidPassword.class)
-                .hasMessageContaining("잘못된 비밀번호 형식입니다.");
-    }
-
-    @Test
-    void 비밀번호_길이가_1보다_작으면_예외를_던진다() {
-        assertThatThrownBy(() -> new Member(validId, validEmail, ""))
-                .isInstanceOf(MemberException.InvalidPassword.class)
-                .hasMessageContaining("잘못된 비밀번호 형식입니다.");
-    }
 }

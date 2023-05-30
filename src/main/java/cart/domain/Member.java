@@ -15,16 +15,15 @@ public class Member {
     private final String password;
 
     public Member(Long id, String email, String password) {
-        validate(id, email, password);
+        validate(id, email);
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    private void validate(Long id, String email, String password) {
+    private void validate(Long id, String email) {
         validateId(id);
         validateEmail(email);
-        validatePassword(password);
     }
 
     private void validateId(Long id) {
@@ -36,12 +35,6 @@ public class Member {
     private void validateEmail(String email) {
         if (Objects.isNull(email) || !EMAIL_PATTERN.matcher(email).matches()) {
             throw new MemberException.InvalidEmail();
-        }
-    }
-
-    private void validatePassword(String password) {
-        if (Objects.isNull(password) || password.length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new MemberException.InvalidPassword();
         }
     }
 

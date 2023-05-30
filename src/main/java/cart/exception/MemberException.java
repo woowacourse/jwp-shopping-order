@@ -1,7 +1,5 @@
 package cart.exception;
 
-import static cart.domain.Member.MINIMUM_PASSWORD_LENGTH;
-
 public class MemberException extends RuntimeException {
 
     public MemberException(String message) {

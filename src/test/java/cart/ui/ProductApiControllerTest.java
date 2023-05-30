@@ -6,15 +6,15 @@ import cart.dto.ProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.*;
-import static io.restassured.RestAssured.*;
+import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
+import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
 class ProductApiControllerTest extends ControllerTestConfig {
 
     Long 상품_계란_등록() {
-        return productDao.createProduct(new Product("계란", 1000, "계란_이미지_주소"));
+        return productDao.createProduct(new Product("계란", 1000, "https://계란_이미지_주소.png"));
     }
 
     @Test
@@ -70,7 +70,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
-                .body(new ProductRequest("계란", 1000, "계란_이미지_주소"))
+                .body(new ProductRequest("계란", 1000, "https://계란_이미지_주소.png"))
                 .post("/products")
         .then()
                 .statusCode(HttpStatus.CREATED.value());
@@ -90,7 +90,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
-                .body(new ProductRequest("수정된 계란", 1000, "수정된 계란_이미지_주소"))
+                .body(new ProductRequest("수정된 계란", 1000, "https://계란_이미지_주소.png"))
                 .pathParam("id", 상품_계란_식별자값)
                 .put("/products/{id}")
         .then()
