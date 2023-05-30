@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.domain.Point;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartResponse;
@@ -41,6 +42,15 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     }
 
+    @Test
+    void testest() {
+        memberDao.addMember(new Member("abc", "1234"));
+        Member abc = memberDao.getMemberByEmail("abc");
+        System.out.println(abc.getEmail());
+        System.out.println(abc.getPassword());
+        System.out.println(abc.getPoint().getValue());
+    }
+
     @DisplayName("[장바구니 추가] 장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
@@ -53,7 +63,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("[장바구니 추가] 잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf", new Point(0));
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
@@ -69,7 +79,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = requestGetCartItems(member);
         CartResponse cart = response.as(CartResponse.class);
 
-        assertThat(cart.getUserPoint()).isEqualTo(3_000);
+        assertThat(cart.getUserPoint()).isEqualTo(0);
         assertThat(cart.getMinUsagePoints()).isEqualTo(3_000);
         assertThat(cart.getCartItems()).isNotEmpty();
     }

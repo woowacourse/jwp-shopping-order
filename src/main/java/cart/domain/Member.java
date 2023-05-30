@@ -5,8 +5,16 @@ public class Member {
     private String email;
     private String password;
 
-    public Member(Long id, String email, String password) {
+    private Point point;
+
+    public Member(Long id, String email, String password, Point point) {
         this.id = id;
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -21,6 +29,10 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public Point getPoint() {
+        return point;
     }
 
     public boolean checkPassword(String password) {

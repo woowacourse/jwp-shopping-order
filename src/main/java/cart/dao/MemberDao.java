@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.domain.Point;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -35,8 +36,8 @@ public class MemberDao {
     }
 
     public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+        String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId(), member.getPoint().getValue());
     }
 
     public void deleteMember(Long id) {
@@ -52,7 +53,7 @@ public class MemberDao {
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"), new Point(rs.getInt("point")));
         }
     }
 }

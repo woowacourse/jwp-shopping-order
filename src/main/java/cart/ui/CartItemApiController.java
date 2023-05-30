@@ -35,7 +35,7 @@ public class CartItemApiController {
     @GetMapping
     public ResponseEntity<CartResponse> showCart(Member member) {
         List<CartItemDto> cartItems = cartItemService.findByMember(member);
-        Point memberPoint = memberService.getMemberPoint(member);
+        Point memberPoint = member.getPoint();
         Point minUsagePoint = Point.MINIMUM_USAGE_POINT;
         return ResponseEntity.ok(new CartResponse(cartItems, memberPoint.getValue(), minUsagePoint.getValue()));
     }
