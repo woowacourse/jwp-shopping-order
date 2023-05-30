@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class CartItemDao {
@@ -59,7 +60,7 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public CartItem findById(Long id) {
+    public Optional<CartItem> findById(Long id) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
@@ -78,7 +79,7 @@ public class CartItemDao {
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member);
         });
-        return cartItems.isEmpty() ? null : cartItems.get(0);
+        return cartItems.isEmpty() ? Optional.empty() : Optional.of(cartItems.get(0));
     }
 
 

@@ -2,6 +2,7 @@ package cart.common;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.CartItemNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,8 +16,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(CartItemException.class)
-    public ResponseEntity<String> handle(CartItemException e){
+    @ExceptionHandler({CartItemException.class, CartItemNotFoundException.class})
+    public ResponseEntity<String> handleCartException(RuntimeException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
@@ -24,4 +25,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handle(ProductNotFoundException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+
 }
