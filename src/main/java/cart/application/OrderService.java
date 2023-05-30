@@ -10,6 +10,7 @@ import cart.dto.request.OrderItemDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailsDto;
 import cart.dto.response.OrderResponse;
+import cart.dto.response.OrdersResponse;
 import cart.dto.response.ProductResponse;
 import cart.exception.CartItemException.QuantityNotSame;
 import cart.exception.CartItemException.UnknownCartItem;
@@ -34,7 +35,7 @@ public class OrderService {
     }
 
     // todo: 전체적으로 사용자 검증 필요
-    
+
     public long saveOrder(final Member member, final OrderRequest orderRequest) {
         List<CartItem> cartItems = new ArrayList<>();
         List<Long> unknownItemIds = new ArrayList<>();
@@ -77,5 +78,18 @@ public class OrderService {
                 .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
                 collect(Collectors.toUnmodifiableList());
         return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails);
+    }
+
+    public OrdersResponse getOrdersByMember(final Member member) {
+        List<Order> orders = orderRepository.findByMemberId(member.getId());
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for(Order order : orders){
+            List<OrderDetailsDto> orderDetails = order.getOrderItems()
+                    .stream()
+                    .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
+                    collect(Collectors.toUnmodifiableList());
+            orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails));
+        }
+        return new OrdersResponse(orderResponses);
     }
 }

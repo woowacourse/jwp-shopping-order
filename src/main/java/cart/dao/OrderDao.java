@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class OrderDao {
 
@@ -32,5 +34,10 @@ public class OrderDao {
     public OrderEntity findById(final long id) {
         String sql = "SELECT * FROM orders WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
+    public List<OrderEntity> findAllByMemberId(final long memberId) {
+        String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

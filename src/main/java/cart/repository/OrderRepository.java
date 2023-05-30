@@ -10,6 +10,7 @@ import cart.entity.OrderEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -42,5 +43,23 @@ public class OrderRepository {
         Member member = memberDao.getMemberById(orderEntity.getMemberId());
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderId);
         return new Order(orderId, member, orderEntity.getShippingFee(), orderEntity.getTotalPrice(), orderItems, orderEntity.getCreatedAt());
+    }
+
+    public List<Order> findByMemberId(final long memberId) {
+        List<Order> orders = new ArrayList<>();
+        Member member = memberDao.getMemberById(memberId);
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
+        for(OrderEntity orderEntity : orderEntities){
+            List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderEntity.getId());
+            orders.add(new Order(
+                    orderEntity.getId(),
+                    member,
+                    orderEntity.getShippingFee(),
+                    orderEntity.getTotalPrice(),
+                    orderItems,
+                    orderEntity.getCreatedAt()
+            ));
+        }
+        return orders;
     }
 }
