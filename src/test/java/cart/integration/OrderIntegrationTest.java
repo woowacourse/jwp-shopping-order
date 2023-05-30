@@ -31,8 +31,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberDao.getMemberById(1L).get();
+        member2 = memberDao.getMemberById(2L).get();
 
         cartItemId = createCartItem(member, new CartItemRequest(5L));
         cartItemId2 = createCartItem(member, new CartItemRequest(6L));
