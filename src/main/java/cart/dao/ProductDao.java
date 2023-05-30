@@ -25,7 +25,7 @@ public class ProductDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
-            int price = rs.getInt("price");
+            long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
         });
@@ -35,7 +35,7 @@ public class ProductDao {
         String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
-            int price = rs.getInt("price");
+            long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
         });
@@ -51,7 +51,7 @@ public class ProductDao {
             );
 
             ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
+            ps.setLong(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
 
             return ps;

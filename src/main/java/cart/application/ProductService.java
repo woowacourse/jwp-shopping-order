@@ -49,6 +49,7 @@ public class ProductService {
         }
     }
 
+    // todo: delete할 때 cartItem은 삭제 안해주고 있네
     public void deleteProduct(Long productId) {
         int deletedProductCount = productDao.deleteProduct(productId);
         if (deletedProductCount == 0) {

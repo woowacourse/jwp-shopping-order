@@ -32,7 +32,6 @@ public class CartItemService {
         if (cartItemDao.countByMemberIdAndProductId(member.getId(), cartItemRequest.getProductId()) != 0) {
             throw new DuplicatedCartItem();
         }
-        CartItem cartItem = new CartItem(member, productDao.getProductById(cartItemRequest.getProductId()));
         return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
     }
 

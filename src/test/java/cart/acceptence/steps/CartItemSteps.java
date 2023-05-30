@@ -86,7 +86,7 @@ public class CartItemSteps {
     public static ExtractableResponse<Response> 장바구니_아이템_수정_요청(
             final Member member,
             final long cartItemId,
-            final int quantity
+            final long quantity
     ) {
         return 장바구니_아이템_수정_요청(member, cartItemId, new CartItemQuantityUpdateRequest(quantity));
     }
