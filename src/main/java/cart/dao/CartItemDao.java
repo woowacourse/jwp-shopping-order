@@ -38,17 +38,17 @@ public class CartItemDao {
     }
 
     final RowMapper<CartItem> cartItemRowMapper = (result, rowNum) -> {
-        final Long memberId = result.getLong("member.id");
+        final Long memberId = result.getLong("member_id");
         final String email = result.getString("email");
         final Member member = new Member(memberId, email, null);
 
-        final Long productId = result.getLong("product.id");
+        final Long productId = result.getLong("product_id");
         final String productName = result.getString("name");
         final int productPrice = result.getInt("price");
         final String productImageUrl = result.getString("image_url");
         final Product product = new Product(productId, productName, productPrice, productImageUrl);
 
-        final Long cartItemId = result.getLong("cart_item.id");
+        final Long cartItemId = result.getLong("cartItem_id");
         final int quantity = result.getInt("quantity");
         return new CartItem(cartItemId, member, product, quantity);
     };
@@ -63,8 +63,9 @@ public class CartItemDao {
     }
 
     public Optional<CartItem> findById(final Long id) {
-        final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
-                "p.id, p.name, p.price, p.image_url, ci.quantity " +
+        final String sql = "SELECT m.id AS member_id, m.email, " +
+                "ci.id AS cartItem_id, ci.member_id, ci.quantity, " +
+                "p.id AS product_id, p.name, p.price, p.image_url " +
                 "FROM cart_item ci " +
                 "JOIN member m ON ci.member_id = m.id " +
                 "JOIN product p ON ci.product_id = p.id " +
@@ -77,8 +78,9 @@ public class CartItemDao {
     }
 
     public List<CartItem> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT m.id, m.email, ci.id, ci.member_id, " +
-                "p.id, p.name, p.price, p.image_url, ci.quantity " +
+        final String sql = "SELECT m.id AS member_id, m.email, " +
+                "ci.id AS cartItem_id, ci.member_id, ci.quantity, " +
+                "p.id AS product_id, p.name, p.price, p.image_url " +
                 "FROM cart_item ci " +
                 "JOIN member m ON ci.member_id = m.id " +
                 "JOIN product p ON ci.product_id = p.id " +
@@ -90,8 +92,9 @@ public class CartItemDao {
     public List<CartItem> findAllByIds(final List<Long> ids) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
-        final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
-                "p.id, p.name, p.price, p.image_url, ci.quantity " +
+        final String sql = "SELECT m.id AS member_id, m.email, " +
+                "ci.id AS cartItem_id, ci.member_id, ci.quantity, " +
+                "p.id AS product_id, p.name, p.price, p.image_url " +
                 "FROM cart_item ci " +
                 "JOIN member m ON ci.member_id = m.id " +
                 "JOIN product p ON ci.product_id = p.id " +

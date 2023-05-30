@@ -31,13 +31,13 @@ public class OrderDao {
 
     private final RowMapper<Order> orderMapper = (result, count) -> {
         final Member member = new Member(
-                result.getLong("member.id"),
+                result.getLong("member_id"),
                 result.getString("email"),
                 null,
                 result.getInt("point"));
 
         return new Order(
-                result.getLong("orders.id"),
+                result.getLong("order_id"),
                 member,
                 new MemberPoint(result.getInt("used_point")),
                 result.getTimestamp("orders.created_at").toLocalDateTime());
@@ -52,8 +52,8 @@ public class OrderDao {
     }
 
     public Optional<Order> findById(final Long id) {
-        final String sql = "SELECT o.id, o.used_point, o.created_at, " +
-                "m.id, m.email, m.point " +
+        final String sql = "SELECT o.id AS order_id, o.used_point, o.created_at, " +
+                "m.id AS member_id, m.email, m.point " +
                 "FROM orders o " +
                 "JOIN member m ON m.id = o.member_id " +
                 "WHERE o.id = ?";
@@ -65,8 +65,8 @@ public class OrderDao {
     }
 
     public List<Order> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT o.id, o.used_point, o.created_at, " +
-                "m.id, m.email, m.point " +
+        final String sql = "SELECT o.id AS order_id, o.used_point, o.created_at, " +
+                "m.id AS member_id, m.email, m.point " +
                 "FROM orders o " +
                 "JOIN member m ON m.id = o.member_id " +
                 "WHERE o.member_id = ?";
