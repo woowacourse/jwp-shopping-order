@@ -70,7 +70,8 @@ public class OrderServiceUnitTest {
         );
         Long orderId = 1L;
 
-        given(orderRepository.findById(orderId)).willReturn(orderHistory);
+        given(orderRepository.isMemberOrder(member, orderId)).willReturn(true);
+        given(orderRepository.findOrderHistory(orderId)).willReturn(orderHistory);
 
         // when
         OrderResponse order = orderService.findOrder(member, orderId);

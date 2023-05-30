@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -75,7 +76,7 @@ public class OrderRepository {
         return orders;
     }
 
-    public OrderHistory findById(final Long orderId) {
+    public OrderHistory findOrderHistory(final Long orderId) {
         OrderTableEntity orderTableEntity = orderDao.findById(orderId);
 
         List<OrderItemHistoryEntity> orderItemHistoryEntities = orderItemHistoryDao.findAllByOrderId(orderId);
@@ -90,5 +91,10 @@ public class OrderRepository {
                 .collect(Collectors.toList());
 
         return new OrderHistory(orderId, productHistories, orderTableEntity.getDeliveryFee(), couponHistories, orderTableEntity.getCreateAt());
+    }
+
+    public boolean isMemberOrder(final Member member, final Long orderId) {
+        OrderTableEntity entity = orderDao.findById(orderId);
+        return Objects.equals(entity.getMemberId(), member.getId());
     }
 }

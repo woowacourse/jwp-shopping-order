@@ -4,6 +4,7 @@ import cart.domain.history.OrderHistory;
 import cart.domain.member.Member;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
+import cart.exception.MemberNotOwnerException;
 import cart.repository.order.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +28,15 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderResponse findOrder(final Member member, final Long orderId) {
-        // TODO: 다른 유저가 보는지 validate 추가하기
-        OrderHistory order = orderRepository.findById(orderId);
+        validateMemberHasOrder(member, orderId);
+
+        OrderHistory order = orderRepository.findOrderHistory(orderId);
         return OrderResponse.from(order);
+    }
+
+    private void validateMemberHasOrder(final Member member, final Long orderId) {
+        if (!orderRepository.isMemberOrder(member, orderId)) {
+            throw new MemberNotOwnerException();
+        }
     }
 }

@@ -41,9 +41,9 @@ public class OrderDao {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
-    public OrderTableEntity findById(final Long memberId) {
+    public OrderTableEntity findById(final Long orderId) {
         String sql = "SELECT * FROM order_table WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, memberId);
+        return jdbcTemplate.queryForObject(sql, rowMapper, orderId);
     }
 
     public Long save(final long memberId, final int deliveryFee) {
