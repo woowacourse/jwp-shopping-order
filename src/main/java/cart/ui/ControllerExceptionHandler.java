@@ -23,6 +23,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        logger.warn(ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+
         Map<String, Object> body = new HashMap<>();
 
         body.put("statusCode", HttpStatus.BAD_REQUEST);
