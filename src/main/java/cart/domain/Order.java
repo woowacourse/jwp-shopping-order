@@ -7,30 +7,32 @@ public class Order {
 
     private Long id;
     private Long memberId;
-    private int totalPrice;
+    private int totalPurchaseAmount;
+    private int totalItemPrice;
     private LocalDateTime orderedAt;
     private int shippingFee;
     private int discountedTotalPrice;
 
-    public Order(Long id, Long memberId, int totalPrice, LocalDateTime orderedAt, int shippingFee, int discountedTotalPrice) {
+    public Order(Long id, Long memberId, int totalPurchaseAmount, int totalItemPrice, LocalDateTime orderedAt, int shippingFee, int discountedTotalPrice) {
         this.id = id;
         this.memberId = memberId;
-        this.totalPrice = totalPrice;
+        this.totalPurchaseAmount = totalPurchaseAmount;
+        this.totalItemPrice = totalItemPrice;
         this.orderedAt = orderedAt;
         this.shippingFee = shippingFee;
         this.discountedTotalPrice = discountedTotalPrice;
     }
 
-    public Order(Long memberId, int totalPrice, LocalDateTime orderedAt, int shippingFee, int discountedTotalPrice) {
-        this.id = null;
+    public Order(Long memberId, int totalPurchaseAmount, int totalItemPrice, LocalDateTime orderedAt, int shippingFee, int discountedTotalPrice) {
         this.memberId = memberId;
-        this.totalPrice = totalPrice;
+        this.totalPurchaseAmount = totalPurchaseAmount;
+        this.totalItemPrice = totalItemPrice;
         this.orderedAt = orderedAt;
         this.shippingFee = shippingFee;
         this.discountedTotalPrice = discountedTotalPrice;
     }
 
-    public static int calculateTotalPrice(List<Integer> prices){
+    public static int calculatePriceSum(List<Integer> prices){
         return prices.stream()
                 .mapToInt(price -> price)
                 .sum();
@@ -51,8 +53,8 @@ public class Order {
         return memberId;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public int getTotalPurchaseAmount() {
+        return totalPurchaseAmount;
     }
 
     public LocalDateTime getOrderedAt() {

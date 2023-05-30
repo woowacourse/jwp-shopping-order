@@ -27,7 +27,8 @@ CREATE TABLE cart_item (
 CREATE TABLE orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    total_price BIGINT NOT NULL,
+    total_purchase_amount INT NOT NULL,
+    total_item_price INT NOT NULL,
     ordered_at DATETIME NOT NULL default current_timestamp,
     shipping_fee INT NOT NULL,
     discounted_total_price INT NOT NULL,

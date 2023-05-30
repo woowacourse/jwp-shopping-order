@@ -1,8 +1,6 @@
 package cart.dao;
 
-import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -31,7 +29,7 @@ public class OrderDao {
             );
 
             ps.setLong(1, memberId);
-            ps.setInt(2, order.getTotalPrice());
+            ps.setInt(2, order.getTotalPurchaseAmount());
             ps.setInt(3, order.getShippingFee());
             ps.setInt(4, order.getDiscountedTotalPrice());
 
