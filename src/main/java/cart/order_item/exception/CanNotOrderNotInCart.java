@@ -1,8 +1,11 @@
 package cart.order_item.exception;
 
-public class CanNotOrderNotInCart extends RuntimeException {
+import cart.exception.BusinessException;
+import org.springframework.http.HttpStatus;
+
+public class CanNotOrderNotInCart extends BusinessException {
 
   public CanNotOrderNotInCart(final String message) {
-    super(message);
+    super(message, HttpStatus.BAD_REQUEST);
   }
 }

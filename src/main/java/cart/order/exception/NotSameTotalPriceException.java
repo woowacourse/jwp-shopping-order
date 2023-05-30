@@ -1,8 +1,11 @@
 package cart.order.exception;
 
-public class NotSameTotalPriceException extends RuntimeException {
+import cart.exception.BusinessException;
+import org.springframework.http.HttpStatus;
+
+public class NotSameTotalPriceException extends BusinessException {
 
   public NotSameTotalPriceException(final String message) {
-    super(message);
+    super(message, HttpStatus.BAD_REQUEST);
   }
 }
