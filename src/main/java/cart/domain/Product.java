@@ -1,37 +1,21 @@
 package cart.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+@Getter
+@EqualsAndHashCode
+@AllArgsConstructor
 public class Product {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
 
-    public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
+    private final int stock;
 
-    public Product(Long id, String name, int price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public Product(final String name, final int price, final String imageUrl, final int stock) {
+        this(null, name, price, imageUrl, stock);
     }
 }
