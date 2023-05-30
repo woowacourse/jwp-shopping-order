@@ -9,10 +9,11 @@ import org.springframework.http.MediaType;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
-    public void getProducts() {
+    public void 상품을_조회한다() {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -24,7 +25,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void createProduct() {
+    public void 상품을_추가하다() {
         var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 
         var response = given()
@@ -39,7 +40,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void getCreatedProduct() {
+    public void 상품을_추가하고_조회하다() {
         var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
         // create product
