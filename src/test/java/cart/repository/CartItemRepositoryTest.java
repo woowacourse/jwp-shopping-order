@@ -83,6 +83,41 @@ class CartItemRepositoryTest {
         );
     }
 
+    @Test
+    @DisplayName("save 메서드는 장바구니 상품을 저장한다.")
+    void save() {
+        Product newProduct = new Product("피자", 20000, "http://pizza.com");
+        Long newProductId = productRepository.createProduct(newProduct);
+        newProduct.assignId(newProductId);
+        CartItem newCartItem = new CartItem(member, newProduct);
+
+        Long newCartItemId = cartItemRepository.save(newCartItem);
+
+        newCartItem.assignId(newCartItemId);
+        CartItem result = cartItemRepository.findById(newCartItemId);
+        assertThat(result).usingRecursiveComparison().isEqualTo(newCartItem);
+    }
+
+    @Test
+    @DisplayName("updateQuantity 메서드는 장바구니 상품 수량을 수정한다.")
+    void updateQuantity() {
+        CartItem updateCartItem = cartItem.changeQuantity(5);
+
+        cartItemRepository.updateQuantity(updateCartItem);
+
+        CartItem result = cartItemRepository.findById(cartItem.getId());
+        assertThat(result).usingRecursiveComparison().isEqualTo(updateCartItem);
+    }
+
+    @Test
+    @DisplayName("deleteById 메서드는 장바구니 상품을 삭제한다.")
+    void deleteById() {
+        cartItemRepository.deleteById(cartItem.getId());
+
+        List<CartItem> result = cartItemRepository.findByMemberId(member.getId());
+        assertThat(result).isEmpty();
+    }
+
     @Nested
     @DisplayName("findByMemberIdAndProductId 메서드는 ")
     class FindByMemberIdAndProductId {
@@ -144,40 +179,5 @@ class CartItemRepositoryTest {
 
             assertThat(result).usingRecursiveComparison().isEqualTo(cartItem);
         }
-    }
-
-    @Test
-    @DisplayName("save 메서드는 장바구니 상품을 저장한다.")
-    void save() {
-        Product newProduct = new Product("피자", 20000, "http://pizza.com");
-        Long newProductId = productRepository.createProduct(newProduct);
-        newProduct.assignId(newProductId);
-        CartItem newCartItem = new CartItem(member, newProduct);
-
-        Long newCartItemId = cartItemRepository.save(newCartItem);
-
-        newCartItem.assignId(newCartItemId);
-        CartItem result = cartItemRepository.findById(newCartItemId);
-        assertThat(result).usingRecursiveComparison().isEqualTo(newCartItem);
-    }
-
-    @Test
-    @DisplayName("updateQuantity 메서드는 장바구니 상품 수량을 수정한다.")
-    void updateQuantity() {
-        CartItem updateCartItem = cartItem.changeQuantity(5);
-
-        cartItemRepository.updateQuantity(updateCartItem);
-
-        CartItem result = cartItemRepository.findById(cartItem.getId());
-        assertThat(result).usingRecursiveComparison().isEqualTo(updateCartItem);
-    }
-
-    @Test
-    @DisplayName("deleteById 메서드는 장바구니 상품을 삭제한다.")
-    void deleteById() {
-        cartItemRepository.deleteById(cartItem.getId());
-
-        List<CartItem> result = cartItemRepository.findByMemberId(member.getId());
-        assertThat(result).isEmpty();
     }
 }

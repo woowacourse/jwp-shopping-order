@@ -76,6 +76,29 @@ class CartItemDaoTest {
         );
     }
 
+    @Test
+    @DisplayName("updateQuantity 메서드는 장바구니 상품 수량을 수정한다.")
+    void updateQuantity() {
+        CartItemEntity updateCartItem = new CartItemEntity(cartItem.getId(), member, product, 5);
+
+        cartItemDao.updateQuantity(updateCartItem);
+
+        Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
+        assertAll(
+                () -> assertThat(result).isNotEmpty(),
+                () -> assertThat(result.get().getQuantity()).isEqualTo(5)
+        );
+    }
+
+    @Test
+    @DisplayName("deleteById 메서드는 장바구니 상품을 삭제한다.")
+    void deleteById() {
+        cartItemDao.deleteById(cartItem.getId());
+
+        Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
+        assertThat(result).isEmpty();
+    }
+
     @Nested
     @DisplayName("findByMemberIdAndProductId 메서드는 ")
     class FindByMemberIdAndProductId {
@@ -146,28 +169,5 @@ class CartItemDaoTest {
                     () -> assertThat(result.get().getUpdatedAt()).isNotNull()
             );
         }
-    }
-
-    @Test
-    @DisplayName("updateQuantity 메서드는 장바구니 상품 수량을 수정한다.")
-    void updateQuantity() {
-        CartItemEntity updateCartItem = new CartItemEntity(cartItem.getId(), member, product, 5);
-
-        cartItemDao.updateQuantity(updateCartItem);
-
-        Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
-        assertAll(
-                () -> assertThat(result).isNotEmpty(),
-                () -> assertThat(result.get().getQuantity()).isEqualTo(5)
-        );
-    }
-
-    @Test
-    @DisplayName("deleteById 메서드는 장바구니 상품을 삭제한다.")
-    void deleteById() {
-        cartItemDao.deleteById(cartItem.getId());
-
-        Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
-        assertThat(result).isEmpty();
     }
 }

@@ -19,11 +19,10 @@ public class ControllerTest {
     protected MockMvc mockMvc;
     protected ObjectMapper objectMapper = buildObjectMapper();
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
     @MockBean
     protected MemberService memberService;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     @BeforeEach
     void setUp() {

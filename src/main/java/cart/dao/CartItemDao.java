@@ -27,6 +27,17 @@ public class CartItemDao {
             rs.getTimestamp("cart_item.updated_at").toLocalDateTime()
     );
 
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
+    public CartItemDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("member_id", "product_id", "quantity");
+    }
+
     private static MemberEntity extractMember(ResultSet rs) throws SQLException {
         return new MemberEntity(
                 rs.getLong("member.id"),
@@ -47,17 +58,6 @@ public class CartItemDao {
                 rs.getTimestamp("product.created_at").toLocalDateTime(),
                 rs.getTimestamp("product.updated_at").toLocalDateTime()
         );
-    }
-
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart_item")
-                .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id", "product_id", "quantity");
     }
 
     public List<CartItemEntity> findByMemberId(Long memberId) {
