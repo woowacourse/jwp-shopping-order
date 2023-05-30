@@ -1,18 +1,39 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.9'
+    id 'org.springframework.boot' version '2.7.10'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+
     id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
-
-sourceCompatibility = '11'
 
 configurations {
     asciidoctorExt
 }
 
+asciidoctor {
+    dependsOn test
+    configurations 'asciidoctorExt'
+}
+
+tasks.register('copyApiDocument', Copy) {
+    dependsOn asciidoctor
+    doFirst {
+        delete file("src/main/resources/static/docs")
+    }
+    from asciidoctor.outputDir
+    into file("src/main/resources/static/docs")
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
 repositories {
     mavenCentral()
+}
+
+build {
+    dependsOn copyApiDocument
 }
 
 dependencies {
@@ -34,39 +55,7 @@ dependencies {
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
-asciidoctor {
-    dependsOn test
-    configurations 'asciidoctorExt'
-}
-
-tasks.register('copyApiDocument', Copy) {
-    dependsOn asciidoctor
-    doFirst {
-        delete file("src/main/resources/static/docs")
-    }
-
-    from asciidoctor.outputDir
-    into file("src/main/resources/static/docs")
-}
-
-build {
-    dependsOn copyApiDocument
-}
-
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
-test {
-    useJUnitPlatform()
-    outputs.dir snippetsDir
-}
-
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
-}
-
 tasks.named('test') {
     useJUnitPlatform()
 }
+
