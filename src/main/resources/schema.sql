@@ -27,6 +27,13 @@ CREATE TABLE coupon (
     discount_percent INT NOT NULL
 );
 
+CREATE TABLE coupon1 (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    discount_policy_name VARCHAR(255) NOT NULL UNIQUE,
+    discount_value INT NOT NULL
+);
+
 CREATE TABLE coupon_box (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
