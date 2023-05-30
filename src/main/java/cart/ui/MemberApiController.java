@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.MemberService;
 import cart.domain.member.Member;
+import cart.domain.member.MemberPoint;
 import cart.dto.PointResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +21,8 @@ public class MemberApiController {
 
     @GetMapping("/point")
     public ResponseEntity<PointResponse> getPoint(Member member) {
-        final Member findMember = memberService.getPoint(member);
-        final PointResponse pointResponse = new PointResponse(findMember.getPointValue());
+        final MemberPoint point = memberService.getPoint(member);
+        final PointResponse pointResponse = new PointResponse(point.getPoint());
         return ResponseEntity.ok(pointResponse);
     }
 }
