@@ -15,4 +15,4 @@ INSERT INTO amount_discount (id, rate) VALUES (1, 10);
 INSERT INTO discount_type (id, discount_type, discount_amount_id) VALUES (1, 'PERCENT', 1);
 INSERT INTO discount_condition (id, discount_condition_type) VALUES (1, 'ALWAYS');
 INSERT INTO coupon(id, name, discount_type_id, discount_condition_id) VALUES (1, '10% 할인 쿠폰', 1, 1);
-INSERT INTO coupon_member(id, used, coupon_id, member_id) VALUES (1, false, 1, 1);
+INSERT INTO coupon_member(id, coupon_id, member_id) VALUES (1, 1, 1);

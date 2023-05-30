@@ -85,7 +85,6 @@ CREATE TABLE IF NOT EXISTS  coupon
 CREATE TABLE IF NOT EXISTS  coupon_member
 (
     id        BIGINT  NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    used      BOOLEAN NOT NULL,
     coupon_id BIGINT  NOT NULL,
     member_id BIGINT  NOT NULL,
     FOREIGN KEY (coupon_id) REFERENCES coupon (id)

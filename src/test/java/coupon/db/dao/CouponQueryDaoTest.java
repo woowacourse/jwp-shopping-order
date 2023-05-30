@@ -36,7 +36,7 @@ class CouponQueryDaoTest {
         jdbcTemplate.execute("INSERT INTO discount_condition (id, discount_condition_type) VALUES (1, 'ALWAYS')");
         jdbcTemplate.execute(
                 "INSERT INTO coupon(id, name, discount_type_id, discount_condition_id) VALUES (1, '10% 할인 쿠폰', 1, 1)");
-        jdbcTemplate.execute("INSERT INTO coupon_member(id, used, coupon_id, member_id) VALUES (1, false, 1, 1)");
+        jdbcTemplate.execute("INSERT INTO coupon_member(id, coupon_id, member_id) VALUES (1, 1, 1)");
     }
 
 
