@@ -1,68 +1,60 @@
 package cart.persistence.dao;
 
-import cart.domain.product.Product;
+import cart.persistence.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Component;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
-@Repository
+@Component
 public class ProductDao {
-
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
+    private static final RowMapper<ProductEntity> rowMapper =
+            (rs, rowNum) -> new ProductEntity(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getString("image_url")
+            );
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public List<Product> getAllProducts() {
+    public Long insert(ProductEntity productEntity) {
+        SqlParameterSource param = new BeanPropertySqlParameterSource(productEntity);
+
+        return simpleJdbcInsert.executeAndReturnKey(param).longValue();
+    }
+
+    public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Product getProductById(Long productId) {
+    public Optional<ProductEntity> findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        ProductEntity findProduct = jdbcTemplate.queryForObject(sql, rowMapper, id);
+
+        return Optional.ofNullable(findProduct);
     }
 
-    public Long createProduct(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    public void updateProduct(Long productId, Product product) {
+    public int updateProduct(Long productId, ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+
+        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(),
+                productEntity.getImageUrl(), productId);
     }
 
     public void deleteProduct(Long productId) {

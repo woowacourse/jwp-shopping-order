@@ -1,14 +1,14 @@
 package cart.application;
 
-import cart.persistence.dao.CartItemDao;
-import cart.persistence.dao.ProductDao;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.domain.repository.ProductRepository;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
+import cart.persistence.dao.CartItemDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
     private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
+    public CartItemService(ProductRepository productRepository, CartItemDao cartItemDao) {
+        this.productRepository = productRepository;
         this.cartItemDao = cartItemDao;
     }
 
@@ -33,7 +33,7 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productDao.getProductById(cartItemRequest.getProductId());
+        Product product = productRepository.findById(cartItemRequest.getProductId());
 
         return cartItemDao.save(new CartItem(member, product));
     }
