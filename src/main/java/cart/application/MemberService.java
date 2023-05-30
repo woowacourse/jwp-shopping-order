@@ -1,5 +1,10 @@
 package cart.application;
 
+import static cart.application.dto.mapper.MemberMapper.convertMember;
+import static cart.application.dto.mapper.MemberMapper.convertMemberResponse;
+import static cart.application.dto.mapper.MemberMapper.convverMemberResponse;
+
+import cart.application.dto.mapper.MemberMapper;
 import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberLoginResponse;
@@ -7,12 +12,12 @@ import cart.application.dto.member.MemberResponse;
 import cart.application.dto.member.MemberSaveRequest;
 import cart.common.auth.BasicTokenProvider;
 import cart.domain.coupon.CouponSaveEvent;
-import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberRepository;
 import cart.domain.member.NaturalPassword;
+import cart.domain.member.dto.MemberWithId;
 import cart.domain.security.SHA256Service;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
@@ -40,9 +45,7 @@ public class MemberService {
         if (memberRepository.existByName(memberSaveRequest.getName())) {
             throw new BadRequestException(ErrorCode.MEMBER_DUPLICATE_NAME);
         }
-        final NaturalPassword naturalPassword = NaturalPassword.create(memberSaveRequest.getPassword());
-        final String encodedPassword = SHA256Service.encrypt(naturalPassword.getPassword());
-        final Member member = Member.create(memberSaveRequest.getName(), EncryptedPassword.create(encodedPassword));
+        final Member member = convertMember(memberSaveRequest);
         final long savedMemberId = memberRepository.insert(member);
         applicationEventPublisher.publishEvent(new CouponSaveEvent(savedMemberId));
         return savedMemberId;
@@ -64,19 +67,18 @@ public class MemberService {
     }
 
     public MemberResponse getById(final Long id) {
-        final Member member = memberRepository.findById(id);
-        return new MemberResponse(id, member.name(), member.password());
+        final MemberWithId member = memberRepository.findById(id);
+        return convertMemberResponse(member);
     }
 
     public MemberResponse getByName(final String memberName) {
         final Member member = memberRepository.findByName(memberName);
-        return new MemberResponse(member.name(), member.password());
+        return convverMemberResponse(member);
     }
 
     public List<MemberResponse> getMembers() {
         return memberRepository.findAll().stream()
-            .map(memberWithId -> new MemberResponse(memberWithId.getId(), memberWithId.getMember().name(),
-                memberWithId.getMember().password()))
+            .map(MemberMapper::convertMemberResponse)
             .collect(Collectors.toUnmodifiableList());
     }
 
@@ -84,11 +86,7 @@ public class MemberService {
         final Member member = memberRepository.findMyCouponsByName(memberName);
         final List<MemberCoupon> memberCoupons = member.memberCoupons();
         return memberCoupons.stream()
-            .map(memberCoupon -> {
-                final CouponWithId coupon = memberCoupon.getCoupon();
-                return new MemberCouponResponse(
-                    coupon.getId(), coupon.getName(), coupon.getDiscountRate(), coupon.getExpiredDate(),
-                    memberCoupon.isUsed());
-            }).collect(Collectors.toUnmodifiableList());
+            .map(MemberMapper::convertMemberCouponResponse)
+            .collect(Collectors.toUnmodifiableList());
     }
 }

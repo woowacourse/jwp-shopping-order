@@ -8,20 +8,20 @@ public class CouponEntity {
     private final String name;
     private final Integer discountRate;
     private final Integer period;
-    private final LocalDateTime expiredDate;
+    private final LocalDateTime expiredAt;
 
     public CouponEntity(final String name, final Integer discountRate, final Integer period,
-                        final LocalDateTime expiredDate) {
-        this(null, name, discountRate, period, expiredDate);
+                        final LocalDateTime expiredAt) {
+        this(null, name, discountRate, period, expiredAt);
     }
 
     public CouponEntity(final Long id, final String name, final Integer discountRate, final Integer period,
-                        final LocalDateTime expiredDate) {
+                        final LocalDateTime expiredAt) {
         this.id = id;
         this.name = name;
         this.discountRate = discountRate;
         this.period = period;
-        this.expiredDate = expiredDate;
+        this.expiredAt = expiredAt;
     }
 
     public Long getId() {
@@ -40,7 +40,7 @@ public class CouponEntity {
         return period;
     }
 
-    public LocalDateTime getExpiredDate() {
-        return expiredDate;
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
     }
 }

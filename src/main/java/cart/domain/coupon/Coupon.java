@@ -7,14 +7,14 @@ public class Coupon {
     private final CouponName name;
     private final CouponDiscountRate discountRate;
     private final CouponPeriod period;
-    private final LocalDateTime expiredDate;
+    private final LocalDateTime expiredAt;
 
     private Coupon(final CouponName name, final CouponDiscountRate discountRate, final CouponPeriod period,
-                   final LocalDateTime expiredDate) {
+                   final LocalDateTime expiredAt) {
         this.name = name;
         this.discountRate = discountRate;
         this.period = period;
-        this.expiredDate = expiredDate;
+        this.expiredAt = expiredAt;
     }
 
     public static Coupon create(final String name, final int discountRate, final int period) {
@@ -26,12 +26,12 @@ public class Coupon {
     }
 
     public static Coupon create(final String name, final int discountRate, final int period,
-                                final LocalDateTime expiredDate) {
+                                final LocalDateTime expiredAt) {
         return new Coupon(
             CouponName.create(name),
             CouponDiscountRate.create(discountRate),
             CouponPeriod.create(period),
-            expiredDate);
+            expiredAt);
     }
 
     public String name() {
@@ -46,7 +46,7 @@ public class Coupon {
         return period.getPeriod();
     }
 
-    public LocalDateTime expiredDate() {
-        return expiredDate;
+    public LocalDateTime expiredAt() {
+        return expiredAt;
     }
 }

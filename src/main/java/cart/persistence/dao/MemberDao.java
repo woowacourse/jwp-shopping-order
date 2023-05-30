@@ -63,8 +63,8 @@ public class MemberDao {
 
     public List<MemberCouponDto> findMyCouponsByName(final String memberName) {
         final String query = "SELECT m.id AS memberId, m.name AS memberName, m.password, "
-            + " c.id AS couponId, c.name AS couponName, c.discount_rate, c.period, mc.expired_date, "
-            + " mc.issued_date, mc.is_used"
+            + " c.id AS couponId, c.name AS couponName, c.discount_rate, c.period, mc.expired_at, "
+            + " mc.issued_at, mc.is_used"
             + " FROM member m"
             + " LEFT JOIN member_coupon mc ON mc.member_id = m.id"
             + " LEFT JOIN coupon c on mc.coupon_id = c.id"
@@ -78,8 +78,8 @@ public class MemberDao {
                 rs.getString("couponName"),
                 rs.getInt("period"),
                 rs.getInt("discount_rate"),
-                rs.getTimestamp("expired_date").toLocalDateTime(),
-                rs.getTimestamp("issued_date").toLocalDateTime(),
+                rs.getTimestamp("expired_at").toLocalDateTime(),
+                rs.getTimestamp("issued_at").toLocalDateTime(),
                 rs.getBoolean("is_used")
             ), memberName);
     }

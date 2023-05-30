@@ -1,6 +1,7 @@
 package cart.persistence.repository;
 
 import static cart.persistence.mapper.MemberMapper.convertMember;
+import static cart.persistence.mapper.MemberMapper.convertMemberWithId;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
@@ -31,10 +32,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Member findById(final Long id) {
+    public MemberWithId findById(final Long id) {
         final MemberEntity memberEntity = memberDao.findById(id)
             .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-        return convertMember(memberEntity);
+        return convertMemberWithId(memberEntity);
     }
 
     @Override
@@ -45,9 +46,16 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
+    public MemberWithId findWithIdByName(final String name) {
+        final MemberEntity memberEntity = memberDao.findByName(name)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        return convertMemberWithId(memberEntity);
+    }
+
+    @Override
     public List<MemberWithId> findAll() {
         return memberDao.findAll().stream()
-            .map(MemberMapper::convertMemberRes)
+            .map(MemberMapper::convertMemberWithId)
             .collect(Collectors.toUnmodifiableList());
     }
 

@@ -23,14 +23,14 @@ public class CouponService {
 
     public List<CouponResponse> getAllCoupons() {
         return couponRepository.findAll().stream()
-            .map(couponWithId -> new CouponResponse(couponWithId.getId(), couponWithId.getName(),
-                couponWithId.getDiscountRate(), couponWithId.getExpiredDate()))
+            .map(couponWithId -> new CouponResponse(couponWithId.getId(), couponWithId.getCoupon().name(),
+                couponWithId.getCoupon().discountRate(), couponWithId.getCoupon().expiredAt()))
             .collect(Collectors.toUnmodifiableList());
     }
 
     public CouponResponse getCouponById(final Long id) {
         final Coupon coupon = couponRepository.findById(id);
-        return new CouponResponse(id, coupon.name(), coupon.discountRate(), coupon.expiredDate());
+        return new CouponResponse(id, coupon.name(), coupon.discountRate(), coupon.expiredAt());
     }
 
     @Transactional

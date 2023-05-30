@@ -7,14 +7,14 @@ public class CouponResponse {
     private final Long id;
     private final String name;
     private final Integer discountRate;
-    private final LocalDateTime expiredDate;
+    private final LocalDateTime expiredAt;
 
     public CouponResponse(final Long id, final String name, final Integer discountRate,
-                          final LocalDateTime expiredDate) {
+                          final LocalDateTime expiredAt) {
         this.id = id;
         this.name = name;
         this.discountRate = discountRate;
-        this.expiredDate = expiredDate;
+        this.expiredAt = expiredAt;
     }
 
     public Long getId() {
@@ -29,7 +29,7 @@ public class CouponResponse {
         return discountRate;
     }
 
-    public LocalDateTime getExpiredDate() {
-        return expiredDate;
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
     }
 }

@@ -1,5 +1,7 @@
 package cart.persistence.mapper;
 
+import static cart.persistence.mapper.CouponMapper.convertCoupon;
+
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
@@ -17,7 +19,7 @@ public class MemberMapper {
         return Member.create(memberEntity.getName(), EncryptedPassword.create(memberEntity.getPassword()));
     }
 
-    public static MemberWithId convertMemberRes(final MemberEntity memberEntity) {
+    public static MemberWithId convertMemberWithId(final MemberEntity memberEntity) {
         return new MemberWithId(memberEntity.getId(), convertMember(memberEntity));
     }
 
@@ -34,10 +36,8 @@ public class MemberMapper {
     public static List<MemberCoupon> convertMemberCoupons(final List<MemberCouponDto> myCouponsByName) {
         return myCouponsByName.stream()
             .map(memberCouponDto -> {
-                final CouponWithId coupon = new CouponWithId(memberCouponDto.getCouponId(),
-                    memberCouponDto.getCouponName(), memberCouponDto.getDiscountRate(),
-                    memberCouponDto.getCouponPeriod(), memberCouponDto.getExpiredDate());
-                return new MemberCoupon(coupon, memberCouponDto.getIssuedDate(), memberCouponDto.getExpiredDate(),
+                final CouponWithId coupon = new CouponWithId(memberCouponDto.getCouponId(), convertCoupon(memberCouponDto));
+                return new MemberCoupon(coupon, memberCouponDto.getIssuedAt(), memberCouponDto.getExpiredAt(),
                     memberCouponDto.isUsed());
             }).collect(Collectors.toUnmodifiableList());
     }

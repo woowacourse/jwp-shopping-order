@@ -6,15 +6,15 @@ import java.time.LocalDateTime;
 public class MemberCoupon {
 
     private final CouponWithId coupon;
-    private final LocalDateTime issuedDate;
-    private final LocalDateTime expiredDate;
+    private final LocalDateTime issuedAt;
+    private final LocalDateTime expiredAt;
     private final boolean isUsed;
 
-    public MemberCoupon(final CouponWithId coupon, final LocalDateTime issuedDate, final LocalDateTime expiredDate,
+    public MemberCoupon(final CouponWithId coupon, final LocalDateTime issuedAt, final LocalDateTime expiredAt,
                         final boolean isUsed) {
         this.coupon = coupon;
-        this.issuedDate = issuedDate;
-        this.expiredDate = expiredDate;
+        this.issuedAt = issuedAt;
+        this.expiredAt = expiredAt;
         this.isUsed = isUsed;
     }
 
@@ -22,12 +22,12 @@ public class MemberCoupon {
         return coupon;
     }
 
-    public LocalDateTime getIssuedDate() {
-        return issuedDate;
+    public LocalDateTime getIssuedAt() {
+        return issuedAt;
     }
 
-    public LocalDateTime getExpiredDate() {
-        return expiredDate;
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
     }
 
     public boolean isUsed() {

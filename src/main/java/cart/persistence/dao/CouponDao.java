@@ -23,8 +23,8 @@ public class CouponDao {
         final String name = rs.getString("name");
         final int discountRate = rs.getInt("discount_rate");
         final int period = rs.getInt("period");
-        final LocalDateTime expiredDate = rs.getTimestamp("expired_date").toLocalDateTime();
-        return new CouponEntity(id, name, discountRate, period, expiredDate);
+        final LocalDateTime expiredAt = rs.getTimestamp("expired_at").toLocalDateTime();
+        return new CouponEntity(id, name, discountRate, period, expiredAt);
     };
 
     private final JdbcTemplate jdbcTemplate;
@@ -51,13 +51,13 @@ public class CouponDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO coupon (name, discount_rate, period, expired_date) VALUES (?, ?, ?, ?)",
+                "INSERT INTO coupon (name, discount_rate, period, expired_at) VALUES (?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, coupon.getName());
             ps.setInt(2, coupon.getDiscountRate());
             ps.setInt(3, coupon.getPeriod());
-            ps.setTimestamp(4, Timestamp.valueOf(coupon.getExpiredDate()));
+            ps.setTimestamp(4, Timestamp.valueOf(coupon.getExpiredAt()));
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();

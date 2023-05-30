@@ -6,17 +6,17 @@ public class MemberCouponEntity {
 
     private final Long memberId;
     private final Long couponId;
-    private final LocalDateTime issuedDate;
-    private final LocalDateTime expiredDate;
+    private final LocalDateTime issuedAt;
+    private final LocalDateTime expiredAt;
     private final boolean isUsed;
 
-    public MemberCouponEntity(final Long memberId, final Long couponId, final LocalDateTime issuedDate,
-                              final LocalDateTime expiredDate,
+    public MemberCouponEntity(final Long memberId, final Long couponId, final LocalDateTime issuedAt,
+                              final LocalDateTime expiredAt,
                               final boolean isUsed) {
         this.memberId = memberId;
         this.couponId = couponId;
-        this.issuedDate = issuedDate;
-        this.expiredDate = expiredDate;
+        this.issuedAt = issuedAt;
+        this.expiredAt = expiredAt;
         this.isUsed = isUsed;
     }
 
@@ -28,12 +28,12 @@ public class MemberCouponEntity {
         return couponId;
     }
 
-    public LocalDateTime getIssuedDate() {
-        return issuedDate;
+    public LocalDateTime getIssuedAt() {
+        return issuedAt;
     }
 
-    public LocalDateTime getExpiredDate() {
-        return expiredDate;
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
     }
 
     public boolean isUsed() {

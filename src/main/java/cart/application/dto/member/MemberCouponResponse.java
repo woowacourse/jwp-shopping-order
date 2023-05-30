@@ -7,15 +7,15 @@ public class MemberCouponResponse {
     private final Long id;
     private final String name;
     private final Integer discountRate;
-    private final LocalDateTime expiredDate;
+    private final LocalDateTime expiredAt;
     private final boolean isUsed;
 
     public MemberCouponResponse(final Long id, final String name, final Integer discountRate,
-                                final LocalDateTime expiredDate, final boolean isUsed) {
+                                final LocalDateTime expiredAt, final boolean isUsed) {
         this.id = id;
         this.name = name;
         this.discountRate = discountRate;
-        this.expiredDate = expiredDate;
+        this.expiredAt = expiredAt;
         this.isUsed = isUsed;
     }
 
@@ -31,8 +31,8 @@ public class MemberCouponResponse {
         return discountRate;
     }
 
-    public LocalDateTime getExpiredDate() {
-        return expiredDate;
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
     }
 
     public boolean getIsUsed() {
