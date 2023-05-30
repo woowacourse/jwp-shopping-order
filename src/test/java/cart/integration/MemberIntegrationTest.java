@@ -23,7 +23,11 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("사용자를 추가한다.")
     void join() {
         // given
+        final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 10, 365);
+        쿠폰_저장(신규_가입_쿠폰_등록_요청);
+
         final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "password");
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
 
         // expected
         given()
@@ -34,6 +38,19 @@ public class MemberIntegrationTest extends IntegrationTest {
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .header(LOCATION, "/users/" + 1);
+
+        // 가입 후 신규 회원 축하 쿠폰이 발급되었는지 확인
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/users/me/coupons")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("size", is(1))
+            .body("[0].id", equalTo(1))
+            .body("[0].name", equalTo("신규 가입 축하 쿠폰"))
+            .body("[0].discountRate", equalTo(10))
+            .body("[0].isUsed", equalTo(false));
     }
 
     @Test

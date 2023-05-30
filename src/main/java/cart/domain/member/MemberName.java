@@ -15,7 +15,7 @@ public class MemberName {
         this.name = name;
     }
 
-    public static MemberName create(final String name) {
+    static MemberName create(final String name) {
         validateName(name);
         return new MemberName(name);
     }

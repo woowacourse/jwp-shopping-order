@@ -15,18 +15,12 @@ public class Member {
         this.memberCoupons = memberCoupons;
     }
 
-    public static Member create(final String name, final String password) {
-        return new Member(MemberName.create(name), MemberPassword.create(password), Collections.emptyList());
+    public static Member create(final String name, final MemberPassword password) {
+        return new Member(MemberName.create(name), password, Collections.emptyList());
     }
 
-    public static Member createWithEncodedPassword(final String name, final String password) {
-        return new Member(MemberName.create(name), MemberPassword.createWithEncodedPassword(password),
-            Collections.emptyList());
-    }
-
-    public static Member createWithEncodedPassword(final String name, final String password,
-                                                   final List<MemberCoupon> memberCoupons) {
-        return new Member(MemberName.create(name), MemberPassword.createWithEncodedPassword(password), memberCoupons);
+    public static Member create(final String name, final MemberPassword password, final List<MemberCoupon> memberCoupons) {
+        return new Member(MemberName.create(name), password, memberCoupons);
     }
 
     public String name() {
@@ -35,6 +29,10 @@ public class Member {
 
     public String password() {
         return password.getPassword();
+    }
+
+    public MemberPassword memberPassword() {
+        return password;
     }
 
     public List<MemberCoupon> memberCoupons() {

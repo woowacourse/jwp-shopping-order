@@ -1,6 +1,7 @@
 package cart.persistence.mapper;
 
 import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.dto.MemberWithId;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 public class MemberMapper {
 
     public static Member convertMember(final MemberEntity memberEntity) {
-        return Member.createWithEncodedPassword(memberEntity.getName(), memberEntity.getPassword());
+        return Member.create(memberEntity.getName(), EncryptedPassword.create(memberEntity.getPassword()));
     }
 
     public static MemberWithId convertMemberRes(final MemberEntity memberEntity) {
@@ -21,7 +22,13 @@ public class MemberMapper {
     }
 
     public static Member convertMember(final CartItemDto cartItemDto) {
-        return Member.createWithEncodedPassword(cartItemDto.getMemberName(), cartItemDto.getMemberPassword());
+        return Member.create(cartItemDto.getMemberName(), EncryptedPassword.create(cartItemDto.getMemberPassword()));
+    }
+
+    public static Member convertMember(final List<MemberCouponDto> myCouponsByName) {
+        return Member.create(myCouponsByName.get(0).getMemberName(),
+            EncryptedPassword.create(myCouponsByName.get(0).getMemberPassword()),
+            convertMemberCoupons(myCouponsByName));
     }
 
     public static List<MemberCoupon> convertMemberCoupons(final List<MemberCouponDto> myCouponsByName) {

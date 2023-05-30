@@ -8,9 +8,11 @@ import cart.application.dto.member.MemberSaveRequest;
 import cart.common.auth.BasicTokenProvider;
 import cart.domain.coupon.CouponSaveEvent;
 import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberRepository;
+import cart.domain.member.NaturalPassword;
 import cart.domain.security.SHA256Service;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
@@ -38,7 +40,9 @@ public class MemberService {
         if (memberRepository.existByName(memberSaveRequest.getName())) {
             throw new BadRequestException(ErrorCode.MEMBER_DUPLICATE_NAME);
         }
-        final Member member = Member.create(memberSaveRequest.getName(), memberSaveRequest.getPassword());
+        final NaturalPassword naturalPassword = NaturalPassword.create(memberSaveRequest.getPassword());
+        final String encodedPassword = SHA256Service.encrypt(naturalPassword.getPassword());
+        final Member member = Member.create(memberSaveRequest.getName(), EncryptedPassword.create(encodedPassword));
         final long savedMemberId = memberRepository.insert(member);
         applicationEventPublisher.publishEvent(new CouponSaveEvent(savedMemberId));
         return savedMemberId;
@@ -50,8 +54,9 @@ public class MemberService {
 
         final Member member = memberRepository.findByName(name);
         final String encodedPassword = SHA256Service.encrypt(password);
+        final EncryptedPassword requestEncryptedPassword = EncryptedPassword.create(encodedPassword);
 
-        if (!encodedPassword.equals(member.password())) {
+        if (!requestEncryptedPassword.equals(member.memberPassword())) {
             throw new BadRequestException(ErrorCode.MEMBER_PASSWORD_INVALID);
         }
         final String basicToken = BasicTokenProvider.createToken(name, password);
