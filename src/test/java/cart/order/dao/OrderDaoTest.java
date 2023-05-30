@@ -40,7 +40,7 @@ class OrderDaoTest {
     List<OrderEntity> orderEntities = orderDao.findByMemberId(memberId);
 
     //then
-    assertEquals(1, orderEntities.size());
+    assertEquals(3, orderEntities.size());
   }
 
   @Test

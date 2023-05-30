@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cart.helper.IntegrationTestHelper;
 import cart.member.dao.MemberDao;
@@ -79,8 +78,10 @@ class OrderApiControllerTest extends IntegrationTestHelper {
 
     //then
     assertAll(
-        () -> assertEquals(1, orderResponses.size()),
-        () -> assertEquals(2, orderResponses.get(0).getProducts().size())
+        () -> assertEquals(3, orderResponses.size()),
+        () -> assertEquals(3, orderResponses.get(0).getProducts().size()),
+        () -> assertEquals(2, orderResponses.get(1).getProducts().size()),
+        () -> assertEquals(1, orderResponses.get(2).getProducts().size())
     );
   }
 
@@ -105,9 +106,9 @@ class OrderApiControllerTest extends IntegrationTestHelper {
 
     //then
     assertAll(
-        () -> assertEquals(2, specificOrderResponse.getProducts().size()),
-        () -> assertTrue(
-            BigDecimal.valueOf(380400).compareTo(specificOrderResponse.getTotalPrice()) == 0),
+        () -> assertEquals(3, specificOrderResponse.getProducts().size()),
+        () -> assertEquals(0,
+            BigDecimal.valueOf(585400).compareTo(specificOrderResponse.getTotalPrice())),
         () -> assertEquals(orderId, specificOrderResponse.getOrderId())
     );
   }

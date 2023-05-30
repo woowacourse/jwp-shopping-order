@@ -46,8 +46,8 @@ class CartItemDaoTest {
         .collect(Collectors.toList());
 
     Assertions.assertAll(
-        () -> assertEquals(2, savedCartItemIds.size()),
-        () -> assertThat(savedCartItemIds).containsAnyElementsOf(List.of(1L, 2L))
+        () -> assertEquals(3, savedCartItemIds.size()),
+        () -> assertThat(savedCartItemIds).containsAnyElementsOf(List.of(1L, 2L, 3L))
     );
   }
 }

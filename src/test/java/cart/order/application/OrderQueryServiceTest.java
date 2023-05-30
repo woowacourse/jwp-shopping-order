@@ -15,8 +15,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @SpringBootTest
+@Sql(scripts = "/schema.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class OrderQueryServiceTest {
 
   @Autowired
@@ -36,8 +40,10 @@ class OrderQueryServiceTest {
 
     //then
     assertAll(
-        () -> assertEquals(1, orderResponses.size()),
-        () -> assertEquals(2, orderResponses.get(0).getProducts().size())
+        () -> assertEquals(3, orderResponses.size()),
+        () -> assertEquals(3, orderResponses.get(0).getProducts().size()),
+        () -> assertEquals(2, orderResponses.get(1).getProducts().size()),
+        () -> assertEquals(1, orderResponses.get(2).getProducts().size())
     );
   }
 
@@ -48,7 +54,7 @@ class OrderQueryServiceTest {
     final Member member = memberDao.getMemberById(1L);
 
     //when & then
-    assertThatThrownBy(() -> orderQueryService.searchOrder(member, 2L))
+    assertThatThrownBy(() -> orderQueryService.searchOrder(member, 4L))
         .isInstanceOf(CanNotSearchNotMyOrderException.class);
   }
 
@@ -65,7 +71,8 @@ class OrderQueryServiceTest {
 
     //then
     assertAll(
-        () -> assertEquals(specificOrderResponse.getTotalPrice(), BigDecimal.valueOf(380400d)),
+        () -> assertEquals(0,
+            specificOrderResponse.getTotalPrice().compareTo(BigDecimal.valueOf(585400))),
         () -> assertEquals(specificOrderResponse.getOrderId(), orderId)
     );
   }

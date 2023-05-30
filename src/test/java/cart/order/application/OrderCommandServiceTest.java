@@ -48,7 +48,7 @@ class OrderCommandServiceTest {
     final Long savedId = orderCommandService.registerOrder(member, registerOrderRequest);
 
     //then
-    assertEquals(3L, savedId);
+    assertEquals(5L, savedId);
   }
 
   @Test

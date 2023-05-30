@@ -39,31 +39,81 @@ INSERT INTO member (email, password)
 VALUES ('a@a.com', '1234');
 INSERT INTO member (email, password)
 VALUES ('b@b.com', '1234');
+INSERT INTO member (email, password)
+VALUES ('c@c.com', '1234');
 
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (2, 3, 5);
+VALUES (1, 3, 5);
+
+INSERT INTO cart_item (member_id, product_id, quantity)
+VALUES (1, 4, 3);
+INSERT INTO cart_item (member_id, product_id, quantity)
+VALUES (1, 5, 2);
+
+INSERT INTO cart_item (member_id, product_id, quantity)
+VALUES (1, 6, 2);
+
+INSERT INTO cart_item (member_id, product_id, quantity)
+VALUES (2, 6, 2);
 
 INSERT INTO orders (member_id, delivery_fee)
 VALUES (1, 3000);
+INSERT INTO orders (member_id, delivery_fee)
+VALUES (1, 5000);
+INSERT INTO orders (member_id, delivery_fee)
+VALUES (1, 5000);
 
 INSERT INTO orders (member_id, delivery_fee)
 VALUES (2, 4000);
 
+-- 1번 주문
+
+-- 1번 product
 INSERT INTO order_item (order_id, name, price, image_url, quantity)
 VALUES (1, 'PET보틀-정사각(420ml)', 43400,
         'https://cdn-mart.baemin.com/sellergoods/main/2ddb9f04-c15d-4647-b6e7-30afb9e8d072.jpg?h=300&w=300',
         2);
 
+-- 2번 product
 INSERT INTO order_item (order_id, name, price, image_url, quantity)
 VALUES (1, 'PET보틀-밀크티(370ml)', 73400,
         'https://cdn-mart.baemin.com/sellergoods/main/ac90cb6d-70ad-4271-a25e-03e4db9a9960.jpg?h=300&w=300',
         4);
 
+-- 3번 product
 INSERT INTO order_item (order_id, name, price, image_url, quantity)
-VALUES (2, 'PET보틀-정사각(370ml)', 41000,
+VALUES (1, 'PET보틀-정사각(370ml)', 41000,
         'https://cdn-mart.baemin.com/sellergoods/main/fbe1660a-20f4-4077-8ce7-d8926c7b4e6d.jpg?h=300&w=300',
         5);
+
+-- 2번 주문
+
+-- 4번 product
+INSERT INTO order_item (order_id, name, price, image_url, quantity)
+VALUES (2, 'PET보틀-납작(450ml)', 39900,
+        'https://cdn-mart.baemin.com/sellergoods/main/6adcd3f3-25a3-4038-82a4-322eb72ec281.jpg?h=300&w=300',
+        3);
+
+-- 5번 product
+INSERT INTO order_item (order_id, name, price, image_url, quantity)
+VALUES (2, 'PET보틀-단지(480ml)', 39900,
+        'https://cdn-mart.baemin.com/sellergoods/main/61d13e8f-63fe-4a19-baee-e84a2ae2b922.jpg?h=300&w=300',
+        2);
+
+-- 3번 주문
+
+-- 6번 product
+INSERT INTO order_item (order_id, name, price, image_url, quantity)
+VALUES (3, 'PET보틀-납작(260ml)', 41000,
+        'https://cdn-mart.baemin.com/sellergoods/main/d07bec18-ce84-41c2-8903-61cbd10712b6.jpg?h=300&w=300',
+        2);
+
+-- 4번 주문
+INSERT INTO order_item (order_id, name, price, image_url, quantity)
+VALUES (4, 'PET보틀-납작(260ml)', 41000,
+        'https://cdn-mart.baemin.com/sellergoods/main/d07bec18-ce84-41c2-8903-61cbd10712b6.jpg?h=300&w=300',
+        3);

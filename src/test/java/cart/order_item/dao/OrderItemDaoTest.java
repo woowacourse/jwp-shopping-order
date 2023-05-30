@@ -60,6 +60,6 @@ class OrderItemDaoTest {
     final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
 
     //then
-    assertEquals(2, orderItemEntities.size());
+    assertEquals(3, orderItemEntities.size());
   }
 }
