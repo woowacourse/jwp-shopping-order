@@ -26,6 +26,7 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public PointResponse checkPoint(final Member member) {
         return new PointResponse(
                 memberDao.getMemberById(member.getId()).getPoint()
