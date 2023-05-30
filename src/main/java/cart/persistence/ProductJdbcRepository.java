@@ -1,6 +1,5 @@
 package cart.persistence;
 
-import cart.application.mapper.ProductMapper;
 import cart.application.repository.ProductRepository;
 import cart.domain.Product;
 import cart.persistence.dao.ProductDao;
@@ -21,7 +20,7 @@ public class ProductJdbcRepository implements ProductRepository {
 
     @Override
     public long create(final Product product) {
-        ProductEntity entity = ProductMapper.toEntity(product);
+        ProductEntity entity = ProductEntity.from(product);
         return productDao.create(entity);
     }
 
@@ -29,7 +28,7 @@ public class ProductJdbcRepository implements ProductRepository {
     public List<Product> findAll() {
         List<ProductEntity> entities = productDao.findAll();
         return entities.stream()
-                .map(ProductMapper::toProduct)
+                .map(ProductEntity::toDomain)
                 .collect(Collectors.toList());
     }
 
@@ -39,12 +38,12 @@ public class ProductJdbcRepository implements ProductRepository {
         if (optionalProductEntity.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(ProductMapper.toProduct(optionalProductEntity.get()));
+        return Optional.of(optionalProductEntity.get().toDomain());
     }
 
     @Override
     public void update(final Product product) {
-        ProductEntity entity = ProductMapper.toEntity(product);
+        ProductEntity entity = ProductEntity.from(product);
         productDao.update(entity);
     }
 

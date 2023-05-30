@@ -1,6 +1,5 @@
 package cart.persistence;
 
-import cart.application.mapper.CartItemMapper;
 import cart.application.repository.CartItemRepository;
 import cart.domain.CartItem;
 import cart.domain.Member;
@@ -30,7 +29,7 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public long create(final CartItem cartItem) {
-        CartItemEntity entity = CartItemMapper.toEntity(cartItem);
+        CartItemEntity entity = CartItemEntity.from(cartItem);
         return cartItemDao.create(entity);
     }
 
@@ -38,7 +37,7 @@ public class CartItemJdbcRepository implements CartItemRepository {
     public List<CartItem> findByMember(final Member member) {
         List<CartDetailDTO> cartDetails = cartItemDao.findByMemberId(member.getId());
         return cartDetails.stream()
-                .map(CartItemMapper::toCartItem)
+                .map(CartDetailDTO::toDomain)
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +47,7 @@ public class CartItemJdbcRepository implements CartItemRepository {
         if (optionalCartDetail.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(CartItemMapper.toCartItem(optionalCartDetail.get()));
+        return Optional.of(optionalCartDetail.get().toDomain());
     }
 
     @Override
@@ -58,6 +57,6 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public void updateQuantity(final CartItem cartItem) {
-        cartItemDao.updateQuantity(CartItemMapper.toEntity(cartItem));
+        cartItemDao.updateQuantity(CartItemEntity.from(cartItem));
     }
 }

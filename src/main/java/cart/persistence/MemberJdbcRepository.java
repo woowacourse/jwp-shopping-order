@@ -1,6 +1,5 @@
 package cart.persistence;
 
-import cart.application.mapper.MemberMapper;
 import cart.application.repository.MemberRepository;
 import cart.domain.Member;
 import cart.persistence.dao.MemberDao;
@@ -23,6 +22,6 @@ public class MemberJdbcRepository implements MemberRepository {
         if (optionalMemberEntity.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(MemberMapper.toMember(optionalMemberEntity.get()));
+        return Optional.of(optionalMemberEntity.get().toDomain());
     }
 }

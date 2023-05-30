@@ -1,5 +1,8 @@
 package cart.persistence.dto;
 
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.Product;
 import cart.persistence.entity.CartItemEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
@@ -15,6 +18,12 @@ public class CartDetailDTO {
         this.cartItemEntity = cartItemEntity;
         this.memberEntity = memberEntity;
         this.productEntity = productEntity;
+    }
+
+    public CartItem toDomain() {
+        Product product = productEntity.toDomain();
+        Member member = memberEntity.toDomain();
+        return new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), product, member);
     }
 
     public CartItemEntity getCartItemEntity() {

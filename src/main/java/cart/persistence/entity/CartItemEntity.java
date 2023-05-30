@@ -1,5 +1,7 @@
 package cart.persistence.entity;
 
+import cart.domain.CartItem;
+
 public class CartItemEntity {
 
     private Long id;
@@ -16,6 +18,15 @@ public class CartItemEntity {
         this.memberId = memberId;
         this.productId = productId;
         this.quantity = quantity;
+    }
+
+    public static CartItemEntity from(final CartItem cartItem) {
+        return new CartItemEntity(
+                cartItem.getId(),
+                cartItem.getMember().getId(),
+                cartItem.getProduct().getId(),
+                cartItem.getQuantity()
+        );
     }
 
     public Long getId() {

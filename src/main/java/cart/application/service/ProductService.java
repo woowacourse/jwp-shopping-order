@@ -1,6 +1,5 @@
 package cart.application.service;
 
-import cart.application.mapper.ProductMapper;
 import cart.application.repository.ProductRepository;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
@@ -31,18 +30,22 @@ public class ProductService {
     }
 
     public Long createProduct(final ProductRequest request) {
-        Product product = ProductMapper.toProduct(request);
+        Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl());
         return productRepository.create(product);
     }
 
-    public void updateProduct(final Long productId, final ProductRequest request) {
-        Product product = ProductMapper.toProduct(productId, request);
+    public void updateProduct(final long productId, final ProductRequest request) {
+        checkProductExistence(productId);
+        Product product = new Product(productId, request.getName(), request.getPrice(), request.getImageUrl());
         productRepository.update(product);
     }
 
-    public void deleteProduct(final Long productId) {
+    private void checkProductExistence(final Long productId) {
         productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
+    }
+
+    public void deleteProduct(final Long productId) {
         productRepository.deleteById(productId);
     }
 }
