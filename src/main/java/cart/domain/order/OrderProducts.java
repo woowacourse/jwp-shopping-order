@@ -1,4 +1,6 @@
-package cart.domain;
+package cart.domain.order;
+
+import cart.domain.cart.CartItem;
 
 import java.util.List;
 import java.util.stream.Collectors;

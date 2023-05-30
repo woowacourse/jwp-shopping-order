@@ -1,7 +1,11 @@
 package cart.application;
 
 import cart.dao.*;
-import cart.domain.*;
+import cart.domain.cart.CartItem;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProducts;
+import cart.domain.product.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.request.PaymentRequest;

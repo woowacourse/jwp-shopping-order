@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.member;
 
 public class Member {
     private static final int MINIMUM_POINT = 0;

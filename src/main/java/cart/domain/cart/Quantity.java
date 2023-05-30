@@ -1,8 +1,8 @@
-package cart.domain;
+package cart.domain.cart;
 
 import java.util.Objects;
 
-class Quantity {
+public class Quantity {
 
     private static final int MINIMUM_QUANTITY = 1;
 

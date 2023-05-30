@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.request.PaymentRequest;

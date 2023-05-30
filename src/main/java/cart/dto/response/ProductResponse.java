@@ -1,6 +1,6 @@
 package cart.dto.response;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductResponse {
     private final Long id;

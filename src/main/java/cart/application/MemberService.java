@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.response.MemberResponse;
 import cart.dto.response.PointResponse;
 import org.springframework.stereotype.Service;
