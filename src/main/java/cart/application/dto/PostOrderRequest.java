@@ -4,13 +4,16 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 public class PostOrderRequest {
-
+    @NotNull(message = "0이상의 값을 입력해야 합니다")
     @Min(value = 0, message = "0이상의 값을 입력해야 합니다")
     private Integer usedPoint;
 
+    @NotNull(message = "하나 이상의 상품이 포함되어야 합니다")
     @Size(min = 1, message = "하나 이상의 상품이 포함되어야 합니다")
     private List<@Valid SingleKindProductRequest> products;
 

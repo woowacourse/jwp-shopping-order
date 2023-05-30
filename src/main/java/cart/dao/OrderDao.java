@@ -17,4 +17,8 @@ public class OrderDao {
     public Order findById(Long id) {
         return null;
     }
+
+    public Long save(Order order) {
+        return null;
+    }
 }

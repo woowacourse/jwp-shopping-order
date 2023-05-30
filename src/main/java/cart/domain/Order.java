@@ -12,10 +12,10 @@ public class Order {
     private final Integer usedPoint;
     private final Integer savedPoint;
     private final OrderStatus orderStatus;
-    private final List<QuantityAndProduct> products;
+    private final List<QuantityAndProduct> quantityAndProducts;
 
     public Order(Long orderId, Member member, LocalDateTime orderAt, Integer payAmount, Integer usedPoint, Integer savedPoint,
-        OrderStatus orderStatus, List<QuantityAndProduct> products) {
+        OrderStatus orderStatus, List<QuantityAndProduct> quantityAndProducts) {
         this.orderId = orderId;
         this.member = member;
         this.orderAt = orderAt;
@@ -23,7 +23,25 @@ public class Order {
         this.usedPoint = usedPoint;
         this.savedPoint = savedPoint;
         this.orderStatus = orderStatus;
-        this.products = products;
+        this.quantityAndProducts = quantityAndProducts;
+    }
+
+    public Order(Member member, LocalDateTime orderAt, Integer payAmount, Integer usedPoint, Integer savedPoint,
+        OrderStatus orderStatus, List<QuantityAndProduct> quantityAndProducts) {
+        this.orderId = null;
+        this.member = member;
+        this.orderAt = orderAt;
+        this.payAmount = payAmount;
+        this.usedPoint = usedPoint;
+        this.savedPoint = savedPoint;
+        this.orderStatus = orderStatus;
+        this.quantityAndProducts = quantityAndProducts;
+    }
+
+    public static Order from(Member member, Integer payAmount, Integer usedPoint, Integer savedPoint,
+        List<QuantityAndProduct> quantityAndProducts) {
+        return new Order(null, member, LocalDateTime.now(), payAmount, usedPoint, savedPoint, OrderStatus.PENDING,
+            quantityAndProducts);
     }
 
     public Long getOrderId() {
@@ -55,6 +73,6 @@ public class Order {
     }
 
     public List<QuantityAndProduct> getQuantityAndProducts() {
-        return products;
+        return quantityAndProducts;
     }
 }

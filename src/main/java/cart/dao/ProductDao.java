@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,6 +40,10 @@ public class ProductDao {
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
         });
+    }
+
+    public List<Product> getProductsByIds(List<Long> productIds) {
+        return Collections.emptyList();
     }
 
     public Long createProduct(Product product) {
