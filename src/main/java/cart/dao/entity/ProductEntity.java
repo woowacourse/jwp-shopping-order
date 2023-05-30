@@ -21,6 +21,10 @@ public class ProductEntity {
         this.updatedAt = updatedAt;
     }
 
+    public ProductEntity(final Long id, final String name, final int price, final String imageUrl) {
+        this(id, name, price, imageUrl, null, null);
+    }
+
     public static ProductEntity createForSave(final String name, final int price, final String imageUrl) {
         return new ProductEntity(null, name, price, imageUrl, null, null);
     }

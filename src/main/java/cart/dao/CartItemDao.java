@@ -99,7 +99,6 @@ public class CartItemDao {
         }
     }
 
-
     public int delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         return jdbcTemplate.update(sql, memberId, productId);
