@@ -1,22 +1,22 @@
 package cart.domain.coupon;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Coupon {
-    private final CouponName couponName;
+    private final CouponName name;
     private final DiscountRate discountRate;
     private final Period period;
-    private final LocalDate expiredDate;
+    private final LocalDateTime expiredDate;
 
-    public Coupon(CouponName couponName, DiscountRate discountRate, Period period, LocalDate expiredDate) {
-        this.couponName = couponName;
-        this.discountRate = discountRate;
-        this.period = period;
+    public Coupon(String name, int discountRate, int period, LocalDateTime expiredDate) {
+        this.name = new CouponName(name);
+        this.discountRate = new DiscountRate(discountRate);
+        this.period = new Period(period);
         this.expiredDate = expiredDate;
     }
 
-    public String getCouponName() {
-        return couponName.getName();
+    public String getName() {
+        return name.getName();
     }
 
     public int getDiscountRate() {
@@ -27,7 +27,7 @@ public class Coupon {
         return period.getPeriod();
     }
 
-    public LocalDate getExpiredDate() {
+    public LocalDateTime getExpiredDate() {
         return expiredDate;
     }
 }
