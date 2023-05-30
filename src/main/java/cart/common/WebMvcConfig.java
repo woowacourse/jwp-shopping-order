@@ -1,4 +1,4 @@
-package cart;
+package cart.common;
 
 import cart.dao.MemberDao;
 import cart.ui.MemberArgumentResolver;

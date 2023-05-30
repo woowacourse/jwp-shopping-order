@@ -1,4 +1,4 @@
-package cart;
+package cart.common;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
