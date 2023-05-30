@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.order.dao.entity.OrderEntity;
 import java.util.List;
+import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,5 +41,21 @@ class OrderDaoTest {
 
     //then
     assertEquals(1, orderEntities.size());
+  }
+
+  @Test
+  @DisplayName("findByOrderId() : order Id를 통해 주문 목록을 조회할 수 있다.")
+  void test_findByOrderId() throws Exception {
+    //given
+    final long orderId = 1L;
+
+    //when
+    Optional<OrderEntity> orderEntity = orderDao.findByOrderId(orderId);
+
+    //then
+    assertAll(
+        () -> Assertions.assertThat(orderEntity).isPresent(),
+        () -> assertEquals(orderEntity.get().getId(), orderId)
+    );
   }
 }

@@ -64,6 +64,6 @@ VALUES (1, 'PET보틀-밀크티(370ml)', 73400,
         4);
 
 INSERT INTO order_item (order_id, name, price, image_url, quantity)
-VALUES (1, 'PET보틀-정사각(370ml)', 41000,
+VALUES (2, 'PET보틀-정사각(370ml)', 41000,
         'https://cdn-mart.baemin.com/sellergoods/main/fbe1660a-20f4-4077-8ce7-d8926c7b4e6d.jpg?h=300&w=300',
         5);
