@@ -61,6 +61,10 @@ public class Order {
         return orderedAt;
     }
 
+    public int getTotalItemPrice() {
+        return totalItemPrice;
+    }
+
     public int getShippingFee() {
         return shippingFee;
     }

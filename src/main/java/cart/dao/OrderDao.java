@@ -24,14 +24,15 @@ public class OrderDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO orders (member_id, total_price, delivery_fee, discounted_total_price) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO orders (member_id, total_purchase_amount, total_item_price, shipping_fee, discounted_total_price) VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setLong(1, memberId);
             ps.setInt(2, order.getTotalPurchaseAmount());
-            ps.setInt(3, order.getShippingFee());
-            ps.setInt(4, order.getDiscountedTotalPrice());
+            ps.setInt(3, order.getTotalItemPrice());
+            ps.setInt(4, order.getShippingFee());
+            ps.setInt(5, order.getDiscountedTotalPrice());
 
             return ps;
         }, keyHolder);
