@@ -1,4 +1,4 @@
-package cart.domain.history;
+package cart.dto.history;
 
 public class ProductHistory {
 
@@ -11,7 +11,7 @@ public class ProductHistory {
     public ProductHistory(final Long id, final String productName, final String imgUrl, final int quantity, final int price) {
         this.id = id;
         this.productName = productName;
-        this.imgUrl= imgUrl;
+        this.imgUrl = imgUrl;
         this.quantity = quantity;
         this.price = price;
     }
@@ -36,7 +36,7 @@ public class ProductHistory {
         return price;
     }
 
-    public void setPrice(final int price) {
+    public void updatePrice(final int price) {
         this.price = price;
     }
 }

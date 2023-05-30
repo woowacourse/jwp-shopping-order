@@ -40,7 +40,7 @@ public class PaymentService {
         return PaymentResponse.from(member, cart);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public PaymentUsingCouponsResponse applyCoupons(final Member member, final List<Long> request) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
         Coupons requestCoupons = couponRepository.findAllByCouponIds(request);
@@ -53,18 +53,6 @@ public class PaymentService {
     private List<Long> parseCouponRequestIds(final List<CouponIdRequest> couponIds) {
         return couponIds.stream()
                 .map(CouponIdRequest::getId)
-                .collect(Collectors.toList());
-    }
-
-    public List<Long> parseProductIds(final List<ProductIdRequest> productIds) {
-        return productIds.stream()
-                .map(ProductIdRequest::getId)
-                .collect(Collectors.toList());
-    }
-
-    public List<Integer> parseProductQuantities(final List<ProductIdRequest> quantities) {
-        return quantities.stream()
-                .map(ProductIdRequest::getQuantity)
                 .collect(Collectors.toList());
     }
 
@@ -82,16 +70,32 @@ public class PaymentService {
         return orderRepository.save(member, orderHistory);
     }
 
-    private void updateCartItems(final Order order) {
-        for (CartItem cartItem : order.getCart().getCartItems()) {
-            if (cartItem.isEmptyQuantity()) {
-                cartRepository.deleteCartItemById(cartItem.getId());
-                continue;
-            }
-
-            cartRepository.updateCartItemQuantity(cartItem);
-        }
+    private List<Long> parseProductIds(final List<ProductIdRequest> productIds) {
+        return productIds.stream()
+                .map(ProductIdRequest::getId)
+                .collect(Collectors.toList());
     }
+
+    private List<Integer> parseProductQuantities(final List<ProductIdRequest> quantities) {
+        return quantities.stream()
+                .map(ProductIdRequest::getQuantity)
+                .collect(Collectors.toList());
+    }
+
+    private void updateCartItems(final Order order) {
+        order.getCart().getCartItems()
+                .forEach(this::updateCartItem);
+    }
+
+    private void updateCartItem(final CartItem cartItem) {
+        if (cartItem.isEmptyQuantity()) {
+            cartRepository.deleteCartItemById(cartItem.getId());
+            return;
+        }
+
+        cartRepository.updateCartItemQuantity(cartItem);
+    }
+
 
     private void deleteUsedCoupons(final OrderResponse orderHistory) {
         List<Long> couponIds = orderHistory.getCoupons().stream()

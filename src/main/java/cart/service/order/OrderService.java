@@ -1,7 +1,7 @@
 package cart.service.order;
 
-import cart.domain.history.OrderHistory;
 import cart.domain.member.Member;
+import cart.dto.history.OrderHistory;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
 import cart.exception.MemberNotOwnerException;

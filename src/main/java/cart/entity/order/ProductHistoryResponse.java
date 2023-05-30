@@ -1,6 +1,6 @@
 package cart.entity.order;
 
-import cart.domain.history.ProductHistory;
+import cart.dto.history.ProductHistory;
 
 public class ProductHistoryResponse {
 

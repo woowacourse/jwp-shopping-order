@@ -1,8 +1,8 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.history.ProductHistory;
 import cart.domain.product.Product;
+import cart.dto.history.ProductHistory;
 import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 import cart.exception.CartItemNotFoundException;
 import org.junit.jupiter.api.DisplayName;

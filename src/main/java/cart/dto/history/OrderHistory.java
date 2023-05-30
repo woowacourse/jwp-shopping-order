@@ -1,4 +1,4 @@
-package cart.domain.history;
+package cart.dto.history;
 
 import cart.domain.cart.DeliveryFee;
 

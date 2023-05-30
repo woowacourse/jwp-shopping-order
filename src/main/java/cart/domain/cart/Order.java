@@ -1,9 +1,9 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.history.ProductHistory;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponResponse;
+import cart.dto.history.ProductHistory;
 import cart.dto.order.OrderResponse;
 import cart.dto.product.DeliveryFeeResponse;
 import cart.entity.order.ProductHistoryResponse;
@@ -55,21 +55,18 @@ public class Order {
                 .filter(coupon -> !coupon.isDeliveryCoupon())
                 .collect(Collectors.toList());
 
-        for (final ProductHistory productHistory : productHistories) {
-            applyCouponsOnProduct(productCoupons, productHistory);
-        }
+        productHistories.forEach(productHistory -> applyCouponsOnProduct(productCoupons, productHistory));
     }
 
-    private static void applyCouponsOnProduct(final List<Coupon> productCoupons, final ProductHistory productHistory) {
+    private void applyCouponsOnProduct(final List<Coupon> productCoupons, final ProductHistory productHistory) {
         int price = productHistory.getPrice();
 
         for (final Coupon coupon : productCoupons) {
             price = coupon.calculate(price);
         }
 
-        productHistory.setPrice(price);
+        productHistory.updatePrice(price);
     }
-
 
     public Member getMember() {
         return member;

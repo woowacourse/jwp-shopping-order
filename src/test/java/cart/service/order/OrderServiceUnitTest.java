@@ -1,9 +1,9 @@
 package cart.service.order;
 
-import cart.domain.history.CouponHistory;
-import cart.domain.history.OrderHistory;
-import cart.domain.history.ProductHistory;
 import cart.domain.member.Member;
+import cart.dto.history.CouponHistory;
+import cart.dto.history.OrderHistory;
+import cart.dto.history.ProductHistory;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
 import cart.repository.order.OrderRepository;

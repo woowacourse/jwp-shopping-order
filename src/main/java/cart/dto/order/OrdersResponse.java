@@ -1,6 +1,6 @@
 package cart.dto.order;
 
-import cart.domain.history.OrderHistory;
+import cart.dto.history.OrderHistory;
 
 import java.util.List;
 import java.util.stream.Collectors;

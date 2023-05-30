@@ -1,7 +1,7 @@
 package cart.dto.order;
 
-import cart.domain.history.OrderHistory;
 import cart.dto.coupon.CouponResponse;
+import cart.dto.history.OrderHistory;
 import cart.dto.product.DeliveryFeeResponse;
 import cart.entity.order.ProductHistoryResponse;
 
