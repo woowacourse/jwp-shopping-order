@@ -54,6 +54,9 @@ Coupon --> DiscountCondition --> AllwaysDiscountCondition
 
 할인된 금액을 계산해주는 것이 가장 중요한 역할을 합니다
 
+쿠폰 타입은 입력을 받을때, enum 이 아니라, String 형태로 받고 있습니다  
+enum 을 사용하는 경우에는, 변경이 적은 경우에만 사용하는 것으로 알고 있지만, 도메인상 자주 변할 것 같아서 String 형태로 주었습니다
+
 ## member
 
 1단계의 회원 도메인과 크게 달라지지 않습니다
