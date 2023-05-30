@@ -52,4 +52,11 @@ class PriceTest {
         assertThat(price.isLessThan(new Price(1500))).isTrue();
     }
 
+    @Test
+    @DisplayName("가격이 0원인지 아닌지 확인 할 수 있다.")
+    void isZero() {
+        Price price = new Price(0);
+        assertThat(price.isZero()).isTrue();
+    }
+
 }
