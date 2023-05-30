@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS cart_item (
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
     );
 CREATE TABLE IF NOT EXISTS orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS orders (
     original_price INT NOT NULL,
     discount_price INT NOT NULL,
     confirm_state BOOLEAN NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member(id)
+    FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS coupon (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -37,15 +37,21 @@ CREATE TABLE IF NOT EXISTS orders_coupon(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
-    FOREIGN KEY (orders_id) REFERENCES orders(id),
-    FOREIGN KEY (coupon_id) REFERENCES coupon(id)
+    FOREIGN KEY (orders_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS orders_cart_item(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity int NOT NULL,
-    FOREIGN KEY (orders_id) REFERENCES orders(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    FOREIGN KEY (orders_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
-
+CREATE TABLE IF NOT EXISTS member_coupon(
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL
+    FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE,
+    FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
+)

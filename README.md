@@ -6,9 +6,9 @@
 | --- | --- | --- |-------|
 | 주문하기 | POST | ~/orders | o     |
 | 주문 목록 조회 | GET | ~/orders | o     |
-| 주문 상세 보기 | GET | ~/orders/{id} | x     |
-| 주문 확정 | PATCH | ~/orders/{id}/confirm | x     |
-| 주문 취소 | DELETE | ~/orders/{id} | x     |
+| 주문 상세 보기 | GET | ~/orders/{id} | o     |
+| 주문 확정 | PATCH | ~/orders/{id}/confirm | o     |
+| 주문 취소 | DELETE | ~/orders/{id} | o     |
 | 유저 쿠폰 발급 | POST | ~/users/coupons | x     |
 | 모든 쿠폰 조회 | GET | ~/coupons | x     |
 | 유저 쿠폰 조회 | GET | ~/users/coupons | x     |

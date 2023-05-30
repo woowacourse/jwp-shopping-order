@@ -34,4 +34,14 @@ public class OrdersController {
     public ResponseEntity<OrdersResponse> showOrdersDetail(Member member,@PathVariable long id){
         return ResponseEntity.ok().body(ordersService.findOrdersById(member,id));
     }
+    @PatchMapping("/{id}/confirm")
+    public ResponseEntity<OrdersResponse> confirmOrders(Member member,@PathVariable long id){
+        return ResponseEntity.ok().body(ordersService.confirmOrders(member,id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> cancelOrders(@PathVariable long id){
+        ordersService.deleteOrders(id);
+        return ResponseEntity.noContent().build();
+    }
 }

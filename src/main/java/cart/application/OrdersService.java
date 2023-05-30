@@ -1,8 +1,6 @@
 package cart.application;
 
 import cart.domain.Member;
-import cart.domain.Orders;
-import cart.dto.CartItemResponse;
 import cart.dto.OrdersRequest;
 import cart.dto.OrdersResponse;
 import cart.repository.OrdersRepository;
@@ -33,5 +31,12 @@ public class OrdersService {
 
     public OrdersResponse findOrdersById(final Member member,final long id){
         return OrdersResponse.ofDetail(ordersRepository.findOrdersById(member, id));
+    }
+
+    public OrdersResponse confirmOrders(Member member, long id) {
+        return OrdersResponse.ofCoupon(ordersRepository.confirmOrdersCreateCoupon(id));
+    }
+    public void deleteOrders(final long id){
+        ordersRepository.deleteOrders(id);
     }
 }

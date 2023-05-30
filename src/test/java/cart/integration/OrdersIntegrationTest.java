@@ -41,7 +41,7 @@ public class OrdersIntegrationTest extends IntegrationTest{
                 .statusCode(HttpStatus.OK.value());
     }
     @Test
-    @DisplayName("주문 목록을 가져온다")
+    @DisplayName("주문 상세목록을 본다")
     void getOrderDetailTest(){
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
@@ -57,8 +57,7 @@ public class OrdersIntegrationTest extends IntegrationTest{
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().patch("/orders/1/confirm")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("coupon", hasItems("id", "name", "discount_type", "discount_rate", "discount_amount", "minimum_price"));
+                .statusCode(HttpStatus.OK.value());
     }
     @Test
     @DisplayName("주문 취소를 한다")

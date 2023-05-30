@@ -53,4 +53,12 @@ public class OrdersDao {
                         rs.getBoolean("confirm_state")
                 ),id);
     }
+    public void updateConfirmById(final long id){
+        final String sql = "UPDATE orders SET confirm_state = true WHERE id = ? ";
+        jdbcTemplate.update(sql,id);
+    }
+    public void deleteById(final long id){
+        final String sql = "DELETE FROM orders WHERE id = ?";
+        jdbcTemplate.update(sql,id);
+    }
 }
