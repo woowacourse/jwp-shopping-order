@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
+import cart.dao.ProductDao;
 import cart.dto.CartItemRequest;
 import cart.dto.OrderCreateRequest;
 
@@ -26,5 +28,14 @@ public class ServiceTest {
 	protected OrderService orderService;
 
 	@Autowired
+	protected ProductService productService;
+
+	@Autowired
 	protected MemberDao memberDao;
+
+	@Autowired
+	protected ProductDao productDao;
+
+	@Autowired
+	protected CartItemDao cartItemDao;
 }
