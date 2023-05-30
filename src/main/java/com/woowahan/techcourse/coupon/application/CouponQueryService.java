@@ -10,8 +10,10 @@ import com.woowahan.techcourse.coupon.domain.Order;
 import com.woowahan.techcourse.coupon.exception.CouponNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CouponQueryService {
 
     private final CouponQueryDao couponQueryDao;
