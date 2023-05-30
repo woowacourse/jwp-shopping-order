@@ -21,6 +21,11 @@ public class OrderProductEntity {
     }
 
     public OrderProductEntity(Long id, Long orderId, ProductEntity productEntity, String productName, Integer productPrice,
+            String productImageUrl, Integer quantity) {
+        this(id, orderId, productEntity, productName, productPrice, productImageUrl, quantity, null, null);
+    }
+
+    public OrderProductEntity(Long id, Long orderId, ProductEntity productEntity, String productName, Integer productPrice,
             String productImageUrl, Integer quantity, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.orderId = orderId;

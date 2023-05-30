@@ -15,6 +15,10 @@ public class OrderEntity {
         this(null, memberEntity, usedPoint, null, null);
     }
 
+    public OrderEntity(Long id, MemberEntity memberEntity, Integer usedPoint) {
+        this(id, memberEntity, usedPoint, null, null);
+    }
+
     public OrderEntity(Long id, MemberEntity memberEntity, Integer usedPoint, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.memberEntity = memberEntity;
