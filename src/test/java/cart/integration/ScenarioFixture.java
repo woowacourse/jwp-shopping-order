@@ -36,9 +36,6 @@ public class ScenarioFixture extends IntegrationTest {
     private CouponRepository couponRepository;
 
     @Autowired
-    private CouponService couponService;
-
-    @Autowired
     private SaleRepository saleRepository;
 
     @Autowired

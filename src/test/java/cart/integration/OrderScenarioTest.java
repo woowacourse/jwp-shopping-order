@@ -59,7 +59,7 @@ public class OrderScenarioTest extends ScenarioFixture {
                 () -> assertThat(jsonPath.getLong("products[2].price")).isEqualTo(피자.getPrice()),
                 () -> assertThat(jsonPath.getString("products[2].imgUrl")).isEqualTo(피자.getImageUrl()),
                 () -> assertThat(jsonPath.getBoolean("products[2].isOnSale")).isEqualTo(false),
-                () -> assertThat(jsonPath.getLong("products[2리].salePrice")).isEqualTo(0)
+                () -> assertThat(jsonPath.getLong("products[2].salePrice")).isEqualTo(0)
         );
 
         assertThat(jsonPath.getLong("deliveryPrice")).isEqualTo(3000);
@@ -135,27 +135,30 @@ public class OrderScenarioTest extends ScenarioFixture {
     }
 
     @Test
-    @Disabled
-    void 사용자가_결제하기_바튼을_누른다() {
+    void 사용자가_결제하기_버튼을_누른다() {
+        사용자가_상품을_장바구니에_담는다(사용자1, 치킨);
+        사용자가_상품을_장바구니에_담는다(사용자1, 샐러드);
+        사용자가_상품을_장바구니에_담는다(사용자1, 피자);
+
+        
         final var 요청바디 = Map.of(
                 "products",
                 List.of(
-                        Map.of("id", 1),
-                        Map.of("id", 2)
+                        Map.of("id", 치킨.getId(), "quantity", 3),
+                        Map.of("id", 피자.getId(), "quantity", 5)
                 ),
                 "coupons",
                 List.of(
-                        Map.of("id", 1),
-                        Map.of("id", 2)
+                        Map.of("id", 전체10프로할인쿠폰.getId()),
+                        Map.of("id", 배송비무료쿠폰.getId())
                 )
         );
-
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(사용자1.getEmail(), 사용자1.getPassword())
                 .body(요청바디)
                 .when()
-                .post("/payment")
+                .post("/payments")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
