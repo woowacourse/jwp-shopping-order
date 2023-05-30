@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.dto.ErrorResponse;
+import cart.application.dto.ErrorResponse;
 import cart.exception.ForbiddenException;
 import cart.exception.NotFoundException;
 import cart.exception.StoreException;

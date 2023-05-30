@@ -3,11 +3,11 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.application.dto.CartItemQuantityUpdateRequest;
+import cart.application.dto.CartItemRequest;
+import cart.application.dto.CartItemResponse;
+import cart.application.dto.ProductRequest;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
 import cart.persistence.dao.MemberDao;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
