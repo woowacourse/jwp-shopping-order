@@ -20,19 +20,19 @@ CREATE TABLE cart_item (
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
-CREATE TABLE purchase (
+CREATE TABLE orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	member_id BIGINT NOT NULL,
-	total_amount INT NOT NULL,
+	total_price INT NOT NULL,
 	FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
-CREATE TABLE purchase_details (
+CREATE TABLE order_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    purchase_id BIGINT NOT NULL,
+    orders_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
-    FOREIGN KEY (purchase_id) REFERENCES purchase(id),
+    FOREIGN KEY (orders_id) REFERENCES orders(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
