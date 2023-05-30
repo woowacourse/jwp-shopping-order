@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.Objects;
 
 @Repository
@@ -36,6 +35,3 @@ public class OrderDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 }
-
-
-
