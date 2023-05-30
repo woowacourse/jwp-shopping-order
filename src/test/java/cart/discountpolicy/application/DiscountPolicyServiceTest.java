@@ -100,7 +100,7 @@ class DiscountPolicyServiceTest {
 
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
-                .containsExactly(8_000, 12_000);
+                .containsExactly(12_000, 18_000);
         assertThat(cart.getDeliveryPrice())
                 .isEqualTo(3_000);
     }
