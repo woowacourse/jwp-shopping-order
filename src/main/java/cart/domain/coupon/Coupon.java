@@ -25,7 +25,8 @@ public class Coupon {
             LocalDateTime.now().plusDays(period));
     }
 
-    public static Coupon create(final String name, final int discountRate, final int period, final LocalDateTime expiredDate) {
+    public static Coupon create(final String name, final int discountRate, final int period,
+                                final LocalDateTime expiredDate) {
         return new Coupon(
             CouponName.create(name),
             CouponDiscountRate.create(discountRate),

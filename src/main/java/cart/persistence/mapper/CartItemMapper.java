@@ -7,7 +7,7 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.product.dto.ProductWithId;
-import cart.persistence.dto.CartItemDto;
+import cart.persistence.dao.dto.CartItemDto;
 
 public class CartItemMapper {
 

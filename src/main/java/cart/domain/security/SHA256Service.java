@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class SHA256Service {
+
     public static String encrypt(final String target) {
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-256");

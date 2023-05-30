@@ -3,6 +3,7 @@ package cart.persistence.entity;
 import java.time.LocalDateTime;
 
 public class CouponEntity {
+
     private final Long id;
     private final String name;
     private final Integer discountRate;

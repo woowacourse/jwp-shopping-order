@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberCouponDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public MemberCouponDao(final JdbcTemplate jdbcTemplate) {

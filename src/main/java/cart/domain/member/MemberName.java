@@ -6,6 +6,7 @@ import cart.exception.BadRequestException;
 import java.util.Objects;
 
 public class MemberName {
+
     private static final int NAME_MIN_LENGTH = 4, NAME_MAX_LENGTH = 10;
 
     private final String name;

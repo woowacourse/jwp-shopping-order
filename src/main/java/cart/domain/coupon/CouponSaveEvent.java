@@ -1,6 +1,7 @@
 package cart.domain.coupon;
 
 public class CouponSaveEvent {
+
     private final Long memberId;
 
     public CouponSaveEvent(final Long memberId) {

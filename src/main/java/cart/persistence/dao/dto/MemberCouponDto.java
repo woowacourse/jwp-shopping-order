@@ -3,6 +3,7 @@ package cart.persistence.dao.dto;
 import java.time.LocalDateTime;
 
 public class MemberCouponDto {
+
     private final Long memberId;
     private final String memberName;
     private final String memberPassword;

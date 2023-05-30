@@ -29,12 +29,14 @@ public class MemberCouponService {
     @TransactionalEventListener
     public void saveMemberCoupon(final CouponSaveEvent couponSaveEvent) {
         final Long memberId = couponSaveEvent.getMemberId();
-        final CouponWithId coupon = couponRepository.findByNameAndDiscountRate(JOIN_MEMBER_COUPON, JOIN_MEMBER_COUPON_DISCOUNT_RATE);
+        final CouponWithId coupon = couponRepository.findByNameAndDiscountRate(JOIN_MEMBER_COUPON,
+            JOIN_MEMBER_COUPON_DISCOUNT_RATE);
         final LocalDateTime issuedDate = LocalDateTime.now();
         if (coupon.getExpiredDate().isBefore(issuedDate)) {
             throw new BadRequestException(ErrorCode.COUPON_EXPIRED);
         }
-        final MemberCoupon memberCoupon = new MemberCoupon(coupon, issuedDate, issuedDate.plusDays(coupon.getPeriod()), false);
+        final MemberCoupon memberCoupon = new MemberCoupon(coupon, issuedDate, issuedDate.plusDays(coupon.getPeriod()),
+            false);
         memberCouponRepository.save(memberId, memberCoupon);
     }
 }

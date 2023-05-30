@@ -11,7 +11,7 @@ import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dao.MemberDao;
-import cart.persistence.dto.CartItemDto;
+import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.mapper.CartItemMapper;

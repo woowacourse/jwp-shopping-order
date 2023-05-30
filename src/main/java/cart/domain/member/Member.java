@@ -24,7 +24,8 @@ public class Member {
             Collections.emptyList());
     }
 
-    public static Member createWithEncodedPassword(final String name, final String password, final List<MemberCoupon> memberCoupons) {
+    public static Member createWithEncodedPassword(final String name, final String password,
+                                                   final List<MemberCoupon> memberCoupons) {
         return new Member(MemberName.create(name), MemberPassword.createWithEncodedPassword(password), memberCoupons);
     }
 

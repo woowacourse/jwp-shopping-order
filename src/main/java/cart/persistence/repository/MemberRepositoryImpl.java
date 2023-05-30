@@ -3,7 +3,6 @@ package cart.persistence.repository;
 import static cart.persistence.mapper.MemberMapper.convertMember;
 import static cart.persistence.mapper.MemberMapper.convertMemberCoupons;
 
-import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberRepository;

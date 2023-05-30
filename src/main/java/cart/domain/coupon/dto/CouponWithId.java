@@ -3,6 +3,7 @@ package cart.domain.coupon.dto;
 import java.time.LocalDateTime;
 
 public class CouponWithId {
+
     private final Long id;
     private final String name;
     private final Integer discountRate;
