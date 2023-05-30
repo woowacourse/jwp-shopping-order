@@ -1,6 +1,7 @@
-package cart.dao;
+package cart.step2.coupontype.persist;
 
-import cart.domain.CouponType;
+import cart.step2.coupontype.domain.CouponType;
+import cart.step2.coupontype.domain.CouponTypeEntity;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,8 +13,8 @@ import java.util.Optional;
 @Repository
 public class CouponTypeDao {
 
-    private RowMapper<CouponType> rowMapper = (rs, rowNum) -> {
-        return new CouponType(
+    private RowMapper<CouponTypeEntity> rowMapper = (rs, rowNum) -> {
+        return new CouponTypeEntity(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("description"),
@@ -27,12 +28,12 @@ public class CouponTypeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CouponType> findAll() {
+    public List<CouponTypeEntity> findAll() {
         String sql = "SELECT * FROM coupon_type ORDER BY discount_amount";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<CouponType> findById(final Long couponTypeId) {
+    public Optional<CouponTypeEntity> findById(final Long couponTypeId) {
         String sql = "SELECT * FROM coupon_type WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, couponTypeId));

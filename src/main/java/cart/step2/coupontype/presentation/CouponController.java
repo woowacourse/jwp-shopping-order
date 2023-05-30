@@ -1,9 +1,9 @@
-package cart.ui;
+package cart.step2.coupontype.presentation;
 
-import cart.application.CouponService;
+import cart.step2.coupontype.service.CouponService;
 import cart.domain.Member;
-import cart.dto.CouponResponse;
-import cart.dto.CouponTypeResponse;
+import cart.step2.coupontype.presentation.dto.CouponResponse;
+import cart.step2.coupontype.presentation.dto.CouponTypeResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

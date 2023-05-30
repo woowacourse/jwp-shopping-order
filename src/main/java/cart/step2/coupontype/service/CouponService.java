@@ -1,11 +1,12 @@
-package cart.application;
+package cart.step2.coupontype.service;
 
-import cart.dao.CouponDao;
-import cart.dao.CouponTypeDao;
-import cart.domain.Coupon;
-import cart.domain.CouponType;
-import cart.dto.CouponResponse;
-import cart.dto.CouponTypeResponse;
+import cart.step2.coupontype.domain.repository.CouponTypeRepository;
+import cart.step2.coupontype.persist.CouponDao;
+import cart.step2.coupontype.persist.CouponTypeDao;
+import cart.step2.coupontype.domain.Coupon;
+import cart.step2.coupontype.domain.CouponType;
+import cart.step2.coupontype.presentation.dto.CouponResponse;
+import cart.step2.coupontype.presentation.dto.CouponTypeResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,11 @@ import java.util.stream.Collectors;
 public class CouponService {
 
     private final CouponDao couponDao;
-    private final CouponTypeDao couponTypeDao;
+    private final CouponTypeRepository couponTypeRepository;
 
-    public CouponService(final CouponDao couponDao, final CouponTypeDao couponTypeDao) {
+    public CouponService(final CouponDao couponDao, final CouponTypeRepository couponTypeRepository) {
         this.couponDao = couponDao;
-        this.couponTypeDao = couponTypeDao;
+        this.couponTypeRepository = couponTypeRepository;
     }
 
     @Transactional
@@ -35,7 +36,7 @@ public class CouponService {
     }
 
     public List<CouponTypeResponse> getCouponsType() {
-        return couponTypeDao.findAll().stream()
+        return couponTypeRepository.findAll().stream()
                 .map(CouponTypeResponse::new)
                 .collect(Collectors.toList());
     }
@@ -43,8 +44,7 @@ public class CouponService {
     public List<CouponResponse> getMemberCoupons(final Long memberId) {
         return couponDao.findAll(memberId).stream()
                 .map(coupon -> {
-                    CouponType couponType = couponTypeDao.findById(coupon.getCouponTypeId())
-                            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰 종류입니다. 쿠폰 타입 ID가 일치하는지 확인해주세요."));
+                    CouponType couponType = couponTypeRepository.findById(coupon.getCouponTypeId());
                     return new CouponResponse(coupon, couponType);
                 })
                 .collect(Collectors.toList());

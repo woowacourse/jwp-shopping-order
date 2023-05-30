@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.step2.coupontype.persist;
 
-import cart.domain.Coupon;
+import cart.step2.coupontype.domain.Coupon;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

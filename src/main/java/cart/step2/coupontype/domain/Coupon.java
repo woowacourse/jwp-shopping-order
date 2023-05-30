@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.step2.coupontype.domain;
 
 public class Coupon {
 

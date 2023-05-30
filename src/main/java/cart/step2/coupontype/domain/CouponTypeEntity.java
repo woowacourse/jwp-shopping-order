@@ -1,17 +1,26 @@
-package cart.domain;
+package cart.step2.coupontype.domain;
 
-public class CouponType {
+public class CouponTypeEntity {
 
     private final Long id;
     private final String name;
     private final String description;
-    private final int discountAmount;
+    private final Integer discountAmount;
 
-    public CouponType(final Long id, final String name, final String description, final int discountAmount) {
+    public CouponTypeEntity(final Long id, final String name, final String description, final Integer discountAmount) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.discountAmount = discountAmount;
+    }
+
+    public CouponType toDomain() {
+        return new CouponType(
+                id,
+                name,
+                description,
+                discountAmount
+        );
     }
 
     public Long getId() {
@@ -26,7 +35,8 @@ public class CouponType {
         return description;
     }
 
-    public int getDiscountAmount() {
+    public Integer getDiscountAmount() {
         return discountAmount;
     }
+
 }
