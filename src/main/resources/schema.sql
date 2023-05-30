@@ -34,7 +34,7 @@ CREATE TABLE member_coupon (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
-    expired_at DATETIME NOT NULL,
+    expired_at DATETIME NOT NULL,팅
     is_used BOOL NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
