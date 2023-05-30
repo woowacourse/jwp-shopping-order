@@ -49,6 +49,16 @@ Content-Type: application/json
 GET http://localhost:8080/members/1
 Content-Type: application/json
 
+### 멤버 생성 (회원가입)
+
+POST http://localhost:8080/members/join
+Content-Type: application/json
+
+{
+  "email": "gitchan@gmail.com",
+  "password": "gitchan_coding"
+}
+
 ## Cart Item API
 
 ### 장바구니 아이템 목록 조회

@@ -2,14 +2,15 @@ package cart.ui;
 
 import cart.application.MemberService;
 import cart.domain.Member;
+import cart.dto.MemberCreateRequest;
+import cart.dto.MemberCreateResponse;
 import cart.dto.MemberPointQueryResponse;
 import cart.dto.MemberQueryResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,6 +26,14 @@ public class MemberApiController {
     @GetMapping
     public ResponseEntity<List<MemberQueryResponse>> findAllMembers() {
         return ResponseEntity.ok().body(memberService.findAllMembers());
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<MemberCreateResponse> join(@Valid @RequestBody MemberCreateRequest request) {
+        MemberCreateResponse member = memberService.join(request);
+        return ResponseEntity
+                .created(URI.create("/members/" + member.getId()))
+                .build();
     }
 
     @GetMapping("/{id}")

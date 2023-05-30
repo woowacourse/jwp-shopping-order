@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.dto.MemberCreateRequest;
 import cart.dto.MemberCreateResponse;
 import cart.dto.MemberPointQueryResponse;
 import cart.dto.MemberQueryResponse;
@@ -18,8 +19,9 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public MemberCreateResponse addMember(final Member member) {
-        return MemberCreateResponse.from(memberRepository.save(member));
+    public MemberCreateResponse join(final MemberCreateRequest request) {
+        final Member member = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
+        return MemberCreateResponse.from(member);
     }
 
     public MemberPointQueryResponse findPointsOf(final Member member) {

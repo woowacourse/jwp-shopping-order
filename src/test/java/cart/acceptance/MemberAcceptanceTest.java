@@ -8,6 +8,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static cart.fixture.MemberFixtures.CREATE_REQUEST_GITCHAN;
 import static cart.fixture.MemberFixtures.MEMBER_GITCHAN;
 import static cart.steps.PointSteps.멤버의_포인트_조회_요청;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -23,7 +24,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 멤버의_포인트를_조회할_수_있다() {
-        memberService.addMember(MEMBER_GITCHAN);
+        memberService.join(CREATE_REQUEST_GITCHAN);
         final Member gitchan = memberDao.getMemberByEmail(MEMBER_GITCHAN.getEmail());
 
         final ExtractableResponse<Response> response = 멤버의_포인트_조회_요청(gitchan);
