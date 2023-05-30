@@ -19,14 +19,7 @@ public class Coupon {
         this.minimumPrice = minimumPrice;
     }
 
-    public TotalPrice apply(final TotalPrice totalPrice) {
-        if (totalPrice.orderPriceIsMoreThan(minimumPrice)) {
-            return discountPolicy.discount(totalPrice, value);
-        }
-        return totalPrice;
-    }
-
-    public TotalPrice calculateDiscountPrice(final TotalPrice totalPrice) {
+    public long discountOrderPrice(final TotalPrice totalPrice) {
         return totalPrice.subOrderPrice(discountPolicy.discount(totalPrice, value));
     }
 

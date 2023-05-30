@@ -29,8 +29,8 @@ public class MemberCoupon {
         return new MemberCoupon(id, member, coupon, true);
     }
 
-    public TotalPrice calculateDiscountPrice(final TotalPrice totalPrice) {
-        return coupon.calculateDiscountPrice(totalPrice);
+    public long discountOrderPrice(final TotalPrice totalPrice) {
+        return coupon.discountOrderPrice(totalPrice);
     }
 
     public Long getId() {
@@ -55,8 +55,8 @@ public class MemberCoupon {
         }
 
         @Override
-        public TotalPrice calculateDiscountPrice(final TotalPrice totalPrice) {
-            return new TotalPrice(0, 0);
+        public long discountOrderPrice(final TotalPrice totalPrice) {
+            return 0;
         }
 
         @Override

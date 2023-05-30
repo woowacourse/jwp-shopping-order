@@ -29,11 +29,11 @@ public class OrderResponse {
         this.orderItems = orderItems;
     }
 
-    public static OrderResponse of(final Order order, final TotalPrice totalPrice, final TotalPrice discountedPrice) {
+    public static OrderResponse of(final Order order, final TotalPrice totalPrice, final long discountedOrderPrice) {
         return new OrderResponse(
                 order.getId(),
                 totalPrice.getTotalItemsPrice(),
-                discountedPrice.getTotalItemsPrice(),
+                discountedOrderPrice,
                 order.getDeliveryFee(),
                 mapToOrderItemDtos(order.getOrderItems().getOrderItems())
         );

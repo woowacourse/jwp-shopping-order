@@ -32,27 +32,11 @@ public class TotalPrice {
         return new TotalPrice(orderPrice, amount);
     }
 
+    public long subOrderPrice(final TotalPrice other) {
+        return this.orderPrice - other.orderPrice;
+    }
+
     public long getTotalItemsPrice() {
         return orderPrice;
-    }
-
-    public boolean orderPriceIsMoreThan(final long minimumPrice) {
-        return minimumPrice >= orderPrice;
-    }
-
-    public TotalPrice subOrderPrice(final TotalPrice other) {
-        return new TotalPrice(this.orderPrice - other.orderPrice, this.deliveryFee);
-    }
-
-    public long getDeliveryPrice() {
-        return deliveryFee;
-    }
-
-    public long getOrderPrice() {
-        return orderPrice;
-    }
-
-    public long getDeliveryFee() {
-        return deliveryFee;
     }
 }

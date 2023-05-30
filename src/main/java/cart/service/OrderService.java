@@ -84,8 +84,8 @@ public class OrderService {
         final MemberValidator memberValidator = new MemberValidator(member);
         order.validateMember(memberValidator);
         final TotalPrice totalPrice = order.calculateTotalPrice();
-        final TotalPrice discountedPrice = memberCoupon.calculateDiscountPrice(totalPrice);
+        final long discountedOrderPrice = memberCoupon.discountOrderPrice(totalPrice);
 
-        return OrderResponse.of(order, totalPrice, discountedPrice);
+        return OrderResponse.of(order, totalPrice, discountedOrderPrice);
     }
 }
