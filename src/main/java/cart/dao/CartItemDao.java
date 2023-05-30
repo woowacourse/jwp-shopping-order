@@ -16,7 +16,12 @@ import java.util.List;
 @Repository
 public class CartItemDao {
     private static final RowMapper<CartItem> CART_ITEM_MAPPER = (rs, rowNum) -> {
-        final Member member = new Member(rs.getLong("member_id"), null, null, null);
+        final Member member = new Member(
+                rs.getLong("member_id"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getInt("point")
+        );
         final Product product = new Product(
                 rs.getLong("id"),
                 rs.getString("name"),
@@ -44,7 +49,7 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(final Long memberId) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.password, member.point, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -61,7 +66,7 @@ public class CartItemDao {
     }
 
     public CartItem findById(final Long id) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.password, member.point, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -71,8 +76,9 @@ public class CartItemDao {
 
 
     public List<CartItem> findByIds(final List<Long> cartIds) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        final String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.password, member.point, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id IN (:id)";
         final MapSqlParameterSource source = new MapSqlParameterSource("id", cartIds);

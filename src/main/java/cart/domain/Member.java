@@ -4,13 +4,13 @@ public class Member {
     private static final int MINIMUM_POINT = 0;
 
     private final Long id;
-    private final String email;
+    private final Email email;
     private final String password;
     private Integer point;
 
     public Member(final Long id, final String email, final String password, final Integer point) {
         this.id = id;
-        this.email = email;
+        this.email = new Email(email);
         this.password = password;
         this.point = point;
     }
@@ -20,7 +20,7 @@ public class Member {
     }
 
     public String getEmail() {
-        return email;
+        return email.getValue();
     }
 
     public String getPassword() {
