@@ -2,15 +2,15 @@ package cart.cart.presentation;
 
 import cart.cart.application.CartService;
 import cart.cart.presentation.dto.CartResponse;
+import cart.cart.presentation.dto.CouponDiscountRequest;
+import cart.cart.presentation.dto.DiscountResponse;
 import cart.common.auth.Auth;
 import cart.member.Member;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/payment")
+@RequestMapping("/payments")
 public class CartController {
     private final CartService cartService;
 
@@ -24,9 +24,10 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
-//    @PostMapping
-//    public ResponseEntity<DiscountResponse> selectCoupons(@RequestBody CouponDiscountRequest couponDiscountRequest) {
-//        cartService.discountWithCoupons(couponDiscountRequest.getCouponIds());
-//    }
+    @PostMapping("/coupons")
+    public ResponseEntity<DiscountResponse> selectCoupons(@Auth Member member, @RequestBody CouponDiscountRequest couponDiscountRequest) {
+        final var discountResponse = cartService.discountWithCoupons(member, couponDiscountRequest.getCouponIds());
+        return ResponseEntity.ok(discountResponse);
+    }
 
 }

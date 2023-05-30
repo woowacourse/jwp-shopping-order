@@ -23,7 +23,8 @@ public class CouponService {
     }
 
     public void applyCoupon(Long couponId, Cart cart) {
-        discountPolicyService.applyPolicy(couponId, cart);
+        final var coupon = couponRepository.findById(couponId);
+        discountPolicyService.applyPolicy(coupon.getDiscountConditionId(), cart);
     }
 
     public Coupon findById(Long couponId) {

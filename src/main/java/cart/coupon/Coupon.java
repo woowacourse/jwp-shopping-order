@@ -18,4 +18,8 @@ public class Coupon {
     public Long getId() {
         return id;
     }
+
+    public Long getDiscountConditionId() {
+        return discountConditionId;
+    }
 }

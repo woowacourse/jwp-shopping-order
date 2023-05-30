@@ -6,10 +6,6 @@ public class CouponRequest {
     public CouponRequest() {
     }
 
-    public CouponRequest(long id) {
-        this.id = id;
-    }
-
     public long getId() {
         return id;
     }

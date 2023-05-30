@@ -64,4 +64,15 @@ public class CartItem {
     public void setDiscountPrice(int discountPrice) {
         this.discountPrice = discountPrice;
     }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", discountPrice=" + discountPrice +
+                ", product=" + product +
+                ", member=" + member +
+                '}';
+    }
 }

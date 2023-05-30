@@ -82,13 +82,16 @@ public class OrderScenarioTest extends ScenarioFixture {
     }
 
     @Test
-    @Disabled
     @DisplayName("사용자가 적용할 쿠폰 목록을 체크한다.")
     void 사용자가_적용할_쿠폰_목록을_체크한다() {
+        사용자가_상품을_장바구니에_담는다(사용자1, 치킨);
+        사용자가_상품을_장바구니에_담는다(사용자1, 샐러드);
+        사용자가_상품을_장바구니에_담는다(사용자1, 피자);
+
         final var 요청바디 = Map.of("coupons",
                 List.of(
-                        Map.of("id", 1),
-                        Map.of("id", 2)
+                        Map.of("id", 전체10프로할인쿠폰.getId()),
+                        Map.of("id", 배송비무료쿠폰.getId())
                 )
         );
 
@@ -105,16 +108,23 @@ public class OrderScenarioTest extends ScenarioFixture {
 
         assertAll(
                 "쿠폰의 할인정책이 적용된 첫 번째 상품 검증",
-                () -> assertThat(jsonPath.getLong("$.products[0].productId")).isEqualTo(1),
-                () -> assertThat(jsonPath.getLong("$.products[0].originalPrice")).isEqualTo(1000),
-                () -> assertThat(jsonPath.getLong("$.products[0].discountPrice")).isEqualTo(100)
+                () -> assertThat(jsonPath.getLong("products[0].productId")).isEqualTo(치킨.getId()),
+                () -> assertThat(jsonPath.getLong("products[0].originalPrice")).isEqualTo(치킨.getPrice()),
+                () -> assertThat(jsonPath.getLong("products[0].discountPrice")).isEqualTo(1_000)
         );
 
         assertAll(
                 "쿠폰의 할인정책이 적용된 두 번째 상품 검증",
-                () -> assertThat(jsonPath.getLong("$.products[1].productId")).isEqualTo(2),
-                () -> assertThat(jsonPath.getLong("$.products[1].originalPrice")).isEqualTo(3000),
-                () -> assertThat(jsonPath.getLong("$.products[2].discountPrice")).isEqualTo(600)
+                () -> assertThat(jsonPath.getLong("products[1].productId")).isEqualTo(샐러드.getId()),
+                () -> assertThat(jsonPath.getLong("products[1].originalPrice")).isEqualTo(샐러드.getPrice()),
+                () -> assertThat(jsonPath.getLong("products[1].discountPrice")).isEqualTo(2_000)
+        );
+
+        assertAll(
+                "쿠폰의 할인정책이 적용된 세 번째 상품 검증",
+                () -> assertThat(jsonPath.getLong("products[2].productId")).isEqualTo(피자.getId()),
+                () -> assertThat(jsonPath.getLong("products[2].originalPrice")).isEqualTo(피자.getPrice()),
+                () -> assertThat(jsonPath.getLong("products[2].discountPrice")).isEqualTo(1_300)
         );
 
         assertAll(
@@ -155,7 +165,7 @@ public class OrderScenarioTest extends ScenarioFixture {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(사용자1.getEmail(), 사용자1.getPassword())
                 .when()
-                .get("/payment")
+                .get("/payments")
                 .then()
                 .log().all()
                 .extract();

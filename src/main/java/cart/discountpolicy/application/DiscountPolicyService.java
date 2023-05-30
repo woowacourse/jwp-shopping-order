@@ -59,7 +59,7 @@ public class DiscountPolicyService {
                 public void discount(Cart cart) {
                     final var deliveryPrice = cart.getDeliveryPrice();
                     final var discountedDeliveryPrice = calculateDiscountPriceWithPercentage(discountCondition.getDiscountValue(), deliveryPrice);
-                    cart.setDeliveryPrice(discountedDeliveryPrice);
+                    cart.setDeliveryPrice(deliveryPrice - discountedDeliveryPrice);
                 }
             });
         }

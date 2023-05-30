@@ -1,17 +1,23 @@
 package cart.cart.presentation.dto;
 
-public class ProductDiscountResponse {
+import cart.cart.domain.cartitem.CartItem;
+
+public class CartItemDiscountResponse {
     private long productId;
     private long originalPrice;
     private long discountPrice;
 
-    public ProductDiscountResponse() {
+    public CartItemDiscountResponse() {
     }
 
-    public ProductDiscountResponse(long productId, long originalPrice, long discountPrice) {
+    public CartItemDiscountResponse(long productId, long originalPrice, long discountPrice) {
         this.productId = productId;
         this.originalPrice = originalPrice;
         this.discountPrice = discountPrice;
+    }
+
+    public static CartItemDiscountResponse from(CartItem cartItem) {
+        return new CartItemDiscountResponse(cartItem.getId(), cartItem.getProduct().getPrice(), cartItem.getDiscountPrice());
     }
 
     public long getProductId() {
