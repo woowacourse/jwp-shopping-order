@@ -42,13 +42,11 @@ public class ProductService {
         return products.get(products.size() - 1).getId() == 1L;
     }
 
-    public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+    public Long createProduct(final Product product) {
         return productDao.createProduct(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+    public void updateProduct(Long productId, Product product) {
         productDao.updateProduct(productId, product);
     }
 

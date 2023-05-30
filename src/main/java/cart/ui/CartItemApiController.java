@@ -1,8 +1,10 @@
 package cart.ui;
 
 import cart.application.CartItemService;
+import cart.application.ProductService;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -25,9 +27,11 @@ import java.util.stream.Collectors;
 public class CartItemApiController {
 
     private final CartItemService cartItemService;
+    private final ProductService productService;
 
-    public CartItemApiController(CartItemService cartItemService) {
+    public CartItemApiController(final CartItemService cartItemService, final ProductService productService) {
         this.cartItemService = cartItemService;
+        this.productService = productService;
     }
 
     @GetMapping
@@ -43,14 +47,18 @@ public class CartItemApiController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+        final Product product = productService.getProductById(cartItemRequest.getProductId());
+        final CartItem cartItem = new CartItem(member, product);
+        Long cartItemId = cartItemService.add(cartItem);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
-        cartItemService.updateQuantity(member, id, request);
+        final int quantity = request.getQuantity();
+
+        cartItemService.updateQuantity(member, id, quantity);
 
         return ResponseEntity.ok().build();
     }

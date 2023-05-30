@@ -1,6 +1,6 @@
 package cart.dto;
 
-import java.util.Objects;
+import cart.domain.Product;
 
 public class ProductRequest {
     private String name;
@@ -14,6 +14,10 @@ public class ProductRequest {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public Product toDomain() {
+        return new Product(name, price, imageUrl);
     }
 
     public String getName() {

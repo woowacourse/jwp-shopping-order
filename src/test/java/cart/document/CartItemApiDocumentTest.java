@@ -2,7 +2,9 @@ package cart.document;
 
 import cart.WebMvcConfig;
 import cart.application.CartItemService;
+import cart.application.ProductService;
 import cart.dao.MemberDao;
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -71,6 +74,9 @@ public class CartItemApiDocumentTest {
     @MockBean
     private CartItemService cartItemService;
 
+    @Mock
+    private ProductService productService;
+
     @MockBean
     private WebMvcConfig webMvcConfig;
 
@@ -79,7 +85,7 @@ public class CartItemApiDocumentTest {
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
-        mockMvc = MockMvcBuilders.standaloneSetup(new CartItemApiController(cartItemService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new CartItemApiController(cartItemService, productService))
                 .setCustomArgumentResolvers(new MemberArgumentResolver(memberDao))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
                 .build();
@@ -117,7 +123,7 @@ public class CartItemApiDocumentTest {
         // given
         given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
         final CartItemRequest request = new CartItemRequest(ProductFixtures.CHICKEN.ID);
-        given(cartItemService.add(any(Member.class), any(CartItemRequest.class)))
+        given(cartItemService.add(any(CartItem.class)))
                 .willReturn(MemberA_CartItem1.ID);
         final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
 
@@ -142,7 +148,7 @@ public class CartItemApiDocumentTest {
         // given
         given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(10);
-        willDoNothing().given(cartItemService).updateQuantity(MemberA.ENTITY, MemberA_CartItem1.ID, request);
+        willDoNothing().given(cartItemService).updateQuantity(MemberA.ENTITY, MemberA_CartItem1.ID, request.getQuantity());
         final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
 
         // when, then

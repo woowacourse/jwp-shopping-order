@@ -6,18 +6,16 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CartItemService {
-    private final ProductDao productDao;
+
     private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
+    public CartItemService(final CartItemDao cartItemDao) {
         this.cartItemDao = cartItemDao;
     }
 
@@ -29,20 +27,20 @@ public class CartItemService {
         return cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+    public Long add(CartItem cartItem) {
+        return cartItemDao.save(cartItem);
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(Member member, Long id, int quantity) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
-        if (request.getQuantity() == 0) {
+        if (quantity == 0) {
             cartItemDao.deleteById(id);
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
+        cartItem.changeQuantity(quantity);
         cartItemDao.updateQuantity(cartItem);
     }
 

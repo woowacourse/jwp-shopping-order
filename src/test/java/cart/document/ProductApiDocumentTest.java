@@ -129,7 +129,7 @@ public class ProductApiDocumentTest {
     @Test
     void 상품_수정_문서화() throws Exception {
         // given
-        willDoNothing().given(productService).updateProduct(CHICKEN.ID, CHICKEN.REQUEST);
+        willDoNothing().given(productService).updateProduct(CHICKEN.ID, CHICKEN.ENTITY);
 
         // when, then
         mockMvc.perform(put("/products/{id}", CHICKEN.ID)
