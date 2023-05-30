@@ -40,4 +40,19 @@ public class DiscountIntegrationTest extends IntegrationTest {
                 () -> assertThat(result.get(0).getDiscountPrice()).isEqualTo(500)
         );
     }
+
+    @Test
+    @DisplayName("원래 가격을 통해 할인 정보를 응답한다.")
+    void getPriceInfoFailByInvalidGrade() {
+        final int originPrice = 10000;
+        final String grade = "asdf";
+        final ExtractableResponse<Response> response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/discount?price=" + originPrice + "&memberGrade=" + grade)
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }
