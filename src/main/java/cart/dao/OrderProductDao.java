@@ -26,7 +26,7 @@ public class OrderProductDao {
 
     private final RowMapper<OrderProduct> orderProductRowMapper = (result, rowNum) -> {
         final Member member = new Member(
-                result.getLong("member.id"),
+                result.getLong("id"),
                 result.getString("email"),
                 null);
         final Order order = new Order(

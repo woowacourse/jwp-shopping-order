@@ -66,8 +66,8 @@ public class CartItemDao {
         final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
                 "p.id, p.name, p.price, p.image_url, ci.quantity " +
                 "FROM cart_item ci " +
-                "INNER JOIN member m ON ci.member_id = m.id " +
-                "INNER JOIN product p ON ci.product_id = p.id " +
+                "JOIN member m ON ci.member_id = m.id " +
+                "JOIN product p ON ci.product_id = p.id " +
                 "WHERE ci.id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartItemRowMapper, id));
@@ -77,16 +77,15 @@ public class CartItemDao {
     }
 
     public List<CartItem> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
+        final String sql = "SELECT m.id, m.email, ci.id, ci.member_id, " +
                 "p.id, p.name, p.price, p.image_url, ci.quantity " +
                 "FROM cart_item ci " +
-                "INNER JOIN member m ON ci.member_id = m.id " +
-                "INNER JOIN product p ON ci.product_id = p.id " +
+                "JOIN member m ON ci.member_id = m.id " +
+                "JOIN product p ON ci.product_id = p.id " +
                 "WHERE ci.member_id = ?";
 
         return jdbcTemplate.query(sql, cartItemRowMapper, memberId);
     }
-
 
     public List<CartItem> findAllByIds(final List<Long> ids) {
         final MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -94,8 +93,8 @@ public class CartItemDao {
         final String sql = "SELECT ci.id, ci.member_id, m.id, m.email, " +
                 "p.id, p.name, p.price, p.image_url, ci.quantity " +
                 "FROM cart_item ci " +
-                "INNER JOIN member m ON ci.member_id = m.id " +
-                "INNER JOIN product p ON ci.product_id = p.id " +
+                "JOIN member m ON ci.member_id = m.id " +
+                "JOIN product p ON ci.product_id = p.id " +
                 "WHERE ci.id IN (:ids)";
 
         return namedParameterJdbcTemplate.query(sql, parameters, cartItemRowMapper);
