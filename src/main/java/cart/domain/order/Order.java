@@ -1,16 +1,17 @@
 package cart.domain.order;
 
 import cart.domain.member.Member;
+import cart.domain.member.Point;
 
 public class Order {
 
     private final Member member;
-    private final Integer usedPoint;
+    private final Point usingPoint;
     private final OrderProducts orderProducts;
 
-    public Order(final Member member, final Integer usedPoint, final OrderProducts orderProducts) {
+    public Order(final Member member, final int usingPoint, final OrderProducts orderProducts) {
         this.member = member;
-        this.usedPoint = usedPoint;
+        this.usingPoint = new Point(usingPoint);
         this.orderProducts = orderProducts;
     }
 
@@ -18,8 +19,8 @@ public class Order {
         return member;
     }
 
-    public Integer getUsedPoint() {
-        return usedPoint;
+    public int getUsedPoint() {
+        return usingPoint.getValue();
     }
 
     public OrderProducts getOrderProducts() {
@@ -27,7 +28,7 @@ public class Order {
     }
 
     public Integer getTotalAmount() {
-        return orderProducts.getTotalAmount() - usedPoint;
+        return orderProducts.getTotalAmount() - usingPoint.getValue();
     }
 
     public Integer getSavedPoint() {
