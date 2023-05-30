@@ -41,6 +41,27 @@ public class ProductDao {
         });
     }
 
+    public List<Product> getProductByInterval(final Long lastIdInPrevPage, final int pageItemCount) {
+        String sql = "SELECT * " +
+                "FROM product " +
+                "WHERE id < ? " +
+                "ORDER BY id desc " +
+                "limit ?";
+        return jdbcTemplate.query(sql, new Object[]{lastIdInPrevPage, pageItemCount}, (rs, rowNum) -> {
+           Long id = rs.getLong("id");
+           String name = rs.getString("name");
+           int price = rs.getInt("price");
+           String imageUrl = rs.getString("image_url");
+           return new Product(id, name, price, imageUrl);
+        });
+    }
+
+    public Long getLastProductId() {
+        String sql = "SELECT max(id)" +
+                "FROM product";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("max(id)")) + 1;
+    }
+
     public Long createProduct(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

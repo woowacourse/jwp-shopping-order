@@ -5,6 +5,8 @@ import cart.application.ProductService;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.dto.HomePagingRequest;
+import cart.dto.HomePagingResponse;
 import cart.dto.ProductCartItemResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -44,6 +46,17 @@ public class ProductApiController {
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         final Product product = productService.getProductById(id);
         return ResponseEntity.ok(ProductResponse.of(product));
+    }
+
+    @GetMapping("/cart-items")
+    public ResponseEntity<HomePagingResponse> getHomePagingProduct(@RequestBody HomePagingRequest homePagingRequest) {
+        final Long lastIdInPrevPage = homePagingRequest.getLastId();
+        final int pageItemCount = homePagingRequest.getPageItemCount();
+
+        final List<Product> products = productService.getProductsInPaging(lastIdInPrevPage, pageItemCount);
+        final boolean isLast = productService.hasLastProduct(lastIdInPrevPage, pageItemCount);
+
+        return ResponseEntity.ok(HomePagingResponse.of(products, isLast));
     }
 
     @GetMapping("/{productId}/cart-items")

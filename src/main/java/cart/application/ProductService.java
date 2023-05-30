@@ -27,6 +27,24 @@ public class ProductService {
         return productDao.getProductById(productId);
     }
 
+    public List<Product> getProductsInPaging(final Long lastIdInPrevPage, final int pageItemCount) {
+        return getProductsByInterval(lastIdInPrevPage, pageItemCount);
+    }
+
+    private List<Product> getProductsByInterval(final Long lastIdInPrevPage, final int pageItemCount) {
+        if (lastIdInPrevPage != 0) {
+            return productDao.getProductByInterval(lastIdInPrevPage, pageItemCount);
+        }
+
+        final Long lastId = productDao.getLastProductId();
+        return productDao.getProductByInterval(lastId, pageItemCount);
+    }
+
+    public boolean hasLastProduct(final Long lastIdInPrevPage, final int pageItemCount) {
+        final List<Product> products = getProductsByInterval(lastIdInPrevPage, pageItemCount);
+        return products.get(products.size() - 1).getId() == 1L;
+    }
+
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         return productDao.createProduct(product);
