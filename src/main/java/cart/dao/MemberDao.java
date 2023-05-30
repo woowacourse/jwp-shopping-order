@@ -61,4 +61,9 @@ public class MemberDao {
         final String sql = "SELECT id, email, password, point from member";
         return jdbcTemplate.query(sql, MEMBER_MAPPER);
     }
+
+    public void updatePoint(final Member member) {
+        final String sql = "UPDATE member SET point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, member.getPoint(), member.getId());
+    }
 }

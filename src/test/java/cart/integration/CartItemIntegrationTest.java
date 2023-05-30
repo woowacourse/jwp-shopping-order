@@ -325,6 +325,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         @Test
         void paymentCartItems() {
             final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 0);
+            final int expectPoint = 1_000;
 
             final ExtractableResponse<Response> response = given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -338,7 +339,34 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
             assertAll(
                     () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                    () -> assertThat(response.header("Location")).isEqualTo("redirect:/orders/histories/1")
+                    () -> assertThat(response.header("Location")).isEqualTo("redirect:/orders/histories/1"),
+                    // point = price * quantity * point_rate
+                    () -> assertThat(memberDao.getMemberById(member1.getId()).getPoint()).isEqualTo(expectPoint)
+            );
+        }
+
+        @DisplayName("포인트를 사용할 경우 포인트가 차감된다.")
+        @Test
+        void paymentWithPoint() {
+            final int expectPoint = 1400;
+            final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 100);
+            member1.savePoint(500);
+            memberDao.updatePoint(member1);
+
+            final ExtractableResponse<Response> response = given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                    .body(request)
+                    .when()
+                    .redirects().follow(false)
+                    .post("/cart-items/payment")
+                    .then()
+                    .extract();
+
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                    () -> assertThat(response.header("Location")).isEqualTo("redirect:/orders/histories/1"),
+                    () -> assertThat(memberDao.getMemberById(member1.getId()).getPoint()).isEqualTo(expectPoint)
             );
         }
     }

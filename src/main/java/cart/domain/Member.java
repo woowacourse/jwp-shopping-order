@@ -4,7 +4,7 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
-    private final Integer point;
+    private Integer point;
 
     public Member(final Long id, final String email, final String password, final Integer point) {
         this.id = id;
@@ -35,5 +35,16 @@ public class Member {
 
     public boolean isAbleToUsePoint(final Integer usingPoint) {
         return point >= usingPoint;
+    }
+
+    public void usePoint(final Integer usingPoint) {
+        if (!isAbleToUsePoint(usingPoint)) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        point -= usingPoint;
+    }
+
+    public void savePoint(final Integer savedPoint) {
+        point += savedPoint;
     }
 }

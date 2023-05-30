@@ -1,9 +1,6 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.OrderHistoryDao;
-import cart.dao.OrderProductDao;
-import cart.dao.ProductDao;
+import cart.dao.*;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -25,12 +22,14 @@ public class CartItemService {
     private final CartItemDao cartItemDao;
     private final OrderHistoryDao orderHistoryDao;
     private final OrderProductDao orderProductDao;
+    private final MemberDao memberDao;
 
-    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao) {
+    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao, final MemberDao memberDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
         this.orderHistoryDao = orderHistoryDao;
         this.orderProductDao = orderProductDao;
+        this.memberDao = memberDao;
     }
 
     @Transactional(readOnly = true)
@@ -79,6 +78,9 @@ public class CartItemService {
         final Order order = new Order(member, request.getPoint(), cartItems);
         final Long orderId = orderHistoryDao.createOrder(order);
         orderProductDao.createProducts(orderId, order.getProducts());
+        member.usePoint(request.getPoint());
+        member.savePoint(order.getSavedPoint());
+        memberDao.updatePoint(member);
         return orderId;
     }
 
