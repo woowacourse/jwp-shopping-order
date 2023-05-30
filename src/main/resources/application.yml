@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: db
+    active: mysql
 
 ---
 spring:
