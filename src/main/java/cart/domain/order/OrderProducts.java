@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderProducts {
+
     private static final double POINT_RATE = 0.05;
 
     private final List<OrderProduct> products;
