@@ -59,7 +59,7 @@ public class ProductDao {
     public Long getLastProductId() {
         String sql = "SELECT max(id)" +
                 "FROM product";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("max(id)")) + 1;
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("max(id)"));
     }
 
     public Long createProduct(Product product) {

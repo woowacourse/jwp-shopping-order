@@ -37,7 +37,7 @@ public class ProductService {
         }
 
         final Long lastId = productDao.getLastProductId();
-        return productDao.getProductByInterval(lastId, pageItemCount);
+        return productDao.getProductByInterval(lastId + 1, pageItemCount);
     }
 
     public boolean hasLastProduct(final Long lastIdInPrevPage, final int pageItemCount) {
