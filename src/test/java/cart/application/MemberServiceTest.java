@@ -11,6 +11,7 @@ import cart.domain.member.Member;
 import cart.dto.AuthMember;
 import cart.dto.MemberCashChargeRequest;
 import cart.dto.MemberCashChargeResponse;
+import cart.dto.MemberShowCurrentCashResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,5 +42,19 @@ class MemberServiceTest {
 
         // then
         assertThat(memberCashChargeResponse.getChargedCash()).isEqualTo(15000);
+    }
+
+    @Test
+    @DisplayName("인증된 사용자의 현재 금액을 반환한다.")
+    void findMemberCurrentCharge() {
+        // given
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        AuthMember authMember = new AuthMember(Dooly.EMAIL, Dooly.PASSWORD);
+
+        // when
+        MemberShowCurrentCashResponse response = memberService.findMemberCurrentCharge(authMember);
+
+        // then
+        assertThat(response.getCurrentCash()).isEqualTo(5000);
     }
 }

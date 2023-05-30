@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dto.MemberCashChargeRequest;
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -92,6 +93,66 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                         () -> assertThat(response.getBody().asString()).isEqualTo("충전할 금액은 1원 이상이어야합니다.")
                 );
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("사용자의 현재 금액 확인 시")
+    class showCurrentCash {
+
+        @Test
+        @DisplayName("인증 정보가 없으면 예외가 발생한다.")
+        void throws_when_not_found_authentication() {
+            // when
+            Response response = RestAssured.given().log().all()
+                    .get("/members/cash")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("인증된 사용자가 아니면 예외가 발생한다.")
+        void throws_when_not_authentication_user() {
+            // given
+            String email = "notExist@email.com";
+            String password = "notExistPassword";
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(email, password)
+                    .get("/members/cash")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증된 사용자가 아닙니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("사용자의 현재 잔액을 반환한다.")
+        void success() {
+            // when
+            Response response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(Dooly.EMAIL, Dooly.PASSWORD)
+                    .get("/members/cash")
+                    .then().log().all()
+                    .extract().response();
+            JsonPath jsonPath = response.jsonPath();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                    () -> assertThat(jsonPath.getInt("currentCash")).isEqualTo(5000)
+            );
         }
     }
 }

@@ -5,6 +5,7 @@ import cart.domain.member.Member;
 import cart.dto.AuthMember;
 import cart.dto.MemberCashChargeRequest;
 import cart.dto.MemberCashChargeResponse;
+import cart.dto.MemberShowCurrentCashResponse;
 import cart.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,10 @@ public class MemberService {
         Member chargedMember = findMember.chargeCash(memberCashChargeRequest.getCashToCharge());
         memberDao.updateMemberCash(chargedMember);
         return new MemberCashChargeResponse(chargedMember.getCash());
+    }
+
+    public MemberShowCurrentCashResponse findMemberCurrentCharge(AuthMember authMember) {
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
+        return new MemberShowCurrentCashResponse(findMember.getCash());
     }
 }
