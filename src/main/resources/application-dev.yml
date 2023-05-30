@@ -1,0 +1,12 @@
+spring:
+  sql:
+    init:
+      schema-locations: classpath:test-schema.sql
+      data-locations: classpath:dev-data.sql
+      mode: always
+  datasource:
+    hikari:
+      jdbc-url: ${JDBC_URL}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
