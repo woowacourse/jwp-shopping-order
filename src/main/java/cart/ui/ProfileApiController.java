@@ -8,7 +8,7 @@ import cart.domain.Member;
 import cart.dto.ProfileResponse;
 
 @RestController
-public class ProfileController {
+public class ProfileApiController {
 
     @GetMapping("/profile")
     public ResponseEntity<ProfileResponse> findProfile(@Auth Member member) {

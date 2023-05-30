@@ -16,11 +16,11 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-public class OrderController {
+public class OrderApiController {
 
     private final OrderService orderService;
 
-    public OrderController(final OrderService orderService) {
+    public OrderApiController(final OrderService orderService) {
         this.orderService = orderService;
     }
 
