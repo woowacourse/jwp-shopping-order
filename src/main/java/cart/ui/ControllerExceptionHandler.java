@@ -34,7 +34,8 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFouncException(NotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception) {
+        logger.warn("[NotFoundException]", exception);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(exception.getMessage()));
@@ -42,12 +43,16 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(StoreException.class)
     public ResponseEntity<ErrorResponse> handleException(StoreException exception) {
+        logger.warn("[StoreException]", exception);
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> unhandledException(Exception exception) {
+        logger.error("[Internal Server Error]", exception);
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("Internal Server Error."));
     }
