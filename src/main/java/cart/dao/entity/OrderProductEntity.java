@@ -7,22 +7,27 @@ public class OrderProductEntity {
 
     private final Long id;
     private final Long orderId;
-    private final Long productId;
-    private final String orderProductName;
-    private final Integer orderProductPrice;
-    private final String orderProductImageUrl;
+    private final ProductEntity productEntity;
+    private final String productName;
+    private final Integer productPrice;
+    private final String productImageUrl;
     private final Integer quantity;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public OrderProductEntity(Long id, Long orderId, Long productId, String orderProductName, Integer orderProductPrice,
-            String orderProductImageUrl, Integer quantity, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public OrderProductEntity(Long orderId, ProductEntity productEntity, String productName, Integer productPrice,
+            String productImageUrl, Integer quantity) {
+        this(null, orderId, productEntity, productName, productPrice, productImageUrl, quantity, null, null);
+    }
+
+    public OrderProductEntity(Long id, Long orderId, ProductEntity productEntity, String productName, Integer productPrice,
+            String productImageUrl, Integer quantity, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.orderId = orderId;
-        this.productId = productId;
-        this.orderProductName = orderProductName;
-        this.orderProductPrice = orderProductPrice;
-        this.orderProductImageUrl = orderProductImageUrl;
+        this.productEntity = productEntity;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productImageUrl = productImageUrl;
         this.quantity = quantity;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -32,10 +37,10 @@ public class OrderProductEntity {
         return new OrderProductEntity(
                 id,
                 orderId,
-                productId,
-                orderProductName,
-                orderProductPrice,
-                orderProductImageUrl,
+                productEntity,
+                productName,
+                productPrice,
+                productImageUrl,
                 quantity,
                 createdAt,
                 updatedAt
@@ -50,20 +55,24 @@ public class OrderProductEntity {
         return orderId;
     }
 
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
     public Long getProductId() {
-        return productId;
+        return productEntity.getId();
     }
 
-    public String getOrderProductName() {
-        return orderProductName;
+    public String getProductName() {
+        return productName;
     }
 
-    public Integer getOrderProductPrice() {
-        return orderProductPrice;
+    public Integer getProductPrice() {
+        return productPrice;
     }
 
-    public String getOrderProductImageUrl() {
-        return orderProductImageUrl;
+    public String getProductImageUrl() {
+        return productImageUrl;
     }
 
     public Integer getQuantity() {
@@ -87,11 +96,11 @@ public class OrderProductEntity {
             return false;
         }
         OrderProductEntity that = (OrderProductEntity) o;
-        return Objects.equals(getId(), that.getId());
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(id);
     }
 }
