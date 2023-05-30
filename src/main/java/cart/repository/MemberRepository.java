@@ -24,13 +24,17 @@ public class MemberRepository {
         return savedMember;
     }
 
-    public int findPointsOf(final Member member) {
+    public int findPointOf(final Member member) {
         return pointDao.findByMemberId(member.getId());
     }
 
-    public void addPoints(final Member member, final int addedPoints) {
-        final int currentPoints = pointDao.findByMemberId(member.getId());
-        final int newPoints = currentPoints + addedPoints;
-        pointDao.updatePoints(new PointEntity(member.getId(), newPoints));
+    public void addPoint(final Member member, final int addedPoint) {
+        final int currentPoint = pointDao.findByMemberId(member.getId());
+        final int newPoint = currentPoint + addedPoint;
+        updatePoint(member, newPoint);
+    }
+
+    public void updatePoint(final Member member, final int newPoint) {
+        pointDao.updatePoints(new PointEntity(member.getId(), newPoint));
     }
 }

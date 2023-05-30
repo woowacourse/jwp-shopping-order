@@ -19,10 +19,10 @@ public class MemberService {
     }
 
     public MemberPointQueryResponse findPointsOf(final Member member) {
-        return new MemberPointQueryResponse(memberRepository.findPointsOf(member));
+        return new MemberPointQueryResponse(memberRepository.findPointOf(member));
     }
 
     public void addPoints(final Member member, final int points) {
-        memberRepository.addPoints(member, points);
+        memberRepository.addPoint(member, points);
     }
 }

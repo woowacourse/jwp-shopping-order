@@ -29,10 +29,11 @@ public class OrderService {
     }
 
     public long orderCartItems(final Member member, final OrderRequest request) {
-        final int savedPoint = memberRepository.findPointsOf(member);
+        final int savedPoint = memberRepository.findPointOf(member);
         final int usedPoint = request.getPoints();
         final int updatedPoint = savedPoint - usedPoint;
         validatePointAmount(updatedPoint);
+        memberRepository.updatePoint(member, updatedPoint);
 
         final Map<Product, Integer> products = request.getCartItemIds().stream()
                 .collect(Collectors.toMap(
@@ -49,7 +50,7 @@ public class OrderService {
             orderRepository.addOrderProductTo(orderHistoryId, product, products.get(product));
         }
 
-        return 0;
+        return orderHistoryId;
     }
 
     private static int calculateTotalPrice(final Map<Product, Integer> products) {
