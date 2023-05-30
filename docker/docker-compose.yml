@@ -5,9 +5,9 @@ services:
     container_name: shopping_db
     image: mysql/mysql-server:5.7
     environment:
-      MYSQL_DATABASE: shopping_cart
+      MYSQL_DATABASE: shopping_order
       MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: root
       TZ: 'Asia/Seoul'
     ports:
       - 13306:3306
