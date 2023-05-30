@@ -73,16 +73,30 @@ class ProductDaoTest {
     @Test
     @DisplayName("상품 정보를 변경한다.")
     void updateProductTest() {
-        //given
+        // given
         final Long savedPadId = productDao.createProduct(배변패드);
 
         final ProductEntity changeProduct = new ProductEntity(savedPadId, 비버꼬리요리.getName(), 비버꼬리요리.getPrice(), 비버꼬리요리.getImageUrl());
 
-        //when
+        // when
         productDao.updateProduct(changeProduct);
 
-        //then
+        // then
         final ProductEntity productEntity = productDao.findById(savedPadId);
         assertThat(productEntity).usingRecursiveComparison().isEqualTo(changeProduct);
+    }
+
+    @Test
+    @DisplayName("상품을 삭제한다.")
+    void deleteProductTest() {
+        // given
+        final Long savedPadId = productDao.createProduct(배변패드);
+        final Long savedTailId = productDao.createProduct(비버꼬리요리);
+
+        // when
+        productDao.deleteProduct(savedPadId);
+
+        // then
+        assertThat(productDao.findAll()).hasSize(1);
     }
 }

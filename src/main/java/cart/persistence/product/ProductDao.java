@@ -63,6 +63,11 @@ public class ProductDao {
         );
     }
 
+    public void deleteProduct(final Long productId) {
+        final String sql = "DELETE FROM product WHERE id = ?";
+        jdbcTemplate.update(sql, productId);
+    }
+
 
     public void updateProduct2(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
@@ -107,10 +112,5 @@ public class ProductDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    public void deleteProduct(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
     }
 }
