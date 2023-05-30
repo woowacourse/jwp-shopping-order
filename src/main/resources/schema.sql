@@ -1,6 +1,6 @@
-drop table cart_item;
-drop table product;
-drop table member;
+drop table if exists cart_item;
+drop table if exists product;
+drop table if exists member;
 
 CREATE TABLE if not exists product
 (

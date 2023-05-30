@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      mode: always
+  h2:
+    console:
+      enabled: true
