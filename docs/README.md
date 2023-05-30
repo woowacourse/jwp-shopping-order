@@ -324,16 +324,14 @@ Content-Type: application/json
 
 {
     items: [
-        {
-            "product": {
-                "id": 1,
-                "quantity": 5
-            }		
+        { 
+            "id": 1,
+            "quantity": 5
+            		
         },
-            "product": {
-                "id": 2,
-                "quantity": 100
-            }
+        {
+            "id": 2,
+            "quantity": 100
         }
     ],
     couponId: 1
@@ -369,18 +367,18 @@ HTTP/1.1 200 OK
                             "id": 1,
                             "name": "하이",
                             "price": 1000,
-                            "quantity": 20,
                             "imagaeUrl": "sample"
-                        }
+                        },
+                        "quantity": 20
                     },
 					{
                         "product": {
                             "id": 2,
                             "name": "하이2",
                             "price": 2000,
-                            "quantity": 30,
                             "imagaeUrl": "sample"
-                        }
+                        },
+                        "quantity": 20
                     }
                 ]
     },
@@ -392,18 +390,18 @@ HTTP/1.1 200 OK
                             "id": 3,
                             "name": "하이3",
                             "price": 1000,
-                            "quantity": 20,
                             "imagaeUrl": "sample"
-                        }
+                        },
+                        "quantity": 20,
                     },
                     {
                         "product": {
                             "id": 4,
                             "name": "하이4",
                             "price": 2000,
-                            "quantity": 30,
                             "imagaeUrl": "sample"
-                        }
+                        },
+                        "quantity": 30,
                     }
                 ]
     }
@@ -432,18 +430,18 @@ HTTP/1.1 200 OK
                 "id": 1,
                 "name": "하이",
                 "price": 1000,
-                "qunatity": 20,
                 "imageUrl": "sample"
-            }
+            },
+            "qunatity": 20
         },
         {
             "proudct": {
                 "id": 2,
                 "name": "하이2",
                 "price": 1000,
-                "qunatity": 20,
                 "imageUrl": "sample"
-            }
+            },
+            "qunatity": 20
         }
     ]
 }
