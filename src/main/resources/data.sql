@@ -7,7 +7,8 @@ VALUES ('치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097
 INSERT INTO member (email, password, cash)
 VALUES ('dooly@dooly.com', '1234', 1200000),
        ('ber@ber.com', '1234', 850000),
-       ('bixx@bixx.com', '1234', 1500000);
+       ('bixx@bixx.com', '1234', 1500000),
+       ('a@a.com', '1234', 500);
 
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (1, 1, 2),
