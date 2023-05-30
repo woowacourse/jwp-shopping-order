@@ -59,7 +59,7 @@ public class ProductDao {
             ps.setString(1, product.getName());
             ps.setInt(2, product.getPrice());
             ps.setString(3, product.getImage());
-            ps.setBoolean(4, product.isDiscounted());
+            ps.setBoolean(4, product.getIsDiscounted());
             ps.setInt(5, product.getDiscountRate());
 
             return ps;
@@ -69,8 +69,8 @@ public class ProductDao {
     }
 
     public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image = ?, is_discounted, discount_rate WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.isDiscounted(), product.getDiscountRate(), productId);
+        String sql = "UPDATE product SET name = ?, price = ?, image = ?, is_discounted = ?, discount_rate = ? WHERE id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.getIsDiscounted(), product.getDiscountRate(), productId);
     }
 
     public void deleteProduct(Long productId) {

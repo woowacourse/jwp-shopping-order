@@ -47,7 +47,7 @@ public class Product {
         return image;
     }
 
-    public boolean isDiscounted() {
+    public boolean getIsDiscounted() {
         return isDiscounted;
     }
 
@@ -56,7 +56,7 @@ public class Product {
     }
 
     public int calculateDiscountedPrice(int discountedPercentage) {
-        if (isDiscounted()) {
+        if (getIsDiscounted()) {
             return (discountRate / 100 * price - price) * -1;
         } else {
             return (discountedPercentage / 100 * price - price) * -1;

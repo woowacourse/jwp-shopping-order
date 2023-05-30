@@ -1,11 +1,12 @@
 package cart.dto;
 
 public class ProductRequest {
+
     private String name;
     private int price;
     private String imageUrl;
-    private int discountRate;
     private boolean isDiscounted;
+    private int discountRate;
 
     public ProductRequest() {
     }
@@ -30,5 +31,13 @@ public class ProductRequest {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public boolean getIsDiscounted() {
+        return isDiscounted;
+    }
+
+    public int getDiscountRate() {
+        return discountRate;
     }
 }
