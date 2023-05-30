@@ -6,10 +6,14 @@ import java.util.List;
 
 public class Order {
 
+    private static final int BASE_SHIPPING_FEE = 3000;
+    private static final int FREE = 0;
+    public static final int MINIMUM_FREE_SHIPPING_STANDARD = 50_000;
+
     private final Long id;
     private final Member member;
     private final List<OrderItem> orderItems;
-    private Money deliveryFee;
+    private Money shippingFee;
     private Money purchaseItemPrice;
     private Money discountPurchaseItemPrice;
 
@@ -17,14 +21,14 @@ public class Order {
             final Long id,
             final Member member,
             final List<OrderItem> orderItems,
-            final Money deliveryFee,
+            final Money shippingFee,
             final Money purchaseItemPrice,
             final Money discountPurchaseItemPrice
     ) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
-        this.deliveryFee = deliveryFee;
+        this.shippingFee = shippingFee;
         this.purchaseItemPrice = purchaseItemPrice;
         this.discountPurchaseItemPrice = discountPurchaseItemPrice;
     }
@@ -44,6 +48,14 @@ public class Order {
         int discountedPrice = calculateItemDiscount() + calculateMemberDiscount();
         this.discountPurchaseItemPrice = new Money(discountedPrice);
         return discountedPrice;
+    }
+
+    public void determineShippingFee(final int purchasePrice) {
+        if (purchasePrice >= MINIMUM_FREE_SHIPPING_STANDARD) {
+            this.shippingFee = new Money(FREE);
+            return;
+        }
+        this.shippingFee = new Money(BASE_SHIPPING_FEE);
     }
 
     private int calculateItemDiscount() {
@@ -72,8 +84,8 @@ public class Order {
         return orderItems;
     }
 
-    public int getDeliveryFee() {
-        return deliveryFee.getMoney();
+    public int getShippingFee() {
+        return shippingFee.getMoney();
     }
 
     public int getPurchaseItemPrice() {
