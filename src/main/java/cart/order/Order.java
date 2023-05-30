@@ -32,4 +32,28 @@ public class Order {
     public Order assignId(Long id) {
         return new Order(id, orderItems, orderCoupons, deliveryPrice, orderedTime, memberId);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public List<OrderCoupon> getOrderCoupons() {
+        return orderCoupons;
+    }
+
+    public Integer getDeliveryPrice() {
+        return deliveryPrice;
+    }
+
+    public Timestamp getOrderedTime() {
+        return orderedTime;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
 }

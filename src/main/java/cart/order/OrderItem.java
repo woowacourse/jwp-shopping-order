@@ -14,4 +14,24 @@ public class OrderItem {
         this.quantity = quantity;
         this.imgUri = imgUri;
     }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public String getImgUri() {
+        return imgUri;
+    }
 }

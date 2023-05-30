@@ -8,4 +8,12 @@ public class OrderCoupon {
         this.couponId = couponId;
         this.couponName = couponName;
     }
+
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    public String getCouponName() {
+        return couponName;
+    }
 }

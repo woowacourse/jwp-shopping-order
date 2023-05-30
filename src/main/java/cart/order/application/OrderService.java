@@ -9,6 +9,7 @@ import cart.order.OrderCoupon;
 import cart.order.OrderItem;
 import cart.order.presentation.OrderCouponRequest;
 import cart.order.presentation.OrderRequest;
+import cart.order.presentation.OrdersResponse;
 import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
 
@@ -93,5 +94,10 @@ public class OrderService {
                 quantity,
                 cartItem.getProduct().getImageUrl()
         );
+    }
+
+    public OrdersResponse findOrderHistories(Long memberId) {
+        final var orders = orderRepository.findAllByMemberId(memberId);
+        return OrdersResponse.from(orders);
     }
 }
