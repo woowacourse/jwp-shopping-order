@@ -106,4 +106,25 @@ class OrderServiceTest extends ServiceTest {
 			() -> assertThat(orderResponse.getPoints()).isEqualTo(1000)
 		);
 	}
+
+	@Test
+	void 전체_주문_이력을_조회한다() {
+		// given
+		final Member member = new Member(1L, EMAIL, PASSWORD, 1000);
+		final List<OrderItemResponse> orderItemResponses = List.of(
+			new OrderItemResponse(1L, "치킨", 10000, 1,
+				"https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
+		);
+		List<OrderResponse> expected = List.of(
+			new OrderResponse(1L, 10, 1000, orderItemResponses)
+		);
+
+		// when
+		final List<OrderResponse> orderResponses = orderService.findAll(member);
+
+		// then
+		assertThat(orderResponses)
+			.usingRecursiveComparison()
+			.isEqualTo(expected);
+	}
 }
