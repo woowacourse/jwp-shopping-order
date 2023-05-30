@@ -1,26 +1,32 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
-    public void getProducts() {
-        var result = given()
+    @DisplayName("등록된 전체 상품 목록을 조회한다.")
+    public void findAllProducts() {
+
+        var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/products")
                 .then()
+                .statusCode(HttpStatus.OK.value())
                 .extract();
 
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+        var products = response.jsonPath().getList(".", ProductResponse.class);
+
+        assertThat(products).extracting(ProductResponse::getName).containsExactlyInAnyOrder("피자", "치킨", "샐러드");
     }
 
     @Test
@@ -39,7 +45,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void getCreatedProduct() {
+    public void findCreatedProduct() {
         var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
         // create product
