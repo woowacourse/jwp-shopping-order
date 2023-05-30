@@ -35,4 +35,12 @@ public class Coupon {
     public Long getCouponId() {
         return couponId;
     }
+
+    public DiscountCondition getDiscountCondition() {
+        return discountCondition;
+    }
+
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
+    }
 }
