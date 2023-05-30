@@ -27,7 +27,9 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            Long pointRatio = rs.getLong("point_ratio");
+            boolean pointAvailable = rs.getBoolean("point_available");
+            return new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
         });
     }
 
@@ -37,7 +39,9 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            Long pointRatio = rs.getLong("point_ratio");
+            boolean pointAvailable = rs.getBoolean("point_available");
+            return new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
         });
     }
 
@@ -46,13 +50,15 @@ public class ProductDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                    "INSERT INTO product (name, price, image_url, point_ratio, point_available) VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, product.getName());
             ps.setInt(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
+            ps.setLong(4, product.getPointRatio());
+            ps.setBoolean(5, product.getPointAvailable());
 
             return ps;
         }, keyHolder);
@@ -61,8 +67,8 @@ public class ProductDao {
     }
 
     public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        String sql = "UPDATE product SET name = ?, price = ?, image_url = ?, point_ratio = ?, point_available = ?, WHERE id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getPointRatio(), product.getPointAvailable(), productId);
     }
 
     public void deleteProduct(Long productId) {
