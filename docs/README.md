@@ -279,7 +279,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 
 {
-	"password": "encodedBySha256Password"
+	"token": "encodedBySha256Password"
 }
 ```
 ---

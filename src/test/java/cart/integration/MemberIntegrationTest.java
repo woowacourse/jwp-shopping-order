@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.util.Base64Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,7 +61,9 @@ public class MemberIntegrationTest extends IntegrationTest {
 
         //then
         String encryptedPassword = Encryptor.encrypt(password);
+        String token = Base64Utils.encodeToUrlSafeString(encryptedPassword.getBytes());
+
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getString("password")).isEqualTo(encryptedPassword);
+        assertThat(response.jsonPath().getString("token")).isEqualTo(token);
     }
 }
