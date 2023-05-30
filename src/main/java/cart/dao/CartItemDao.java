@@ -103,8 +103,8 @@ public class CartItemDao {
 
         final String sql = String.format("DELETE FROM cart_item WHERE member_id = %d AND product_id IN " + inSql,
             memberId);
-        System.out.println("sql = " + sql);
-        System.out.println(jdbcTemplate.update(sql, productIds.toArray()));
+        
+        jdbcTemplate.update(sql, productIds.toArray());
     }
 
     public void deleteById(Long id) {

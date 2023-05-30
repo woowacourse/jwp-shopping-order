@@ -71,7 +71,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
             () -> assertThat(response.header("Location")).isNotNull(),
             () -> assertThat(orderResponse.getItems()).hasSize(2),
-            () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(75_000),
+            () -> assertThat(orderResponse.getProductPrice()).isEqualTo(75_000),
             () -> assertThat(orderResponse.getDiscountPrice()).isEqualTo(5000),
             () -> assertThat(orderResponse.getDeliveryFee()).isEqualTo(3000),
             () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(73000)
@@ -99,7 +99,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertAll(
             () -> assertThat(orderResponse.getOrderId()).isEqualTo(orderId),
             () -> assertThat(orderResponse.getItems()).hasSize(2),
-            () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(75_000),
+            () -> assertThat(orderResponse.getProductPrice()).isEqualTo(75_000),
             () -> assertThat(orderResponse.getDiscountPrice()).isEqualTo(5000),
             () -> assertThat(orderResponse.getDeliveryFee()).isEqualTo(3000),
             () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(73000)
@@ -127,15 +127,15 @@ public class OrderIntegrationTest extends IntegrationTest {
         //then
         assertAll(
             () -> assertThat(ordersResponse.getOrders()).hasSize(2),
-            
+
             () -> assertThat(ordersResponse.getOrders().get(0).getItems()).hasSize(2),
-            () -> assertThat(ordersResponse.getOrders().get(0).getTotalPrice()).isEqualTo(75_000),
+            () -> assertThat(ordersResponse.getOrders().get(0).getProductPrice()).isEqualTo(75_000),
             () -> assertThat(ordersResponse.getOrders().get(0).getDiscountPrice()).isEqualTo(5000),
             () -> assertThat(ordersResponse.getOrders().get(0).getDeliveryFee()).isEqualTo(3000),
             () -> assertThat(ordersResponse.getOrders().get(0).getTotalPrice()).isEqualTo(73000),
 
             () -> assertThat(ordersResponse.getOrders().get(1).getItems()).hasSize(2),
-            () -> assertThat(ordersResponse.getOrders().get(1).getTotalPrice()).isEqualTo(115_000),
+            () -> assertThat(ordersResponse.getOrders().get(1).getProductPrice()).isEqualTo(115_000),
             () -> assertThat(ordersResponse.getOrders().get(1).getDiscountPrice()).isEqualTo(5000),
             () -> assertThat(ordersResponse.getOrders().get(1).getDeliveryFee()).isEqualTo(3000),
             () -> assertThat(ordersResponse.getOrders().get(1).getTotalPrice()).isEqualTo(113_000)
