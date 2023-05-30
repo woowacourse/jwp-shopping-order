@@ -90,3 +90,13 @@
 |  **장바구니 상품 조회**   |     GET     |     /cart-items     |
 |  **장바구니 상품 삭제**   |   DELETE    |  /cart-items/{id}   |
 | **장바구니 상품 다중 삭제** |   DELETE    | /cart-items?ids=1,2 |
+
+### 쿠폰 API (CouponController)
+- coupon.http
+
+|              | HTTP method |    요청 URI     |
+|:------------:|:-----------:|:-------------:|
+|  **쿠폰 추가**   |    POST     |   /coupons    |
+| **쿠폰 단일 조회** |     GET     | /coupons/{id} |
+| **쿠폰 전체 조회** |     GET     |   /coupons    |
+|  **쿠폰 삭제**   |   DELETE    | /coupons/{id} |

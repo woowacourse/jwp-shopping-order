@@ -111,7 +111,7 @@ public class CouponIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("상품 정보를 삭제한다.")
+    @DisplayName("쿠폰 정보를 삭제한다.")
     void deleteCoupon() {
         // given
         final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 20, 365);

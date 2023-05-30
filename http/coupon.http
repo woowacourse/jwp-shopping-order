@@ -1,0 +1,18 @@
+### 쿠폰 생성
+POST {{host}}/coupons
+Content-Type: application/json
+
+{
+  "name": "신규 가입 축하 쿠폰",
+  "discountRate": 10,
+  "period": 10
+}
+
+### 쿠폰 단일 조회
+GET {{host}}/coupons/1
+
+### 쿠폰 전체 조회
+GET {{host}}/coupons
+
+### 쿠폰 삭제
+DELETE {{host}}/coupons/1
