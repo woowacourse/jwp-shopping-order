@@ -1,11 +1,11 @@
-package cart.application;
+package cart.application.coupon;
 
-import cart.domain.Coupon;
-import cart.domain.Coupons;
 import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Coupons;
 import cart.dto.CouponResponse;
 import cart.dto.CouponTypeResponse;
-import cart.repository.CouponRepository;
+import cart.repository.coupon.CouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

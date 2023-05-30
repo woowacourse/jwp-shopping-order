@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.application.CouponProvider;
-import cart.application.CouponService;
+import cart.application.coupon.CouponProvider;
+import cart.application.coupon.CouponService;
 import cart.domain.Member;
 import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;

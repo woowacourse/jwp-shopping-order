@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Coupons;
+
 public class Member {
     private final Long id;
     private final String email;

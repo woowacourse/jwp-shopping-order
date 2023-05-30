@@ -1,11 +1,12 @@
 package cart.application;
 
-import cart.domain.Coupon;
-import cart.domain.Coupons;
+import cart.application.coupon.CouponProvider;
 import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Coupons;
 import cart.dto.CouponResponse;
 import cart.dto.CouponTypeResponse;
-import cart.repository.CouponRepository;
+import cart.repository.coupon.CouponRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

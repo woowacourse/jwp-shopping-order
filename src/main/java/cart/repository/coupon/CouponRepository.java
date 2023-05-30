@@ -1,8 +1,8 @@
-package cart.repository;
+package cart.repository.coupon;
 
-import cart.domain.Coupon;
-import cart.domain.Coupons;
 import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Coupons;
 import org.springframework.stereotype.Repository;
 
 @Repository

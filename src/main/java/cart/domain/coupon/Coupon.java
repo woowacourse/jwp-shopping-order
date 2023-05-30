@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.coupon;
 
 public class Coupon {
 
