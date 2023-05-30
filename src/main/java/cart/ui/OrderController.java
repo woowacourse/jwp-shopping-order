@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.OrderService;
+import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class OrderController {
 
     //상품 등록
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody OrderCreateRequest orderCreateRequest){
-        Long id = orderService.createOrder(orderCreateRequest);
+    public ResponseEntity<Void> createOrder(Member member, @RequestBody OrderCreateRequest orderCreateRequest){
+        Long id = orderService.createOrder(member, orderCreateRequest);
         return ResponseEntity.created(URI.create("/orders" + id)).build();
     }
 }

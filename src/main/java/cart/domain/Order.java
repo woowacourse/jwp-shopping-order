@@ -1,16 +1,62 @@
 package cart.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order {
 
-    private List<CartItem> cartItems;
+    private Long id;
+    private Long memberId;
+    private int totalPrice;
+    private LocalDateTime orderedAt;
+    private int shippingFee;
+    private int discountedTotalPrice;
 
-    public Order(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
+    public Order(Long id, Long memberId, int totalPrice, LocalDateTime orderedAt, int shippingFee, int discountedTotalPrice) {
+        this.id = id;
+        this.memberId = memberId;
+        this.totalPrice = totalPrice;
+        this.orderedAt = orderedAt;
+        this.shippingFee = shippingFee;
+        this.discountedTotalPrice = discountedTotalPrice;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
+    public Order(Long memberId, int totalPrice, LocalDateTime orderedAt, int shippingFee, int discountedTotalPrice) {
+        this.id = null;
+        this.memberId = memberId;
+        this.totalPrice = totalPrice;
+        this.orderedAt = orderedAt;
+        this.shippingFee = shippingFee;
+        this.discountedTotalPrice = discountedTotalPrice;
+    }
+
+    public static int calculateTotalPrice(List<Integer> prices){
+        return prices.stream()
+                .mapToInt(price -> price)
+                .sum();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
+    }
+
+    public int getShippingFee() {
+        return shippingFee;
+    }
+
+    public int getDiscountedTotalPrice() {
+        return discountedTotalPrice;
     }
 }

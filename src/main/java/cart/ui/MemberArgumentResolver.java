@@ -19,11 +19,16 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
+    //parameter 객체의 getParameterType()을 통해 controller method의 parameter가 Member class인지 확인
+    //그리고 일치 여부를 boolean type으로 반환
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
+    //basic을 사용하여 member class의 email과 password를 뽑아옴
+    //본인 여부 확인
+    //최종적으로 member를 생성해서 반환
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {

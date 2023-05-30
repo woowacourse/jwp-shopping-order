@@ -29,7 +29,7 @@ CREATE TABLE orders (
     member_id BIGINT NOT NULL,
     total_price BIGINT NOT NULL,
     ordered_at DATETIME NOT NULL default current_timestamp,
-    delivery_fee INT NOT NULL,
+    shipping_fee INT NOT NULL,
     discounted_total_price INT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
