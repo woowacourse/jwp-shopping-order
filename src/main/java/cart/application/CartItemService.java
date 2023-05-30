@@ -69,15 +69,12 @@ public class CartItemService {
     public Long payment(final Member member, final PaymentRequest request) {
         final List<Long> cartIds = extractCartIds(request);
         final List<CartItem> cartItems = getCartItems(member, cartIds);
-        if (!member.isAbleToUsePoint(request.getPoint())) {
-            throw new IllegalArgumentException("포인트가 부족합니다.");
-        }
+        member.usePoint(request.getPoint());
         final OrderProducts orderProducts = new OrderProducts(cartItems);
         final Order order = new Order(member, request.getPoint(), orderProducts);
         final Long orderId = orderHistoryDao.createOrder(order);
-        orderProductDao.createProducts(orderId, order.getOrderProducts());
-        member.usePoint(request.getPoint());
         member.savePoint(order.getSavedPoint());
+        orderProductDao.createProducts(orderId, order.getOrderProducts());
         memberDao.updatePoint(member);
         return orderId;
     }
