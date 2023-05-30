@@ -74,4 +74,11 @@ class CouponQueryDaoTest {
 
         assertThat(result).isEmpty();
     }
+
+    @Test
+    void 쿠폰을_id로_여러개_조회할_수_있다() {
+        List<Coupon> result = couponQueryDao.findAllByIds(List.of(1L, 2L));
+
+        assertThat(result).hasSize(1);
+    }
 }

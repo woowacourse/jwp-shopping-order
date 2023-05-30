@@ -53,4 +53,10 @@ public class CouponQueryDao {
     public List<Coupon> findAll() {
         return jdbcTemplate.query(BASE_FIND_ALL_SQL, rowMapper);
     }
+
+    public List<Coupon> findAllByIds(List<Long> couponIds) {
+        String questionMarks = String.join(",", couponIds.stream().map(id -> "?").toArray(String[]::new));
+        String sql = BASE_FIND_ALL_SQL + "WHERE c.id IN (" + questionMarks + ")";
+        return jdbcTemplate.query(sql, rowMapper, couponIds);
+    }
 }
