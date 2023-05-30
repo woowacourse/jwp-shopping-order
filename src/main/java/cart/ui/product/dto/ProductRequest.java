@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.ui.product.dto;
 
 public class ProductRequest {
     private String name;
@@ -25,4 +25,5 @@ public class ProductRequest {
     public String getImageUrl() {
         return imageUrl;
     }
+
 }
