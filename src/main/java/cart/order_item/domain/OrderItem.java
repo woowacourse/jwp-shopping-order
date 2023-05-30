@@ -7,13 +7,42 @@ public class OrderItem {
 
   private Long id;
 
-  private Order order;
+  private final Order order;
 
-  private String name;
+  private final String name;
 
-  private Money price;
+  private final Money price;
 
-  private String imageUrl;
+  private final String imageUrl;
 
-  private int quantity;
+  private final int quantity;
+
+  public OrderItem(
+      final Long id, final Order order,
+      final String name, final Money price,
+      final String imageUrl, final int quantity
+  ) {
+    this.id = id;
+    this.order = order;
+    this.name = name;
+    this.price = price;
+    this.imageUrl = imageUrl;
+    this.quantity = quantity;
+  }
+
+  public OrderItem(
+      final Order order, final String name,
+      final Money price, final String imageUrl,
+      final int quantity
+  ) {
+    this.order = order;
+    this.name = name;
+    this.price = price;
+    this.imageUrl = imageUrl;
+    this.quantity = quantity;
+  }
+
+  public Money getPrice() {
+    return price;
+  }
 }

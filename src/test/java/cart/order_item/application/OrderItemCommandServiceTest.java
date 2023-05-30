@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
+import cart.order.domain.Order;
 import cart.order_item.exception.CanNotOrderNotInCart;
+import cart.value_object.Money;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,26 +27,26 @@ class OrderItemCommandServiceTest {
   @DisplayName("registerOrderItem() : 주문된 상품을 저장할 수 있다.")
   void test_registerOrderItem() throws Exception {
     //given
-    final long orderId = 3L;
     final List<Long> cartIdemIds = List.of(1L, 2L);
     final Member member = memberDao.getMemberById(1L);
+    final Order order = new Order(1L, member, new Money(3000));
 
     //when & then
     assertDoesNotThrow(
-        () -> orderItemCommandService.registerOrderItem(cartIdemIds, orderId, member));
+        () -> orderItemCommandService.registerOrderItem(cartIdemIds, order, member));
   }
 
   @Test
   @DisplayName("registerOrderItem() : 장바구니에 담지 않은 물품을 주문할 경우에는 CanNotOrderNotInCart이 발생합니다.")
   void test_registerOrderItem_CanNotOrderNotInCart() throws Exception {
     //given
-    final long orderId = 1L;
     final List<Long> cartIdemIds = List.of(1L, 2L, 3L);
     final Member member = memberDao.getMemberById(1L);
+    final Order order = new Order(1L, member, new Money(3000));
 
     //when & then
     assertThatThrownBy(
-        () -> orderItemCommandService.registerOrderItem(cartIdemIds, orderId, member))
+        () -> orderItemCommandService.registerOrderItem(cartIdemIds, order, member))
         .isInstanceOf(CanNotOrderNotInCart.class);
   }
 }
