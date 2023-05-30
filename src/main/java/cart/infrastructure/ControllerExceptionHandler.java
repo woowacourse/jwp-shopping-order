@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.infrastructure;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+// TODO 예외메시지 전달, 500 에러 처리
 @ControllerAdvice
 public class ControllerExceptionHandler {
 

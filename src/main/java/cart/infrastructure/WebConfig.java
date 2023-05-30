@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.infrastructure;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
