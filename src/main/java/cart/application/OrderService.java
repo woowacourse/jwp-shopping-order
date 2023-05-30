@@ -5,8 +5,12 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.domain.Product;
 import cart.dto.request.OrderItemDto;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderDetailsDto;
+import cart.dto.response.OrderResponse;
+import cart.dto.response.ProductResponse;
 import cart.exception.CartItemException.QuantityNotSame;
 import cart.exception.CartItemException.UnknownCartItem;
 import cart.repository.OrderRepository;
@@ -15,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -28,6 +33,8 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
+    // todo: 전체적으로 사용자 검증 필요
+    
     public long saveOrder(final Member member, final OrderRequest orderRequest) {
         List<CartItem> cartItems = new ArrayList<>();
         List<Long> unknownItemIds = new ArrayList<>();
@@ -54,11 +61,21 @@ public class OrderService {
 
         Order order = Order.of(member, 3000, OrderItem.of(cartItems), 30000);
         order.checkPrice(orderRequest.getTotalPrice());
+        // order.checkMember(member); // 멤버가 아닌데 주문을 등록하는 경우
 
         long orderId = orderRepository.save(order);
         for (CartItem cartItem : cartItems) {
             cartItemDao.deleteById(cartItem.getId());
         }
         return orderId;
+    }
+
+    public OrderResponse getOrderByOrderId(final long orderId) {
+        Order order = orderRepository.findByOrderId(orderId);
+        List<OrderDetailsDto> orderDetails = order.getOrderItems()
+                .stream()
+                .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
+                collect(Collectors.toUnmodifiableList());
+        return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails);
     }
 }

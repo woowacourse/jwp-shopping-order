@@ -22,7 +22,7 @@
 
 - [x] 주문 등록 POST `/orders` 201
 - [ ] 사용자의 주문 목록 조회 GET `/orders` 200
-- [ ] 특정 주문의 상세 정보 조회 GET `/orders/{orderId}` 200
+- [x] 특정 주문의 상세 정보 조회 GET `/orders/{orderId}` 200
 
 ## 재화 관련 정책
 
