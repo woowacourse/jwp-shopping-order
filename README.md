@@ -22,7 +22,7 @@
 | PUT        | /products/{id} | 200        | 상품 정보를 업데이트한다. |
 | DELETE     | /products/{id} | 204        | 상품을 삭제한다.      |
 
-### Member Point API
+### Member API
 
 | HttpMethod | URL             | HttpStatus | Description    |
 |------------|-----------------|------------|----------------|
