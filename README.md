@@ -5,8 +5,18 @@
 ### Domain
 - [ ] Order
   - [ ] 필드  
-    - [ ] CartItem
-    - [ ] 
+    - [ ] id
+    - [ ] Member (회원 객체)
+    - [ ] OrderInfos(OrderInfo 일급 콜렉션 객체)
+    - [ ] originalPrice (할인 전 원가)
+    - [ ] usedPoint (사용할 적립금)
+    - [ ] pointToAdd (추가될 적립금)
+
+- [ ] Point
+  - [ ] 필드
+    - [ ] id
+    - [ ] Member (회원 객체)
+    - [ ] point (해당 회원의 현재 적립금)
 
 ### API
 - [ ] 장바구니
