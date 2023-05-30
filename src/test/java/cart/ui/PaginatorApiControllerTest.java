@@ -56,27 +56,26 @@ class PaginatorApiControllerTest {
         void 페이지를_지정하지_않은_경우_BAD_REQUEST_가_반환된다() throws Exception {
             // given
             given(orderService.getOrdersWithPagination(any(Member.class), any(GetOrdersRequest.class))).willReturn(
-                List.of(orderResponse1, orderResponse2, orderResponse3));
+                ordersResponse1);
 
             // when & then
             mockMvc.perform(get("/orders")
                     .header(HttpHeaders.AUTHORIZATION, authorizationHeader))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(3)));
+                .andExpect(status().isBadRequest());
         }
 
         @Test
         void 페이지를_지정하면_특정_페이지에_대한_주문_목록을_조회한다() throws Exception {
             // given
-            long page = 1L;
             given(orderService.getOrdersWithPagination(any(Member.class), any(GetOrdersRequest.class))).willReturn(
-                List.of(orderResponse1, orderResponse2, orderResponse3));
+                ordersResponse1);
+            long page = 1L;
 
             // when & then
             mockMvc.perform(get("/orders?page=" + page)
                     .header(HttpHeaders.AUTHORIZATION, authorizationHeader))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(3)));
+                .andExpect(jsonPath("$.contents", Matchers.hasSize(3)));
         }
 
         @Test
@@ -90,6 +89,7 @@ class PaginatorApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderId").exists())
                 .andExpect(jsonPath("$.orderAt").exists())
+                .andExpect(jsonPath("$.orderStatus").exists())
                 .andExpect(jsonPath("$.payAmount").exists())
                 .andExpect(jsonPath("$.usedPoint").exists())
                 .andExpect(jsonPath("$.savedPoint").exists())

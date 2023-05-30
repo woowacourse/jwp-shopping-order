@@ -9,28 +9,29 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.QuantityAndProduct;
 
-// TODO: 주문 상태 관련
-public class GetOrderResponse {
+public class OrderContents {
 
     private final Long orderId;
     private final Integer payAmount;
     private final LocalDateTime orderAt;
+    private final String orderStatus;
     private final String productName;
     private final String productImageUrl;
     private final Integer totalProductCount;
 
-    public GetOrderResponse(Long orderId, Integer payAmount, LocalDateTime orderAt, String productName,
+    public OrderContents(Long orderId, Integer payAmount, LocalDateTime orderAt, String orderStatus, String productName,
         String productImageUrl,
         Integer totalProductCount) {
         this.orderId = orderId;
         this.payAmount = payAmount;
         this.orderAt = orderAt;
+        this.orderStatus = orderStatus;
         this.productName = productName;
         this.productImageUrl = productImageUrl;
         this.totalProductCount = totalProductCount;
     }
 
-    public static List<GetOrderResponse> from(List<Order> orders) {
+    public static List<OrderContents> from(List<Order> orders) {
         return orders.stream()
             .map(order -> {
                 List<QuantityAndProduct> quantityAndProducts = order.getProducts();
@@ -38,8 +39,8 @@ public class GetOrderResponse {
                     .mapToInt(QuantityAndProduct::getQuantity)
                     .count();
                 Product representative = quantityAndProducts.get(0).getProduct();
-                return new GetOrderResponse(order.getOrderId(), order.getPayAmount(), order.getOrderAt(),
-                    representative.getName(), representative.getImageUrl(), totalProductCount);
+                return new OrderContents(order.getOrderId(), order.getPayAmount(), order.getOrderAt(),
+                    order.getOrderStatus().getDisplayName(), representative.getName(), representative.getImageUrl(), totalProductCount);
             })
             .collect(toList());
     }
@@ -54,6 +55,10 @@ public class GetOrderResponse {
 
     public LocalDateTime getOrderAt() {
         return orderAt;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
     }
 
     public String getProductName() {

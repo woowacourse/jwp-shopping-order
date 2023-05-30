@@ -1,6 +1,5 @@
 package cart.domain;
 
-// TODO: 주문 상태 관련
 public enum OrderStatus {
 
     PENDING("Pending"),

@@ -7,15 +7,17 @@ public class GetDetailedOrderResponse {
 
     private final Long orderId;
     private final LocalDateTime orderAt;
+    private final String orderStatus;
     private final int payAmount;
     private final int usedPoint;
     private final int savedPoint;
     private final List<SingleKindDetailedProductResponse> products;
 
-    public GetDetailedOrderResponse(Long orderId, LocalDateTime orderAt, int payAmount, int usedPoint, int savedPoint,
+    public GetDetailedOrderResponse(Long orderId, LocalDateTime orderAt, String orderStatus, int payAmount, int usedPoint, int savedPoint,
         List<SingleKindDetailedProductResponse> products) {
         this.orderId = orderId;
         this.orderAt = orderAt;
+        this.orderStatus = orderStatus;
         this.payAmount = payAmount;
         this.usedPoint = usedPoint;
         this.savedPoint = savedPoint;
@@ -28,6 +30,10 @@ public class GetDetailedOrderResponse {
 
     public LocalDateTime getOrderAt() {
         return orderAt;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
     }
 
     public int getPayAmount() {

@@ -1,7 +1,6 @@
 package cart.ui;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -15,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cart.application.OrderService;
 import cart.application.dto.GetDetailedOrderResponse;
-import cart.application.dto.GetOrderResponse;
 import cart.application.dto.GetOrdersRequest;
+import cart.application.dto.GetOrdersResponse;
 import cart.application.dto.PostOrderRequest;
 import cart.domain.Member;
 
@@ -30,7 +29,7 @@ public class OrdersApiController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<GetOrderResponse>> getOrdersWithPagination(Member member,
+    public ResponseEntity<GetOrdersResponse> getOrdersWithPagination(Member member,
         @ModelAttribute @Valid GetOrdersRequest request) {
         return ResponseEntity.ok(orderService.getOrdersWithPagination(member, request));
     }

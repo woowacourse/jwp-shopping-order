@@ -10,18 +10,17 @@ public class Order {
     private final Integer payAmount;
     private final Integer usedPoint;
     private final Integer savedPoint;
-    //TODO: 주문 상태 관련
-    private final OrderStatus orderState;
+    private final OrderStatus orderStatus;
     private final List<QuantityAndProduct> products;
 
     public Order(Long orderId, LocalDateTime orderAt, Integer payAmount, Integer usedPoint, Integer savedPoint,
-        OrderStatus orderState, List<QuantityAndProduct> products) {
+        OrderStatus orderStatus, List<QuantityAndProduct> products) {
         this.orderId = orderId;
         this.orderAt = orderAt;
         this.payAmount = payAmount;
         this.usedPoint = usedPoint;
         this.savedPoint = savedPoint;
-        this.orderState = orderState;
+        this.orderStatus = orderStatus;
         this.products = products;
     }
 
@@ -45,8 +44,8 @@ public class Order {
         return savedPoint;
     }
 
-    public OrderStatus getOrderState() {
-        return orderState;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
     public List<QuantityAndProduct> getProducts() {
