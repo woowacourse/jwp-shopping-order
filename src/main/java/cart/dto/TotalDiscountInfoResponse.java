@@ -3,13 +3,16 @@ package cart.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import cart.domain.price.discount.DiscountInformation;
 
 public class TotalDiscountInfoResponse {
-    private final List<DiscountInfoResponse> discountInfoResponses;
+    private final List<DiscountInfoResponse> discountInformation;
 
-    private TotalDiscountInfoResponse(List<DiscountInfoResponse> discountInfoResponses) {
-        this.discountInfoResponses = discountInfoResponses;
+    @JsonCreator
+    private TotalDiscountInfoResponse(List<DiscountInfoResponse> discountInformation) {
+        this.discountInformation = discountInformation;
     }
 
     public static TotalDiscountInfoResponse of(List<DiscountInformation> discountInformations) {
@@ -19,7 +22,7 @@ public class TotalDiscountInfoResponse {
         return new TotalDiscountInfoResponse(discountInfoResponses);
     }
 
-    public List<DiscountInfoResponse> getDiscountInfoResponses() {
-        return discountInfoResponses;
+    public List<DiscountInfoResponse> getDiscountInformation() {
+        return discountInformation;
     }
 }

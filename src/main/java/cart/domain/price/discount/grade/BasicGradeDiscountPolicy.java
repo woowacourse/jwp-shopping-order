@@ -5,7 +5,7 @@ import cart.domain.price.discount.DiscountInformation;
 import cart.domain.price.discount.DiscountPolicy;
 
 public class BasicGradeDiscountPolicy implements DiscountPolicy {
-    private static final String NAME = "gradeDiscount";
+    private static final String NAME = "memberGradeDiscount";
 
     @Override
     public Integer calculateDiscountPrice(Integer price, Member member) {

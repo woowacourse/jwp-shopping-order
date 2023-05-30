@@ -18,7 +18,7 @@ class PriceServiceTest {
     @DisplayName("가격과 등급을 통해 적용된 모든 가격정책의 상세내용을 반환한다.")
     void getDiscountInformation() {
         //when
-        final var result = priceService.getDiscountInformation(10000, "gold").getDiscountInfoResponses();
+        final var result = priceService.getDiscountInformation(10000, "gold").getDiscountInformation();
 
         //then
         Assertions.assertAll(
@@ -26,7 +26,7 @@ class PriceServiceTest {
                 () -> assertThat(result.get(1).getPolicyName()).isEqualTo("priceDiscount"),
                 () -> assertThat(result.get(1).getDiscountRate()).isEqualTo(0.02),
                 () -> assertThat(result.get(1).getDiscountPrice()).isEqualTo(200),
-                () -> assertThat(result.get(0).getPolicyName()).isEqualTo("gradeDiscount"),
+                () -> assertThat(result.get(0).getPolicyName()).isEqualTo("memberGradeDiscount"),
                 () -> assertThat(result.get(0).getDiscountRate()).isEqualTo(0.05),
                 () -> assertThat(result.get(0).getDiscountPrice()).isEqualTo(500)
         );
