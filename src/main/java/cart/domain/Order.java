@@ -33,6 +33,13 @@ public class Order {
         this(null, member, orderItems, null, null, null);
     }
 
+    public void calculateTotalPrinciplePrice() {
+        int totalPrinciplePrice = orderItems.stream()
+                .mapToInt(OrderItem::getPrinciplePrice)
+                .sum();
+        this.purchaseItemPrice = new Money(totalPrinciplePrice);
+    }
+
     public int calculateTotalDiscountedPrice() {
         int discountedPrice = calculateItemDiscount() + calculateMemberDiscount();
         this.discountPurchaseItemPrice = new Money(discountedPrice);

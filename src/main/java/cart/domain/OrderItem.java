@@ -54,6 +54,10 @@ public class OrderItem {
         return member.discountPrice(getPrice()) * getQuantity();
     }
 
+    public int getPrinciplePrice() {
+        return getPrice() * getQuantity();
+    }
+
     public boolean isDiscount() {
         return discountRate.isDiscount();
     }

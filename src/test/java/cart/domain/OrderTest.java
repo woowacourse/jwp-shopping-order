@@ -28,4 +28,23 @@ class OrderTest {
         assertThat(result).isEqualTo(expect);
     }
 
+    @Test
+    @DisplayName("원래의 총 상품 구매 금액을 구한다.")
+    void calculate_principle_purchase_money() {
+        // given
+        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
+        List<OrderItem> orderItems = List.of(
+                new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
+                new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
+        Order order = new Order(member, orderItems);
+
+        int expect = 40_000;
+
+        // when
+        order.calculateTotalPrinciplePrice();
+        int result = order.getPurchaseItemPrice();
+
+        // then
+        assertThat(result).isEqualTo(expect);
+    }
 }
