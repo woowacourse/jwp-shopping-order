@@ -1,4 +1,4 @@
-CREATE TABLE product (
+CREATE TABLE if not exists product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
@@ -7,13 +7,15 @@ CREATE TABLE product (
     point_available BOOLEAN
 );
 
-CREATE TABLE member (
+CREATE TABLE if not exists member (
      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) NOT NULL UNIQUE,
-     password VARCHAR(255) NOT NULL
+     password VARCHAR(255) NOT NULL,
+     point INT NOT NULL,
+     CONSTRAINT only_positive_point check (point >= 0)
 );
 
-CREATE TABLE cart_item (
+CREATE TABLE if not exists cart_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
