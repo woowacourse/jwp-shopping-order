@@ -21,8 +21,8 @@ VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 3, 5);
 
-INSERT INTO coupon (name, discount_rate, `period`, expired_date)
+INSERT INTO coupon (name, discount_rate, `period`, expired_at)
 VALUES ('신규 가입 할인 쿠폰', 20, 14, '2023-05-30 15:30:00');
 
-INSERT INTO member_coupon (member_id, coupon_id, issued_date, expired_date, is_used)
+INSERT INTO member_coupon (member_id, coupon_id, issued_at, expired_at, is_used)
 VALUES (1, 1, NOW(), '2023-06-01 15:30:00', false);

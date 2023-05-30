@@ -25,7 +25,7 @@ public class MemberService {
         memberDao.addMember(new Member(memberRequest.getName(), encryptedPassword));
     }
 
-    public String generateBasicAuth(final MemberRequest memberRequest) {
+    public String generateMemberToken(final MemberRequest memberRequest) {
         String encryptedPassword = encrypt(memberRequest.getPassword()); // encrypt util 클래스 생성
         if (!memberDao.existsByMember(new Member(memberRequest.getName(), encryptedPassword))) {
             throw new AuthenticationException();
