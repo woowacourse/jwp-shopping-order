@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.domain.member.Member;
+import cart.domain.member.MemberValidator;
 import cart.exception.InvalidCartItemOwnerException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -18,7 +20,7 @@ class CartItemTest {
         // given
         final Member member = new Member("pizza@pizza.com", "password");
         final Product product = new Product("pizza1", "pizza1.jpg", 8900L);
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(member.getId(), product);
 
         // expect
         assertThat(cartItem.getQuantity()).isEqualTo(1);
@@ -29,7 +31,7 @@ class CartItemTest {
         // given
         final Member member = new Member("pizza@pizza.com", "password");
         final Product product = new Product("pizza1", "pizza1.jpg", 8900L);
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(member.getId(), product);
 
         // when
         cartItem.changeQuantity(2);
@@ -41,12 +43,14 @@ class CartItemTest {
     @Test
     void 소유주가_아니라면_예외를_던진다() {
         // given
-        final Member member = new Member(1L, "pizza@pizza.com", "password");
+        final Member member1 = new Member(1L, "pizza@pizza.com", "password");
+        final Member member2 = new Member(2L, "email", "password");
         final Product product = new Product("pizza1", "pizza1.jpg", 8900L);
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(member2.getId(), product);
+        final MemberValidator memberValidator = new MemberValidator(member1);
 
         // expect
-        assertThatThrownBy(() -> cartItem.checkOwner(new Member(2L, "email", "password")))
+        assertThatThrownBy(() -> cartItem.validateOwner(memberValidator))
                 .isInstanceOf(InvalidCartItemOwnerException.class)
                 .hasMessage("장바구니의 소유자가 아닙니다.");
     }
@@ -56,9 +60,10 @@ class CartItemTest {
         // given
         final Member member = new Member(1L, "pizza@pizza.com", "password");
         final Product product = new Product("pizza1", "pizza1.jpg", 8900L);
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(member.getId(), product);
+        final MemberValidator memberValidator = new MemberValidator(member);
 
         // expect
-        assertThatNoException().isThrownBy(() -> cartItem.checkOwner(member));
+        assertThatNoException().isThrownBy(() -> cartItem.validateOwner(memberValidator));
     }
 }

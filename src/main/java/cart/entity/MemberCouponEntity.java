@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.domain.MemberCoupon;
+import cart.domain.member.MemberCoupon;
 
 public class MemberCouponEntity {
 

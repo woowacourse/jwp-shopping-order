@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.member.MemberValidator;
 import cart.exception.InvalidCartItemOwnerException;
 
 import java.util.Objects;
@@ -7,29 +8,45 @@ import java.util.Objects;
 public class CartItem {
 
     private final Long id;
-    private final Member member;
+    private final Long memberId;
     private final Product product;
     private Integer quantity;
 
-    public CartItem(final Member member, final Product product) {
+    public CartItem(final Long member, final Product product) {
         this(null, 1, member, product);
     }
 
-    public CartItem(final Long id, final Integer quantity, final Member member, final Product product) {
+    public CartItem(final Long id, final Integer quantity, final Long member, final Product product) {
         this.id = id;
         this.quantity = quantity;
-        this.member = member;
+        this.memberId = member;
         this.product = product;
-    }
-
-    public void checkOwner(final Member member) {
-        if (!this.member.equals(member)) {
-            throw new InvalidCartItemOwnerException();
-        }
     }
 
     public void changeQuantity(final int quantity) {
         this.quantity = quantity;
+    }
+
+    public void validateOwner(final MemberValidator memberValidator) {
+        if (!memberValidator.isOwner(memberId)) {
+            throw new InvalidCartItemOwnerException();
+        };
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 
     @Override
@@ -47,21 +64,5 @@ public class CartItem {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public Product getProduct() {
-        return product;
     }
 }

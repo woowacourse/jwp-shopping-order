@@ -1,8 +1,9 @@
 package cart.service;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.Product;
+import cart.domain.member.MemberValidator;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;
@@ -38,12 +39,10 @@ public class CartItemService {
     }
 
     public Long save(final Long memberId, final CartItemSaveRequest request) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
         final Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(ProductNotFoundException::new);
 
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(memberId, product);
         return cartItemRepository.save(cartItem).getId();
     }
 
@@ -59,7 +58,9 @@ public class CartItemService {
                 .orElseThrow(MemberNotFoundException::new);
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(CartItemNotFoundException::new);
-        cartItem.checkOwner(member);
+
+        final MemberValidator memberValidator = new MemberValidator(member);
+        cartItem.validateOwner(memberValidator);
         cartItemRepository.delete(cartItem);
     }
 
@@ -73,7 +74,8 @@ public class CartItemService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        cartItem.checkOwner(member);
+        final MemberValidator memberValidator = new MemberValidator(member);
+        cartItem.validateOwner(memberValidator);
         if (request.getQuantity() == 0) {
             cartItemRepository.delete(cartItem);
             return;

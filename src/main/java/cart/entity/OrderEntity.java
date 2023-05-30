@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 
 public class OrderEntity {
 
@@ -17,7 +17,7 @@ public class OrderEntity {
     }
 
     public static OrderEntity from(final Order order) {
-        return new OrderEntity(order.getId(), order.getDeliveryFee(), order.getMemberCoupon().getId(), order.getMember().getId());
+        return new OrderEntity(order.getId(), order.getDeliveryFee(), order.getMemberCouponId(), order.getMemberId());
     }
 
     public Long getId() {

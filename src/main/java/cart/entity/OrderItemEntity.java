@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.domain.OrderItem;
+import cart.domain.order.OrderItem;
 
 public class OrderItemEntity {
 

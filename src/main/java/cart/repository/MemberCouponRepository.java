@@ -3,7 +3,7 @@ package cart.repository;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
-import cart.domain.MemberCoupon;
+import cart.domain.member.MemberCoupon;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
@@ -48,5 +48,17 @@ public class MemberCouponRepository {
         }
         memberCouponDao.update(MemberCouponEntity.from(memberCoupon));
         return memberCoupon;
+    }
+
+    public Optional<MemberCoupon> findById(final Long id) {
+        return memberCouponDao.findById(id)
+                .map(entity -> new MemberCoupon(
+                        entity.getId(),
+                        memberDao.findById(entity.getMemberId())
+                                .orElseThrow(MemberNotFoundException::new).toDomain(),
+                        couponDao.findById(entity.getCouponId())
+                                .orElseThrow(CouponNotFoundException::new).toDomain(),
+                        entity.isUsed()
+                ));
     }
 }

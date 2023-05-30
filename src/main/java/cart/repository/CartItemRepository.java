@@ -4,7 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.Product;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
@@ -37,13 +37,13 @@ public class CartItemRepository {
     public CartItem save(final CartItem cartItem) {
         final CartItemEntity cartItemEntity = new CartItemEntity(
                 cartItem.getId(),
-                cartItem.getMember().getId(),
+                cartItem.getMemberId(),
                 cartItem.getProduct().getId(),
                 cartItem.getQuantity()
         );
         if (Objects.isNull(cartItem.getId())) {
             final CartItemEntity entity = cartItemDao.insert(cartItemEntity);
-            return new CartItem(entity.getId(), cartItem.getQuantity(), cartItem.getMember(), cartItem.getProduct());
+            return new CartItem(entity.getId(), cartItem.getQuantity(), cartItem.getMemberId(), cartItem.getProduct());
         }
         cartItemDao.updateQuantity(cartItemEntity);
         return cartItem;
@@ -51,9 +51,6 @@ public class CartItemRepository {
 
     public List<CartItem> findAllByMemberId(final Long memberId) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberId(memberId);
-        final Member member = memberDao.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new)
-                .toDomain();
         final List<Long> productIds = cartItemEntities.stream()
                 .map(CartItemEntity::getProductId)
                 .collect(toList());
@@ -61,7 +58,7 @@ public class CartItemRepository {
                 .map(ProductEntity::toDomain)
                 .collect(toMap(Product::getId, Function.identity()));
         return cartItemEntities.stream()
-                .map(it -> new CartItem(it.getId(), it.getQuantity(), member, products.get(it.getProductId())))
+                .map(it -> new CartItem(it.getId(), it.getQuantity(), memberId, products.get(it.getProductId())))
                 .collect(toList());
     }
 
@@ -71,13 +68,10 @@ public class CartItemRepository {
             return Optional.empty();
         }
         final CartItemEntity cartItemEntity = mayBeCartItemEntity.get();
-        final Member member = memberDao.findById(cartItemEntity.getMemberId())
-                .orElseThrow(MemberNotFoundException::new)
-                .toDomain();
         final Product product = productDao.findById(cartItemEntity.getProductId())
                 .orElseThrow(ProductNotFoundException::new)
                 .toDomain();
-        return Optional.of(new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), member, product));
+        return Optional.of(new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), cartItemEntity.getMemberId(), product));
     }
 
     public void deleteAll(final List<CartItem> cartItems) {

@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.MemberDto;
 import cart.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayNameGeneration;

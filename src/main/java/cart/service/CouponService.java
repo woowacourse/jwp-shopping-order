@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
 public class CouponService {
 
@@ -19,6 +18,7 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CouponResponse> findAllByMemberId(final Long memberId) {
         final List<Coupon> coupons = couponRepository.findAllByMemberId(memberId);
         return coupons.stream()

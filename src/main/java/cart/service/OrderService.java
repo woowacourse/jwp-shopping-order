@@ -1,9 +1,10 @@
 package cart.service;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.MemberCoupon;
-import cart.domain.Order;
+import cart.domain.TotalPrice;
+import cart.domain.member.Member;
+import cart.domain.member.MemberCoupon;
+import cart.domain.order.Order;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.MemberCouponNotFoundException;
@@ -42,13 +43,10 @@ public class OrderService {
     }
 
     public Long save(final Long memberId, final OrderRequest request) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
-
         final List<CartItem> cartItems = cartItemRepository.findAllByMemberId(memberId);
 
         final MemberCoupon usedCoupon = useCouponIfExist(memberId, request.getCouponId());
-        final Order order = Order.createFromCartItems(cartItems, 3000L, usedCoupon, member);
+        final Order order = Order.createFromCartItems(cartItems, 3000L, usedCoupon.getId(), memberId);
 
         cartItemRepository.deleteAll(cartItems);
         return orderRepository.save(order).getId();
@@ -64,21 +62,28 @@ public class OrderService {
         return memberCouponRepository.save(usedCoupon);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findAll(final Long memberId) {
         final List<Order> orders = orderRepository.findByMemberId(memberId);
 
         return orders.stream()
-                .map(OrderResponse::from)
+                .map(order -> findById(memberId, order.getId()))
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findById(final Long memberId, final Long id) {
         final Order order = orderRepository.findById(id)
                 .orElseThrow(OrderNotFoundException::new);
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
-        order.checkOwner(member);
+        final MemberCoupon memberCoupon = memberCouponRepository.findById(order.getMemberCouponId())
+                .orElseThrow(MemberCouponNotFoundException::new);
 
-        return OrderResponse.from(order);
+        order.checkOwner(member);
+        final TotalPrice totalPrice = order.calculateTotalPrice();
+        final TotalPrice discountedPrice = memberCoupon.calculateDiscountPrice(totalPrice);
+
+        return OrderResponse.of(order, totalPrice, discountedPrice);
     }
 }

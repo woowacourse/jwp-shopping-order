@@ -9,7 +9,6 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
-@Transactional
 @Service
 public class MemberService {
 

@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
@@ -43,7 +43,7 @@ public class CartItemServiceTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(member.getId(), product);
 
         // when
         cartItemRepository.save(cartItem);
@@ -59,8 +59,8 @@ public class CartItemServiceTest {
         final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
 
         // when
         final List<CartItemDto> result = cartItemService.findAll(member.getId());
@@ -77,7 +77,7 @@ public class CartItemServiceTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
 
         // when
         cartItemService.delete(cartItem.getId(), member.getId());
@@ -91,7 +91,7 @@ public class CartItemServiceTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(2);
 
         // when
@@ -107,7 +107,7 @@ public class CartItemServiceTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(0);
 
         // when

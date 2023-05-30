@@ -1,4 +1,6 @@
-package cart.domain;
+package cart.domain.order;
+
+import cart.domain.CartItem;
 
 public class OrderItem {
 

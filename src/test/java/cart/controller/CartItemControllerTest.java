@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;
@@ -84,8 +84,8 @@ public class CartItemControllerTest {
         final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
 
-        cartItemRepository.save(new CartItem(member, product1));
-        cartItemRepository.save(new CartItem(member, product2));
+        cartItemRepository.save(new CartItem(member.getId(), product1));
+        cartItemRepository.save(new CartItem(member.getId(), product2));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // expect
@@ -102,7 +102,7 @@ public class CartItemControllerTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // when
@@ -121,7 +121,7 @@ public class CartItemControllerTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
         final CartItemQuantityUpdateRequest updateRequest = new CartItemQuantityUpdateRequest(2);
 

@@ -1,5 +1,6 @@
-package cart.domain;
+package cart.domain.member;
 
+import cart.domain.TotalPrice;
 import cart.domain.coupon.Coupon;
 import cart.exception.CouponAlreadyUsedException;
 
