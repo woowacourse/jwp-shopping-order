@@ -11,6 +11,10 @@ public class Member {
         this.password = password;
     }
 
+    public Member(final String email, final String password) {
+        this(null, email, password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -25,5 +29,14 @@ public class Member {
 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

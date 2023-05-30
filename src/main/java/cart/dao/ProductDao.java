@@ -2,22 +2,24 @@ package cart.dao;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertProduct;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertProduct = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Product> getAllProducts() {
@@ -42,22 +44,12 @@ public class ProductDao {
     }
 
     public Long createProduct(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        final Map<String, ? extends Serializable> parameters = Map.of(
+                "name", product.getName(),
+                "price", product.getPrice(),
+                "image_url", product.getImageUrl());
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
+        return insertProduct.executeAndReturnKey(parameters).longValue();
     }
 
     public void updateProduct(Long productId, Product product) {
