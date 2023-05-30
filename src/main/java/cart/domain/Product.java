@@ -3,8 +3,10 @@ package cart.domain;
 public class Product {
     private Long id;
     private String name;
-    private int price;
+    private Integer price;
     private String imageUrl;
+    private Integer pointRatio;
+    private Boolean point_available;
 
     public Product(String name, int price, String imageUrl) {
         this.name = name;
