@@ -8,7 +8,8 @@ CREATE TABLE product (
 CREATE TABLE member (
      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) NOT NULL UNIQUE,
-     password VARCHAR(255) NOT NULL
+     password VARCHAR(255) NOT NULL,
+     nickname VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE cart_item (
@@ -34,7 +35,9 @@ CREATE TABLE member_coupon (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
+    is_used BOOLEAN DEFAULT false NOT NULL,
     expired_at DATETIME NOT NULL,
+    create_at DATETIME DEFAULT current_timestamp NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
@@ -45,7 +48,7 @@ CREATE TABLE `order` (
     coupon_id BIGINT NOT NULL,
     shipping_fee INT NOT NULL,
     total_price INT NOT NULL,
-    create_at DATETIME DEFAULT current_timestamp,
+    create_at DATETIME DEFAULT current_timestamp NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
@@ -54,7 +57,9 @@ CREATE TABLE order_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    price INT NOT NULL,
+    image_url TEXT NOT NULL,
     quantity INT NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES `order`(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    FOREIGN KEY (order_id) REFERENCES `order`(id)
 );
