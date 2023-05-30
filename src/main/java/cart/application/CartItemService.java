@@ -1,10 +1,7 @@
 package cart.application;
 
 import cart.dao.*;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.Product;
+import cart.domain.*;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.request.PaymentRequest;
@@ -75,9 +72,10 @@ public class CartItemService {
         if (!member.isAbleToUsePoint(request.getPoint())) {
             throw new IllegalArgumentException("포인트가 부족합니다.");
         }
-        final Order order = new Order(member, request.getPoint(), cartItems);
+        final OrderProducts orderProducts = new OrderProducts(cartItems);
+        final Order order = new Order(member, request.getPoint(), orderProducts);
         final Long orderId = orderHistoryDao.createOrder(order);
-        orderProductDao.createProducts(orderId, order.getProducts());
+        orderProductDao.createProducts(orderId, order.getOrderProducts());
         member.usePoint(request.getPoint());
         member.savePoint(order.getSavedPoint());
         memberDao.updatePoint(member);

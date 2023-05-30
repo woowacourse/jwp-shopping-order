@@ -1,22 +1,30 @@
 package cart.domain;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderProducts {
     private static final double POINT_RATE = 0.05;
-    private final List<CartItem> products;
 
-    public OrderProducts(final List<CartItem> products) {
-        this.products = products;
+    private final List<OrderProduct> products;
+
+    public OrderProducts(final List<CartItem> cartItems) {
+        products = cartItems.stream()
+                .map(cartItem -> new OrderProduct(
+                                cartItem.getProduct(),
+                                cartItem.getProduct().getPrice(),
+                                cartItem.getQuantity()
+                        )
+                ).collect(Collectors.toList());
     }
 
     public Integer getTotalAmount() {
         return products.stream()
-                .mapToInt(product -> product.getProduct().getPrice() * product.getQuantity())
+                .mapToInt(product -> product.getPurchasedPrice() * product.getQuantity())
                 .sum();
     }
 
-    public List<CartItem> getProducts() {
+    public List<OrderProduct> getProducts() {
         return products;
     }
 

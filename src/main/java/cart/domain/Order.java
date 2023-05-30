@@ -1,17 +1,15 @@
 package cart.domain;
 
-import java.util.List;
-
 public class Order {
 
     private final Member member;
     private final Integer usedPoint;
-    private final OrderProducts products;
+    private final OrderProducts orderProducts;
 
-    public Order(final Member member, final Integer usedPoint, final List<CartItem> cartItems) {
+    public Order(final Member member, final Integer usedPoint, final OrderProducts orderProducts) {
         this.member = member;
         this.usedPoint = usedPoint;
-        this.products = new OrderProducts(cartItems);
+        this.orderProducts = orderProducts;
     }
 
     public Member getMember() {
@@ -22,15 +20,15 @@ public class Order {
         return usedPoint;
     }
 
-    public OrderProducts getProducts() {
-        return products;
+    public OrderProducts getOrderProducts() {
+        return orderProducts;
     }
 
     public Integer getTotalAmount() {
-        return products.getTotalAmount();
+        return orderProducts.getTotalAmount();
     }
 
     public Integer getSavedPoint() {
-        return products.getSavedPoint();
+        return orderProducts.getSavedPoint();
     }
 }
