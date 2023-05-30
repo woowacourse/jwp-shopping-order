@@ -14,4 +14,6 @@ public interface CouponRepository {
     long insert(final Coupon coupon);
 
     void deleteById(final Long couponId);
+
+    CouponWithId findByNameAndDiscountRate(final String name, final int discountRate);
 }

@@ -19,6 +19,7 @@ public enum ErrorCode {
     COUPON_DISCOUNT_RATE_RANGE("쿠폰 할인율은 5 ~ 90%까지 가능합니다."),
     COUPON_DUPLICATE("이미 존재하는 쿠폰 정보입니다."),
     COUPON_NOT_FOUND("쿠폰 정보를 찾을 수 없습니다."),
+    COUPON_EXPIRED("만료된 쿠폰입니다."),
 
     /** CART */
     CART_NOT_FOUND("장바구니 정보를 찾을 수 없습니다."),

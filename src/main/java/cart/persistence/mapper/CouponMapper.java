@@ -8,7 +8,7 @@ public class CouponMapper {
 
     public static CouponWithId convertCouponWithId(final CouponEntity couponEntity) {
         return new CouponWithId(couponEntity.getId(), couponEntity.getName(),
-            couponEntity.getDiscountRate(), couponEntity.getExpiredDate());
+            couponEntity.getDiscountRate(), couponEntity.getPeriod(), couponEntity.getExpiredDate());
     }
 
     public static Coupon convertCoupon(final CouponEntity couponEntity) {

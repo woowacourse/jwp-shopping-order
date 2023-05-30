@@ -1,10 +1,12 @@
 package cart.application;
 
+import cart.application.dto.coupon.CouponResponse;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberLoginResponse;
 import cart.application.dto.member.MemberResponse;
 import cart.application.dto.member.MemberSaveRequest;
 import cart.common.auth.BasicTokenProvider;
+import cart.domain.coupon.CouponSaveEvent;
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
 import cart.domain.security.SHA256Service;
@@ -12,6 +14,7 @@ import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public MemberService(final MemberRepository memberRepository) {
+    public MemberService(final MemberRepository memberRepository,
+                         final ApplicationEventPublisher applicationEventPublisher) {
         this.memberRepository = memberRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -31,7 +37,9 @@ public class MemberService {
             throw new BadRequestException(ErrorCode.MEMBER_DUPLICATE_NAME);
         }
         final Member member = Member.create(memberSaveRequest.getName(), memberSaveRequest.getPassword());
-        return memberRepository.insert(member);
+        final long savedMemberId = memberRepository.insert(member);
+        applicationEventPublisher.publishEvent(new CouponSaveEvent(savedMemberId));
+        return savedMemberId;
     }
 
     public MemberLoginResponse login(final MemberLoginRequest memberLoginRequest) {

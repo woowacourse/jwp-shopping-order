@@ -45,14 +45,14 @@ class CouponDaoTest extends DaoTest {
 
     @Test
     @DisplayName("요청받은 아이디에 해당하는 쿠폰을 반환한다.")
-    void getCouponById_success() {
+    void findById_success() {
         // given
         final LocalDateTime 저장_시간 = LocalDateTime.now();
         final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = couponDao.insert(신규_가입_축하_쿠폰);
 
         // when
-        final CouponEntity coupon = couponDao.getCouponById(저장된_신규_가입_축하_쿠폰_아이디).get();
+        final CouponEntity coupon = couponDao.findById(저장된_신규_가입_축하_쿠폰_아이디).get();
 
         // then
         assertThat(coupon)
@@ -63,9 +63,9 @@ class CouponDaoTest extends DaoTest {
 
     @Test
     @DisplayName("요청받은 쿠폰 아이디가 존재하지 않으면 빈 값을 반환한다.")
-    void getCouponById_fail() {
+    void findById_fail() {
         // when
-        final Optional<CouponEntity> coupon = couponDao.getCouponById(1L);
+        final Optional<CouponEntity> coupon = couponDao.findById(1L);
 
         // then
         assertThat(coupon)
@@ -83,7 +83,7 @@ class CouponDaoTest extends DaoTest {
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = couponDao.insert(신규_가입_축하_쿠폰);
 
         // then
-        final CouponEntity coupon = couponDao.getCouponById(저장된_신규_가입_축하_쿠폰_아이디).get();
+        final CouponEntity coupon = couponDao.findById(저장된_신규_가입_축하_쿠폰_아이디).get();
         assertThat(coupon)
             .extracting(CouponEntity::getId, CouponEntity::getName, CouponEntity::getDiscountRate,
                 CouponEntity::getPeriod, CouponEntity::getExpiredDate)
@@ -102,7 +102,7 @@ class CouponDaoTest extends DaoTest {
         couponDao.deleteById(저장된_신규_가입_축하_쿠폰_아이디);
 
         // then
-        final Optional<CouponEntity> coupon = couponDao.getCouponById(저장된_신규_가입_축하_쿠폰_아이디);
+        final Optional<CouponEntity> coupon = couponDao.findById(저장된_신규_가입_축하_쿠폰_아이디);
         assertThat(coupon)
             .isEmpty();
     }
@@ -121,5 +121,36 @@ class CouponDaoTest extends DaoTest {
         // then
         assertThat(result)
             .isSameAs(expected);
+    }
+
+    @Test
+    @DisplayName("요청받은 이름과 할인율에 해당하는 쿠폰을 반환한다.")
+    void findByNameAndDiscountRate_success() {
+        // given
+        final LocalDateTime 저장_시간 = LocalDateTime.now();
+        final String couponName = "신규 가입 축하 쿠폰";
+        final int discountRate = 20;
+        final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity(couponName, discountRate, 365, 저장_시간.plusDays(365));
+        final Long 저장된_신규_가입_축하_쿠폰_아이디 = couponDao.insert(신규_가입_축하_쿠폰);
+
+        // when
+        final CouponEntity coupon = couponDao.findByNameAndDiscountRate(couponName, discountRate).get();
+
+        // then
+        assertThat(coupon)
+            .extracting(CouponEntity::getId, CouponEntity::getName, CouponEntity::getDiscountRate,
+                CouponEntity::getPeriod, CouponEntity::getExpiredDate)
+            .containsExactly(저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
+    }
+
+    @Test
+    @DisplayName("요청받은 쿠폰 이름이 존재하지 않으면 빈 값을 반환한다.")
+    void findByNameAndDiscountRate_fail() {
+        // when
+        final Optional<CouponEntity> coupon = couponDao.findByNameAndDiscountRate("아무 쿠폰", 10);
+
+        // then
+        assertThat(coupon)
+            .isEmpty();
     }
 }
