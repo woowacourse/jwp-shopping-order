@@ -20,9 +20,9 @@ public class OrderProducts {
                 ).collect(Collectors.toList());
     }
 
-    public Integer getTotalAmount() {
+    public int getTotalAmount() {
         return products.stream()
-                .mapToInt(product -> product.getPurchasedPrice() * product.getQuantity())
+                .mapToInt(OrderProduct::getAmount)
                 .sum();
     }
 
