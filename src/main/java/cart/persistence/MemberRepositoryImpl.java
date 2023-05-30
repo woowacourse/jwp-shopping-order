@@ -16,16 +16,14 @@ import java.util.Optional;
 @Repository
 public class MemberRepositoryImpl implements MemberRepository {
     private final MemberDao memberDao;
-    private final Encryptor encryptor;
 
-    public MemberRepositoryImpl(MemberDao memberDao, Encryptor encryptor) {
+    public MemberRepositoryImpl(MemberDao memberDao) {
         this.memberDao = memberDao;
-        this.encryptor = encryptor;
     }
 
     @Override
     public Long save(Member member) {
-        String encryptedPassword = encryptor.encrypt(member.getPassword());
+        String encryptedPassword = Encryptor.encrypt(member.getPassword());
         MemberEntity memberEntity = new MemberEntity(member.getName(), encryptedPassword);
 
         return memberDao.insertMember(memberEntity);
@@ -60,7 +58,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         Optional<MemberEntity> findMember = memberDao.findByName(member.getName());
 
         if (findMember.isPresent()) {
-            String encryptedPassword = encryptor.encrypt(member.getPassword());
+            String encryptedPassword = Encryptor.encrypt(member.getPassword());
 
             return Objects.equals(encryptedPassword, findMember.get().getPassword());
         }

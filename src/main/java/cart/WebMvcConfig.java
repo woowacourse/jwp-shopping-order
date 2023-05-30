@@ -1,6 +1,6 @@
 package cart;
 
-import cart.dao.MemberDao;
+import cart.domain.repository.MemberRepository;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -11,21 +11,21 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public WebMvcConfig(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public WebMvcConfig(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberDao));
+        resolvers.add(new MemberArgumentResolver(memberRepository));
     }
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://monumental-kleicha-ad648a.netlify.app/", "http://localhost:9000", "http://localhost:3000", "http://localhost:8080","https://jourzura2.kro.kr")
+                .allowedOrigins("https://monumental-kleicha-ad648a.netlify.app/", "http://localhost:9000", "http://localhost:3000", "http://localhost:8080", "https://jourzura2.kro.kr")
                 .allowedMethods("*");
     }
 }
