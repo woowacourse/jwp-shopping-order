@@ -65,4 +65,8 @@ public class CouponRepository {
     public void deleteById(final long couponId) {
         couponDao.deleteById(couponId);
     }
+
+    public void deleteAllByIds(final List<Long> couponIds) {
+        couponDao.deleteAllByIds(couponIds);
+    }
 }

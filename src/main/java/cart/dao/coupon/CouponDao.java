@@ -6,7 +6,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CouponDao {
@@ -40,5 +42,11 @@ public class CouponDao {
     public void deleteById(final long couponId) {
         String sql = "DELETE FROM coupon WHERE id = ?";
         jdbcTemplate.update(sql, couponId);
+    }
+
+    public void deleteAllByIds(final List<Long> couponIds) {
+        String sql = "DELETE FROM coupon WHERE id IN (:couponIds)";
+        Map<String, Object> params = Collections.singletonMap("couponIds", couponIds);
+        namedParameterJdbcTemplate.update(sql, params);
     }
 }

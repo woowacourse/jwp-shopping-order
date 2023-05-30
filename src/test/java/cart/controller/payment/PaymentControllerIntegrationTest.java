@@ -20,6 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static cart.fixture.CouponFixture.createCoupons;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -46,6 +47,7 @@ public class PaymentControllerIntegrationTest {
     void find_payment_page() {
         // given
         Member member = memberRepository.findMemberById(1);
+        member.initCoupons(createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
         long orderId = paymentService.pay(member, req);
 

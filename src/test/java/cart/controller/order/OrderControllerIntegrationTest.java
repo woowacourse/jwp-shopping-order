@@ -20,6 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static cart.fixture.CouponFixture.createCoupons;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,6 +48,7 @@ class OrderControllerIntegrationTest {
     @Test
     void find_orders() {
         Member member = memberRepository.findMemberById(1);
+        member.initCoupons(createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
         long orderId = paymentService.pay(member, req);
 
@@ -65,13 +67,14 @@ class OrderControllerIntegrationTest {
                 .body("orders[0].products[0].price", equalTo(9000))
                 .body("orders[0].deliveryPrice.deliveryPrice", equalTo(3000))
                 .body("orders[0].coupons[0].couponId", equalTo(1))
-                .body("orders[0].coupons[0].couponName", equalTo("전체 10% 할인 쿠폰"));
+                .body("orders[0].coupons[0].couponName", equalTo("1000원 할인 쿠폰"));
     }
 
     @DisplayName("주문 내역을 한 개 반환한다.")
     @Test
     void find_order() {
         Member member = memberRepository.findMemberById(1);
+        member.initCoupons(createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
         long orderId = paymentService.pay(member, req);
 
@@ -90,6 +93,6 @@ class OrderControllerIntegrationTest {
                 .body("products[0].price", equalTo(9000))
                 .body("deliveryPrice.deliveryPrice", equalTo(3000))
                 .body("coupons[0].couponId", equalTo(1))
-                .body("coupons[0].couponName", equalTo("전체 10% 할인 쿠폰"));
+                .body("coupons[0].couponName", equalTo("1000원 할인 쿠폰"));
     }
 }

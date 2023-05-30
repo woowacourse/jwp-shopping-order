@@ -92,6 +92,7 @@ class PaymentIntegrationServiceTest {
     void pay() {
         // given
         Member member = memberRepository.findMemberById(1);
+        member.initCoupons(createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
 
         // when

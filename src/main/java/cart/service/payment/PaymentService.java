@@ -71,9 +71,7 @@ public class PaymentService {
     @Transactional
     public long pay(final Member member, final PaymentRequest paymentRequest) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-
-        Coupons requestCoupons = couponRepository.findAllByCouponIds(parseCouponRequestIds(paymentRequest.getCoupons()));
-        member.initCoupons(requestCoupons);
+        member.validateHasCoupons(parseCouponRequestIds(paymentRequest.getCoupons()));
 
         Order order = new Order(member, cart);
         OrderResponse orderHistory = order.pay(parseProductIds(paymentRequest.getProducts()), parseProductQuantities(paymentRequest.getProducts()), parseCouponRequestIds(paymentRequest.getCoupons()));
@@ -90,13 +88,16 @@ public class PaymentService {
                 cartRepository.deleteCartItemById(cartItem.getId());
                 continue;
             }
+
             cartRepository.updateCartItemQuantity(cartItem);
         }
     }
 
     private void deleteUsedCoupons(final OrderResponse orderHistory) {
-        for (CouponResponse coupon : orderHistory.getCoupons()) {
-            couponRepository.deleteById(coupon.getCouponId());
-        }
+        List<Long> couponIds = orderHistory.getCoupons().stream()
+                .map(CouponResponse::getCouponId)
+                .collect(Collectors.toList());
+
+        couponRepository.deleteAllByIds(couponIds);
     }
 }

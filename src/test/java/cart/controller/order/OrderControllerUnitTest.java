@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static cart.fixture.CouponFixture.createCoupons;
 import static cart.fixture.MemberFixture.createMember;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -51,6 +52,7 @@ public class OrderControllerUnitTest {
     void find_all_orders() throws Exception {
         // given
         Member member = createMember();
+        member.initCoupons(createCoupons());
         given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
         given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
 

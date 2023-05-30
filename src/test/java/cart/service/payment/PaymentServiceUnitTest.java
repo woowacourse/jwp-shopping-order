@@ -99,10 +99,8 @@ class PaymentServiceUnitTest {
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
         Cart cart = createCart();
         member.initCoupons(createCoupons());
-        Coupons coupons = new Coupons(List.of(new Coupon(1L, "쿠폰", new PolicyDiscount(1000))));
 
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
-        given(couponRepository.findAllByCouponIds(List.of(1L))).willReturn(coupons);
 
         // when
         long id = paymentService.pay(member, req);
