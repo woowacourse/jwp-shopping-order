@@ -9,6 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberDao memberDao;
@@ -23,10 +25,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
+                .allowedOrigins("http://localhost:3000", "http://13.209.69.80:8080", "http://localhost:8080")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+                .allowedHeaders(AUTHORIZATION)
                 .allowCredentials(true);
     }
 }

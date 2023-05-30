@@ -1,13 +1,24 @@
+import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.hidetake.swagger.generator' version '2.18.2'
+    id 'com.epages.restdocs-api-spec' version '0.16.2'
 }
 
 sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
+}
+
+swaggerSources {
+    sample {
+        setInputFile(file("${project.buildDir}/api-spec/openapi3.yaml"))
+    }
 }
 
 dependencies {
@@ -19,10 +30,40 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
     testImplementation 'org.springframework:spring-context:5.3.9'
+    testImplementation "com.epages:restdocs-api-spec-restassured:0.16.2"
 
+    swaggerUI 'org.webjars:swagger-ui:4.11.1'
+
+    runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.register('copySwaggerUI', Copy) {
+    dependsOn 'generateSwaggerUISample'
+
+    def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+
+    from("${generateSwaggerUISampleTask.outputDir}")
+    into("${project.buildDir}/resources/main/static/docs")
+}
+
+tasks.withType(BootJar).configureEach {
+    dependsOn 'copySwaggerUI'
+    dependsOn 'openapi3'
+}
+
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
+}
+
+openapi3 {
+    setServer("http://54.180.102.84:8080")
+    title = "restdocs-swagger API Documentation"
+    description = "Spring REST Docs with SwaggerUI."
+    version = "0.0.1"
+    format = "yaml"
 }

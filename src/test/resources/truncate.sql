@@ -1,0 +1,3 @@
+TRUNCATE TABLE member;
+TRUNCATE TABLE product;
+TRUNCATE TABLE cart_item;
