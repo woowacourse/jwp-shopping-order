@@ -18,6 +18,10 @@ public class OrderEntity {
         this(null, memberId, totalPrice, discountPrice);
     }
 
+    public static OrderEntity of(final long id, final OrderEntity orderEntity) {
+        return new OrderEntity(id, orderEntity.memberId, orderEntity.totalPrice, orderEntity.discountPrice);
+    }
+
     public Long getId() {
         return id;
     }
