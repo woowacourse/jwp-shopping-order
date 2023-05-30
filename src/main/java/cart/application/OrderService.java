@@ -84,7 +84,7 @@ public class OrderService {
 
     private void compareEachCartItem(final CartItem cartItem, final CartItemRequest request) {
         if (isInvalidProduct(cartItem, request) || isInvalidQuantity(cartItem, request) || isNotChecked(cartItem)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("주문 정보가 일치하지 않습니다.");
         }
     }
 

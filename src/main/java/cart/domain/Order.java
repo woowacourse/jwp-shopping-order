@@ -21,10 +21,10 @@ public class Order {
 
     public void validatePoints(final int memberPoints) {
         if (points > memberPoints) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("보유한 포인트보다 많이 사용할 수 없습니다.");
         }
         if (points % MINIMUM_UNIT_POINTS != 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(String.format("포인트는 %d 단위로 사용할 수 있습니다.", MINIMUM_UNIT_POINTS));
         }
     }
 
