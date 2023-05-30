@@ -472,4 +472,77 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             }
         }
     }
+
+    @Nested
+    @DisplayName("장바구니에 담긴 상품 삭제 시")
+    class showCartItems {
+
+        @Test
+        @DisplayName("인증 정보가 없으면 예외가 발생한다.")
+        void throws_when_not_found_authentication() {
+            // when
+            Response response = RestAssured.given().log().all()
+                    .get("/cart-items")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("인증된 사용자가 아니면 예외가 발생한다.")
+        void throws_when_not_authentication_user() {
+            // given
+            String email = "notExist@email.com";
+            String password = "notExistPassword";
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(email, password)
+                    .get("/cart-items")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증된 사용자가 아닙니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("장바구니에 담긴 상품 정보 목록이 조회된다.")
+        void success() {
+            // when
+            Response response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(Dooly.EMAIL, Dooly.PASSWORD)
+                    .get("/cart-items")
+                    .then().log().all()
+                    .extract().response();
+            JsonPath jsonPath = response.jsonPath();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+
+                    () -> assertThat(jsonPath.getLong("[0].id")).isEqualTo(Dooly_CartItem1.ID),
+                    () -> assertThat(jsonPath.getInt("[0].quantity")).isEqualTo(Dooly_CartItem1.QUANTITY),
+                    () -> assertThat(jsonPath.getLong("[0].product.id")).isEqualTo(Dooly_CartItem1.PRODUCT.getId()),
+                    () -> assertThat(jsonPath.getString("[0].product.name")).isEqualTo(Dooly_CartItem1.PRODUCT.getName()),
+                    () -> assertThat(jsonPath.getInt("[0].product.price")).isEqualTo(Dooly_CartItem1.PRODUCT.getPrice()),
+                    () -> assertThat(jsonPath.getString("[0].product.imageUrl")).isEqualTo(Dooly_CartItem1.PRODUCT.getImageUrl()),
+
+                    () -> assertThat(jsonPath.getLong("[1].id")).isEqualTo(Dooly_CartItem2.ID),
+                    () -> assertThat(jsonPath.getInt("[1].quantity")).isEqualTo(Dooly_CartItem2.QUANTITY),
+                    () -> assertThat(jsonPath.getLong("[1].product.id")).isEqualTo(Dooly_CartItem2.PRODUCT.getId()),
+                    () -> assertThat(jsonPath.getString("[1].product.name")).isEqualTo(Dooly_CartItem2.PRODUCT.getName()),
+                    () -> assertThat(jsonPath.getInt("[1].product.price")).isEqualTo(Dooly_CartItem2.PRODUCT.getPrice()),
+                    () -> assertThat(jsonPath.getString("[1].product.imageUrl")).isEqualTo(Dooly_CartItem2.PRODUCT.getImageUrl())
+            );
+        }
+    }
 }
