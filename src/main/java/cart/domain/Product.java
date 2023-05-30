@@ -1,22 +1,54 @@
 package cart.domain;
 
+import cart.domain.value.DiscountRate;
+import cart.domain.value.ImageUrl;
+import cart.domain.value.Name;
+import cart.domain.value.Price;
+
 public class Product {
     private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private Name name;
+    private Price price;
+    private ImageUrl imageUrl;
+    private boolean isDiscounted;
+    private DiscountRate discountRate;
 
-    public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public Product(
+            final String name,
+            final int price,
+            final String imageUrl
+    ) {
+        this.name = new Name(name);
+        this.price = new Price(price);
+        this.imageUrl = new ImageUrl(imageUrl);
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(
+            final Long id,
+            final String name,
+            final int price,
+            final String imageUrl
+    ) {
         this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.name = new Name(name);
+        this.price = new Price(price);
+        this.imageUrl = new ImageUrl(imageUrl);
+    }
+
+    public Product(
+            final Long id,
+            final String name,
+            final int price,
+            final String imageUrl,
+            final boolean isDiscounted,
+            final int discountRate
+    ) {
+        this.id = id;
+        this.name = new Name(name);
+        this.price = new Price(price);
+        this.imageUrl = new ImageUrl(imageUrl);
+        this.isDiscounted = isDiscounted;
+        this.discountRate = new DiscountRate(discountRate);
     }
 
     public Long getId() {
@@ -24,14 +56,22 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public int getPrice() {
-        return price;
+        return price.getValue();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getValue();
+    }
+
+    public boolean isDiscounted() {
+        return isDiscounted;
+    }
+
+    public int getDiscountRate() {
+        return discountRate.getValue();
     }
 }
