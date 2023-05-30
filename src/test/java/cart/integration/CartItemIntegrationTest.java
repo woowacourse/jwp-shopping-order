@@ -1,7 +1,9 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
 import cart.domain.member.Member;
+import cart.domain.member.MemberName;
+import cart.domain.member.NaturalPassword;
+import cart.domain.repository.MemberRepository;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -26,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     private Long productId;
     private Long productId2;
@@ -40,8 +42,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.findById(1L);
+        member2 = memberRepository.findById(2L);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
@@ -56,7 +58,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getName(), member.getPassword() + "asdf");
+        Member illegalMember = new Member(
+                member.getId(),
+                new MemberName(member.getName()),
+                new NaturalPassword(member.getPassword() + "asdf")
+        );
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 

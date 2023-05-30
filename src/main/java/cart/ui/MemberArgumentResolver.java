@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
-import cart.dao.MemberDao;
 import cart.domain.member.Member;
+import cart.domain.repository.MemberRepository;
+import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -12,10 +12,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            return null;
+            throw new AuthenticationException("인증 정보가 존재하지 않습니다.");
         }
 
         String[] authHeader = authorization.split(" ");
@@ -43,10 +43,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByName(name);
+
+        Member member = memberRepository.findByName(name);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("인증되지 않은 사용자입니다.");
         }
+
         return member;
     }
 }
