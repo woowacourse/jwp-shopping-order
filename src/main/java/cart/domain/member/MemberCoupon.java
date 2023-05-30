@@ -29,10 +29,6 @@ public class MemberCoupon {
         return new MemberCoupon(id, member, coupon, true);
     }
 
-    public TotalPrice calculatePrice(final TotalPrice totalPrice) {
-        return coupon.apply(totalPrice);
-    }
-
     public TotalPrice calculateDiscountPrice(final TotalPrice totalPrice) {
         return coupon.calculateDiscountPrice(totalPrice);
     }
@@ -56,11 +52,6 @@ public class MemberCoupon {
     public static final class NullMemberCoupon extends MemberCoupon {
         public NullMemberCoupon() {
             super(null, null, false);
-        }
-
-        @Override
-        public TotalPrice calculatePrice(final TotalPrice totalPrice) {
-            return totalPrice;
         }
 
         @Override

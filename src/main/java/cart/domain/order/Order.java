@@ -1,8 +1,8 @@
 package cart.domain.order;
 
 import cart.domain.CartItem;
-import cart.domain.member.Member;
 import cart.domain.TotalPrice;
+import cart.domain.member.MemberValidator;
 import cart.exception.InvalidOrderOwnerException;
 import cart.exception.InvalidOrderSizeException;
 
@@ -44,8 +44,8 @@ public class Order {
         return new TotalPrice(orderItems.sumPrice(), deliveryFee);
     }
 
-    public void checkOwner(final Member member) {
-        if (!this.memberId.equals(member.getId())) {
+    public void validateMember(final MemberValidator memberValidator) {
+        if (!memberValidator.isOwner(memberId)) {
             throw new InvalidOrderOwnerException();
         }
     }

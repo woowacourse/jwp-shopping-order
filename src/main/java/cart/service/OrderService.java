@@ -4,6 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.TotalPrice;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
+import cart.domain.member.MemberValidator;
 import cart.domain.order.Order;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -80,7 +81,8 @@ public class OrderService {
         final MemberCoupon memberCoupon = memberCouponRepository.findById(order.getMemberCouponId())
                 .orElseThrow(MemberCouponNotFoundException::new);
 
-        order.checkOwner(member);
+        final MemberValidator memberValidator = new MemberValidator(member);
+        order.validateMember(memberValidator);
         final TotalPrice totalPrice = order.calculateTotalPrice();
         final TotalPrice discountedPrice = memberCoupon.calculateDiscountPrice(totalPrice);
 
