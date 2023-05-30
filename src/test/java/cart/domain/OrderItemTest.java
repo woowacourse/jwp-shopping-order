@@ -14,24 +14,14 @@ class OrderItemTest {
     @Test
     void 주문_상품이_정상적으로_생성된다() {
         Product product = new Product(1L, "사과", 1000, "http://image.com/image.png");
-        Quantity quantity = new Quantity(5);
-        OrderItem orderItem = new OrderItem(1L, product, quantity);
+
+        OrderItem orderItem = new OrderItem(1L, product, 5, 5000);
 
         assertAll(
                 () -> assertThat(orderItem.getId()).isEqualTo(1L),
                 () -> assertThat(orderItem.getProduct()).isEqualTo(product),
-                () -> assertThat(orderItem.getQuantity()).isEqualTo(quantity)
+                () -> assertThat(orderItem.getQuantity().getAmount()).isEqualTo(5),
+                () -> assertThat(orderItem.getPrice().getAmount()).isEqualTo(5000)
         );
-    }
-
-    @Test
-    void 주문_상품의_총_가격을_계산한다() {
-        Product product = new Product(1L, "사과", 1000, "http://image.com/image.png");
-        Quantity quantity = new Quantity(5);
-        OrderItem orderItem = new OrderItem(1L, product, quantity);
-
-        Price price = orderItem.calculatePrice();
-
-        assertThat(price.getAmount()).isEqualTo(5000);
     }
 }

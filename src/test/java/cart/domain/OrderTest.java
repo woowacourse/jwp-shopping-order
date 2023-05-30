@@ -18,8 +18,8 @@ class OrderTest {
     private final Product productA = new Product(1L, "상품A", 1000, "http://imageA.com");
     private final Product productB = new Product(2L, "상품B", 2000, "http://imageB.com");
     private final Member member = new Member(1L, "gray@google.com", "1234", 1000);
-    private final OrderItem orderItemA = new OrderItem(1L, productA, new Quantity(2));
-    private final OrderItem orderItemB = new OrderItem(2L, productB, new Quantity(4));
+    private final OrderItem orderItemA = new OrderItem(1L, productA, 2, 2000);
+    private final OrderItem orderItemB = new OrderItem(2L, productB,4, 8000);
 
     @Test
     void 주문이_정상적으로_생성된다() {

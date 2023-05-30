@@ -8,11 +8,11 @@ public class OrderItem {
     private Quantity quantity;
     private Price price;
 
-    public OrderItem(Long id, Product product, Quantity quantity, Price price) {
+    public OrderItem(Long id, Product product, int quantity, long price) {
         this.id = id;
         this.product = product;
-        this.quantity = quantity;
-        this.price = price;
+        this.quantity = new Quantity(quantity);
+        this.price = Price.from(price);
     }
 
     public Long getId() {
