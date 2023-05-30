@@ -1,0 +1,12 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:shopping_order;MODE=MySQL
+  sql:
+    init:
+      data-locations: classpath:truncate.sql
+      schema-locations: classpath:schema.sql
+      mode: always
