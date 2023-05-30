@@ -20,8 +20,14 @@ public class CartItemEntity {
         this(id, memberEntity, productEntity, quantity, null, null);
     }
 
-    public CartItemEntity(Long id, MemberEntity memberEntity, ProductEntity productEntity, Integer quantity,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CartItemEntity(
+            Long id,
+            MemberEntity memberEntity,
+            ProductEntity productEntity,
+            Integer quantity,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
+    ) {
         this.id = id;
         this.memberEntity = memberEntity;
         this.productEntity = productEntity;

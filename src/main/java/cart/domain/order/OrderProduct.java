@@ -29,6 +29,10 @@ public class OrderProduct {
         return product;
     }
 
+    public Long getProductId() {
+        return product != null ? product.getId() : null;
+    }
+
     public int getQuantity() {
         return quantity;
     }

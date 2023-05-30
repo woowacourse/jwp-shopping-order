@@ -24,8 +24,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error(String.format(ERROR_LOG_FORMAT, e.getClass(), e.getMessage()));
-        return ResponseEntity.internalServerError()
-                .body(new ErrorResponse("죄송합니다. 서버에서 오류가 발생했습니다. 잠시 후에 다시 시도해주세요."));
+        return ResponseEntity.internalServerError().body(new ErrorResponse("죄송합니다. 서버에서 오류가 발생했습니다. 잠시 후에 다시 시도해주세요."));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -34,8 +33,7 @@ public class ControllerExceptionHandler {
         String message = String.format(format, e.getRequiredType().getSimpleName(), e.getValue());
 
         log.warn(String.format(ERROR_LOG_FORMAT, e.getClass(), message));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(message));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(message));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -47,21 +45,18 @@ public class ControllerExceptionHandler {
         String message = String.format("요청 데이터이 유효하지 않습니다. 예외 메시지: %s", errorMessages);
 
         log.warn(String.format(ERROR_LOG_FORMAT, e.getClass(), message));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(message));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(message));
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handlerAuthenticationException(AuthenticationException e) {
         log.warn(String.format(ERROR_LOG_FORMAT, e.getClass(), e.getMessage()));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorResponse(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(ShoppingException.class)
     public ResponseEntity<ErrorResponse> handleShoppingException(ShoppingException e) {
         log.warn(String.format(ERROR_LOG_FORMAT, e.getClass(), e.getMessage()));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 }

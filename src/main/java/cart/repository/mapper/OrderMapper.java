@@ -10,16 +10,19 @@ import java.util.stream.Collectors;
 public class OrderMapper {
 
     public static Order toDomain(OrderEntity orderEntity, List<OrderProductEntity> orderProductEntities) {
-        List<OrderProduct> orderProducts = orderProductEntities.stream()
-                .map(OrderProductMapper::toDomain)
-                .collect(Collectors.toList());
         return new Order(
                 orderEntity.getId(),
                 MemberMapper.toDomain(orderEntity.getMemberEntity()),
-                orderProducts,
+                generateOrderProducts(orderProductEntities),
                 orderEntity.getUsedPoint(),
                 orderEntity.getCreatedAt()
         );
+    }
+
+    private static List<OrderProduct> generateOrderProducts(List<OrderProductEntity> orderProductEntities) {
+        return orderProductEntities.stream()
+                .map(OrderProductMapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     public static OrderEntity toEntity(Order order) {

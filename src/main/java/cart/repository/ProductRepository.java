@@ -26,8 +26,7 @@ public class ProductRepository {
     }
 
     public Product getProductById(Long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId)
-                .orElseThrow(NotFound::new);
+        ProductEntity productEntity = productDao.getProductById(productId).orElseThrow(NotFound::new);
         return ProductMapper.toDomain(productEntity);
     }
 

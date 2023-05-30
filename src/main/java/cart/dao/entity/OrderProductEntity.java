@@ -15,18 +15,40 @@ public class OrderProductEntity {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public OrderProductEntity(Long orderId, ProductEntity productEntity, String productName, Integer productPrice,
-            String productImageUrl, Integer quantity) {
+    public OrderProductEntity(
+            Long orderId,
+            ProductEntity productEntity,
+            String productName,
+            Integer productPrice,
+            String productImageUrl,
+            Integer quantity
+    ) {
         this(null, orderId, productEntity, productName, productPrice, productImageUrl, quantity, null, null);
     }
 
-    public OrderProductEntity(Long id, Long orderId, ProductEntity productEntity, String productName, Integer productPrice,
-            String productImageUrl, Integer quantity) {
+    public OrderProductEntity(
+            Long id,
+            Long orderId,
+            ProductEntity productEntity,
+            String productName,
+            Integer productPrice,
+            String productImageUrl,
+            Integer quantity
+    ) {
         this(id, orderId, productEntity, productName, productPrice, productImageUrl, quantity, null, null);
     }
 
-    public OrderProductEntity(Long id, Long orderId, ProductEntity productEntity, String productName, Integer productPrice,
-            String productImageUrl, Integer quantity, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public OrderProductEntity(
+            Long id,
+            Long orderId,
+            ProductEntity productEntity,
+            String productName,
+            Integer productPrice,
+            String productImageUrl,
+            Integer quantity,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
+    ) {
         this.id = id;
         this.orderId = orderId;
         this.productEntity = productEntity;
@@ -65,7 +87,7 @@ public class OrderProductEntity {
     }
 
     public Long getProductId() {
-        return productEntity.getId();
+        return productEntity != null ? productEntity.getId() : null;
     }
 
     public String getProductName() {

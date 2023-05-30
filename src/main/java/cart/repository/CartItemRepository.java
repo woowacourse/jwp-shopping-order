@@ -27,8 +27,7 @@ public class CartItemRepository {
     }
 
     public Optional<CartItem> findByMemberIdAndProductId(Long memberId, Long productId) {
-        return cartItemDao.findByMemberIdAndProductId(memberId, productId)
-                .map(CartItemMapper::toDomain);
+        return cartItemDao.findByMemberIdAndProductId(memberId, productId).map(CartItemMapper::toDomain);
     }
 
     public CartItem findById(Long id) {
