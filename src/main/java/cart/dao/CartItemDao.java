@@ -113,5 +113,11 @@ public class CartItemDao {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         return jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
     }
+
+    public int deleteByMemberId(final Long memberId) {
+        String sql = "DELETE FROM cart_item WHERE member_id = ?";
+
+        return jdbcTemplate.update(sql, memberId);
+    }
 }
 

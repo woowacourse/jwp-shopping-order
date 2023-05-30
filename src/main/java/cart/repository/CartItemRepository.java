@@ -61,6 +61,14 @@ public class CartItemRepository {
         }
     }
 
+    public void deleteByMemberId(Long memberId) {
+        int deletedRow = cartItemDao.deleteByMemberId(memberId);
+
+        if(deletedRow == 0) {
+            throw new CartItemException(NOT_FOUND_CART_ITEM);
+        }
+    }
+
     private CartItemEntity toEntity(CartItem cartItem) {
         Member member = cartItem.getMember();
         Product product = cartItem.getProduct();
