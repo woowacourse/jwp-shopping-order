@@ -1,6 +1,7 @@
 package cart.domain;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -23,7 +24,14 @@ class PercentTest {
         double result = new Percent(percent).getPercentage();
 
         assertThat(result).isEqualTo(percentage);
+    }
 
+    @Test
+    @DisplayName("0퍼센트 인 경우를 확인한다.")
+    void isZero() {
+        Percent percent = new Percent(0);
+
+        assertThat(percent.isZero()).isTrue();
     }
 
 }

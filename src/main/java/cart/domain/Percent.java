@@ -16,6 +16,10 @@ public class Percent {
         }
     }
 
+    public boolean isZero() {
+        return value == 0;
+    }
+
     public double getPercentage() {
         return value / 100.0;
     }

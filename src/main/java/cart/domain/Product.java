@@ -31,7 +31,7 @@ public class Product {
     }
 
     public boolean isOnSale() {
-        return discountPercent.getPercentage() != 0;
+        return !discountPercent.isZero();
     }
 
     public Price getDiscountPrice() {
