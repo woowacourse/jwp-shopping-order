@@ -1,6 +1,6 @@
-package cart.ui;
+package cart.controller;
 
-import cart.application.ProductService;
+import cart.service.ProductService;
 import cart.dao.MemberDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
