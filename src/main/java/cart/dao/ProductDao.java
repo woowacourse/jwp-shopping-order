@@ -24,7 +24,7 @@ public class ProductDao {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
-            String name = rs.getString("name");
+            String name = rs.getString("product_name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
@@ -34,7 +34,7 @@ public class ProductDao {
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
+            String name = rs.getString("product_name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
@@ -46,7 +46,7 @@ public class ProductDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                    "INSERT INTO product (product_name, price, image_url) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
@@ -61,7 +61,7 @@ public class ProductDao {
     }
 
     public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        String sql = "UPDATE product SET product_name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
