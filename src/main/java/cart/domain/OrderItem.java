@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class OrderItem {
 
     private final Product product;
@@ -22,5 +24,27 @@ public class OrderItem {
 
     public int getTotalPrice() {
         return totalPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return quantity == orderItem.quantity && totalPrice == orderItem.totalPrice && Objects.equals(product, orderItem.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, quantity, totalPrice);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "product=" + product +
+                ", quantity=" + quantity +
+                ", totalPrice=" + totalPrice +
+                '}';
     }
 }
