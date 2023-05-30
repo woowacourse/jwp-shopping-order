@@ -21,9 +21,9 @@
 - Join된 결과물은 Domain과 맵핑된다. 따라서 Repository에서 하는 것이 좋아 보인다.
 - 그렇다면 다른 쿼리문들은 DAO에서 하는 이유가 무엇인가..? 이도 Repository에서 하면 되는거 아닌가?
 - 모든 DAO를 Repository에서 수행한다면, rowMapper는 Domain을 반환하나 ???
-- Join문에 대해서만 예외적인 케이스(Repository에서 수행하고, 도메인을 반환함)로 생각해주면 어떨까?
+- DTO를 추가적으로 만드는 방법은 어떨까?
 
 ### 결론
 
 - DB에 쿼리 날리는 횟수는 최소화하는게 좋다. -> Join을 사용한다.
-- Join 쿼리만 Repository에 작성하도록 한다.(이 때, rowMapper는 도메인을 반환함.)
+- entity 여러개를 필드로 갖는 DTO를 만들어서 Dao->Repository 넘겨주고, Repository에서 이를 도메인으로 변환하자.
