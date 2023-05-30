@@ -6,6 +6,7 @@ import cart.domain.Member;
 import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
 import cart.dto.CouponResponse;
+import cart.dto.CouponTypeResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -47,9 +48,16 @@ public class CouponController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<CouponTypeResponse>> getAllCoupons() {
+        final List<CouponTypeResponse> couponResponses = couponProvider.findCouponAll();
+        return ResponseEntity.ok(couponResponses);
+    }
+
     @GetMapping("/member")
     public ResponseEntity<List<CouponResponse>> getMemberCoupons(final Member member) {
-        final List<CouponResponse> couponMemberResponses = couponProvider.findCouponByMember(member);
-        return ResponseEntity.ok().body(couponMemberResponses);
+        final List<CouponResponse> couponResponses = couponProvider.findCouponByMember(member);
+        return ResponseEntity.ok(couponResponses);
     }
+
 }

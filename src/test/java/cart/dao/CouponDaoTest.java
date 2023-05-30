@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.dao.entity.CouponEntity;
 import cart.dao.entity.CouponTypeCouponEntity;
+import cart.dao.entity.CouponTypeEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -62,6 +64,20 @@ class CouponDaoTest {
         assertAll(
                 () -> assertThat(results).hasSize(3),
                 () -> assertThat(results.get(1).getUsageStatus()).isFalse()
+        );
+    }
+
+    @Test
+    void 전체_쿠폰_조회를_한다() {
+        // when
+        final List<CouponTypeEntity> couponTypeEntities = couponDao.findAll();
+
+        // then
+        assertAll(
+                () -> assertThat(couponTypeEntities).hasSize(4),
+                () -> assertThat(couponTypeEntities.stream()
+                        .map(CouponTypeEntity::getDiscountAmount)
+                        .collect(toList())).containsExactly(1000, 3000, 5000, 10000)
         );
     }
 }

@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.dao.entity.CouponEntity;
 import cart.dao.entity.CouponTypeCouponEntity;
+import cart.dao.entity.CouponTypeEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -29,6 +30,13 @@ public class CouponDao {
                     rs.getInt("discountAmount"),
                     rs.getBoolean("usageStatus")
     );
+    private final RowMapper<CouponTypeEntity> couponTypeEntityRowMapper = (rs, num) ->
+            new CouponTypeEntity(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getInt("discount_amount")
+            );
 
     public CouponDao(final NamedParameterJdbcOperations jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -67,5 +75,11 @@ public class CouponDao {
                 .addValue("memberId", memberId);
 
         jdbcTemplate.update(sql, params);
+    }
+
+    public List<CouponTypeEntity> findAll() {
+        final String sql = "SELECT id, name, description, discount_amount FROM coupon_type";
+
+        return jdbcTemplate.query(sql, couponTypeEntityRowMapper);
     }
 }

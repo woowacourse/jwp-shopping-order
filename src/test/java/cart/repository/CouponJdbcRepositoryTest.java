@@ -60,4 +60,22 @@ class CouponJdbcRepositoryTest {
                 }
         );
     }
+
+    @Test
+    void 전체_쿠폰을_반환한다() {
+        // when
+        final Coupons coupons = couponJdbcRepository.findCouponAll();
+
+        // then
+        final List<Coupon> results = coupons.getCoupons();
+        assertAll(
+                () -> assertThat(results).hasSize(4),
+                () -> {
+                    final List<Integer> discountAmounts = results.stream()
+                            .map(Coupon::getDiscountAmount)
+                            .collect(Collectors.toList());
+                    assertThat(discountAmounts).containsExactly(1000, 3000, 5000, 10000);
+                }
+        );
+    }
 }

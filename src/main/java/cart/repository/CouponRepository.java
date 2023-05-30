@@ -12,4 +12,6 @@ public interface CouponRepository {
     void changeStatus(Long couponId, Long memberId);
 
     Coupons findCouponsByMemberId(Long memberId);
+
+    Coupons findCouponAll();
 }

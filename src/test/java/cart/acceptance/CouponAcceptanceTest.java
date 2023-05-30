@@ -101,6 +101,30 @@ public class CouponAcceptanceTest extends IntegrationTest {
                 .extract();
     }
 
+    /**
+     * when 모든 쿠폰 조회 요청이 들어오면
+     * then 모든 쿠폰을 반환한다
+     */
+    @Test
+    void 모든_쿠폰을_반환한다() {
+        // when
+        final ExtractableResponse<Response> 전체_쿠폰 = 전체_쿠폰을_조회한다();
+
+        // then
+        assertAll(
+                () -> assertThat(전체_쿠폰.statusCode()).isEqualTo(OK.value()),
+                () -> assertThat(전체_쿠폰.jsonPath().getList("discountAmount", Integer.class))
+                        .containsExactly(1000, 3000, 5000, 10000)
+        );
+    }
+
+    private ExtractableResponse<Response> 전체_쿠폰을_조회한다() {
+        return givenBasic()
+                .get("/coupons")
+                .then().log().all()
+                .extract();
+    }
+
     private RequestSpecification givenBasic() {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

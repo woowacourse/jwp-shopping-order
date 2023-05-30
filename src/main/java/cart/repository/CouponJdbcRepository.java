@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.CouponDao;
 import cart.dao.entity.CouponEntity;
 import cart.dao.entity.CouponTypeCouponEntity;
+import cart.dao.entity.CouponTypeEntity;
 import cart.domain.Coupon;
 import cart.domain.Coupons;
 import cart.domain.Member;
@@ -54,5 +55,14 @@ public class CouponJdbcRepository implements CouponRepository {
                 entity.getDiscountAmount(),
                 entity.getUsageStatus()
         );
+    }
+
+    @Override
+    public Coupons findCouponAll() {
+        final List<CouponTypeEntity> couponTypeEntities = couponDao.findAll();
+        final List<Coupon> coupons = couponTypeEntities.stream()
+                .map(it -> Coupon.createCouponType(it.getId(), it.getName(), it.getDescription(), it.getDiscountAmount()))
+                .collect(toList());
+        return new Coupons(coupons);
     }
 }

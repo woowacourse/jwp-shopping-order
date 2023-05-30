@@ -1,8 +1,10 @@
 package cart.application;
 
+import cart.domain.Coupon;
 import cart.domain.Coupons;
 import cart.domain.Member;
 import cart.dto.CouponResponse;
+import cart.dto.CouponTypeResponse;
 import cart.repository.CouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +26,28 @@ public class CouponProvider {
     public List<CouponResponse> findCouponByMember(final Member member) {
         final Coupons coupons = couponRepository.findCouponsByMemberId(member.getId());
         return coupons.getCoupons().stream()
-                .map(it -> new CouponResponse(
-                        it.getId(),
-                        it.getName(),
-                        it.getDiscountAmount(),
-                        it.getDescription(),
-                        it.isUsageStatus()))
+                .map(CouponProvider::toCouponResponse)
                 .collect(toList());
     }
+
+    private static CouponResponse toCouponResponse(final Coupon coupon) {
+        return new CouponResponse(
+                coupon.getId(),
+                coupon.getName(),
+                coupon.getDiscountAmount(),
+                coupon.getDescription(),
+                coupon.isUsageStatus());
+    }
+
+    public List<CouponTypeResponse> findCouponAll() {
+        final Coupons coupons = couponRepository.findCouponAll();
+        return coupons.getCoupons().stream()
+                .map(CouponProvider::toCouponTypeResponse)
+                .collect(toList());
+    }
+
+    private static CouponTypeResponse toCouponTypeResponse(final Coupon coupon) {
+        return new CouponTypeResponse(coupon.getId(), coupon.getName(), coupon.getDiscountAmount(), coupon.getDescription());
+    }
+
 }

@@ -21,6 +21,15 @@ public class Coupon {
         this.usageStatus = usageStatus;
     }
 
+    public static Coupon createCouponType(
+            final Long id,
+            final String name,
+            final String description,
+            final int discountAmount
+    ) {
+        return new Coupon(id, name, description, discountAmount, true);
+    }
+
     public boolean isNotUsed() {
         return !usageStatus;
     }
