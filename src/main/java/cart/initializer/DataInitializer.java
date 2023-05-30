@@ -1,9 +1,9 @@
 package cart.initializer;
 
-import cart.dao.CartItemDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Component;
@@ -14,14 +14,14 @@ import javax.annotation.PostConstruct;
 public class DataInitializer {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
-    private final CartItemDao cartItemDao;
+    private final CartItemRepository cartItemRepository;
 
     public DataInitializer(final ProductRepository productRepository,
                            final MemberRepository memberRepository,
-                           final CartItemDao cartItemDao) {
+                           final CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
-        this.cartItemDao = cartItemDao;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @PostConstruct
@@ -34,13 +34,13 @@ public class DataInitializer {
         final Member savedMember2 = memberRepository.save(new Member("b@b.com", "1234"));
         final Member savedMember3 = memberRepository.save(new Member("ringlo@email.com", "ringlo1010235"));
 
-        cartItemDao.save(new CartItem(savedMember1, productRepository.getProductById(깃짱)));
-        cartItemDao.save(new CartItem(savedMember1, productRepository.getProductById(제리)));
-        cartItemDao.save(new CartItem(savedMember1, productRepository.getProductById(호이)));
+        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(깃짱)));
+        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(제리)));
+        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(호이)));
 
-        cartItemDao.save(new CartItem(savedMember2, productRepository.getProductById(깃짱)));
-        cartItemDao.save(new CartItem(savedMember2, productRepository.getProductById(제리)));
+        cartItemRepository.save(new CartItem(savedMember2, productRepository.getProductById(깃짱)));
+        cartItemRepository.save(new CartItem(savedMember2, productRepository.getProductById(제리)));
 
-        cartItemDao.save(new CartItem(savedMember3, productRepository.getProductById(깃짱)));
+        cartItemRepository.save(new CartItem(savedMember3, productRepository.getProductById(깃짱)));
     }
 }
