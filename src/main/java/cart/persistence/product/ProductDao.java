@@ -2,6 +2,7 @@ package cart.persistence.product;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -21,6 +22,13 @@ public class ProductDao {
 
     private final SimpleJdbcInsert simpleJdbcInsert;
 
+    private final RowMapper<ProductEntity> productRowMapper = (rs, rowNum) ->
+            new ProductEntity(rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getString("image_url")
+            );
+
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -33,7 +41,12 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductEntity> findAll() {
+        String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, productRowMapper);
+    }
+
+    public List<Product> getAllProducts2() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
