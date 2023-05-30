@@ -20,7 +20,7 @@ public class CouponResponse {
     }
 
     public static CouponResponse from(Coupon coupon) {
-        return new CouponResponse(coupon.getId(), coupon.getType().name(), coupon.getName(),
+        return new CouponResponse(coupon.getId(), coupon.getName(), coupon.getType().name(),
                 coupon.getDiscountAmount());
     }
 
