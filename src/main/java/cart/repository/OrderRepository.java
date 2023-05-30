@@ -7,6 +7,7 @@ import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderWithOrderProductEntities;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderProduct;
 import cart.domain.Product;
 import cart.exception.OrderException;
 import java.util.List;
@@ -17,15 +18,22 @@ import org.springframework.stereotype.Repository;
 public class OrderRepository {
 
     private final OrderDao orderDao;
+    private final OrderProductRepository orderProductRepository;
 
-    public OrderRepository(final OrderDao orderDao) {
+    public OrderRepository(final OrderDao orderDao, final OrderProductRepository orderProductRepository) {
         this.orderDao = orderDao;
+        this.orderProductRepository = orderProductRepository;
     }
 
     public Long save(Order order) {
         OrderEntity orderEntity = toEntity(order);
 
-        return orderDao.save(orderEntity);
+        Long orderId = orderDao.save(orderEntity);
+        List<OrderProduct> orderProducts = order.getOrderProducts();
+
+        orderProductRepository.saveAll(orderProducts, orderId);
+
+        return orderId;
     }
 
     private OrderEntity toEntity(Order order) {
@@ -52,12 +60,20 @@ public class OrderRepository {
 
     private Order toDomain(OrderWithOrderProductEntities orderWithOrderProductEntities, Member member) {
         OrderEntity orderEntity = orderWithOrderProductEntities.getOrderEntity();
-        List<Product> products = orderWithOrderProductEntities.getOrderProductEntities().stream()
-                .map(productEntity -> new Product(
-                        productEntity.getId(),
-                        productEntity.getProductName(),
-                        productEntity.getProductPrice(),
-                        productEntity.getProductImageUrl())
+        List<OrderProduct> products = orderWithOrderProductEntities.getOrderProductEntities().stream()
+                .map(orderProductEntity -> {
+                            Product product = new Product(
+                                    orderProductEntity.getProductId(),
+                                    orderProductEntity.getProductName(),
+                                    orderProductEntity.getProductPrice(),
+                                    orderProductEntity.getProductImageUrl()
+                            );
+                            return new OrderProduct(
+                                    orderEntity.getId(),
+                                    product,
+                                    orderProductEntity.getQuantity()
+                            );
+                        }
                 ).collect(Collectors.toList());
 
         return new Order(orderEntity.getId(), products, member, orderEntity.getUsedPoint());

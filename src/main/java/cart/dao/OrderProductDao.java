@@ -2,9 +2,11 @@ package cart.dao;
 
 import cart.dao.entity.OrderProductEntity;
 import cart.dao.entity.ProductEntity;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +31,6 @@ public class OrderProductDao {
         );
     };
 
-
     public OrderProductDao(final JdbcTemplate jdbcTemplate) {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("id")
@@ -45,5 +46,13 @@ public class OrderProductDao {
 
     public Long save(OrderProductEntity orderProductEntity) {
         return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(orderProductEntity)).longValue();
+    }
+
+    public void saveAll(List<OrderProductEntity> productEntities) {
+        SqlParameterSource[] sqlParameterSources = productEntities.stream()
+                .map(BeanPropertySqlParameterSource::new)
+                .toArray(SqlParameterSource[]::new);
+
+        simpleJdbcInsert.executeBatch(sqlParameterSources);
     }
 }

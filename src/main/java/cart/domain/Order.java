@@ -6,28 +6,29 @@ import java.util.Objects;
 
 public class Order {
     private final Long id;
-    private final List<Product> products;
+    private final List<OrderProduct> orderProducts;
     private final Member member;
     private final Point usedPoint;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public Order(final Long id, final List<Product> products, final Member member, final Point usedPoint,
+    public Order(final Long id, final List<OrderProduct> orderProducts, final Member member, final Point usedPoint,
                  final LocalDateTime createdAt, final LocalDateTime updatedAt) {
         this.id = id;
-        this.products = products;
+        this.orderProducts = orderProducts;
         this.member = member;
         this.usedPoint = usedPoint;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Order(final Long id, final List<Product> products, final Member member, final int usedPoint) {
-        this(id, products, member, new Point(usedPoint), null, null);
+    public Order(final Long id, final List<OrderProduct> orderProducts, final Member member, final int usedPoint) {
+        this(id, orderProducts, member, new Point(usedPoint), null, null);
     }
 
     public int getTotalPrice() {
-        return products.stream()
+        return orderProducts.stream()
+                .map(OrderProduct::getProduct)
                 .mapToInt(Product::getPrice)
                 .sum();
     }
@@ -36,8 +37,8 @@ public class Order {
         return id;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
     }
 
     public Member getMember() {

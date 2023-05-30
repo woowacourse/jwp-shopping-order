@@ -1,6 +1,7 @@
 package cart.dao.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class MemberEntity {
     private final Long id;
@@ -43,5 +44,22 @@ public class MemberEntity {
 
     public int getPoint() {
         return point;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MemberEntity that = (MemberEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
