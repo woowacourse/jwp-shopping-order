@@ -2,12 +2,20 @@ package cart.dto;
 
 import cart.domain.Product;
 
+import javax.validation.constraints.NotNull;
+
 public class ProductRequest {
+
+    @NotNull(message = "상품의 이름을 입력하세요")
     private String name;
-    private int price;
+
+    @NotNull(message = "상품의 가격을 입력하세요")
+    private Integer price;
+
+    @NotNull(message = "상품의 이미지 URL을 입력하세요")
     private String imageUrl;
 
-    public ProductRequest(final String name, final int price, final String imageUrl) {
+    public ProductRequest(final String name, final Integer price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -21,7 +29,7 @@ public class ProductRequest {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

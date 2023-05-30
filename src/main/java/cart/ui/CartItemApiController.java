@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class CartItemApiController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(final Member member,
-                                             @RequestBody final CartItemRequest cartItemRequest) {
+                                             @Valid @RequestBody final CartItemRequest cartItemRequest) {
         final Product product = productService.getProductById(cartItemRequest.getProductId());
         final CartItem cartItem = new CartItem(member, product);
         final Long cartItemId = cartItemService.add(cartItem);
@@ -58,7 +59,7 @@ public class CartItemApiController {
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(final Member member,
                                                        @PathVariable final Long id,
-                                                       @RequestBody final CartItemQuantityUpdateRequest request) {
+                                                       @Valid @RequestBody final CartItemQuantityUpdateRequest request) {
         final int quantity = request.getQuantity();
 
         cartItemService.updateQuantity(member, id, quantity);

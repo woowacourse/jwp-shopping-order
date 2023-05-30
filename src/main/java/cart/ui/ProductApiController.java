@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class ProductApiController {
     }
 
     @GetMapping("/cart-items")
-    public ResponseEntity<HomePagingResponse> getHomePagingProduct(@RequestBody final HomePagingRequest homePagingRequest) {
+    public ResponseEntity<HomePagingResponse> getHomePagingProduct(@Valid @RequestBody final HomePagingRequest homePagingRequest) {
         final Long lastIdInPrevPage = homePagingRequest.getLastId();
         final int pageItemCount = homePagingRequest.getPageItemCount();
 
@@ -78,7 +79,7 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> createProduct(@Valid @RequestBody final ProductRequest productRequest) {
         final Product product = productRequest.toDomain();
         final Long id = productService.createProduct(product);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
@@ -86,7 +87,7 @@ public class ProductApiController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable final Long id,
-                                              @RequestBody final ProductRequest productRequest) {
+                                              @Valid @RequestBody final ProductRequest productRequest) {
         final Product product = productRequest.toDomain();
         productService.updateProduct(id, product);
         return ResponseEntity.status(HttpStatus.OK).build();

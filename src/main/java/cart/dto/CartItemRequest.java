@@ -1,6 +1,10 @@
 package cart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class CartItemRequest {
+
+    @NotNull(message = "상품의 ID를 입력하세요")
     private Long productId;
 
     public CartItemRequest() {
