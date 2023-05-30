@@ -44,7 +44,7 @@ CREATE TABLE point
 (
     id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT    NOT NULL,
-    amount     INT       NOT NULL,
+    amount     INT       NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL
         DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL

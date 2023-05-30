@@ -4,34 +4,40 @@ import cart.domain.Product;
 
 public class ProductResponse {
     private Long productId;
-    private String name;
     private int price;
+    private String name;
     private String imageUrl;
+    private int stock;
 
-    private ProductResponse(Long productId, String name, int price, String imageUrl) {
+    public ProductResponse(Long productId, int price, String name, String imageUrl, int stock) {
         this.productId = productId;
-        this.name = name;
         this.price = price;
+        this.name = name;
         this.imageUrl = imageUrl;
+        this.stock = stock;
     }
 
     public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new ProductResponse(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), product.getStock());
     }
 
     public Long getProductId() {
         return productId;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public int getPrice() {
         return price;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public int getStock() {
+        return stock;
     }
 }
