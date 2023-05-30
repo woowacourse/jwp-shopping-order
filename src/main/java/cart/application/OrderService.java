@@ -5,8 +5,10 @@ import cart.dao.OrderDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Money;
+import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.exception.CartItemException.IllegalId;
 import java.util.List;
 import java.util.Objects;
@@ -25,8 +27,8 @@ public class OrderService {
     }
 
     public Long add(final Member member, final OrderRequest orderRequest) {
-        final Long orderId = orderDao.createOrder(member.getId(), DELIVERY_FEE_BASIC);
-        orderDao.addOrderItems(createOrderItems(orderId, member, orderRequest));
+        final Long orderId = orderDao.save(member.getId(), DELIVERY_FEE_BASIC);
+        orderDao.saveOrderItems(createOrderItems(orderId, member, orderRequest));
         return orderId;
     }
 
@@ -49,5 +51,10 @@ public class OrderService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalId(cartItemId));
         cartItem.checkOwner(member);
+    }
+
+    public List<OrderResponse> findOrdersByMember(final Member member) {
+        List<Order> orders = orderDao.findByMemberId(member.getId());
+        return OrderResponse.from(orders);
     }
 }

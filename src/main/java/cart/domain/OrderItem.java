@@ -1,6 +1,7 @@
 package cart.domain;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrderItem {
@@ -74,5 +75,37 @@ public class OrderItem {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final OrderItem orderItem = (OrderItem) o;
+        return Objects.equals(id, orderItem.id) && Objects.equals(orderId, orderItem.orderId)
+                && Objects.equals(name, orderItem.name) && Objects.equals(price, orderItem.price)
+                && Objects.equals(imageUrl, orderItem.imageUrl) && Objects.equals(quantity,
+                orderItem.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderId, name, price, imageUrl, quantity);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }

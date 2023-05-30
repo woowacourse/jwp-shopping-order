@@ -122,4 +122,3 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }
-
