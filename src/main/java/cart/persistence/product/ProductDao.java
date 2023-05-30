@@ -51,6 +51,23 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, productRowMapper, productId);
     }
 
+    public void updateProduct(final ProductEntity productEntity) {
+        final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+
+        jdbcTemplate.update(
+                sql,
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl(),
+                productEntity.getId()
+        );
+    }
+
+
+    public void updateProduct2(Long productId, Product product) {
+        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+    }
 
     public Product getProductById2(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
@@ -90,11 +107,6 @@ public class ProductDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
     public void deleteProduct(Long productId) {

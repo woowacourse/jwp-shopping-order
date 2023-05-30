@@ -69,4 +69,20 @@ class ProductDaoTest {
         // then
         assertThat(findTail).usingRecursiveComparison().isEqualTo(savedTail);
     }
+
+    @Test
+    @DisplayName("상품 정보를 변경한다.")
+    void updateProductTest() {
+        //given
+        final Long savedPadId = productDao.createProduct(배변패드);
+
+        final ProductEntity changeProduct = new ProductEntity(savedPadId, 비버꼬리요리.getName(), 비버꼬리요리.getPrice(), 비버꼬리요리.getImageUrl());
+
+        //when
+        productDao.updateProduct(changeProduct);
+
+        //then
+        final ProductEntity productEntity = productDao.findById(savedPadId);
+        assertThat(productEntity).usingRecursiveComparison().isEqualTo(changeProduct);
+    }
 }
