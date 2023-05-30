@@ -56,7 +56,7 @@ public class ProductApiControllerTest extends ControllerTestWithDocs {
     @Test
     void 상품_생성() throws Exception {
         //given
-        ProductRequest request = new ProductRequest(치킨.getName(), 치킨.getPrice(), 치킨.getImageUrl());
+        ProductRequest request = new ProductRequest(치킨.getName(), 치킨.getPrice().getValue(), 치킨.getImageUrl());
         when(productService.createProduct(any(ProductRequest.class))).thenReturn(치킨.getId());
 
         //when

@@ -20,7 +20,7 @@ public class ProductResponse {
     }
 
     public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice().getValue(), product.getImageUrl());
     }
 
     public Long getId() {
