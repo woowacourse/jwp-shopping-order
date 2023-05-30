@@ -7,6 +7,7 @@ import cart.dao.MemberDao;
 import cart.domain.member.Member;
 import cart.repository.mapper.MemberMapper;
 import cart.test.ServiceTest;
+import cart.ui.controller.dto.response.MemberPointResponse;
 import cart.ui.controller.dto.response.MemberResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -55,5 +56,17 @@ class MemberServiceTest {
                 () -> assertThat(response.getPassword()).isEqualTo(member.getPassword()),
                 () -> assertThat(response.getPoint()).isEqualTo(member.getPoint())
         );
+    }
+
+    @Test
+    @DisplayName("getMemberPoint 메서드는 멤버의 포인트를 응답한다.")
+    void getMemberPoint() {
+        Member member = new Member("a@a.com", "password1", 1000);
+        Long memberId = memberDao.addMember(MemberMapper.toEntity(member));
+        member.assignId(memberId);
+
+        MemberPointResponse response = memberService.getMemberPoint(member);
+
+        assertThat(response.getPoint()).isEqualTo(1000);
     }
 }
