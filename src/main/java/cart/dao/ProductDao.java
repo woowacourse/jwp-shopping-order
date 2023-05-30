@@ -1,15 +1,15 @@
 package cart.dao;
 
+import cart.domain.Money;
 import cart.domain.Product;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
@@ -27,7 +27,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return new Product(productId, name, new Money(price), imageUrl);
         });
     }
 
@@ -37,7 +37,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return new Product(productId, name, new Money(price), imageUrl);
         });
     }
 
@@ -51,7 +51,7 @@ public class ProductDao {
             );
 
             ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
+            ps.setLong(2, product.getPrice().getValue());
             ps.setString(3, product.getImageUrl());
 
             return ps;
