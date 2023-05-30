@@ -1,4 +1,4 @@
-package cart.step2.coupontype.domain;
+package cart.step2.coupon.domain;
 
 public class Coupon {
 
@@ -29,4 +29,5 @@ public class Coupon {
     public Long getCouponTypeId() {
         return couponTypeId;
     }
+
 }

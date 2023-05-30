@@ -1,6 +1,6 @@
-package cart.step2.coupontype.presentation.dto;
+package cart.step2.coupon.presentation.dto;
 
-import cart.step2.coupontype.domain.Coupon;
+import cart.step2.coupon.domain.Coupon;
 import cart.step2.coupontype.domain.CouponType;
 
 public class CouponResponse {

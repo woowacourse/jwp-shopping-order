@@ -1,8 +1,9 @@
-package cart.step2.coupontype.presentation;
+package cart.step2.coupon.presentation;
 
-import cart.step2.coupontype.service.CouponService;
+import cart.step2.coupon.presentation.dto.CouponResponse;
+import cart.step2.coupon.service.CouponService;
+import cart.step2.coupontype.service.CouponTypeService;
 import cart.domain.Member;
-import cart.step2.coupontype.presentation.dto.CouponResponse;
 import cart.step2.coupontype.presentation.dto.CouponTypeResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +22,11 @@ import java.util.List;
 public class CouponController {
 
     private final CouponService couponService;
+    private final CouponTypeService couponTypeService;
 
-    public CouponController(final CouponService couponService) {
+    public CouponController(final CouponService couponService, final CouponTypeService couponTypeService) {
         this.couponService = couponService;
+        this.couponTypeService = couponTypeService;
     }
 
     @PostMapping("/{couponTypeId}")
@@ -40,7 +43,7 @@ public class CouponController {
 
     @GetMapping
     public ResponseEntity<List<CouponTypeResponse>> showAllCouponsTypes() {
-        List<CouponTypeResponse> couponsType = couponService.getCouponsType();
+        List<CouponTypeResponse> couponsType = couponTypeService.getCouponsType();
         return ResponseEntity.ok().body(couponsType);
     }
 
