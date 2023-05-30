@@ -52,4 +52,21 @@ class ProductDaoTest {
         // then
         assertThat(productEntities).usingRecursiveComparison().isEqualTo(List.of(savedPad, savedTail, savedDino));
     }
+
+    @Test
+    @DisplayName("상품 id로 특정 상품 정보를 조회한다.")
+    void findProductByIdTest() {
+        // given
+        final Long savedPadId = productDao.createProduct(배변패드);
+        final Long savedTailId = productDao.createProduct(비버꼬리요리);
+
+        final ProductEntity savedPad = new ProductEntity(savedPadId, 배변패드.getName(), 배변패드.getPrice(), 배변패드.getImageUrl());
+        final ProductEntity savedTail = new ProductEntity(savedTailId, 비버꼬리요리.getName(), 비버꼬리요리.getPrice(), 비버꼬리요리.getImageUrl());
+
+        // when
+        final ProductEntity findTail = productDao.findById(savedTailId);
+
+        // then
+        assertThat(findTail).usingRecursiveComparison().isEqualTo(savedTail);
+    }
 }

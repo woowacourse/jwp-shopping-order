@@ -36,20 +36,25 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long createProduct(ProductEntity productEntity) {
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(productEntity);
+    public Long createProduct(final ProductEntity productEntity) {
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(productEntity);
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     public List<ProductEntity> findAll() {
-        String sql = "SELECT * FROM product";
+        final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
-    public List<Product> getAllProducts2() {
-        String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
+    public ProductEntity findById(final Long productId) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, productRowMapper, productId);
+    }
+
+
+    public Product getProductById2(Long productId) {
+        String sql = "SELECT * FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
@@ -57,9 +62,10 @@ public class ProductDao {
         });
     }
 
-    public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+    public List<Product> getAllProducts2() {
+        String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long productId = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
