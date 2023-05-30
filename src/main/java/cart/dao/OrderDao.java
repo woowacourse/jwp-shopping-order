@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Order;
+import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -33,5 +34,18 @@ public class OrderDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public Order findById(Long orderId) {
+        String sql = "SELECT * FROM orders WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{orderId}, (rs, rowNum) -> {
+            Long memberId = rs.getLong("member_id");
+            int totalPurchaseAmount = rs.getInt("total_purchase_amount");
+            int totalItemPrice = rs.getInt(("total_item_price");
+            int shippingFee = rs.getInt(("shipping_fee");
+            int discountedTotalPrice = rs.getInt("discounted_total_price");
+
+            return new Order(orderId, memberId, totalPurchaseAmount, totalItemPrice,null, shippingFee, discountedTotalPrice);
+        });
     }
 }

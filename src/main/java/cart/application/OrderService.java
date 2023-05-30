@@ -98,6 +98,7 @@ public class OrderService {
     }
 
     public OrderResponse getOrderById(Long orderId) {
-        return orderDao.findById(orderId);
+        Order order = orderDao.findById(orderId);
+        return new OrderResponse(order);
     }
 }
