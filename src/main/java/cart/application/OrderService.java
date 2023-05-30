@@ -24,14 +24,7 @@ public class OrderService {
     @Autowired
     private CartItemDao cartItemDao;
     @Autowired
-    private MemberDao memberDao;
-    @Autowired
     private OrderedItemDao orderedItemDao;
-
-    public OrderService(OrderDao orderDao, CartItemDao cartItemDao) {
-        this.orderDao = orderDao;
-        this.cartItemDao = cartItemDao;
-    }
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
         //totalItemPrice구하기 -> List<Int>으로 변경 -> 다 더한 값 return

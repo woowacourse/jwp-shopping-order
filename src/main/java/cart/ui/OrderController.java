@@ -22,9 +22,6 @@ public class OrderController {
     @Autowired
     private CartItemDao cartItemDao;
 
-    //장바구니에 담긴 상품을 주문
-    //TODO: 주문된 상품들 장바구니에서 제거
-
     @PostMapping
     public ResponseEntity<Void> createOrder(Member member, @RequestBody OrderCreateRequest orderCreateRequest){
         Long id = orderService.createOrder(member, orderCreateRequest);
