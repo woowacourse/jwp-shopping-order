@@ -7,10 +7,14 @@ public class Member {
     private String email;
     private String password;
 
-    public Member(final Long id, final String email, final String password) {
+    private Member(final Long id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public static Member of(final Long id, final String email, final String password) {
+        return new Member(id, email, password);
     }
 
     public boolean checkPassword(final String password) {

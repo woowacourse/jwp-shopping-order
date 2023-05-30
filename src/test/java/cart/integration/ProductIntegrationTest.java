@@ -59,7 +59,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     void 상품_목록을_원하는_구간만큼_조회하다() {
-        final HomePagingRequest request = new HomePagingRequest(4L, 2);
+        final HomePagingRequest request = HomePagingRequest.of(4L, 2);
         final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -89,7 +89,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     void 상품을_추가하다() {
-        final ProductRequest request = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        final ProductRequest request = ProductRequest.of("치킨", 10_000, "http://example.com/chicken.jpg");
 
         final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -104,7 +104,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     void 상품을_수정하다() {
-        final ProductRequest product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        final ProductRequest product = ProductRequest.of("피자", 15_000, "http://example.com/pizza.jpg");
 
         final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

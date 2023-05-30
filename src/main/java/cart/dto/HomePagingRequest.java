@@ -10,9 +10,13 @@ public class HomePagingRequest {
     @NotNull(message = "보고 싶은 상품의 개수를 입력하세요")
     private final Integer pageItemCount;
 
-    public HomePagingRequest(final Long lastId, final Integer pageItemCount) {
+    private HomePagingRequest(final Long lastId, final Integer pageItemCount) {
         this.lastId = lastId;
         this.pageItemCount = pageItemCount;
+    }
+
+    public static HomePagingRequest of(final Long lastId, final Integer pageItemCount) {
+        return new HomePagingRequest(lastId, pageItemCount);
     }
 
     public Long getLastId() {

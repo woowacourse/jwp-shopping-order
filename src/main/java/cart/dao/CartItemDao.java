@@ -36,9 +36,9 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            Member member = Member.of(memberId, email, null);
+            Product product = Product.of(productId, name, price, imageUrl);
+            return CartItem.of(cartItemId, quantity, product, member);
         });
     }
 
@@ -56,9 +56,9 @@ public class CartItemDao {
                 String imageUrl = rs.getString("image_url");
                 Long cartItemId = rs.getLong("cart_item.id");
                 int quantity = rs.getInt("cart_item.quantity");
-                Member member = new Member(memberId, email, null);
-                Product product = new Product(productId, name, price, imageUrl);
-                return new CartItem(cartItemId, quantity, product, member);
+                Member member = Member.of(memberId, email, null);
+                Product product = Product.of(productId, name, price, imageUrl);
+                return CartItem.of(cartItemId, quantity, product, member);
             });
         } catch (final EmptyResultDataAccessException e) {
             return null;
@@ -100,9 +100,9 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            Member member = Member.of(memberId, email, null);
+            Product product = Product.of(productId, name, price, imageUrl);
+            return CartItem.of(cartItemId, quantity, product, member);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }

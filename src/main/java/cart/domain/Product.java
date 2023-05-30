@@ -8,17 +8,19 @@ public class Product {
     private int price;
     private String imageUrl;
 
-    public Product(final String name, final int price, final String imageUrl) {
+    private Product(final Long id, final String name, final int price, final String imageUrl) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public static Product of(final String name, final int price, final String imageUrl) {
+        return new Product(null, name, price, imageUrl);
+    }
+
+    public static Product of(final Long id, final String name, final int price, final String imageUrl) {
+        return new Product(id, name, price, imageUrl);
     }
 
     @Override

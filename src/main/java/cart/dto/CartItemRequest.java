@@ -7,11 +7,15 @@ public class CartItemRequest {
     @NotNull(message = "상품의 ID를 입력하세요")
     private Long productId;
 
-    public CartItemRequest() {
+    private CartItemRequest() {
     }
 
-    public CartItemRequest(final Long productId) {
+    private CartItemRequest(final Long productId) {
         this.productId = productId;
+    }
+
+    public static CartItemRequest from(final Long productId) {
+        return new CartItemRequest(productId);
     }
 
     public Long getProductId() {

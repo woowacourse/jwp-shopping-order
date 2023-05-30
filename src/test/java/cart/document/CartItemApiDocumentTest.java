@@ -120,7 +120,7 @@ public class CartItemApiDocumentTest {
     void 특정_유저의_장바구니_상품_추가_문서화() throws Exception {
         // given
         given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        final CartItemRequest request = new CartItemRequest(ProductFixtures.CHICKEN.ID);
+        final CartItemRequest request = CartItemRequest.from(ProductFixtures.CHICKEN.ID);
         given(cartItemService.add(any(CartItem.class)))
                 .willReturn(MemberA_CartItem1.ID);
         final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
@@ -145,7 +145,7 @@ public class CartItemApiDocumentTest {
     void 특정_유저의_장바구니_상품_수정_문서화() throws Exception {
         // given
         given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(10);
+        final CartItemQuantityUpdateRequest request = CartItemQuantityUpdateRequest.from(10);
         willDoNothing().given(cartItemService).updateQuantity(MemberA.ENTITY, MemberA_CartItem1.ID, request.getQuantity());
         final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
 

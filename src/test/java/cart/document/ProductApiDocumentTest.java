@@ -122,7 +122,7 @@ public class ProductApiDocumentTest {
                 .willReturn(List.of(SALAD.ENTITY, CHICKEN.ENTITY));
         given(productService.hasLastProduct(3L, 2))
                 .willReturn(true);
-        final HomePagingRequest request = new HomePagingRequest(3L, 2);
+        final HomePagingRequest request = HomePagingRequest.of(3L, 2);
 
         // when, then
         mockMvc.perform(get("/products/cart-items")

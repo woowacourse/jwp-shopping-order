@@ -21,7 +21,7 @@ public class ProductCartItemResponse {
             return new ProductCartItemResponse(product, null);
         }
 
-        final CartItemInProductCartItemDto cartItemDto = new CartItemInProductCartItemDto(cartItem.getId(), cartItem.getQuantity());
+        final CartItemInProductCartItemDto cartItemDto = CartItemInProductCartItemDto.of(cartItem.getId(), cartItem.getQuantity());
         return new ProductCartItemResponse(product, cartItemDto);
     }
 

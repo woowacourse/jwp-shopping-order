@@ -19,7 +19,7 @@ public class CartItemFixtures {
         public static final Product PRODUCT = CHICKEN.ENTITY;
         public static final Member MEMBER = MemberA.ENTITY;
 
-        public static final CartItem ENTITY = new CartItem(ID, QUANTITY, PRODUCT, MEMBER);
+        public static final CartItem ENTITY = CartItem.of(ID, QUANTITY, PRODUCT, MEMBER);
         public static final CartItemResponse RESPONSE = CartItemResponse.of(ENTITY);
     }
 
@@ -29,7 +29,7 @@ public class CartItemFixtures {
         public static final Product PRODUCT = SALAD.ENTITY;
         public static final Member MEMBER = MemberA.ENTITY;
 
-        public static final CartItem ENTITY = new CartItem(ID, QUANTITY, PRODUCT, MEMBER);
+        public static final CartItem ENTITY = CartItem.of(ID, QUANTITY, PRODUCT, MEMBER);
         public static final CartItemResponse RESPONSE = CartItemResponse.of(ENTITY);
     }
 
@@ -39,7 +39,7 @@ public class CartItemFixtures {
         public static final Product PRODUCT = PIZZA.ENTITY;
         public static final Member MEMBER = MemberB.ENTITY;
 
-        public static final CartItem ENTITY = new CartItem(ID, QUANTITY, PRODUCT, MEMBER);
+        public static final CartItem ENTITY = CartItem.of(ID, QUANTITY, PRODUCT, MEMBER);
         public static final CartItemResponse RESPONSE = CartItemResponse.of(ENTITY);
     }
 }

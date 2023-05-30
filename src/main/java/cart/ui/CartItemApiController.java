@@ -50,7 +50,7 @@ public class CartItemApiController {
     public ResponseEntity<Void> addCartItems(final Member member,
                                              @Valid @RequestBody final CartItemRequest cartItemRequest) {
         final Product product = productService.getProductById(cartItemRequest.getProductId());
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = CartItem.of(member, product);
         final Long cartItemId = cartItemService.add(cartItem);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();

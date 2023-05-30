@@ -31,7 +31,7 @@ public class ControllerExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
 
-        final ErrorResponse errorResponse = new ErrorResponse(errorMessage);
+        final ErrorResponse errorResponse = ErrorResponse.from(errorMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }

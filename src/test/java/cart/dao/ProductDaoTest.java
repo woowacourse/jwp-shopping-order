@@ -61,7 +61,7 @@ class ProductDaoTest extends DaoTest {
 
     @Test
     void 상품을_등록하다() {
-        final Product product = new Product("test", 50000, "www.test.com");
+        final Product product = Product.of("test", 50000, "www.test.com");
         final Long id = productDao.createProduct(product);
 
         assertThat(id).isEqualTo(5L);
@@ -69,7 +69,7 @@ class ProductDaoTest extends DaoTest {
 
     @Test
     void 상품을_수정하다() {
-        final Product product = new Product("test", 50000, "www.test.com");
+        final Product product = Product.of("test", 50000, "www.test.com");
 
         assertDoesNotThrow(() -> productDao.updateProduct(1L, product));
     }

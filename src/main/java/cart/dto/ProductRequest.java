@@ -15,14 +15,18 @@ public class ProductRequest {
     @NotNull(message = "상품의 이미지 URL을 입력하세요")
     private String imageUrl;
 
-    public ProductRequest(final String name, final Integer price, final String imageUrl) {
+    private ProductRequest(final String name, final Integer price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
+    public static ProductRequest of(final String name, final Integer price, final String imageUrl) {
+        return new ProductRequest(name, price, imageUrl);
+    }
+
     public Product toDomain() {
-        return new Product(name, price, imageUrl);
+        return Product.of(name, price, imageUrl);
     }
 
     public String getName() {

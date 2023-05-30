@@ -141,7 +141,7 @@ class ProductServiceTest {
     @Test
     void 상품을_생성하다() {
         // given
-        final Product product = new Product("test", 10000, "www.test.com");
+        final Product product = Product.of("test", 10000, "www.test.com");
         when(productDao.createProduct(product)).thenReturn(5L);
 
         // when
@@ -154,7 +154,7 @@ class ProductServiceTest {
     @Test
     void 상품_정보를_수정하다() {
         // given
-        final Product product = new Product("test", 10000, "www.test.com");
+        final Product product = Product.of("test", 10000, "www.test.com");
         doNothing().when(productDao).updateProduct(1L, product);
 
         // when, then

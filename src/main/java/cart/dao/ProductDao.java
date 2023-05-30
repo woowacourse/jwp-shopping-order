@@ -27,7 +27,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return Product.of(productId, name, price, imageUrl);
         });
     }
 
@@ -37,7 +37,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return Product.of(productId, name, price, imageUrl);
         });
     }
 
@@ -52,7 +52,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(id, name, price, imageUrl);
+            return Product.of(id, name, price, imageUrl);
         });
     }
 

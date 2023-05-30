@@ -76,7 +76,7 @@ class CartItemDaoTest extends DaoTest {
 
     @Test
     void 장바구니_물건의_수량을_수정하다() {
-        final CartItem cartItem = new CartItem(1L, 10, CHICKEN.ENTITY, MemberA.ENTITY);
+        final CartItem cartItem = CartItem.of(1L, 10, CHICKEN.ENTITY, MemberA.ENTITY);
 
         assertDoesNotThrow(() -> cartItemDao.updateQuantity(cartItem));
     }
