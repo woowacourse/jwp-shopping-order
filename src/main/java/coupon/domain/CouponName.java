@@ -1,5 +1,6 @@
 package coupon.domain;
 
+import coupon.exception.CouponException;
 import java.util.Objects;
 
 public class CouponName {
@@ -14,7 +15,7 @@ public class CouponName {
 
     private void validateValue(String value) {
         if (value.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("쿠폰 이름은 " + MAX_NAME_LENGTH + "자를 초과할 수 없습니다.");
+            throw new CouponException("쿠폰 이름은 " + MAX_NAME_LENGTH + "자를 초과할 수 없습니다.");
         }
     }
 

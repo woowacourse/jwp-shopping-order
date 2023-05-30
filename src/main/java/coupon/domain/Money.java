@@ -1,5 +1,6 @@
 package coupon.domain;
 
+import coupon.exception.CouponException;
 import java.util.Objects;
 
 public final class Money {
@@ -16,7 +17,7 @@ public final class Money {
 
     private void validateValue(long value) {
         if (value < MIN_VALUE) {
-            throw new IllegalArgumentException("금액은 " + MIN_VALUE + "원 이상이어야 합니다.");
+            throw new CouponException("금액은 " + MIN_VALUE + "원 이상이어야 합니다.");
         }
     }
 

@@ -3,6 +3,7 @@ package coupon.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import coupon.exception.CouponException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ class CouponNameTest {
         String input = "쿠".repeat(256);
 
         assertThatThrownBy(() -> new CouponName(input))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CouponException.class)
                 .hasMessageContaining("쿠폰 이름은 255자를 초과할 수 없습니다.");
     }
 

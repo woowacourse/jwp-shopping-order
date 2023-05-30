@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import coupon.exception.CouponException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class MoneyTest {
         // when
         // then
         assertThatThrownBy(() -> new Money(value))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CouponException.class)
                 .hasMessage("금액은 0원 이상이어야 합니다.");
     }
 
