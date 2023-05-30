@@ -6,6 +6,7 @@ import cart.dao.OrderDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderedItem;
 import cart.domain.Product;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderItemRequest;
@@ -24,6 +25,8 @@ public class OrderService {
     private CartItemDao cartItemDao;
     @Autowired
     private MemberDao memberDao;
+    @Autowired
+    private OrderedItemDao orderedItemDao;
 
     public OrderService(OrderDao orderDao, CartItemDao cartItemDao) {
         this.orderDao = orderDao;
@@ -31,20 +34,44 @@ public class OrderService {
     }
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
-        //TODO: totalItemPrice구하기 -> List<Int>으로 변경 -> 다 더한 값 return
+        //totalItemPrice구하기 -> List<Int>으로 변경 -> 다 더한 값 return
         int totalItemPrice = findTotalItemPrice(orderCreateRequest);
-        //TODO: shippingFee 구하기 -> totalPrice로 구함
+        //shippingFee 구하기 -> totalPrice로 구함
         int shippingFee = Order.calculateShippingFee(totalItemPrice);
-        //TODO: discountedTotalPrice 구하기 -> 상품 할인 체크 -> 상품 할인이 있다면 상품 할인 적용, 아니라면 member의 등급 확인해서 구함
+        //discountedTotalPrice 구하기 -> 상품 할인 체크 -> 상품 할인이 있다면 상품 할인 적용, 아니라면 member의 등급 확인해서 구함
         int discountedTotalPrice = findDiscountedTotalItemPrice(member, orderCreateRequest, totalItemPrice);
+        int totalPurchaseAmount = totalItemPrice + shippingFee;
 
-        Order order = new Order(member.getId(), totalItemPrice + shippingFee, totalItemPrice, null, shippingFee, discountedTotalPrice);
-        Long id = orderDao.createOrder(member.getId(), order);
+        Order order = new Order(member.getId(), totalPurchaseAmount, totalItemPrice, null, shippingFee, discountedTotalPrice);
+        member.order(totalPurchaseAmount);
+        Long orderId = orderDao.createOrder(member.getId(), order);
 
-        return id;
+
+        //주문한 상품들은 ordered_item에 추가
+        List<CartItem> cartItems = findCartItems(orderCreateRequest);
+        for (CartItem cartItem : cartItems) {
+            Product product = cartItem.getProduct();
+            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity());
+            orderedItemDao.createOrderedItems(orderId, orderedItem);
+        }
+
+
+        return orderId;
     }
 
-    public int findTotalItemPrice(OrderCreateRequest orderCreateRequest){
+    public List<CartItem> findCartItems(OrderCreateRequest orderCreateRequest) {
+        List<OrderItemRequest> orderItemRequests = orderCreateRequest.getOrderItemRequests();
+        List<CartItem> cartItems = new ArrayList<>();
+
+        for (OrderItemRequest orderItemRequest : orderItemRequests) {
+            CartItem cartItem = cartItemDao.findById(orderItemRequest.getCartItemId());
+            cartItems.add(cartItem);
+        }
+
+        return cartItems;
+    }
+
+    public int findTotalItemPrice(OrderCreateRequest orderCreateRequest) {
         List<OrderItemRequest> orderItemRequests = orderCreateRequest.getOrderItemRequests();
         List<Integer> prices = new ArrayList<>();
 
@@ -57,7 +84,7 @@ public class OrderService {
         return Order.calculatePriceSum(prices);
     }
 
-    public int findDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest, int totalItemPrice){
+    public int findDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest, int totalItemPrice) {
         List<OrderItemRequest> orderItemRequests = orderCreateRequest.getOrderItemRequests();
         List<Integer> discountedPrice = new ArrayList<>();
 

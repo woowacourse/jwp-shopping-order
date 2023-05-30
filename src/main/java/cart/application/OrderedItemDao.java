@@ -1,6 +1,7 @@
-package cart.dao;
+package cart.application;
 
-import cart.domain.Order;
+import cart.domain.OrderedItem;
+import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -11,34 +12,33 @@ import java.sql.Statement;
 import java.util.Objects;
 
 @Repository
-public class OrderDao {
+public class OrderedItemDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public OrderDao(JdbcTemplate jdbcTemplate) {
+    public OrderedItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long createOrder(Long memberId, Order order) {
+    public Long createOrderedItems(Long orderId, OrderedItem orderedItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO orders (member_id, total_price, delivery_fee, discounted_total_price) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO orders_item (orders_id, product_name, product_price, product_image, product_quantity) VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, memberId);
-            ps.setInt(2, order.getTotalPurchaseAmount());
-            ps.setInt(3, order.getShippingFee());
-            ps.setInt(4, order.getDiscountedTotalPrice());
+            ps.setLong(1, orderId);
+            ps.setString(2, orderedItem.getProductName());
+            ps.setInt(3, orderedItem.getProductPrice());
+            ps.setString(4, orderedItem.getProductImage());
+            ps.setInt(3, orderedItem.getProductQuantity());
 
             return ps;
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+
     }
 }
-
-
-

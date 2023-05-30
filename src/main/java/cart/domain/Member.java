@@ -27,8 +27,13 @@ public class Member {
         this.rank = rank;
     }
 
+    public void order(int totalPrice){
+        this.totalPrice += totalPrice;
+        setRank();
+    }
+
     //TODO: 상품 주문할 때 마다 rank를 calculate해줘야한다
-    public void calculateRank() {
+    public void setRank() {
         if (totalPrice == 0) {
             this.rank = "일반";
         }else if(totalPrice <= 100_000){
