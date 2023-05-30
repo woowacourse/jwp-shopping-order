@@ -20,6 +20,10 @@ public class Email {
         }
     }
 
+    public String getAddress() {
+        return address;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -37,7 +41,10 @@ public class Email {
         return Objects.hash(address);
     }
 
-    public String getAddress() {
-        return address;
+    @Override
+    public String toString() {
+        return "Email{" +
+                "address='" + address + '\'' +
+                '}';
     }
 }

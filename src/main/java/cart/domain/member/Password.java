@@ -39,6 +39,10 @@ public class Password {
         return !matcher.find();
     }
 
+    public String getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -56,7 +60,10 @@ public class Password {
         return Objects.hash(value);
     }
 
-    public String getValue() {
-        return value;
+    @Override
+    public String toString() {
+        return "Password{" +
+                "value='" + value + '\'' +
+                '}';
     }
 }

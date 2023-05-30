@@ -6,10 +6,10 @@ import java.util.Objects;
 
 public class Point {
 
-    private final Money amount;
+    private final Money money;
 
-    public Point(final Money amount) {
-        this.amount = amount;
+    public Point(final Money money) {
+        this.money = money;
     }
 
     public static Point valueOf(final int point) {
@@ -17,19 +17,23 @@ public class Point {
     }
 
     public Point reduce(final Point point) {
-        return new Point(this.amount.subtract(point.amount));
+        return new Point(this.money.subtract(point.money));
     }
 
     public Point save(final Point point) {
-        return new Point(this.amount.add(point.amount));
+        return new Point(this.money.add(point.money));
     }
 
     public boolean isMoreThan(final Point point) {
-        return amount.isMoreThan(point.amount);
+        return money.isMoreThan(point.money);
     }
 
-    public Money getAmount() {
-        return amount;
+    public int getMoneyAmount() {
+        return money.getAmount();
+    }
+
+    public Money getMoney() {
+        return money;
     }
 
     @Override
@@ -37,11 +41,18 @@ public class Point {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final Point point1 = (Point) o;
-        return Objects.equals(amount, point1.amount);
+        return Objects.equals(money, point1.money);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount);
+        return Objects.hash(money);
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "amount=" + money +
+                '}';
     }
 }

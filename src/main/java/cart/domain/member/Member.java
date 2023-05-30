@@ -44,6 +44,10 @@ public class Member {
         return password.getValue();
     }
 
+    public int getPointAmount() {
+        return point.getMoneyAmount();
+    }
+
     public Long getId() {
         return id;
     }
@@ -75,5 +79,15 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, password);
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email=" + email +
+                ", password=" + password +
+                ", point=" + point +
+                '}';
     }
 }

@@ -9,10 +9,10 @@ public class Money {
     private static final int MINIMUM_PRICE = 0;
     private static final int DEFAULT_SCALE = 0;
 
-    private final BigDecimal money;
+    private final BigDecimal amount;
 
-    public Money(final BigDecimal money) {
-        this.money = money;
+    public Money(final BigDecimal amount) {
+        this.amount = amount;
     }
 
     public static Money valueOf(final int money) {
@@ -27,27 +27,27 @@ public class Money {
     }
 
     public Money add(final Money money) {
-        return new Money(this.money.add(money.money));
+        return new Money(this.amount.add(money.amount));
     }
 
     public Money subtract(final Money money) {
-        return new Money(this.money.subtract(money.money));
+        return new Money(this.amount.subtract(money.amount));
     }
 
     public boolean isMoreThan(final Money money) {
-        return this.money.compareTo(money.money) >= 0;
+        return this.amount.compareTo(money.amount) >= 0;
     }
 
     public Money getPartial(final double rate) {
-        return new Money(money.multiply(BigDecimal.valueOf(rate)).setScale(DEFAULT_SCALE, RoundingMode.DOWN));
+        return new Money(amount.multiply(BigDecimal.valueOf(rate)).setScale(DEFAULT_SCALE, RoundingMode.DOWN));
     }
 
-    public BigDecimal getMoney() {
-        return money;
+    public int getAmount() {
+        return amount.intValue();
     }
 
     public int getMoneyValue() {
-        return money.intValue();
+        return amount.intValue();
     }
 
     @Override
@@ -59,18 +59,18 @@ public class Money {
             return false;
         }
         final Money money1 = (Money) o;
-        return Objects.equals(money, money1.money);
+        return Objects.equals(amount, money1.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(money);
+        return Objects.hash(amount);
     }
 
     @Override
     public String toString() {
         return "Money{" +
-                "money=" + money +
+                "money=" + amount +
                 '}';
     }
 }
