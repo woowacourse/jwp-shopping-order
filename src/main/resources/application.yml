@@ -1,6 +1,6 @@
-#spring:
-#  profiles:
-#    active: db
+spring:
+  profiles:
+    active: db
 
 ---
 spring:
