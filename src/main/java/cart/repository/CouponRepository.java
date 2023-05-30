@@ -3,14 +3,12 @@ package cart.repository;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.entity.CouponEntity;
-import cart.dao.entity.MemberCouponEntity;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -28,7 +26,7 @@ public class CouponRepository {
         Map<Long, CouponEntity> allCouponsById = couponDao.findAll().stream()
                 .collect(Collectors.toMap(CouponEntity::getId, couponEntity -> couponEntity));
 
-        return memberCouponDao.findByMemberId(member.getId()).stream()
+        return memberCouponDao.findUsableByMemberId(member.getId()).stream()
                 .map(memberCouponEntity -> memberCouponEntity.toCoupon(allCouponsById))
                 .collect(Collectors.toList());
     }

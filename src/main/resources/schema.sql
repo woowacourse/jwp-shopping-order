@@ -37,7 +37,7 @@ CREATE TABLE member_coupon (
     coupon_id BIGINT NOT NULL,
     is_used BOOLEAN DEFAULT false NOT NULL,
     expired_at DATETIME NOT NULL,
-    create_at DATETIME DEFAULT current_timestamp NOT NULL,
+    created_at DATETIME DEFAULT current_timestamp NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
@@ -48,7 +48,7 @@ CREATE TABLE `order` (
     coupon_id BIGINT NOT NULL,
     shipping_fee INT NOT NULL,
     total_price INT NOT NULL,
-    create_at DATETIME DEFAULT current_timestamp NOT NULL,
+    created_at DATETIME DEFAULT current_timestamp NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );

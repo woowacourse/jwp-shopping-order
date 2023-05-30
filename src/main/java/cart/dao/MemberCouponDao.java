@@ -1,14 +1,11 @@
 package cart.dao;
 
-import cart.dao.entity.CouponEntity;
 import cart.dao.entity.MemberCouponEntity;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class MemberCouponDao {
@@ -25,8 +22,8 @@ public class MemberCouponDao {
             rs.getDate("expired_at")
     );
 
-    public List<MemberCouponEntity> findByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
+    public List<MemberCouponEntity> findUsableByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM member_coupon WHERE is_used = false AND member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
 
     }

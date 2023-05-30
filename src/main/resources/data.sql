@@ -24,3 +24,5 @@ INSERT INTO coupon (name, min_price, max_price, type, discount_amount, discount_
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1, 1, '2023-06-30');
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1, 2, '2023-06-30');
 
+
+IN

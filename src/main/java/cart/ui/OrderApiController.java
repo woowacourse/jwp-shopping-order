@@ -1,5 +1,6 @@
 package cart.ui;
 
+import cart.application.CouponService;
 import cart.domain.Member;
 import cart.dto.OrderCouponResponse;
 import org.springframework.http.HttpStatus;
@@ -16,15 +17,18 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderApiController {
 
+    private final CouponService couponService;
+
+    public OrderApiController(final CouponService couponService) {
+        this.couponService = couponService;
+    }
+
     @GetMapping("/coupons")
     public ResponseEntity<List<OrderCouponResponse>> findCoupons(
             @RequestParam final List<Long> cartItemId,
             Member member
     ) {
-        List<OrderCouponResponse> orderCouponResponses = List.of(
-                new OrderCouponResponse(cartItemId.get(0), "반짝할인(10%)", 10000, true, 3000),
-                new OrderCouponResponse(cartItemId.get(1), "반짝할인(20%)", 20000, false, null)
-        );
+        List<OrderCouponResponse> orderCouponResponses = couponService.calculateCouponForCarts(member, cartItemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
