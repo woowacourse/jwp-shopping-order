@@ -29,7 +29,7 @@
 
 ## 상품
 
-### **상품 목록 조회**
+- [X] 상품 목록 조회
 
 ### Request
 
@@ -59,8 +59,8 @@ Content-Type: application/json
 ]
 
 ```
-
-### 상품 조회
+---
+- [X] 상품 조회
 
 ### Request
 
@@ -81,8 +81,8 @@ Content-Type: application/json
     "imageUrl": "http://example.com/chicken.jpg"
 }
 ```
-
-### 상품 추가
+---
+- [X] 상품 추가
 
 ### Request
 
@@ -104,8 +104,8 @@ Content-Type: application/json
 HTTP/1.1 201 Created
 Location: /products/{productId}
 ```
-
-### 상품 수정
+---
+- [X] 상품 수정
 
 ### Request
 
@@ -126,8 +126,8 @@ Content-Type: application/json
 ```
 HTTP/1.1 200 OK
 ```
-
-### 상품 삭제
+---
+- [X] 상품 삭제
 
 ### Request
 
@@ -145,7 +145,7 @@ HTTP/1.1 204 No Content
 
 ## 장바구니
 
-### 장바구니 아이템 목록 조회
+- [X] 장바구니 아이템 목록 조회
 
 ### Request
 
@@ -184,8 +184,8 @@ Content-Type: application/json
 ]
 
 ```
-
-### 장바구니 아이템 추가
+---
+- [X] 장바구니 아이템 추가
 
 ### Request
 
@@ -205,8 +205,8 @@ Content-Type: application/json
 HTTP/1.1 201 Created
 Location: /cart-items/{cartItemId}
 ```
-
-### 장바구니 아이템 수량 변경
+---
+- [X] 장바구니 아이템 수량 변경
 
 ### Request
 
@@ -225,8 +225,8 @@ Content-Type: application/json
 ```
 HTTP/1.1 200 OK
 ```
-
-### 장바구니 아이템 삭제
+---
+- [X] 장바구니 아이템 삭제
 
 ### Request
 
@@ -240,8 +240,8 @@ Authorization: Basic ${credentials}
 ```
 HTTP/1.1 204 No Content
 ```
-
-## 회원 가입
+---
+- [X] 회원 가입
 
 ### Request
 
@@ -258,8 +258,32 @@ Content-Type: application/json
 ``` json
 HTTP/1.1 200 OK
 ```
+---
+- [X] 로그인
 
-## 내 쿠폰함
+### Request
+
+``` json
+POST /users/login HTTP/1.1
+Content-Type: application/json
+
+{
+	"name": "jourzura",
+	"password": "1q2w3e4r!"
+}
+```
+
+### Response
+
+``` json
+HTTP/1.1 200 OK
+
+{
+	"password": "encodedBySha256Password"
+}
+```
+---
+- [ ] 내 쿠폰함 조회
 
 ### Request
 
@@ -288,8 +312,8 @@ Content-Type: application/json
     }
 ]
 ```
-
-## 상품 주문
+---
+- [ ] 상품 주문
 
 ### Request
 
@@ -322,8 +346,8 @@ Content-Type: application/json
 HTTP/1.1 201 OK
 Location: /orders/{orderId}
 ```
-
-## 상품 주문 조회
+---
+- [ ] 상품 주문 조회
 
 ### Request
 
@@ -385,8 +409,8 @@ HTTP/1.1 200 OK
     }
 ]
 ```
-
-## 단일 상품 주문 상세 보기
+---
+- [ ] 단일 상품 주문 상세 보기
 
 ### Request
 
@@ -422,29 +446,5 @@ HTTP/1.1 200 OK
             }
         }
     ]
-}
-```
-
-## 로그인
-
-### Request
-
-``` json
-POST /users/login HTTP/1.1
-Content-Type: application/json
-
-{
-	"name": "jourzura",
-	"password": "1q2w3e4r!"
-}
-```
-
-### Response
-
-``` json
-HTTP/1.1 200 OK
-
-{
-	"password": "encodedBySha256Password"
 }
 ```
