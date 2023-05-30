@@ -1,7 +1,7 @@
 package cart.config;
 
 import cart.repository.MemberRepository;
-import cart.ui.MemberArgumentResolver;
+import cart.ui.common.MemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;

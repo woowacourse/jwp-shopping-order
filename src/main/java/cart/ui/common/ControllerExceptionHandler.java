@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.common;
 
 import static cart.exception.ErrorMessage.INTERNAL_SERVER_ERROR;
 

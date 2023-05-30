@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.common;
 
 import static cart.exception.ErrorMessage.INVALID_AUTHORIZATION_INFORMATION;
 import static cart.exception.ErrorMessage.UNAUTHORIZED_MEMBER;
