@@ -3,9 +3,15 @@ package cart.order.application;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderItemResponse;
 import cart.order.application.dto.OrderResponse;
+import cart.order.application.dto.SpecificOrderResponse;
 import cart.order.dao.OrderDao;
+import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
+import cart.order.exception.CanNotSearchNotMyOrderException;
+import cart.order.exception.NotFoundOrderException;
 import cart.order_item.application.OrderItemQueryService;
+import cart.order_item.domain.OrderItem;
+import cart.order_item.domain.OrderedItems;
 import cart.value_object.Money;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,13 +42,12 @@ public class OrderQueryService {
     return orders.stream()
         .map(order -> new OrderResponse(
             order.getId(),
-            mapToOrderItemResponseFrom(order)))
+            mapToOrderItemResponseFrom(orderItemQueryService.searchOrderItemsByOrderId(order))))
         .collect(Collectors.toList());
   }
 
-  private List<OrderItemResponse> mapToOrderItemResponseFrom(final Order order) {
-    return orderItemQueryService.searchOrderItemsByOrderId(order)
-        .stream()
+  private List<OrderItemResponse> mapToOrderItemResponseFrom(final List<OrderItem> orderItems) {
+    return orderItems.stream()
         .map(orderItem -> new OrderItemResponse(
             orderItem.getId(),
             orderItem.getName(),
@@ -50,5 +55,35 @@ public class OrderQueryService {
             orderItem.getQuantity(),
             orderItem.getPrice().multiply(orderItem.getQuantity()).getValue()))
         .collect(Collectors.toList());
+  }
+
+  public SpecificOrderResponse searchOrder(final Member member, final Long orderId) {
+    final OrderEntity orderEntity = orderDao.findByOrderId(orderId)
+        .orElseThrow(() -> new NotFoundOrderException("해당 주문은 존재하지 않습니다."));
+
+    final Order order = new Order(
+        orderEntity.getId(),
+        member,
+        new Money(orderEntity.getDeliveryFee())
+    );
+
+    validateOrderOwner(order, orderEntity.getMemberId());
+
+    final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
+    final OrderedItems orderedItems = new OrderedItems(orderItems);
+    final List<OrderItemResponse> orderItemResponses = mapToOrderItemResponseFrom(orderItems);
+
+    return new SpecificOrderResponse(
+        orderEntity.getId(),
+        orderItemResponses,
+        orderedItems.calculateAllItemPrice().getValue(),
+        orderEntity.getDeliveryFee()
+    );
+  }
+
+  private void validateOrderOwner(final Order order, final Long memberId) {
+    if (order.isNotMyOrder(memberId)) {
+      throw new CanNotSearchNotMyOrderException("사용자의 주문 목록 이외는 조회할 수 없습니다.");
+    }
   }
 }
