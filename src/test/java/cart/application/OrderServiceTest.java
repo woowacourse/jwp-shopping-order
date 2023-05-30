@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import cart.application.dto.GetOrdersRequest;
 import cart.dao.OrderDao;
 import cart.domain.Order;
+import cart.domain.Page;
 import cart.domain.Paginator;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +29,7 @@ class OrderServiceTest {
     @Mock
     private OrderDao orderDao;
     @Mock
-    private Paginator paginator;
+    private Paginator<Order> paginator;
     @InjectMocks
     private OrderService orderService;
 
@@ -36,8 +37,9 @@ class OrderServiceTest {
     void 사용자의_주문_이력을_가져온다() {
         // given
         List<Order> orders = List.of(order1, order2, order3);
+        Page<Order> pages = new Page<>(orders, 3, 1, 1);
         given(orderDao.findAllByMemberId(anyLong())).willReturn(orders);
-        given(paginator.paginate(anyList(), anyInt())).willReturn(orders);
+        given(paginator.paginate(anyList(), anyInt())).willReturn(pages);
 
         // when & then
         assertDoesNotThrow(() -> orderService.getOrdersWithPagination(member1, new GetOrdersRequest(1)));
