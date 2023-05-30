@@ -55,11 +55,10 @@ public class CartItemDao {
     }
 
     public List<CartDetailDTO> findByMemberId(final long memberId) {
-        String sql =
-                "SELECT * FROM cart_item "
-                        + "INNER JOIN member ON cart_item.member_id = member.id "
-                        + "INNER JOIN product ON cart_item.product_id = product.id "
-                        + "WHERE cart_item.member_id = ?";
+        String sql = "SELECT * FROM cart_item "
+                + "INNER JOIN member ON cart_item.member_id = member.id "
+                + "INNER JOIN product ON cart_item.product_id = product.id "
+                + "WHERE cart_item.member_id = ?";
         return jdbcTemplate.query(sql, RowMapperHelper.cartDetailRowMapper(), memberId);
     }
 
