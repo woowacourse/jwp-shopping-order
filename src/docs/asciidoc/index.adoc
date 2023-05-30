@@ -5,7 +5,7 @@
 :sectlinks:
 :sectnums: // 분류별 자동으로 숫자를 달아줌
 
-== 상
+== 상품
 
 === 상품 생성
 
@@ -67,7 +67,6 @@ include::{snippets}/product-controller-unit-test/delete_product/http-request.ado
 
 ==== 응답
 
-include::{snippets}/product-controller-unit-test/delete_product/response-headers.adoc[]
 include::{snippets}/product-controller-unit-test/delete_product/http-response.adoc[]
 
 === 상품 세일 적용

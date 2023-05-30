@@ -1,15 +1,13 @@
 package cart.controller.product;
 
-import cart.config.auth.guard.basic.MemberArgumentResolver;
-import cart.config.web.WebMvcConfig;
-import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import cart.dto.sale.SaleProductRequest;
+import cart.repository.coupon.CouponRepository;
+import cart.repository.member.MemberRepository;
 import cart.service.product.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static cart.fixture.MemberFixture.createMember;
 import static cart.helper.RestDocsHelper.customDocument;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -48,23 +43,16 @@ class ProductControllerUnitTest {
     private ProductService productService;
 
     @MockBean
-    private MemberArgumentResolver memberArgumentResolver;
+    private MemberRepository memberRepository;
 
     @MockBean
-    private WebMvcConfig webMvcConfig;
+    private CouponRepository couponRepository;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void init() throws Exception {
-        Member member = createMember();
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
-    }
 
     @DisplayName("모든 상품을 조회한다.")
     @Test
