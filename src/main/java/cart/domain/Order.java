@@ -16,10 +16,14 @@ public class Order {
     }
 
     public Order(Long id, Member owner, List<OrderItem> orderItems) {
+        this(id, owner, orderItems, LocalDateTime.now());
+    }
+
+    public Order(Long id, Member owner, List<OrderItem> orderItems, LocalDateTime createdAt) {
         this.id = id;
         this.owner = owner;
         this.orderItems = new ArrayList<>(orderItems);
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
