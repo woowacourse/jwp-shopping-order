@@ -1,10 +1,12 @@
 package cart.order.application;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.application.dto.RegisterOrderRequest;
+import cart.order.exception.NotSameTotalPriceException;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +30,7 @@ class OrderCommandServiceTest {
     final Member member = memberDao.getMemberById(1L);
 
     final List<Long> cartItemIds = List.of(1L, 2L);
-    final BigDecimal totalPrice = BigDecimal.valueOf(10000);
+    final BigDecimal totalPrice = BigDecimal.valueOf(116800);
     final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
 
     final RegisterOrderRequest registerOrderRequest =
@@ -43,5 +45,27 @@ class OrderCommandServiceTest {
 
     //then
     assertEquals(3L, savedId);
+  }
+
+  @Test
+  @DisplayName("registerOrder() : 명시된 주문 총 금액과 계산한 총 금액이 다르면 NotSameTotalPriceException이 발생한다.")
+  void test_registerOrder_NotSameTotalPriceException() throws Exception {
+    //given
+    final Member member = memberDao.getMemberById(1L);
+
+    final List<Long> cartItemIds = List.of(1L, 2L);
+    final BigDecimal totalPrice = BigDecimal.valueOf(200000);
+    final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
+
+    final RegisterOrderRequest registerOrderRequest =
+        new RegisterOrderRequest(
+            cartItemIds,
+            totalPrice,
+            deliveryFee
+        );
+
+    //when & then
+    assertThatThrownBy(() -> orderCommandService.registerOrder(member, registerOrderRequest))
+        .isInstanceOf(NotSameTotalPriceException.class);
   }
 }

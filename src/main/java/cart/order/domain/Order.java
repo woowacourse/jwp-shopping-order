@@ -10,4 +10,14 @@ public class Order {
   private Member member;
 
   private Money deliveryFee;
+
+  public Order(final Long id, final Member member, final Money deliveryFee) {
+    this.id = id;
+    this.member = member;
+    this.deliveryFee = deliveryFee;
+  }
+
+  public Long getId() {
+    return id;
+  }
 }
