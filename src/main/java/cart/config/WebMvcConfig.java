@@ -1,4 +1,4 @@
-package cart;
+package cart.config;
 
 import cart.application.service.AuthService;
 import cart.ui.MemberArgumentResolver;
