@@ -1,26 +1,25 @@
 package cart.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class Member {
-    private Long id;
-    private String email;
-    private String password;
 
-    public Member(Long id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
+    private static final int DEFAULT_POINT_VALUE = 0;
+
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final Integer point;
+
+    public Member(final String email, final String password, final Integer point) {
+        this(null, email, password, point);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
+    public Member(final String email, final String password) {
+        this(null, email, password, DEFAULT_POINT_VALUE);
     }
 
     public boolean checkPassword(String password) {
