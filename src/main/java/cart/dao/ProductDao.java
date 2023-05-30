@@ -27,7 +27,9 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            boolean isDiscounted = rs.getBoolean("is_discounted");
+            int discountRate = rs.getInt("discount_rate");
+            return new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
         });
     }
 
@@ -37,7 +39,9 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            boolean isDiscounted = rs.getBoolean("is_discounted");
+            int discountRate = rs.getInt("discount_rate");
+            return new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
         });
     }
 
@@ -46,14 +50,15 @@ public class ProductDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                    "INSERT INTO product (name, price, image_url, is_discounted, discount_rate) VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, product.getName());
             ps.setInt(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
-
+            ps.setBoolean(4, product.isDiscounted());
+            ps.setInt(5, product.getDiscountRate());
             return ps;
         }, keyHolder);
 

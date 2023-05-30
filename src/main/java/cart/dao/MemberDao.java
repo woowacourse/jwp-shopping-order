@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -32,8 +31,8 @@ public class MemberDao {
     }
 
     public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+        String sql = "INSERT INTO member (email, password, rank, total_purchase_amount) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), "normal", 0);
     }
 
     public void updateMember(Member member) {
