@@ -35,7 +35,7 @@ public class ProductJdbcRepository implements ProductRepository {
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, product.getName());
-			ps.setInt(2, product.getPrice());
+			ps.setLong(2, product.getPrice());
 			ps.setString(3, product.getImageUrl());
 			return ps;
 		}, keyHolder);

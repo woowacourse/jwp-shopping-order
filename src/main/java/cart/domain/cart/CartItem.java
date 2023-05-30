@@ -5,6 +5,7 @@ import cart.domain.product.Product;
 public class CartItem {
 
 	private static final int DEFAULT_QUANTITY = 1;
+
 	private final Long id;
 	private final Product product;
 	private int quantity;

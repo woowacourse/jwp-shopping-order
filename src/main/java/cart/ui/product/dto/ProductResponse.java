@@ -5,10 +5,10 @@ import cart.application.product.dto.ProductDto;
 public class ProductResponse {
 	private Long id;
 	private String name;
-	private int price;
+	private Long price;
 	private String imageUrl;
 
-	private ProductResponse(Long id, String name, int price, String imageUrl) {
+	private ProductResponse(Long id, String name, Long price, String imageUrl) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
@@ -27,7 +27,7 @@ public class ProductResponse {
 		return name;
 	}
 
-	public int getPrice() {
+	public Long getPrice() {
 		return price;
 	}
 

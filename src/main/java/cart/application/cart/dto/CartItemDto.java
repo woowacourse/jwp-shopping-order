@@ -11,7 +11,7 @@ public class CartItemDto {
 	private final ProductDto product;
 
 	public CartItemDto(final CartItemRequest cartItemRequest) {
-		this(null, 1, new ProductDto(cartItemRequest.getProductId(), null, 0, null));
+		this(null, 1, new ProductDto(cartItemRequest.getProductId(), null, 0L, null));
 
 	}
 

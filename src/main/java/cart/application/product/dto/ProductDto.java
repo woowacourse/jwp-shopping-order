@@ -7,10 +7,10 @@ public class ProductDto {
 
 	private final Long id;
 	private final String name;
-	private final int price;
+	private final Long price;
 	private final String imageUrl;
 
-	public ProductDto(final Long id, final String name, final int price, final String imageUrl) {
+	public ProductDto(final Long id, final String name, final Long price, final String imageUrl) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
@@ -33,7 +33,7 @@ public class ProductDto {
 		return name;
 	}
 
-	public int getPrice() {
+	public Long getPrice() {
 		return price;
 	}
 
