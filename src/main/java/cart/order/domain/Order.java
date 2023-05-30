@@ -17,6 +17,10 @@ public class Order {
     this.deliveryFee = deliveryFee;
   }
 
+  public boolean isNotMyOrder(final Long memberId) {
+    return !this.member.isMe(memberId);
+  }
+
   public Long getId() {
     return id;
   }
