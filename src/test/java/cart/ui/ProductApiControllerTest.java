@@ -29,6 +29,7 @@ import cart.dao.MemberDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
@@ -46,6 +47,7 @@ import org.springframework.test.web.servlet.ResultActions;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(ProductApiController.class)
+@DisplayName("ProductApiController 은(는)")
 public class ProductApiControllerTest {
 
     private static final String API_URL = "/products";

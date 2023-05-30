@@ -1,5 +1,6 @@
 package cart.integration;
 
+import static cart.fixture.JsonMapper.toJson;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -7,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,8 +26,6 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     private static final String API_URL = "/products";
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     void 상품을_추가한다() {
@@ -82,7 +78,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 상품을_수정한다() throws JsonProcessingException {
+    void 상품을_수정한다() {
         // given
         String 위치 = 상품을_추가하고_위치를_반환("치킨", 10_000, "http://example.com/chicken.jpg");
         ProductRequest 비싸진치킨 = new ProductRequest("비싸진치킨", 15_000, "http://example.com/chicken.jpg");
@@ -90,7 +86,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         // when
         given().log().all()
                 .contentType(JSON)
-                .body(objectMapper.writeValueAsString(비싸진치킨))
+                .body(toJson(비싸진치킨))
                 .when()
                 .put(위치)
                 .then()
@@ -119,17 +115,23 @@ public class ProductIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
-    private ExtractableResponse<Response> 상품_추가(String 이름, int 가격, String 이미지_url) {
+    public static ExtractableResponse<Response> 상품_추가(String 이름, int 가격, String 이미지_url) {
         var request = new ProductRequest(이름, 가격, 이미지_url);
         return 상품_추가(request);
     }
 
-    private String 상품을_추가하고_위치를_반환(String 이름, int 가격, String 이미지_url) {
+    public static long 상품을_추가하고_아이디를_반환(String 이름, int 가격, String 이미지_url) {
+        String location = 상품을_추가하고_위치를_반환(이름, 가격, 이미지_url);
+        final String id = location.substring(location.lastIndexOf("/") + 1);
+        return Long.parseLong(id);
+    }
+
+    public static String 상품을_추가하고_위치를_반환(String 이름, int 가격, String 이미지_url) {
         var request = new ProductRequest(이름, 가격, 이미지_url);
         return 상품_추가(request).header("Location");
     }
 
-    private ExtractableResponse<Response> 상품_추가(ProductRequest request) {
+    public static ExtractableResponse<Response> 상품_추가(ProductRequest request) {
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
