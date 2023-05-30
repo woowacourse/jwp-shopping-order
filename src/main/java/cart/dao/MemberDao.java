@@ -21,7 +21,7 @@ public class MemberDao {
         String sql = "SELECT * FROM member WHERE id = ?";
         List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
-    }
+    } // TODO: 2023/05/30 optional로 수정해보기
 
     public Member findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
@@ -30,12 +30,12 @@ public class MemberDao {
     }
 
     public void create(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+        String sql = "INSERT INTO member (email, password, point) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint());
     }
 
     public void update(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
     }
 
@@ -52,7 +52,7 @@ public class MemberDao {
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"), rs.getInt("point"));
         }
     }
 }

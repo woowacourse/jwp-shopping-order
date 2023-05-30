@@ -3,13 +3,14 @@ CREATE TABLE IF NOT EXISTS product (
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
     image_url VARCHAR(255) NOT NULL
-    );
+);
 
 CREATE TABLE IF NOT EXISTS member (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
-    );
+    password VARCHAR(255) NOT NULL,
+    point BIGINT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS cart_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -30,10 +31,10 @@ INSERT INTO product (name, price, image_url)
 VALUES ('샐러드', 20000,
         'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
 
-INSERT INTO member (email, password)
-VALUES ('kangsj9665@gmail.com', '1234');
-INSERT INTO member (email, password)
-VALUES ('yis092521@gmail.com', '1234');
+INSERT INTO member (email, password, point)
+VALUES ('kangsj9665@gmail.com', '1234', 0);
+INSERT INTO member (email, password, point)
+VALUES ('yis092521@gmail.com', '1234', 0);
 
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (1, 1, 2);

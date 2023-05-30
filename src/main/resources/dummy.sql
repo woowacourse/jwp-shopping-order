@@ -23,8 +23,8 @@ INSERT INTO product (name, price, image_url) VALUES ('노트북 스티커', 5000
 INSERT INTO product (name, price, image_url) VALUES ('모자', 50000, 'https://images.unsplash.com/photo-1521369909029-2afed882baee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8JUVCJUFBJUE4JUVDJTlFJTkwfGVufDB8fDB8fHww&auto=format&fit=crop&w=900&q=60');
 INSERT INTO product (name, price, image_url) VALUES ('슬리퍼', 12000, 'https://images.unsplash.com/photo-1622920799137-86c891159e44?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8JUVDJThBJUFDJUVCJUE2JUFDJUVEJThEJUJDfGVufDB8fDB8fHww&auto=format&fit=crop&w=900&q=60');
 
-INSERT INTO member (email, password) VALUES ('kangsj9665@gmail.com', '1234');
-INSERT INTO member (email, password) VALUES ('yis092521@gmail.com', '1234');
+INSERT INTO member (email, password, point) VALUES ('kangsj9665@gmail.com', '1234', 0);
+INSERT INTO member (email, password, point) VALUES ('yis092521@gmail.com', '1234', 0);
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
