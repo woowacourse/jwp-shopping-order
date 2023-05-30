@@ -1,9 +1,7 @@
 package cart.domain;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import cart.exception.NotContainedItemException;
@@ -18,20 +16,21 @@ public class Cart {
         this.cartItems = new ArrayList<>(cartItems);
     }
 
-    public List<OrderItem> order(List<CartItem> itemsToOrder) {
+    public Order order(List<CartItem> itemsToOrder) {
         validateContainsAllOf(itemsToOrder);
         cartItems.removeAll(itemsToOrder);
-        return itemsToOrder.stream()
+        List<OrderItem> orderItems = itemsToOrder.stream()
                 .map(OrderItem::new)
                 .collect(Collectors.toList());
+        return new Order(owner, orderItems);
     }
 
-    private void validateContainsAllOf(List<CartItem> cartItems) {
-        Set<CartItem> reference = new HashSet<>(this.cartItems);
-        if (reference.containsAll(cartItems)) {
-            return;
+    private void validateContainsAllOf(List<CartItem> items) {
+        boolean anyAbsence = items.stream()
+                .anyMatch(that -> !cartItems.contains(that));
+        if (anyAbsence) {
+            throw new NotContainedItemException();
         }
-        throw new NotContainedItemException();
     }
 
     public Member getOwner() {

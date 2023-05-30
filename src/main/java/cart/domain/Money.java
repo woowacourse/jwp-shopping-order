@@ -38,6 +38,10 @@ public class Money {
         return this.value - value < MINIMUM;
     }
 
+    public Money multiply(int count) {
+        return new Money(value * count);
+    }
+
     public Money percentageOf(int percentage) {
         if (percentage < 0 || MAX_PERCENTAGE < percentage) {
             throw new IllegalPercentageException();

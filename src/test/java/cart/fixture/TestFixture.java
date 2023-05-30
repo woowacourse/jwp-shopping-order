@@ -36,6 +36,11 @@ public class TestFixture {
     public static List<CartItem> CART_ITEMS_MEMBER_A = List.of(CART_ITEM_치킨_MEMBER_A, CART_ITEM_샐러드_MEMBER_A);
 
     public static OrderItem ORDERED_치킨 = new OrderItem(null, 치킨, 1);
+    public static OrderItem ORDERED_샐러드 = new OrderItem(null, 샐러드, 10);
+    public static OrderItem ORDERED_피자 = new OrderItem(null, 피자, 2);
+
+    public static List<OrderItem> ORDER_ITEMS = List.of(ORDERED_치킨, ORDERED_샐러드, ORDERED_피자);
+
     public static OrderItem ORDERED_치킨_COUPON_USED = new OrderItem(null, 치킨, 1);
 
 }
