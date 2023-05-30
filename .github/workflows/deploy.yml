@@ -1,0 +1,26 @@
+name: deploy
+on:
+  workflow_dispatch:
+  push:
+    branches: [jaeyoung22]
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: change permission
+        run: |
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/jwp-shopping-order
+      - uses: actions/checkout@v3
+      - name: gradle bootjar
+        run: |
+          chmod +x ./gradlew
+          ./gradlew bootjar
+      - name: kill 80 port if exist
+        run: |
+          if sudo lsof -i :8080; then
+            echo "Port 8080 is already in use. Killing the process..."
+            sudo lsof -i :8080 | awk 'NR!=1 {print $2}' | sudo xargs kill -9
+          fi
+      - name: deploy
+        run: |
+          sudo java -jar build/libs/jwp-shopping-order.jar --spring.config.location=file:/home/ubuntu/application.properties &
