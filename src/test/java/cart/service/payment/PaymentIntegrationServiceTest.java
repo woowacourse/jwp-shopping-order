@@ -78,7 +78,7 @@ class PaymentIntegrationServiceTest {
         CouponsApplyRequest req = new CouponsApplyRequest(List.of(new CouponIdRequest(1L)));
 
         // when
-        PaymentUsingCouponsResponse result = paymentService.applyCoupons(member, req);
+        PaymentUsingCouponsResponse result = paymentService.applyCoupons(member, List.of(1L));
 
         // then
         assertAll(

@@ -6,7 +6,6 @@ import cart.domain.coupon.Coupons;
 import cart.domain.discount.PolicyDiscount;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
-import cart.dto.coupon.CouponsApplyRequest;
 import cart.dto.order.OrderResponse;
 import cart.dto.payment.PaymentRequest;
 import cart.dto.payment.PaymentResponse;
@@ -77,14 +76,13 @@ class PaymentServiceUnitTest {
         Coupons coupons = createCoupons();
         Coupons reqCoupons = new Coupons(List.of(new Coupon(1L, "쿠폰", new PolicyDiscount(1000))));
         member.initCoupons(coupons);
-        CouponsApplyRequest request = new CouponsApplyRequest(List.of(new CouponIdRequest(1L)));
         Cart cart = createCart();
 
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
         given(couponRepository.findAllByCouponIds(List.of(1L))).willReturn(reqCoupons);
 
         // when
-        PaymentUsingCouponsResponse result = paymentService.applyCoupons(member, request);
+        PaymentUsingCouponsResponse result = paymentService.applyCoupons(member, List.of(1L));
 
         // then
         assertAll(

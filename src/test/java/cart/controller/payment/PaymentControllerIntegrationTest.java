@@ -2,7 +2,6 @@ package cart.controller.payment;
 
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
-import cart.dto.coupon.CouponsApplyRequest;
 import cart.dto.payment.PaymentRequest;
 import cart.dto.product.ProductIdRequest;
 import cart.repository.member.MemberRepository;
@@ -72,15 +71,11 @@ public class PaymentControllerIntegrationTest {
     @Test
     void apply_coupon() {
         // given
-        CouponsApplyRequest req = new CouponsApplyRequest(List.of(new CouponIdRequest(1L)));
-
         // when & then
         Response response = given()
                 .auth().preemptive().basic("a@a.com", "1234")
                 .when()
-                .contentType(ContentType.JSON)
-                .body(req)
-                .post("/payments/coupons");
+                .get("/payments/coupons?couponsId=1");
 
         response.then()
                 .statusCode(HttpStatus.OK.value())

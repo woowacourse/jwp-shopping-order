@@ -7,7 +7,6 @@ import cart.domain.coupon.Coupons;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
 import cart.dto.coupon.CouponResponse;
-import cart.dto.coupon.CouponsApplyRequest;
 import cart.dto.order.OrderResponse;
 import cart.dto.payment.PaymentRequest;
 import cart.dto.payment.PaymentResponse;
@@ -42,11 +41,11 @@ public class PaymentService {
     }
 
     @Transactional
-    public PaymentUsingCouponsResponse applyCoupons(final Member member, final CouponsApplyRequest request) {
+    public PaymentUsingCouponsResponse applyCoupons(final Member member, final List<Long> request) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-        Coupons requestCoupons = couponRepository.findAllByCouponIds(parseCouponRequestIds(request.getCoupons()));
+        Coupons requestCoupons = couponRepository.findAllByCouponIds(request);
 
-        member.validateHasCoupons(parseCouponRequestIds(request.getCoupons()));
+        member.validateHasCoupons(request);
 
         return PaymentUsingCouponsResponse.from(cart, requestCoupons.getCoupons());
     }
