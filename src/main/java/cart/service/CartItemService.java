@@ -4,9 +4,9 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.controller.dto.CartItemQuantityUpdateRequest;
+import cart.controller.dto.CartItemRequest;
+import cart.controller.dto.CartItemResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
