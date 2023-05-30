@@ -58,7 +58,7 @@ public class CartRepositoryImpl implements CartRepository {
     private Product createProduct(CartItemDetail cartItemDetail) {
         return new Product(
                 cartItemDetail.getProductId(),
-                cartItemDetail.getMemberName(),
+                cartItemDetail.getProductName(),
                 cartItemDetail.getPrice(),
                 cartItemDetail.getImageUrl()
         );
