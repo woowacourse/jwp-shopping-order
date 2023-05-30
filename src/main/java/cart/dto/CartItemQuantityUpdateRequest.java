@@ -1,6 +1,10 @@
 package cart.dto;
 
+import javax.validation.constraints.Positive;
+
 public class CartItemQuantityUpdateRequest {
+
+    @Positive(message = "수량은 음수가 될 수 없습니다. 입력값: ${validatedValue}")
     private int quantity;
 
     public CartItemQuantityUpdateRequest() {
