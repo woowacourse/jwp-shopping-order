@@ -49,7 +49,7 @@ public class OrderDao {
             + "INNER JOIN order_item AS IT ON IT.order_id = ORD.id "
             + "INNER JOIN product AS PR ON PR.id = IT.product_id "
             + "WHERE ORD.id = ?";
-        System.out.println("sql = " + sql);
+
         return jdbcTemplate.query(sql, ORDER_DTO_ROW_MAPPER, orderId);
     }
 
@@ -61,6 +61,7 @@ public class OrderDao {
             + "INNER JOIN order_item AS IT ON IT.order_id = ORD.id "
             + "INNER JOIN product AS PR ON PR.id = IT.product_id "
             + "WHERE ORD.member_id = ?";
+
         return jdbcTemplate.query(sql, ORDER_DTO_ROW_MAPPER, memberId);
     }
 }
