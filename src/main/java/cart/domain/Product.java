@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.ProductNotValidException;
+
 import java.util.Objects;
 
 public class Product {

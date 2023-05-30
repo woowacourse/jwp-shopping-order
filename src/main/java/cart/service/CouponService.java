@@ -3,7 +3,6 @@ package cart.service;
 import cart.domain.coupon.Coupon;
 import cart.dto.CouponResponse;
 import cart.repository.CouponRepository;
-import cart.repository.MemberCouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

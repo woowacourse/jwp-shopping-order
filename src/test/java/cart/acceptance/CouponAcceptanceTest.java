@@ -1,6 +1,5 @@
 package cart.acceptance;
 
-
 import cart.dto.CouponResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

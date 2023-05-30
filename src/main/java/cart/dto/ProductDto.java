@@ -8,7 +8,7 @@ public class ProductDto {
 
     @Schema(description = "상품 Id", example = "1")
     private final Long id;
-    
+
     @Schema(description = "상품명", example = "치즈피자")
     private final String name;
 

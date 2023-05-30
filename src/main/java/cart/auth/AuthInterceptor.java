@@ -2,9 +2,10 @@ package cart.auth;
 
 import cart.dao.CredentialDao;
 import cart.exception.AuthenticationException;
+import org.springframework.web.servlet.HandlerInterceptor;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthInterceptor implements HandlerInterceptor {
 

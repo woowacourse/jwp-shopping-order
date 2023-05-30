@@ -28,7 +28,7 @@ public class OrderItemEntity {
                 orderItem.getPrice(),
                 orderItem.getQuantity(),
                 orderId
-                );
+        );
     }
 
     public OrderItem toDomain() {

@@ -1,10 +1,6 @@
 package cart.entity;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.discountCondition.ConditionType;
-import cart.domain.coupon.discountCondition.DiscountCondition;
-import cart.domain.coupon.discountCondition.NoneCondition;
-import cart.domain.coupon.discountCondition.TotalItemsPriceCondition;
 import cart.domain.coupon.discountPolicy.DeliveryPolicy;
 import cart.domain.coupon.discountPolicy.DiscountPolicy;
 import cart.domain.coupon.discountPolicy.PercentPolicy;
