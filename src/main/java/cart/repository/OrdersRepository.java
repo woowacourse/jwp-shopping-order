@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 @Component
 public class OrdersRepository {
     private final OrdersDao ordersDao;
-    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
     private final RelativeRepository relativeRepository;
 
-    public OrdersRepository(OrdersDao ordersDao, CartRepository cartRepository, RelativeRepository relativeRepository) {
+    public OrdersRepository(OrdersDao ordersDao, CartItemRepository cartItemRepository, RelativeRepository relativeRepository) {
         this.ordersDao = ordersDao;
-        this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
         this.relativeRepository = relativeRepository;
     }
 
@@ -28,7 +28,7 @@ public class OrdersRepository {
             final int discountPrice,
             final List<Long> couponIds) {
         final long orderId = ordersDao.createOrders(memberId, originalPrice, discountPrice);
-        cartRepository.changeCartItemToOrdersItem(orderId, cartIds);
+        cartItemRepository.changeCartItemToOrdersItem(orderId, cartIds);
         relativeRepository.addOrdersCoupon(orderId, couponIds);
         return orderId;
     }

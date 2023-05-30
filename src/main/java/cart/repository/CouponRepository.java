@@ -61,7 +61,15 @@ public class CouponRepository {
         List<Long> memberCouponIds = memberCouponDao.findByMemberId(id);
         List<Coupon> coupons = new ArrayList<>();
         for (Long couponId : memberCouponIds) {
-            coupons.add(couponDao.findWithId(id));
+            coupons.add(couponDao.findWithId(couponId));
+        }
+        return coupons;
+    }
+
+    public List<Coupon> findCouponsById(final List<Long> ids){
+        List<Coupon> coupons =new ArrayList<>();
+        for(Long couponId : ids){
+            coupons.add(couponDao.findWithId(couponId));
         }
         return coupons;
     }

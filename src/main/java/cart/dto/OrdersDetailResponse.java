@@ -33,8 +33,8 @@ public class OrdersDetailResponse {
         return new OrdersDetailResponse(
                 orders.getId(),
                 orders.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList()),
-                orders.getOriginalPrice(),
-                orders.getDiscountPrice(),
+                orders.getOriginalPriceValue(),
+                orders.getDiscountPriceValue(),
                 orders.isConfirmState(),
                 CouponResponse.of(coupon)
         );

@@ -50,8 +50,8 @@ public class OrdersResponse {
         return new OrdersResponse(
                 orders.getId(),
                 orders.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList()),
-                orders.getOriginalPrice(),
-                orders.getDiscountPrice(),
+                orders.getOriginalPriceValue(),
+                orders.getDiscountPriceValue(),
                 orders.isConfirmState(),
                 CouponResponse.of(Optional.of(orders.getCoupons().get(0)))
         );

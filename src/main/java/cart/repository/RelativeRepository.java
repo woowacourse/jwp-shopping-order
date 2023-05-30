@@ -40,7 +40,7 @@ public class RelativeRepository {
     }
 
     private CartItem findProductWithCartItems(Member member, final OrdersCartItemEntity ordersCartItem) {
-        return new CartItem(member, productDao.getProductById(ordersCartItem.getProductId()));
+        return new CartItem(member, productDao.findById(ordersCartItem.getProductId()));
     }
 
     public void addOrdersCoupon(final long orderId, final List<Long> couponIds) {

@@ -6,8 +6,8 @@ public class Orders {
     private Long id;
     private Member member;
     private List<CartItem> cartItems;
-    private Integer originalPrice;
-    private Integer discountPrice;
+    private Price originalPrice;
+    private Price discountPrice;
     private List<Coupon> coupons;
     private boolean confirmState;
 
@@ -15,8 +15,8 @@ public class Orders {
         this.id = id;
         this.member = member;
         this.cartItems = cartItems;
-        this.originalPrice = originalPrice;
-        this.discountPrice = discountPrice;
+        this.originalPrice = new Price(originalPrice);
+        this.discountPrice = new Price(discountPrice);
         this.coupons = coupons;
         this.confirmState = confirmState;
     }
@@ -33,12 +33,20 @@ public class Orders {
         return cartItems;
     }
 
-    public Integer getOriginalPrice() {
+    public Price getOriginalPrice() {
         return originalPrice;
     }
 
-    public Integer getDiscountPrice() {
+    public Price getDiscountPrice() {
         return discountPrice;
+    }
+
+    public Integer getOriginalPriceValue() {
+        return originalPrice.getValue();
+    }
+
+    public Integer getDiscountPriceValue() {
+        return discountPrice.getValue();
     }
 
     public List<Coupon> getCoupons() {

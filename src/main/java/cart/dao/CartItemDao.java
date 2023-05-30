@@ -99,7 +99,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 
-    public CartItemEntity findProductIdByCartId(final long cartId) {
+    public CartItemEntity findCartItemEntitiesByCartId(final long cartId) {
         final String sql = "SELECT * FROM cart_item WHERE id =?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
                         new CartItemEntity(
@@ -109,6 +109,10 @@ public class CartItemDao {
                                 rs.getInt("quantity")
                         )
                 , cartId);
+    }
+    public long findProductIdByCartId(final long cartId){
+        final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql,(rs,rowNum)-> rs.getLong("product_id"),cartId);
     }
 }
 

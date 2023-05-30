@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.domain.PriceValidator;
 import cart.dto.OrdersRequest;
 import cart.dto.OrdersResponse;
 import cart.repository.OrdersRepository;
@@ -12,9 +13,11 @@ import java.util.stream.Collectors;
 @Service
 public class OrdersService {
     private final OrdersRepository ordersRepository;
+    private final PriceValidator priceValidator;
 
-    public OrdersService(OrdersRepository ordersRepository) {
+    public OrdersService(OrdersRepository ordersRepository, PriceValidator priceValidator) {
         this.ordersRepository = ordersRepository;
+        this.priceValidator = priceValidator;
     }
 
     public Long takeOrders(Member member, final OrdersRequest ordersRequest) {
@@ -22,6 +25,7 @@ public class OrdersService {
         final int originalPrice = ordersRequest.getOriginalPrice();
         final int discountPrice = ordersRequest.getDiscountPrice();
         final List<Long> coupons = List.of(ordersRequest.getCouponId());
+        priceValidator.validateOrders(cartIds,discountPrice,coupons);
         return ordersRepository.takeOrders(member.getId(), cartIds, originalPrice, discountPrice, coupons);
     }
 

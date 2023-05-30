@@ -24,7 +24,7 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.findById(productId);
         return ProductResponse.of(product);
     }
 
