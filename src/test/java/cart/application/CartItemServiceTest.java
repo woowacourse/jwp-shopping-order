@@ -6,7 +6,7 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.dto.CartItemRequest;
-import cart.exception.MemberNotFoundException;
+import cart.exception.notfound.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

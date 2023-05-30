@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
-import cart.exception.MemberNotFoundException;
+import cart.exception.notfound.MemberNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

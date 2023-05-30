@@ -10,7 +10,7 @@ import cart.domain.orderproduct.OrderProduct;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderProductDto;
 import cart.dto.OrderRequest;
-import cart.exception.MemberNotFoundException;
+import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.point.InvalidPointUseException;
 import cart.exception.point.PointAbusedException;
 import cart.repository.OrderRepository;

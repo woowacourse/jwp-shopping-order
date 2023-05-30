@@ -1,10 +1,10 @@
-package cart.exception;
+package cart.exception.notfound;
 
-public abstract class GlobalException extends RuntimeException {
+public abstract class NotFoundException extends RuntimeException {
 
     private final String message;
 
-    public GlobalException(final String message) {
+    public NotFoundException(final String message) {
         this.message = message;
     }
 

@@ -10,7 +10,7 @@ import cart.domain.member.MemberPoint;
 import cart.domain.orderproduct.Order;
 import cart.domain.orderproduct.OrderProduct;
 import cart.domain.product.Product;
-import cart.exception.OrderNotFoundException;
+import cart.exception.notfound.OrderNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

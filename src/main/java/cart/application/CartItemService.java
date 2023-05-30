@@ -8,8 +8,8 @@ import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.exception.CartItemNotFoundException;
-import cart.exception.ProductNotFoundException;
+import cart.exception.notfound.CartItemNotFoundException;
+import cart.exception.notfound.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

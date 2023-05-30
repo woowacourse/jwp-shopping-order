@@ -3,7 +3,7 @@ package cart.application;
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.dto.ProductRequest;
-import cart.exception.ProductNotFoundException;
+import cart.exception.notfound.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

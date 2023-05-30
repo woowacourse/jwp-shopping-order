@@ -6,7 +6,7 @@ import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
-import cart.exception.MemberNotFoundException;
+import cart.exception.notfound.MemberNotFoundException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,10 +1,10 @@
-package cart.ui;
+package cart.ui.common;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
-import cart.exception.MemberNotFoundException;
 import cart.exception.authorization.InvalidFormatException;
 import cart.exception.authorization.PasswordNotMatchException;
+import cart.exception.notfound.MemberNotFoundException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
