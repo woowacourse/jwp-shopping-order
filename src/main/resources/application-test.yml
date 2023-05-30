@@ -6,3 +6,9 @@ spring:
     url: jdbc:mysql://localhost:13306/shopping-order?serverTimezone=Asia/Seoul
     username: user
     password: userpassword
+  sql:
+    init:
+      data-locations:
+      schema-locations: classpath:schema.sql
+      mode: always
+

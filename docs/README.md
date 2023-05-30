@@ -255,6 +255,10 @@ Content-Type: application/json
 }
 ```
 
+``` json
+HTTP/1.1 200 OK
+```
+
 ## 내 쿠폰함
 
 ### Request

@@ -78,14 +78,3 @@ CREATE TABLE IF NOT EXISTS order_coupon
     FOREIGN KEY (order_id) REFERENCES `order` (id),
     FOREIGN KEY (coupon_id) REFERENCES coupon (id)
 );
-
-# 주문 쿠폰
-CREATE TABLE IF NOT EXISTS order_coupon
-(
-    id        INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    order_id  INT UNSIGNED NOT NULL,
-    coupon_id INT UNSIGNED NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (order_id) REFERENCES `order` (id),
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
-);
