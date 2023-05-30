@@ -36,14 +36,14 @@ class MemberDaoTest extends DaoTest {
 
     @Test
     void 멤버를_추가하다() {
-        final Member member = Member.of(null, "test@test.com", "1234");
+        final Member member = Member.of(null, "test@test.com", "1234", 0L);
 
         assertDoesNotThrow(() -> memberDao.addMember(member));
     }
 
     @Test
     void 멤버_정보를_변경하다() {
-        final Member member = Member.of(1L, "test@test.com", "1234");
+        final Member member = Member.of(1L, "test@test.com", "1234", 0L);
 
         assertDoesNotThrow(() -> memberDao.updateMember(member));
     }

@@ -70,7 +70,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     @Test
     void 잘못된_사용자_정보로_장바구니에_아이템을_추가_요청시_실패한다() {
-        final Member illegalMember = Member.of(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        final Member illegalMember = Member.of(member.getId(), member.getEmail(), member.getPassword() + "asdf", 0L);
         final CartItemRequest cartItemRequest = CartItemRequest.from(productId);
         final ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 

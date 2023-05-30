@@ -53,7 +53,10 @@ public class MemberDao {
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return Member.of(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return Member.of(rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getLong("cash"));
         }
     }
 }
