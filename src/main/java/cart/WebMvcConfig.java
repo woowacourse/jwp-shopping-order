@@ -9,8 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberDao memberDao;
@@ -29,7 +27,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000", "http://13.209.69.80:8080", "http://localhost:8080")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
-                .allowedHeaders(AUTHORIZATION)
+                .allowedHeaders("*")
+                .exposedHeaders("*")
                 .allowCredentials(true);
     }
 }
