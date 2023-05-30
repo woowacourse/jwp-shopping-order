@@ -3,10 +3,10 @@ package cart.persistence.entity;
 public class ProductEntity {
     private final Long id;
     private final String name;
-    private final int price;
+    private final Integer price;
     private final String imageUrl;
 
-    public ProductEntity(Long id, String name, int price, String imageUrl) {
+    public ProductEntity(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -25,7 +25,7 @@ public class ProductEntity {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
