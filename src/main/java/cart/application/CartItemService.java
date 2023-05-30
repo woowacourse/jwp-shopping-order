@@ -1,5 +1,10 @@
 package cart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
@@ -7,10 +12,6 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
@@ -28,7 +29,7 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(productDao.getProductById(cartItemRequest.getProductId()),member));
+        return cartItemDao.save(new CartItem(productDao.getProductById(cartItemRequest.getProductId()), member));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

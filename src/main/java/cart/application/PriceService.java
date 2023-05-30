@@ -19,7 +19,8 @@ public class PriceService {
 
     public TotalDiscountInfoResponse getDiscountInformation(Integer price, String gradeName) {
         final Grade grade = Grade.findGradeByGradeName(gradeName);
-        final List<DiscountInformation> discountPoliciesInformations = pricePolicy.getAllDiscountPoliciesInformation(price, grade);
+        final List<DiscountInformation> discountPoliciesInformations = pricePolicy.getAllDiscountPoliciesInformation(
+                price, grade);
         return TotalDiscountInfoResponse.of(discountPoliciesInformations);
     }
 }

@@ -53,7 +53,7 @@ public class OrderRepository {
 
     public Order findOrderById(Long orderId, Member member) {
         final OrderEntity orderEntity = orderDao.findById(orderId)
-                .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = "+ orderId));
+                .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
         List<OrderedItemEntity> orderedItems = orderedItemDao.findItemsByOrderId(orderId);
         final List<CartItem> items = orderedItemToCartItem(member, orderedItems);
         return new Order(orderEntity.getId(), orderEntity.getPrice(), member, items);

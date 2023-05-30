@@ -26,7 +26,7 @@ public class CartItems {
     }
 
     public void validateExistentCartItems(List<Long> cartItemIds) {
-        if(cartItemIds.size() != cartItems.size()) {
+        if (cartItemIds.size() != cartItems.size()) {
             throw new CartItemException("존재하지 않는 cartItemId가 포함되어 있습니다.");
         }
     }

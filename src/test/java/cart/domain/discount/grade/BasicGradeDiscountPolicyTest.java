@@ -52,10 +52,10 @@ class BasicGradeDiscountPolicyTest {
 
     public static Stream<Arguments> provideParamsAndExpected() {
         return Stream.of(
-                Arguments.of(20000, Grade.GOLD, new DiscountInformation("memberGradeDiscount", 0.05, 1000 )),
-                Arguments.of(20000, Grade.SILVER, new DiscountInformation("memberGradeDiscount", 0.03, 600 )),
-                Arguments.of(20000, Grade.BRONZE, new DiscountInformation("memberGradeDiscount", 0.01, 200 )),
-                Arguments.of(100000, Grade.GOLD, new DiscountInformation("memberGradeDiscount", 0.05, 5000 ))
+                Arguments.of(20000, Grade.GOLD, new DiscountInformation("memberGradeDiscount", 0.05, 1000)),
+                Arguments.of(20000, Grade.SILVER, new DiscountInformation("memberGradeDiscount", 0.03, 600)),
+                Arguments.of(20000, Grade.BRONZE, new DiscountInformation("memberGradeDiscount", 0.01, 200)),
+                Arguments.of(100000, Grade.GOLD, new DiscountInformation("memberGradeDiscount", 0.05, 5000))
         );
     }
 }

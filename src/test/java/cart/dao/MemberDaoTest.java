@@ -32,9 +32,9 @@ class MemberDaoTest extends DaoTest {
 
         //then
         Assertions.assertAll(
-                ()-> assertThat(result.getEmail()).isEqualTo("a@a.com"),
-                ()-> assertThat(result.getPassword()).isEqualTo("1234"),
-                ()-> assertThat(result.getGrade()).isEqualTo(1)
+                () -> assertThat(result.getEmail()).isEqualTo("a@a.com"),
+                () -> assertThat(result.getPassword()).isEqualTo("1234"),
+                () -> assertThat(result.getGrade()).isEqualTo(1)
         );
     }
 
@@ -47,9 +47,9 @@ class MemberDaoTest extends DaoTest {
 
         //then
         Assertions.assertAll(
-                ()-> assertThat(result.getEmail()).isEqualTo("a@a.com"),
-                ()-> assertThat(result.getPassword()).isEqualTo("1234"),
-                ()-> assertThat(result.getGrade()).isEqualTo(1)
+                () -> assertThat(result.getEmail()).isEqualTo("a@a.com"),
+                () -> assertThat(result.getPassword()).isEqualTo("1234"),
+                () -> assertThat(result.getGrade()).isEqualTo(1)
         );
     }
 
