@@ -55,6 +55,10 @@ public class OrderService {
             orderedItemDao.createOrderedItems(orderId, orderedItem);
         }
 
+        //주문한 상품은 장바구니에서 삭제
+        for (CartItem cartItem : cartItems) {
+            cartItemDao.delete(member.getId(), cartItem.getId());
+        }
 
         return orderId;
     }
