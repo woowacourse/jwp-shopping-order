@@ -5,27 +5,12 @@ import cart.domain.TotalPrice;
 public class DeliveryPolicy implements DiscountPolicy {
 
     @Override
-    public TotalPrice discount(final TotalPrice orderPrice) {
-        return orderPrice.discountDelivery();
+    public TotalPrice discount(final TotalPrice orderPrice, final long value) {
+        return orderPrice.discountDelivery(value);
     }
 
     @Override
     public String getName() {
         return PolicyType.DELIVERY.getName();
-    }
-
-    @Override
-    public long getDiscountPrice() {
-        return 0;
-    }
-
-    @Override
-    public int getDiscountPercent() {
-        return 0;
-    }
-
-    @Override
-    public boolean isDiscountDeliveryFee() {
-        return true;
     }
 }

@@ -21,12 +21,9 @@ public class CouponDao {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String policyType = rs.getString("policy_type");
-        final long discountPrice = rs.getLong("discount_price");
-        final int discountPercent = rs.getInt("discount_percent");
-        final boolean discountDeliveryFee = rs.getBoolean("discount_delivery_fee");
-        final String conditionType = rs.getString("condition_type");
+        final long discountValue = rs.getLong("discount_value");
         final long minimumPrice = rs.getLong("minimum_price");
-        return new CouponEntity(id, name, policyType, discountPrice, discountPercent, discountDeliveryFee, conditionType, minimumPrice);
+        return new CouponEntity(id, name, policyType, discountValue, minimumPrice);
     };
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {

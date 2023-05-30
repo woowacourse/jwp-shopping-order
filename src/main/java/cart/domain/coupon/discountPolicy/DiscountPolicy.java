@@ -4,14 +4,7 @@ import cart.domain.TotalPrice;
 
 public interface DiscountPolicy {
 
-    TotalPrice discount(final TotalPrice orderPrice);
+    TotalPrice discount(final TotalPrice orderPrice, final long value);
 
     String getName();
-
-    long getDiscountPrice();
-
-    int getDiscountPercent();
-
-    boolean isDiscountDeliveryFee();
-
 }

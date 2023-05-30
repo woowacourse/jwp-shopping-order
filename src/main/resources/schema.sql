@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `PRODUCT`
     `price`      long             NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `MEMBER`
 (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `MEMBER`
     `password`   varchar(255)        NOT NULL,
     `created_at` timestamp           NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp           NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `CART_ITEM`
 (
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `CART_ITEM`
     `quantity`   long             NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `ORDERS`
 (
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `ORDERS`
     `member_id`    long             NOT NULL,
     `created_at`   timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at`   timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `ORDER_ITEM`
 (
@@ -47,21 +47,18 @@ CREATE TABLE IF NOT EXISTS `ORDER_ITEM`
     `order_id`   long             NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `COUPON`
 (
-    `id`                    long PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `name`                  varchar(255)     NOT NULL,
-    `policy_type`           varchar(255)     NOT NULL,
-    `discount_price`        long             NOT NULL,
-    `discount_percent`      int              NOT NULL,
-    `discount_delivery_fee` boolean          NOT NULL,
-    `condition_type`        varchar(255)     NOT NULL,
-    `minimum_price`         long             NOT NULL,
-    `created_at`            timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    `updated_at`            timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-    );
+    `id`             long PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `name`           varchar(255)     NOT NULL,
+    `policy_type`    varchar(255)     NOT NULL,
+    `discount_value` long             NOT NULL,
+    `minimum_price`  long             NOT NULL,
+    `created_at`     timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at`     timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
+);
 
 CREATE TABLE IF NOT EXISTS `MEMBER_COUPON`
 (
@@ -71,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `MEMBER_COUPON`
     `used`       boolean          NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     `updated_at` timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
-    );
+);
 
 ALTER TABLE `CART_ITEM`
     ADD FOREIGN KEY (`member_id`) REFERENCES `MEMBER` (`id`);

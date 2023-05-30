@@ -44,8 +44,10 @@ public class OrderRepository {
 
     public Order save(final Order order) {
         final OrderEntity orderEntity = OrderEntity.from(order);
-        final MemberCouponEntity memberCouponEntity = MemberCouponEntity.from(order.getMemberCoupon());
-        memberCouponDao.update(memberCouponEntity);
+        if (!Objects.isNull(order.getMemberCoupon().getId())) {
+            final MemberCouponEntity memberCouponEntity = MemberCouponEntity.from(order.getMemberCoupon());
+            memberCouponDao.update(memberCouponEntity);
+        }
         if (Objects.isNull(order.getId())) {
             final OrderEntity entity = orderDao.insert(orderEntity);
             final List<OrderItemEntity> orderItemEntities = mapToOrderItemEntities(order, entity.getId());

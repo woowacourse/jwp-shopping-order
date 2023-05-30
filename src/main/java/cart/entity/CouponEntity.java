@@ -16,29 +16,20 @@ public class CouponEntity {
     private final Long id;
     private final String name;
     private final String policyType;
-    private final long discountPrice;
-    private final int discountPercent;
-    private final boolean discountDeliveryFee;
-    private final String conditionType;
+    private final long value;
     private final long minimumPrice;
 
     public CouponEntity(
             final Long id,
             final String name,
             final String policyType,
-            final long discountPrice,
-            final int discountPercent,
-            final boolean discountDeliveryFee,
-            final String conditionType,
+            final long value,
             final long minimumPrice
     ) {
         this.id = id;
         this.name = name;
         this.policyType = policyType;
-        this.discountPrice = discountPrice;
-        this.discountPercent = discountPercent;
-        this.discountDeliveryFee = discountDeliveryFee;
-        this.conditionType = conditionType;
+        this.value = value;
         this.minimumPrice = minimumPrice;
     }
 
@@ -47,25 +38,18 @@ public class CouponEntity {
                 id,
                 name,
                 getDiscountPolicy(),
-                getDiscountCondition()
+                value,
+                minimumPrice
         );
-    }
-
-    private DiscountCondition getDiscountCondition() {
-        final ConditionType type = ConditionType.from(conditionType);
-        if (type == ConditionType.MINIMUM_PRICE) {
-            return new TotalItemsPriceCondition(minimumPrice);
-        }
-        return new NoneCondition();
     }
 
     private DiscountPolicy getDiscountPolicy() {
         final PolicyType type = PolicyType.from(policyType);
         if (type == PolicyType.PRICE) {
-            return new PricePolicy(discountPrice);
+            return new PricePolicy();
         }
         if (type == PolicyType.PERCENT) {
-            return new PercentPolicy(discountPercent);
+            return new PercentPolicy();
         }
         return new DeliveryPolicy();
     }
@@ -80,22 +64,6 @@ public class CouponEntity {
 
     public String getPolicyType() {
         return policyType;
-    }
-
-    public long getDiscountPrice() {
-        return discountPrice;
-    }
-
-    public int getDiscountPercent() {
-        return discountPercent;
-    }
-
-    public boolean getDiscountDeliveryFee() {
-        return discountDeliveryFee;
-    }
-
-    public String getConditionType() {
-        return conditionType;
     }
 
     public long getMinimumPrice() {

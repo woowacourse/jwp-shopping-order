@@ -28,12 +28,12 @@ public class MemberCoupon {
         return new MemberCoupon(id, member, coupon, true);
     }
 
-    public TotalPrice calculatePrice(final TotalPrice orderPrice) {
-        return coupon.apply(orderPrice);
+    public TotalPrice calculatePrice(final TotalPrice totalPrice) {
+        return coupon.apply(totalPrice);
     }
 
-    public TotalPrice calculateDiscountPrice(final TotalPrice orderPrice) {
-        return coupon.calculateDiscountPrice(orderPrice);
+    public TotalPrice calculateDiscountPrice(final TotalPrice totalPrice) {
+        return coupon.calculateDiscountPrice(totalPrice);
     }
 
     public Long getId() {
@@ -58,6 +58,16 @@ public class MemberCoupon {
         }
 
         @Override
+        public TotalPrice calculatePrice(final TotalPrice totalPrice) {
+            return totalPrice;
+        }
+
+        @Override
+        public TotalPrice calculateDiscountPrice(final TotalPrice totalPrice) {
+            return new TotalPrice(0, 0);
+        }
+
+        @Override
         public MemberCoupon use() {
             return this;
         }
@@ -69,7 +79,7 @@ public class MemberCoupon {
 
         @Override
         public Long getId() {
-            throw new UnsupportedOperationException();
+            return null;
         }
 
         @Override

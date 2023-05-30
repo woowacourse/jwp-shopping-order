@@ -15,8 +15,8 @@ public class TotalPrice {
     }
 
     public void validate(final long price) {
-        if (price <= 0) {
-            throw new InvalidPriceException("가격은 0이하가 될 수 없습니다");
+        if (price < 0) {
+            throw new InvalidPriceException("가격은 0보다 작을 수 없습니다");
         }
     }
 
@@ -24,24 +24,28 @@ public class TotalPrice {
         return new TotalPrice(orderPrice - amount, deliveryFee);
     }
 
-    public TotalPrice discountPercent(final int percent) {
+    public TotalPrice discountPercent(final long percent) {
         return new TotalPrice(orderPrice * 100 / percent, deliveryFee);
     }
 
-    public TotalPrice discountDelivery() {
-        return new TotalPrice(orderPrice, 0);
+    public TotalPrice discountDelivery(final long amount) {
+        return new TotalPrice(orderPrice, amount);
     }
 
     public long getTotalItemsPrice() {
         return orderPrice;
     }
 
-    public long getDeliveryPrice() {
-        return deliveryFee;
+    public boolean orderPriceIsMoreThan(final long minimumPrice) {
+        return minimumPrice >= orderPrice;
     }
 
     public TotalPrice subOrderPrice(final TotalPrice other) {
         return new TotalPrice(this.orderPrice - other.orderPrice, this.deliveryFee);
+    }
+
+    public long getDeliveryPrice() {
+        return deliveryFee;
     }
 
     public long getOrderPrice() {
