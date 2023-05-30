@@ -29,17 +29,17 @@ public class CartItemApiController {
         this.cartItemService = cartItemService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
-    }
-
     @PostMapping
     public ResponseEntity<CartItemUpdateResponse> addCartItems(@Auth Member member, @RequestBody CartItemAddRequest cartItemAddRequest) {
         Long cartItemId = cartItemService.add(member, cartItemAddRequest);
         final CartItemResponse response = cartItemService.findById(cartItemId);
         final CartItemUpdateResponse createdResponse = new CartItemUpdateResponse(response.getQuantity(), response.isChecked());
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).body(createdResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth Member member) {
+        return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
     @PatchMapping("/{id}")

@@ -109,24 +109,9 @@ public class CartItemDao {
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
     public void update(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.isChecked(), cartItem.getId());
-    }
-
-    public void deleteByProductId(final Long productId) {
-        String sql = "DELETE FROM cart_item WHERE product_id = ?";
-        jdbcTemplate.update(sql, productId);
     }
 
     public void deleteAll(final List<Long> cartItemIds) {
@@ -143,5 +128,14 @@ public class CartItemDao {
             }
         });
     }
-}
 
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByProductId(final Long productId) {
+        String sql = "DELETE FROM cart_item WHERE product_id = ?";
+        jdbcTemplate.update(sql, productId);
+    }
+}

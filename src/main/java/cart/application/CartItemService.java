@@ -28,6 +28,12 @@ public class CartItemService {
 		this.cartItemDao = cartItemDao;
 	}
 
+	public Long add(Member member, CartItemAddRequest cartItemAddRequest) {
+		final ProductEntity productEntity = productDao.getProductById(cartItemAddRequest.getProductId());
+		final Product product = Product.from(productEntity);
+		return cartItemDao.save(new CartItem(member, product));
+	}
+
 	public List<CartItemResponse> findByMember(Member member) {
 		List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
 		return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
@@ -36,12 +42,6 @@ public class CartItemService {
 	public CartItemResponse findById(Long cartItemId) {
 		final CartItem cartItem = cartItemDao.findById(cartItemId);
 		return CartItemResponse.of(cartItem);
-	}
-
-	public Long add(Member member, CartItemAddRequest cartItemAddRequest) {
-		final ProductEntity productEntity = productDao.getProductById(cartItemAddRequest.getProductId());
-		final Product product = Product.from(productEntity);
-		return cartItemDao.save(new CartItem(member, product));
 	}
 
 	public CartItemUpdateResponse updateQuantity(Member member, Long id, CartItemUpdateRequest request) {
