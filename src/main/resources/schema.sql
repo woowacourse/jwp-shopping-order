@@ -20,8 +20,8 @@ CREATE TABLE cart_item
     product_id BIGINT NOT NULL,
     quantity   INT    NOT NULL,
 
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
 
 CREATE TABLE order_history
@@ -31,7 +31,7 @@ CREATE TABLE order_history
     used_point  INT    NOT NULL,
     order_price INT    NOT NULL,
 
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
 
 CREATE TABLE order_product
@@ -44,7 +44,7 @@ CREATE TABLE order_product
     image_url        VARCHAR(255) NOT NULL,
     quantity         INT          NOT NULL,
 
-    FOREIGN KEY (order_history_id) REFERENCES order_history (id)
+    FOREIGN KEY (order_history_id) REFERENCES order_history (id) ON DELETE CASCADE
 );
 
 CREATE TABLE point
@@ -53,5 +53,5 @@ CREATE TABLE point
     member_id    BIGINT NOT NULL,
     point_amount INT    NOT NULL,
 
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
