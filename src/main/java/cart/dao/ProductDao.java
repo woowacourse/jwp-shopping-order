@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -21,24 +22,24 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductEntity> getAllProducts() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return new ProductEntity(productId, name, price, imageUrl);
         });
     }
 
-    public Product getProductById(Long productId) {
+    public ProductEntity getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return new ProductEntity(productId, name, price, imageUrl);
         });
     }
 

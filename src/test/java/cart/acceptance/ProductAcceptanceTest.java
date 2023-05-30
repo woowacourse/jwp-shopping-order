@@ -1,7 +1,7 @@
 package cart.acceptance;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
+import cart.repository.ProductRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -17,13 +17,13 @@ import static org.springframework.http.HttpStatus.*;
 public class ProductAcceptanceTest extends AcceptanceTest {
 
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @Test
     void 제품을_추가할_수_있다() {
         final ExtractableResponse<Response> response = 제품_추가_요청(PRODUCT_REQUEST_CAMERA_EOS_M200);
         Long id = 추가된_제품_아이디_반환(response);
-        Product savedProduct = productDao.getProductById(id);
+        Product savedProduct = productRepository.getProductById(id);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(CREATED.value()),
