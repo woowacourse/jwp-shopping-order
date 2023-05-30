@@ -25,20 +25,20 @@ CREATE TABLE IF NOT EXISTS cart_item
 
 CREATE TABLE IF NOT EXISTS `order`
 (
-    id           BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id    BIGINT    NOT NULL,
-    created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    order_amount BIGINT    NOT NULL,
-    used_point   BIGINT    NOT NULL,
+    id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT    NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    used_point BIGINT    NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
 CREATE TABLE IF NOT EXISTS order_item
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id   BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL,
+    id                  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id            BIGINT NOT NULL,
+    product_id          BIGINT NOT NULL,
+    quantity            INT    NOT NULL,
+    price_at_order_time BIGINT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES `order` (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
