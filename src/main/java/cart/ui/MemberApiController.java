@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.MemberService;
+import cart.dto.TokenResponse;
 import cart.dto.MemberRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +26,8 @@ public class MemberApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody final MemberRequest memberRequest) {
-        String basicAuth = memberService.generateBasicAuth(memberRequest);
-        return ResponseEntity.ok().body(basicAuth);
+    public ResponseEntity<TokenResponse> login(@RequestBody final MemberRequest memberRequest) {
+        String basicAuth = memberService.generateMemberToken(memberRequest);
+        return ResponseEntity.ok().body(new TokenResponse(basicAuth));
     }
 }
