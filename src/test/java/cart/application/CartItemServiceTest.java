@@ -18,6 +18,7 @@ import cart.domain.CartItem;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemDuplicateException;
 import cart.exception.ItemOwnerNotMatchException;
 import cart.exception.ProductNotFound;
 import java.util.List;
@@ -33,7 +34,7 @@ import org.junit.jupiter.api.Test;
 @DisplayName("CartItemService 은(는)")
 class CartItemServiceTest {
 
-    private static final CartItemRequest CART_ITEM_REQUEST = new CartItemRequest(1L);
+    private static final CartItemRequest CART_ITEM_REQUEST = new CartItemRequest(CHICKEN.getId());
 
     private CartItemDao cartItemDao = mock(CartItemDao.class);
     private ProductDao productDao = mock(ProductDao.class);
@@ -66,6 +67,19 @@ class CartItemServiceTest {
     }
 
     @Test
+    void 이미_존재하는_아이템을_추가하면_예외() {
+        // given
+        given(productDao.findById(1L))
+                .willReturn(Optional.of(CHICKEN));
+        given(cartItemDao.findByMemberIdAndProductId(MEMBER.getId(), CHICKEN.getId()))
+                .willReturn(Optional.of(new CartItem(1L, 1, CHICKEN, MEMBER.getId())));
+
+        // when & then
+        assertThatThrownBy(() -> cartItemService.add(MEMBER, CART_ITEM_REQUEST))
+                .isInstanceOf(CartItemDuplicateException.class);
+    }
+
+    @Test
     void 멤버를_통해서_모든_장바구니_상품을_반환한다() {
         // given
         List<CartItem> expected = List.of(
@@ -82,7 +96,6 @@ class CartItemServiceTest {
                 .isEqualTo(expected);
     }
 
-    //TODO 정상로직 추가 하고 픽스쳐 정리
     @Test
     void 상품_수량을_변경한다_수량을_0개로하면_삭제() {
         // given

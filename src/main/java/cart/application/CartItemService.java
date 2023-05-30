@@ -10,6 +10,7 @@ import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemDuplicateException;
 import cart.exception.CartItemException;
 import cart.exception.ProductNotFound;
 import java.util.List;
@@ -29,8 +30,15 @@ public class CartItemService {
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productDao.findById(cartItemRequest.getProductId())
                 .orElseThrow(ProductNotFound::new);
+        validateDuplicateCartItem(member.getId(), cartItemRequest.getProductId());
         CartItem cartItem = new CartItem(product, member.getId());
         return cartItemDao.save(cartItem);
+    }
+
+    private void validateDuplicateCartItem(Long memberId, Long productId) {
+        if (cartItemDao.findByMemberIdAndProductId(memberId, productId).isPresent()) {
+            throw new CartItemDuplicateException();
+        }
     }
 
     public List<CartItemResponse> findByMember(Member member) {

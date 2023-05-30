@@ -39,7 +39,8 @@ public class CartItemDao {
 
     public List<CartItem> findByMemberId(Long memberId) {
         String sql =
-                "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, product.id, product.name, product.price, product.image_url " +
+                "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, product.id, product.name, product.price, product.image_url "
+                        +
                         "FROM cart_item " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.member_id = ?";
@@ -56,7 +57,8 @@ public class CartItemDao {
 
     public Optional<CartItem> findById(Long id) {
         String sql =
-                "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
                         "FROM cart_item " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.id = ?";
@@ -75,5 +77,19 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ? ";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public Optional<CartItem> findByMemberIdAndProductId(Long memberId, Long productId) {
+        String sql =
+                "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
+                        "FROM cart_item " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "WHERE cart_item.id = ? and  cart_item.member_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartItemRowMapper, memberId, productId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
