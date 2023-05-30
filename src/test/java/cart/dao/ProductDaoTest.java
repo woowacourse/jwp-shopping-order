@@ -1,8 +1,11 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.entity.CartItemEntity;
+import cart.dao.entity.MemberEntity;
 import cart.dao.entity.ProductEntity;
 import cart.test.RepositoryTest;
 import java.time.LocalDateTime;
@@ -12,12 +15,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @RepositoryTest
 class ProductDaoTest {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
+    private CartItemDao cartItemDao;
 
     @Test
     @DisplayName("getAllProducts 메서드는 모든 상품 데이터를 조회한다.")
@@ -55,15 +65,36 @@ class ProductDaoTest {
         );
     }
 
-    @Test
-    @DisplayName("deleteProduct 메서드는 상품 데이터를 삭제한다.")
-    void deleteProduct() {
-        Long savedProductId = productDao.createProduct(new ProductEntity("치킨", 10000, "http://image.com"));
+    @Nested
+    @DisplayName("deleteProduct 메서드는 ")
+    class DeleteProduct {
 
-        productDao.deleteProduct(savedProductId);
+        @Test
+        @DisplayName("장바구니에 담겨 있는 상품이라면 예외를 던진다.")
+        void existCartItemProduct() {
+            MemberEntity member = new MemberEntity("a@a.com", "password1", 10);
+            Long savedMemberId = memberDao.addMember(member);
 
-        Optional<ProductEntity> result = productDao.getProductById(savedProductId);
-        assertThat(result).isEmpty();
+            ProductEntity product = new ProductEntity("치킨", 10000, "http://image.com");
+            Long savedProductId = productDao.createProduct(product);
+
+            CartItemEntity cartItem = new CartItemEntity(member.assignId(savedMemberId), product.assignId(savedProductId), 1);
+            cartItemDao.save(cartItem);
+
+            assertThatThrownBy(() -> productDao.deleteProduct(savedProductId))
+                    .isInstanceOf(DataIntegrityViolationException.class);
+        }
+
+        @Test
+        @DisplayName("상품 데이터를 삭제한다.")
+        void deleteProduct() {
+            Long savedProductId = productDao.createProduct(new ProductEntity("치킨", 10000, "http://image.com"));
+
+            productDao.deleteProduct(savedProductId);
+
+            Optional<ProductEntity> result = productDao.getProductById(savedProductId);
+            assertThat(result).isEmpty();
+        }
     }
 
     @Nested

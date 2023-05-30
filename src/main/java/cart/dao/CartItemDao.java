@@ -116,5 +116,10 @@ public class CartItemDao {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public void deleteAllByProductId(Long productId) {
+        String sql = "DELETE FROM cart_item WHERE product_id = ?";
+        jdbcTemplate.update(sql, productId);
+    }
 }
 

@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.product.Product;
+import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import cart.ui.controller.dto.request.ProductRequest;
 import cart.ui.controller.dto.response.ProductResponse;
@@ -14,9 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     public List<ProductResponse> getAllProducts() {
@@ -46,6 +49,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long productId) {
+        cartItemRepository.deleteAllByProductId(productId);
         productRepository.deleteProduct(productId);
     }
 }

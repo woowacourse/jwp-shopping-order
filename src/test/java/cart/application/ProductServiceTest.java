@@ -3,14 +3,21 @@ package cart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.MemberDao;
+import cart.dao.entity.MemberEntity;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
+import cart.repository.mapper.MemberMapper;
 import cart.test.ServiceTest;
 import cart.ui.controller.dto.request.ProductRequest;
 import cart.ui.controller.dto.response.ProductResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,6 +31,12 @@ class ProductServiceTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private MemberDao memberDao;
 
     @BeforeEach
     void setUp() {
@@ -73,12 +86,38 @@ class ProductServiceTest {
         );
     }
 
-    @Test
-    @DisplayName("deleteProduct 메서드는 상품을 삭제한다.")
-    void deleteProduct() {
-        productService.deleteProduct(product.getId());
+    @Nested
+    @DisplayName("deleteProduct 메서드는 ")
+    class DeleteProduct {
 
-        List<ProductResponse> result = productService.getAllProducts();
-        assertThat(result).isEmpty();
+        @Test
+        @DisplayName("상품의 장바구니 상품을 모두 삭제한다.")
+        void deleteCartItems() {
+            MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
+            Long memberId = memberDao.addMember(memberEntity);
+            Member member = MemberMapper.toDomain(memberEntity);
+            member.assignId(memberId);
+
+            CartItem cartItem = new CartItem(member, product);
+            cartItemRepository.save(cartItem);
+
+            productService.deleteProduct(product.getId());
+
+            List<Product> products = productRepository.getAllProducts();
+            List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
+            assertAll(
+                    () -> assertThat(products).isEmpty(),
+                    () -> assertThat(cartItems).isEmpty()
+            );
+        }
+
+        @Test
+        @DisplayName("상품을 삭제한다.")
+        void deleteProduct() {
+            productService.deleteProduct(product.getId());
+
+            List<ProductResponse> result = productService.getAllProducts();
+            assertThat(result).isEmpty();
+        }
     }
 }
