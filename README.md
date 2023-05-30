@@ -3,7 +3,10 @@
 ## step2
 
 ### Domain
-- [ ] 
+- [ ] Order
+  - [ ] 필드  
+    - [ ] CartItem
+    - [ ] 
 
 ### API
 - [ ] 장바구니
