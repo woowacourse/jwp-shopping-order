@@ -79,7 +79,7 @@ public class OrderService {
                         .mapToInt(orderProduct -> orderProduct.getProductPriceValue() * orderProduct.getQuantityValue())
                         .sum(),
                 order.getUsedPointValue(),
-                order.getCreatedAt(),
+                order.getOrderedAt(),
                 orderProducts.stream()
                         .map(orderProduct -> new OrderProductDto(
                                 orderProduct.getProductId(),

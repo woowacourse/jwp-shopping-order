@@ -11,18 +11,18 @@ public class Order {
     private Long id;
     private final Member member;
     private final MemberPoint usedPoint;
-    private LocalDateTime createdAt;
+    private LocalDateTime orderedAt;
 
     public Order(final Member member, final MemberPoint usedPoint) {
         this.member = member;
         this.usedPoint = usedPoint;
     }
 
-    public Order(final Long id, final Member member, final MemberPoint usedPoint, final LocalDateTime createdAt) {
+    public Order(final Long id, final Member member, final MemberPoint usedPoint, final LocalDateTime orderedAt) {
         this.id = id;
         this.member = member;
         this.usedPoint = usedPoint;
-        this.createdAt = createdAt;
+        this.orderedAt = orderedAt;
     }
 
     public Long getId() {
@@ -45,8 +45,8 @@ public class Order {
         return usedPoint.getPoint();
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class Order {
                 "id=" + id +
                 ", member=" + member +
                 ", usedPoint=" + usedPoint +
-                ", createdAt=" + createdAt +
+                ", createdAt=" + orderedAt +
                 '}';
     }
 }
