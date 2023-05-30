@@ -2,7 +2,6 @@ package cart.domain;
 
 import cart.exception.CartItemException;
 
-import java.util.List;
 import java.util.Objects;
 
 public class CartItem {
@@ -27,6 +26,20 @@ public class CartItem {
         this.checked = checked;
     }
 
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new CartItemException.IllegalMember(this, member);
+        }
+    }
+
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void changeChecked(final boolean checked) {
+        this.checked = checked;
+    }
+
     public Long getId() {
         return id;
     }
@@ -45,31 +58,6 @@ public class CartItem {
 
     public boolean isChecked() {
         return checked;
-    }
-
-    public void validateLegalOrder(final List<CartItem> items) {
-        for (final CartItem item : items) {
-            if (Objects.equals(id, item.id)) {
-                if (this.equals(item)) {
-                    return;
-                }
-            }
-        }
-        throw new IllegalArgumentException();
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
-    }
-
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void changeChecked(final boolean checked) {
-        this.checked = checked;
     }
 
     @Override

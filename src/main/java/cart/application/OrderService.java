@@ -70,15 +70,6 @@ public class OrderService {
         }
     }
 
-    private List<CartItem> toCartItems(final Member member, final List<CartItemRequest> requests) {
-        return requests.stream()
-                .map(cartItemRequest -> new CartItem(cartItemRequest.getId(), cartItemRequest.getQuantity(),
-                        productDao.getProductById(cartItemRequest.getProductId()),
-                        member,
-                        true
-                )).collect(Collectors.toList());
-    }
-
     private void iterateRequests(final List<CartItemRequest> requests, final CartItem cartItem) {
         for (final CartItemRequest request : requests) {
             compareEachCartItemIfIdEquals(cartItem, request);
@@ -107,6 +98,15 @@ public class OrderService {
 
     private boolean isNotChecked(final CartItem cartItem) {
         return !cartItem.isChecked();
+    }
+
+    private List<CartItem> toCartItems(final Member member, final List<CartItemRequest> requests) {
+        return requests.stream()
+                .map(cartItemRequest -> new CartItem(cartItemRequest.getId(), cartItemRequest.getQuantity(),
+                        productDao.getProductById(cartItemRequest.getProductId()),
+                        member,
+                        true
+                )).collect(Collectors.toList());
     }
 
     private void updateMember(final Member member, final Order order) {
