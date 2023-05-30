@@ -32,13 +32,13 @@ class MemberServiceTest {
     void 모든_회원_정보를_얻는다() {
         //given
         Mockito.when(memberRepository.getAllMembers())
-                .thenReturn(List.of(new Member(1L, "huchu@woowahan.com", "1234567a!")));
+                .thenReturn(List.of(new Member(1L, "huchu@woowahan.com", "1234567a!", 0)));
 
         //when
         final List<Member> allMembers = memberService.getAllMembers();
 
         //then
-        assertThat(allMembers).isEqualTo(List.of(new Member(1L, "huchu@woowahan.com", "1234567a!")));
+        assertThat(allMembers).isEqualTo(List.of(new Member(1L, "huchu@woowahan.com", "1234567a!", 0)));
     }
 
     @Test
@@ -47,12 +47,12 @@ class MemberServiceTest {
         final String email = "huchu@woowahan.com";
 
         Mockito.when(memberRepository.getMemberByEmail(any(Email.class)))
-                .thenReturn(new Member(1L, email, "1234567a!"));
+                .thenReturn(new Member(1L, email, "1234567a!", 0));
 
         //when
         final Member member = memberService.getMemberByEmail(new Email(email));
 
         //then
-        assertThat(member).isEqualTo(new Member(1L, "huchu@woowahan.com", "1234567a!"));
+        assertThat(member).isEqualTo(new Member(1L, "huchu@woowahan.com", "1234567a!", 0));
     }
 }

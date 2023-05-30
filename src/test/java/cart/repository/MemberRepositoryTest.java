@@ -44,7 +44,7 @@ class MemberRepositoryTest {
 
         //then
         assertThat(allMembers).usingRecursiveComparison()
-                .isEqualTo(List.of(new Member(1L, "huchu@woowahan.com", "1234567a!")));
+                .isEqualTo(List.of(new Member(1L, "huchu@woowahan.com", "1234567a!", 0)));
     }
 
     @Test
@@ -56,6 +56,6 @@ class MemberRepositoryTest {
         final Member member = memberRepository.getMemberByEmail(email);
 
         //then
-        assertThat(member).isEqualTo(new Member(1L, "huchu@woowahan.com", "1234567a!"));
+        assertThat(member).isEqualTo(new Member(1L, "huchu@woowahan.com", "1234567a!", 0));
     }
 }

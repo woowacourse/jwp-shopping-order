@@ -1,5 +1,7 @@
 package cart.domain.member;
 
+import cart.domain.Point;
+
 import java.util.Objects;
 
 public class Member {
@@ -7,15 +9,29 @@ public class Member {
     private final Long id;
     private final Email email;
     private final Password password;
+    private final Point point;
 
-    public Member(final Long id, final String email, final String password) {
+    private Member(final Long id, final Email email, final Password password, final Point point) {
         this.id = id;
-        this.email = new Email(email);
-        this.password = new Password(password);
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
+    public Member(final Long id, final String email, final String password, final int point) {
+        this(id, new Email(email), new Password(password), Point.valueOf(point));
     }
 
     public boolean hasSamePassword(final Password password) {
         return this.password.equals(password);
+    }
+
+    public boolean canConsume(final Point point) {
+        return this.point.isMoreThan(point);
+    }
+
+    public Member calculatePoint(final Point point) {
+        return new Member(id, email, password, this.point.reduce(point));
     }
 
     public String getEmailValue() {

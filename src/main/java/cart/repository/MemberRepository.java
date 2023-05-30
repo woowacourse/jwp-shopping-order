@@ -24,13 +24,13 @@ public class MemberRepository {
                 .map(memberEntity -> new Member(
                         memberEntity.getId(),
                         memberEntity.getEmail(),
-                        memberEntity.getPassword()
-                ))
+                        memberEntity.getPassword(),
+                        0))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public Member getMemberByEmail(final Email email) {
         final MemberEntity memberEntity = memberDao.getMemberByEmail(email.getAddress());
-        return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
+        return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword(), 0);
     }
 }

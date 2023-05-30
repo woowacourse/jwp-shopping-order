@@ -18,7 +18,7 @@ class MemberTest {
     @CsvSource({"1234567a!, true", "a!1234567, false"})
     void 비밀번호가_같은지_확인한다(final String password, final boolean expected) {
         //given
-        final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!");
+        final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!", 0);
 
         //when
         final boolean actual = member.hasSamePassword(new Password(password));
@@ -30,7 +30,7 @@ class MemberTest {
     @Test
     void 이메일_값을_반환한다() {
         //given
-        final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!");
+        final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!", 0);
 
         //when
         final String emailValue = member.getEmailValue();
@@ -42,12 +42,25 @@ class MemberTest {
     @Test
     void 비밀번호_값을_반환한다() {
         //given
-        final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!");
+        final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!", 0);
 
         //when
         final String passwordValue = member.getPasswordValue();
 
         //then
         assertThat(passwordValue).isEqualTo("1234567a!");
+    }
+
+    @ParameterizedTest
+    @CsvSource({"999, true", "1000, false", "1001, false"})
+    void 포인트를_사용할_수_있는지_확인한다(final int point, final boolean expected) {
+        //given
+        final Member member = new Member(1L, "huchu@woowahan.com", "1234567a!", 1000);
+
+        //when
+        final boolean actual = member.canConsume(Point.valueOf(point));
+
+        //then
+        assertThat(actual).isEqualTo(expected);
     }
 }
