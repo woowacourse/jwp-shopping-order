@@ -1,8 +1,8 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
-
 import java.util.Objects;
+
+import cart.exception.CartItemException;
 
 public class CartItem {
     private Long id;
@@ -47,5 +47,22 @@ public class CartItem {
 
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        CartItem cartItem = (CartItem)o;
+
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

@@ -1,17 +1,18 @@
 package cart.dao;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.Product;
 
 @Repository
 public class CartItemDao {
@@ -91,6 +92,11 @@ public class CartItemDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteAllBy(Long memberId) {
+        String sql = "DELETE FROM cart_item WHERE member_id = ?";
+        jdbcTemplate.update(sql, memberId);
     }
 
     public void updateQuantity(CartItem cartItem) {

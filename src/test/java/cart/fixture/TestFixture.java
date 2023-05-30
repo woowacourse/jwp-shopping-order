@@ -4,6 +4,7 @@ import java.util.List;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.OrderItem;
 import cart.domain.Product;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -33,4 +34,8 @@ public class TestFixture {
     public static CartItem CART_ITEM_샐러드_MEMBER_A = new CartItem(2L, 10, 샐러드, MEMBER_A);
 
     public static List<CartItem> CART_ITEMS_MEMBER_A = List.of(CART_ITEM_치킨_MEMBER_A, CART_ITEM_샐러드_MEMBER_A);
+
+    public static OrderItem ORDERED_치킨 = new OrderItem(null, 치킨, 1);
+    public static OrderItem ORDERED_치킨_COUPON_USED = new OrderItem(null, 치킨, 1);
+
 }

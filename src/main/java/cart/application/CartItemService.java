@@ -8,9 +8,9 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
 
 @Service
 public class CartItemService {
@@ -22,13 +22,23 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return CartItemResponse.of(cartItems);
+    public List<CartItem> findByMember(Member member) {
+        return cartItemDao.findByMemberId(member.getId());
+    }
+
+    public CartItem getItemBy(Long id) {
+        return cartItemDao.findById(id);
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Product product = productDao.getProductById(cartItemRequest.getProductId());
+        return cartItemDao.save(new CartItem(member, product));
+    }
+
+    public void add(List<CartItem> cartItems) {
+        for (CartItem cartItem : cartItems) {
+            cartItemDao.save(cartItem);
+        }
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
@@ -49,5 +59,9 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    public void removeAllOf(Member member) {
+        cartItemDao.deleteAllBy(member.getId());
     }
 }

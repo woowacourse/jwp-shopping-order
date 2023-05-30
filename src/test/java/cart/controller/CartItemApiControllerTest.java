@@ -66,7 +66,7 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
         when(memberDao.getMemberByEmail(eq(MEMBER_B.getEmail()))).thenReturn(Optional.of(MEMBER_B));
 
         when(cartItemService.findByMember(notNull())).thenReturn(Collections.emptyList());
-        when(cartItemService.findByMember(eq(MEMBER_A))).thenReturn(CartItemResponse.of(CART_ITEMS_MEMBER_A));
+        when(cartItemService.findByMember(eq(MEMBER_A))).thenReturn(CART_ITEMS_MEMBER_A);
         when(cartItemService.add(eq(MEMBER_A), any())).thenReturn(1L);
     }
 
