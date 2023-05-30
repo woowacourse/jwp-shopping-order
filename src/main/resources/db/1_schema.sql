@@ -3,7 +3,7 @@ CREATE TABLE member
     id         BIGINT       NOT NULL AUTO_INCREMENT,
     email      VARCHAR(255) NOT NULL UNIQUE,
     password   VARCHAR(255) NOT NULL,
-    point      INT          NOT NULL,
+    point      INT          NOT NULL DEFAULT 0,
     created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
@@ -48,7 +48,6 @@ CREATE TABLE order_product
 (
     id                BIGINT        NOT NULL AUTO_INCREMENT,
     order_id          BIGINT        NOT NULL,
-    product_id        BIGINT        NOT NULL,
     product_name      VARCHAR(255)  NOT NULL,
     product_price     INT           NOT NULL,
     product_image_url VARCHAR(2048) NOT NULL,
@@ -56,6 +55,15 @@ CREATE TABLE order_product
     created_at        TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (order_id) REFERENCES orders (id),
+    FOREIGN KEY (order_id) REFERENCES orders (id)
+);
+
+CREATE TABLE order_product_record
+(
+    id               BIGINT NOT NULL AUTO_INCREMENT,
+    order_product_id BIGINT NOT NULL,
+    product_id       BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (order_product_id) REFERENCES order_product (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
