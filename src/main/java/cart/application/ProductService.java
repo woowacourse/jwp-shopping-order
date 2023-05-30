@@ -23,9 +23,8 @@ public class ProductService {
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
-        return ProductResponse.of(product);
+    public Product getProductById(Long productId) {
+        return productDao.getProductById(productId);
     }
 
     public Long createProduct(ProductRequest productRequest) {

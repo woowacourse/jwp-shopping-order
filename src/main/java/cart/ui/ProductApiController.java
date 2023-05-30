@@ -1,11 +1,23 @@
 package cart.ui;
 
+import cart.application.CartItemService;
 import cart.application.ProductService;
+import cart.domain.CartItem;
+import cart.domain.Member;
+import cart.domain.Product;
+import cart.dto.ProductCartItemResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
@@ -15,9 +27,12 @@ import java.util.List;
 public class ProductApiController {
 
     private final ProductService productService;
+    private final CartItemService cartItemService;
 
-    public ProductApiController(ProductService productService) {
+    public ProductApiController(final ProductService productService,
+                                final CartItemService cartItemService) {
         this.productService = productService;
+        this.cartItemService = cartItemService;
     }
 
     @GetMapping
@@ -27,7 +42,19 @@ public class ProductApiController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        final Product product = productService.getProductById(id);
+        return ResponseEntity.ok(ProductResponse.of(product));
+    }
+
+    @GetMapping("/{productId}/cart-items")
+    public ResponseEntity<ProductCartItemResponse> getProductCartItemByProductId(@PathVariable Long productId,
+                                                                                 Member member) {
+        final Product product = productService.getProductById(productId);
+        final CartItem cartItem = cartItemService.findByMemberAndProduct(member, product);
+
+        final ProductCartItemResponse productCartItemResponse = ProductCartItemResponse.of(product, cartItem);
+
+        return ResponseEntity.ok(productCartItemResponse);
     }
 
     @PostMapping

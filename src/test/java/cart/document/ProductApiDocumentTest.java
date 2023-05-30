@@ -82,7 +82,7 @@ public class ProductApiDocumentTest {
     void 특정_상품_조회_문서화() throws Exception {
         // given
         given(productService.getProductById(any()))
-                .willReturn(CHICKEN.RESPONSE);
+                .willReturn(CHICKEN.DOMAIN);
 
         // when, then
         mockMvc.perform(get("/products/{id}", CHICKEN.ID)
