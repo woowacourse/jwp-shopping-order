@@ -39,17 +39,17 @@ public class CartItemDao {
 
     final RowMapper<CartItem> cartItemRowMapper = (result, rowNum) -> {
         final Long memberId = result.getLong("member.id");
-        final String email = result.getString("member.email");
+        final String email = result.getString("email");
         final Member member = new Member(memberId, email, null);
 
         final Long productId = result.getLong("product.id");
-        final String productName = result.getString("product.name");
-        final int productPrice = result.getInt("product.price");
-        final String productImageUrl = result.getString("product.image_url");
+        final String productName = result.getString("name");
+        final int productPrice = result.getInt("price");
+        final String productImageUrl = result.getString("image_url");
         final Product product = new Product(productId, productName, productPrice, productImageUrl);
 
         final Long cartItemId = result.getLong("cart_item.id");
-        final int quantity = result.getInt("cart_item.quantity");
+        final int quantity = result.getInt("quantity");
         return new CartItem(cartItemId, member, product, quantity);
     };
 
