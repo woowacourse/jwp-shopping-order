@@ -4,7 +4,7 @@ import cart.dao.OrderHistoryDao;
 import cart.dao.OrderProductDao;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.OrderHistoryEntity;
+import cart.entity.OrderHistoryEntity;
 import cart.entity.OrderProductEntity;
 import org.springframework.stereotype.Repository;
 

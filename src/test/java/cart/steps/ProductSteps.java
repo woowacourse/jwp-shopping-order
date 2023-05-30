@@ -1,6 +1,6 @@
 package cart.steps;
 
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

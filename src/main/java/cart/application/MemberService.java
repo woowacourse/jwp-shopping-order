@@ -1,10 +1,10 @@
 package cart.application;
 
 import cart.domain.Member;
-import cart.dto.MemberCreateRequest;
-import cart.dto.MemberCreateResponse;
-import cart.dto.MemberPointQueryResponse;
-import cart.dto.MemberQueryResponse;
+import cart.dto.request.MemberCreateRequest;
+import cart.dto.response.MemberCreateResponse;
+import cart.dto.response.MemberPointQueryResponse;
+import cart.dto.response.MemberQueryResponse;
 import cart.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 

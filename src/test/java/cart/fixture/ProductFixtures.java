@@ -1,6 +1,6 @@
 package cart.fixture;
 
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 
 public class ProductFixtures {
     public static final ProductRequest PRODUCT_REQUEST_CAMERA_EOS_M200 = new ProductRequest("EOS M200", 923_490, "https://gitchan.co.kr");

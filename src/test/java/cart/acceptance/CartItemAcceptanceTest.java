@@ -1,8 +1,8 @@
 package cart.acceptance;
 
 import cart.dao.MemberDao;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;

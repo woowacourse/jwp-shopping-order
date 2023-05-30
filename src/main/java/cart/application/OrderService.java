@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.OrderRequest;
+import cart.dto.request.OrderRequest;
 import cart.exception.InvalidPointException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;

@@ -1,7 +1,7 @@
 package cart.fixture;
 
 import cart.domain.Member;
-import cart.dto.MemberCreateRequest;
+import cart.dto.request.MemberCreateRequest;
 
 public class MemberFixtures {
 

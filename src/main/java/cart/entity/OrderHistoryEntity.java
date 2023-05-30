@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.entity;
 
 public class OrderHistoryEntity {
     private final Long id;

@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.response;
 
 public class MemberPointQueryResponse {
     private final int points;
