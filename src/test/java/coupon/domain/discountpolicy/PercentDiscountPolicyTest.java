@@ -10,13 +10,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
-class RateDiscountPolicyTest {
+class PercentDiscountPolicyTest {
 
     @ParameterizedTest
     @CsvSource(value = {"10000, 1000", "20000, 2000", "30000, 3000"})
     void 할인_금액을_계산한다(int input, int expected) {
         // given
-        RateDiscountPolicy discountPolicy = new RateDiscountPolicy(10);
+        PercentDiscountPolicy discountPolicy = new PercentDiscountPolicy(10);
 
         // when
         Money result = discountPolicy.calculateDiscountAmount(new Order(input));

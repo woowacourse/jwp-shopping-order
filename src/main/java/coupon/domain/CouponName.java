@@ -18,7 +18,7 @@ public class CouponName {
         }
     }
 
-    public String getName() {
+    public String getValue() {
         return value;
     }
 

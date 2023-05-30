@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import coupon.domain.discountcondition.DiscountCondition;
 import coupon.domain.discountpolicy.DiscountPolicy;
-import coupon.domain.discountpolicy.RateDiscountPolicy;
+import coupon.domain.discountpolicy.PercentDiscountPolicy;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 class CouponTest {
 
-    private final DiscountPolicy discountPolicy = new RateDiscountPolicy(30);
+    private final DiscountPolicy discountPolicy = new PercentDiscountPolicy(30);
     private final DiscountCondition alwaysDiscountCondition = DiscountCondition.AlwaysDiscountCondition;
     private final DiscountCondition noneDiscountCondition = DiscountCondition.NoneDiscountCondition;
 

@@ -14,7 +14,7 @@ class CouponNameTest {
     void 쿠폰_이름이_정상적으로_생성된다() {
         CouponName couponName = new CouponName("쿠폰 이름");
 
-        assertThat(couponName.getName()).isEqualTo("쿠폰 이름");
+        assertThat(couponName.getValue()).isEqualTo("쿠폰 이름");
     }
 
     @Test
