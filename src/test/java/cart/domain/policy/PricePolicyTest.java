@@ -21,4 +21,11 @@ class PricePolicyTest {
         assertThat(discountPolicy.discount(price)).isEqualTo(new Price(resultValue));
     }
 
+    @Test
+    @DisplayName("할인값이 0원인 경우 예외가 발생한다.")
+    void exception() {
+        assertThatThrownBy(() -> new PricePolicy(0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

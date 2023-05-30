@@ -18,4 +18,11 @@ class PercentPolicyTest {
         assertThat(discountPolicy.discount(price)).isEqualTo(new Price(4500));
     }
 
+    @Test
+    @DisplayName("할인율이 0퍼센트인 경우 예외가 발생한다.")
+    void exception() {
+        assertThatThrownBy(() -> new PercentPolicy(0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

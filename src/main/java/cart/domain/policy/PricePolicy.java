@@ -7,7 +7,15 @@ public class PricePolicy implements DiscountPolicy {
     private final Price price;
 
     public PricePolicy(int value) {
-        this.price = new Price(value);
+        Price price = new Price(value);
+        validateIsZero(price);
+        this.price = price;
+    }
+
+    private void validateIsZero(Price price) {
+        if (price.isZero()) {
+            throw new IllegalArgumentException("할인가격은 0원이 될 수 없습니다.");
+        }
     }
 
     @Override
