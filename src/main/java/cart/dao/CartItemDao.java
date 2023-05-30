@@ -41,6 +41,25 @@ public class CartItemDao {
         });
     }
 
+    public CartItem findByMemberIdAndProductId(Long memberId, Long productId) {
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.member_id = ? AND product.id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{memberId, productId}, (rs, rowNum) -> {
+            String email = rs.getString("email");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            Long cartItemId = rs.getLong("cart_item.id");
+            int quantity = rs.getInt("cart_item.quantity");
+            Member member = new Member(memberId, email, null);
+            Product product = new Product(productId, name, price, imageUrl);
+            return new CartItem(cartItemId, quantity, product, member);
+        });
+    }
+
     public Long save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -81,7 +100,6 @@ public class CartItemDao {
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
-
 
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
