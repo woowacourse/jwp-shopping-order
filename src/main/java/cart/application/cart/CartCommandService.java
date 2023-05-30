@@ -5,8 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.application.cart.dto.CartDto;
-import cart.application.cart.dto.CartItemDto;
+import cart.application.cart.dto.CarItemAddDto;
+import cart.application.cart.dto.CartItemUpdateQuantityDto;
+import cart.application.cart.dto.CartItemsRemoveDto;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItemRepository;
@@ -30,40 +31,36 @@ public class CartCommandService {
 		this.cartItemRepository = cartItemRepository;
 	}
 
-	public Long add(CartDto cartDto) {
-		final CartItemDto cartItemDto = cartDto.getCartItemDto();
-		final Product product = productRepository.findById(cartItemDto.getProductId())
+	public Long add(CarItemAddDto cartDto) {
+		final Product product = productRepository.findById(cartDto.getProductId())
 			.orElseThrow();
-		final CartItem cartItem = new CartItem(null, product, cartItemDto.getQuantity());
 
-		final Cart cart = new Cart(cartDto.getMemberId(), List.of(cartItem));
-		return cartRepository.save(cart);
+		return cartRepository.save(new Cart(cartDto.getMemberId(), List.of(new CartItem(product))));
 	}
 
-	public void updateQuantity(CartDto cartDto) {
+	public void updateQuantity(CartItemUpdateQuantityDto cartDto) {
 		final Cart cart = cartRepository.findByMemberId(cartDto.getMemberId());
 
-		final CartItemDto cartItemDto = cartDto.getCartItemDto();
-		final CartItem cartItem = cart.findCartItemById(cartItemDto.getId())
+		final CartItem cartItem = cart.findCartItemById(cartDto.getCartItemId())
 			.orElseThrow(() -> new CartItemException.IllegalMember(cartDto.getMemberId()));
 
-		cartItem.changeQuantity(cartItemDto.getQuantity());
+		cartItem.changeQuantity(cartDto.getQuantity());
 
 		if (cartItem.getQuantity() == 0) {
-			cartItemRepository.deleteById(cartItem.getId());
+			cartItemRepository.deleteByIds(List.of(cartItem.getId()));
 			return;
 		}
 
 		cartItemRepository.updateQuantity(cartItem);
 	}
 
-	public void remove(CartDto cartDto) {
+	public void remove(CartItemsRemoveDto cartDto) {
 		final Cart cart = cartRepository.findByMemberId(cartDto.getMemberId());
 
-		final CartItemDto cartItemDto = cartDto.getCartItemDto();
-		final CartItem cartItem = cart.findCartItemById(cartItemDto.getId())
-			.orElseThrow(() -> new CartItemException.IllegalMember(cartDto.getMemberId()));
-
-		cartItemRepository.deleteById(cartItem.getId());
+		if (cart.contains(cartDto.getCartItemIds())) {
+			cartItemRepository.deleteByIds(cartDto.getCartItemIds());
+			return;
+		}
+		throw new CartItemException.IllegalMember(cartDto.getMemberId());
 	}
 }

@@ -1,5 +1,6 @@
 package cart.domain.cart;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CartItemRepository {
@@ -10,5 +11,5 @@ public interface CartItemRepository {
 
 	void delete(Long memberId, Long productId);
 
-	void deleteById(Long id);
+	void deleteByIds(List<Long> ids);
 }

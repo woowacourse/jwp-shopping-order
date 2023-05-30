@@ -1,6 +1,8 @@
 package cart.persistence.cart;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +25,7 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
 	@Override
 	public Optional<CartItem> findById(final Long id) {
-		String sql = createBaseCartQuery("WHERE cart_item.id = ?");
+		final String sql = createBaseCartQuery("WHERE cart_item.id = ?");
 		try {
 			final CartItem cartItem = jdbcTemplate.queryForObject(sql, CART_ITEM_ROW_MAPPER, id);
 			return Optional.ofNullable(cartItem);
@@ -34,20 +36,25 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
 	@Override
 	public void updateQuantity(final CartItem cartItem) {
-		String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+		final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 		jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
 	}
 
 	@Override
 	public void delete(final Long memberId, final Long productId) {
-		String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
+		final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
 		jdbcTemplate.update(sql, memberId, productId);
 	}
 
 	@Override
-	public void deleteById(final Long id) {
-		String sql = "DELETE FROM cart_item WHERE id = ?";
-		jdbcTemplate.update(sql, id);
+	public void deleteByIds(final List<Long> ids) {
+		final String sql = "DELETE FROM cart_item WHERE id = ?";
+
+		final List<Object[]> batchArgs = ids.stream()
+			.map(id -> new Object[] {id})
+			.collect(Collectors.toList());
+
+		jdbcTemplate.batchUpdate(sql, batchArgs);
 	}
 
 	private String createBaseCartQuery(final String condition) {

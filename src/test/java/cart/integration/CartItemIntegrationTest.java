@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import cart.domain.member.Member;
 import cart.persistence.member.MemberJdbcRepository;
 import cart.ui.cart.dto.CartItemQuantityUpdateRequest;
+import cart.ui.cart.dto.CartItemRemoveRequest;
 import cart.ui.cart.dto.CartItemRequest;
 import cart.ui.cart.dto.CartItemResponse;
 import cart.ui.product.dto.ProductRequest;
@@ -133,8 +134,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
 	@Test
 	void removeCartItem() {
 		Long cartItemId = requestAddCartItemAndGetId(member, productId);
-
-		ExtractableResponse<Response> response = requestDeleteCartItem(cartItemId);
+		final CartItemRemoveRequest cartItemRemoveRequest = new CartItemRemoveRequest(List.of(cartItemId));
+		ExtractableResponse<Response> response = requestDeleteCartItem(cartItemRemoveRequest);
 
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
@@ -207,12 +208,13 @@ public class CartItemIntegrationTest extends IntegrationTest {
 			.extract();
 	}
 
-	private ExtractableResponse<Response> requestDeleteCartItem(Long cartItemId) {
+	private ExtractableResponse<Response> requestDeleteCartItem(CartItemRemoveRequest cartItemRemoveRequest) {
 		return given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.auth().preemptive().basic(member.getEmail(), member.getPassword())
+			.body(cartItemRemoveRequest)
 			.when()
-			.delete("/cart-items/{cartItemId}", cartItemId)
+			.delete("/cart-items")
 			.then()
 			.log().all()
 			.extract();

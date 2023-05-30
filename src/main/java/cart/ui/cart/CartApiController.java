@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cart.application.cart.CartCommandService;
 import cart.application.cart.CartQueryService;
-import cart.application.cart.dto.CartDto;
-import cart.application.cart.dto.CartItemDto;
+import cart.application.cart.dto.CarItemAddDto;
+import cart.application.cart.dto.CartItemUpdateQuantityDto;
+import cart.application.cart.dto.CartItemsRemoveDto;
 import cart.domain.member.Member;
 import cart.ui.cart.dto.CartItemQuantityUpdateRequest;
+import cart.ui.cart.dto.CartItemRemoveRequest;
 import cart.ui.cart.dto.CartItemRequest;
 import cart.ui.cart.dto.CartItemResponse;
 
@@ -53,29 +55,22 @@ public class CartApiController {
 
 	@PostMapping
 	public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-		final CartItemDto cartItemDto = new CartItemDto(cartItemRequest);
-
-		final CartDto cartDto = new CartDto(member.getId(), cartItemDto);
-
-		Long cartItemId = cartCommandService.add(cartDto);
-
+		final Long cartItemId = cartCommandService.add(
+			new CarItemAddDto(member.getId(), cartItemRequest.getProductId()));
 		return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
 	}
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,
 		@RequestBody CartItemQuantityUpdateRequest request) {
-		final CartDto cartDto = new CartDto(member.getId(), new CartItemDto(id, request.getQuantity(), null));
-		cartCommandService.updateQuantity(cartDto);
-
+		cartCommandService.updateQuantity(new CartItemUpdateQuantityDto(member.getId(), id, request.getQuantity()));
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
-		final CartDto cartDto = new CartDto(member.getId(), new CartItemDto(id, 0, null));
-		cartCommandService.remove(cartDto);
-
+	@DeleteMapping
+	public ResponseEntity<Void> removeCartItems(Member member,
+		@RequestBody CartItemRemoveRequest cartItemRemoveRequest) {
+		cartCommandService.remove(new CartItemsRemoveDto(member.getId(), cartItemRemoveRequest.getCartItemIds()));
 		return ResponseEntity.noContent().build();
 	}
 }

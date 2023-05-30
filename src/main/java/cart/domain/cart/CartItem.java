@@ -4,9 +4,14 @@ import cart.domain.product.Product;
 
 public class CartItem {
 
+	private static final int DEFAULT_QUANTITY = 1;
 	private final Long id;
 	private final Product product;
 	private int quantity;
+
+	public CartItem(final Product product) {
+		this(null, product, DEFAULT_QUANTITY);
+	}
 
 	public CartItem(final Long id, final Product product, final int quantity) {
 		this.id = id;

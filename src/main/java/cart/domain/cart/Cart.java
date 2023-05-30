@@ -3,12 +3,9 @@ package cart.domain.cart;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import cart.error.exception.CartItemException;
 
 public class Cart {
 
@@ -20,10 +17,8 @@ public class Cart {
 		this.cartItems = cartItemsToMapById(cartItems);
 	}
 
-	public void checkOwner(final Long memberId) {
-		if (!Objects.equals(this.memberId, memberId)) {
-			throw new CartItemException.IllegalMember(memberId);
-		}
+	public boolean contains(final List<Long> cartItemIds) {
+		return cartItems.keySet().containsAll(cartItemIds);
 	}
 
 	public Optional<CartItem> findCartItemById(final Long cartItemId) {
