@@ -25,7 +25,7 @@ public class OrderedItemDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO orders_item (orders_id, product_name, product_price, product_image, product_quantity) VALUES (?, ?, ?, ?, ?)",
+                    "INSERT INTO ordered_item (orders_id, product_name, product_price, product_image, product_quantity) VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
@@ -33,7 +33,7 @@ public class OrderedItemDao {
             ps.setString(2, orderedItem.getProductName());
             ps.setInt(3, orderedItem.getProductPrice());
             ps.setString(4, orderedItem.getProductImage());
-            ps.setInt(3, orderedItem.getProductQuantity());
+            ps.setInt(5, orderedItem.getProductQuantity());
 
             return ps;
         }, keyHolder);
