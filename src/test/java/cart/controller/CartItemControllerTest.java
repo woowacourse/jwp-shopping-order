@@ -100,11 +100,11 @@ public class CartItemControllerTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // when
-        mockMvc.perform(delete("/cart-items/" + product.getId())
+        mockMvc.perform(delete("/cart-items/" + cartItem.getId())
                         .header("Authorization", header)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
