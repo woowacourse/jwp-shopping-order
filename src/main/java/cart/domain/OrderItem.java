@@ -35,7 +35,7 @@ public class OrderItem {
             final int quantity,
             final int discountRate
     ) {
-        this (
+        this(
                 id,
                 new Name(name),
                 new Money(price),
@@ -45,9 +45,21 @@ public class OrderItem {
         );
     }
 
-    public int getPurchasedItemsPrice() {
+    public int getItemDiscountedPrice() {
         double discountedPercent = discountRate.getDiscountedPercent();
         return price.multiply(discountedPercent) * getQuantity();
+    }
+
+    public int getMemberDiscountedPrice(final Member member) {
+        return member.discountPrice(getPrice()) * getQuantity();
+    }
+
+    public boolean isDiscount() {
+        return discountRate.isDiscount();
+    }
+
+    public boolean isNotDiscount() {
+        return !discountRate.isDiscount();
     }
 
     public Long getId() {

@@ -20,6 +20,10 @@ public class Member {
         this(id, new Email(email), new Password(password), rank);
     }
 
+    public int discountPrice(final int itemPrice) {
+        return rank.getDiscountPrice(itemPrice);
+    }
+
     public Long getId() {
         return id;
     }
