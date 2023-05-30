@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.ui;
 
 import static cart.fixture.JsonMapper.toJson;
 import static org.hamcrest.Matchers.endsWith;
@@ -28,7 +28,6 @@ import cart.application.ProductService;
 import cart.dao.MemberDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.ui.ProductApiController;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -45,8 +44,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @AutoConfigureRestDocs
 @SuppressWarnings("NonAsciiCharacters")
-@WebMvcTest(ProductApiController.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@WebMvcTest(ProductApiController.class)
 public class ProductApiControllerTest {
 
     private static final String API_URL = "/products";
@@ -286,3 +285,4 @@ public class ProductApiControllerTest {
                         )));
     }
 }
+

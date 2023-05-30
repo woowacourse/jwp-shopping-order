@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -76,6 +77,27 @@ class ProductDaoTest {
         // then
         상품_검증(products.get(0), CHICKEN_NO_ID);
         상품_검증(products.get(1), PIZZA_NO_ID);
+    }
+
+    @Test
+    void 여러_아이디를_전달받아_해당하는_모든_상품을_반환한다() {
+        // given
+        Long chickenId = productDao.save(CHICKEN_NO_ID);
+        Long pizzaId = productDao.save(PIZZA_NO_ID);
+        Product baseball = new Product("야구공", 3000, "www.baseball.com");
+        productDao.save(baseball);
+
+        Set<Long> ids = Set.of(chickenId, pizzaId);
+
+        // when
+        List<Product> actual = productDao.findAllByIds(ids);
+
+        // then
+        assertAll(
+                () -> assertThat(actual.size()).isEqualTo(2),
+                () -> 상품_검증(actual.get(0), CHICKEN_NO_ID),
+                () -> 상품_검증(actual.get(1), PIZZA_NO_ID)
+        );
     }
 
     @Test
