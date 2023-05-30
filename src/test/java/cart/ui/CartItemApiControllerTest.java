@@ -64,9 +64,11 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .get("/cart-items")
         .then()
+                .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -86,10 +88,12 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .body(new CartItemRequest(계란.getId()))
                 .post("/cart-items")
         .then()
+                .log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
@@ -113,11 +117,13 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .pathParam("id", 장바구니_상품.getId())
                 .body(new CartItemQuantityUpdateRequest(10))
                 .patch("/cart-items/{id}")
         .then()
+                .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -138,10 +144,12 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .pathParam("id", 장바구니_상품.getId())
                 .delete("/cart-items/{id}")
         .then()
+                .log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
