@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS orders_cart_item(
 CREATE TABLE IF NOT EXISTS member_coupon(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    coupon_id BIGINT NOT NULL
+    coupon_id BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE,
     FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
 )

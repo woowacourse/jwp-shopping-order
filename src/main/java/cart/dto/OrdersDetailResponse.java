@@ -1,6 +1,5 @@
 package cart.dto;
 
-import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Orders;
 
@@ -15,7 +14,8 @@ public class OrdersDetailResponse {
     private int discountPrice;
     private boolean confirmState;
     private CouponResponse coupon;
-    private OrdersDetailResponse(){
+
+    private OrdersDetailResponse() {
 
     }
 
@@ -27,7 +27,8 @@ public class OrdersDetailResponse {
         this.confirmState = confirmState;
         this.coupon = coupon;
     }
-    public static OrdersDetailResponse of(Orders orders){
+
+    public static OrdersDetailResponse of(Orders orders) {
         Optional<Coupon> coupon = Optional.ofNullable(orders.getCoupons().get(0));
         return new OrdersDetailResponse(
                 orders.getId(),

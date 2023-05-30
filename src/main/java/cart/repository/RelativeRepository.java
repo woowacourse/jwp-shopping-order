@@ -4,7 +4,6 @@ import cart.dao.CouponDao;
 import cart.dao.OrdersCartItemDao;
 import cart.dao.OrdersCouponDao;
 import cart.dao.ProductDao;
-import cart.dao.entity.CartItemEntity;
 import cart.dao.entity.OrdersCartItemEntity;
 import cart.dao.entity.OrdersEntity;
 import cart.domain.CartItem;
@@ -30,21 +29,23 @@ public class RelativeRepository {
         this.couponDao = couponDao;
     }
 
-    public Orders makeOrders(OrdersEntity ordersEntity, Member member){
+    public Orders makeOrders(OrdersEntity ordersEntity, Member member) {
         List<CartItem> cartItems = ordersCartItemDao.findAllByOrdersId(ordersEntity.getId()).stream()
-                .map(ordersCartItem -> findProductWithCartItems(member,ordersCartItem))
+                .map(ordersCartItem -> findProductWithCartItems(member, ordersCartItem))
                 .collect(Collectors.toList());
         List<Coupon> coupons = ordersCouponDao.finAllByOrdersId(ordersEntity.getId()).stream()
                 .map(ordersCouponEntity -> couponDao.findWithId(ordersCouponEntity.getCouponId()))
                 .collect(Collectors.toList());
-        return new Orders(ordersEntity.getId(),member,cartItems,ordersEntity.getOriginalPrice(),ordersEntity.getDiscountPrice(),coupons,ordersEntity.isConfirmState());
+        return new Orders(ordersEntity.getId(), member, cartItems, ordersEntity.getOriginalPrice(), ordersEntity.getDiscountPrice(), coupons, ordersEntity.isConfirmState());
     }
-    private CartItem findProductWithCartItems(Member member,final OrdersCartItemEntity ordersCartItem){
-        return new CartItem(member,productDao.getProductById(ordersCartItem.getProductId()));
+
+    private CartItem findProductWithCartItems(Member member, final OrdersCartItemEntity ordersCartItem) {
+        return new CartItem(member, productDao.getProductById(ordersCartItem.getProductId()));
     }
-    public void addOrdersCoupon(final long orderId, final List<Long> couponIds){
-        for(Long couponId: couponIds){
-            ordersCouponDao.createOrderCoupon(orderId,couponId);
+
+    public void addOrdersCoupon(final long orderId, final List<Long> couponIds) {
+        for (Long couponId : couponIds) {
+            ordersCouponDao.createOrderCoupon(orderId, couponId);
         }
     }
 }

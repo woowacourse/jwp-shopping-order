@@ -1,7 +1,9 @@
 package cart.repository;
 
-import cart.dao.*;
-import cart.domain.*;
+import cart.dao.OrdersDao;
+import cart.domain.Coupon;
+import cart.domain.Member;
+import cart.domain.Orders;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,27 +26,29 @@ public class OrdersRepository {
             final List<Long> cartIds,
             final int originalPrice,
             final int discountPrice,
-            final List<Long> couponIds){
-        final long orderId = ordersDao.createOrders(memberId,originalPrice,discountPrice);
-        cartRepository.changeCartItemToOrdersItem(orderId,cartIds);
-        relativeRepository.addOrdersCoupon(orderId,couponIds);
+            final List<Long> couponIds) {
+        final long orderId = ordersDao.createOrders(memberId, originalPrice, discountPrice);
+        cartRepository.changeCartItemToOrdersItem(orderId, cartIds);
+        relativeRepository.addOrdersCoupon(orderId, couponIds);
         return orderId;
     }
 
-    public List<Orders> findAllOrdersByMember(Member member){
+    public List<Orders> findAllOrdersByMember(Member member) {
         return ordersDao.findAllByMemberId(member.getId()).stream()
-                .map(ordersEntity -> relativeRepository.makeOrders(ordersEntity,member))
+                .map(ordersEntity -> relativeRepository.makeOrders(ordersEntity, member))
                 .collect(Collectors.toList());
     }
-    public Orders findOrdersById(final Member member,final long id){
-        return relativeRepository.makeOrders(ordersDao.findById(id),member);
+
+    public Orders findOrdersById(final Member member, final long id) {
+        return relativeRepository.makeOrders(ordersDao.findById(id), member);
     }
 
     public Coupon confirmOrdersCreateCoupon(final long id) {
         ordersDao.updateConfirmById(id);
         return null;
     }
-    public void deleteOrders(final long id){
+
+    public void deleteOrders(final long id) {
         ordersDao.deleteById(id);
     }
 }

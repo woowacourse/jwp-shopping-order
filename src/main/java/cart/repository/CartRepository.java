@@ -16,12 +16,13 @@ public class CartRepository {
         this.cartItemDao = cartItemDao;
         this.ordersCartItemDao = ordersCartItemDao;
     }
-    public void changeCartItemToOrdersItem(final long orderId, final List<Long> cartIds){
+
+    public void changeCartItemToOrdersItem(final long orderId, final List<Long> cartIds) {
         CartItemEntity cartItem;
-        for(Long cartId: cartIds){
+        for (Long cartId : cartIds) {
             cartItem = cartItemDao.findProductIdByCartId(cartId);
             cartItemDao.deleteById(cartId);
-            ordersCartItemDao.createOrdersIdCartItemId(orderId,cartItem.getProductId(),cartItem.getQuantity());
+            ordersCartItemDao.createOrdersIdCartItemId(orderId, cartItem.getProductId(), cartItem.getQuantity());
         }
     }
 

@@ -11,7 +11,9 @@ public class CouponResponse {
     private float discountRate;
     private int discountAmount;
     private int minimumPrice;
-    private CouponResponse(){
+    private boolean issuable;
+
+    private CouponResponse() {
 
     }
 
@@ -23,9 +25,19 @@ public class CouponResponse {
         this.discountAmount = discountAmount;
         this.minimumPrice = minimumPrice;
     }
+
+    private CouponResponse(long id, String name, String discountType, float discountRate, int discountAmount, boolean issuable) {
+        this.id = id;
+        this.name = name;
+        this.discountType = discountType;
+        this.discountRate = discountRate;
+        this.discountAmount = discountAmount;
+        this.issuable = issuable;
+    }
+
     // TODO : null 값 고민해보기
-    public static CouponResponse of(Optional<Coupon> coupon){
-        if(coupon.isEmpty()){
+    public static CouponResponse of(Optional<Coupon> coupon) {
+        if (coupon.isEmpty()) {
             return null;
         }
         return new CouponResponse(
@@ -35,6 +47,17 @@ public class CouponResponse {
                 coupon.get().getDiscountRate(),
                 coupon.get().getDiscountAmount(),
                 coupon.get().getMinimumPrice()
+        );
+    }
+
+    public static CouponResponse issuableOf(Coupon coupon, boolean issuable) {
+        return new CouponResponse(
+                coupon.getId(),
+                coupon.getName(),
+                coupon.getCouponType().value(),
+                coupon.getDiscountRate(),
+                coupon.getDiscountAmount(),
+                issuable
         );
     }
 
@@ -60,5 +83,9 @@ public class CouponResponse {
 
     public int getMinimumPrice() {
         return minimumPrice;
+    }
+
+    public boolean getIssuable() {
+        return issuable;
     }
 }

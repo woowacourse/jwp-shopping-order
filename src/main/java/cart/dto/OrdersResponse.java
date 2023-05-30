@@ -1,6 +1,5 @@
 package cart.dto;
 
-import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Orders;
 
@@ -15,12 +14,15 @@ public class OrdersResponse {
     private int discountPrice;
     private boolean confirmState;
     private CouponResponse coupon;
-    private OrdersResponse(){
+
+    private OrdersResponse() {
 
     }
-    private OrdersResponse(CouponResponse coupon){
+
+    private OrdersResponse(CouponResponse coupon) {
         this.coupon = coupon;
     }
+
     private OrdersResponse(Long id, List<CartItemResponse> ordersProduct, boolean confirmState) {
         this.id = id;
         this.ordersProduct = ordersProduct;
@@ -36,7 +38,7 @@ public class OrdersResponse {
         this.coupon = coupon;
     }
 
-    public static OrdersResponse of(Orders orders){
+    public static OrdersResponse of(Orders orders) {
         return new OrdersResponse(
                 orders.getId(),
                 orders.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList()),
@@ -44,7 +46,7 @@ public class OrdersResponse {
         );
     }
 
-    public static OrdersResponse ofDetail(Orders orders){
+    public static OrdersResponse ofDetail(Orders orders) {
         return new OrdersResponse(
                 orders.getId(),
                 orders.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList()),
@@ -54,11 +56,13 @@ public class OrdersResponse {
                 CouponResponse.of(Optional.of(orders.getCoupons().get(0)))
         );
     }
-    public static OrdersResponse ofCoupon(Coupon coupon){
+
+    public static OrdersResponse ofCoupon(Coupon coupon) {
         return new OrdersResponse(
                 CouponResponse.of(Optional.ofNullable(coupon))
         );
     }
+
     public List<CartItemResponse> getOrdersProduct() {
         return ordersProduct;
     }

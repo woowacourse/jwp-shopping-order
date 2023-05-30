@@ -40,3 +40,5 @@ INSERT INTO orders_coupon (orders_id,coupon_id) VALUES (2,2);
 INSERT INTO orders_cart_item (orders_id,product_id,quantity) VALUES (1,4,1);
 INSERT INTO orders_cart_item (orders_id,product_id,quantity) VALUES (2,1,1);
 INSERT INTO orders_cart_item (orders_id,product_id,quantity) VALUES (2,2,2);
+
+INSERT INTO member_coupon (member_id, coupon_id) VALUES (1,1);

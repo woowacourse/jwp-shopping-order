@@ -8,9 +8,10 @@ public class OrdersRequest {
     private int discountPrice;
     private Long couponId;
 
-    private OrdersRequest(){
+    private OrdersRequest() {
 
     }
+
     public OrdersRequest(List<Long> cartProductIds, int originalPrice, int discountPrice, Long couponId) {
         this.cartProductIds = cartProductIds;
         this.originalPrice = originalPrice;

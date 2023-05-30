@@ -23,10 +23,6 @@ class OrdersRepositoryTest {
     private CartItemDao cartItemDao;
     @Mock
     private OrdersDao ordersDao;
-    @Mock
-    private OrdersCartItemDao ordersCartItemDao;
-    @Mock
-    private OrdersCouponDao ordersCouponDao;
     @InjectMocks
     private OrdersRepository ordersRepository;
 

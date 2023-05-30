@@ -3,7 +3,7 @@ package cart.dto;
 public class CouponRequest {
     private Long id;
 
-    private CouponRequest(){
+    private CouponRequest() {
     }
 
     public CouponRequest(Long id) {

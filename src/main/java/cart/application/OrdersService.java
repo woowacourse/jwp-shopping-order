@@ -17,26 +17,28 @@ public class OrdersService {
         this.ordersRepository = ordersRepository;
     }
 
-    public Long takeOrders(Member member,final OrdersRequest ordersRequest){
+    public Long takeOrders(Member member, final OrdersRequest ordersRequest) {
         final List<Long> cartIds = ordersRequest.getCartProductIds();
         final int originalPrice = ordersRequest.getOriginalPrice();
         final int discountPrice = ordersRequest.getDiscountPrice();
         final List<Long> coupons = List.of(ordersRequest.getCouponId());
-        return ordersRepository.takeOrders(member.getId(),cartIds,originalPrice,discountPrice,coupons);
+        return ordersRepository.takeOrders(member.getId(), cartIds, originalPrice, discountPrice, coupons);
     }
-    public List<OrdersResponse> findMembersAllOrders(final Member member){
+
+    public List<OrdersResponse> findMembersAllOrders(final Member member) {
         return ordersRepository.findAllOrdersByMember(member).stream()
                 .map(OrdersResponse::of).collect(Collectors.toList());
     }
 
-    public OrdersResponse findOrdersById(final Member member,final long id){
+    public OrdersResponse findOrdersById(final Member member, final long id) {
         return OrdersResponse.ofDetail(ordersRepository.findOrdersById(member, id));
     }
 
     public OrdersResponse confirmOrders(Member member, long id) {
         return OrdersResponse.ofCoupon(ordersRepository.confirmOrdersCreateCoupon(id));
     }
-    public void deleteOrders(final long id){
+
+    public void deleteOrders(final long id) {
         ordersRepository.deleteOrders(id);
     }
 }

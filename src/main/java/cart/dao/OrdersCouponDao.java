@@ -13,25 +13,28 @@ import java.util.List;
 public class OrdersCouponDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<OrdersCouponEntity> ordersCouponEntityRowMapper = (rs,rowNum) -> new OrdersCouponEntity(
+    private final RowMapper<OrdersCouponEntity> ordersCouponEntityRowMapper = (rs, rowNum) -> new OrdersCouponEntity(
             rs.getLong("id"),
             rs.getLong("orders_id"),
             rs.getLong("coupon_id")
     );
-    public OrdersCouponDao(JdbcTemplate jdbcTemplate){
+
+    public OrdersCouponDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders_coupon")
                 .usingGeneratedKeyColumns("id");
     }
-    public void createOrderCoupon(final long ordersId, final long couponId){
+
+    public void createOrderCoupon(final long ordersId, final long couponId) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("orders_id",ordersId)
-                .addValue("coupon_id",couponId);
+                .addValue("orders_id", ordersId)
+                .addValue("coupon_id", couponId);
         simpleJdbcInsert.execute(parameterSource);
     }
-    public List<OrdersCouponEntity> finAllByOrdersId(final long ordersId){
+
+    public List<OrdersCouponEntity> finAllByOrdersId(final long ordersId) {
         final String sql = "SELECT * FROM orders_coupon WHERE orders_id = ?";
-        return jdbcTemplate.query(sql,ordersCouponEntityRowMapper,ordersId);
+        return jdbcTemplate.query(sql, ordersCouponEntityRowMapper, ordersId);
     }
 }

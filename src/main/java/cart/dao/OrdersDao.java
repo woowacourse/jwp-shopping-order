@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dao.entity.OrdersEntity;
-import cart.domain.Orders;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,7 +13,7 @@ import java.util.List;
 public class OrdersDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<OrdersEntity> ordersEntityRowMapper = (rs,rowNum) -> new OrdersEntity(
+    private final RowMapper<OrdersEntity> ordersEntityRowMapper = (rs, rowNum) -> new OrdersEntity(
             rs.getLong("id"),
             rs.getLong("member_id"),
             rs.getInt("original_price"),
@@ -22,43 +21,46 @@ public class OrdersDao {
             rs.getBoolean("confirm_state")
     );
 
-    public OrdersDao(JdbcTemplate jdbcTemplate){
+    public OrdersDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long createOrders(final long memberId, final int originalPrice, final  int discountPrice){
+    public Long createOrders(final long memberId, final int originalPrice, final int discountPrice) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("member_id",memberId)
-                .addValue("original_price",originalPrice)
-                .addValue("discount_price",discountPrice)
-                .addValue("confirm_state",false);
+                .addValue("member_id", memberId)
+                .addValue("original_price", originalPrice)
+                .addValue("discount_price", discountPrice)
+                .addValue("confirm_state", false);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<OrdersEntity> findAllByMemberId(final long memberId){
+    public List<OrdersEntity> findAllByMemberId(final long memberId) {
         final String sql = "SELECT * FROM orders WHERE member_id = ?";
-        return jdbcTemplate.query(sql,ordersEntityRowMapper,memberId);
+        return jdbcTemplate.query(sql, ordersEntityRowMapper, memberId);
     }
-    public OrdersEntity findById(final long id){
+
+    public OrdersEntity findById(final long id) {
         final String sql = "SELECT * FROM orders WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,(rs, rowNum) ->
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
                 new OrdersEntity(
                         rs.getLong("id"),
                         rs.getLong("member_id"),
                         rs.getInt("original_price"),
                         rs.getInt("discount_price"),
                         rs.getBoolean("confirm_state")
-                ),id);
+                ), id);
     }
-    public void updateConfirmById(final long id){
+
+    public void updateConfirmById(final long id) {
         final String sql = "UPDATE orders SET confirm_state = true WHERE id = ? ";
-        jdbcTemplate.update(sql,id);
+        jdbcTemplate.update(sql, id);
     }
-    public void deleteById(final long id){
+
+    public void deleteById(final long id) {
         final String sql = "DELETE FROM orders WHERE id = ?";
-        jdbcTemplate.update(sql,id);
+        jdbcTemplate.update(sql, id);
     }
 }
