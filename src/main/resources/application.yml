@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: mysql
+    active: db
 
 ---
 spring:
@@ -18,23 +18,3 @@ spring:
   thymeleaf:
     cache: false
 
----
-spring:
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/shopping_cart?serverTimezone=UTC&characterEncoding=UTF-8
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 1234
-
-  sql:
-    init:
-      schema-locations: classpath:schema.sql
-      mode: always
-
-  config:
-    activate:
-      on-profile: mysql
-
-  thymeleaf:
-    cache: false
