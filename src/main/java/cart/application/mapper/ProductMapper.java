@@ -6,6 +6,9 @@ import cart.persistence.entity.ProductEntity;
 
 public class ProductMapper {
 
+    private ProductMapper() {
+    }
+
     public static ProductEntity toEntity(final Product product) {
         return new ProductEntity(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }

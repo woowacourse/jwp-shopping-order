@@ -5,6 +5,9 @@ import cart.persistence.entity.MemberEntity;
 
 public class MemberMapper {
 
+    private MemberMapper() {
+    }
+
     public static Member toMember(final MemberEntity entity) {
         return new Member(entity.getId(), entity.getEmail(), entity.getPassword());
     }
