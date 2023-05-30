@@ -5,6 +5,7 @@ CREATE TABLE product
     price      INT          NOT NULL,
     image_url  VARCHAR(255) NOT NULL,
     stock      BIGINT       NOT NULL,
+    isDelete   BOOLEAN      DEFAULT FALSE,
     created_at TIMESTAMP    NOT NULL
         DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP    NOT NULL
@@ -66,13 +67,15 @@ CREATE TABLE orders
 
 CREATE TABLE order_item
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    orders_id   BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity   INT       NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    id             BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    orders_id      BIGINT    NOT NULL,
+    product_id     BIGINT    NOT NULL,
+    quantity       INT       NOT NULL,
+    original_name  INT       NOT NULL,
+    original_price INT       NOT NULL,
+    created_at     TIMESTAMP NOT NULL
         DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL
+    updated_at     TIMESTAMP NOT NULL
         DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (orders_id) REFERENCES orders (id),
@@ -81,11 +84,11 @@ CREATE TABLE order_item
 
 CREATE TABLE payment
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    orders_id   BIGINT NOT NULL,
-    total_product_price BIGINT NOT NULL,
+    id                   BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    orders_id            BIGINT NOT NULL,
+    total_product_price  BIGINT NOT NULL,
     total_delivery_price BIGINT NOT NULL,
-    use_point BIGINT NOT NULL DEFAULT 0,
-    total_payment BIGINT NOT NULL,
+    use_point            BIGINT NOT NULL DEFAULT 0,
+    total_payment        BIGINT NOT NULL,
     FOREIGN KEY (orders_id) REFERENCES orders (id)
 );
