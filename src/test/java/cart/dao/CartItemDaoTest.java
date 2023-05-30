@@ -99,6 +99,25 @@ class CartItemDaoTest {
         assertThat(result).isEmpty();
     }
 
+    @Test
+    @DisplayName("deleteAllByProductId 메서드는 상품 ID에 해당하는 모든 장바구니 상품을 삭제한다.")
+    void deleteAllByProductId() {
+        MemberEntity newMember = new MemberEntity("b@b.com", "password2", 50);
+        memberDao.addMember(newMember);
+
+        new CartItemEntity(newMember, product, 1);
+        Long newCartItemId = cartItemDao.save(cartItem);
+
+        cartItemDao.deleteAllByProductId(product.getId());
+
+        Optional<CartItemEntity> cartItemA = cartItemDao.findById(product.getId());
+        Optional<CartItemEntity> cartItemB = cartItemDao.findById(newCartItemId);
+        assertAll(
+                () -> assertThat(cartItemA).isEmpty(),
+                () -> assertThat(cartItemB).isEmpty()
+        );
+    }
+
     @Nested
     @DisplayName("findByMemberIdAndProductId 메서드는 ")
     class FindByMemberIdAndProductId {
@@ -169,23 +188,5 @@ class CartItemDaoTest {
                     () -> assertThat(result.get().getUpdatedAt()).isNotNull()
             );
         }
-    }
-
-    @Test
-    @DisplayName("deleteAllByProductId 메서드는 상품 ID에 해당하는 모든 장바구니 상품을 삭제한다.")
-    void deleteAllByProductId() {
-        MemberEntity newMember = new MemberEntity("b@b.com", "password2", 50);
-        memberDao.addMember(newMember);
-        CartItemEntity newCartItem = new CartItemEntity(newMember, product, 1);
-        Long newCartItemId = cartItemDao.save(cartItem);
-
-        cartItemDao.deleteAllByProductId(product.getId());
-
-        Optional<CartItemEntity> cartItemA = cartItemDao.findById(product.getId());
-        Optional<CartItemEntity> cartItemB = cartItemDao.findById(newCartItemId);
-        assertAll(
-                () -> assertThat(cartItemA).isEmpty(),
-                () -> assertThat(cartItemB).isEmpty()
-        );
     }
 }

@@ -42,10 +42,13 @@ class OrderRepositoryTest {
     void findById() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
         Long memberId = memberDao.addMember(memberEntity);
+
         ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
         productDao.createProduct(productEntity);
+
         OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0);
         Long orderId = orderDao.save(orderEntity);
+
         OrderProductEntity orderProductEntity =
                 new OrderProductEntity(orderId, null, "치킨", 10000, "http://chicken.com", 5);
         Long orderProductId = orderProductDao.save(orderProductEntity);

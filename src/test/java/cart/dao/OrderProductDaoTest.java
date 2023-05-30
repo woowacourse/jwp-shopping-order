@@ -43,11 +43,14 @@ class OrderProductDaoTest {
         void allOrderProduct() {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
             Long memberId = memberDao.addMember(memberEntity);
+
             OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 10);
             Long orderId = orderDao.save(orderEntity);
+
             OrderProductEntity orderProductEntityA =
                     new OrderProductEntity(orderId, null, "치킨", 13000, "http://chicken.com", 10);
             Long orderProductIdA = orderProductDao.save(orderProductEntityA);
+
             OrderProductEntity orderProductEntityB =
                     new OrderProductEntity(orderId, null, "치킨", 13000, "http://chicken.com", 10);
             Long orderProductIdB = orderProductDao.save(orderProductEntityB);
@@ -70,16 +73,21 @@ class OrderProductDaoTest {
         void orderProductWithProduct() {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
             Long memberId = memberDao.addMember(memberEntity);
+
             ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
             Long productId = productDao.createProduct(productEntity);
+
             OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 10);
             Long orderId = orderDao.save(orderEntity);
+
             OrderProductEntity orderProductEntityA =
                     new OrderProductEntity(orderId, productEntity.assignId(productId), "치킨", 13000, "http://chicken.com", 10);
             Long orderProductIdA = orderProductDao.save(orderProductEntityA);
+
             OrderProductEntity orderProductEntityB =
                     new OrderProductEntity(orderId, productEntity.assignId(productId), "치킨", 13000, "http://chicken.com", 10);
             Long orderProductIdB = orderProductDao.save(orderProductEntityB);
+
             orderProductRecordDao.save(new OrderProductRecordEntity(orderProductIdA, productId));
             orderProductRecordDao.save(new OrderProductRecordEntity(orderProductIdB, productId));
 

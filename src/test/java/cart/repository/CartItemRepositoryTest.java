@@ -118,6 +118,27 @@ class CartItemRepositoryTest {
         assertThat(result).isEmpty();
     }
 
+    @Test
+    @DisplayName("deleteAllByProductId 메서드는 상품 ID에 해당하는 모든 장바구니 상품을 삭제한다.")
+    void deleteAllByProductId() {
+        MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 50);
+        Long newMemberId = memberDao.addMember(newMemberEntity);
+        Member newMember = MemberMapper.toDomain(newMemberEntity);
+        newMember.assignId(newMemberId);
+
+        CartItem newCartItem = new CartItem(newMember, product);
+        cartItemRepository.save(newCartItem);
+
+        cartItemRepository.deleteAllByProductId(product.getId());
+
+        List<CartItem> cartItemA = cartItemRepository.findByMemberId(member.getId());
+        List<CartItem> cartItemB = cartItemRepository.findByMemberId(newMember.getId());
+        assertAll(
+                () -> assertThat(cartItemA).isEmpty(),
+                () -> assertThat(cartItemB).isEmpty()
+        );
+    }
+
     @Nested
     @DisplayName("findByMemberIdAndProductId 메서드는 ")
     class FindByMemberIdAndProductId {
@@ -179,26 +200,5 @@ class CartItemRepositoryTest {
 
             assertThat(result).usingRecursiveComparison().isEqualTo(cartItem);
         }
-    }
-
-    @Test
-    @DisplayName("deleteAllByProductId 메서드는 상품 ID에 해당하는 모든 장바구니 상품을 삭제한다.")
-    void deleteAllByProductId() {
-        MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 50);
-        Long newMemberId = memberDao.addMember(newMemberEntity);
-        Member newMember = MemberMapper.toDomain(newMemberEntity);
-        newMember.assignId(newMemberId);
-
-        CartItem newCartItem = new CartItem(newMember, product);
-        cartItemRepository.save(newCartItem);
-
-        cartItemRepository.deleteAllByProductId(product.getId());
-
-        List<CartItem> cartItemA = cartItemRepository.findByMemberId(member.getId());
-        List<CartItem> cartItemB = cartItemRepository.findByMemberId(newMember.getId());
-        assertAll(
-                () -> assertThat(cartItemA).isEmpty(),
-                () -> assertThat(cartItemB).isEmpty()
-        );
     }
 }

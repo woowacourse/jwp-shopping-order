@@ -36,10 +36,13 @@ class OrderProductRecordDaoTest {
     void save() {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
         Long memberId = memberDao.addMember(memberEntity);
+
         ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
         Long productId = productDao.createProduct(productEntity);
+
         OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0);
         Long orderId = orderDao.save(orderEntity);
+
         OrderProductEntity orderProductEntity =
                 new OrderProductEntity(orderId, productEntity.assignId(productId), "치킨", 10000, "http://chicken.com", 5);
         Long orderProductId = orderProductDao.save(orderProductEntity);
