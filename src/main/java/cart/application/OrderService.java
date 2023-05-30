@@ -32,11 +32,11 @@ public class OrderService {
         //TODO: totalPrice구하기 -> List<Int>으로 변경 -> 다 더한 값 return
         int totalPrice = getTotalCount(orderCreateRequest);
         //TODO: shippingFee 구하기 -> totalPrice로 구함
-        int shippingFee = getShippingFee(totalPrice);
+        int shippingFee = Order.calculateShippingFee(totalPrice);
         //TODO: discountedTotalPrice 구하기 -> member의 등급 확인해서 구함
 
 
-        new Order(member.getId(), totalPrice, null, )
+        new Order(member.getId(), totalPrice, null, shippingFee, )
         Long id = orderDao.createOrder(order);
 
         return id;
