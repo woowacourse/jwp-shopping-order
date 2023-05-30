@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.api;
 
 import cart.application.OrderService;
 import cart.domain.Member;
@@ -37,4 +37,9 @@ public class OrderApiController {
         return ResponseEntity.ok(orderResponse);
     }
 
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getOrders(final Member member) {
+        final List<OrderResponse> orderResponses = orderService.selectAll(member);
+        return ResponseEntity.ok(orderResponses);
+    }
 }

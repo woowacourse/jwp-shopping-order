@@ -32,6 +32,22 @@ public class MysqlCartItemRepository implements CartItemRepository {
         return toCartItem(cartItemEntity);
     }
 
+    private CartItem toCartItem(final CartItemEntity cartItemEntity) {
+        final ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId());
+        final MemberEntity memberEntity = memberDao.findById(cartItemEntity.getMemberId());
+        return new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), toProduct(productEntity), toMember(memberEntity));
+    }
+
+    private Product toProduct(final ProductEntity productEntity) {
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),
+                productEntity.getImageUrl());
+    }
+
+    private Member toMember(final MemberEntity memberEntity) {
+        return new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(),
+                memberEntity.getPassword());
+    }
+
     @Override
     public List<CartItem> findByMemberId(final long memberId) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
@@ -61,21 +77,5 @@ public class MysqlCartItemRepository implements CartItemRepository {
     private CartItemEntity toCartItemEntity(final CartItem cartItem) {
         return new CartItemEntity(cartItem.getId(), cartItem.getMember().getId(), cartItem.getProduct().getId(),
                 cartItem.getQuantity());
-    }
-
-    private CartItem toCartItem(final CartItemEntity cartItemEntity) {
-        final ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId());
-        final MemberEntity memberEntity = memberDao.findById(cartItemEntity.getMemberId());
-        return new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), toProduct(productEntity), toMember(memberEntity));
-    }
-
-    private Product toProduct(final ProductEntity productEntity) {
-        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),
-                productEntity.getImageUrl());
-    }
-
-    private Member toMember(final MemberEntity memberEntity) {
-        return new Member(memberEntity.getId(), memberEntity.getGrade(), memberEntity.getEmail(),
-                memberEntity.getPassword());
     }
 }

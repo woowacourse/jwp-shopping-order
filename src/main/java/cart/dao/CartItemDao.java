@@ -78,7 +78,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
     }
 
-    public void deleteAllById(final List<Long> ids) {
+    public void deleteByIds(final List<Long> ids) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.batchUpdate(sql, ids, ids.size(), ((ps, id) -> {
             ps.setLong(1, id);

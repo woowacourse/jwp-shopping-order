@@ -3,17 +3,12 @@ package cart.repository;
 import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.Product;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
-import cart.entity.ProductEntity;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -40,7 +35,7 @@ public class MysqlOrderRepository implements OrderRepository {
                 .collect(Collectors.toList());
 
         orderItemDao.saveAll(orderItemEntities);
-        cartItemDao.deleteAllById(order.getCartItemIds());
+        cartItemDao.deleteByIds(order.getCartItemIds());
 
         return new Order(savedOrderEntity.getId(), order.getPrice(), order.getMember(), order.getCartItems());
     }
@@ -57,6 +52,14 @@ public class MysqlOrderRepository implements OrderRepository {
                 .sum();
 
         return new Order(id, totalPrice, member, cartItems);
+    }
+
+    @Override
+    public List<Order> findMemberOrders(final Member member) {
+        final List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
+        return orderEntities.stream()
+                .map(orderEntity -> findById(orderEntity.getId(), member))
+                .collect(Collectors.toList());
     }
 
 }

@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.api;
 
 import cart.application.ProductService;
 import cart.dto.request.ProductRequest;
@@ -32,7 +32,7 @@ public class ProductApiController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        Long id = productService.createProduct(productRequest);
+        final Long id = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 

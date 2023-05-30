@@ -43,4 +43,11 @@ public class OrderService {
         final Order order = orderRepository.findById(id, member);
         return OrderResponse.of(order);
     }
+
+    public List<OrderResponse> selectAll(final Member member) {
+        final List<Order> orders = orderRepository.findMemberOrders(member);
+        return orders.stream()
+                .map(OrderResponse::of)
+                .collect(Collectors.toUnmodifiableList());
+    }
 }

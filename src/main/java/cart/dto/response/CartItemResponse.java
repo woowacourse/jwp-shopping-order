@@ -15,11 +15,7 @@ public class CartItemResponse {
     }
 
     public static CartItemResponse of(CartItem cartItem) {
-        return new CartItemResponse(
-                cartItem.getId(),
-                cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
-        );
+        return new CartItemResponse(cartItem.getId(), cartItem.getQuantity(), ProductResponse.of(cartItem.getProduct()));
     }
 
     public Long getId() {
