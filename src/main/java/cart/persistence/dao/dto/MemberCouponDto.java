@@ -11,13 +11,13 @@ public class MemberCouponDto {
     private final String couponName;
     private final int couponPeriod;
     private final int discountRate;
-    private final LocalDateTime expiredDate;
-    private final LocalDateTime issuedDate;
+    private final LocalDateTime expiredAt;
+    private final LocalDateTime issuedAt;
     private final boolean isUsed;
 
     public MemberCouponDto(final Long memberId, final String memberName, final String memberPassword,
                            final Long couponId, final String couponName, final int couponPeriod, final int discountRate,
-                           final LocalDateTime expiredDate, final LocalDateTime issuedDate, final boolean isUsed) {
+                           final LocalDateTime expiredAt, final LocalDateTime issuedAt, final boolean isUsed) {
         this.memberId = memberId;
         this.memberName = memberName;
         this.memberPassword = memberPassword;
@@ -25,8 +25,8 @@ public class MemberCouponDto {
         this.couponName = couponName;
         this.couponPeriod = couponPeriod;
         this.discountRate = discountRate;
-        this.expiredDate = expiredDate;
-        this.issuedDate = issuedDate;
+        this.expiredAt = expiredAt;
+        this.issuedAt = issuedAt;
         this.isUsed = isUsed;
     }
 
@@ -58,12 +58,12 @@ public class MemberCouponDto {
         return discountRate;
     }
 
-    public LocalDateTime getExpiredDate() {
-        return expiredDate;
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
     }
 
-    public LocalDateTime getIssuedDate() {
-        return issuedDate;
+    public LocalDateTime getIssuedAt() {
+        return issuedAt;
     }
 
     public boolean isUsed() {

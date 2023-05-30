@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.joining;
 import cart.application.dto.CartItemQuantityUpdateRequest;
 import cart.application.dto.CartItemRequest;
 import cart.application.dto.CartItemResponse;
-import cart.application.dto.ProductResponse;
+import cart.application.dto.product.ProductResponse;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItemRepository;
 import cart.domain.cartitem.dto.CartItemSaveReq;

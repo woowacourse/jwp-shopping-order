@@ -1,22 +1,21 @@
 package cart.application;
 
-import static cart.application.dto.mapper.MemberMapper.convertMember;
-import static cart.application.dto.mapper.MemberMapper.convertMemberResponse;
-import static cart.application.dto.mapper.MemberMapper.convverMemberResponse;
+import static cart.application.mapper.MemberMapper.convertMember;
+import static cart.application.mapper.MemberMapper.convertMemberResponse;
+import static cart.application.mapper.MemberMapper.convverMemberResponse;
 
-import cart.application.dto.mapper.MemberMapper;
 import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberLoginResponse;
 import cart.application.dto.member.MemberResponse;
 import cart.application.dto.member.MemberSaveRequest;
+import cart.application.mapper.MemberMapper;
 import cart.common.auth.BasicTokenProvider;
 import cart.domain.coupon.CouponSaveEvent;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberRepository;
-import cart.domain.member.NaturalPassword;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.security.SHA256Service;
 import cart.exception.BadRequestException;

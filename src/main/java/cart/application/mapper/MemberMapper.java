@@ -1,4 +1,4 @@
-package cart.application.dto.mapper;
+package cart.application.mapper;
 
 import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberResponse;

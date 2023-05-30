@@ -7,7 +7,7 @@ import cart.application.dto.CartItemRequest;
 import cart.application.dto.coupon.CouponRequest;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberSaveRequest;
-import cart.application.dto.ProductRequest;
+import cart.application.dto.product.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;

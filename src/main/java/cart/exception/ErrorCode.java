@@ -5,8 +5,8 @@ public enum ErrorCode {
      * PRODUCT
      */
     PRODUCT_NOT_FOUND("유효하지 않은 상품 ID입니다."),
-    PRODUCT_NAME_LENGTH("상품 이름의 길이는 1 ~ 25글자여야 합니다."),
-    PRODUCT_PRICE_RANGE("상품 가격은 0 ~ 10,000,000원까지 가능합니다."),
+    PRODUCT_NAME_LENGTH("상품 이름의 길이는 1 ~ 20자까지 가능합니다."),
+    PRODUCT_PRICE_RANGE("상품 가격은 1 ~ 10,000,000원까지 가능합니다."),
 
     /**
      * MEMBER
@@ -26,11 +26,18 @@ public enum ErrorCode {
     COUPON_DUPLICATE("이미 존재하는 쿠폰 정보입니다."),
     COUPON_NOT_FOUND("쿠폰 정보를 찾을 수 없습니다."),
     COUPON_EXPIRED("만료된 쿠폰입니다."),
+    COUPON_ALREADY_EXIST("이미 발급된 쿠폰입니다."),
 
     /**
      * CART
      */
     CART_NOT_FOUND("장바구니 정보를 찾을 수 없습니다."),
+
+    /**
+     * ORDER
+     */
+    ORDER_INVALID_PRODUCTS("장바구니에 담기지 않은 상품은 주문할 수 없습니다."),
+    NATUAL_ORDER_HAS_COUPON("쿠폰이 적용되지 않은 주문입니다."),
 
     /**
      * HTTP STATUS CODE - 400

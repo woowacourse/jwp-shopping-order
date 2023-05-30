@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.is;
 
 import cart.application.dto.CartItemQuantityUpdateRequest;
 import cart.application.dto.CartItemRequest;
-import cart.application.dto.ProductRequest;
+import cart.application.dto.product.ProductRequest;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberSaveRequest;
 import org.junit.jupiter.api.DisplayName;

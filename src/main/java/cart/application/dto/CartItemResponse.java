@@ -1,5 +1,7 @@
 package cart.application.dto;
 
+import cart.application.dto.product.ProductResponse;
+
 public class CartItemResponse {
 
     private final Long id;

@@ -36,7 +36,7 @@ class CouponDaoTest extends DaoTest {
         // then
         assertThat(coupons)
             .extracting(CouponEntity::getId, CouponEntity::getName, CouponEntity::getDiscountRate,
-                CouponEntity::getPeriod, CouponEntity::getExpiredDate)
+                CouponEntity::getPeriod, CouponEntity::getExpiredAt)
             .containsExactly(
                 tuple(저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365)),
                 tuple(저장된_첫_주문_감사_쿠폰_아이디, "첫 주문 감사 쿠폰", 10, 10, 저장_시간.plusDays(10))
@@ -57,7 +57,7 @@ class CouponDaoTest extends DaoTest {
         // then
         assertThat(coupon)
             .extracting(CouponEntity::getId, CouponEntity::getName, CouponEntity::getDiscountRate,
-                CouponEntity::getPeriod, CouponEntity::getExpiredDate)
+                CouponEntity::getPeriod, CouponEntity::getExpiredAt)
             .containsExactly(저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
     }
 
@@ -86,7 +86,7 @@ class CouponDaoTest extends DaoTest {
         final CouponEntity coupon = couponDao.findById(저장된_신규_가입_축하_쿠폰_아이디).get();
         assertThat(coupon)
             .extracting(CouponEntity::getId, CouponEntity::getName, CouponEntity::getDiscountRate,
-                CouponEntity::getPeriod, CouponEntity::getExpiredDate)
+                CouponEntity::getPeriod, CouponEntity::getExpiredAt)
             .containsExactly(저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
     }
 
@@ -139,7 +139,7 @@ class CouponDaoTest extends DaoTest {
         // then
         assertThat(coupon)
             .extracting(CouponEntity::getId, CouponEntity::getName, CouponEntity::getDiscountRate,
-                CouponEntity::getPeriod, CouponEntity::getExpiredDate)
+                CouponEntity::getPeriod, CouponEntity::getExpiredAt)
             .containsExactly(저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
     }
 

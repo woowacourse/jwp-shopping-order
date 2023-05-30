@@ -1,7 +1,11 @@
 package cart.application;
 
-import cart.application.dto.ProductRequest;
-import cart.application.dto.ProductResponse;
+import static cart.application.mapper.ProductMapper.convertProduct;
+import static cart.application.mapper.ProductMapper.convertProductResponse;
+
+import cart.application.dto.product.ProductRequest;
+import cart.application.dto.product.ProductResponse;
+import cart.application.mapper.ProductMapper;
 import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
 import cart.domain.product.dto.ProductWithId;
@@ -23,27 +27,24 @@ public class ProductService {
     public List<ProductResponse> getAllProducts() {
         final List<ProductWithId> products = productRepository.getAllProducts();
         return products.stream()
-            .map(productWithId -> new ProductResponse(productWithId.getId(), productWithId.getProduct().getName(),
-                productWithId.getProduct().getPrice(), productWithId.getProduct().getImageUrl()))
+            .map(ProductMapper::convertProductResponse)
             .collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
         final Product product = productRepository.getProductById(productId);
-        return new ProductResponse(productId, product.getName(), product.getPrice(), product.getImageUrl());
+        return convertProductResponse(productId, product);
     }
 
     @Transactional
     public Long createProduct(ProductRequest productRequest) {
-        final Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-            productRequest.getImageUrl());
+        final Product product = convertProduct(productRequest);
         return productRepository.save(product);
     }
 
     @Transactional
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        final Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-            productRequest.getImageUrl());
+        final Product product = convertProduct(productRequest);
         productRepository.updateProduct(productId, product);
     }
 
