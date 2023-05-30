@@ -10,11 +10,13 @@ import cart.application.dto.GetOrdersRequest;
 import cart.application.dto.GetOrdersResponse;
 import cart.application.dto.OrderContents;
 import cart.application.dto.PostOrderRequest;
+import cart.application.dto.SingleKindDetailedProductResponse;
 import cart.dao.OrderDao;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Page;
 import cart.domain.Paginator;
+import cart.exception.AuthenticationException;
 
 @Service
 public class OrderService {
@@ -36,8 +38,13 @@ public class OrderService {
             contents);
     }
 
+    @Transactional(readOnly = true)
     public GetDetailedOrderResponse getOrder(Member member, Long orderId) {
-        return null;
+        Order order = orderDao.findById(orderId);
+        if (member.equals(order.getMember())) {
+            return GetDetailedOrderResponse.of(order);
+        }
+        throw new AuthenticationException();
     }
 
     public Long addOrder(Member member, PostOrderRequest request) {

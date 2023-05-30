@@ -6,6 +6,7 @@ import java.util.List;
 public class Order {
 
     private final Long orderId;
+    private final Member member;
     private final LocalDateTime orderAt;
     private final Integer payAmount;
     private final Integer usedPoint;
@@ -13,9 +14,10 @@ public class Order {
     private final OrderStatus orderStatus;
     private final List<QuantityAndProduct> products;
 
-    public Order(Long orderId, LocalDateTime orderAt, Integer payAmount, Integer usedPoint, Integer savedPoint,
+    public Order(Long orderId, Member member, LocalDateTime orderAt, Integer payAmount, Integer usedPoint, Integer savedPoint,
         OrderStatus orderStatus, List<QuantityAndProduct> products) {
         this.orderId = orderId;
+        this.member = member;
         this.orderAt = orderAt;
         this.payAmount = payAmount;
         this.usedPoint = usedPoint;
@@ -26,6 +28,10 @@ public class Order {
 
     public Long getOrderId() {
         return orderId;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public LocalDateTime getOrderAt() {
@@ -48,7 +54,7 @@ public class Order {
         return orderStatus;
     }
 
-    public List<QuantityAndProduct> getProducts() {
+    public List<QuantityAndProduct> getQuantityAndProducts() {
         return products;
     }
 }

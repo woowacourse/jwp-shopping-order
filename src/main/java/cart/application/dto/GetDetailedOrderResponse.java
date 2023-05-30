@@ -2,6 +2,9 @@ package cart.application.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import cart.domain.Order;
 
 public class GetDetailedOrderResponse {
 
@@ -22,6 +25,15 @@ public class GetDetailedOrderResponse {
         this.usedPoint = usedPoint;
         this.savedPoint = savedPoint;
         this.products = products;
+    }
+
+    public static GetDetailedOrderResponse of(Order order) {
+        List<SingleKindDetailedProductResponse> detailedProducts = order.getQuantityAndProducts().stream()
+            .map(SingleKindDetailedProductResponse::of)
+            .collect(Collectors.toList());
+        return new GetDetailedOrderResponse(order.getOrderId(), order.getOrderAt(),
+            order.getOrderStatus().getDisplayName(), order.getPayAmount(), order.getUsedPoint(), order.getSavedPoint(),
+            detailedProducts);
     }
 
     public Long getOrderId() {

@@ -13,4 +13,8 @@ public class OrderDao {
     public List<Order> findAllByMemberId(Long id) {
         return Collections.emptyList();
     }
+
+    public Order findById(Long id) {
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 package cart.domain;
 
+import static cart.TestSource.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,11 +18,11 @@ import cart.TestSource;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class PaginatorTest {
 
-    private final Order orderAt1999Payed30000PointUsed1000 = new Order(1L, LocalDateTime.of(1999, 1, 1, 1, 1), 30000,
+    private final Order orderAt1999Payed30000PointUsed1000 = new Order(1L, member1, LocalDateTime.of(1999, 1, 1, 1, 1), 30000,
         1000, 1500, OrderStatus.PENDING, List.of(TestSource.quantityAndProduct1));
-    private final Order orderAt2000Payed20000PointUsed900 = new Order(1L, LocalDateTime.of(2000, 1, 1, 1, 1), 20000,
+    private final Order orderAt2000Payed20000PointUsed900 = new Order(1L, member1, LocalDateTime.of(2000, 1, 1, 1, 1), 20000,
         900, 1000, OrderStatus.PENDING, List.of(TestSource.quantityAndProduct2));
-    private final Order orderAt2001Payed10000PointUsed800 = new Order(1L, LocalDateTime.of(2001, 1, 1, 1, 1), 10000,
+    private final Order orderAt2001Payed10000PointUsed800 = new Order(1L, member1, LocalDateTime.of(2001, 1, 1, 1, 1), 10000,
         800, 500, OrderStatus.PENDING, List.of(TestSource.quantityAndProduct3));
 
     private final List<Order> orders = List.of(orderAt1999Payed30000PointUsed1000, orderAt2000Payed20000PointUsed900,

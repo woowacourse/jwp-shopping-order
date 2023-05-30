@@ -34,7 +34,7 @@ public class OrderContents {
     public static List<OrderContents> from(List<Order> orders) {
         return orders.stream()
             .map(order -> {
-                List<QuantityAndProduct> quantityAndProducts = order.getProducts();
+                List<QuantityAndProduct> quantityAndProducts = order.getQuantityAndProducts();
                 int totalProductCount = (int) quantityAndProducts.stream()
                     .mapToInt(QuantityAndProduct::getQuantity)
                     .count();
