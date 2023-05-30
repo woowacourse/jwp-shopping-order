@@ -25,7 +25,7 @@ public class Order {
     }
 
     public Integer getTotalAmount() {
-        return orderProducts.getTotalAmount();
+        return orderProducts.getTotalAmount() - usedPoint;
     }
 
     public Integer getSavedPoint() {
