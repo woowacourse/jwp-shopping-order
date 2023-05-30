@@ -1,23 +1,31 @@
 package cart.document;
 
 import cart.WebMvcConfig;
+import cart.application.CartItemService;
 import cart.application.ProductService;
+import cart.dto.HomePagingRequest;
+import cart.fixtures.MemberFixtures;
 import cart.ui.ProductApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.Base64Utils;
 
 import java.util.List;
 
+import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
 import static cart.fixtures.ProductFixtures.CHICKEN;
+import static cart.fixtures.ProductFixtures.PANCAKE;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static cart.fixtures.ProductFixtures.SALAD;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,11 +53,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SuppressWarnings("NonAsciiCharacters")
 public class ProductApiDocumentTest {
 
+    private static final String BASIC_PREFIX = "Basic ";
+
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private CartItemService cartItemService;
 
     @MockBean
     private ProductService productService;
@@ -82,7 +95,7 @@ public class ProductApiDocumentTest {
     void 특정_상품_조회_문서화() throws Exception {
         // given
         given(productService.getProductById(any()))
-                .willReturn(CHICKEN.DOMAIN);
+                .willReturn(CHICKEN.ENTITY);
 
         // when, then
         mockMvc.perform(get("/products/{id}", CHICKEN.ID)
@@ -100,6 +113,105 @@ public class ProductApiDocumentTest {
                                 fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL")
                         )
                 ));
+    }
+
+    @Test
+    void 상품_페이지_조회_문서화() throws Exception {
+        // given
+        given(productService.getProductsInPaging(3L, 2))
+                .willReturn(List.of(SALAD.ENTITY, CHICKEN.ENTITY));
+        given(productService.hasLastProduct(3L, 2))
+                .willReturn(true);
+        final HomePagingRequest request = new HomePagingRequest(3L, 2);
+
+        // when, then
+        mockMvc.perform(get("/products/cart-items")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andDo(document("products/getHomePagingProduct",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("lastId").type(JsonFieldType.NUMBER).description("현재 페이지의 마지막 상품 아이디"),
+                                fieldWithPath("pageItemCount").type(JsonFieldType.NUMBER).description("페이지에 가져올 상품의 개수")
+                        ),
+                        responseFields(
+                                fieldWithPath("products").type(JsonFieldType.ARRAY).description("상품 목록"),
+                                fieldWithPath("products.[].id").type(JsonFieldType.NUMBER).description("상품 아이디"),
+                                fieldWithPath("products.[].name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("products.[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("products.[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 경로"),
+                                fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("가져온 상품 목록에 마지막 상품이 들어있는지 여부")
+                        )
+                ));
+    }
+
+    @Nested
+    class 멤버와_상품_id를_통한_상품과_장바구니_조회_문서화 {
+
+        @Test
+        void 특정_상품이_장바구니에_존재할_때의_문서화() throws Exception {
+            // given
+            given(productService.getProductById(any()))
+                    .willReturn(CHICKEN.ENTITY);
+            given(cartItemService.findByMemberAndProduct(any(), any()))
+                    .willReturn(MemberA_CartItem1.ENTITY);
+            final String encodeAuthInfo = Base64Utils.encodeToString((MemberFixtures.MemberA.EMAIL + ":" + MemberFixtures.MemberA.PASSWORD).getBytes());
+
+            // when, then
+            mockMvc.perform(get("/products/{productId}/cart-items", CHICKEN.ID)
+                            .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andDo(document("products/getProductCartItemByProductId/existCartItem",
+                            preprocessResponse(prettyPrint()),
+                            pathParameters(
+                                    parameterWithName("productId").description("조회할 상품 아이디")
+                            ),
+                            responseFields(
+                                    fieldWithPath("product").type(JsonFieldType.OBJECT).description("상품"),
+                                    fieldWithPath("product.id").type(JsonFieldType.NUMBER).description("상품 아이디"),
+                                    fieldWithPath("product.name").type(JsonFieldType.STRING).description("상품 이름"),
+                                    fieldWithPath("product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                    fieldWithPath("product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 경로"),
+                                    fieldWithPath("cartItem").type(JsonFieldType.OBJECT).description("장바구니"),
+                                    fieldWithPath("cartItem.id").type(JsonFieldType.NUMBER).description("장바구니 아이디"),
+                                    fieldWithPath("cartItem.quantity").type(JsonFieldType.NUMBER).description("장바구니 상품의 개수")
+                            )
+                    ));
+        }
+
+        @Test
+        void 특정_상품이_장바구니에_존재하지_않을_때의_문서화() throws Exception {
+            // given
+            given(productService.getProductById(any()))
+                    .willReturn(PANCAKE.ENTITY);
+            given(cartItemService.findByMemberAndProduct(any(), any()))
+                    .willReturn(null);
+            final String encodeAuthInfo = Base64Utils.encodeToString((MemberFixtures.MemberA.EMAIL + ":" + MemberFixtures.MemberA.PASSWORD).getBytes());
+
+            // when, then
+            mockMvc.perform(get("/products/{productId}/cart-items", PANCAKE.ID)
+                            .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andDo(document("products/getProductCartItemByProductId/notExistCartItem",
+                            preprocessResponse(prettyPrint()),
+                            pathParameters(
+                                    parameterWithName("productId").description("조회할 상품 아이디")
+                            ),
+                            responseFields(
+                                    fieldWithPath("product").type(JsonFieldType.OBJECT).description("상품"),
+                                    fieldWithPath("product.id").type(JsonFieldType.NUMBER).description("상품 아이디"),
+                                    fieldWithPath("product.name").type(JsonFieldType.STRING).description("상품 이름"),
+                                    fieldWithPath("product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                    fieldWithPath("product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 경로"),
+                                    fieldWithPath("cartItem").type(JsonFieldType.NULL).description("장바구니가 없으므로 NULL을 반환")
+                            )
+                    ));
+        }
     }
 
     @Test

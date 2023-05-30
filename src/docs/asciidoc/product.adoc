@@ -27,7 +27,46 @@ include::{snippets}/products/getProductById/http-response.adoc[]
 include::{snippets}/products/getProductById/response-fields.adoc[]
 
 
-==== 3. 상품 추가
+==== 3. 모든 상품 조회 (페이징)
+
+[discrete]
+====== 요청
+include::{snippets}/products/getHomePagingProduct/http-request.adoc[]
+include::{snippets}/products/getHomePagingProduct/request-fields.adoc[]
+
+[discrete]
+====== 응답
+include::{snippets}/products/getHomePagingProduct/http-response.adoc[]
+include::{snippets}/products/getHomePagingProduct/response-fields.adoc[]
+
+==== 4. 상품 상세
+
+===== 4-1. 특정 상품이 장바구니에 존재할 때
+
+[discrete]
+====== 요청
+include::{snippets}/products/getProductCartItemByProductId/existCartItem/http-request.adoc[]
+include::{snippets}/products/getProductCartItemByProductId/existCartItem/path-parameters.adoc[]
+
+[discrete]
+====== 응답
+include::{snippets}/products/getProductCartItemByProductId/existCartItem/http-response.adoc[]
+include::{snippets}/products/getProductCartItemByProductId/existCartItem/response-fields.adoc[]
+
+===== 4-2. 특정 상품이 장바구니에 존재하지 않을 때
+
+[discrete]
+====== 요청
+include::{snippets}/products/getProductCartItemByProductId/notExistCartItem/http-request.adoc[]
+include::{snippets}/products/getProductCartItemByProductId/notExistCartItem/path-parameters.adoc[]
+
+[discrete]
+====== 응답
+include::{snippets}/products/getProductCartItemByProductId/notExistCartItem/http-response.adoc[]
+include::{snippets}/products/getProductCartItemByProductId/notExistCartItem/response-fields.adoc[]
+
+
+==== 5. 상품 추가
 
 [discrete]
 ====== 요청
@@ -39,7 +78,7 @@ include::{snippets}/products/createProduct/request-fields.adoc[]
 include::{snippets}/products/createProduct/http-response.adoc[]
 
 
-==== 4. 상품 수정
+==== 6. 상품 수정
 
 [discrete]
 ====== 요청
@@ -52,7 +91,7 @@ include::{snippets}/products/updateProduct/path-parameters.adoc[]
 include::{snippets}/products/updateProduct/http-response.adoc[]
 
 
-==== 5. 상품 삭제
+==== 7. 상품 삭제
 
 [discrete]
 ====== 요청
