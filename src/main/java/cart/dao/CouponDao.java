@@ -50,4 +50,11 @@ public class CouponDao {
         String sql = "select * from coupon";
         return jdbcTemplate.query(sql, couponRowMapper);
     }
+
+    public List<Coupon> findAllByMemberId(Long memberId) {
+        String sql = "select * from coupon " +
+                "join member_coupon on coupon.id = member_coupon.coupon_id " +
+                "where coupon.member_id = ?";
+        return jdbcTemplate.query(sql, couponRowMapper, memberId);
+    }
 }
