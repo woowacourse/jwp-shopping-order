@@ -9,9 +9,9 @@
 | 주문 상세 보기 | GET | ~/orders/{id} | o     |
 | 주문 확정 | PATCH | ~/orders/{id}/confirm | o     |
 | 주문 취소 | DELETE | ~/orders/{id} | o     |
-| 유저 쿠폰 발급 | POST | ~/users/coupons | x     |
-| 모든 쿠폰 조회 | GET | ~/coupons | x     |
-| 유저 쿠폰 조회 | GET | ~/users/coupons | x     |
+| 유저 쿠폰 발급 | POST | ~/users/coupons | o     |
+| 모든 쿠폰 조회 | GET | ~/coupons | o     |
+| 유저 쿠폰 조회 | GET | ~/users/coupons | o     |
 
 - **[POST] 주문하기 (~/orders)**
 
