@@ -10,8 +10,8 @@ import cart.persistence.entity.MemberEntity;
 import cart.util.Encryptor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class MemberRepositoryImpl implements MemberRepository {
@@ -27,6 +27,15 @@ public class MemberRepositoryImpl implements MemberRepository {
         MemberEntity memberEntity = new MemberEntity(member.getName(), encryptedPassword);
 
         return memberDao.insertMember(memberEntity);
+    }
+
+    @Override
+    public List<Member> findAll() {
+        List<MemberEntity> allMemberEntities = memberDao.findAll();
+
+        return allMemberEntities.stream()
+                .map(this::toMember)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,18 +60,5 @@ public class MemberRepositoryImpl implements MemberRepository {
                 new MemberName(memberEntity.getName()),
                 new EncryptedPassword(memberEntity.getPassword())
         );
-    }
-
-    @Override
-    public boolean hasMember(Member member) {
-        Optional<MemberEntity> findMember = memberDao.findByName(member.getName());
-
-        if (findMember.isPresent()) {
-            String encryptedPassword = Encryptor.encrypt(member.getPassword());
-
-            return Objects.equals(encryptedPassword, findMember.get().getPassword());
-        }
-
-        return false;
     }
 }

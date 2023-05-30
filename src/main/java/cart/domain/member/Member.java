@@ -12,8 +12,8 @@ public class Member {
         this.password = password;
     }
 
-    public Member(Long id, String name, String password) {
-        this(id, new MemberName(name), new NaturalPassword(password));
+    public Member(String name, String password) {
+        this(null, new MemberName(name), new NaturalPassword(password));
     }
 
     public Long getId() {
