@@ -1,4 +1,4 @@
-package cart.persistence.dto;
+package cart.domain.dto;
 
 public class CartItemDetail {
     private final Long id;
