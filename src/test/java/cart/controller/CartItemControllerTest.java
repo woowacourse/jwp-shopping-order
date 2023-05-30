@@ -1,15 +1,5 @@
 package cart.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
@@ -19,8 +9,6 @@ import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Base64;
-import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -31,6 +19,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Base64;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @AutoConfigureMockMvc
 @Transactional
@@ -100,11 +102,11 @@ public class CartItemControllerTest {
         // given
         final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // when
-        mockMvc.perform(delete("/cart-items/" + product.getId())
+        mockMvc.perform(delete("/cart-items/" + cartItem.getId())
                         .header("Authorization", header)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
