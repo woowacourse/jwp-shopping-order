@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -45,7 +45,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         // 본인 여부 확인
         Member member = memberDao.getMemberByEmail(email);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("로그인 정보가 맞지 않습니다.");
         }
         return member;
     }

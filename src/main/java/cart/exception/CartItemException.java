@@ -3,7 +3,7 @@ package cart.exception;
 import cart.domain.CartItem;
 import cart.domain.Member;
 
-public class CartItemException extends RuntimeException {
+public class CartItemException extends ShoppingOrderException {
     public CartItemException(String message) {
         super(message);
     }

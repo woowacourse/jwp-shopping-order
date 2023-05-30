@@ -2,12 +2,11 @@ package cart.dao;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ProductDao {
@@ -44,11 +43,7 @@ public class ProductDao {
     }
 
     public Long createProduct(Product product) {
-        final Map<String, ? extends Serializable> parameters = Map.of(
-                "name", product.getName(),
-                "price", product.getPrice(),
-                "image_url", product.getImageUrl());
-
+        final BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
         return insertProduct.executeAndReturnKey(parameters).longValue();
     }
 
