@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.common;
 
 import cart.application.MemberService;
 import javax.servlet.http.HttpServletRequest;

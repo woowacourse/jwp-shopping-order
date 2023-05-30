@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.common;
 
 public class ErrorResponse {
 

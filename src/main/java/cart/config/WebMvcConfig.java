@@ -1,9 +1,9 @@
 package cart.config;
 
 import cart.application.MemberService;
-import cart.ui.BasicAuthInterceptor;
-import cart.ui.BasicAuthenticationExtractor;
-import cart.ui.MemberArgumentResolver;
+import cart.ui.common.BasicAuthInterceptor;
+import cart.ui.common.BasicAuthenticationExtractor;
+import cart.ui.common.MemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;

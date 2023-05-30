@@ -1,10 +1,12 @@
-package cart.ui;
+package cart.ui.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.exception.AuthenticationException;
+import cart.ui.common.BasicAuthenticationExtractor;
+import cart.ui.common.MemberAuth;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.common;
 
 import cart.exception.AuthenticationException;
 import java.util.Base64;
