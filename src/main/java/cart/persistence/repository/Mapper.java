@@ -1,6 +1,8 @@
 package cart.persistence.repository;
 
+import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
 
 class Mapper {
@@ -20,6 +22,16 @@ class Mapper {
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
+                null
+        );
+    }
+
+    public static MemberEntity memberToMemberEntityMapper(final Member member) {
+        return new MemberEntity(
+                member.getId(),
+                member.getEmail(),
+                member.getPassword(),
+                member.getPoint(),
                 null
         );
     }

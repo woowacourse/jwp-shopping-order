@@ -1,6 +1,7 @@
 package cart.persistence.dao;
 
 import cart.domain.member.Member;
+import cart.persistence.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -62,8 +63,8 @@ public class MemberDao {
         return jdbcTemplate.query(sql, MEMBER_MAPPER);
     }
 
-    public void updatePoint(final Member member) {
+    public void updatePoint(final MemberEntity memberEntity) {
         final String sql = "UPDATE member SET point = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getPoint(), member.getId());
+        jdbcTemplate.update(sql, memberEntity.getPoint(), memberEntity.getId());
     }
 }

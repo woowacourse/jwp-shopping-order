@@ -10,7 +10,6 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderProducts;
 import cart.domain.product.Product;
 import cart.persistence.dao.CartItemDao;
-import cart.persistence.dao.MemberDao;
 import cart.persistence.dao.OrderHistoryDao;
 import cart.persistence.dao.OrderProductDao;
 import cart.persistence.repository.CartItemRepository;
@@ -27,14 +26,12 @@ public class CartItemService {
     private final CartItemDao cartItemDao;
     private final OrderHistoryDao orderHistoryDao;
     private final OrderProductDao orderProductDao;
-    private final MemberDao memberDao;
 
-    public CartItemService(final CartItemRepository cartItemRepository, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao, final MemberDao memberDao) {
+    public CartItemService(final CartItemRepository cartItemRepository, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao) {
         this.cartItemRepository = cartItemRepository;
         this.cartItemDao = cartItemDao;
         this.orderHistoryDao = orderHistoryDao;
         this.orderProductDao = orderProductDao;
-        this.memberDao = memberDao;
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +80,7 @@ public class CartItemService {
         final Long orderId = orderHistoryDao.createOrder(order);
         member.savePoint(order.getSavedPoint());
         orderProductDao.createProducts(orderId, order.getOrderProducts());
-        memberDao.updatePoint(member);
+        cartItemRepository.updatePoint(member);
         return orderId;
     }
 

@@ -8,6 +8,7 @@ import cart.application.dto.response.CartItemResponse;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.persistence.dao.MemberDao;
+import cart.persistence.entity.MemberEntity;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -340,7 +341,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
             final int expectPoint = 1400;
             final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 100);
             member1.savePoint(500);
-            memberDao.updatePoint(member1);
+            memberDao.updatePoint(new MemberEntity(member1.getId(), null, null, member1.getPoint(), null));
 
             final ExtractableResponse<Response> response = given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
