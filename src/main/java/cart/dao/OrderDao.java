@@ -20,20 +20,16 @@ public class OrderDao {
     }
 
     public Long createOrder(Long memberId, Order order) {
+        String sql = "INSERT INTO orders (member_id, total_purchase_amount, total_item_price, shipping_fee, discounted_total_price) VALUES (?, ?, ?, ?, ?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO orders (member_id, total_purchase_amount, total_item_price, shipping_fee, discounted_total_price) VALUES (?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, memberId);
             ps.setInt(2, order.getTotalPurchaseAmount());
             ps.setInt(3, order.getTotalItemPrice());
             ps.setInt(4, order.getShippingFee());
             ps.setInt(5, order.getDiscountedTotalPrice());
-
             return ps;
         }, keyHolder);
 
