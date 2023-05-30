@@ -4,11 +4,11 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-import cart.application.dto.CartItemQuantityUpdateRequest;
-import cart.application.dto.CartItemRequest;
-import cart.application.dto.product.ProductRequest;
+import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.application.dto.cartitem.CartItemRequest;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberSaveRequest;
+import cart.application.dto.product.ProductRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,8 @@ import org.springframework.http.MediaType;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
-    @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
+    @DisplayName("장바구니에 아이템을 추가한다.")
     void addCartItem() {
         // given
         final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
@@ -41,8 +41,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .header(LOCATION, "/cart-items/" + 1);
     }
 
-    @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
+    @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     void addCartItemByIllegalMember() {
         // given
         final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
@@ -60,8 +60,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     @Test
+    @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     void getCartItems() {
         // given
         final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
@@ -103,8 +103,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .body("[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
     }
 
-    @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     @Test
+    @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     void increaseCartItemQuantity() {
         // given
         final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
@@ -130,8 +130,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .extract();
     }
 
-    @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     @Test
+    @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     void decreaseCartItemQuantityToZero() {
         // given
         final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
@@ -157,8 +157,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .body("size", is(0));
     }
 
-    @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     @Test
+    @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     void updateOtherMembersCartItem() {
         // given
         final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
@@ -186,8 +186,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .extract();
     }
 
-    @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     @Test
+    @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     void removeCartItem() {
         // given
         final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");
@@ -218,8 +218,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
             .body("size", is(0));
     }
 
-    @DisplayName("장바구니에 담긴 아이템을 여러 개 삭제한다.")
     @Test
+    @DisplayName("장바구니에 담긴 아이템을 여러 개 삭제한다.")
     void removeCartItems() {
         // given
         final MemberSaveRequest 져니_등록_요청 = new MemberSaveRequest("journey", "test1234");

@@ -40,15 +40,13 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Member findByName(final String name) {
-        final MemberEntity memberEntity = memberDao.findByName(name)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        final MemberEntity memberEntity = getMemberEntityByName(name);
         return convertMember(memberEntity);
     }
 
     @Override
     public MemberWithId findWithIdByName(final String name) {
-        final MemberEntity memberEntity = memberDao.findByName(name)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        final MemberEntity memberEntity = getMemberEntityByName(name);
         return convertMemberWithId(memberEntity);
     }
 
@@ -66,7 +64,13 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Member findMyCouponsByName(final String memberName) {
+        final MemberEntity memberEntity = getMemberEntityByName(memberName);
         final List<MemberCouponDto> myCouponsByName = memberDao.findMyCouponsByName(memberName);
-        return convertMember(myCouponsByName);
+        return convertMember(myCouponsByName, memberEntity);
+    }
+
+    private MemberEntity getMemberEntityByName(final String name) {
+        return memberDao.findByName(name)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }

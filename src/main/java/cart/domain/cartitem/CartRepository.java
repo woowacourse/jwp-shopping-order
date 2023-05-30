@@ -1,12 +1,11 @@
 package cart.domain.cartitem;
 
 import cart.domain.cartitem.dto.CartItemSaveReq;
-import cart.domain.cartitem.dto.CartItemWithId;
 import java.util.List;
 
-public interface CartItemRepository {
+public interface CartRepository {
 
-    List<CartItemWithId> findByMemberName(final String memberName);
+    Cart findByMemberName(final String memberName);
 
     Long save(final String memberName, final CartItemSaveReq cartItemSaveReq);
 
@@ -14,7 +13,7 @@ public interface CartItemRepository {
 
     void updateQuantity(final Long cartItemId, final int quantity);
 
-    CartItem findById(final Long cartItemId);
+    Cart findById(final Long cartItemId);
 
     Long countByIdsAndMemberId(final List<Long> cartItemIds, final String memberName);
 

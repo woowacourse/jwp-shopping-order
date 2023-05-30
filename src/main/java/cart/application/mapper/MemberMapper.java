@@ -19,7 +19,7 @@ public class MemberMapper {
         return Member.create(memberSaveRequest.getName(), EncryptedPassword.create(encodedPassword));
     }
 
-    public static MemberResponse convverMemberResponse(final Member member) {
+    public static MemberResponse convertMemberResponse(final Member member) {
         return new MemberResponse(member.name(), member.password());
     }
 

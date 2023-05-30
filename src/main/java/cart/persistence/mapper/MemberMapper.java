@@ -27,16 +27,16 @@ public class MemberMapper {
         return Member.create(cartItemDto.getMemberName(), EncryptedPassword.create(cartItemDto.getMemberPassword()));
     }
 
-    public static Member convertMember(final List<MemberCouponDto> myCouponsByName) {
-        return Member.create(myCouponsByName.get(0).getMemberName(),
-            EncryptedPassword.create(myCouponsByName.get(0).getMemberPassword()),
+    public static Member convertMember(final List<MemberCouponDto> myCouponsByName, final MemberEntity memberEntity) {
+        return Member.create(memberEntity.getName(), EncryptedPassword.create(memberEntity.getPassword()),
             convertMemberCoupons(myCouponsByName));
     }
 
     public static List<MemberCoupon> convertMemberCoupons(final List<MemberCouponDto> myCouponsByName) {
         return myCouponsByName.stream()
             .map(memberCouponDto -> {
-                final CouponWithId coupon = new CouponWithId(memberCouponDto.getCouponId(), convertCoupon(memberCouponDto));
+                final CouponWithId coupon = new CouponWithId(memberCouponDto.getCouponId(),
+                    convertCoupon(memberCouponDto));
                 return new MemberCoupon(coupon, memberCouponDto.getIssuedAt(), memberCouponDto.getExpiredAt(),
                     memberCouponDto.isUsed());
             }).collect(Collectors.toUnmodifiableList());

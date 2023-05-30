@@ -108,7 +108,7 @@ public class CartItemDao {
             + "    FROM"
             + "    ("
             + "        SELECT ci.id AS id FROM cart_item AS ci"
-            + "        JOIN member AS m ON ci.member_id = m.id"
+            + "        INNER JOIN member AS m ON ci.member_id = m.id"
             + "        AND ci.id IN (:ids) AND m.id = :memberId"
             + "    ) cart_item_temp"
             + ")";

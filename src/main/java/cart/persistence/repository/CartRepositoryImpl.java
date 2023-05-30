@@ -1,11 +1,10 @@
 package cart.persistence.repository;
 
-import static cart.persistence.mapper.CartItemMapper.convertCartItem;
+import static cart.persistence.mapper.CartMapper.convertCart;
 
-import cart.domain.cartitem.CartItem;
-import cart.domain.cartitem.CartItemRepository;
+import cart.domain.cartitem.Cart;
+import cart.domain.cartitem.CartRepository;
 import cart.domain.cartitem.dto.CartItemSaveReq;
-import cart.domain.cartitem.dto.CartItemWithId;
 import cart.exception.DBException;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
@@ -14,27 +13,26 @@ import cart.persistence.dao.MemberDao;
 import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.MemberEntity;
-import cart.persistence.mapper.CartItemMapper;
+import cart.persistence.mapper.CartMapper;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CartItemRepositoryImpl implements CartItemRepository {
+public class CartRepositoryImpl implements CartRepository {
 
     private final MemberDao memberDao;
     private final CartItemDao cartItemDao;
 
-    public CartItemRepositoryImpl(final MemberDao memberDao, final CartItemDao cartItemDao) {
+    public CartRepositoryImpl(final MemberDao memberDao, final CartItemDao cartItemDao) {
         this.memberDao = memberDao;
         this.cartItemDao = cartItemDao;
     }
 
     @Override
-    public List<CartItemWithId> findByMemberName(final String memberName) {
-        return cartItemDao.findByMemberName(memberName).stream()
-            .map(CartItemMapper::convertCartItemWithId)
-            .collect(Collectors.toUnmodifiableList());
+    public Cart findByMemberName(final String memberName) {
+        final MemberEntity memberEntity = getMemberEntity(memberName);
+        final List<CartItemDto> carItems = cartItemDao.findByMemberName(memberName);
+        return CartMapper.convertCart(carItems, memberEntity);
     }
 
     @Override
@@ -62,10 +60,10 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     }
 
     @Override
-    public CartItem findById(final Long cartItemId) {
+    public Cart findById(final Long cartItemId) {
         final CartItemDto cartItemDto = cartItemDao.findById(cartItemId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CART_NOT_FOUND));
-        return convertCartItem(cartItemDto);
+        return convertCart(cartItemDto);
     }
 
     @Override

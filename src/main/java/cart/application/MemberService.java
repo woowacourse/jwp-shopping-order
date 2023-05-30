@@ -2,7 +2,6 @@ package cart.application;
 
 import static cart.application.mapper.MemberMapper.convertMember;
 import static cart.application.mapper.MemberMapper.convertMemberResponse;
-import static cart.application.mapper.MemberMapper.convverMemberResponse;
 
 import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberLoginRequest;
@@ -72,7 +71,7 @@ public class MemberService {
 
     public MemberResponse getByName(final String memberName) {
         final Member member = memberRepository.findByName(memberName);
-        return convverMemberResponse(member);
+        return MemberMapper.convertMemberResponse(member);
     }
 
     public List<MemberResponse> getMembers() {

@@ -17,6 +17,10 @@ public class ProductMapper {
             cartItemDto.getProductImageUrl());
     }
 
+    public static ProductWithId convertProductWithId(final CartItemDto cartItemDto) {
+        return new ProductWithId(cartItemDto.getCartId(), convertProduct(cartItemDto));
+    }
+
     public static ProductWithId convertProductWithId(final ProductEntity productEntity) {
         return new ProductWithId(productEntity.getId(), convertProduct(productEntity));
     }

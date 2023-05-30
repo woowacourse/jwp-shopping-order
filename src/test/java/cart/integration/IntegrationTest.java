@@ -2,8 +2,8 @@ package cart.integration;
 
 import static io.restassured.RestAssured.given;
 
-import cart.application.dto.CartItemQuantityUpdateRequest;
-import cart.application.dto.CartItemRequest;
+import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.application.dto.cartitem.CartItemRequest;
 import cart.application.dto.coupon.CouponRequest;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberSaveRequest;

@@ -1,14 +1,14 @@
-package cart.application.dto;
+package cart.application.dto.cartitem;
 
 import cart.application.dto.product.ProductResponse;
 
-public class CartItemResponse {
+public class CartResponse {
 
     private final Long id;
     private final int quantity;
     private final ProductResponse product;
 
-    public CartItemResponse(final Long id, final int quantity, final ProductResponse product) {
+    public CartResponse(final Long id, final int quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;

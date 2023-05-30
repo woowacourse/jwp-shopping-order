@@ -1,20 +1,21 @@
-package cart.domain.cartitem.dto;
+package cart.domain.cartitem;
 
-import cart.domain.member.dto.MemberWithId;
 import cart.domain.product.dto.ProductWithId;
 
 public class CartItemWithId {
 
     private final Long id;
-    private final int quantity;
+    private int quantity;
     private final ProductWithId product;
-    private final MemberWithId member;
 
-    public CartItemWithId(final Long id, final int quantity, final ProductWithId product, final MemberWithId member) {
+    public CartItemWithId(final Long id, final int quantity, final ProductWithId product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
-        this.member = member;
+    }
+
+    public void changeQuantity(final int quantity) {
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -27,9 +28,5 @@ public class CartItemWithId {
 
     public ProductWithId getProduct() {
         return product;
-    }
-
-    public MemberWithId getMember() {
-        return member;
     }
 }
