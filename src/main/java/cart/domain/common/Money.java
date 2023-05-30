@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.common;
 
 import java.math.BigInteger;
 import java.util.Objects;

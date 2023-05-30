@@ -1,6 +1,6 @@
 package cart.domain.product;
 
-import cart.domain.Money;
+import cart.domain.common.Money;
 
 public class Product {
     private final Long id;
