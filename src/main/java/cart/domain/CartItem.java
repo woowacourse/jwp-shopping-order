@@ -1,10 +1,10 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
-
+import cart.exception.ForbiddenException;
 import java.util.Objects;
 
 public class CartItem {
+
     private Long id;
     private int quantity;
     private final Product product;
@@ -41,7 +41,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new ForbiddenException();
         }
     }
 

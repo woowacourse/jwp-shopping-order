@@ -8,13 +8,11 @@ import cart.persistence.entity.ProductEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductJdbcRepository implements ProductRepository {
 
-    @Autowired
     private final ProductDao productDao;
 
     public ProductJdbcRepository(final ProductDao productDao) {
