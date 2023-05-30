@@ -42,6 +42,12 @@ public class OrderDao {
 
         final long id = orderInsert.executeAndReturnKey(Map.of("member_id", member.getId(), "used_points", usedPoints, "saving_rate", savingRate)).longValue();
 
+        batchInsertCartItems(cartItems, id);
+
+        return id;
+    }
+
+    private void batchInsertCartItems(final List<CartItem> cartItems, final long id) {
         List<Map<String, Object>> batchValues = new ArrayList<>();
         for (final CartItem cartItem : cartItems) {
             Map<String, Object> batchMap = new HashMap<>();
@@ -54,8 +60,6 @@ public class OrderDao {
             batchValues.add(batchMap);
         }
         orderItemInsert.executeBatch(batchValues.toArray(new Map[0]));
-
-        return id;
     }
 
     public OrderEntity findById(final Long id, final Long memberId) {

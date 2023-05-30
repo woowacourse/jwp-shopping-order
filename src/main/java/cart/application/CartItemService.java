@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class CartItemService {
+    private static final int ZERO_QUANTITY = 0;
+    private static final boolean NOT_CHECKED = false;
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -43,9 +45,9 @@ public class CartItemService {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
-        if (request.getQuantity() == 0) {
+        if (request.getQuantity() == ZERO_QUANTITY) {
             cartItemDao.deleteById(id);
-            return new CartItemUpdateResponse(0, false);
+            return new CartItemUpdateResponse(ZERO_QUANTITY, NOT_CHECKED);
         }
 
         cartItem.changeQuantity(request.getQuantity());
