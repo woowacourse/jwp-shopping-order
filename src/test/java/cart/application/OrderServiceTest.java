@@ -1,9 +1,9 @@
 package cart.application;
 
 import cart.domain.Member;
-import cart.dto.CartItemRequest;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderResponse;
+import cart.dto.request.CartItemRequest;
+import cart.dto.request.OrderCreateRequest;
+import cart.dto.response.OrderResponse;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

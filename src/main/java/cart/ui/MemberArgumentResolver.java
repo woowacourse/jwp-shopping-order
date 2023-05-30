@@ -1,5 +1,6 @@
 package cart.ui;
 
+import cart.application.auth.Auth;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;

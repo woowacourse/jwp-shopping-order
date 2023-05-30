@@ -1,9 +1,9 @@
 package cart.acceptance;
 
 import cart.dao.CartItemDao;
-import cart.dto.CartItemAddRequest;
-import cart.dto.CartItemUpdateRequest;
-import cart.dto.CartItemUpdateResponse;
+import cart.dto.request.CartItemAddRequest;
+import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.response.CartItemUpdateResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
