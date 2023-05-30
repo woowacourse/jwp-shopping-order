@@ -1,8 +1,7 @@
-package cart.ui;
+package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.integration.IntegrationTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class MemberApiControllerTest extends IntegrationTest {
+public class MemberIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
@@ -25,6 +24,7 @@ class MemberApiControllerTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         this.member = memberDao.getMemberById(1L);
+        super.setUp();
     }
 
     @DisplayName("사용자의 포인트를 조회한다.")
