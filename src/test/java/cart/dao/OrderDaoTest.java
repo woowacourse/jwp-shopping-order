@@ -34,7 +34,7 @@ class OrderDaoTest {
 
     @Test
     @DisplayName("저장 성공")
-    void save_success() {
+    void insert_success() {
         // given
         final OrderEntity orderEntity = new OrderEntity(1L, 15_000, 0);
 
