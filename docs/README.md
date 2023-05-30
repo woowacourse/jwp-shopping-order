@@ -260,7 +260,7 @@ Content-Type: application/json
 ### Request
 
 ```
-GET /users/{userId}/coupons HTTP/1.1
+GET /users/me/coupons HTTP/1.1
 Authorization: Basic 93290uf9ewfiod
 ```
 
