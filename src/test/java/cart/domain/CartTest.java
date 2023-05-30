@@ -9,6 +9,8 @@ import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -23,10 +25,10 @@ class CartTest {
     void 항목을_구매한다() {
         var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A);
 
-        var orderItems = cart.order(of(CART_ITEM_치킨_MEMBER_A));
+        var orderItems = cart.order(List.of(CART_ITEM_치킨_MEMBER_A));
 
         assertThat(orderItems.getOrderItems())
-                .usingRecursiveFieldByFieldElementComparator()
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
                 .containsExactly(ORDERED_치킨);
     }
 

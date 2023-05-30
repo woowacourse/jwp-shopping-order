@@ -26,6 +26,21 @@ public enum RequestSnippets {
     )),
     CART_ITEM_QUANTITY_UPDATE(CartItemQuantityUpdateRequest.class, () -> Map.of(
             "quantity", "수량"
+    )),
+    PRODUCT_WITH_ID(ProductRequest.WithId.class, () -> Map.of(
+            "id", "제품 id",
+            "name", "제품 명",
+            "price", "제품 가격",
+            "imageUrl", "제품 이미지 url"
+    )),
+    ORDER(OrderRequest.class, () -> join(
+            Map.of(
+                    "cartItemId", "장바구니 항목 id",
+                    "product", "제품",
+                    "quantity", "수량",
+                    "couponIds", "쿠폰 id(들)"
+            ),
+            withPrefix("product.", PRODUCT_WITH_ID.fieldsSupplier.get())
     ));
 
     private static final String EMPTY = "";

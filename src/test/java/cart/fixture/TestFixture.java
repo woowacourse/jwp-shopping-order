@@ -3,7 +3,10 @@ package cart.fixture;
 import java.util.List;
 
 import cart.domain.CartItem;
+import cart.domain.Coupon;
+import cart.domain.DiscountPolicy;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
 
@@ -35,12 +38,20 @@ public class TestFixture {
 
     public static List<CartItem> CART_ITEMS_MEMBER_A = List.of(CART_ITEM_치킨_MEMBER_A, CART_ITEM_샐러드_MEMBER_A);
 
-    public static OrderItem ORDERED_치킨 = new OrderItem(null, 치킨, 1);
-    public static OrderItem ORDERED_샐러드 = new OrderItem(null, 샐러드, 10);
-    public static OrderItem ORDERED_피자 = new OrderItem(null, 피자, 2);
+    public static OrderItem ORDERED_치킨 = new OrderItem(1L, 치킨, 1);
+    public static OrderItem ORDERED_샐러드 = new OrderItem(2L, 샐러드, 10);
+    public static OrderItem ORDERED_피자 = new OrderItem(3L, 피자, 2);
+    public static OrderItem ORDERED_햄버거 = new OrderItem(4L, 햄버거, 3);
+    public static OrderItem ORDERED_제로콜라 = new OrderItem(5L, 제로콜라, 7);
+    public static OrderItem ORDERED_감자튀김 = new OrderItem(6L, 감자튀김, 6);
 
-    public static List<OrderItem> ORDER_ITEMS = List.of(ORDERED_치킨, ORDERED_샐러드, ORDERED_피자);
+    public static List<OrderItem> ORDER_ITEMS_ONE = List.of(ORDERED_치킨, ORDERED_샐러드, ORDERED_피자);
+    public static List<OrderItem> ORDER_ITEMS_TWO = List.of(ORDERED_햄버거, ORDERED_제로콜라, ORDERED_감자튀김);
+    public static Order ORDER_ONE_MEMBER_A = new Order(1L, MEMBER_A, ORDER_ITEMS_ONE);
+    public static Order ORDER_TWO_MEMBER_A = new Order(2L, MEMBER_A, ORDER_ITEMS_TWO);
 
     public static OrderItem ORDERED_치킨_COUPON_USED = new OrderItem(null, 치킨, 1);
+
+    public static Coupon FIXED_COUPON_2000 = new Coupon(1L, 2000, DiscountPolicy.FIXED);
 
 }

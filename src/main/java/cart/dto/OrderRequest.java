@@ -5,14 +5,14 @@ import java.util.List;
 public class OrderRequest {
 
     private Long cartItemId;
-    private ProductRequest product;
+    private ProductRequest.WithId product;
     private Integer quantity;
     private List<Long> couponIds;
 
     private OrderRequest() {
     }
 
-    public OrderRequest(Long cartItemId, ProductRequest product, Integer quantity, List<Long> couponIds) {
+    public OrderRequest(Long cartItemId, ProductRequest.WithId product, Integer quantity, List<Long> couponIds) {
         this.cartItemId = cartItemId;
         this.product = product;
         this.quantity = quantity;
@@ -23,7 +23,7 @@ public class OrderRequest {
         return cartItemId;
     }
 
-    public ProductRequest getProduct() {
+    public ProductRequest.WithId getProduct() {
         return product;
     }
 

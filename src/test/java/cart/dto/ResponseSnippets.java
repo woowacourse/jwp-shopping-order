@@ -28,6 +28,20 @@ public enum ResponseSnippets {
                     "product", "제품 정보"
             ),
             withPrefix("product.", PRODUCT.fieldsSupplier.get())
+    )),
+    ORDER_ITEM(OrderItemResponse.class, () -> Map.of(
+            "orderItemId", "주문 항목 id",
+            "product", "주문 시점의 상품",
+            "total", "주문 항목의 총 금액",
+            "quantity", "주문 항목의 수량"
+    )),
+    ORDER(OrderResponse.class, () -> join(join(
+                    Map.of(
+                            "orderId", "주문 id",
+                            "orderItems", "주문한 항목들"
+                    ),
+                    withPrefix("orderItems[].", ORDER_ITEM.fieldsSupplier.get())),
+            withPrefix("orderItems[].product.", PRODUCT.fieldsSupplier.get())
     ));
 
     private static final String EMPTY = "";

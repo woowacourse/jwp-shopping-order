@@ -1,7 +1,7 @@
 package cart.dao;
 
 import static cart.fixture.TestFixture.MEMBER_A;
-import static cart.fixture.TestFixture.ORDER_ITEMS;
+import static cart.fixture.TestFixture.ORDER_ITEMS_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class OrderDaoTest {
 
     @Test
     void 주문을_저장한다() {
-        Order order = new Order(MEMBER_A, ORDER_ITEMS);
+        Order order = new Order(MEMBER_A, ORDER_ITEMS_ONE);
         Long id = orderDao.insert(OrderDto.of(order));
 
         assertThat(orderDao.selectBy(id)).isNotNull();
@@ -39,7 +39,7 @@ class OrderDaoTest {
 
     @Test
     void 주문을_불러온다() {
-        Order order = new Order(MEMBER_A, ORDER_ITEMS);
+        Order order = new Order(MEMBER_A, ORDER_ITEMS_ONE);
         Long id = orderDao.insert(OrderDto.of(order));
 
         assertThat(orderDao.selectBy(id))

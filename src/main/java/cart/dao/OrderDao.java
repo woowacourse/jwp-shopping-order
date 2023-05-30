@@ -1,6 +1,7 @@
 package cart.dao;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -38,6 +39,19 @@ public class OrderDao {
                         rs.getObject("created_at", LocalDateTime.class)
                 ),
                 id
+        );
+    }
+
+    public List<OrderDto> selectAllBy(Long memberId) {
+        String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> new OrderDto(
+                        rs.getLong("id"),
+                        rs.getLong("member_id"),
+                        rs.getObject("created_at", LocalDateTime.class)
+                ),
+                memberId
         );
     }
 }

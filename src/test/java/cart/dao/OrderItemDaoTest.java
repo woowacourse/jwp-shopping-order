@@ -1,6 +1,6 @@
 package cart.dao;
 
-import static cart.fixture.TestFixture.ORDER_ITEMS;
+import static cart.fixture.TestFixture.ORDER_ITEMS_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -32,16 +32,16 @@ class OrderItemDaoTest {
 
     @Test
     void 주문_항목을_모두_저장한다() {
-        orderItemDao.insertAll(ORDER_ID, ORDER_ITEMS);
+        orderItemDao.insertAll(ORDER_ID, ORDER_ITEMS_ONE);
     }
 
     @Test
     void 주문_항목을_모두_조회한다() {
-        orderItemDao.insertAll(ORDER_ID, ORDER_ITEMS);
+        orderItemDao.insertAll(ORDER_ID, ORDER_ITEMS_ONE);
         List<OrderItem> orderItems = orderItemDao.selectAllOf(ORDER_ID);
 
         assertThat(orderItems)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
-                .containsExactlyInAnyOrderElementsOf(ORDER_ITEMS);
+                .containsExactlyInAnyOrderElementsOf(ORDER_ITEMS_ONE);
     }
 }

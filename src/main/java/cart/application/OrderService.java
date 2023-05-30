@@ -2,6 +2,7 @@ package cart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,7 @@ public class OrderService {
         orderItemDao.insertAll(orderId, order.getOrderItems());
     }
 
-    private Order getBy(Long id) {
+    public Order getBy(Long id) {
         OrderDto orderDto = orderDao.selectBy(id);
         return new Order(
                 orderDto.getId(),
@@ -61,5 +62,12 @@ public class OrderService {
                 orderItemDao.selectAllOf(id),
                 orderDto.getCreatedAt()
         );
+    }
+
+    public List<Order> getBy(Member member) {
+        return orderDao.selectAllBy(member.getId()).stream()
+                .map(OrderDto::getId)
+                .map(this::getBy)
+                .collect(Collectors.toList());
     }
 }

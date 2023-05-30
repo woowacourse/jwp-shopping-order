@@ -14,7 +14,7 @@ fi
 
 echo "\n🐣 SpringBoot 프로젝트 빌드를 시작합니다.\n"
 
-./gradlew bootJar
+./gradlew clean bootJar
 
 echo "\n🐣 SpringBoot 애플리케이션을 실행합니다.\n"
 
