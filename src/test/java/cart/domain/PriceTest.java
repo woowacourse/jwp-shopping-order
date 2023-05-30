@@ -43,4 +43,13 @@ class PriceTest {
         assertThat(price1.minus(price2)).isEqualTo(new Price(1000));
     }
 
+    @Test
+    @DisplayName("가격을 비교 할 수 있다.")
+    void isMoreThan() {
+        Price price = new Price(1000);
+
+        assertThat(price.isMoreThan(new Price(500))).isTrue();
+        assertThat(price.isLessThan(new Price(1500))).isTrue();
+    }
+
 }

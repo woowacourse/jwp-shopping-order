@@ -28,6 +28,14 @@ public class Price {
         return new Price(this.value - price.value);
     }
 
+    public boolean isMoreThan(Price price) {
+        return this.value > price.value;
+    }
+
+    public boolean isLessThan(Price price) {
+        return this.value < price.value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
