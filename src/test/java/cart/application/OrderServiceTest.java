@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import cart.domain.Member;
 import cart.dto.CartItemRequest;
 import cart.dto.OrderCreateRequest;
+import cart.dto.OrderItemResponse;
 import cart.dto.OrderResponse;
 import cart.exception.InvalidProductException;
 import cart.exception.InvalidQuantityException;
@@ -86,5 +87,23 @@ class OrderServiceTest extends ServiceTest {
 			.hasMessage("장바구에 등록한 상품 수량과 일치하지 않습니다");
 	}
 
+	@Test
+	void 단일_주문_이력을_조회한다() {
+		// given
+		final Long orderId = 1L;
+		final Member member = new Member(1L, EMAIL, PASSWORD, 1000);
+		final List<OrderItemResponse> expected = List.of(
+			new OrderItemResponse(1L, "치킨", 10000, 1,
+				"https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
+		);
 
+		// when
+		final OrderResponse orderResponse = orderService.findById(orderId, member);
+
+		// then
+		assertAll(
+			() -> assertThat(orderResponse.getCartItems()).usingRecursiveComparison().isEqualTo(expected),
+			() -> assertThat(orderResponse.getPoints()).isEqualTo(1000)
+		);
+	}
 }
