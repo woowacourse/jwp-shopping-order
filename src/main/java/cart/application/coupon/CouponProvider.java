@@ -33,10 +33,10 @@ public class CouponProvider {
     private static CouponResponse toCouponResponse(final Coupon coupon) {
         return new CouponResponse(
                 coupon.getId(),
-                coupon.getName(),
-                coupon.getDiscountAmount(),
-                coupon.getDescription(),
-                coupon.isUsageStatus());
+                coupon.getName().getName(),
+                coupon.getDiscountAmount().getDiscountAmount(),
+                coupon.getDescription().getDescription(),
+                coupon.getUsageStatus().getUsageStatus());
     }
 
     public List<CouponTypeResponse> findCouponAll() {
@@ -47,6 +47,10 @@ public class CouponProvider {
     }
 
     private static CouponTypeResponse toCouponTypeResponse(final Coupon coupon) {
-        return new CouponTypeResponse(coupon.getId(), coupon.getName(), coupon.getDiscountAmount(), coupon.getDescription());
+        return new CouponTypeResponse(
+                coupon.getId(),
+                coupon.getName().getName(),
+                coupon.getDiscountAmount().getDiscountAmount(),
+                coupon.getDescription().getDescription());
     }
 }

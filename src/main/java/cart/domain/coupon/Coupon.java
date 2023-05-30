@@ -3,17 +3,16 @@ package cart.domain.coupon;
 public class Coupon {
 
     private final Long id;
-    private final String name;
-    private final String description;
-    private final int discountAmount;
-    private final boolean usageStatus;
+    private final Name name;
+    private final Description description;
+    private final DiscountAmount discountAmount;
+    private final UsageStatus usageStatus;
 
-    public Coupon(final Long id,
-                  final String name,
-                  final String description,
-                  final int discountAmount,
-                  final boolean usageStatus
-    ) {
+    public Coupon(final Long id, final String name, final String description, final int discountAmount, final Boolean usageStatus) {
+        this(id, Name.from(name), Description.from(description), DiscountAmount.from(discountAmount), UsageStatus.from(usageStatus));
+    }
+
+    public Coupon(final Long id, final Name name, final Description description, final DiscountAmount discountAmount, final UsageStatus usageStatus) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -31,26 +30,26 @@ public class Coupon {
     }
 
     public boolean isNotUsed() {
-        return !usageStatus;
+        return usageStatus.isNotUsed();
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
+    public Name getName() {
         return name;
     }
 
-    public String getDescription() {
+    public Description getDescription() {
         return description;
     }
 
-    public int getDiscountAmount() {
+    public DiscountAmount getDiscountAmount() {
         return discountAmount;
     }
 
-    public boolean isUsageStatus() {
+    public UsageStatus getUsageStatus() {
         return usageStatus;
     }
 }

@@ -57,7 +57,7 @@ class CouponJdbcRepositoryTest {
                 () -> assertThat(results).hasSize(3),
                 () -> {
                     final List<Integer> discountAmounts = results.stream()
-                            .map(Coupon::getDiscountAmount)
+                            .map(it -> it.getDiscountAmount().getDiscountAmount())
                             .collect(Collectors.toList());
                     assertThat(discountAmounts).containsExactly(1000, 3000, 5000);
                 }
@@ -75,7 +75,7 @@ class CouponJdbcRepositoryTest {
                 () -> assertThat(results).hasSize(4),
                 () -> {
                     final List<Integer> discountAmounts = results.stream()
-                            .map(Coupon::getDiscountAmount)
+                            .map(it -> it.getDiscountAmount().getDiscountAmount())
                             .collect(Collectors.toList());
                     assertThat(discountAmounts).containsExactly(1000, 3000, 5000, 10000);
                 }
