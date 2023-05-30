@@ -76,4 +76,12 @@ public class MoneyTest {
 
         assertThat(original).isEqualTo(new Money(12000));
     }
+
+    @DisplayName("곱할 수 있다")
+    @Test
+    void multiply() {
+        Money original = new Money(12000);
+
+        assertThat(original.multiply(3)).isEqualTo(new Money(36000));
+    }
 }
