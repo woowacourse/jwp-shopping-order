@@ -42,11 +42,12 @@ CREATE TABLE order_history
 
 CREATE TABLE order_product
 (
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    order_id   BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id              BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_id        BIGINT NOT NULL,
+    product_id      BIGINT NOT NULL,
+    purchased_price INT    NOT NULL,
+    quantity        INT    NOT NULL,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (order_id) REFERENCES order_history (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE

@@ -23,6 +23,7 @@ public class OrderProductDao {
                 .map(product -> new MapSqlParameterSource()
                         .addValue("order_id", orderId)
                         .addValue("product_id", product.getProduct().getId())
+                        .addValue("purchased_price", product.getProduct().getPrice())
                         .addValue("quantity", product.getQuantity())
                 ).toArray(SqlParameterSource[]::new);
         jdbcInsert.executeBatch(sources);
