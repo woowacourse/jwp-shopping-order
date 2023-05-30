@@ -36,4 +36,8 @@ public class MemberService {
                 .map(MemberQueryResponse::from)
                 .collect(Collectors.toList());
     }
+
+    public MemberQueryResponse findMemberById(final Long id) {
+        return MemberQueryResponse.from(memberRepository.findMemberById(id));
+    }
 }

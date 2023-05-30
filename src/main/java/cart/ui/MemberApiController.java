@@ -6,6 +6,7 @@ import cart.dto.MemberPointQueryResponse;
 import cart.dto.MemberQueryResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,11 @@ public class MemberApiController {
     @GetMapping
     public ResponseEntity<List<MemberQueryResponse>> findAllMembers() {
         return ResponseEntity.ok().body(memberService.findAllMembers());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberQueryResponse> findMemberById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(memberService.findMemberById(id));
     }
 
     @GetMapping("/points")

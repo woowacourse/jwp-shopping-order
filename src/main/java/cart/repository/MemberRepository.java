@@ -43,4 +43,8 @@ public class MemberRepository {
     public List<Member> findAllMembers() {
         return memberDao.getAllMembers();
     }
+
+    public Member findMemberById(final Long id) {
+        return memberDao.getMemberById(id);
+    }
 }
