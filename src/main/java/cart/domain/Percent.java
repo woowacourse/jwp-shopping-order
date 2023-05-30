@@ -3,25 +3,25 @@ package cart.domain;
 import java.util.Objects;
 
 public class Percent {
-    private final int percent;
+    private final int value;
 
-    public Percent(int percent) {
-        validate(percent);
-        this.percent = percent;
+    public Percent(int value) {
+        validate(value);
+        this.value = value;
     }
 
-    private void validate(int percent) {
-        if (percent < 0 || percent > 100) {
+    private void validate(int value) {
+        if (value < 0 || value > 100) {
             throw new IllegalArgumentException("0 ~ 100 퍼센트까지 가능합니다.");
         }
     }
 
     public double getPercentage() {
-        return percent / 100.0;
+        return value / 100.0;
     }
 
-    public int getPercent() {
-        return percent;
+    public int getValue() {
+        return value;
     }
 
     @Override
@@ -29,11 +29,11 @@ public class Percent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Percent that = (Percent) o;
-        return percent == that.percent;
+        return value == that.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(percent);
+        return Objects.hash(value);
     }
 }
