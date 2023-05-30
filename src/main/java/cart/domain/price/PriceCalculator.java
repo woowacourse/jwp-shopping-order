@@ -1,4 +1,4 @@
-package cart.domain.discount;
+package cart.domain.price;
 
 import cart.domain.Member;
 

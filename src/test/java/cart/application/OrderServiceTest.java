@@ -16,7 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.discount.DiscountPriceCalculator;
+import cart.domain.price.DiscountPriceCalculator;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.CartItemException;
@@ -118,9 +118,7 @@ class OrderServiceTest {
     }
 
     private Long addOrder(Member member, CartItem cartItem) {
-        final int price = cartItem.calculateTotalPrice();
-
-        List<Long> cartItemId = Arrays.asList(cartItem.getId());
+        List<Long> cartItemId = List.of(cartItem.getId());
         OrderRequest orderRequest1 = new OrderRequest(cartItemId);
         return orderService.order(orderRequest1, member);
     }
