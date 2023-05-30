@@ -5,10 +5,10 @@ VALUES ('치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097
        ('팬케이크', 8000, 'https://images.unsplash.com/photo-1544726982-b414d58fabaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8JUVEJThDJUFDJUVDJUJDJTgwJUVDJTlEJUI0JUVEJTgxJUFDfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60');
 
 INSERT INTO member (email, password, cash)
-VALUES ('dooly@dooly.com', '1234', 1200000),
+VALUES ('a@a.com', '1234', 500),
+       ('dooly@dooly.com', '1234', 1200000),
        ('ber@ber.com', '1234', 850000),
-       ('bixx@bixx.com', '1234', 1500000),
-       ('a@a.com', '1234', 500);
+       ('bixx@bixx.com', '1234', 1500000);
 
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (1, 1, 2),
