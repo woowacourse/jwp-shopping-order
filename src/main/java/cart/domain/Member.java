@@ -33,7 +33,7 @@ public class Member {
         return this.password.equals(password);
     }
 
-    public boolean isAbleToUse(final Integer usingPoint) {
+    public boolean isAbleToUsePoint(final Integer usingPoint) {
         return point >= usingPoint;
     }
 }

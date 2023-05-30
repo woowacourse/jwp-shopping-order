@@ -73,7 +73,7 @@ public class CartItemService {
     public Long payment(final Member member, final PaymentRequest request) {
         final List<Long> cartIds = extractCartIds(request);
         final List<CartItem> cartItems = getCartItems(member, cartIds);
-        if (!member.isAbleToUse(request.getPoint())) {
+        if (!member.isAbleToUsePoint(request.getPoint())) {
             throw new IllegalArgumentException("포인트가 부족합니다.");
         }
         final Order order = new Order(member, request.getPoint(), cartItems);
