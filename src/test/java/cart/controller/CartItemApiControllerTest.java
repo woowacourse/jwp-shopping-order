@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -85,7 +86,10 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
                 .andExpect(status().isOk())
                 .andExpect(content().json(response))
                 .andDo(print())
-                .andDo(documentationOf(cartItemsResponse));
+                .andDo(documentationOf(
+                        cartItemsResponse,
+                        requestHeaders(headerWithName("Authorization").description("인증 정보"))
+                ));
     }
 
     @Test
@@ -118,7 +122,8 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
                 .andDo(print())
                 .andDo(documentationOf(
                         cartItemRequest,
-                        responseHeaders(headerWithName("Location").description("생성된 항목 위치"))
+                        responseHeaders(headerWithName("Location").description("생성된 항목 위치")),
+                        requestHeaders(headerWithName("Authorization").description("인증 정보"))
                 ));
     }
 
@@ -136,7 +141,10 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(documentationOf(quantityUpdateRequest));
+                .andDo(documentationOf(
+                        quantityUpdateRequest,
+                        requestHeaders(headerWithName("Authorization").description("인증 정보"))
+                ));
     }
 
     @Test
@@ -149,6 +157,8 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isNoContent())
                 .andDo(print())
-                .andDo(documentationOf());
+                .andDo(documentationOf(
+                        requestHeaders(headerWithName("Authorization").description("인증 정보"))
+                ));
     }
 }

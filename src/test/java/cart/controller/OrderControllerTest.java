@@ -10,6 +10,8 @@ import static cart.fixture.TestFixture.샐러드;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -116,7 +118,10 @@ public class OrderControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isNoContent())
                 .andDo(print())
-                .andDo(documentationOf(orderRequest));
+                .andDo(documentationOf(
+                        orderRequest,
+                        requestHeaders(headerWithName("Authorization").description("인증 정보"))
+                ));
     }
 
     @Test
@@ -132,7 +137,10 @@ public class OrderControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(documentationOf(orderResponses));
+                .andDo(documentationOf(
+                        orderResponses,
+                        requestHeaders(headerWithName("Authorization").description("인증 정보"))
+                ));
     }
 
     @Test
@@ -147,6 +155,9 @@ public class OrderControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(documentationOf(orderResponse));
+                .andDo(documentationOf(
+                        orderResponse,
+                        requestHeaders(headerWithName("Authorization").description("인증 정보"))
+                ));
     }
 }
