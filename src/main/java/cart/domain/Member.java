@@ -5,13 +5,13 @@ public class Member {
 
     private final Long id;
     private final Email email;
-    private final String password;
+    private final Password password;
     private Integer point;
 
     public Member(final Long id, final String email, final String password, final Integer point) {
         this.id = id;
         this.email = new Email(email);
-        this.password = password;
+        this.password = new Password(password);
         this.point = point;
     }
 
@@ -24,7 +24,7 @@ public class Member {
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     public Integer getPoint() {
@@ -32,7 +32,7 @@ public class Member {
     }
 
     public boolean checkPassword(final String password) {
-        return this.password.equals(password);
+        return this.password.checkPassword(password);
     }
 
     public boolean isAbleToUsePoint(final Integer usingPoint) {
