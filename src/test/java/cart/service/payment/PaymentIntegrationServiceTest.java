@@ -2,7 +2,6 @@ package cart.service.payment;
 
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
-import cart.dto.coupon.CouponsApplyRequest;
 import cart.dto.history.OrderHistory;
 import cart.dto.payment.PaymentRequest;
 import cart.dto.payment.PaymentResponse;
@@ -74,8 +73,6 @@ class PaymentIntegrationServiceTest {
         // given
         Member member = memberRepository.findMemberById(1);
         member.initCoupons(createCoupons());
-
-        CouponsApplyRequest req = new CouponsApplyRequest(List.of(new CouponIdRequest(1L)));
 
         // when
         PaymentUsingCouponsResponse result = paymentService.applyCoupons(member, List.of(1L));

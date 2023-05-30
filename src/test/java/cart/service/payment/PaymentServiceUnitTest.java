@@ -103,7 +103,7 @@ class PaymentServiceUnitTest {
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
 
         // when
-        long id = paymentService.pay(member, req);
+        paymentService.pay(member, req);
 
         // then
         verify(orderRepository).save(any(), any(OrderResponse.class));

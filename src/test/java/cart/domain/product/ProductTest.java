@@ -77,7 +77,6 @@ class ProductTest {
 
         // when
         int result = product.getSalePrice();
-        ;
 
         // then
         assertThat(result).isEqualTo(0);

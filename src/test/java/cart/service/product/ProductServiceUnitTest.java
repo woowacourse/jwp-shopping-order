@@ -94,13 +94,13 @@ class ProductServiceUnitTest {
     @Test
     void apply_sale_on_product() {
         // given
-        Long id = 1L;
+        long id = 1L;
         SaleProductRequest req = new SaleProductRequest(10);
         Product product = createProduct();
         given(productRepository.findProductById(id)).willReturn(product);
 
         // when
-        long resultId = productService.applySale(id, req);
+        productService.applySale(id, req);
 
         // then
         assertThat(product.isOnSale()).isTrue();
@@ -110,7 +110,7 @@ class ProductServiceUnitTest {
     @Test
     void un_apply_sale_on_product() {
         // given
-        Long id = 1L;
+        long id = 1L;
         Product product = createProduct();
         given(productRepository.findProductById(id)).willReturn(product);
 

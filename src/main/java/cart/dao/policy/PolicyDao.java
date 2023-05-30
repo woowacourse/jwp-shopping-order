@@ -3,7 +3,6 @@ package cart.dao.policy;
 import cart.entity.policy.PolicyEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,13 +15,12 @@ import java.util.Objects;
 public class PolicyDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public PolicyDao(final JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public PolicyDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    // 추후 사용할 예정입니다 :)
     private final RowMapper<PolicyEntity> rowMapper = (rs, rowNum) ->
             new PolicyEntity(
                     rs.getLong("id"),

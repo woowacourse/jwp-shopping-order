@@ -4,26 +4,17 @@ import cart.domain.member.Member;
 import cart.entity.member.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert insertAction;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public MemberDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.insertAction = new SimpleJdbcInsert(dataSource)
-                .withTableName("member")
-                .usingGeneratedKeyColumns("id");
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     private final RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
@@ -43,6 +34,7 @@ public class MemberDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, email);
     }
 
+    // 추후 사용할 예정이라 남겨뒀습니다 :)
     public void addMember(final Member member) {
         String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());

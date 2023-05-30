@@ -68,10 +68,6 @@ public class Order {
         productHistory.updatePrice(price);
     }
 
-    public Member getMember() {
-        return member;
-    }
-
     public Cart getCart() {
         return cart;
     }

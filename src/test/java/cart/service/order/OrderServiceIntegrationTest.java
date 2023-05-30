@@ -57,7 +57,7 @@ public class OrderServiceIntegrationTest {
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
 
         // when
-        long orderId = paymentService.pay(member, req);
+        paymentService.pay(member, req);
         OrdersResponse orders = orderService.findOrders(member);
 
         // then

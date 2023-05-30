@@ -2,9 +2,9 @@ package cart.entity.member;
 
 public class MemberEntity {
 
-    private Long id;
-    private String email;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String password;
 
     public MemberEntity(final Long id, final String email, final String password) {
         this.id = id;
