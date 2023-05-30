@@ -20,8 +20,8 @@ public class OrderController {
 
     //상품 등록
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderCreateRequest orderCreateRequest){
-        Long id = orderService.add(orderCreateRequest);
+    public ResponseEntity<Void> createOrder(@RequestBody OrderCreateRequest orderCreateRequest){
+        Long id = orderService.createOrder(orderCreateRequest);
         return ResponseEntity.created(URI.create("/orders" + id)).build();
     }
 }
