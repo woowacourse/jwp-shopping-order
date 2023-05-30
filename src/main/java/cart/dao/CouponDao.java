@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -48,5 +49,17 @@ public class CouponDao {
         String sql = "DELETE FROM coupon WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public List<Coupon> findByMemberId(Long memberId) {
+        String sql = "SELECT coupon.id, coupon.name, coupon.discount_percent, coupon_box.member_id " +
+                "FROM coupon_box JOIN coupon ON coupon_box.coupon_id = coupon.id WHERE coupon_box.member_id = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long couponId = rs.getLong("coupon.id");
+            String couponName = rs.getString("coupon.name");
+            int discountPercent = rs.getInt("coupon.discount_percent");
+            return new Coupon(couponId, couponName, discountPercent);
+        }, memberId);
+    }
+
 
 }
