@@ -96,4 +96,8 @@ public class OrderService {
 
         return Order.calculatePriceSum(discountedPrice);
     }
+
+    public OrderResponse getOrderById(Long orderId) {
+        return orderDao.findById(orderId);
+    }
 }
