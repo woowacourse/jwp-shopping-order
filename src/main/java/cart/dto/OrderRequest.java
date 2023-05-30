@@ -2,14 +2,14 @@ package cart.dto;
 
 import java.util.List;
 
-public class OrdersRequest {
+public class OrderRequest {
 
     private final List<Long> order;
     private final Integer originalPrice;
     private final Integer usedPoint;
     private final Integer pointToAdd;
 
-    public OrdersRequest(List<Long> order, Integer originalPrice, Integer usedPoint, Integer pointToAdd) {
+    public OrderRequest(List<Long> order, Integer originalPrice, Integer usedPoint, Integer pointToAdd) {
         this.order = order;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
