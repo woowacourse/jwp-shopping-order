@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
 import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
+import cart.persistence.dao.MemberDao;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;

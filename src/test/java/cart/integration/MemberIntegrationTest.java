@@ -1,7 +1,7 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
 import cart.domain.member.Member;
+import cart.persistence.dao.MemberDao;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

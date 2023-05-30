@@ -1,9 +1,9 @@
 package cart.application;
 
-import cart.dao.ProductDao;
+import cart.application.dto.request.ProductRequest;
+import cart.application.dto.response.ProductResponse;
 import cart.domain.product.Product;
-import cart.dto.request.ProductRequest;
-import cart.dto.response.ProductResponse;
+import cart.persistence.dao.ProductDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

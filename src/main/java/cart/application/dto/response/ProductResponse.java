@@ -1,4 +1,4 @@
-package cart.dto.response;
+package cart.application.dto.response;
 
 import cart.domain.product.Product;
 

@@ -1,22 +1,21 @@
-package cart.domain;
+package cart.domain.order;
 
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
-import cart.domain.order.OrderProducts;
 import cart.domain.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class OrderProductsTest {
+class OrderTest {
 
-    private static final double POINT_RATE = 0.05;
-    private OrderProducts orderProducts;
     private Member member;
+    private OrderProducts orderProducts;
 
     @BeforeEach
     void setUp() {
@@ -30,17 +29,12 @@ class OrderProductsTest {
         orderProducts = new OrderProducts(cartItems);
     }
 
-    @DisplayName("상품 가격의 총합을 계산한다.")
-    @Test
-    void calculateTotalAmount() {
-        final int totalAmount = 11_000;
-        assertThat(orderProducts.getTotalAmount()).isEqualTo(totalAmount);
-    }
+    @DisplayName("적립금을 사용할 경우 총 가격에서 적립금을 뺀 가격만 결제한다.")
+    @ParameterizedTest
+    @ValueSource(ints = {0, 100, 1_000})
+    void getTotalAmountTest(final int usingPoint) {
+        final Order order = new Order(member, usingPoint, orderProducts);
 
-    @DisplayName("적립 포인트를 계산한다.")
-    @Test
-    void getSavedPoint() {
-        final int savedPoint = (int) (orderProducts.getTotalAmount() * POINT_RATE);
-        assertThat(orderProducts.getSavedPoint()).isEqualTo(savedPoint);
+        assertThat(order.getTotalAmount()).isEqualTo(orderProducts.getTotalAmount() - usingPoint);
     }
 }

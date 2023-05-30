@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.persistence.dao;
 
 import cart.domain.order.Order;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,8 +1,8 @@
 package cart.ui;
 
 import cart.application.MemberService;
+import cart.application.dto.response.PointResponse;
 import cart.domain.member.Member;
-import cart.dto.response.PointResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

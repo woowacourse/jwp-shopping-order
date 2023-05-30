@@ -1,14 +1,14 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
+import cart.application.dto.request.CartItemQuantityUpdateRequest;
+import cart.application.dto.request.CartItemRequest;
+import cart.application.dto.request.PaymentRequest;
+import cart.application.dto.request.ProductRequest;
+import cart.application.dto.response.CartItemResponse;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
-import cart.dto.request.PaymentRequest;
-import cart.dto.request.ProductRequest;
-import cart.dto.response.CartItemResponse;
+import cart.persistence.dao.MemberDao;
+import cart.persistence.dao.ProductDao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
