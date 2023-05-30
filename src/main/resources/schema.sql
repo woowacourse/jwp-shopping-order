@@ -28,7 +28,6 @@ CREATE TABLE order_history
 (
     id             BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id      BIGINT NOT NULL,
-    original_price INT    NOT NULL,
     used_point     INT    NOT NULL,
     order_price    INT    NOT NULL,
 
