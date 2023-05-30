@@ -1,4 +1,12 @@
-CREATE TABLE IF NOT EXISTS product
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS point_history;
+DROP TABLE IF EXISTS `point`;
+DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
+CREATE TABLE product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
@@ -6,14 +14,14 @@ CREATE TABLE IF NOT EXISTS product
     image_url VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS member
+CREATE TABLE member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS cart_item
+CREATE TABLE cart_item
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
@@ -23,17 +31,17 @@ CREATE TABLE IF NOT EXISTS cart_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE IF NOT EXISTS `order`
+CREATE TABLE `order`
 (
-    id           BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id    BIGINT    NOT NULL,
+    id           BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT   NOT NULL,
     created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    order_amount BIGINT    NOT NULL,
-    used_point   BIGINT    NOT NULL,
+    order_amount BIGINT   NOT NULL,
+    used_point   BIGINT   NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-CREATE TABLE IF NOT EXISTS order_item
+CREATE TABLE order_item
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id   BIGINT NOT NULL,
@@ -43,7 +51,7 @@ CREATE TABLE IF NOT EXISTS order_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE IF NOT EXISTS `point`
+CREATE TABLE `point`
 (
     id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
@@ -51,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `point`
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-CREATE TABLE IF NOT EXISTS point_history
+CREATE TABLE point_history
 (
     id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id    BIGINT NOT NULL,
