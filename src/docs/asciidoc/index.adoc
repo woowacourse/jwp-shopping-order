@@ -5,7 +5,7 @@
 :sectlinks:
 :sectnums: // 분류별 자동으로 숫자를 달아줌
 
-== Product
+== 상
 
 === 상품 생성
 
@@ -95,7 +95,7 @@ include::{snippets}/product-controller-unit-test/unapply_sale/http-request.adoc[
 include::{snippets}/product-controller-unit-test/unapply_sale/response-headers.adoc[]
 include::{snippets}/product-controller-unit-test/unapply_sale/http-response.adoc[]
 
-== Order
+== 주문
 
 === 주문 내역 전체 조회
 
@@ -120,4 +120,37 @@ include::{snippets}/order-controller-unit-test/find_order/http-request.adoc[]
 
 include::{snippets}/order-controller-unit-test/find_order/http-response.adoc[]
 
+== 결제
 
+=== 구매 페이지 조회
+
+==== 요청
+
+include::{snippets}/payment-controller-unit-test/find_payment_page/request-headers.adoc[]
+include::{snippets}/payment-controller-unit-test/find_payment_page/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/payment-controller-unit-test/find_payment_page/http-response.adoc[]
+
+=== 쿠폰 적용 페이지 조회
+
+==== 요청
+
+include::{snippets}/payment-controller-unit-test/apply_coupons/request-headers.adoc[]
+include::{snippets}/payment-controller-unit-test/apply_coupons/request-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/payment-controller-unit-test/apply_coupons/http-response.adoc[]
+
+=== 장바구니 상품 모두 결제
+
+==== 요청
+
+include::{snippets}/payment-controller-unit-test/pay/request-headers.adoc[]
+include::{snippets}/payment-controller-unit-test/pay/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/payment-controller-unit-test/pay/http-response.adoc[]
