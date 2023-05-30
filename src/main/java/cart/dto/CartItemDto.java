@@ -2,22 +2,22 @@ package cart.dto;
 
 import cart.domain.CartItem;
 
-public class CartItemResponse {
+public class CartItemDto {
     private Long cartItemId;
     private int quantity;
-    private ProductResponse product;
+    private ProductDto product;
 
-    private CartItemResponse(Long cartItemId, int quantity, ProductResponse product) {
+    private CartItemDto(Long cartItemId, int quantity, ProductDto product) {
         this.cartItemId = cartItemId;
         this.quantity = quantity;
         this.product = product;
     }
 
-    public static CartItemResponse of(CartItem cartItem) {
-        return new CartItemResponse(
+    public static CartItemDto of(CartItem cartItem) {
+        return new CartItemDto(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
+                ProductDto.of(cartItem.getProduct())
         );
     }
 
@@ -29,7 +29,7 @@ public class CartItemResponse {
         return quantity;
     }
 
-    public ProductResponse getProduct() {
+    public ProductDto getProduct() {
         return product;
     }
 }

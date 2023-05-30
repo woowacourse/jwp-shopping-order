@@ -6,7 +6,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.CartItemDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +22,9 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
+    public List<CartItemDto> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream().map(CartItemDto::of).collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {

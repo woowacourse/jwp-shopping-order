@@ -3,17 +3,17 @@ package cart.dto;
 import java.util.List;
 
 public class CartResponse {
-    private List<CartItemResponse> cartItems;
+    private List<CartItemDto> cartItems;
     private int userPoint;
     private int minUsagePoints;
 
-    public CartResponse(List<CartItemResponse> cartItems, int userPoint, int minUsagePoints) {
+    public CartResponse(List<CartItemDto> cartItems, int userPoint, int minUsagePoints) {
         this.cartItems = cartItems;
         this.userPoint = userPoint;
         this.minUsagePoints = minUsagePoints;
     }
 
-    public List<CartItemResponse> getCartItems() {
+    public List<CartItemDto> getCartItems() {
         return cartItems;
     }
 

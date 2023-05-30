@@ -6,7 +6,7 @@ import cart.domain.Member;
 import cart.domain.Point;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.CartItemDto;
 import cart.dto.CartResponse;
 import java.net.URI;
 import java.util.List;
@@ -34,7 +34,7 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<CartResponse> showCart(Member member) {
-        List<CartItemResponse> cartItems = cartItemService.findByMember(member);
+        List<CartItemDto> cartItems = cartItemService.findByMember(member);
         Point memberPoint = memberService.getMemberPoint(member);
         Point minUsagePoint = Point.MINIMUM_USAGE_POINT;
         return ResponseEntity.ok(new CartResponse(cartItems, memberPoint.getValue(), minUsagePoint.getValue()));
