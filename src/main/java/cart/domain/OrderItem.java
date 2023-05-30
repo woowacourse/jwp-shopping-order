@@ -6,11 +6,13 @@ public class OrderItem {
     private Long id;
     private Product product;
     private Quantity quantity;
+    private Price price;
 
-    public OrderItem(Long id, Product product, Quantity quantity) {
+    public OrderItem(Long id, Product product, Quantity quantity, Price price) {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
+        this.price = price;
     }
 
     public Long getId() {
@@ -25,8 +27,8 @@ public class OrderItem {
         return quantity;
     }
 
-    public Price calculatePrice() {
-        return product.getPrice().multiply(quantity.getAmount());
+    public Price getPrice() {
+        return price;
     }
 
     @Override

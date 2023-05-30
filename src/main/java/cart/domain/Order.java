@@ -30,7 +30,7 @@ public class Order {
 
     public Price calculateTotalPrice() {
         return orderItems.stream()
-                .map(OrderItem::calculatePrice)
+                .map(OrderItem::getPrice)
                 .reduce(Price::plus)
                 .orElseThrow(IllegalArgumentException::new); // TODO
     }
