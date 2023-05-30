@@ -46,7 +46,7 @@ public class OrderProductDao {
                 product.getProductName(),
                 product.getProductPrice(),
                 product.getProductImageUrl(),
-                new Quantity(result.getInt("order_product.quantity")));
+                new Quantity(result.getInt("quantity")));
     };
 
     public void insertAll(final List<OrderProduct> orderProducts) {
