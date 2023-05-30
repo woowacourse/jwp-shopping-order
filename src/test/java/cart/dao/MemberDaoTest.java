@@ -13,8 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@ActiveProfiles("test")
 class MemberDaoTest {
 
     @Autowired
@@ -23,6 +26,7 @@ class MemberDaoTest {
     private MemberDao memberDao;
 
     @BeforeEach
+    @Sql({"/truncate.sql", "/data.sql"})
     void setUp() {
         this.memberDao = new MemberDao(jdbcTemplate);
     }
@@ -82,5 +86,50 @@ class MemberDaoTest {
                     .isInstanceOf(MemberNotFoundException.class)
                     .hasMessage("이메일에 해당하는 멤버를 찾을 수 없습니다.");
         }
+    }
+
+    @Nested
+    @DisplayName("ID로 멤버 조회 시")
+    class selectMemberById {
+
+        @Test
+        @DisplayName("멤버가 존재하면 멤버를 반환한다.")
+        void isExist() {
+            // given
+            Long existId = Dooly.ID;
+
+            // when
+            Member findMember = memberDao.selectMemberById(existId);
+
+            // then
+            assertThat(findMember).usingRecursiveComparison().isEqualTo(Dooly.ENTITY);
+        }
+
+        @Test
+        @DisplayName("멤버가 존재하지 않으면 예외가 발생한다.")
+        void throws_when_not_exist_member() {
+            // given
+            Long notExistId = -1L;
+
+            // when, then
+            assertThatThrownBy(() -> memberDao.selectMemberById(notExistId))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessage("ID에 해당하는 멤버를 찾을 수 없습니다.");
+        }
+    }
+
+    @Test
+    @DisplayName("해당하는 멤버의 금액을 업데이트한다.")
+    void updateMemberCash() {
+        // given
+        Member member = memberDao.selectMemberById(Dooly.ID);
+        Member chargedMember = member.chargeCash(10000);
+
+        // when
+        memberDao.updateMemberCash(chargedMember);
+        Member memberAfterCharge = memberDao.selectMemberById(Dooly.ID);
+
+        // then
+        assertThat(memberAfterCharge.getCash()).isEqualTo(15000);
     }
 }

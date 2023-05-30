@@ -1,14 +1,30 @@
 package cart.domain.member;
 
 public class Member {
-    private Long id;
-    private String email;
-    private String password;
+    private static final int INITITAL_CASH = 5000;
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final Cash cash;
 
-    public Member(Long id, String email, String password) {
+    public Member(final Long id, final String email,
+                  final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.cash = new Cash(INITITAL_CASH);
+    }
+
+    public Member(final Long id, final String email,
+                  final String password, final int cash) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.cash = new Cash(cash);
+    }
+
+    public Member chargeCash(int cashToCharge) {
+        return new Member(this.id, this.email, this.password, cash.charge(cashToCharge).getCash());
     }
 
     public Long getId() {
@@ -21,6 +37,10 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getCash() {
+        return cash.getCash();
     }
 
     public boolean checkPassword(String password) {
