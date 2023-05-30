@@ -5,13 +5,15 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
+    private static final int MINIMUM_QUANTITY = 1;
+
     private final Long id;
     private final Member member;
     private final Product product;
     private Integer quantity;
 
     public CartItem(final Member member, final Product product) {
-        this(null, member, product, 1);
+        this(null, member, product, MINIMUM_QUANTITY);
     }
 
     public CartItem(final Long id, final Member member, final Product product, final Integer quantity) {
@@ -44,6 +46,9 @@ public class CartItem {
     }
 
     public void changeQuantity(final int quantity) {
+        if (quantity < MINIMUM_QUANTITY) {
+            throw new IllegalArgumentException("변경 가능 최소 수량은 1입니다.");
+        }
         this.quantity = quantity;
     }
 }
