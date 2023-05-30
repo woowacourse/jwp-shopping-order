@@ -37,3 +37,4 @@ out/
 .vscode/
 
 application-mysql.properties
+db/
