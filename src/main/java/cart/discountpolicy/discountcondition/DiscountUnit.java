@@ -1,5 +1,5 @@
 package cart.discountpolicy.discountcondition;
 
-public enum Unit {
+public enum DiscountUnit {
     PERCENTAGE, ABSOLUTE
 }

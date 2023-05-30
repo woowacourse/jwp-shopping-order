@@ -1,10 +1,14 @@
 package cart.member.infrastructure;
 
 import cart.member.Member;
+import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,9 +17,13 @@ import java.util.List;
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public MemberDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public MemberDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("MEMBER")
+                .usingGeneratedKeyColumns("ID");
     }
 
     public Member getMemberById(Long id) {
@@ -30,9 +38,12 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+    public Long addMember(Member member) {
+        final var propertySource = new MapSqlParameterSource();
+        propertySource.addValue("email", member.getEmail());
+        propertySource.addValue("password", member.getPassword());
+        final var key = simpleJdbcInsert.executeAndReturnKey(propertySource);
+        return key.longValue();
     }
 
     public void updateMember(Member member) {

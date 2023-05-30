@@ -20,7 +20,13 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<CartResponse> findCart(@Auth Member member) {
-        final var cart = cartService.findCartByMemberId(member.getId());
+        final var cart = cartService.findCartByMemberId(member);
         return ResponseEntity.ok(cart);
     }
+
+//    @PostMapping
+//    public ResponseEntity<DiscountResponse> selectCoupons(@RequestBody CouponDiscountRequest couponDiscountRequest) {
+//        cartService.discountWithCoupons(couponDiscountRequest.getCouponIds());
+//    }
+
 }

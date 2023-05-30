@@ -1,5 +1,6 @@
 package cart.cart.presentation.dto;
 
+import cart.cart.domain.cartitem.CartItem;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CartItemResponse {
@@ -22,8 +23,13 @@ public class CartItemResponse {
         this.salePrice = salePrice;
     }
 
-    public static CartItemResponse from(long productId, String productName, long price, String imgUrl, int salePrice) {
-        return new CartItemResponse(productId, productName, price, imgUrl, salePrice != 0, salePrice);
+    public static CartItemResponse from(CartItem cartItem) {
+        return new CartItemResponse(cartItem.getId(),
+                cartItem.getProduct().getName(),
+                cartItem.getProduct().getPrice(),
+                cartItem.getProduct().getImageUrl(),
+                cartItem.getDiscountPrice() != 0,
+                cartItem.getDiscountPrice());
     }
 
     public long getProductId() {

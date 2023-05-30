@@ -15,7 +15,7 @@ public class CartItemRepositoryDaoImpl implements CartItemRepository {
     }
 
     @Override
-    public List<CartItem> findByMemberId(Long memberId) {
+    public List<CartItem> findAllByMemberId(Long memberId) {
         return cartItemDao.findByMemberId(memberId);
     }
 

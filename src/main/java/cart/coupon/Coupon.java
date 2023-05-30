@@ -1,25 +1,21 @@
 package cart.coupon;
 
 public class Coupon {
-    private final long id;
-    private final long memberId;
+    private final Long id;
     private final String name;
+    private final Long discountConditionId;
 
-    public Coupon(long id, long memberId, String name) {
+    public Coupon(Long id, String name, Long discountConditionId) {
         this.id = id;
-        this.memberId = memberId;
         this.name = name;
-    }
-
-    public long getId() {
-        return id;
+        this.discountConditionId = discountConditionId;
     }
 
     public String getName() {
         return name;
     }
 
-    public long getMemberId() {
-        return memberId;
+    public Long getId() {
+        return id;
     }
 }

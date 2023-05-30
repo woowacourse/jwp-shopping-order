@@ -1,19 +1,17 @@
 package cart.product;
 
-import cart.discountpolicy.discountcondition.Category;
+import java.util.Objects;
 
 public class Product {
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
-    private Category category;
 
     public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.category = Category.assignCategory(name);
     }
 
     public Product(Long id, String name, int price, String imageUrl) {
@@ -21,7 +19,6 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.category = Category.assignCategory(name);
     }
 
     public Long getId() {
@@ -40,7 +37,26 @@ public class Product {
         return imageUrl;
     }
 
-    public Category getCategory() {
-        return category;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return price == product.price && Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(imageUrl, product.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

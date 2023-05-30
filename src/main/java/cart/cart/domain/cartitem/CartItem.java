@@ -61,11 +61,7 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public void discountPrice(List<DiscountPolicy> policies) {
-        for (DiscountPolicy policy : policies) {
-            if (policy.support(new DiscountCondition(product))) {
-                this.discountPrice += policy.discount(this.product.getPrice());
-            }
-        }
+    public void setDiscountPrice(int discountPrice) {
+        this.discountPrice = discountPrice;
     }
 }

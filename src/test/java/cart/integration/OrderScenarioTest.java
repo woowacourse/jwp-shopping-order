@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.member.Member;
 import cart.cart.domain.cartitem.presentation.dto.CartItemRequest;
+import cart.product.Product;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Disabled;
@@ -21,51 +22,62 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class OrderScenarioTest extends ScenarioFixture {
     @Test
     void 사용자가_결제_페이지에_처음_접속한다() {
-        사용자가_상품을_장바구니에_담는다(사용자1, new CartItemRequest(상품아이디1));
-        사용자가_상품을_장바구니에_담는다(사용자1, new CartItemRequest(상품아이디2));
+        사용자가_상품을_장바구니에_담는다(사용자1, 치킨);
+        사용자가_상품을_장바구니에_담는다(사용자1, 샐러드);
+        사용자가_상품을_장바구니에_담는다(사용자1, 피자);
 
         final var 결과 = 사용자가_결제_페이지에_접속한다();
         assertThat(결과.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         final var jsonPath = 결과.jsonPath();
-        assertThat(jsonPath.getList("products")).hasSize(2);
+        assertThat(jsonPath.getList("products")).hasSize(3);
 
         assertAll(
                 "Body에 들어있는 첫번 째 상품 검증하기",
-                () -> assertThat(jsonPath.getLong("products[0].productId")).isEqualTo(상품아이디1),
-                () -> assertThat(jsonPath.getString("products[0].productName")).isEqualTo("치킨"),
-                () -> assertThat(jsonPath.getLong("products[0].price")).isEqualTo(10_000),
-                () -> assertThat(jsonPath.getString("products[0].imgUrl")).isEqualTo("http://example.com/chicken.jpg"),
-                () -> assertThat(jsonPath.getBoolean("products[0].isOnSale")).isEqualTo(false),
-                () -> assertThat(jsonPath.getLong("products[0].salePrice")).isEqualTo(0)
+                () -> assertThat(jsonPath.getLong("products[0].productId")).isEqualTo(치킨.getId()),
+                () -> assertThat(jsonPath.getString("products[0].productName")).isEqualTo(치킨.getName()),
+                () -> assertThat(jsonPath.getLong("products[0].price")).isEqualTo(치킨.getPrice()),
+                () -> assertThat(jsonPath.getString("products[0].imgUrl")).isEqualTo(치킨.getImageUrl()),
+                () -> assertThat(jsonPath.getBoolean("products[0].isOnSale")).isEqualTo(true),
+                () -> assertThat(jsonPath.getLong("products[0].salePrice")).isEqualTo(3000)
         );
 
         assertAll(
                 "Body에 들어있는 두번 째 상품 검증하기",
-                () -> assertThat(jsonPath.getLong("products[1].productId")).isEqualTo(상품아이디2),
-                () -> assertThat(jsonPath.getString("products[1].productName")).isEqualTo("피자"),
-                () -> assertThat(jsonPath.getLong("products[1].price")).isEqualTo(15_000),
-                () -> assertThat(jsonPath.getString("products[1].imgUrl")).isEqualTo("http://example.com/pizza.jpg"),
-                () -> assertThat(jsonPath.getBoolean("products[1].isOnSale")).isEqualTo(true),
-                () -> assertThat(jsonPath.getLong("products[1].salePrice")).isEqualTo(5_000)
+                () -> assertThat(jsonPath.getLong("products[1].productId")).isEqualTo(샐러드.getId()),
+                () -> assertThat(jsonPath.getString("products[1].productName")).isEqualTo(샐러드.getName()),
+                () -> assertThat(jsonPath.getLong("products[1].price")).isEqualTo(샐러드.getPrice()),
+                () -> assertThat(jsonPath.getString("products[1].imgUrl")).isEqualTo(샐러드.getImageUrl()),
+                () -> assertThat(jsonPath.getBoolean("products[1].isOnSale")).isEqualTo(false),
+                () -> assertThat(jsonPath.getLong("products[1].salePrice")).isEqualTo(0)
+        );
+
+        assertAll(
+                "Body에 들어있는 세번 째 상품 검증하기",
+                () -> assertThat(jsonPath.getLong("products[2].productId")).isEqualTo(피자.getId()),
+                () -> assertThat(jsonPath.getString("products[2].productName")).isEqualTo(피자.getName()),
+                () -> assertThat(jsonPath.getLong("products[2].price")).isEqualTo(피자.getPrice()),
+                () -> assertThat(jsonPath.getString("products[2].imgUrl")).isEqualTo(피자.getImageUrl()),
+                () -> assertThat(jsonPath.getBoolean("products[2].isOnSale")).isEqualTo(false),
+                () -> assertThat(jsonPath.getLong("products[2리].salePrice")).isEqualTo(0)
         );
 
         assertThat(jsonPath.getLong("deliveryPrice")).isEqualTo(3000);
 
         assertAll(
                 "Body에 들어있는 첫번 째 쿠폰 검증",
-                () -> assertThat(jsonPath.getLong("coupons[0].couponId")).isEqualTo(1),
-                () -> assertThat(jsonPath.getString("coupons[0].couponName")).isEqualTo("10% 전체 할인 쿠폰")
+                () -> assertThat(jsonPath.getLong("coupons[0].couponId")).isEqualTo(전체10프로할인쿠폰.getId()),
+                () -> assertThat(jsonPath.getString("coupons[0].couponName")).isEqualTo(전체10프로할인쿠폰.getName())
         );
         assertAll(
                 "Body에 들어있는 두번 째 쿠폰 검증",
-                () -> assertThat(jsonPath.getLong("coupons[1].couponId")).isEqualTo(2),
-                () -> assertThat(jsonPath.getString("coupons[1].couponName")).isEqualTo("20% 전체 할인 쿠폰")
+                () -> assertThat(jsonPath.getLong("coupons[1].couponId")).isEqualTo(전체20프로할인쿠폰.getId()),
+                () -> assertThat(jsonPath.getString("coupons[1].couponName")).isEqualTo(전체20프로할인쿠폰.getName())
         );
         assertAll(
                 "Body에 들어있는 세번 째 쿠폰 검증",
-                () -> assertThat(jsonPath.getLong("coupons[2].couponId")).isEqualTo(3),
-                () -> assertThat(jsonPath.getString("coupons[2].couponName")).isEqualTo("배송비 무료 쿠폰")
+                () -> assertThat(jsonPath.getLong("coupons[2].couponId")).isEqualTo(배송비무료쿠폰.getId()),
+                () -> assertThat(jsonPath.getString("coupons[2].couponName")).isEqualTo(배송비무료쿠폰.getName())
         );
     }
 
@@ -149,7 +161,8 @@ public class OrderScenarioTest extends ScenarioFixture {
                 .extract();
     }
 
-    private ExtractableResponse<Response> 사용자가_상품을_장바구니에_담는다(Member member, CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> 사용자가_상품을_장바구니에_담는다(Member member, Product product) {
+        final var cartItemRequest = new CartItemRequest(product.getId());
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())

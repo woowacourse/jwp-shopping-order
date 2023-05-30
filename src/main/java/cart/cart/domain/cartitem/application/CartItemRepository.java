@@ -5,7 +5,7 @@ import cart.cart.domain.cartitem.CartItem;
 import java.util.List;
 
 public interface CartItemRepository {
-    List<CartItem> findByMemberId(Long memberId);
+    List<CartItem> findAllByMemberId(Long memberId);
 
     Long save(CartItem cartItem);
 

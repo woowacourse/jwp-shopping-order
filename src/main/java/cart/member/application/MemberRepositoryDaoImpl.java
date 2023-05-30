@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public class MemberRepositoryDaoImpl implements MemberRepository {
     private final MemberDao memberDao;
+    private final MemberCouponMapper memberCouponMapper = new MemberCouponMapper();
 
     public MemberRepositoryDaoImpl(MemberDao memberDao) {
         this.memberDao = memberDao;
@@ -16,17 +17,30 @@ public class MemberRepositoryDaoImpl implements MemberRepository {
 
     @Override
     public Member getMemberById(Long id) {
-        return memberDao.getMemberById(id);
+        final var memberById = memberDao.getMemberById(id);
+        return new Member(memberById.getId(),
+                memberById.getEmail(),
+                memberById.getPassword(),
+                memberCouponMapper.findAllByMemberId(memberById.getId()));
     }
 
     @Override
     public Member getMemberByEmail(String email) {
-        return memberDao.getMemberByEmail(email);
+        final var memberByEmail = memberDao.getMemberByEmail(email);
+        return new Member(memberByEmail.getId(),
+                memberByEmail.getEmail(),
+                memberByEmail.getPassword(),
+                memberCouponMapper.findAllByMemberId(memberByEmail.getId()));
     }
 
     @Override
-    public void addMember(Member member) {
-        memberDao.addMember(member);
+    public Long addMember(Member member) {
+        return memberDao.addMember(member);
+    }
+
+    @Override
+    public void addCoupon(Member member, Long couponId) {
+        memberCouponMapper.addCoupon(member.getId(), couponId);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package cart.cart.presentation.dto;
 
+import cart.coupon.Coupon;
+
 public class CouponResponse {
     private long couponId;
     private String couponName;
@@ -12,8 +14,8 @@ public class CouponResponse {
         this.couponName = couponName;
     }
 
-    public static CouponResponse from(long couponId, String couponName) {
-        return new CouponResponse(couponId, couponName);
+    public static CouponResponse from(Coupon coupon) {
+        return new CouponResponse(coupon.getId(), coupon.getName());
     }
 
     public long getCouponId() {

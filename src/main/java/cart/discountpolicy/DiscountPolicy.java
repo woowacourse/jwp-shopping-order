@@ -1,11 +1,14 @@
 package cart.discountpolicy;
 
+import cart.cart.Cart;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 
-public interface DiscountPolicy {
-    boolean isSelective();
+public abstract class DiscountPolicy {
+    private final DiscountCondition discountCondition;
 
-    boolean support(DiscountCondition condition);
+    public DiscountPolicy(DiscountCondition discountCondition) {
+        this.discountCondition = discountCondition;
+    }
 
-    int discount(int price);
+    public abstract void discount(Cart cart);
 }

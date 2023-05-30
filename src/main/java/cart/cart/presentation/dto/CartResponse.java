@@ -1,5 +1,6 @@
 package cart.cart.presentation.dto;
 
+import cart.cart.Cart;
 import cart.cart.domain.cartitem.CartItem;
 import cart.coupon.Coupon;
 
@@ -17,18 +18,15 @@ public class CartResponse {
         this.coupons = couponResponses;
     }
 
-    public static CartResponse from(List<CartItem> products, int deliveryPrice, List<Coupon> coupons) {
-        final var cartItemResponses = products.stream().map(cartItem ->
-                        CartItemResponse.from(cartItem.getId(),
-                                cartItem.getProduct().getName(),
-                                cartItem.getProduct().getPrice(),
-                                cartItem.getProduct().getImageUrl(),
-                                cartItem.getDiscountPrice()))
+    public static CartResponse from(Cart cart) {
+        final var cartItemResponses = cart.getCartItems()
+                .stream().map(CartItemResponse::from)
                 .collect(Collectors.toList());
-        final var couponResponses = coupons.stream()
-                .map(coupon -> CouponResponse.from(coupon.getId(), coupon.getName()))
+        final var couponResponses = cart.getCoupons()
+                .stream().map(CouponResponse::from)
                 .collect(Collectors.toList());
-        return new CartResponse(cartItemResponses, deliveryPrice, couponResponses);
+
+        return new CartResponse(cartItemResponses, cart.getDeliveryPrice(), couponResponses);
     }
 
     public List<CartItemResponse> getProducts() {

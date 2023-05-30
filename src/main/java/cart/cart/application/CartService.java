@@ -1,34 +1,36 @@
 package cart.cart.application;
 
+import cart.cart.Cart;
 import cart.cart.domain.cartitem.application.CartItemRepository;
 import cart.cart.presentation.dto.CartResponse;
-import cart.coupon.application.CouponRepository;
-import cart.discountpolicy.application.DiscountPolicyRepository;
+import cart.coupon.application.CouponService;
+import cart.member.Member;
+import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
     private final CartItemRepository cartItemRepository;
-    private final DiscountPolicyRepository discountPolicyRepository;
-    private final CouponRepository couponRepository;
+    private final CouponService couponService;
+    private final SaleService saleService;
 
-    public CartService(CartItemRepository cartItemRepository, DiscountPolicyRepository discountPolicyRepository, CouponRepository couponRepository) {
+    public CartService(CartItemRepository cartItemRepository, CouponService couponService, SaleService saleService) {
         this.cartItemRepository = cartItemRepository;
-        this.discountPolicyRepository = discountPolicyRepository;
-        this.couponRepository = couponRepository;
+        this.couponService = couponService;
+        this.saleService = saleService;
     }
 
-    public CartResponse findCartByMemberId(Long memberId) {
-        final var cartItems = cartItemRepository.findByMemberId(memberId);
-        final var policies = discountPolicyRepository.findAllNonSelectivePolicies();
-        cartItems.forEach(cartItem -> cartItem.discountPrice(policies));
-        final var deliveryPrice = getDeliveryPrice();
-        final var coupons = couponRepository.findAllByMemberId(memberId);
+    public CartResponse findCartByMemberId(Member member) {
+        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
+        final var coupons = member.getCouponIds()
+                .stream().map(couponService::findById)
+                .collect(Collectors.toList());
+        final var cart = new Cart(cartItems, coupons);
 
-        return CartResponse.from(cartItems, deliveryPrice, coupons);
-    }
+        saleService.applySale(cart);
 
-    private int getDeliveryPrice() {
-        return 3_000;
+        return CartResponse.from(cart);
     }
 }
