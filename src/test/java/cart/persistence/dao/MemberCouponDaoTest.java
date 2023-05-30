@@ -53,4 +53,44 @@ class MemberCouponDaoTest extends DaoTest {
                 tuple(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰", 10,
                     20, false));
     }
+
+    @Test
+    @DisplayName("해당 회원이 쿠폰을 이미 발급받았다면 true를 반환한다.")
+    void existByMemberIdAndCouponId_true() {
+        // given
+        final MemberEntity 져니 = new MemberEntity("journey", "password");
+        final Long 저장된_져니_아이디 = memberDao.insert(져니);
+
+        final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 10, LocalDateTime.now().plusDays(365));
+        final Long 저장된_신규_가입_축하_쿠폰_아이디 = couponDao.insert(신규_가입_축하_쿠폰);
+
+        final LocalDateTime 쿠폰_발급_시간 = LocalDateTime.now();
+        final LocalDateTime 쿠폰_만료_시간 = 쿠폰_발급_시간.plusDays(10);
+        final MemberCouponEntity 사용자_쿠폰_저장_엔티티 = new MemberCouponEntity(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디, 쿠폰_발급_시간,
+            쿠폰_만료_시간, false);
+        memberCouponDao.insert(사용자_쿠폰_저장_엔티티);
+
+        // when
+        final boolean result = memberCouponDao.existByMemberIdAndCouponId(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("해당 회원이 쿠폰을 발급받지 않았다면 false를 반환한다.")
+    void existByMemberIdAndCouponId_false() {
+        // given
+        final MemberEntity 져니 = new MemberEntity("journey", "password");
+        final Long 저장된_져니_아이디 = memberDao.insert(져니);
+
+        final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 10, LocalDateTime.now().plusDays(365));
+        final Long 저장된_신규_가입_축하_쿠폰_아이디 = couponDao.insert(신규_가입_축하_쿠폰);
+
+        // when
+        final boolean result = memberCouponDao.existByMemberIdAndCouponId(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
+
+        // then
+        assertThat(result).isFalse();
+    }
 }

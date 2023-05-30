@@ -18,7 +18,12 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     @Override
     public void save(final Long memberId, final MemberCoupon memberCoupon) {
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(memberId, memberCoupon.getCoupon().getId(),
-            memberCoupon.getIssuedDate(), memberCoupon.getExpiredDate(), false);
+            memberCoupon.getIssuedAt(), memberCoupon.getExpiredAt(), false);
         memberCouponDao.insert(memberCouponEntity);
+    }
+
+    @Override
+    public boolean existByMemberIdAndCouponId(final Long memberId, final Long couponId) {
+        return memberCouponDao.existByMemberIdAndCouponId(memberId, couponId);
     }
 }

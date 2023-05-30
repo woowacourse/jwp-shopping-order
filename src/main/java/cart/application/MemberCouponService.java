@@ -31,12 +31,26 @@ public class MemberCouponService {
         final Long memberId = couponSaveEvent.getMemberId();
         final CouponWithId coupon = couponRepository.findByNameAndDiscountRate(JOIN_MEMBER_COUPON,
             JOIN_MEMBER_COUPON_DISCOUNT_RATE);
-        final LocalDateTime issuedDate = LocalDateTime.now();
-        if (coupon.getExpiredDate().isBefore(issuedDate)) {
+
+        final LocalDateTime issuedAt = LocalDateTime.now();
+        validateExpiredCoupon(coupon, issuedAt);
+
+        validateAlreadyIssued(memberId, coupon.getId());
+
+        final MemberCoupon memberCoupon = new MemberCoupon(coupon, issuedAt,
+            issuedAt.plusDays(coupon.getCoupon().period()), false);
+        memberCouponRepository.save(memberId, memberCoupon);
+    }
+
+    private void validateExpiredCoupon(final CouponWithId coupon, final LocalDateTime issuedAt) {
+        if (coupon.getCoupon().expiredAt().isBefore(issuedAt)) {
             throw new BadRequestException(ErrorCode.COUPON_EXPIRED);
         }
-        final MemberCoupon memberCoupon = new MemberCoupon(coupon, issuedDate, issuedDate.plusDays(coupon.getPeriod()),
-            false);
-        memberCouponRepository.save(memberId, memberCoupon);
+    }
+
+    private void validateAlreadyIssued(final Long memberId, final Long couponId) {
+        if (memberCouponRepository.existByMemberIdAndCouponId(memberId, couponId)) {
+            throw new BadRequestException(ErrorCode.COUPON_ALREADY_EXIST);
+        }
     }
 }
