@@ -33,7 +33,7 @@ public class OrderProductDao {
                 result.getLong("order_id"),
                 member,
                 new MemberPoint(result.getInt("used_point")),
-                result.getTimestamp("orders.created_at").toLocalDateTime());
+                result.getTimestamp("created_at").toLocalDateTime());
         final Product product = new Product(
                 result.getLong("product_id"),
                 result.getString("name"),

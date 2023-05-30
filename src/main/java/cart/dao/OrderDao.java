@@ -40,7 +40,7 @@ public class OrderDao {
                 result.getLong("order_id"),
                 member,
                 new MemberPoint(result.getInt("used_point")),
-                result.getTimestamp("orders.created_at").toLocalDateTime());
+                result.getTimestamp("created_at").toLocalDateTime());
     };
 
     public Long insert(final Order order) {
