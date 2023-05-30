@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import cart.domain.Member;
 import cart.dto.CartItemRequest;
+import cart.dto.CartPointsResponse;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderItemResponse;
 import cart.dto.OrderResponse;
@@ -126,5 +127,20 @@ class OrderServiceTest extends ServiceTest {
 		assertThat(orderResponses)
 			.usingRecursiveComparison()
 			.isEqualTo(expected);
+	}
+
+	@Test
+	void 장바구니_상품의_예상_적립금을_계산한다() {
+		// given
+		final Member member = new Member(1L, EMAIL, PASSWORD, 1000);
+
+		// when
+		final CartPointsResponse cartPointsResponse = orderService.calculatePoints(member);
+
+		// then
+		assertAll(
+			() -> assertThat(cartPointsResponse.getSavingRate()).isEqualTo(10),
+			() -> assertThat(cartPointsResponse.getPoints()).isEqualTo(10000)
+		);
 	}
 }
