@@ -23,24 +23,26 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE `order`
+CREATE TABLE purchase_order
 (
-    id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT    NOT NULL,
-    order_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    payment    INT       NOT NULL,
-    used_point INT       NOT NULL,
+    id                BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id         BIGINT    NOT NULL,
+    order_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    payment           INT       NOT NULL,
+    used_point        INT       NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-CREATE TABLE order_item
+CREATE TABLE purchase_order_item
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id   BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    order_at   INT    NOT NULL,
-    quantity   INT    NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES `order` (id),
+    id                BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    purchase_order_id BIGINT       NOT NULL,
+    product_id        BIGINT       NOT NULL,
+    name              VARCHAR(255) NOT NULL,
+    price             INT          NOT NULL,
+    image_url         VARCHAR(255) NOT NULL,
+    quantity          INT          NOT NULL,
+    FOREIGN KEY (purchase_order_id) REFERENCES purchase_order (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
@@ -52,4 +54,13 @@ CREATE TABLE member_point
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expired_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE order_member_point
+(
+    id                BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    purchase_order_id BIGINT NOT NULL,
+    member_point_id   BIGINT NOT NULL,
+    FOREIGN KEY (purchase_order_id) REFERENCES purchase_order (id),
+    FOREIGN KEY (member_point_id) REFERENCES member (id)
 );
