@@ -14,7 +14,7 @@ class Email {
     }
 
     private void validateEmail(final String email) {
-        if (!email.matches(EMAIL_REGULAR_EXPRESSION)) {
+        if (email == null || !email.matches(EMAIL_REGULAR_EXPRESSION)) {
             throw new IllegalArgumentException("이메일 형식이 유효하지 않습니다.");
         }
     }
