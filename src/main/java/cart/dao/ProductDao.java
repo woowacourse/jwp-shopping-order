@@ -27,7 +27,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return new Product(productId, name, price, imageUrl, rs.getInt("stock"));
         });
     }
 
@@ -37,7 +37,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return new Product(productId, name, price, imageUrl, rs.getInt("stock"));
         });
     }
 
@@ -46,13 +46,14 @@ public class ProductDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                    "INSERT INTO product (name, price, image_url, stock) VALUES (?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, product.getName());
             ps.setInt(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
+            ps.setInt(4, product.getStock());
 
             return ps;
         }, keyHolder);
@@ -61,8 +62,8 @@ public class ProductDao {
     }
 
     public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        String sql = "UPDATE product SET name = ?, price = ?, image_url = ?, stock = ? WHERE id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getStock(), productId);
     }
 
     public void deleteProduct(Long productId) {
