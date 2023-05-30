@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cart.helper.IntegrationTestHelper;
 import cart.member.dao.MemberDao;
@@ -31,7 +32,7 @@ class OrderApiControllerTest extends IntegrationTestHelper {
     final Member member = memberDao.getMemberById(1L);
 
     final List<Long> cartItemIdList = List.of(1L, 2L);
-    final BigDecimal totalPrice = BigDecimal.valueOf(10000);
+    final BigDecimal totalPrice = BigDecimal.valueOf(380400);
     final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
 
     final RegisterOrderRequest registerOrderRequest = new RegisterOrderRequest(cartItemIdList,
@@ -60,7 +61,7 @@ class OrderApiControllerTest extends IntegrationTestHelper {
     final Member member = memberDao.getMemberById(1L);
 
     //when
-    List<OrderResponse> orderRespons =
+    List<OrderResponse> orderResponses =
         given().log().all()
             .auth().preemptive().basic(member.getEmail(), member.getPassword())
             .when()
@@ -72,10 +73,14 @@ class OrderApiControllerTest extends IntegrationTestHelper {
             .jsonPath()
             .getList(".", OrderResponse.class);
 
+    for (final OrderResponse orderRespons : orderResponses) {
+      System.out.println(orderRespons.getOrderId());
+    }
+
     //then
     assertAll(
-        () -> assertEquals(1, orderRespons.size()),
-        () -> assertEquals(3, orderRespons.get(0).getProducts().size())
+        () -> assertEquals(1, orderResponses.size()),
+        () -> assertEquals(2, orderResponses.get(0).getProducts().size())
     );
   }
 
@@ -101,7 +106,8 @@ class OrderApiControllerTest extends IntegrationTestHelper {
     //then
     assertAll(
         () -> assertEquals(2, specificOrderResponse.getProducts().size()),
-        () -> assertEquals(BigDecimal.valueOf(380400d), specificOrderResponse.getTotalPrice()),
+        () -> assertTrue(
+            BigDecimal.valueOf(380400).compareTo(specificOrderResponse.getTotalPrice()) == 0),
         () -> assertEquals(orderId, specificOrderResponse.getOrderId())
     );
   }

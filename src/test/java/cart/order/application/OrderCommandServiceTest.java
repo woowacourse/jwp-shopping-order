@@ -13,8 +13,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @SpringBootTest
+@Sql(scripts = "/schema.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class OrderCommandServiceTest {
 
   @Autowired
@@ -30,7 +34,7 @@ class OrderCommandServiceTest {
     final Member member = memberDao.getMemberById(1L);
 
     final List<Long> cartItemIds = List.of(1L, 2L);
-    final BigDecimal totalPrice = BigDecimal.valueOf(116800);
+    final BigDecimal totalPrice = BigDecimal.valueOf(380400);
     final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
 
     final RegisterOrderRequest registerOrderRequest =

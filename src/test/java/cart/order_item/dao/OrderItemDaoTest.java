@@ -41,7 +41,7 @@ class OrderItemDaoTest {
     final OrderItemEntity orderItemEntity1 = new OrderItemEntity(3L, itemName, price, imageUrl,
         quantity);
 
-    final OrderItemEntity orderItemEntity2 = new OrderItemEntity(3L, "itemNaem2",
+    final OrderItemEntity orderItemEntity2 = new OrderItemEntity(3L, "itemName2",
         BigDecimal.valueOf(2000), "imageUrl2", 5);
 
     final List<OrderItemEntity> orderItemEntities = List.of(orderItemEntity1, orderItemEntity2);
@@ -60,6 +60,6 @@ class OrderItemDaoTest {
     final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
 
     //then
-    assertEquals(3, orderItemEntities.size());
+    assertEquals(2, orderItemEntities.size());
   }
 }

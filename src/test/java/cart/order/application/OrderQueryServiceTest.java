@@ -37,7 +37,7 @@ class OrderQueryServiceTest {
     //then
     assertAll(
         () -> assertEquals(1, orderResponses.size()),
-        () -> assertEquals(3, orderResponses.get(0).getProducts().size())
+        () -> assertEquals(2, orderResponses.get(0).getProducts().size())
     );
   }
 

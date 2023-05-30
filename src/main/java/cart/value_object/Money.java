@@ -7,7 +7,7 @@ public class Money {
 
   public static final Money ZERO = new Money(0);
 
-  private BigDecimal value;
+  private final BigDecimal value;
 
   public Money(final BigDecimal value) {
     this.value = value;
@@ -42,7 +42,7 @@ public class Money {
       return false;
     }
     final Money money = (Money) o;
-    return Objects.equals(value, money.value);
+    return value.compareTo(money.value) == 0;
   }
 
   @Override
