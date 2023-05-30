@@ -3,6 +3,7 @@ package cart.application;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @Service
@@ -31,10 +33,20 @@ public class CartItemService {
     }
 
     @Transactional
-    public Long addCartItems(final Member member, final CartItemRequest request) {
+    public Long addCartItem(final Member member, final CartItemRequest request) {
         final Product product = productDao.findById(request.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException(request.getProductId()));
-        return cartItemDao.insert(new CartItem(member, product));
+        final CartItems cartItems = new CartItems(cartItemDao.findAllByMemberId(member.getId()));
+        final Optional<CartItem> cartItemOptional = cartItems.find(product);
+        if (cartItemOptional.isEmpty()) {
+            return cartItemDao.insert(new CartItem(member, product));
+        }
+        final CartItem cartItem = cartItemOptional.get();
+        cartItem.checkOwner(member);
+        final CartItem addedCartItem = cartItem.addQuantity();
+        cartItemDao.updateQuantity(addedCartItem);
+
+        return cartItem.getId();
     }
 
     @Transactional
@@ -46,8 +58,8 @@ public class CartItemService {
             cartItemDao.delete(cartItemId);
             return;
         }
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        final CartItem updatedCartItem = cartItem.changeQuantity(request.getQuantity());
+        cartItemDao.updateQuantity(updatedCartItem);
     }
 
     @Transactional

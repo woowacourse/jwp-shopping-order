@@ -5,6 +5,7 @@ import cart.domain.orderproduct.OrderProduct;
 import cart.domain.product.Product;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -54,5 +55,12 @@ public class CartItems {
 
     public List<CartItem> getCartItems() {
         return cartItems;
+    }
+
+    public Optional<CartItem> find(final Product product) {
+        return cartItems.stream()
+                .filter(m -> m.getProduct().equals(product))
+                .findFirst();
+
     }
 }

@@ -28,14 +28,25 @@ public class CartItem {
         this.quantity = new Quantity(quantity);
     }
 
+    public CartItem(final Long id, final Member member, final Product product, final Quantity quantity) {
+        this.id = id;
+        this.member = member;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new CartItemException.IllegalMember(this, member);
         }
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = new Quantity(quantity);
+    public CartItem changeQuantity(int quantity) {
+        return new CartItem(id, member, product, quantity);
+    }
+
+    public CartItem addQuantity() {
+        return new CartItem(id, member, product, quantity.add());
     }
 
     public Long getId() {

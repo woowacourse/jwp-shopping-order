@@ -10,21 +10,13 @@ VALUES ('피자', 13000,
 INSERT INTO product (name, price, image_url)
 VALUES ('초밥', 18000, 'https://search.pstatic.net/common/?https://cdn-icons-png.flaticon.com/128/5391/5391494.png');
 
-INSERT INTO member (email, password, point)
-VALUES ('a@a.com', '1234', 10000);
-INSERT INTO member (email, password, point)
-VALUES ('b@b.com', '1234', 10000);
+INSERT INTO member (email, password, point) VALUES ('a@a.com', '1234', 10000);
+INSERT INTO member (email, password, point) VALUES ('b@b.com', '1234', 10000);
 
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (1, 1, 2);
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (1, 2, 4);
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (1, 2, 1);
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (1, 3, 2);
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (1, 4, 2);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 1);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 3, 2);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 4, 2);
 
-INSERT INTO cart_item (member_id, product_id, quantity)
-VALUES (2, 2, 5);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 2, 5);

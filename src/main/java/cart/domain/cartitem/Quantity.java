@@ -10,6 +10,10 @@ public class Quantity {
         this.quantity = quantity;
     }
 
+    public Quantity add() {
+        return new Quantity(quantity + 1);
+    }
+
     public int getQuantity() {
         return quantity;
     }
