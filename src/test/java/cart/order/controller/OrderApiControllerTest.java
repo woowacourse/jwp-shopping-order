@@ -10,6 +10,7 @@ import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.RegisterOrderRequest;
+import cart.order.application.dto.SpecificOrderResponse;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -75,6 +76,33 @@ class OrderApiControllerTest extends IntegrationTestHelper {
     assertAll(
         () -> assertEquals(1, orderRespons.size()),
         () -> assertEquals(3, orderRespons.get(0).getProducts().size())
+    );
+  }
+
+  @Test
+  @DisplayName("showOrder() : 사용자가 주문한 특정 주문 목록을 성공적으로 조회한다면 200 OK 를 반환한다.")
+  void test_showOrder() throws Exception {
+    //given
+    final Member member = memberDao.getMemberById(1L);
+    final long orderId = 1L;
+
+    //when
+    final SpecificOrderResponse specificOrderResponse = given().log().all()
+        .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        .when()
+        .get("/orders/{orderId}", orderId)
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.OK.value())
+        .extract()
+        .jsonPath()
+        .getObject(".", SpecificOrderResponse.class);
+
+    //then
+    assertAll(
+        () -> assertEquals(2, specificOrderResponse.getProducts().size()),
+        () -> assertEquals(BigDecimal.valueOf(380400d), specificOrderResponse.getTotalPrice()),
+        () -> assertEquals(orderId, specificOrderResponse.getOrderId())
     );
   }
 }
