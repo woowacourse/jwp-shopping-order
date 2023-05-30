@@ -8,9 +8,6 @@ import cart.application.dto.response.CartItemResponse;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.persistence.dao.MemberDao;
-import cart.persistence.dao.ProductDao;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,21 +32,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
     @Autowired
     private MemberDao memberDao;
-    @Autowired
-    private ProductDao productDao;
 
     private Product product1;
     private Product product2;
     private Member member1;
     private Member member2;
-
-    private static String jsonSerialize(final PaymentRequest request) throws JsonProcessingException {
-        return OBJECT_MAPPER.writeValueAsString(request);
-    }
 
     @BeforeEach
     void setUp() {
