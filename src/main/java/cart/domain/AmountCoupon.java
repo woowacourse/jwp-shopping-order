@@ -24,6 +24,7 @@ public class AmountCoupon implements Coupon {
         return totalPrice - discountAmount;
     }
 
+    @Override
     public CouponInfo getCouponInfo() {
         return couponInfo;
     }

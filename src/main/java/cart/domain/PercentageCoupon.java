@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class PercentageCoupon implements Coupon{
     private final CouponInfo couponInfo;
     private final Double discountPercentage;
@@ -25,5 +27,36 @@ public class PercentageCoupon implements Coupon{
         }
         // TODO: 5/29/23 이거 반올림? 
         return totalPrice - (int)discountPrice;
+    }
+
+    @Override
+    public CouponInfo getCouponInfo() {
+        return couponInfo;
+    }
+
+    public Double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final PercentageCoupon that = (PercentageCoupon) o;
+        return Objects.equals(couponInfo, that.couponInfo)
+                && Objects.equals(discountPercentage, that.discountPercentage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(couponInfo, discountPercentage);
+    }
+
+    @Override
+    public String toString() {
+        return "PercentageCoupon{" +
+                "couponInfo=" + couponInfo +
+                ", discountPercentage=" + discountPercentage +
+                '}';
     }
 }
