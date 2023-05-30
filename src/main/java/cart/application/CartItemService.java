@@ -3,9 +3,9 @@ package cart.application;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import java.util.List;
@@ -30,7 +30,7 @@ public class CartItemService {
 
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         final Product product = productRepository.findById(cartItemRequest.getProductId());
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(product, member));
         return cartItem.getId();
     }
 

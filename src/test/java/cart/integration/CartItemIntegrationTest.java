@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemResponse;
+import cart.dto.request.ProductRequest;
 import cart.entity.MemberEntity;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -27,7 +27,7 @@ import org.springframework.http.MediaType;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-public class CartItemIntegrationTest extends IntegrationTest {
+class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;

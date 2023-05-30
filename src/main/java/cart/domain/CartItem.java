@@ -10,8 +10,12 @@ public class CartItem {
     private final Product product;
     private final Member member;
 
-    public CartItem(final Member member, final Product product) {
+    public CartItem(final Product product, final Member member) {
         this(null, 1, product, member);
+    }
+
+    public CartItem(final int quantity, final Product product, final Member member) {
+        this(null, quantity, product, member);
     }
 
     public CartItem(final Long id, int quantity, final Product product, final Member member) {

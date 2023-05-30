@@ -1,8 +1,8 @@
 package cart.application;
 
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.repository.MysqlProductRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,15 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductService(final MysqlProductRepository mysqlProductRepository) {
-        this.productRepository = mysqlProductRepository;
+    public ProductService(final MysqlProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<ProductResponse> getAllProducts() {
         final List<Product> products = productRepository.findAll();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(final Long productId) {
