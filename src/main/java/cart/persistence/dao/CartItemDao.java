@@ -1,5 +1,6 @@
 package cart.persistence.dao;
 
+import cart.persistence.dto.CartDetailDTO;
 import cart.persistence.entity.CartItemEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -8,7 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,21 +17,9 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) ->
-            new CartItemEntity(
-                    rs.getLong("id"),
-                    rs.getLong("member_id"),
-                    rs.getLong("product_id"),
-                    rs.getInt("quantity")
-            );
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public List<CartItemEntity> findByMemberId(Long memberId) {
-        String sql = "SELECT * FROM cart_item WHERE member_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
     public Long create(CartItemEntity cartItem) {
@@ -53,14 +41,26 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Optional<CartItemEntity> findById(final long id) {
-        String sql = "SELECT * FROM cart_item WHERE id = ?";
+    public Optional<CartDetailDTO> findById(final long id) {
+        String sql = "SELECT * FROM cart_item "
+                + "INNER JOIN member ON cart_item.member_id = member.id "
+                + "INNER JOIN product ON cart_item.product_id = product.id "
+                + "WHERE cart_item.id = ?";
         try {
-            CartItemEntity cartItem = jdbcTemplate.queryForObject(sql, rowMapper, id);
-            return Optional.of(cartItem);
+            CartDetailDTO cartDetail = jdbcTemplate.queryForObject(sql, RowMapperHelper.cartDetailRowMapper(), id);
+            return Optional.of(cartDetail);
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<CartDetailDTO> findByMemberId(final long memberId) {
+        String sql =
+                "SELECT * FROM cart_item "
+                        + "INNER JOIN member ON cart_item.member_id = member.id "
+                        + "INNER JOIN product ON cart_item.product_id = product.id "
+                        + "WHERE cart_item.member_id = ?";
+        return jdbcTemplate.query(sql, RowMapperHelper.cartDetailRowMapper(), memberId);
     }
 
     public void deleteById(final long id) {

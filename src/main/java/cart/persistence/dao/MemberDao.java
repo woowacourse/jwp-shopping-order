@@ -5,19 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
-            new MemberEntity(
-                    rs.getLong("id"),
-                    rs.getString("email"),
-                    rs.getString("password")
-            );
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -31,7 +24,7 @@ public class MemberDao {
     public Optional<MemberEntity> findMemberById(final long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
         try {
-            MemberEntity member = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            MemberEntity member = jdbcTemplate.queryForObject(sql, RowMapperHelper.memberRowMapper(), id);
             return Optional.of(member);
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
@@ -41,7 +34,7 @@ public class MemberDao {
     public Optional<MemberEntity> findMemberByEmail(final String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
         try {
-            MemberEntity member = jdbcTemplate.queryForObject(sql, rowMapper, email);
+            MemberEntity member = jdbcTemplate.queryForObject(sql, RowMapperHelper.memberRowMapper(), email);
             return Optional.of(member);
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
@@ -50,7 +43,7 @@ public class MemberDao {
 
     public List<MemberEntity> findAll() {
         String sql = "SELECT * from member";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, RowMapperHelper.memberRowMapper());
     }
 
     public void update(final MemberEntity member) {

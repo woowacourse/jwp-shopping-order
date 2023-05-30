@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -21,14 +20,6 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
-            new ProductEntity(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getInt("price"),
-                    rs.getString("image_url")
-            );
-
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -37,14 +28,14 @@ public class ProductDao {
 
     public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, RowMapperHelper.productRowMapper());
     }
 
     public Optional<ProductEntity> findById(final long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
 
         try {
-            ProductEntity product = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            ProductEntity product = jdbcTemplate.queryForObject(sql, RowMapperHelper.productRowMapper(), id);
             return Optional.of(product);
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
@@ -54,7 +45,7 @@ public class ProductDao {
     public List<ProductEntity> findByIds(final List<Long> ids) {
         String sql = "SELECT * FROM product WHERE id IN (:ids)";
         SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
-        return namedParameterJdbcTemplate.query(sql, parameters, rowMapper);
+        return namedParameterJdbcTemplate.query(sql, parameters, RowMapperHelper.productRowMapper());
 
     }
 

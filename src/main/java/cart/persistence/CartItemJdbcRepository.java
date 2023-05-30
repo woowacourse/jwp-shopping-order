@@ -1,22 +1,15 @@
 package cart.persistence;
 
 import cart.application.mapper.CartItemMapper;
-import cart.application.mapper.MemberMapper;
-import cart.application.mapper.ProductMapper;
 import cart.application.repository.CartItemRepository;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Product;
-import cart.exception.MemberNotFoundException;
-import cart.exception.ProductNotFoundException;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dao.MemberDao;
 import cart.persistence.dao.ProductDao;
+import cart.persistence.dto.CartDetailDTO;
 import cart.persistence.entity.CartItemEntity;
-import cart.persistence.entity.MemberEntity;
-import cart.persistence.entity.ProductEntity;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -43,35 +36,19 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public List<CartItem> findByMember(final Member member) {
-        List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(member.getId());
-        List<Long> productIds = cartItemEntities.stream()
-                .map(CartItemEntity::getProductId)
-                .collect(Collectors.toList());
-        Map<Long, Product> products = productDao.findByIds(productIds).stream()
-                .map(ProductMapper::toProduct)
-                .collect(Collectors.toMap(Product::getId, product -> product));
-        return cartItemEntities.stream()
-                .map(it -> new CartItem(it.getId(), it.getQuantity(), products.get(it.getProductId()), member))
+        List<CartDetailDTO> cartDetails = cartItemDao.findByMemberId(member.getId());
+        return cartDetails.stream()
+                .map(CartItemMapper::toCartItem)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<CartItem> findById(final long id) {
-        Optional<CartItemEntity> optionalCartItemEntity = cartItemDao.findById(id);
-        if (optionalCartItemEntity.isEmpty()) {
+        Optional<CartDetailDTO> optionalCartDetail = cartItemDao.findById(id);
+        if (optionalCartDetail.isEmpty()) {
             return Optional.empty();
         }
-        CartItemEntity cartItemEntity = optionalCartItemEntity.get();
-
-        MemberEntity memberEntity = memberDao.findMemberById(cartItemEntity.getMemberId())
-                .orElseThrow(MemberNotFoundException::new);
-
-        ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId())
-                .orElseThrow(ProductNotFoundException::new);
-
-        return Optional.of(
-                new CartItem(id, cartItemEntity.getQuantity(), ProductMapper.toProduct(productEntity),
-                        MemberMapper.toMember(memberEntity)));
+        return Optional.of(CartItemMapper.toCartItem(optionalCartDetail.get()));
     }
 
     @Override
