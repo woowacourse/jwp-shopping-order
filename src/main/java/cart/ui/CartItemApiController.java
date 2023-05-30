@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.CartItemService;
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart-items")
@@ -30,7 +32,13 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        final List<CartItem> cartItems = cartItemService.findByMember(member);
+
+        final List<CartItemResponse> responses = cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping

@@ -90,7 +90,7 @@ public class CartItemApiDocumentTest {
         // given
         given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
         given(cartItemService.findByMember(MemberA.ENTITY))
-                .willReturn(List.of(MemberA_CartItem1.RESPONSE, MemberA_CartItem2.RESPONSE));
+                .willReturn(List.of(MemberA_CartItem1.ENTITY, MemberA_CartItem2.ENTITY));
         final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
 
         // when, then

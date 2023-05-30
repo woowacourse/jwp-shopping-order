@@ -61,7 +61,7 @@ public class ProductApiDocumentTest {
     void 모든_상품_목록_조회_문서화() throws Exception {
         // given
         given(productService.getAllProducts())
-                .willReturn(List.of(CHICKEN.RESPONSE, SALAD.RESPONSE, PIZZA.RESPONSE));
+                .willReturn(List.of(CHICKEN.ENTITY, SALAD.ENTITY, PIZZA.ENTITY));
 
         // when, then
         mockMvc.perform(get("/products")
