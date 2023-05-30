@@ -3,8 +3,12 @@ package cart.application;
 import cart.domain.Member;
 import cart.dto.MemberCreateResponse;
 import cart.dto.MemberPointQueryResponse;
+import cart.dto.MemberQueryResponse;
 import cart.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
@@ -24,5 +28,12 @@ public class MemberService {
 
     public void addPoints(final Member member, final int points) {
         memberRepository.addPoint(member, points);
+    }
+
+    public List<MemberQueryResponse> findAllMembers() {
+        final List<Member> members = memberRepository.findAllMembers();
+        return members.stream()
+                .map(MemberQueryResponse::from)
+                .collect(Collectors.toList());
     }
 }

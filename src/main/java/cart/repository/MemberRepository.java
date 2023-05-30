@@ -6,6 +6,8 @@ import cart.domain.Member;
 import cart.entity.PointEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class MemberRepository {
 
@@ -36,5 +38,9 @@ public class MemberRepository {
 
     public void updatePoint(final Member member, final int newPoint) {
         pointDao.updatePoints(new PointEntity(member.getId(), newPoint));
+    }
+
+    public List<Member> findAllMembers() {
+        return memberDao.getAllMembers();
     }
 }

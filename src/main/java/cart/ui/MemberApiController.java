@@ -3,10 +3,13 @@ package cart.ui;
 import cart.application.MemberService;
 import cart.domain.Member;
 import cart.dto.MemberPointQueryResponse;
+import cart.dto.MemberQueryResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/members")
@@ -16,6 +19,11 @@ public class MemberApiController {
 
     public MemberApiController(final MemberService memberService) {
         this.memberService = memberService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MemberQueryResponse>> findAllMembers() {
+        return ResponseEntity.ok().body(memberService.findAllMembers());
     }
 
     @GetMapping("/points")

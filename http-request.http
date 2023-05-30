@@ -1,38 +1,50 @@
-## 상품 API
+## Product API
 
-### 부리또 추가 요청
+### 이리내 추가 요청
 
 POST http://localhost:8080/products
 Content-Type: application/json
 
 {
-  "name": "부리또",
-  "price": 30000,
-  "imageUrl": "http://example.com/burrito.jpg"
+  "name": "이리내",
+  "price": 10000000,
+  "imageUrl": "#"
 }
 
-### 상품 조회 요청
+### 전체 상품 조회 요청
+
+GET http://localhost:8080/products
+Content-Type: application/json
+
+### 특정 상품 조회 요청
 
 GET http://localhost:8080/products/1
 Content-Type: application/json
 
-### 부리또 수정 요청 (가격 수정)
+### 깃짱 수정 요청 (가격 수정)
 
 PUT http://localhost:8080/products/1
 Content-Type: application/json
 
 {
-  "name": "부리또",
-  "price": 15000,
-  "imageUrl": "http://example.com/burrito.jpg"
+  "name": "깃짱코딩",
+  "price": 150000,
+  "imageUrl": "#"
 }
 
-### 부리또 삭제 요청
+### 제리 삭제 요청
 
-DELETE http://localhost:8080/products/1
+DELETE http://localhost:8080/products/2
 Content-Type: application/json
 
-## 장바구니 API
+## Member API
+
+### 전체 멤버 조회
+
+GET http://localhost:8080/members
+Content-Type: application/json
+
+## Cart Item API
 
 ### 장바구니 아이템 목록 조회
 
