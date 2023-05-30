@@ -1,7 +1,6 @@
 package cart.exception;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
 
 import static cart.domain.CartItem.MINIMUM_QUANTITY;
 
@@ -14,8 +13,8 @@ public class CartItemException extends RuntimeException {
 
     public static class InvalidMember extends CartItemException {
 
-        public InvalidMember(CartItem cartItem, Member member) {
-            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
+        public InvalidMember() {
+            super("장바구니에 해당하는 회원이 존재하지 않습니다.");
         }
     }
 

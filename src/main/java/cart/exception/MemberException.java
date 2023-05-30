@@ -1,24 +1,15 @@
 package cart.exception;
 
-import static cart.domain.Member.MINIMUM_PASSWORD_LENGTH;
-
 public class MemberException extends RuntimeException {
 
     public MemberException(String message) {
         super(message);
     }
 
-    public static class InvalidPasswordByNull extends MemberException {
+    public static class InvalidPassword extends MemberException {
 
-        public InvalidPasswordByNull() {
-            super("비밀번호는 빈 값일 수 없습니다.");
-        }
-    }
-
-    public static class InvalidPasswordByLength extends MemberException {
-
-        public InvalidPasswordByLength(String password) {
-            super("비밀번호는 최소 " + MINIMUM_PASSWORD_LENGTH + "자 이상이어야 합니다; password=" + password);
+        public InvalidPassword() {
+            super("잘못된 비밀번호 형식입니다.");
         }
     }
 

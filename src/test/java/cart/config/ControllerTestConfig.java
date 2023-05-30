@@ -52,6 +52,5 @@ public abstract class ControllerTestConfig {
                         .withResponseDefaults(prettyPrint()))
                 .addFilter(document("{method-name}"))
                 .build();
-
     }
 }

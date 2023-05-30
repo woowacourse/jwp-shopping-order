@@ -26,7 +26,7 @@ class CartItemApiControllerTest extends ControllerTestConfig {
     private static final String DOCUMENT_IDENTIFIER = "{method-name}";
 
     Product 상품_계란_등록() {
-        final Product product = new Product("계란", 1000, "계란 이미지 주소");
+        final Product product = new Product("계란", 1000, "https://계란_이미지_주소.png");
         final Long 상품_계란_식별자값 = productDao.createProduct(product);
         return new Product(상품_계란_식별자값, product.getName(), product.getPrice(), product.getImageUrl());
     }
@@ -64,9 +64,11 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .get("/cart-items")
         .then()
+                .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -86,10 +88,12 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .body(new CartItemRequest(계란.getId()))
                 .post("/cart-items")
         .then()
+                .log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
@@ -113,11 +117,13 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .pathParam("id", 장바구니_상품.getId())
                 .body(new CartItemQuantityUpdateRequest(10))
                 .patch("/cart-items/{id}")
         .then()
+                .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -138,10 +144,12 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
+                .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .pathParam("id", 장바구니_상품.getId())
                 .delete("/cart-items/{id}")
         .then()
+                .log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
