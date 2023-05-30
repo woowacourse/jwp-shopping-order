@@ -9,6 +9,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.PointPolicy;
+import cart.domain.Product;
 import cart.dto.CartItemRequest;
 import cart.dto.CartPointsResponse;
 import cart.dto.OrderCreateRequest;
@@ -16,6 +17,8 @@ import cart.dto.OrderItemResponse;
 import cart.dto.OrderResponse;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import cart.entity.ProductEntity;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,11 +75,15 @@ public class OrderService {
 
     private List<CartItem> toCartItems(final Member member, final List<CartItemRequest> requests) {
         return requests.stream()
-                .map(cartItemRequest -> new CartItem(cartItemRequest.getId(), cartItemRequest.getQuantity(),
-                        productDao.getProductById(cartItemRequest.getProductId()),
+                .map(cartItemRequest -> {
+                    final ProductEntity productEntity = productDao.getProductById(cartItemRequest.getProductId());
+                    final Product product = Product.from(productEntity);
+                    return new CartItem(
+                        cartItemRequest.getId(), cartItemRequest.getQuantity(),
+                        product,
                         member,
-                        true
-                )).collect(Collectors.toList());
+                        true);
+                    }).collect(Collectors.toList());
     }
 
     private void iterateRequests(final List<CartItemRequest> requests, final CartItem cartItem) {
