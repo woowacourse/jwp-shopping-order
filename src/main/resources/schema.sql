@@ -3,8 +3,8 @@ CREATE TABLE product (
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
     image VARCHAR(255) NOT NULL,
-    isDiscounted TINYINT NOT NULL,
-    discount_rate INT(3)
+    is_discounted TINYINT NOT NULL,
+    discount_rate INT
 );
 
 CREATE TABLE member (

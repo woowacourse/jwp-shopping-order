@@ -25,7 +25,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void createProduct() {
-        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 0);
 
         var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +40,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void getCreatedProduct() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 0);
 
         // create product
         var location =

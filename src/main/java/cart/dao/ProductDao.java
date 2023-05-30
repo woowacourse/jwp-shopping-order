@@ -26,8 +26,11 @@ public class ProductDao {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            String imageUrl = rs.getString("image");
+            boolean isDiscounted = rs.getBoolean("is_discounted");
+            int discountRate = rs.getInt("discount_rate");
+
+            return new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
         });
     }
 
@@ -36,8 +39,11 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            String imageUrl = rs.getString("image");
+            boolean isDiscounted = rs.getBoolean("is_discounted");
+            int discountRate = rs.getInt("discount_rate");
+
+            return new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
         });
     }
 
@@ -46,13 +52,15 @@ public class ProductDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                    "INSERT INTO product (name, price, image, is_discounted, discount_rate) VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, product.getName());
             ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
+            ps.setString(3, product.getImage());
+            ps.setBoolean(4, product.isDiscounted());
+            ps.setInt(5, product.getDiscountRate());
 
             return ps;
         }, keyHolder);
@@ -61,8 +69,8 @@ public class ProductDao {
     }
 
     public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        String sql = "UPDATE product SET name = ?, price = ?, image = ?, is_discounted, discount_rate WHERE id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.isDiscounted(), product.getDiscountRate(), productId);
     }
 
     public void deleteProduct(Long productId) {

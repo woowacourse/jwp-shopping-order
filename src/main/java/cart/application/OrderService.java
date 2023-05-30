@@ -51,7 +51,7 @@ public class OrderService {
         List<CartItem> cartItems = findCartItems(orderCreateRequest);
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();
-            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity());
+            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImage(), cartItem.getQuantity());
             orderedItemDao.createOrderedItems(orderId, orderedItem);
         }
 
