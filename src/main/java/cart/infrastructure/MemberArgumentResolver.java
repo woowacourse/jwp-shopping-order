@@ -18,19 +18,20 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
+            throws Exception {
+        final String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
             return null;
         }
 
-        BasicAuthInfo authInfo = BasicAuthInfo.from(authorization);
+        final BasicAuthInfo authInfo = BasicAuthInfo.from(authorization);
         if (authInfo == null) {
             return null;
         }

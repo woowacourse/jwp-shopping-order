@@ -38,8 +38,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         cartItemId2 = createCartItem(member, new CartItemRequest(6L));
     }
 
-    private Long createCartItem(Member member, CartItemRequest cartItemRequest) {
-        ExtractableResponse<Response> response = given().log().all()
+    private Long createCartItem(final Member member, final CartItemRequest cartItemRequest) {
+        final ExtractableResponse<Response> response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(cartItemRequest)
@@ -52,14 +52,15 @@ public class OrderIntegrationTest extends IntegrationTest {
         return getIdFromCreatedResponse(response);
     }
 
-    private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
+    private long getIdFromCreatedResponse(final ExtractableResponse<Response> response) {
         return Long.parseLong(response.header("location").split("/")[2]);
     }
 
     @DisplayName("주문 정보를 추가한다.")
     @Test
     void createOrder() {
-        ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(List.of(cartItemId, cartItemId2)));
+        final ExtractableResponse<Response> response = 주문_정보_추가(member,
+                new OrderRequest(List.of(cartItemId, cartItemId2)));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isEqualTo("/orders/1");
@@ -80,9 +81,9 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 주문 정보 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
-        OrderRequest orderRequest = new OrderRequest(List.of(cartItemId, cartItemId2));
-        ExtractableResponse<Response> response = 주문_정보_추가(illegalMember, orderRequest);
+        final Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId, cartItemId2));
+        final ExtractableResponse<Response> response = 주문_정보_추가(illegalMember, orderRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -90,8 +91,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니 정보와 다른 사용자 정보로 주문 정보 추가 요청시 실패한다.")
     @Test
     void addCartItemByDifferentMember() {
-        OrderRequest orderRequest = new OrderRequest(List.of(cartItemId, cartItemId2));
-        ExtractableResponse<Response> response = 주문_정보_추가(member2, orderRequest);
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId, cartItemId2));
+        final ExtractableResponse<Response> response = 주문_정보_추가(member2, orderRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }

@@ -29,7 +29,7 @@ public class OrderDao {
     }
 
     public Long createOrder(final Long memberId, final Money deliveryFee) {
-        Number id = simpleJdbcInsertForOrders.executeAndReturnKey(Map.of(
+        final Number id = simpleJdbcInsertForOrders.executeAndReturnKey(Map.of(
                 "member_id", memberId,
                 "delivery_fee", deliveryFee.getValue()
         ));

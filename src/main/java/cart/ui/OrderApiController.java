@@ -21,8 +21,8 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(Member member, @RequestBody OrderRequest orderRequest) {
-        Long createdId = orderService.add(member, orderRequest);
+    public ResponseEntity<Void> addOrder(final Member member, @RequestBody final OrderRequest orderRequest) {
+        final Long createdId = orderService.add(member, orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + createdId)).build();
     }
 }

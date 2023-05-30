@@ -16,7 +16,7 @@ public class MemberService {
     }
 
     public Member checkLoginMember(final AuthInfo authInfo) {
-        Member member = memberDao.getMemberByEmail(authInfo.getEmail());
+        final Member member = memberDao.getMemberByEmail(authInfo.getEmail());
         if (!member.checkPassword(authInfo.getPassword())) {
             throw new AuthenticationException();
         }

@@ -6,13 +6,13 @@ public class Product {
     private final String imageUrl;
     private Long id;
 
-    public Product(String name, Money price, String imageUrl) {
+    public Product(final String name, final Money price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, Money price, String imageUrl) {
+    public Product(final Long id, final String name, final Money price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;

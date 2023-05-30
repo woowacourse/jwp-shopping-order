@@ -15,16 +15,16 @@ public class BasicAuthInfo implements AuthInfo {
         this.password = password;
     }
 
-    public static BasicAuthInfo from(String authorization) {
-        String[] authHeader = authorization.split(" ");
+    public static BasicAuthInfo from(final String authorization) {
+        final String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
             return null;
         }
 
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
+        final byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
+        final String decodedString = new String(decodedBytes);
 
-        String[] credentials = decodedString.split(":");
+        final String[] credentials = decodedString.split(":");
         return new BasicAuthInfo(
                 credentials[CREDENTIALS_EMAIL_INDEX],
                 credentials[CREDENTIALS_PASSWORD_INDEX]);

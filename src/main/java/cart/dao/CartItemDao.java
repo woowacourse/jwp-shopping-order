@@ -35,13 +35,13 @@ public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public CartItemDao(final JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
-        String sql =
+    public List<CartItem> findByMemberId(final Long memberId) {
+        final String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                         +
                         "FROM cart_item " +
@@ -51,11 +51,11 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, CART_ITEM_ROW_MAPPER, memberId);
     }
 
-    public Long save(CartItem cartItem) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long save(final CartItem cartItem) {
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
+            final PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
@@ -70,8 +70,8 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public CartItem findById(Long id) {
-        String sql =
+    public CartItem findById(final Long id) {
+        final String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                         +
                         "FROM cart_item " +
@@ -80,26 +80,26 @@ public class CartItemDao {
                         "WHERE cart_item.id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, CART_ITEM_ROW_MAPPER, id);
-        } catch (EmptyResultDataAccessException exception) {
+        } catch (final EmptyResultDataAccessException exception) {
             return null;
         }
     }
 
-    public List<CartItem> findByIds(List<Long> ids) {
-        String sql =
+    public List<CartItem> findByIds(final List<Long> ids) {
+        final String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.id IN (:ids)";
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        final MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
         return namedParameterJdbcTemplate.query(sql, parameters, CART_ITEM_ROW_MAPPER);
     }
 
-    public boolean isExist(Long memberId, Long productId) {
-        String sql = "SELECT EXISTS ( "
+    public boolean isExist(final Long memberId, final Long productId) {
+        final String sql = "SELECT EXISTS ( "
                 + "SELECT * FROM cart_item "
                 + "WHERE member_id = ? "
                 + "AND product_id = ? "
@@ -111,25 +111,25 @@ public class CartItemDao {
         ));
     }
 
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
+    public void delete(final Long memberId, final Long productId) {
+        final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void deleteById(final Long id) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public void deleteByIds(final List<Long> ids) {
-        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        final String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+        final MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
-    public void updateQuantity(CartItem cartItem) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+    public void updateQuantity(final CartItem cartItem) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }

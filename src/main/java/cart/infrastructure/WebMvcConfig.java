@@ -10,12 +10,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberService memberService;
 
-    public WebMvcConfig(MemberService memberService) {
+    public WebMvcConfig(final MemberService memberService) {
         this.memberService = memberService;
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberArgumentResolver(memberService));
     }
 }

@@ -8,7 +8,7 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, long price, String imageUrl) {
+    public ProductRequest(final String name, final long price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

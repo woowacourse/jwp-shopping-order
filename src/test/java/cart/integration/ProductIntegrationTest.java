@@ -13,7 +13,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void getProducts() {
-        var result = given()
+        final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/products")
@@ -25,9 +25,9 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void createProduct() {
-        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        final var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 
-        var response = given()
+        final var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(product)
                 .when()
@@ -40,10 +40,10 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void getCreatedProduct() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        final var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
 
         // create product
-        var location =
+        final var location =
                 given()
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .body(product)
@@ -54,7 +54,7 @@ public class ProductIntegrationTest extends IntegrationTest {
                         .extract().header("Location");
 
         // get product
-        var responseProduct = given().log().all()
+        final var responseProduct = given().log().all()
                 .when()
                 .get(location)
                 .then()

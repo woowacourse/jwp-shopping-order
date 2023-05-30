@@ -25,26 +25,26 @@ public class OrderService {
     }
 
     public Long add(final Member member, final OrderRequest orderRequest) {
-        Long orderId = orderDao.createOrder(member.getId(), DELIVERY_FEE_BASIC);
+        final Long orderId = orderDao.createOrder(member.getId(), DELIVERY_FEE_BASIC);
         orderDao.addOrderItems(createOrderItems(orderId, member, orderRequest));
         return orderId;
     }
 
     private List<OrderItem> createOrderItems(final Long orderId, final Member member, final OrderRequest orderRequest) {
-        List<Long> cartItemIds = orderRequest.getCartItemIds();
-        List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
+        final List<Long> cartItemIds = orderRequest.getCartItemIds();
+        final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
         validateIds(member, cartItemIds, cartItems);
         return OrderItem.from(orderId, cartItems);
     }
 
     private void validateIds(final Member member, final List<Long> cartItemIds, final List<CartItem> cartItems) {
-        for (Long cartItemId : cartItemIds) {
+        for (final Long cartItemId : cartItemIds) {
             validateId(member, cartItemId, cartItems);
         }
     }
 
     private void validateId(final Member member, final Long cartItemId, final List<CartItem> cartItems) {
-        CartItem cartItem = cartItems.stream()
+        final CartItem cartItem = cartItems.stream()
                 .filter(item -> Objects.equals(item.getId(), cartItemId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalId(cartItemId));

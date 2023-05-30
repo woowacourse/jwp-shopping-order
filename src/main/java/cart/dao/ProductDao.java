@@ -16,36 +16,36 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
+        final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
+            final Long productId = rs.getLong("id");
+            final String name = rs.getString("name");
+            final int price = rs.getInt("price");
+            final String imageUrl = rs.getString("image_url");
             return new Product(productId, name, new Money(price), imageUrl);
         });
     }
 
-    public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+    public Product getProductById(final Long productId) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
+            final String name = rs.getString("name");
+            final int price = rs.getInt("price");
+            final String imageUrl = rs.getString("image_url");
             return new Product(productId, name, new Money(price), imageUrl);
         });
     }
 
-    public Long createProduct(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long createProduct(final Product product) {
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
+            final PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
@@ -60,13 +60,13 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+    public void updateProduct(final Long productId, final Product product) {
+        final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
+    public void deleteProduct(final Long productId) {
+        final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
 }
