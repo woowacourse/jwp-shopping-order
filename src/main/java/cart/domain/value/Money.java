@@ -15,6 +15,10 @@ public class Money {
         }
     }
 
+    public int multiply(final double percent) {
+        return (int) (money * percent);
+    }
+
     public int getMoney() {
         return money;
     }

@@ -15,6 +15,14 @@ public class DiscountRate {
         }
     }
 
+    public double getDiscountedPercent() {
+        return 1 - (double) discountRate / 100;
+    }
+
+    public boolean isDiscount() {
+        return discountRate > 0;
+    }
+
     public int getDiscountRate() {
         return discountRate;
     }
