@@ -4,8 +4,8 @@ import static cart.exception.ErrorMessage.NOT_FOUND_MEMBER;
 
 import cart.domain.Member;
 import cart.exception.MemberException;
-import cart.repository.dao.MemberDao;
-import cart.repository.entity.MemberEntity;
+import cart.dao.MemberDao;
+import cart.dao.entity.MemberEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;

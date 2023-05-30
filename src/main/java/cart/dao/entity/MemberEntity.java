@@ -1,4 +1,4 @@
-package cart.repository.entity;
+package cart.dao.entity;
 
 import java.time.LocalDateTime;
 

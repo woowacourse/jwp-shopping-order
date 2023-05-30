@@ -1,9 +1,9 @@
-package cart.repository.dao;
+package cart.dao;
 
-import cart.repository.entity.CartItemEntity;
-import cart.repository.entity.CartItemWithMemberAndProductEntity;
-import cart.repository.entity.MemberEntity;
-import cart.repository.entity.ProductEntity;
+import cart.dao.entity.CartItemEntity;
+import cart.dao.entity.CartItemWithMemberAndProductEntity;
+import cart.dao.entity.MemberEntity;
+import cart.dao.entity.ProductEntity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

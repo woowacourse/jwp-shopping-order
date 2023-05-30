@@ -7,9 +7,9 @@ import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.ProductDao;
+import cart.dao.entity.ProductEntity;
 import cart.dto.ProductRequest;
-import cart.repository.dao.ProductDao;
-import cart.repository.entity.ProductEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
@@ -25,15 +25,13 @@ import org.springframework.http.HttpStatus;
 @SuppressWarnings("NonAsciiCharacters")
 public class ProductIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    private ProductDao productDao;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private final ProductEntity 상품 = new ProductEntity(null,
             "피자", 100000, "https://example.com/pizza.jpg",
             null, null);
+    @Autowired
+    private ProductDao productDao;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void 상품_정보를_입력_받아_상품을_등록한다() {

@@ -1,4 +1,4 @@
-package cart.repository.entity;
+package cart.dao.entity;
 
 public class CartItemWithMemberAndProductEntity {
     private final CartItemEntity cartItemEntity;

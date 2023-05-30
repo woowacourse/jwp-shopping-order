@@ -10,12 +10,12 @@ import static cart.integration.steps.ProductStep.상품_생성_요청후_상품_
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.MemberDao;
+import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import cart.dto.CartItemResponse;
 import cart.exception.ErrorMessage;
 import cart.repository.MemberRepository;
-import cart.repository.dao.MemberDao;
-import cart.repository.entity.MemberEntity;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
