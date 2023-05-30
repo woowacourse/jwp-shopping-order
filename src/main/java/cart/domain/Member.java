@@ -7,13 +7,13 @@ public class Member {
     private String email;
     private String password;
 
-    public Member(Long id, String email, String password) {
+    public Member(final Long id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public boolean checkPassword(String password) {
+    public boolean checkPassword(final String password) {
         return this.password.equals(password);
     }
 

@@ -16,12 +16,12 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
+        final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
@@ -31,8 +31,8 @@ public class ProductDao {
         });
     }
 
-    public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+    public Product getProductById(final Long productId) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
@@ -42,28 +42,28 @@ public class ProductDao {
     }
 
     public List<Product> getProductByInterval(final Long lastIdInPrevPage, final int pageItemCount) {
-        String sql = "SELECT * " +
+        final String sql = "SELECT * " +
                 "FROM product " +
                 "WHERE id < ? " +
                 "ORDER BY id desc " +
                 "limit ?";
         return jdbcTemplate.query(sql, new Object[]{lastIdInPrevPage, pageItemCount}, (rs, rowNum) -> {
-           Long id = rs.getLong("id");
-           String name = rs.getString("name");
-           int price = rs.getInt("price");
-           String imageUrl = rs.getString("image_url");
-           return new Product(id, name, price, imageUrl);
+            Long id = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new Product(id, name, price, imageUrl);
         });
     }
 
     public Long getLastProductId() {
-        String sql = "SELECT max(id)" +
+        final String sql = "SELECT max(id)" +
                 "FROM product";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("max(id)"));
     }
 
-    public Long createProduct(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long createProduct(final Product product) {
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -81,13 +81,13 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+    public void updateProduct(final Long productId, final Product product) {
+        final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
+    public void deleteProduct(final Long productId) {
+        final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
 }

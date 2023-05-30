@@ -50,13 +50,13 @@ public class ProductApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable final Long id) {
         final Product product = productService.getProductById(id);
         return ResponseEntity.ok(ProductResponse.of(product));
     }
 
     @GetMapping("/cart-items")
-    public ResponseEntity<HomePagingResponse> getHomePagingProduct(@RequestBody HomePagingRequest homePagingRequest) {
+    public ResponseEntity<HomePagingResponse> getHomePagingProduct(@RequestBody final HomePagingRequest homePagingRequest) {
         final Long lastIdInPrevPage = homePagingRequest.getLastId();
         final int pageItemCount = homePagingRequest.getPageItemCount();
 
@@ -67,8 +67,8 @@ public class ProductApiController {
     }
 
     @GetMapping("/{productId}/cart-items")
-    public ResponseEntity<ProductCartItemResponse> getProductCartItemByProductId(@PathVariable Long productId,
-                                                                                 Member member) {
+    public ResponseEntity<ProductCartItemResponse> getProductCartItemByProductId(@PathVariable final Long productId,
+                                                                                 final Member member) {
         final Product product = productService.getProductById(productId);
         final CartItem cartItem = cartItemService.findByMemberAndProduct(member, product);
 
@@ -78,21 +78,22 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
         final Product product = productRequest.toDomain();
         final Long id = productService.createProduct(product);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> updateProduct(@PathVariable final Long id,
+                                              @RequestBody final ProductRequest productRequest) {
         final Product product = productRequest.toDomain();
         productService.updateProduct(id, product);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

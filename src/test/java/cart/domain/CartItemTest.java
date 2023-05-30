@@ -1,17 +1,15 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
-import cart.fixtures.MemberFixtures;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
-import static cart.fixtures.MemberFixtures.*;
 import static cart.fixtures.MemberFixtures.MemberA;
-import static org.assertj.core.api.Assertions.*;
+import static cart.fixtures.MemberFixtures.MemberB;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

@@ -12,12 +12,12 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberDao memberDao;
 
-    public WebMvcConfig(MemberDao memberDao) {
+    public WebMvcConfig(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberArgumentResolver(memberDao));
     }
 }

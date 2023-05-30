@@ -1,14 +1,12 @@
 package cart.dto;
 
-import java.util.Objects;
-
 public class CartItemRequest {
     private Long productId;
 
     public CartItemRequest() {
     }
 
-    public CartItemRequest(Long productId) {
+    public CartItemRequest(final Long productId) {
         this.productId = productId;
     }
 

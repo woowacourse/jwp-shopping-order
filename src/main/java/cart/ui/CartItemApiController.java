@@ -35,7 +35,7 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
+    public ResponseEntity<List<CartItemResponse>> showCartItems(final Member member) {
         final List<CartItem> cartItems = cartItemService.findByMember(member);
 
         final List<CartItemResponse> responses = cartItems.stream()
@@ -46,16 +46,19 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<Void> addCartItems(final Member member,
+                                             @RequestBody final CartItemRequest cartItemRequest) {
         final Product product = productService.getProductById(cartItemRequest.getProductId());
         final CartItem cartItem = new CartItem(member, product);
-        Long cartItemId = cartItemService.add(cartItem);
+        final Long cartItemId = cartItemService.add(cartItem);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Void> updateCartItemQuantity(final Member member,
+                                                       @PathVariable final Long id,
+                                                       @RequestBody final CartItemQuantityUpdateRequest request) {
         final int quantity = request.getQuantity();
 
         cartItemService.updateQuantity(member, id, quantity);
@@ -64,7 +67,8 @@ public class CartItemApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
+    public ResponseEntity<Void> removeCartItems(final Member member,
+                                                @PathVariable final Long id) {
         cartItemService.remove(member, id);
 
         return ResponseEntity.noContent().build();

@@ -148,7 +148,7 @@ class ProductServiceTest {
         final Long productId = productService.createProduct(product);
 
         // then
-        assertThat(productService.createProduct(product)).isEqualTo(5L);
+        assertThat(productId).isEqualTo(5L);
     }
 
     @Test
