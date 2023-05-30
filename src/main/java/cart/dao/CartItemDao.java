@@ -2,7 +2,12 @@ package cart.dao;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Money;
 import cart.domain.Product;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,11 +16,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class CartItemDao {
@@ -29,7 +29,7 @@ public class CartItemDao {
         Long cartItemId = rs.getLong("cart_item.id");
         int quantity = rs.getInt("cart_item.quantity");
         Member member = new Member(memberId, email, null);
-        Product product = new Product(productId, name, price, imageUrl);
+        Product product = new Product(productId, name, new Money(price), imageUrl);
         return new CartItem(cartItemId, quantity, product, member);
     };
     private final JdbcTemplate jdbcTemplate;
@@ -41,11 +41,13 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
+        String sql =
+                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
+                        "FROM cart_item " +
+                        "INNER JOIN member ON cart_item.member_id = member.id " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "WHERE cart_item.member_id = ?";
         return jdbcTemplate.query(sql, CART_ITEM_ROW_MAPPER, memberId);
     }
 
@@ -69,11 +71,13 @@ public class CartItemDao {
     }
 
     public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id = ?";
+        String sql =
+                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
+                        "FROM cart_item " +
+                        "INNER JOIN member ON cart_item.member_id = member.id " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "WHERE cart_item.id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, CART_ITEM_ROW_MAPPER, id);
         } catch (EmptyResultDataAccessException exception) {
@@ -82,11 +86,13 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByIds(List<Long> ids) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id IN (:ids)";
+        String sql =
+                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
+                        "FROM cart_item " +
+                        "INNER JOIN member ON cart_item.member_id = member.id " +
+                        "INNER JOIN product ON cart_item.product_id = product.id " +
+                        "WHERE cart_item.id IN (:ids)";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
         return namedParameterJdbcTemplate.query(sql, parameters, CART_ITEM_ROW_MAPPER);
