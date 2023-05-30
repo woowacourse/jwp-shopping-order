@@ -1,23 +1,24 @@
-package cart.dto;
+package cart.entity;
 
 import cart.domain.Product;
 import java.math.BigDecimal;
 
-public class ProductResponse {
-    private Long id;
-    private String name;
-    private BigDecimal price;
-    private String imageUrl;
+public class ProductEntity {
 
-    private ProductResponse(Long id, String name, BigDecimal price, String imageUrl) {
+    private final Long id;
+    private final String name;
+    private final BigDecimal price;
+    private final String imageUrl;
+
+    public ProductEntity(Long id, String name, BigDecimal price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public Product toDomain() {
+        return new Product(id, name, price, imageUrl);
     }
 
     public Long getId() {

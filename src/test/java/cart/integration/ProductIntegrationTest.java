@@ -1,13 +1,14 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
@@ -25,7 +26,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void createProduct() {
-        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        var product = new ProductRequest("치킨", BigDecimal.valueOf(10_000), "http://example.com/chicken.jpg");
 
         var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +41,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     public void getCreatedProduct() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
+        var product = new ProductRequest("피자", BigDecimal.valueOf(15_000), "http://example.com/pizza.jpg");
 
         // create product
         var location =
@@ -65,6 +66,6 @@ public class ProductIntegrationTest extends IntegrationTest {
 
         assertThat(responseProduct.getId()).isNotNull();
         assertThat(responseProduct.getName()).isEqualTo("피자");
-        assertThat(responseProduct.getPrice()).isEqualTo(15_000);
+        assertThat(responseProduct.getPrice()).isEqualTo(BigDecimal.valueOf(15_000));
     }
 }

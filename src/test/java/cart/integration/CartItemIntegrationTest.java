@@ -1,13 +1,21 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,18 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     private Long productId;
     private Long productId2;
@@ -37,11 +37,13 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(
+                new ProductRequest("치킨", BigDecimal.valueOf(10_000), "http://example.com/chicken.jpg"));
+        productId2 = createProduct(
+                new ProductRequest("피자", BigDecimal.valueOf(15_000), "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.getMemberById(1L).get();
+        member2 = memberRepository.getMemberById(2L).get();
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

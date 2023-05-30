@@ -1,7 +1,8 @@
 package cart;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class WebMvcConfigTest {
     @Test
     public void allowedCorsTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.options("/products")
-                        .header(HttpHeaders.ORIGIN, "http://example.com")
+                        .header(HttpHeaders.ORIGIN, "http://localhost:3000")
                         .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
                         .header(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS, "content-type"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().exists(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN))
-                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:3000"))
                 .andExpect(header().exists(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS))
                 .andExpect(header().exists(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS))
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "content-type"))

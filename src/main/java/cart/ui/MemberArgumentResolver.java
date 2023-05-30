@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
+import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -12,12 +12,15 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private static final String BASIC_AUTH_PREFIX = "Basic ";
-    private final MemberDao memberDao;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    private static final String BASIC_AUTH_PREFIX = "Basic ";
+
+    private final MemberRepository memberRepository;
+
+    public MemberArgumentResolver(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
+
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -35,7 +38,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String email = credentials[0];
         String password = credentials[1];
 
-        Member member = memberDao.getMemberByEmail(email);
+        Member member = memberRepository.getMemberByEmail(email)
+                .orElseThrow(() -> new AuthenticationException("잘못된 로그인 정보입니다."));
         if (!member.checkPassword(password)) {
             throw new AuthenticationException("비밀번호가 틀렸습니다.");
         }
