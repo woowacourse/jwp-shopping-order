@@ -21,13 +21,13 @@ public class CartItemDao {
 
     private static final RowMapper<CartItemEntity> rowMapper = (rs, rowNum) -> {
         Long memberId = rs.getLong("member_id");
-        String email = rs.getString("email");
-        Long productId = rs.getLong("id");
-        String name = rs.getString("name");
-        BigDecimal price = rs.getBigDecimal("price");
-        String imageUrl = rs.getString("image_url");
-        Long cartItemId = rs.getLong("cart_item.id");
-        int quantity = rs.getInt("cart_item.quantity");
+        String email = rs.getString("member_email");
+        Long productId = rs.getLong("product_id");
+        String name = rs.getString("product_name");
+        BigDecimal price = rs.getBigDecimal("product_price");
+        String imageUrl = rs.getString("product_image_url");
+        Long cartItemId = rs.getLong("cart_item_id");
+        int quantity = rs.getInt("cart_item_quantity");
         MemberEntity member = new MemberEntity(memberId, email, null);
         ProductEntity product = new ProductEntity(productId, name, price, imageUrl);
         return new CartItemEntity(cartItemId, product, member, quantity);
@@ -46,8 +46,8 @@ public class CartItemDao {
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id " +
-                        "WHERE cart_item.member_id = ?";
+                        "INNER JOIN product ON cart_item.product_id = product.id AND product.is_deleted = false " +
+                        "WHERE cart_item.member_id = ? ";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
@@ -78,8 +78,8 @@ public class CartItemDao {
                         +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id " +
-                        "WHERE cart_item.id = ?";
+                        "INNER JOIN product ON cart_item.product_id = product.id AND product.is_deleted = false " +
+                        "WHERE cart_item.id = ? ";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException e) {

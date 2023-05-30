@@ -21,7 +21,7 @@ public class MemberRepository {
     }
 
     public Optional<Member> getMemberById(long id) {
-        return memberDao.getMemberById(id)
+        return memberDao.findById(id)
                 .map(MemberEntity::toDomain);
     }
 }

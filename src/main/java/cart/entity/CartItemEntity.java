@@ -9,6 +9,10 @@ public class CartItemEntity {
     private final MemberEntity memberEntity;
     private final int quantity;
 
+    public CartItemEntity(ProductEntity productEntity, MemberEntity memberEntity) {
+        this(null, productEntity, memberEntity, 1);
+    }
+
     public CartItemEntity(Long id, ProductEntity productEntity, MemberEntity memberEntity, int quantity) {
         this.id = id;
         this.productEntity = productEntity;

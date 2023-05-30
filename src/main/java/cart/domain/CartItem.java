@@ -8,7 +8,7 @@ public class CartItem {
     private Long id;
     private int quantity;
 
-    public CartItem(Member member, Product product) {
+    public CartItem(Product product, Member member) {
         this.quantity = 1;
         this.member = member;
         this.product = product;

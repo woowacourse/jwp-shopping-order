@@ -26,13 +26,13 @@ public class ProductRepository {
     }
 
     public Optional<Product> getProductById(Long productId) {
-        return productDao.getProductById(productId)
+        return productDao.findById(productId)
                 .map(ProductEntity::toDomain);
     }
 
     public Long createProduct(Product product) {
         ProductEntity productEntity = toEntity(product);
-        return productDao.createProduct(productEntity);
+        return productDao.save(productEntity);
     }
 
     public void updateProduct(Long productId, Product product) {
@@ -42,7 +42,6 @@ public class ProductRepository {
 
     private ProductEntity toEntity(Product product) {
         return new ProductEntity(
-                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl()

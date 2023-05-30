@@ -8,6 +8,10 @@ public class MemberEntity {
     private final String email;
     private final String password;
 
+    public MemberEntity(String email, String password) {
+        this(null, email, password);
+    }
+
     public MemberEntity(Long id, String email, String password) {
         this.id = id;
         this.email = email;
@@ -28,5 +32,14 @@ public class MemberEntity {
 
     public Member toDomain() {
         return new Member(id, email, password);
+    }
+
+    @Override
+    public String toString() {
+        return "MemberEntity{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

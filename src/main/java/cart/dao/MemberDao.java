@@ -1,11 +1,16 @@
 package cart.dao;
 
 import cart.entity.MemberEntity;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,7 +28,23 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<MemberEntity> getMemberById(Long id) {
+    public Long save(MemberEntity member) {
+        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    sql, Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, member.getEmail());
+            ps.setString(2, member.getPassword());
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
         try {
             MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -33,7 +54,7 @@ public class MemberDao {
         }
     }
 
-    public Optional<MemberEntity> getMemberByEmail(String email) {
+    public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
         try {
             MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, rowMapper, email);

@@ -22,7 +22,8 @@ public class ProductDao {
         String name = rs.getString("name");
         BigDecimal price = rs.getBigDecimal("price");
         String imageUrl = rs.getString("image_url");
-        return new ProductEntity(productId, name, price, imageUrl);
+        boolean isDeleted = rs.getBoolean("is_deleted");
+        return new ProductEntity(productId, name, price, imageUrl, isDeleted);
     });
 
     private final JdbcTemplate jdbcTemplate;
@@ -31,13 +32,13 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> getAllProducts() {
-        String sql = "SELECT * FROM product";
+    public List<ProductEntity> findAll() {
+        String sql = "SELECT * FROM product WHERE is_deleted = false";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<ProductEntity> getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+    public Optional<ProductEntity> findById(Long productId) {
+        String sql = "SELECT * FROM product WHERE id = ? AND is_deleted = false ";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, productId));
         } catch (EmptyResultDataAccessException e) {
@@ -45,7 +46,7 @@ public class ProductDao {
         }
     }
 
-    public Long createProduct(ProductEntity product) {
+    public Long save(ProductEntity product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -64,13 +65,13 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, ProductEntity product) {
+    public void updateProduct(ProductEntity product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
     }
 
     public void deleteProduct(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
+        String sql = "UPDATE product SET is_deleted = true WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
 }
