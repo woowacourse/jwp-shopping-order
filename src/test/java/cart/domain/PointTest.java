@@ -36,4 +36,16 @@ class PointTest {
         //then
         assertThat(actual).isEqualTo(expected);
     }
+    
+    @Test
+    void 포인트를_적립한다() {
+        //given
+        final Point point = Point.valueOf(1000);
+
+        //when
+        final Point reducedPoint = point.save(Point.valueOf(100));
+
+        //then
+        assertThat(reducedPoint).isEqualTo(Point.valueOf(1100));
+    }
 }

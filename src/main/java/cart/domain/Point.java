@@ -8,7 +8,7 @@ public class Point {
 
     private final Money amount;
 
-    private Point(final Money amount) {
+    public Point(final Money amount) {
         this.amount = amount;
     }
 
@@ -18,6 +18,10 @@ public class Point {
 
     public Point reduce(final Point point) {
         return new Point(this.amount.subtract(point.amount));
+    }
+
+    public Point save(final Point point) {
+        return new Point(this.amount.add(point.amount));
     }
 
     public boolean isMoreThan(final Point point) {
