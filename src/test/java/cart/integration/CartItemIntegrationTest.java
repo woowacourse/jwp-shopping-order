@@ -1,5 +1,8 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
@@ -8,20 +11,17 @@ import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
@@ -56,7 +56,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        final Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf",
+                Collections.emptyList());
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 

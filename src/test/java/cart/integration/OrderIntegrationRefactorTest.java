@@ -23,9 +23,9 @@ import org.springframework.test.web.servlet.MvcResult;
 
 class OrderIntegrationRefactorTest extends IntegrationRefactorTest {
 
-    @DisplayName("주문내역을 조회한다.")
+    @DisplayName("쿠폰을 사용하지 않은 주문내역을 조회한다.")
     @Test
-    void findOrder() throws Exception {
+    void findOrderWithoutCoupon() throws Exception {
         //given
         //상품이 존재한다.
         productDao.createProduct(PRODUCT_1);

@@ -1,8 +1,17 @@
 package cart;
 
+import static java.util.Base64.getEncoder;
+
 import cart.domain.CartItem;
+import cart.domain.Coupon;
+import cart.domain.CouponType;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.domain.Product;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+import java.util.List;
 
 public class TestDataFixture {
 
@@ -15,12 +24,37 @@ public class TestDataFixture {
             "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80");
 
     //Member
-    public static final Member MEMBER_1 = new Member(1L, "a@a.com", "1234");
-    public static final Member MEMBER_2 = new Member(2L, "b@b.com", "1234");
-    public static final Member MEMBER_3 = new Member(3L, "sangun", "1234");
-    public static final Member MEMBER_4 = new Member(3L, "lopi", "1234");
+    public static final Member MEMBER_1 = new Member(1L, "a@a.com", "1234", Collections.emptyList());
+    public static final Member MEMBER_2 = new Member(2L, "b@b.com", "1234", Collections.emptyList());
+    public static final Member MEMBER_3 = new Member(3L, "sangun", "1234", Collections.emptyList());
+    public static final Member MEMBER_4 = new Member(3L, "lopi", "1234", Collections.emptyList());
 
-    //cart-item
-    public static final CartItem CART_ITEM_1 = new CartItem(1L, 2, PRODUCT_1, MEMBER_3);
-    public static final CartItem CART_ITEM_2 = new CartItem(2L, 4, PRODUCT_2, MEMBER_3);
+    //Cart-item
+    public static final CartItem CART_ITEM_1 = new CartItem(1L, 2, PRODUCT_1, MEMBER_1);
+    public static final CartItem CART_ITEM_2 = new CartItem(2L, 4, PRODUCT_2, MEMBER_1);
+
+    //Order
+    public static final Order ORDER_NO_USE_COUPON = Order.of(MEMBER_1, List.of(CART_ITEM_1));
+
+    //Coupon
+    public static final Coupon DISCOUNT_50_PERCENT
+            = new Coupon(null, "50% 할인 쿠폰", 50, CouponType.RATE_DISCOUNT);
+    public static final Coupon DISCOUNT_5000_CONSTANT
+            = new Coupon(null, "5000원 할인 쿠폰", 50, CouponType.CONSTANT_DISCOUNT);
+
+    //AuthHeader
+    public static final String AUTH_HEADER =
+            "Basic " + new String(getEncoder().encode(
+                    String.format("%s:%s", MEMBER_1.getEmail(), MEMBER_1.getPassword()).getBytes()));
+
+    //ObjectMapper
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    public static String objectToJsonString(final Object object) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
