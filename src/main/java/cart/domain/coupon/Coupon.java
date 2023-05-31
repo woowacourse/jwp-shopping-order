@@ -6,12 +6,12 @@ public abstract class Coupon implements DiscountAction, CouponUseConditionAction
     private final Long id;
     private final String name;
     private final DiscountType discountType;
-    private final Integer discountPercent;
+    private final Double discountPercent;
     private final Integer discountAmount;
     private final Integer minimumPrice;
 
 
-    protected Coupon(Long id, String name, DiscountType discountType, Integer discountPercent, Integer discountAmount, Integer minimumPrice) {
+    protected Coupon(Long id, String name, DiscountType discountType, Double discountPercent, Integer discountAmount, Integer minimumPrice) {
         this.id = id;
         this.name = name;
         this.discountType = discountType;
@@ -20,7 +20,7 @@ public abstract class Coupon implements DiscountAction, CouponUseConditionAction
         this.minimumPrice = minimumPrice;
     }
 
-    protected Coupon(Long id, String name, DiscountType discountType, Integer discountPercent, Integer discountAmount) {
+    protected Coupon(Long id, String name, DiscountType discountType, Double discountPercent, Integer discountAmount) {
         this(id, name, discountType, discountPercent, discountAmount, 0);
     }
 
@@ -41,7 +41,7 @@ public abstract class Coupon implements DiscountAction, CouponUseConditionAction
         return discountType;
     }
 
-    public Integer getDiscountPercent() {
+    public Double getDiscountPercent() {
         return discountPercent;
     }
 

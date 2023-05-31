@@ -13,7 +13,7 @@ public class CouponTest {
 
     @Test
     void 퍼센트_할인_쿠폰이_적용된_할인가를_구한다() {
-        Coupon percentCoupon = new PercentCoupon(1L, "10% 할인 쿠폰", 10);
+        Coupon percentCoupon = new PercentCoupon(1L, "10% 할인 쿠폰", 0.1);
 
         OrderProduct orderProduct = new OrderProduct(1L, "치킨", 20000, "url", 1);
         Order order = new Order(1L, 10000, 9000, List.of(orderProduct), percentCoupon);
