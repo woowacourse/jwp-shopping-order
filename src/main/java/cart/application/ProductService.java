@@ -5,7 +5,7 @@ import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.ProductException.DuplicatedProduct;
-import cart.exception.ProductException.IllegalProduct;
+import cart.exception.ProductException.InvalidProduct;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class ProductService {
         }
         int updatedProductCount = productDao.updateProduct(productId, product);
         if (updatedProductCount == 0) {
-            throw new IllegalProduct();
+            throw new InvalidProduct();
         }
     }
 
@@ -54,7 +54,7 @@ public class ProductService {
     public void deleteProduct(Long productId) {
         int deletedProductCount = productDao.deleteProduct(productId);
         if (deletedProductCount == 0) {
-            throw new IllegalProduct();
+            throw new InvalidProduct();
         }
     }
 }
