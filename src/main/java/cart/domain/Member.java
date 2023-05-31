@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.application.service.MemberRequest;
+
 public class Member {
     private final Long id;
     private final String name;
@@ -15,6 +17,10 @@ public class Member {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public Member(final MemberRequest memberRequest) {
+        this(null, memberRequest.getName(), memberRequest.getEmail(), memberRequest.getPassword());
     }
 
     public Long getId() {
