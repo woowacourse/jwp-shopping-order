@@ -7,6 +7,7 @@ import cart.dto.request.CartItemAddRequest;
 import cart.dto.request.CartItemUpdateRequest;
 import cart.dto.response.CartItemResponse;
 import cart.dto.response.CartItemUpdateResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +31,13 @@ public class CartItemApiController {
         this.cartItemService = cartItemService;
     }
 
+    @Operation(summary = "장바구니 조회")
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth Member member) {
         return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
+    @Operation(summary = "장바구니에 상품 추가")
     @PostMapping
     public ResponseEntity<CartItemUpdateResponse> addCartItems(@Auth Member member, @RequestBody CartItemAddRequest cartItemAddRequest) {
         Long cartItemId = cartItemService.add(member, cartItemAddRequest);
@@ -43,6 +46,7 @@ public class CartItemApiController {
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).body(createdResponse);
     }
 
+    @Operation(summary = "장바구니 상품 정보 수정")
     @PatchMapping("/{id}")
     public ResponseEntity<CartItemUpdateResponse> updateCartItem(@Auth Member member, @PathVariable Long id, @RequestBody CartItemUpdateRequest request) {
         CartItemUpdateResponse cartItemUpdateResponse = cartItemService.updateQuantity(member, id, request);
@@ -50,6 +54,7 @@ public class CartItemApiController {
         return ResponseEntity.ok(cartItemUpdateResponse);
     }
 
+    @Operation(summary = "장바구니 상품 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItems(@Auth Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
