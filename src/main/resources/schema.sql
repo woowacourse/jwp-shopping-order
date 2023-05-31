@@ -42,5 +42,7 @@ CREATE TABLE ordered_item (
     product_price INT NOT NULL,
     product_image VARCHAR(255) NOT NULL,
     product_quantity INT NOT NULL,
+    product_is_discounted TINYINT NOT NULL,
+    product_discount_rate INT
     FOREIGN KEY (orders_id) REFERENCES orders(id)
 );
