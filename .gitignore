@@ -1,6 +1,7 @@
 README.md
 .gradle
 build/
+src/resource/static/docs/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
