@@ -66,6 +66,15 @@ public class Order {
         return discountedItemPrinciplePrice - calculateItemDiscount();
     }
 
+    public int getMemberBenefit() {
+        int discountedItemPrinciplePrice = orderItems.stream()
+                .filter(OrderItem::isNotDiscount)
+                .mapToInt(OrderItem::getPrinciplePrice)
+                .sum();
+
+        return discountedItemPrinciplePrice - calculateMemberDiscount();
+    }
+
     private int calculateItemDiscount() {
         return orderItems.stream()
                 .filter(OrderItem::isDiscount)

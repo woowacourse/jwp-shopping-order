@@ -71,7 +71,7 @@ class OrderTest {
 
     @Test
     @DisplayName("상품 할인 금액을 구하는 기능 추가")
-    void calculate_Item_benefit() {
+    void calculate_item_benefit() {
         // given
         Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
         List<OrderItem> orderItems = List.of(
@@ -83,6 +83,25 @@ class OrderTest {
 
         // when
         int result = order.getItemBenefit();
+
+        // then
+        assertThat(result).isEqualTo(expect);
+    }
+
+    @Test
+    @DisplayName("멤버 할인 금액을 구하는 기능 추가")
+    void calculate_member_benefit() {
+        // given
+        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
+        List<OrderItem> orderItems = List.of(
+                new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
+                new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
+        Order order = new Order(member, orderItems);
+
+        int expect = 2000;
+
+        // when
+        int result = order.getMemberBenefit();
 
         // then
         assertThat(result).isEqualTo(expect);
