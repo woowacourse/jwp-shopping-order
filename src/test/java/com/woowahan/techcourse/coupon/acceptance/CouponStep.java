@@ -16,12 +16,8 @@ public class CouponStep {
         return doGet("/coupons");
     }
 
-    public static ExtractableResponse<Response> 쿠폰을_멤버_ID_로_조회(Long id) {
-        return doGet("/members/coupons");
-    }
-
     public static void 쿠폰_사이즈는_N이다(ExtractableResponse<Response> response, int size) {
-        assertThat(response.jsonPath().getList("coupons").size()).isEqualTo(size);
+        assertThat(response.jsonPath().getList("coupons")).hasSize(size);
     }
 
     public static ExtractableResponse<Response> 멤버의_보유_쿠폰_조회(String email, String password) {
