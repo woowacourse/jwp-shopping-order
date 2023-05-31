@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.forbidden;
+
+import cart.exception.StoreException;
 
 public class ForbiddenException extends StoreException {
 

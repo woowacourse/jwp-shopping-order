@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.auth;
+
+import cart.exception.StoreException;
 
 public class UnauthorizedException extends StoreException {
 

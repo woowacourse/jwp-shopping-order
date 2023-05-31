@@ -1,6 +1,6 @@
 package cart.ui.auth;
 
-import cart.exception.LoginFailException;
+import cart.exception.auth.LoginFailException;
 import cart.ui.auth.dto.BasicAuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
 

@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.ForbiddenException;
+import cart.exception.forbidden.ForbiddenException;
 import java.util.Objects;
 
 public class CartItem {

@@ -1,4 +1,4 @@
-package cart.exception;
+package cart.exception.notfound;
 
 public class CartItemNotFoundException extends NotFoundException {
 

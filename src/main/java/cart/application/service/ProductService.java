@@ -4,7 +4,7 @@ import cart.application.dto.ProductRequest;
 import cart.application.dto.ProductResponse;
 import cart.application.repository.ProductRepository;
 import cart.domain.Product;
-import cart.exception.ProductNotFoundException;
+import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,10 @@
 package cart.ui;
 
 import cart.application.dto.ErrorResponse;
-import cart.exception.ForbiddenException;
-import cart.exception.NotFoundException;
 import cart.exception.StoreException;
-import cart.exception.UnauthorizedException;
+import cart.exception.auth.UnauthorizedException;
+import cart.exception.forbidden.ForbiddenException;
+import cart.exception.notfound.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

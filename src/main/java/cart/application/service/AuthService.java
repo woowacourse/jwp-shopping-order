@@ -2,7 +2,7 @@ package cart.application.service;
 
 import cart.application.repository.MemberRepository;
 import cart.domain.Member;
-import cart.exception.LoginFailException;
+import cart.exception.auth.LoginFailException;
 import org.springframework.stereotype.Service;
 
 @Service
