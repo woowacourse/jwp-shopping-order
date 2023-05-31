@@ -1,10 +1,10 @@
 package cart.repository;
 
+import cart.dao.OrderDao2;
 import cart.dao.OrderItemDao;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.domain.Order;
-import cart.domain.OrderItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,6 +22,7 @@ public class OrderRepository {
 
     public Long save(final Order order) {
         OrderEntity orderEntity = OrderEntity.from(order);
+        System.out.println(orderEntity);
         Long savedOrderId = orderDao.save(orderEntity);
 
         List<OrderItemEntity> orderItemEntities = order.getOrderItems()

@@ -32,9 +32,15 @@ public class MemberCouponDao {
     public Optional<MemberCouponEntity> findById(final Long id) {
         final String sql = "SELECT * FROM member_coupon WHERE id = ? ";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException exception){
             return Optional.empty();
         }
+    }
+
+    //예외 컨트롤
+    public void updateUsedById(final Long id) {
+        final String sql = "UPDATE member_coupon SET is_used = ? WHERE id = ?";
+        jdbcTemplate.update(sql, true, id);
     }
 }

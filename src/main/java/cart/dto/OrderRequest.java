@@ -4,20 +4,20 @@ import java.util.List;
 import java.util.Objects;
 
 public class OrderRequest {
-    private List<Long> cartItemsIds;
+    private List<Long> cartItemIds;
     private Long couponId;
 
     public OrderRequest() {
 
     }
 
-    public OrderRequest(final List<Long> cartItemsIds, final Long couponId) {
-        this.cartItemsIds = cartItemsIds;
+    public OrderRequest(final List<Long> cartItemIds, final Long couponId) {
+        this.cartItemIds = cartItemIds;
         this.couponId = couponId;
     }
 
-    public List<Long> getCartItemsIds() {
-        return cartItemsIds;
+    public List<Long> getCartItemIds() {
+        return cartItemIds;
     }
 
     public Long getCouponId() {
@@ -29,19 +29,19 @@ public class OrderRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final OrderRequest that = (OrderRequest) o;
-        return Objects.equals(cartItemsIds, that.cartItemsIds)
+        return Objects.equals(cartItemIds, that.cartItemIds)
                 && Objects.equals(couponId, that.couponId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cartItemsIds, couponId);
+        return Objects.hash(cartItemIds, couponId);
     }
 
     @Override
     public String toString() {
         return "OrderRequest{" +
-                "cartItemsIds=" + cartItemsIds +
+                "cartItemsIds=" + cartItemIds +
                 ", couponId=" + couponId +
                 '}';
     }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -39,5 +38,10 @@ public class CouponRepository {
         CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getCouponId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 쿠폰이 존재하지 않습니다."));
         return memberCouponEntity.toCoupon(couponEntity);
+    }
+
+    // TODO: 5/31/23 예외 컨트롤
+    public void delete(final Coupon coupon) {
+        memberCouponDao.updateUsedById(coupon.getCouponInfo().getId());
     }
 }

@@ -7,9 +7,7 @@ import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +26,7 @@ public class OrderService {
     public Long order(final Member member, final OrderRequest request) {
         Coupon coupon = couponRepository.findById(request.getCouponId());
 
-        List<CartItem> selectedCartItems = cartItemRepository.findByIds(request.getCartItemsIds());
+        List<CartItem> selectedCartItems = cartItemRepository.findByIds(request.getCartItemIds());
 
         for (CartItem selectedCartItem : selectedCartItems) {
             selectedCartItem.checkOwner(member);
@@ -38,6 +36,8 @@ public class OrderService {
                 .map(CartItem::toOrderItem)
                 .collect(Collectors.toList());
         Order order = Order.of(orderItems, member, coupon);
-        return orderRepository.save(order);
+        Long savedId = orderRepository.save(order);
+        couponRepository.delete(coupon);
+        return savedId;
     }
 }
