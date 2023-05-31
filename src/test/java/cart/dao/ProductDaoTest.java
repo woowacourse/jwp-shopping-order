@@ -6,6 +6,7 @@ import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
 import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.notfound.ProductNotFoundException;
+import cart.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
-@Import(ProductDao.class)
+@Import({ProductRepository.class, ProductDao.class, CartItemDao.class})
 public class ProductDaoTest {
 
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private ProductDao productDao;
 
@@ -103,9 +106,9 @@ public class ProductDaoTest {
         final Product product = productDao.findById(1L).orElseThrow(MemberNotFoundException::new);
 
         // when
-//        productDao.delete(product.getId());
+        productRepository.deleteProduct(product);
 
         // then
-//        assertThat(productDao.findById(productId)).isEmpty();
+        assertThat(productDao.findById(product.getId()).isEmpty());
     }
 }

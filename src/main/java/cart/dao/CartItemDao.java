@@ -124,6 +124,12 @@ public class CartItemDao {
         });
     }
 
+    public void deleteByProductId(final Long productId) {
+        final String sql = "DELETE FROM cart_item WHERE product_id = ?";
+
+        jdbcTemplate.update(sql, productId);
+    }
+
     public void updateQuantity(final CartItem cartItem) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 

@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS cart_item;
-DROP TABLE IF EXISTS order_product_record;
 DROP TABLE IF EXISTS order_product;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS orders;
