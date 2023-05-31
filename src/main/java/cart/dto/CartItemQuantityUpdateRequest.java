@@ -1,16 +1,16 @@
 package cart.dto;
 
 public class CartItemQuantityUpdateRequest {
-    private Integer quantity;
+    private Long quantity;
 
     public CartItemQuantityUpdateRequest() {
     }
 
-    public CartItemQuantityUpdateRequest(int quantity) {
+    public CartItemQuantityUpdateRequest(Long quantity) {
         this.quantity = quantity;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 }

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class MemberApiController {
+public class PointApiController {
     private final MemberService memberService;
     
-    public MemberApiController(final MemberService memberService) {
+    public PointApiController(final MemberService memberService) {
         this.memberService = memberService;
     }
     

@@ -2,8 +2,6 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.ProductRequest;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @SuppressWarnings("NonAsciiCharacters")
-class MemberIntegratedControllerTest extends IntegrationTest {
+class PointIntegratedControllerTest extends IntegrationTest {
     @Autowired
     private MemberDao memberDao;
     

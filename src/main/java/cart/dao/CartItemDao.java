@@ -37,7 +37,7 @@ public class CartItemDao {
             final double pointRatio = rs.getDouble("point_ratio");
             final boolean pointAvailable = rs.getBoolean("point_available");
             Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
+            Long quantity = rs.getLong("cart_item.quantity");
             Member member = new Member(memberId, email, null, point);
             Product product = new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
             return new CartItem(cartItemId, quantity, product, member);
@@ -55,7 +55,7 @@ public class CartItemDao {
 
             ps.setLong(1, cartItem.getMember().getId());
             ps.setLong(2, cartItem.getProduct().getId());
-            ps.setInt(3, cartItem.getQuantity());
+            ps.setLong(3, cartItem.getQuantity());
 
             return ps;
         }, keyHolder);
@@ -80,7 +80,7 @@ public class CartItemDao {
             final double pointRatio = rs.getDouble("point_ratio");
             final boolean pointAvailable = rs.getBoolean("point_available");
             Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
+            Long quantity = rs.getLong("cart_item.quantity");
             Member member = new Member(memberId, email, null, point);
             Product product = new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
             return new CartItem(cartItemId, quantity, product, member);
