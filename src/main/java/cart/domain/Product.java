@@ -50,10 +50,6 @@ public class Product {
     }
     
     public int calculatePointToAdd() {
-        if (pointAvailable) {
-            return (int) Math.round(price * (pointRatio / 100.0));
-        }
-        
-        return 0;
+        return (int) Math.round(price * (pointRatio / 100.0));
     }
 }
