@@ -8,5 +8,6 @@ include::product-api.adoc[]
 
 include::cart-items-api.adoc[]
 
+include::member-api.adoc[]
 
 == 회원
