@@ -13,8 +13,6 @@ import cart.dto.CartPointsResponse;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderItemResponse;
 import cart.dto.OrderResponse;
-import cart.exception.InvalidProductException;
-import cart.exception.InvalidQuantityException;
 
 class OrderServiceTest extends ServiceTest {
 
@@ -69,8 +67,7 @@ class OrderServiceTest extends ServiceTest {
 
 		// then
 		assertThatThrownBy(() -> orderService.createOrder(request, member))
-			.isInstanceOf(InvalidProductException.class)
-			.hasMessage("장바구니에 등록한 상품과 일치하지 않습니다");
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
@@ -84,8 +81,7 @@ class OrderServiceTest extends ServiceTest {
 
 		// then
 		assertThatThrownBy(() -> orderService.createOrder(request, member))
-			.isInstanceOf(InvalidQuantityException.class)
-			.hasMessage("장바구에 등록한 상품 수량과 일치하지 않습니다");
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test

@@ -1,5 +1,12 @@
 package cart.application;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
@@ -18,16 +25,6 @@ import cart.dto.OrderResponse;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.ProductEntity;
-import cart.exception.InvalidProductException;
-import cart.exception.InvalidQuantityException;
-import cart.exception.NotCheckedException;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -104,14 +101,8 @@ public class OrderService {
 	}
 
 	private void compareEachCartItem(final CartItem cartItem, final CartItemRequest request) {
-		if (isInvalidProduct(cartItem, request)) {
-			throw new InvalidProductException();
-		}
-		if (isInvalidQuantity(cartItem, request)) {
-			throw new InvalidQuantityException();
-		}
-		if (isNotChecked(cartItem)) {
-			throw new NotCheckedException();
+		if (isInvalidProduct(cartItem, request) || isInvalidQuantity(cartItem, request)) {
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -121,10 +112,6 @@ public class OrderService {
 
 	private boolean isInvalidQuantity(final CartItem cartItem, final CartItemRequest request) {
 		return cartItem.getQuantity() != request.getQuantity();
-	}
-
-	private boolean isNotChecked(final CartItem cartItem) {
-		return !cartItem.isChecked();
 	}
 
 	private void updateMember(final Member member, final Order order) {
