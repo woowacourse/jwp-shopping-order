@@ -12,13 +12,13 @@ public class Product {
     private final Long id;
     private final String name;
     private final String imageUrl;
-    private final long price;
+    private final Money price;
 
-    public Product(final String name, final String imageUrl, final long price) {
+    public Product(final String name, final String imageUrl, final Money price) {
         this(null, name, imageUrl, price);
     }
 
-    public Product(final Long id, final String name, final String imageUrl, final long price) {
+    public Product(final Long id, final String name, final String imageUrl, final Money price) {
         validate(name, imageUrl, price);
         this.id = id;
         this.name = name;
@@ -26,7 +26,7 @@ public class Product {
         this.price = price;
     }
 
-    private void validate(final String name, final String imageUrl, final long price) {
+    private void validate(final String name, final String imageUrl, final Money price) {
         validateName(name);
         validateImage(imageUrl);
         validatePrice(price);
@@ -44,8 +44,8 @@ public class Product {
         }
     }
 
-    private void validatePrice(final long price) {
-        if (price < MIN_PRICE_VALUE) {
+    private void validatePrice(final Money price) {
+        if (price.isUnder(MIN_PRICE_VALUE)) {
             throw new ProductNotValidException("상품 가격은 " + MIN_PRICE_VALUE + "원 이상이여야 합니다.");
         }
     }
@@ -79,7 +79,7 @@ public class Product {
         return imageUrl;
     }
 
-    public long getPrice() {
+    public Money getPrice() {
         return price;
     }
 }

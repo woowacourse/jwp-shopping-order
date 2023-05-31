@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.domain.CartItem;
+import cart.domain.Money;
 import cart.domain.member.Member;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
@@ -57,7 +58,7 @@ public class CartItemControllerTest {
     @Test
     void 장바구니에_상품을_추가한다() throws Exception {
         // given
-        final Product savedProduct = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
+        final Product savedProduct = productRepository.save(new Product("pizza1", "pizza1.jpg", new Money(8900L)));
         final Member savedMember = memberRepository.save(new Member("pizza@pizza.com", "password"));
         final CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(savedProduct.getId());
         final String request = objectMapper.writeValueAsString(cartItemSaveRequest);
@@ -80,8 +81,8 @@ public class CartItemControllerTest {
     @Test
     void 사용자의_장바구니에_담겨있는_모든_상품을_조회한다() throws Exception {
         // given
-        final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
+        final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", new Money(8900L)));
+        final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", new Money(18900L)));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
 
         cartItemRepository.save(new CartItem(member.getId(), product1));
@@ -100,7 +101,7 @@ public class CartItemControllerTest {
     @Test
     void 장바구니에_담겨있는_상품을_제거한다() throws Exception {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
+        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", new Money(8900L)));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
         final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
@@ -119,7 +120,7 @@ public class CartItemControllerTest {
     @Test
     void 장바구니에_담긴_상품의_수량을_변경한다() throws Exception {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
+        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", new Money(8900L)));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
         final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));

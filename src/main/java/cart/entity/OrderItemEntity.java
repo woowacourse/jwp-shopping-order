@@ -1,5 +1,6 @@
 package cart.entity;
 
+import cart.domain.Money;
 import cart.domain.order.OrderItem;
 
 public class OrderItemEntity {
@@ -25,14 +26,14 @@ public class OrderItemEntity {
                 orderItem.getId(),
                 orderItem.getName(),
                 orderItem.getImageUrl(),
-                orderItem.getPrice(),
+                orderItem.getPrice().getValue(),
                 orderItem.getQuantity(),
                 orderId
         );
     }
 
     public OrderItem toDomain() {
-        return new OrderItem(id, name, imageUrl, price, quantity);
+        return new OrderItem(id, name, imageUrl, new Money(price), quantity);
     }
 
     public Long getId() {

@@ -1,12 +1,12 @@
 package cart.domain.coupon.discountPolicy;
 
-import cart.domain.TotalPrice;
+import cart.domain.Money;
 
 public class DeliveryPolicy implements DiscountPolicy {
 
     @Override
-    public TotalPrice discount(final TotalPrice orderPrice, final long value) {
-        return orderPrice.discountDelivery(value);
+    public Money discount(final Money deliveryFee, final long value) {
+        return deliveryFee;
     }
 
     @Override

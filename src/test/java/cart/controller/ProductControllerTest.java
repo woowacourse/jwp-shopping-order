@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.domain.Money;
 import cart.domain.Product;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
@@ -47,8 +48,8 @@ class ProductControllerTest {
     @Test
     void 상품을_전체_조회한다() throws Exception {
         // given
-        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
-        final Product product2 = productRepository.save(new Product("우가티", "tea.jpg", 20000L));
+        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", new Money(1000L)));
+        final Product product2 = productRepository.save(new Product("우가티", "tea.jpg", new Money(20000L)));
 
         // when
         mockMvc.perform(get("/products")
@@ -69,7 +70,7 @@ class ProductControllerTest {
     @Test
     void 상품을_단일_조회한다() throws Exception {
         // given
-        final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product = productRepository.save(new Product("허브티", "tea.jpg", new Money(1000L)));
 
         // when
         mockMvc.perform(get("/products/" + product.getId())
@@ -103,7 +104,7 @@ class ProductControllerTest {
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("허브티"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("tea.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(1000L),
+                () -> assertThat(result.getPrice()).isEqualTo(new Money(1000L)),
                 () -> assertThat(location).isEqualTo("/products/" + result.getId())
         );
     }
@@ -111,7 +112,7 @@ class ProductControllerTest {
     @Test
     void 상품을_수정한다() throws Exception {
         // given
-        final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product = productRepository.save(new Product("허브티", "tea.jpg", new Money(1000L)));
         final ProductUpdateRequest updateRequestDto = new ProductUpdateRequest("고양이", "cat.jpg", 1000000L);
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
@@ -128,14 +129,14 @@ class ProductControllerTest {
                 () -> assertThat(result.getId()).isEqualTo(product.getId()),
                 () -> assertThat(result.getName()).isEqualTo("고양이"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(1000000L)
+                () -> assertThat(result.getPrice()).isEqualTo(new Money(1000000L))
         );
     }
 
     @Test
     void 상품을_삭제한다() throws Exception {
         // given
-        final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
+        final Product product = productRepository.save(new Product("허브티", "tea.jpg", new Money(1000L)));
 
         // when
         mockMvc.perform(delete("/products/" + product.getId())

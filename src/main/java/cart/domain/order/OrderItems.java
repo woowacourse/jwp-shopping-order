@@ -1,6 +1,7 @@
 package cart.domain.order;
 
 import cart.domain.CartItem;
+import cart.domain.Money;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +21,10 @@ public class OrderItems {
                 .collect(Collectors.toList()));
     }
 
-    public long sumPrice() {
+    public Money sumPrice() {
         return orderItems.stream()
-                .mapToLong(OrderItem::getPrice)
-                .sum();
+                .map(OrderItem::getPrice)
+                .reduce(new Money(0), Money::sum);
     }
 
     public int size() {

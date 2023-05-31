@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.domain.CartItem;
-import cart.domain.TotalPrice;
+import cart.domain.Money;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberValidator;
@@ -47,7 +47,7 @@ public class OrderService {
         final List<CartItem> cartItems = cartItemRepository.findAllByMemberId(memberId);
 
         final MemberCoupon usedCoupon = useCouponIfExist(memberId, request.getCouponId());
-        final Order order = Order.createFromCartItems(cartItems, 3000L, usedCoupon.getId(), memberId);
+        final Order order = Order.createFromCartItems(cartItems, new Money(3000L), usedCoupon, memberId);
 
         cartItemRepository.deleteAll(cartItems);
         return orderRepository.save(order).getId();
@@ -78,14 +78,12 @@ public class OrderService {
                 .orElseThrow(OrderNotFoundException::new);
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
-        final MemberCoupon memberCoupon = memberCouponRepository.findById(order.getMemberCouponId())
-                .orElseThrow(MemberCouponNotFoundException::new);
 
         final MemberValidator memberValidator = new MemberValidator(member);
         order.validateMember(memberValidator);
-        final TotalPrice totalPrice = order.calculateTotalPrice();
-        final long discountedOrderPrice = memberCoupon.discountOrderPrice(totalPrice);
+        final Money discountedOrderPrice = order.discountOrderPrice();
+        final Money discountedDeliveryFee = order.discountDeliveryFee();
 
-        return OrderResponse.of(order, totalPrice, discountedOrderPrice);
+        return OrderResponse.of(order, order.getOrderPrice(), discountedOrderPrice, discountedDeliveryFee);
     }
 }

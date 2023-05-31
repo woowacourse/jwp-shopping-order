@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.TotalPrice;
+import cart.domain.Money;
 import cart.domain.coupon.discountPolicy.DiscountPolicy;
 
 public class Coupon {
@@ -9,9 +9,9 @@ public class Coupon {
     private final String name;
     private final DiscountPolicy discountPolicy;
     private final long value;
-    private final long minimumPrice;
+    private final Money minimumPrice;
 
-    public Coupon(final Long id, final String name, final DiscountPolicy discountPolicy, final long value, final long minimumPrice) {
+    public Coupon(final Long id, final String name, final DiscountPolicy discountPolicy, final long value, final Money minimumPrice) {
         this.id = id;
         this.name = name;
         this.discountPolicy = discountPolicy;
@@ -19,8 +19,11 @@ public class Coupon {
         this.minimumPrice = minimumPrice;
     }
 
-    public long discountOrderPrice(final TotalPrice totalPrice) {
-        return totalPrice.subOrderPrice(discountPolicy.discount(totalPrice, value));
+    public Money discount(final Money money) {
+        if (money.isMoreThan(minimumPrice)) {
+            return discountPolicy.discount(money, value);
+        }
+        return money;
     }
 
     public Long getId() {
@@ -39,7 +42,8 @@ public class Coupon {
         return value;
     }
 
-    public long getMinimumPrice() {
+    public Money getMinimumPrice() {
         return minimumPrice;
     }
+
 }

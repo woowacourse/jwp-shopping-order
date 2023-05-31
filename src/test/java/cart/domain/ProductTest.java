@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.InvalidMoneyValueException;
 import cart.exception.ProductNotValidException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -14,7 +15,7 @@ class ProductTest {
     @Test
     void 상품명은_100자_이하가_아니라면_예외를_던진다() {
         // expect
-        assertThatThrownBy(() -> new Product(1L, "가".repeat(101), "1.jpg", 0))
+        assertThatThrownBy(() -> new Product(1L, "가".repeat(101), "1.jpg", new Money(0)))
                 .isInstanceOf(ProductNotValidException.class)
                 .hasMessage("상품명의 길이는 100자 이하여야합니다.");
     }
@@ -22,7 +23,7 @@ class ProductTest {
     @Test
     void 상품_이미지_값이_공백이라면_예외를_던진다() {
         // expect
-        assertThatThrownBy(() -> new Product(1L, "텀블러", "", 1000L))
+        assertThatThrownBy(() -> new Product(1L, "텀블러", "", new Money(1000L)))
                 .isInstanceOf(ProductNotValidException.class)
                 .hasMessage("이미지는 공백일 수 없습니다.");
     }
@@ -30,8 +31,8 @@ class ProductTest {
     @Test
     void 상품_가격은_0원_이상이_아니라면_예외를_던진다() {
         // expect
-        assertThatThrownBy(() -> new Product(1L, "텀블러", "1.jpg", -1))
-                .isInstanceOf(ProductNotValidException.class)
-                .hasMessage("상품 가격은 0원 이상이여야 합니다.");
+        assertThatThrownBy(() -> new Product(1L, "텀블러", "1.jpg", new Money(-1)))
+                .isInstanceOf(InvalidMoneyValueException.class)
+                .hasMessage("돈은 음수가 될 수 없습니다.");
     }
 }

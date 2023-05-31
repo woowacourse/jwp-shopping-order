@@ -1,16 +1,17 @@
 package cart.domain.order;
 
 import cart.domain.CartItem;
+import cart.domain.Money;
 
 public class OrderItem {
 
     private final Long id;
     private final String name;
     private final String imageUrl;
-    private final long price;
+    private final Money price;
     private final Integer quantity;
 
-    public OrderItem(final Long id, final String name, final String imageUrl, final long price, final Integer quantity) {
+    public OrderItem(final Long id, final String name, final String imageUrl, final Money price, final Integer quantity) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -34,7 +35,7 @@ public class OrderItem {
         return name;
     }
 
-    public long getPrice() {
+    public Money getPrice() {
         return price;
     }
 

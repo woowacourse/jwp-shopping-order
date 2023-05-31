@@ -1,5 +1,6 @@
 package cart.entity;
 
+import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.discountPolicy.DeliveryPolicy;
 import cart.domain.coupon.discountPolicy.DiscountPolicy;
@@ -35,7 +36,7 @@ public class CouponEntity {
                 name,
                 getDiscountPolicy(),
                 value,
-                minimumPrice
+                new Money(minimumPrice)
         );
     }
 

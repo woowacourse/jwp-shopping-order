@@ -1,6 +1,6 @@
 package cart.domain.member;
 
-import cart.domain.TotalPrice;
+import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.exception.CouponAlreadyUsedException;
 
@@ -29,8 +29,8 @@ public class MemberCoupon {
         return new MemberCoupon(id, member, coupon, true);
     }
 
-    public long discountOrderPrice(final TotalPrice totalPrice) {
-        return coupon.discountOrderPrice(totalPrice);
+    public Money discount(final Money money) {
+        return coupon.discount(money);
     }
 
     public Long getId() {
@@ -55,8 +55,8 @@ public class MemberCoupon {
         }
 
         @Override
-        public long discountOrderPrice(final TotalPrice totalPrice) {
-            return 0;
+        public Money discount(final Money money) {
+            return new Money(0);
         }
 
         @Override

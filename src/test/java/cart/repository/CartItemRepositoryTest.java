@@ -1,6 +1,7 @@
 package cart.repository;
 
 import cart.domain.CartItem;
+import cart.domain.Money;
 import cart.domain.member.Member;
 import cart.domain.Product;
 import cart.test.RepositoryTest;
@@ -31,7 +32,7 @@ class CartItemRepositoryTest {
     void 장바구니에_상품을_추가한다() {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
+        final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", new Money(8900L)));
         final CartItem cartItem = new CartItem(member.getId(), product);
 
         // when
@@ -46,9 +47,9 @@ class CartItemRepositoryTest {
         // given
         final Member member1 = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
         final Member member2 = memberRepository.save(new Member("pizza2@pizza.com", "password2"));
-        final Product product1 = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("치즈피자2", "2.jpg", 18900L));
-        final Product product3 = productRepository.save(new Product("치즈피자3", "3.jpg", 18900L));
+        final Product product1 = productRepository.save(new Product("치즈피자1", "1.jpg", new Money(8900L)));
+        final Product product2 = productRepository.save(new Product("치즈피자2", "2.jpg", new Money(18900L)));
+        final Product product3 = productRepository.save(new Product("치즈피자3", "3.jpg", new Money(18900L)));
 
         cartItemRepository.save(new CartItem(member1.getId(), product1));
         cartItemRepository.save(new CartItem(member1.getId(), product2));
@@ -65,9 +66,9 @@ class CartItemRepositoryTest {
     void 모든_장바구니_항목을_제거한다() {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product1 = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("치즈피자2", "2.jpg", 9900L));
-        final Product product3 = productRepository.save(new Product("치즈피자3", "3.jpg", 10900L));
+        final Product product1 = productRepository.save(new Product("치즈피자1", "1.jpg", new Money(8900L)));
+        final Product product2 = productRepository.save(new Product("치즈피자2", "2.jpg", new Money(9900L)));
+        final Product product3 = productRepository.save(new Product("치즈피자3", "3.jpg", new Money(10900L)));
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
         final CartItem cartItem3 = cartItemRepository.save(new CartItem(member.getId(), product3));
@@ -83,7 +84,7 @@ class CartItemRepositoryTest {
     void 장바구니의_상품의_수량을_변경한다() {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
+        final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", new Money(8900L)));
         final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
 
         final CartItem updatedCartItem = new CartItem(cartItem.getId(), 2, cartItem.getMemberId(), cartItem.getProduct());

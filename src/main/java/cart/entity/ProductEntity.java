@@ -1,5 +1,6 @@
 package cart.entity;
 
+import cart.domain.Money;
 import cart.domain.Product;
 
 public class ProductEntity {
@@ -21,11 +22,11 @@ public class ProductEntity {
     }
 
     public static ProductEntity from(final Product product) {
-        return new ProductEntity(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
+        return new ProductEntity(product.getId(), product.getName(), product.getImageUrl(), product.getPrice().getValue());
     }
 
     public Product toDomain() {
-        return new Product(id, name, imageUrl, price);
+        return new Product(id, name, imageUrl, new Money(price));
     }
 
     public Long getId() {

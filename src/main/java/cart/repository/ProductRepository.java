@@ -1,6 +1,7 @@
 package cart.repository;
 
 import cart.dao.ProductDao;
+import cart.domain.Money;
 import cart.domain.Product;
 import cart.entity.ProductEntity;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,7 @@ public class ProductRepository {
     }
 
     private Product toProduct(final ProductEntity entity) {
-        return new Product(entity.getId(), entity.getName(), entity.getImageUrl(), entity.getPrice());
+        return new Product(entity.getId(), entity.getName(), entity.getImageUrl(), new Money(entity.getPrice()));
     }
 
     public Optional<Product> findById(final Long productId) {

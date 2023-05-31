@@ -17,7 +17,7 @@ public class OrderEntity {
     }
 
     public static OrderEntity from(final Order order) {
-        return new OrderEntity(order.getId(), order.getDeliveryFee(), order.getMemberCouponId(), order.getMemberId());
+        return new OrderEntity(order.getId(), order.getDeliveryFee().getValue(), order.getMemberCoupon().getId(), order.getMemberId());
     }
 
     public Long getId() {

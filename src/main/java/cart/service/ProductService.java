@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.domain.Money;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequest;
@@ -24,7 +25,7 @@ public class ProductService {
     }
 
     public Long save(final ProductSaveRequest request) {
-        final Product product = new Product(request.getName(), request.getImageUrl(), request.getPrice());
+        final Product product = new Product(request.getName(), request.getImageUrl(), new Money(request.getPrice()));
         return productRepository.save(product).getId();
     }
 
@@ -43,7 +44,7 @@ public class ProductService {
     }
 
     public void update(final Long id, final ProductUpdateRequest request) {
-        final Product savedProduct = new Product(id, request.getName(), request.getImageUrl(), request.getPrice());
+        final Product savedProduct = new Product(id, request.getName(), request.getImageUrl(), new Money(request.getPrice()));
         productRepository.save(savedProduct);
     }
 

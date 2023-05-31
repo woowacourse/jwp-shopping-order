@@ -31,7 +31,7 @@ public class CouponResponse {
                 coupon.getName(),
                 coupon.getDiscountPolicy().getName(),
                 coupon.getValue(),
-                coupon.getMinimumPrice()
+                coupon.getMinimumPrice().getValue()
         );
     }
 

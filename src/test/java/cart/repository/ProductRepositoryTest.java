@@ -1,5 +1,6 @@
 package cart.repository;
 
+import cart.domain.Money;
 import cart.domain.Product;
 import cart.test.RepositoryTest;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -24,7 +25,7 @@ class ProductRepositoryTest {
     @Test
     void 상품을_저장한다() {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Product product = new Product("허브티", "tea.jpg", new Money(1000L));
 
         // when
         productRepository.save(product);
@@ -36,8 +37,8 @@ class ProductRepositoryTest {
     @Test
     void 전체_상품을_조회한다() {
         // given
-        final Product product1 = new Product("허브티", "tea.jpg", 1000L);
-        final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
+        final Product product1 = new Product("허브티", "tea.jpg", new Money(1000L));
+        final Product product2 = new Product("고양이", "cat.jpg", new Money(1000000L));
         final Product savedProduct1 = productRepository.save(product1);
         final Product savedProduct2 = productRepository.save(product2);
 
@@ -53,7 +54,7 @@ class ProductRepositoryTest {
     @Test
     void 단일_상품을_조회한다() {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Product product = new Product("허브티", "tea.jpg", new Money(1000L));
         final Product savedProduct = productRepository.save(product);
 
         // when
@@ -66,9 +67,9 @@ class ProductRepositoryTest {
     @Test
     void 상품을_수정한다() {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Product product = new Product("허브티", "tea.jpg", new Money(1000L));
         final Product savedProduct = productRepository.save(product);
-        final Product updatedProduct = new Product(savedProduct.getId(), "블랙캣", "cat.jpg", 10000L);
+        final Product updatedProduct = new Product(savedProduct.getId(), "블랙캣", "cat.jpg", new Money(10000L));
 
         // when
         productRepository.save(updatedProduct);
@@ -78,14 +79,14 @@ class ProductRepositoryTest {
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("블랙캣"),
                 () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(10000L)
+                () -> assertThat(result.getPrice()).isEqualTo(new Money(10000L))
         );
     }
 
     @Test
     void 상품을_삭제한다() {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Product product = new Product("허브티", "tea.jpg", new Money(1000L));
         final Product savedProduct = productRepository.save(product);
 
         // when

@@ -1,7 +1,8 @@
 package cart.domain.order;
 
 import cart.domain.CartItem;
-import cart.domain.TotalPrice;
+import cart.domain.Money;
+import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberValidator;
 import cart.exception.InvalidOrderOwnerException;
 import cart.exception.InvalidOrderSizeException;
@@ -12,26 +13,26 @@ public class Order {
 
     private final Long id;
     private final OrderItems orderItems;
-    private final long deliveryFee;
-    private final Long memberCouponId;
+    private final Money deliveryFee;
+    private final MemberCoupon memberCoupon;
     private final Long memberId;
 
-    public Order(final OrderItems orderItems, final long deliveryFee, final Long memberCouponId, final Long memberId) {
-        this(null, orderItems, deliveryFee, memberCouponId, memberId);
+    public Order(final OrderItems orderItems, final Money deliveryFee, final MemberCoupon memberCoupon, final Long memberId) {
+        this(null, orderItems, deliveryFee, memberCoupon, memberId);
     }
 
-    public Order(final Long id, final OrderItems orderItems, final long deliveryFee, final Long memberCouponId, final Long memberId) {
+    public Order(final Long id, final OrderItems orderItems, final Money deliveryFee, final MemberCoupon memberCoupon, final Long memberId) {
         this.id = id;
         this.orderItems = orderItems;
         this.deliveryFee = deliveryFee;
-        this.memberCouponId = memberCouponId;
+        this.memberCoupon = memberCoupon;
         this.memberId = memberId;
     }
 
-    public static Order createFromCartItems(final List<CartItem> cartItems, final long deliveryFee, final Long memberCouponId, final Long memberId) {
+    public static Order createFromCartItems(final List<CartItem> cartItems, final Money deliveryFee, final MemberCoupon memberCoupon, final Long memberId) {
         final OrderItems orderItems = OrderItems.from(cartItems);
         validateSize(orderItems);
-        return new Order(orderItems, deliveryFee, memberCouponId, memberId);
+        return new Order(orderItems, deliveryFee, memberCoupon, memberId);
     }
 
     private static void validateSize(final OrderItems orderItems) {
@@ -40,17 +41,25 @@ public class Order {
         }
     }
 
-    public TotalPrice calculateTotalPrice() {
-        return new TotalPrice(orderItems.sumPrice(), deliveryFee);
-    }
-
     public void validateMember(final MemberValidator memberValidator) {
         if (!memberValidator.isOwner(memberId)) {
             throw new InvalidOrderOwnerException();
         }
     }
 
-    public long getDeliveryFee() {
+    public Money discountOrderPrice() {
+        return memberCoupon.discount(orderItems.sumPrice());
+    }
+
+    public Money discountDeliveryFee() {
+        return memberCoupon.discount(deliveryFee);
+    }
+
+    public Money getOrderPrice() {
+        return orderItems.sumPrice();
+    }
+
+    public Money getDeliveryFee() {
         return deliveryFee;
     }
 
@@ -66,7 +75,7 @@ public class Order {
         return memberId;
     }
 
-    public Long getMemberCouponId() {
-        return memberCouponId;
+    public MemberCoupon getMemberCoupon() {
+        return memberCoupon;
     }
 }

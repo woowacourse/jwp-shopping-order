@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.domain.Money;
 import cart.domain.member.Member;
 import cart.domain.Product;
 import cart.repository.MemberRepository;
@@ -43,8 +44,8 @@ class PageControllerTest {
     @Test
     void 관리자_페이지에_접근한다() throws Exception {
         // given
-        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
-        final Product product2 = productRepository.save(new Product("고양이", "cat.jpg", 1000000L));
+        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", new Money(1000L)));
+        final Product product2 = productRepository.save(new Product("고양이", "cat.jpg", new Money(1000000L)));
 
         // expect
         mockMvc.perform(get("/admin"))

@@ -29,7 +29,7 @@ public class OrderItemDto {
         return new OrderItemDto(
                 orderItem.getId(),
                 orderItem.getName(),
-                orderItem.getPrice(),
+                orderItem.getPrice().getValue(),
                 orderItem.getImageUrl(),
                 orderItem.getQuantity()
         );

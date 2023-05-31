@@ -19,7 +19,7 @@ class CartItemTest {
     void 수량의_초기값은_1이다() {
         // given
         final Member member = new Member("pizza@pizza.com", "password");
-        final Product product = new Product("pizza1", "pizza1.jpg", 8900L);
+        final Product product = new Product("pizza1", "pizza1.jpg", new Money(8900L));
         final CartItem cartItem = new CartItem(member.getId(), product);
 
         // expect
@@ -30,7 +30,7 @@ class CartItemTest {
     void 수량을_변경한다() {
         // given
         final Member member = new Member("pizza@pizza.com", "password");
-        final Product product = new Product("pizza1", "pizza1.jpg", 8900L);
+        final Product product = new Product("pizza1", "pizza1.jpg", new Money(8900L));
         final CartItem cartItem = new CartItem(member.getId(), product);
 
         // when
@@ -45,7 +45,7 @@ class CartItemTest {
         // given
         final Member member1 = new Member(1L, "pizza@pizza.com", "password");
         final Member member2 = new Member(2L, "email", "password");
-        final Product product = new Product("pizza1", "pizza1.jpg", 8900L);
+        final Product product = new Product("pizza1", "pizza1.jpg", new Money(8900L));
         final CartItem cartItem = new CartItem(member2.getId(), product);
         final MemberValidator memberValidator = new MemberValidator(member1);
 
@@ -59,7 +59,7 @@ class CartItemTest {
     void 소유주가_맞다면_예외를_던지지_않는다() {
         // given
         final Member member = new Member(1L, "pizza@pizza.com", "password");
-        final Product product = new Product("pizza1", "pizza1.jpg", 8900L);
+        final Product product = new Product("pizza1", "pizza1.jpg", new Money(8900L));
         final CartItem cartItem = new CartItem(member.getId(), product);
         final MemberValidator memberValidator = new MemberValidator(member);
 
