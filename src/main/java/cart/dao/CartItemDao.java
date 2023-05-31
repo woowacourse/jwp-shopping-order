@@ -27,7 +27,8 @@ public class CartItemDao {
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
+                "WHERE cart_item.member_id = ? " +
+                "ORDER BY cart_item.id DESC";
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             String email = rs.getString("email");
             Long cash = rs.getLong("cash");

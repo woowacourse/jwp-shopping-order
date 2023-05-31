@@ -22,14 +22,14 @@ class CartItemDaoTest extends DaoTest {
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(cartItems).hasSize(2);
-            softAssertions.assertThat(cartItems.get(0).getId()).isEqualTo(1L);
+            softAssertions.assertThat(cartItems.get(0).getId()).isEqualTo(2L);
             softAssertions.assertThat(cartItems.get(0).getMember()).isEqualTo(MemberA.ENTITY);
-            softAssertions.assertThat(cartItems.get(0).getProduct()).isEqualTo(CHICKEN.ENTITY);
-            softAssertions.assertThat(cartItems.get(0).getQuantity()).isEqualTo(2);
-            softAssertions.assertThat(cartItems.get(1).getId()).isEqualTo(2L);
+            softAssertions.assertThat(cartItems.get(0).getProduct()).isEqualTo(SALAD.ENTITY);
+            softAssertions.assertThat(cartItems.get(0).getQuantity()).isEqualTo(4);
+            softAssertions.assertThat(cartItems.get(1).getId()).isEqualTo(1L);
             softAssertions.assertThat(cartItems.get(1).getMember()).isEqualTo(MemberA.ENTITY);
-            softAssertions.assertThat(cartItems.get(1).getProduct()).isEqualTo(SALAD.ENTITY);
-            softAssertions.assertThat(cartItems.get(1).getQuantity()).isEqualTo(4);
+            softAssertions.assertThat(cartItems.get(1).getProduct()).isEqualTo(CHICKEN.ENTITY);
+            softAssertions.assertThat(cartItems.get(1).getQuantity()).isEqualTo(2);
         });
     }
 
