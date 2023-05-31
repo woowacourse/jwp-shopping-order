@@ -9,7 +9,7 @@ public class Order {
 
     private Long id;
     private final Member member;
-    private final List<CartItem> cartItems;
+    private List<CartItem> cartItems;
     private final Long originalPrice;
     private final Long usedPoint;
     private final Long pointToAdd;
@@ -21,6 +21,14 @@ public class Order {
 
         this.member = member;
         this.cartItems = cartItems;
+        this.originalPrice = originalPrice;
+        this.usedPoint = usedPoint;
+        this.pointToAdd = pointToAdd;
+    }
+
+    public Order(Long id, Member member, Long originalPrice, Long usedPoint, Long pointToAdd) {
+        this.id = id;
+        this.member = member;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
