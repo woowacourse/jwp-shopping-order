@@ -10,6 +10,10 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
+    public ProductRequest(String name, int price, String imageUrl) {
+        this(name, BigDecimal.valueOf(price), imageUrl);
+    }
+
     public ProductRequest(String name, BigDecimal price, String imageUrl) {
         this.name = name;
         this.price = price;

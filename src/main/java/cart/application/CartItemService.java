@@ -27,14 +27,16 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productRepository.getProductById(cartItemRequest.getProductId())
+    public Long addCart(Member member, CartItemRequest cartItemRequest) {
+        Product product = productRepository.findById(cartItemRequest.getProductId())
                 .orElseThrow(NonExistProductException::new);
-        CartItem cartItem = new CartItem(member, product);
-        return cartItemRepository.save(cartItem);
+        CartItem cartItem = new CartItem(product, member);
+        return cartItemRepository.save(cartItem).getId();
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

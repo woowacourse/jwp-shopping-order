@@ -18,34 +18,32 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.getAllProducts();
+    public List<ProductResponse> findAll() {
+        List<Product> products = productRepository.findAll();
         return products.stream().map(ProductResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productRepository.getProductById(productId)
+    public ProductResponse findById(Long productId) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(NonExistProductException::new);
         return ProductResponse.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
+    public Long registerProduct(ProductRequest productRequest) {
         Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
                 productRequest.getImageUrl()
         );
-        return productRepository.createProduct(product);
+        return productRepository.save(product).getId();
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImageUrl()
-        );
-        productRepository.updateProduct(productId, product);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(NonExistProductException::new);
+        product.update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        productRepository.updateProduct(product);
     }
 
     public void deleteProduct(Long productId) {

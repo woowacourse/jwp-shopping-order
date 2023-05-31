@@ -35,7 +35,7 @@ public class CartItemApiController {
     @PostMapping
     public ResponseEntity<Void> addCartItems(@AuthPrincipal Member member,
                                              @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+        Long cartItemId = cartItemService.addCart(member, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }

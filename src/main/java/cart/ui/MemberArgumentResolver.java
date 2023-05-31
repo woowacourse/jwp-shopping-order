@@ -38,7 +38,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String email = credentials[0];
         String password = credentials[1];
 
-        Member member = memberRepository.getMemberByEmail(email)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthenticationException("잘못된 로그인 정보입니다."));
         if (!member.checkPassword(password)) {
             throw new AuthenticationException("비밀번호가 틀렸습니다.");
