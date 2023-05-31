@@ -35,7 +35,7 @@ CREATE TABLE order_item
 (
     id                  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id          BIGINT NOT NULL,
-    price_at_order_time INT    NOT NULL,
+    price_at_order INT    NOT NULL,
     quantity            INT    NOT NULL,
     order_id            BIGINT NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product (id),
