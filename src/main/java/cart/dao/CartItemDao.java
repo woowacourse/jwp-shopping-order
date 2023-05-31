@@ -84,13 +84,13 @@ public class CartItemDao {
         jdbcTemplate.update(sql, quantity, cartItemEntity.getId());
     }
 
-    public boolean isExistingId(long cartItemId) {
-        String sql = "SELECT EXISTS(SELECT cart_item_id FROM cart_item WHERE id = ?) "
+    public boolean isNonExistingId(long cartItemId) {
+        String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE id = ?) "
             + "AS cart_item_exist";
         try {
-            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new Object[]{cartItemId}, Boolean.class));
+            return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, new Object[]{cartItemId}, Boolean.class));
         } catch (EmptyResultDataAccessException exception) {
-            return false;
+            return true;
         }
     }
 }

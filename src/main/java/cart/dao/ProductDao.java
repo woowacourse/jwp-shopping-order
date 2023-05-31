@@ -65,13 +65,13 @@ public class ProductDao {
         jdbcTemplate.update(sql, productId);
     }
 
-    public boolean isExistingId(long productId) {
-        String sql = "SELECT EXISTS(SELECT product_id FROM product WHERE id = ?) "
+    public boolean isNonExistingId(long productId) {
+        String sql = "SELECT EXISTS(SELECT id FROM product WHERE id = ?) "
             + "AS product_exist";
         try {
-            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new Object[]{productId}, Boolean.class));
+            return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, new Object[]{productId}, Boolean.class));
         } catch (EmptyResultDataAccessException exception) {
-            return false;
+            return true;
         }
     }
 }

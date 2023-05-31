@@ -48,7 +48,7 @@ public class CartItemRepository {
     }
 
     private void validateCartItemExistence(long cartItemId) {
-        if (cartItemDao.isExistingId(cartItemId)) {
+        if (cartItemDao.isNonExistingId(cartItemId)) {
             throw new IllegalArgumentException("존재하지 않는 장바구니 id 입니다.");
         }
     }

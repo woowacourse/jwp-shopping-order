@@ -46,7 +46,7 @@ public class ProductRepository {
     }
 
     private void validateProductExistence(long productId) {
-        if (productDao.isExistingId(productId)) {
+        if (productDao.isNonExistingId(productId)) {
             throw new IllegalArgumentException("존재하지 않는 상품 id 입니다.");
         }
     }
