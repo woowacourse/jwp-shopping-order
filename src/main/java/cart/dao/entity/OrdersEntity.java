@@ -3,15 +3,13 @@ package cart.dao.entity;
 public class OrdersEntity {
     private final long id;
     private final long memberId;
-    private final int originalPrice;
-    private final int discountPrice;
+    private final int price;
     private final boolean confirmState;
 
-    public OrdersEntity(long id, long memberId, int originalPrice, int discountPrice, boolean confirmState) {
+    public OrdersEntity(long id, long memberId, int price, boolean confirmState) {
         this.id = id;
         this.memberId = memberId;
-        this.originalPrice = originalPrice;
-        this.discountPrice = discountPrice;
+        this.price = price;
         this.confirmState = confirmState;
     }
 
@@ -23,15 +21,11 @@ public class OrdersEntity {
         return memberId;
     }
 
-    public int getOriginalPrice() {
-        return originalPrice;
+    public int getPrice() {
+        return price;
     }
 
-    public int getDiscountPrice() {
-        return discountPrice;
-    }
-
-    public boolean isConfirmState() {
+    public boolean getConfirmState() {
         return confirmState;
     }
 }

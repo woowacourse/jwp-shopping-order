@@ -20,7 +20,7 @@ class OrdersDaoTest {
     @Test
     @DisplayName("주문을 받는다")
     void createOrder(){
-        Assertions.assertThat(ordersDao.createOrders(1L,2000,1000)).isEqualTo(3L);
+        Assertions.assertThat(ordersDao.createOrders(1L,1000)).isEqualTo(3L);
     }
 
     @Test
@@ -32,6 +32,6 @@ class OrdersDaoTest {
     @Test
     @DisplayName("해당 id의 주문 내역을 가져온다")
     void findByIdTest(){
-        Assertions.assertThat(ordersDao.findById(1L).getOriginalPrice()).isEqualTo(10000);
+        Assertions.assertThat(ordersDao.findById(1L).getPrice()).isEqualTo(9000);
     }
 }

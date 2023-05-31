@@ -16,8 +16,7 @@ public class OrdersDao {
     private final RowMapper<OrdersEntity> ordersEntityRowMapper = (rs, rowNum) -> new OrdersEntity(
             rs.getLong("id"),
             rs.getLong("member_id"),
-            rs.getInt("original_price"),
-            rs.getInt("discount_price"),
+            rs.getInt("price"),
             rs.getBoolean("confirm_state")
     );
 
@@ -28,11 +27,10 @@ public class OrdersDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long createOrders(final long memberId, final int originalPrice, final int discountPrice) {
+    public Long createOrders(final long memberId, final int discountPrice) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("member_id", memberId)
-                .addValue("original_price", originalPrice)
-                .addValue("discount_price", discountPrice)
+                .addValue("price", discountPrice)
                 .addValue("confirm_state", false);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
@@ -48,8 +46,7 @@ public class OrdersDao {
                 new OrdersEntity(
                         rs.getLong("id"),
                         rs.getLong("member_id"),
-                        rs.getInt("original_price"),
-                        rs.getInt("discount_price"),
+                        rs.getInt("price"),
                         rs.getBoolean("confirm_state")
                 ), id);
     }

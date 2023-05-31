@@ -1,6 +1,7 @@
 package cart.domain.couponissuer;
 
 import cart.domain.Coupon;
+import cart.domain.Member;
 import cart.domain.Orders;
 import cart.repository.CouponRepository;
 
@@ -13,7 +14,7 @@ public class NoCouponIssuer extends CouponIssuer{
     }
 
     @Override
-    public Optional<Coupon> issue(Orders orders) {
+    public Optional<Coupon> issue(Member member,Orders orders) {
         return Optional.empty();
     }
 

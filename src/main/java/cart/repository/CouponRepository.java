@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class CouponRepository {
@@ -74,5 +75,17 @@ public class CouponRepository {
             coupons.add(couponDao.findWithId(couponId));
         }
         return coupons;
+    }
+
+    public List<Coupon> findByOrdersId(final long id){
+        return   ordersCouponDao.finAllByOrdersId(id).stream()
+                .map(ordersCouponEntity -> couponDao.findWithId(ordersCouponEntity.getCouponId()))
+                .collect(Collectors.toList());
+    }
+
+    public void addOrdersCoupon(final long orderId, final List<Long> couponIds) {
+        for (Long couponId : couponIds) {
+            ordersCouponDao.createOrderCoupon(orderId, couponId);
+        }
     }
 }

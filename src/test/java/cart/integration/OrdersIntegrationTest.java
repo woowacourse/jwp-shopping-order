@@ -20,7 +20,7 @@ public class OrdersIntegrationTest extends IntegrationTest{
     @Test
     @DisplayName("해당 장바구니를 주문한다")
     void orderTest(){
-        final OrdersRequest ordersRequest = new OrdersRequest(List.of(1L,2L,3L),14000,12600,1L);
+        final OrdersRequest ordersRequest = new OrdersRequest(List.of(1L,2L,3L),1L);
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -1,6 +1,7 @@
 package cart.domain.couponissuer;
 
 import cart.domain.Coupon;
+import cart.domain.Member;
 import cart.domain.Orders;
 import cart.repository.CouponRepository;
 
@@ -14,13 +15,13 @@ public class OverFiftyPriceCouponIssuer extends CouponIssuer {
     }
 
     @Override
-    public Optional<Coupon> issue(Orders orders) {
-        if(orders.getDiscountPriceValue()>5000){
-            this.issueCoupon(orders.getMemberId(),COUPON_ID);
+    public Optional<Coupon> issue(Member member, Orders orders) {
+        if(orders.getPrice()>5000){
+            this.issueCoupon(member.getId(), COUPON_ID);
             return Optional.of(couponRepository.findById(COUPON_ID));
         }
         setNext();
-        return this.execute(orders);
+        return this.execute(member,orders);
     }
 
     @Override

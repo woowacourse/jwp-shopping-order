@@ -2,7 +2,8 @@ package cart.application;
 
 import cart.domain.Member;
 import cart.domain.Orders;
-import cart.domain.PriceValidator;
+import cart.domain.OrdersTaker;
+import cart.domain.Price;
 import cart.domain.couponissuer.CouponIssuer;
 import cart.domain.couponissuer.Issuer;
 import cart.dto.CouponResponse;
@@ -18,37 +19,33 @@ import java.util.stream.Collectors;
 @Service
 public class OrdersService {
     private final OrdersRepository ordersRepository;
-    private final PriceValidator priceValidator;
+    private final OrdersTaker ordersTaker;
     private final CouponRepository couponRepository;
 
-    public OrdersService(OrdersRepository ordersRepository, PriceValidator priceValidator, CouponRepository couponRepository) {
+    public OrdersService(OrdersRepository ordersRepository, OrdersTaker ordersTaker, CouponRepository couponRepository) {
         this.ordersRepository = ordersRepository;
-        this.priceValidator = priceValidator;
+        this.ordersTaker = ordersTaker;
         this.couponRepository = couponRepository;
     }
 
     public Long takeOrders(Member member, final OrdersRequest ordersRequest) {
         final List<Long> cartIds = ordersRequest.getCartProductIds();
-        final int originalPrice = ordersRequest.getOriginalPrice();
-        final int discountPrice = ordersRequest.getDiscountPrice();
         final List<Long> coupons = List.of(ordersRequest.getCouponId());
-        priceValidator.validateOrders(cartIds,discountPrice,coupons);
-        return ordersRepository.takeOrders(member.getId(), cartIds, originalPrice, discountPrice, coupons);
+        return ordersTaker.takeOrder(member.getId(),cartIds,coupons);
     }
 
     public List<OrdersResponse> findMembersAllOrders(final Member member) {
-        return ordersRepository.findAllOrdersByMember(member).stream()
-                .map(OrdersResponse::of).collect(Collectors.toList());
+        return ordersTaker.findOrdersWithOriginalPrice(member);
     }
 
     public OrdersResponse findOrdersById(final Member member, final long id) {
-        return OrdersResponse.ofDetail(ordersRepository.findOrdersById(member, id));
+        return ordersTaker.findOrdersWithId(member,id);
     }
 
     public CouponResponse confirmOrders(Member member, long id) {
         CouponIssuer couponIssuer = new Issuer(couponRepository);
         Orders orders =  ordersRepository.confirmOrdersCreateCoupon(member,id);
-        return CouponResponse.of(couponIssuer.issue(orders));
+        return CouponResponse.of(couponIssuer.issue(member,orders));
     }
 
     public void deleteOrders(final long id) {

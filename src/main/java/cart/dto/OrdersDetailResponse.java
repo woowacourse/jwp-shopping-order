@@ -28,17 +28,17 @@ public class OrdersDetailResponse {
         this.coupon = coupon;
     }
 
-    public static OrdersDetailResponse of(Orders orders) {
-        Optional<Coupon> coupon = Optional.ofNullable(orders.getCoupons().get(0));
-        return new OrdersDetailResponse(
-                orders.getId(),
-                orders.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList()),
-                orders.getOriginalPriceValue(),
-                orders.getDiscountPriceValue(),
-                orders.isConfirmState(),
-                CouponResponse.of(coupon)
-        );
-    }
+//    public static OrdersDetailResponse of(Orders orders) {
+//        Optional<Coupon> coupon = Optional.ofNullable(orders.getCoupons().get(0));
+//        return new OrdersDetailResponse(
+//                orders.getId(),
+//                orders.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList()),
+//                orders.getOriginalPriceValue(),
+//                orders.getDiscountPriceValue(),
+//                orders.isConfirmState(),
+//                CouponResponse.of(coupon)
+//        );
+//    }
 
     public long getId() {
         return id;

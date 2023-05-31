@@ -31,8 +31,8 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 INSERT INTO coupon (name,discount_type,discount_rate,discount_amount,minimum_price) VALUES ('10% 할인', 'percentage',0.1,0,0);
 INSERT INTO coupon (name,discount_type,discount_rate,discount_amount,minimum_price) VALUES ('1000원 할인', 'deduction',0,1000,1000);
 
-INSERT INTO orders (member_id,original_price,discount_price,confirm_state) VALUES (1,10000,9000,false);
-INSERT INTO orders (member_id,original_price,discount_price,confirm_state) VALUES (1,5000,4000,true);
+INSERT INTO orders (member_id,price,confirm_state) VALUES (1,9000,false);
+INSERT INTO orders (member_id,price,confirm_state) VALUES (1,4000,true);
 
 INSERT INTO orders_coupon (orders_id,coupon_id) VALUES (1,1);
 INSERT INTO orders_coupon (orders_id,coupon_id) VALUES (2,2);

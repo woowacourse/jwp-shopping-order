@@ -2,7 +2,11 @@ package cart.repository;
 
 import cart.dao.CartItemDao;
 import cart.dao.OrdersCartItemDao;
+import cart.dao.ProductDao;
 import cart.dao.entity.CartItemEntity;
+import cart.dao.entity.OrdersCartItemEntity;
+import cart.domain.CartItem;
+import cart.domain.Member;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
@@ -14,10 +18,12 @@ import java.util.stream.Collectors;
 public class CartItemRepository {
     private final CartItemDao cartItemDao;
     private final OrdersCartItemDao ordersCartItemDao;
+    private final ProductDao productDao;
 
-    public CartItemRepository(CartItemDao cartItemDao, OrdersCartItemDao ordersCartItemDao) {
+    public CartItemRepository(CartItemDao cartItemDao, OrdersCartItemDao ordersCartItemDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.ordersCartItemDao = ordersCartItemDao;
+        this.productDao = productDao;
     }
 
     public void changeCartItemToOrdersItem(final long orderId, final List<Long> cartIds) {
@@ -43,5 +49,17 @@ public class CartItemRepository {
             productIdQuantityMap.put(cartItem.getProductId(),cartItem.getQuantity());
         }
         return productIdQuantityMap;
+    }
+
+    public List<CartItem> findCartItemsByOrderId(Member member, final long orderId){
+        return   ordersCartItemDao.findAllByOrdersId(orderId).stream()
+                .map(ordersCartItem -> findProductWithCartItems(member, ordersCartItem))
+                .collect(Collectors.toList());
+    }
+    private CartItem findProductWithCartItems(Member member, final OrdersCartItemEntity ordersCartItem) {
+        return new CartItem(ordersCartItem.getId(),
+                ordersCartItem.getQuantity(),
+                productDao.findById(ordersCartItem.getProductId()),
+                member);
     }
 }

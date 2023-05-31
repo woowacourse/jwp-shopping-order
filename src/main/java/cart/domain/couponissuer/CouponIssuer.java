@@ -1,6 +1,7 @@
 package cart.domain.couponissuer;
 
 import cart.domain.Coupon;
+import cart.domain.Member;
 import cart.domain.Orders;
 import cart.repository.CouponRepository;
 import org.springframework.stereotype.Component;
@@ -16,10 +17,10 @@ public abstract class CouponIssuer {
         this.couponRepository = couponRepository;
     }
 
-    abstract public Optional<Coupon> issue(final Orders orders);
+    abstract public Optional<Coupon> issue(Member member,final Orders orders);
     abstract protected void setNext() throws IllegalAccessException;
-    protected Optional<Coupon> execute(Orders orders){
-        return next.issue(orders);
+    protected Optional<Coupon> execute(Member member, Orders orders){
+        return next.issue(member,orders);
     };
     protected void issueCoupon(final long memberId,final long couponId){
         couponRepository.issueCoupon(memberId,couponId);

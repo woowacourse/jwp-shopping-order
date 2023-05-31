@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Orders;
 
@@ -38,22 +39,14 @@ public class OrdersResponse {
         this.coupon = coupon;
     }
 
-    public static OrdersResponse of(Orders orders) {
+    public static OrdersResponse of(Orders orders, List<CartItem> ordersProduct, int originalPrice, final List<Coupon> coupons) {
         return new OrdersResponse(
                 orders.getId(),
-                orders.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList()),
-                orders.isConfirmState()
-        );
-    }
-
-    public static OrdersResponse ofDetail(Orders orders) {
-        return new OrdersResponse(
-                orders.getId(),
-                orders.getCartItems().stream().map(CartItemResponse::of).collect(Collectors.toList()),
-                orders.getOriginalPriceValue(),
-                orders.getDiscountPriceValue(),
+                ordersProduct.stream().map(CartItemResponse::of).collect(Collectors.toList()),
+                originalPrice,
+                orders.getPrice(),
                 orders.isConfirmState(),
-                CouponResponse.of(Optional.of(orders.getCoupons().get(0)))
+                CouponResponse.of(Optional.of(coupons.get(0)))
         );
     }
 
