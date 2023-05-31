@@ -16,6 +16,9 @@ import cart.dto.OrderItemResponse;
 import cart.dto.OrderResponse;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import cart.exception.InvalidOrderCheckedException;
+import cart.exception.InvalidOrderProductException;
+import cart.exception.InvalidOrderQuantityException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,21 +99,27 @@ public class OrderService {
     }
 
     private void compareEachCartItem(final CartItem cartItem, final CartItemRequest request) {
-        if (isInvalidProduct(cartItem, request) || isInvalidQuantity(cartItem, request) || isNotChecked(cartItem)) {
-            throw new IllegalArgumentException();
+        isInvalidProduct(cartItem, request);
+        isInvalidQuantity(cartItem, request);
+        isNotChecked(cartItem);
+    }
+
+    private void isInvalidProduct(final CartItem cartItem, final CartItemRequest request) {
+        if (!cartItem.getProduct().getId().equals(request.getProductId())) {
+            throw new InvalidOrderProductException();
         }
     }
 
-    private boolean isInvalidProduct(final CartItem cartItem, final CartItemRequest request) {
-        return !cartItem.getProduct().getId().equals(request.getProductId());
+    private void isInvalidQuantity(final CartItem cartItem, final CartItemRequest request) {
+        if (cartItem.getQuantity() != request.getQuantity()) {
+            throw new InvalidOrderQuantityException();
+        }
     }
 
-    private boolean isInvalidQuantity(final CartItem cartItem, final CartItemRequest request) {
-        return cartItem.getQuantity() != request.getQuantity();
-    }
-
-    private boolean isNotChecked(final CartItem cartItem) {
-        return !cartItem.isChecked();
+    private void isNotChecked(final CartItem cartItem) {
+        if (!cartItem.isChecked()) {
+            throw new InvalidOrderCheckedException();
+        }
     }
 
     private void updateMember(final Member member, final Order order) {
