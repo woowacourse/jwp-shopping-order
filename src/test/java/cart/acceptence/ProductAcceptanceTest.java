@@ -54,7 +54,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             assertThat(상품_추가_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(상품_추가_결과.jsonPath().getObject("payload", ExceptionResponse.class))
                     .usingRecursiveComparison()
-                    .isEqualTo(new ExceptionResponse("이미 등록된 상품입니다."));
+                    .isEqualTo(new ExceptionResponse("이미 존재하는 상품입니다"));
         }
 
     }
@@ -120,7 +120,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             assertThat(상품_수정_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(상품_수정_결과.jsonPath().getObject("payload", ExceptionResponse.class))
                     .usingRecursiveComparison()
-                    .isEqualTo(new ExceptionResponse("이미 등록된 상품입니다."));
+                    .isEqualTo(new ExceptionResponse("이미 존재하는 상품입니다"));
         }
     }
 
@@ -149,7 +149,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             assertThat(상품_삭제_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(상품_삭제_결과.jsonPath().getObject("payload", ExceptionResponse.class))
                     .usingRecursiveComparison()
-                    .isEqualTo(new ExceptionResponse("존재하지 않는 상품입니다."));
+                    .isEqualTo(new ExceptionResponse("존재하지 않는 상품입니다"));
         }
     }
 

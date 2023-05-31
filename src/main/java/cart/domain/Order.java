@@ -5,8 +5,10 @@ import cart.exception.CartItemException;
 import cart.exception.CartItemException.IllegalMember;
 import cart.exception.CartItemException.TotalPriceNotSame;
 import cart.exception.CartItemException.UnknownCartItem;
+import cart.exception.OrderException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Order {
@@ -69,5 +71,11 @@ public class Order {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    public void checkOwner(final Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new IllegalMember();
+        }
     }
 }

@@ -26,18 +26,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Payload(response));
     }
 
+    @ExceptionHandler({
+            OrderException.IllegalMember.class,
+            CartItemException.IllegalMember.class
+    })
+    public ResponseEntity<Payload> handleException(RuntimeException e) {
+        log.error(e.getMessage(), e);
+        ExceptionResponse response = new ExceptionResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Payload(response));
+    }
+
     @ExceptionHandler(OrderException.class)
     public ResponseEntity<Payload> handleException(OrderException e) {
         log.error(e.getMessage(), e);
         ExceptionResponse response = new ExceptionResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Payload(response));
-    }
-
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Payload> handleException(CartItemException.IllegalMember e) {
-        log.error(e.getMessage(), e);
-        ExceptionResponse response = new ExceptionResponse(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Payload(response));
     }
 
     @ExceptionHandler(CartItemException.UnknownCartItem.class)

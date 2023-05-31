@@ -96,7 +96,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             assertThat(주문_등록_결과.jsonPath().getObject("payload", CartItemIdExceptionResponse.class))
                     .usingRecursiveComparison()
                     .isEqualTo(new CartItemIdExceptionResponse(
-                            "등록되지 않은 상품이 포함되어 있습니다.",
+                            "등록되지 않은 상품이 포함되어 있습니다. 다시 한번 확인해주세요",
                             List.of(존재하지_않는_장바구니_아이템_아이디)
                             )
                     );
@@ -122,7 +122,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(주문_등록_결과.jsonPath().getObject("payload", ExceptionResponse.class))
                     .usingRecursiveComparison()
-                    .isEqualTo(new ExceptionResponse("총 가격이 일치하지 않습니다."));
+                    .isEqualTo(new ExceptionResponse("상품 정보에 변동사항이 존재합니다. 금액을 다시 한번 확인해주세요"));
         }
 
         @Test
@@ -144,7 +144,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
             assertThat(주문_등록_결과.jsonPath().getObject("payload", ExceptionResponse.class))
                     .usingRecursiveComparison()
-                    .isEqualTo(new ExceptionResponse("잘못된 접근입니다."));
+                    .isEqualTo(new ExceptionResponse("잘못된 요청입니다"));
         }
 
     }

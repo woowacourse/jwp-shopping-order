@@ -85,10 +85,9 @@ public class OrderService {
         }
     }
 
-    // todo: 전체적으로 사용자 검증 필요
-
-    public OrderResponse getOrderByOrderId(final long orderId) {
+    public OrderResponse getOrderByOrderId(final Member member, final long orderId) {
         Order order = orderRepository.findByOrderId(orderId);
+        order.checkOwner(member);
         List<OrderDetailsDto> orderDetails = order.getOrderItems()
                 .stream()
                 .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
@@ -96,6 +95,7 @@ public class OrderService {
         return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails);
     }
 
+    // todo: 전체적으로 사용자 검증 필요
     public List<OrderResponse> getOrdersByMember(final Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         List<OrderResponse> orderResponses = new ArrayList<>();
