@@ -1,7 +1,7 @@
 package cart;
 
+import cart.auth.MemberArgumentResolver;
 import cart.repository.MemberRepository;
-import cart.ui.MemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
