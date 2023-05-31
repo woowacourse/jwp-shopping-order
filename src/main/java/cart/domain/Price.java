@@ -23,6 +23,10 @@ public final class Price {
         return new Price(amount - price.amount);
     }
 
+    public Price multiply(final int count) {
+        return new Price(amount * count);
+    }
+
     public boolean isGreaterThanOrEqualTo(final Price price) {
         return amount >= price.amount;
     }
@@ -48,5 +52,12 @@ public final class Price {
     @Override
     public int hashCode() {
         return Objects.hash(amount);
+    }
+
+    @Override
+    public String toString() {
+        return "Price{" +
+                "amount=" + amount +
+                '}';
     }
 }

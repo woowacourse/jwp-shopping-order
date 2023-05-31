@@ -113,4 +113,19 @@ class PriceTest {
         // then
         assertThat(result).isFalse();
     }
+
+    @Test
+    @DisplayName("2만원에 3을 곱하면 6만원이다.")
+    void multiply_20000_and_3_result_60000() {
+        // given
+        final Price price = new Price(20000);
+        final int count = 3;
+
+        // when
+        final Price result = price.multiply(count);
+
+        // then
+        final Price expected = new Price(60000);
+        assertThat(result).isEqualTo(expected);
+    }
 }
