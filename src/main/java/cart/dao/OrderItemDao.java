@@ -47,13 +47,13 @@ public class OrderItemDao {
     }
 
     public void update(final OrderItemEntity orderItemEntity) {
-        String sql = "UPDATE order_item SET name = :name, image_url = :imageUrl, price = price, quantity = quantity, order_id = :orderId";
+        String sql = "UPDATE order_item SET name = :name, image_url = :imageUrl, price = :price, quantity = :quantity, order_id = :orderId";
         final MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("name", orderItemEntity.getName());
-        sqlParameterSource.addValue("image_url", orderItemEntity.getImageUrl());
+        sqlParameterSource.addValue("imageUrl", orderItemEntity.getImageUrl());
         sqlParameterSource.addValue("price", orderItemEntity.getPrice());
         sqlParameterSource.addValue("quantity", orderItemEntity.getQuantity());
-        sqlParameterSource.addValue("order_id", orderItemEntity.getOrderId());
+        sqlParameterSource.addValue("orderId", orderItemEntity.getOrderId());
 
         namedJdbcTemplate.update(sql, sqlParameterSource);
     }

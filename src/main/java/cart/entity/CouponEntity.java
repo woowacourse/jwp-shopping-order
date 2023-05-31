@@ -30,6 +30,15 @@ public class CouponEntity {
         this.minimumPrice = minimumPrice;
     }
 
+    public CouponEntity(
+            final String name,
+            final String policyType,
+            final long value,
+            final long minimumPrice
+    ) {
+        this(null, name, policyType, value, minimumPrice);
+    }
+
     public static CouponEntity from(final Coupon coupon) {
         return new CouponEntity(
                 null,

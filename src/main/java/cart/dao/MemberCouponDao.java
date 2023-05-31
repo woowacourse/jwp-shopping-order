@@ -33,15 +33,6 @@ public class MemberCouponDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Optional<MemberCouponEntity> findByMemberIdAndCouponId(final Long memberId, final Long couponId) {
-        String sql = "SELECT * FROM member_coupon WHERE member_id = ? AND coupon_id = ?";
-        try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, memberId, couponId));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
     public MemberCouponEntity insert(final MemberCouponEntity memberCouponEntity) {
         final BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(memberCouponEntity);
         final long id = jdbcInsert.executeAndReturnKey(parameterSource).longValue();

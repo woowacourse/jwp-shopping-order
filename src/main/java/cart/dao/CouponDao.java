@@ -55,11 +55,6 @@ public class CouponDao {
         return namedJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
     }
 
-    public void deleteById(final Long id) {
-        String sql = "DELETE FROM coupon WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
     public List<CouponEntity> findAll() {
         String sql = "SELECT * FROM coupon";
         return jdbcTemplate.query(sql, rowMapper);

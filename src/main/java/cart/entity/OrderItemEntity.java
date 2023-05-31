@@ -21,6 +21,10 @@ public class OrderItemEntity {
         this.orderId = orderId;
     }
 
+    public OrderItemEntity(final String name, final String imageUrl, final long price, final Integer quantity, final Long orderId) {
+        this(null, name, imageUrl, price, quantity, orderId);
+    }
+
     public static OrderItemEntity of(final OrderItem orderItem, final Long orderId) {
         return new OrderItemEntity(
                 orderItem.getId(),
