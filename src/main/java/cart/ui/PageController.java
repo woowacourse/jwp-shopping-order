@@ -1,7 +1,7 @@
 package cart.ui;
 
+import cart.application.MemberService;
 import cart.application.ProductService;
-import cart.repository.MemberRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
     private final ProductService productService;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
-    public PageController(ProductService productService, MemberRepository memberRepository) {
+    public PageController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
     }
 
     @GetMapping("/admin")
@@ -24,7 +24,7 @@ public class PageController {
 
     @GetMapping("/settings")
     public String members(Model model) {
-        model.addAttribute("members", memberRepository.getAllMembers());
+        model.addAttribute("members", memberService.getAllMembers());
         return "settings";
     }
 }

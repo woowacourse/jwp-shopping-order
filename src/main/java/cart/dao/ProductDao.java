@@ -4,10 +4,13 @@ import cart.entity.ProductEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Repository;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertAction;
     private final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
             new ProductEntity(
@@ -26,6 +30,9 @@ public class ProductDao {
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(
+                Objects.requireNonNull(jdbcTemplate.getDataSource())
+        );
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
@@ -70,5 +77,14 @@ public class ProductDao {
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public List<ProductEntity> getProductByIds(final List<Long> ids) {
+        String sql = "SELECT * FROM product WHERE id IN (:ids)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ids", ids);
+
+        return namedParameterJdbcTemplate.query(sql, params, rowMapper);
     }
 }
