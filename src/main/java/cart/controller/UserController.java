@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.request.LoginRequest;
+import cart.service.request.LoginRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

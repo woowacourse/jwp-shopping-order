@@ -13,10 +13,10 @@ class OrderTest {
     @Test
     @DisplayName("Order 생성 성공")
     void create_success() {
-        Member member = new Member(1L, "홍홍", "honghong");
-        Product hongProduct = new Product("홍실", 1_000_000_000, "hong.com");
-        CartItem cartItem = new CartItem(member, hongProduct);
-        Order order = Order.of(member, List.of(cartItem));
+        final Member member = new Member(1L, "홍홍", "honghong");
+        final Product hongProduct = new Product("홍실", 1_000_000_000, "hong.com");
+        final CartItem cartItem = new CartItem(member, hongProduct);
+        final Order order = Order.of(member, List.of(cartItem));
 
         assertThat(order.getTimeStamp()).isNotNull();
         assertThat(order.getMember()).isEqualTo(member);
@@ -29,11 +29,11 @@ class OrderTest {
     @Test
     @DisplayName("Order 생성 실패 (장바구니를 담은 유저와 주문한 유저가 다름)")
     void create_fail() {
-        Member member = new Member(1L, "홍홍", "honghong");
-        Member illegalMember = new Member(2L, "홍실", "honghong");
-        Product hongProduct = new Product("홍실", 1_000_000_000, "hong.com");
-        CartItem cartItem = new CartItem(member, hongProduct);
-        List<CartItem> cartItems = List.of(cartItem);
+        final Member member = new Member(1L, "홍홍", "honghong");
+        final Member illegalMember = new Member(2L, "홍실", "honghong");
+        final Product hongProduct = new Product("홍실", 1_000_000_000, "hong.com");
+        final CartItem cartItem = new CartItem(member, hongProduct);
+        final List<CartItem> cartItems = List.of(cartItem);
 
         assertThatThrownBy(() -> Order.of(illegalMember, cartItems))
                 .isInstanceOf(IllegalArgumentException.class);

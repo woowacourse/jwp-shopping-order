@@ -6,7 +6,7 @@ import static cart.TestDataFixture.MEMBER_3;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import cart.controller.request.OrderRequestDto;
+import cart.service.request.OrderRequestDto;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;

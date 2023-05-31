@@ -4,9 +4,9 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import cart.integration.request.OrderRequestDto;
-import cart.integration.response.OrderProductResponseDto;
-import cart.integration.response.OrderResponseDto;
+import cart.service.request.OrderRequestDto;
+import cart.service.response.OrderProductResponseDto;
+import cart.service.response.OrderResponseDto;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemRequest;
@@ -79,7 +79,8 @@ class OrderIntegrationTest extends IntegrationTest {
 
         // 주문한 물품을 장바구니에서 삭제한다. // TODO : 주문하기
         ExtractableResponse<Response> cartItems = requestGetCartItems(member);
-        List<CartItemResponse> cartItemResponse = cartItems.as(new TypeRef<>() {});
+        List<CartItemResponse> cartItemResponse = cartItems.as(new TypeRef<>() {
+        });
         assertThat(cartItemResponse).isEmpty();
 
         // 주문내역을 저장한다. // TODO : 주문 내역 확인
@@ -132,5 +133,4 @@ class OrderIntegrationTest extends IntegrationTest {
                 .when().get("/cart-items")
                 .then().log().all().statusCode(HttpStatus.OK.value()).extract();
     }
-
 }
