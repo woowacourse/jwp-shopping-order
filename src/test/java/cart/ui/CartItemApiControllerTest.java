@@ -58,8 +58,8 @@ class CartItemApiControllerTest {
         Member member = new Member(1L, "aa@aaa.com", "1234", 1000);
         CartItem cartItem = new CartItem(1L, 3, product, member);
         CartItemResponse cartItemResponse = CartItemResponse.of(cartItem);
-        given(cartItemService.findByMember(any(Member.class))).willReturn(List.of(cartItemResponse));
-        given(memberDao.getMemberByEmail(any())).willReturn(Optional.of(member));
+        given(cartItemService.findAllByMember(any(Member.class))).willReturn(List.of(cartItemResponse));
+        given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(get("/cart-items")
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0"))
@@ -76,7 +76,7 @@ class CartItemApiControllerTest {
         Member member = new Member(1L, "aaa@google.com", "1234", 1000);
         CartItemRequest cartItemRequest = new CartItemRequest(1L);
         given(cartItemService.add(any(Member.class), any(CartItemRequest.class))).willReturn(1L);
-        given(memberDao.getMemberByEmail(any())).willReturn(Optional.of(member));
+        given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/cart-items")
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
@@ -96,7 +96,7 @@ class CartItemApiControllerTest {
         Member member = new Member(1L, "aaa@google.com", "1234", 1000);
         willDoNothing().given(cartItemService)
                 .updateQuantity(any(Member.class), anyLong(), any(CartItemQuantityUpdateRequest.class));
-        given(memberDao.getMemberByEmail(any())).willReturn(Optional.of(member));
+        given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.patch("/cart-items/{id}", 1L)
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
@@ -121,7 +121,7 @@ class CartItemApiControllerTest {
         Member member = new Member(1L, "aaa@google.com", "1234", 1000);
         willDoNothing().given(cartItemService)
                 .remove(any(Member.class), anyLong());
-        given(memberDao.getMemberByEmail(any())).willReturn(Optional.of(member));
+        given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/cart-items/{id}", 1L)
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0"))

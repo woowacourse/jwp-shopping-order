@@ -19,12 +19,12 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+        List<Product> products = productDao.findAll();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.findById(productId);
         return ProductResponse.of(product);
     }
 
@@ -34,7 +34,7 @@ public class ProductService {
                 .price(productRequest.getPrice())
                 .imageUrl(productRequest.getImageUrl())
                 .build();
-        return productDao.createProduct(product);
+        return productDao.save(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {

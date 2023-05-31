@@ -41,8 +41,8 @@ class OrderRepositoryTest {
         MemberDao memberDao = new MemberDao(jdbcTemplate);
         ProductDao productDao = new ProductDao(jdbcTemplate);
 
-        member = memberDao.getMemberById(1L).get();
-        productId = productDao.createProduct(new Product(null, "사과", 1000, "http://image.com/image.png"));
+        member = memberDao.findById(1L).get();
+        productId = productDao.save(new Product(null, "사과", 1000, "http://image.com/image.png"));
 
         orderRepository = new OrderRepository(orderDao, orderItemDao, memberDao);
     }

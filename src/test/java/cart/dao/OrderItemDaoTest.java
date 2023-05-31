@@ -36,12 +36,12 @@ class OrderItemDaoTest {
         orderDao = new OrderDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         orderId = orderDao.save(new OrderEntity(null, 1L, LocalDateTime.now(), 1000));
-        productId = productDao.createProduct(new Product(null, "벨리곰", 1000, "http:test"));
+        productId = productDao.save(new Product(null, "벨리곰", 1000, "http:test"));
     }
 
     @Test
     void 주문_상품이_정상적으로_저장된다() {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.findById(productId);
         OrderItem orderItem = new OrderItem(null, product, 10, 10000);
 
         Long orderItemId = orderItemDao.save(orderId, orderItem);
@@ -51,7 +51,7 @@ class OrderItemDaoTest {
 
     @Test
     void 주문_상품이_정상적으로_조회된다() {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.findById(productId);
         OrderItem orderItem = new OrderItem(null, product, 10, 10000);
 
         orderItemDao.save(orderId, orderItem);

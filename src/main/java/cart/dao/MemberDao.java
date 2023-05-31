@@ -24,7 +24,7 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Optional<Member> getMemberById(Long id) {
+    public Optional<Member> findById(Long id) {
         String sql = "SELECT member.id, member.email, member.password, member_point.point " +
                 "FROM member " +
                 "JOIN member_point ON member_point.member_id = member.id " +
@@ -32,7 +32,7 @@ public class MemberDao {
         return jdbcTemplate.query(sql, new MemberRowMapper(), id).stream().findAny();
     }
 
-    public Optional<Member> getMemberByEmail(String email) {
+    public Optional<Member> findByEmail(String email) {
         String sql = "SELECT member.id, member.email, member.password, member_point.point " +
                 "FROM member " +
                 "JOIN member_point ON member_point.member_id = member.id " +
@@ -57,7 +57,7 @@ public class MemberDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
+    public List<Member> findAll() {
         String sql = "SELECT member.id, member.email, member.password, member_point.point " +
                 "FROM member " +
                 "JOIN member_point ON member_point.member_id = member.id ";

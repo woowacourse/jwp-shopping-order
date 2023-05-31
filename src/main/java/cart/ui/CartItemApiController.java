@@ -30,7 +30,7 @@ public class CartItemApiController {
     @GetMapping
     public ResponseEntity<Response> showCartItems(Member member) {
         return ResponseEntity.ok()
-                .body(new ResultResponse<>("장바구니에 담긴 상품이 조회되었습니다.", cartItemService.findByMember(member)));
+                .body(new ResultResponse<>("장바구니에 담긴 상품이 조회되었습니다.", cartItemService.findAllByMember(member)));
     }
 
     @PostMapping

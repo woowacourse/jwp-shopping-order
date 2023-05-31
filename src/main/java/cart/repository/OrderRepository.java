@@ -37,7 +37,7 @@ public class OrderRepository {
         OrderEntity orderEntity = orderDao.findById(orderId)
                 .orElseThrow(IllegalArgumentException::new);// TODO
         List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
-        Member member = memberDao.getMemberById(orderEntity.getMemberId())
+        Member member = memberDao.findById(orderEntity.getMemberId())
                 .orElseThrow(IllegalArgumentException::new);// TODO
         return new Order(orderId, member, orderItems, orderEntity.getSpendPoint(), orderEntity.getCreatedAt());
     }

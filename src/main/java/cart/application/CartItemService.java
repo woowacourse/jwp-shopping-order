@@ -22,7 +22,7 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
+    public List<CartItemResponse> findAllByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
@@ -30,7 +30,7 @@ public class CartItemService {
     public Long add(Member member, CartItemRequest cartItemRequest) {
         CartItem cartItem = CartItem.builder()
                 .member(member)
-                .product(productDao.getProductById(cartItemRequest.getProductId()))
+                .product(productDao.findById(cartItemRequest.getProductId()))
                 .quantity(1)
                 .build();
         return cartItemDao.save(cartItem);
