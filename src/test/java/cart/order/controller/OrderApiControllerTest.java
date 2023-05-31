@@ -112,4 +112,21 @@ class OrderApiControllerTest extends IntegrationTestHelper {
         () -> assertEquals(orderId, specificOrderResponse.getOrderId())
     );
   }
+
+  @Test
+  @DisplayName("deleteOrder() : 주문을 성공적으로 삭제한다면 204 No Content를 반환한다.")
+  void test_deleteOrder() throws Exception {
+    //given
+    final Member member = memberDao.getMemberById(1L);
+    final long orderId = 1L;
+
+    //when & then
+    given().log().all()
+        .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        .when()
+        .delete("/orders/{orderId}", orderId)
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.NO_CONTENT.value());
+  }
 }

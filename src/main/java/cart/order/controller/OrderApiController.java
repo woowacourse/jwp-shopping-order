@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,5 +54,14 @@ public class OrderApiController {
       @PathVariable("order-id") Long orderId
   ) {
     return orderQueryService.searchOrder(member, orderId);
+  }
+
+  @DeleteMapping("/orders/{order-id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteOrder(
+      final Member member,
+      @PathVariable("order-id") Long orderId
+  ) {
+    orderCommandService.deleteOrder(member, orderId);
   }
 }

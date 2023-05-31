@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.application.dto.RegisterOrderRequest;
+import cart.order.exception.CanNotDeleteNotMyOrderException;
 import cart.order.exception.NotSameTotalPriceException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -71,5 +72,17 @@ class OrderCommandServiceTest {
     //when & then
     assertThatThrownBy(() -> orderCommandService.registerOrder(member, registerOrderRequest))
         .isInstanceOf(NotSameTotalPriceException.class);
+  }
+
+  @Test
+  @DisplayName("deleteOrder() : 다른 사용자의 주문 목록을 삭제하려고 하면 CanNotDeleteNotMyOrderException이 발생한다.")
+  void test_deleteOrder_CanNotDeleteNotMyOrderException() throws Exception {
+    //given
+    final Member member = memberDao.getMemberById(1L);
+    final Long 다른_사용자의_주문_아이디 = 4L;
+
+    //when & then
+    assertThatThrownBy(() -> orderCommandService.deleteOrder(member, 다른_사용자의_주문_아이디))
+        .isInstanceOf(CanNotDeleteNotMyOrderException.class);
   }
 }
