@@ -11,6 +11,8 @@ public class ProductResponse {
     private boolean isDiscounted;
     private int discountRate;
 
+    public ProductResponse() {
+    }
 
     public ProductResponse(Long id, String name, int price, String imageUrl, boolean isDiscounted, int discountRate) {
         this.id = id;

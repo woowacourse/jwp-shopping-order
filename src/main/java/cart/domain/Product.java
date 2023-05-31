@@ -55,11 +55,11 @@ public class Product {
         return discountRate;
     }
 
-    public int calculateDiscountedPrice(int discountedPercentage) {
+    public int calculateDiscountedPrice(int memberDiscount) {
         if (getIsDiscounted()) {
-            return (discountRate / 100 * price - price) * -1;
+            return (discountRate * price / 100 - price) * -1;
         } else {
-            return (discountedPercentage / 100 * price - price) * -1;
+            return (memberDiscount * price / 100  - price) * -1;
         }
     }
 }

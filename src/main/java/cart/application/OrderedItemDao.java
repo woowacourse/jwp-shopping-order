@@ -56,6 +56,6 @@ public class OrderedItemDao {
             int discountRate = rs.getInt("product_discount_rate");
 
             return new OrderedItem(id, ordersId, productName, productPrice, productImage, productQuantity, isDiscounted, discountRate);
-        });
+        }, id);
     }
 }

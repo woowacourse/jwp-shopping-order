@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.OrderService;
+import cart.dto.OrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ public class MemberController {
     private OrderService orderService;
 
     @GetMapping("/{memberId}/orders/{orderId}")
-    public ResponseEntity<OrderResponse> getOrderByOrderId(@PathVariable Long memberId, @PathVariable Long orderId){
-        return ResponseEntity.ok(orderService.getOrderById(orderId));
+    public ResponseEntity<OrderResponse> getOrderByIds(@PathVariable Long memberId, @PathVariable Long orderId){
+        return ResponseEntity.ok(orderService.getOrderByIds(memberId, orderId));
     }
 }

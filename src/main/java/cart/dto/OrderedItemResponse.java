@@ -5,6 +5,10 @@ public class OrderedItemResponse {
     private int quantity;
     private ProductResponse productResponse;
 
+    public ProductResponse getProductResponse() {
+        return productResponse;
+    }
+
     public OrderedItemResponse(int quantity, ProductResponse productResponse) {
         this.quantity = quantity;
         this.productResponse = productResponse;
@@ -12,9 +16,5 @@ public class OrderedItemResponse {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public ProductResponse getProductResponse() {
-        return productResponse;
     }
 }
