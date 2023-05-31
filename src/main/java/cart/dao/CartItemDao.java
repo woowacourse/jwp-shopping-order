@@ -55,6 +55,12 @@ public class CartItemDao {
         }
     }
 
+    public List<CartItemEntity> findByMemberId(final Long memberId) {
+        String sql = "SELECT " + ALL_COLUMN + " FROM " + TABLE + " WHERE member_id = ?;";
+
+        return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
     public List<CartItemEntity> findAll() {
         String sql = "SELECT " + ALL_COLUMN + " FROM " + TABLE + ";";
 

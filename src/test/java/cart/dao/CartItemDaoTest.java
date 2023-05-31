@@ -69,6 +69,18 @@ class CartItemDaoTest extends DaoTest {
     }
 
     @Test
+    void 회원ID로_데이터를_조회한다() {
+        // given
+        cartItemDao.insert(dummyCartItemEntity);
+
+        // when
+        List<CartItemEntity> result = cartItemDao.findByMemberId(dummyMember.getId());
+
+        // then
+        assertThat(result).hasSize(1);
+    }
+
+    @Test
     void 존재하지_않는_데이터를_조회하면_예외가_발생한다() {
         // expect
         assertThatThrownBy(() -> cartItemDao.findById(213213L))
