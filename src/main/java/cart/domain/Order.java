@@ -15,13 +15,13 @@ public class Order {
     private final List<OrderItem> orderItems;
 
     public Order(final MemberCoupon memberCoupon, final Member member, final List<OrderItem> orderItems) {
-        this(null, DEFAULT_DELIVERY_FEE, memberCoupon, member, orderItems);
+        this(null, memberCoupon, member, orderItems);
     }
 
-    public Order(final Long id, final Long deliveryFee, final MemberCoupon memberCoupon, final Member member,
+    public Order(final Long id, final MemberCoupon memberCoupon, final Member member,
                  final List<OrderItem> orderItems) {
         this.id = id;
-        this.deliveryFee = deliveryFee;
+        this.deliveryFee = DEFAULT_DELIVERY_FEE;
         this.memberCoupon = memberCoupon;
         this.member = member;
         this.orderItems = orderItems;

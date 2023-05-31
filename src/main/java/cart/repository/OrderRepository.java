@@ -71,7 +71,6 @@ public class OrderRepository {
 
         return new Order(
                 savedOrderId,
-                3000L,
                 order.getMemberCoupon(),
                 order.getMember(),
                 savedOrderItems
@@ -87,7 +86,6 @@ public class OrderRepository {
 
         return new Order(
                 orderId,
-                ordersEntity.getDeliveryFee(),
                 memberCoupon,
                 member,
                 orderItems
@@ -125,7 +123,6 @@ public class OrderRepository {
         final MemberCoupon memberCoupon = getMemberCoupon(member, ordersEntity.getMemberCouponId());
         return new Order(
                 orderEntityId,
-                ordersEntity.getDeliveryFee(),
                 memberCoupon,
                 member,
                 makeOrderItems(orderItemDao.findAllByOrderId(orderEntityId))
