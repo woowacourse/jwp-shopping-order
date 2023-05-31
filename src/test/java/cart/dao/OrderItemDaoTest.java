@@ -41,7 +41,7 @@ class OrderItemDaoTest {
 
     @Test
     void 주문_상품이_정상적으로_저장된다() {
-        Product product = productDao.findById(productId);
+        Product product = productDao.findById(productId).get();
         OrderItem orderItem = new OrderItem(null, product, 10, 10000);
 
         Long orderItemId = orderItemDao.save(orderId, orderItem);
@@ -51,7 +51,7 @@ class OrderItemDaoTest {
 
     @Test
     void 주문_상품이_정상적으로_조회된다() {
-        Product product = productDao.findById(productId);
+        Product product = productDao.findById(productId).get();
         OrderItem orderItem = new OrderItem(null, product, 10, 10000);
 
         orderItemDao.save(orderId, orderItem);

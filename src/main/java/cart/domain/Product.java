@@ -27,8 +27,8 @@ public class Product {
         return name;
     }
 
-    public Price getPrice() {
-        return price;
+    public long getPrice() {
+        return price.getAmount();
     }
 
     public String getImageUrl() {

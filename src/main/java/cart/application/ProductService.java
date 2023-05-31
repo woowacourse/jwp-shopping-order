@@ -24,7 +24,8 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.findById(productId);
+        Product product = productDao.findById(productId)
+                .orElseThrow(IllegalArgumentException::new); // TODO
         return ProductResponse.of(product);
     }
 

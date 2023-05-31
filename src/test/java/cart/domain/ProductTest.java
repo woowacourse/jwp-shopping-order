@@ -18,7 +18,7 @@ class ProductTest {
         assertAll(
                 () -> assertThat(product.getId()).isEqualTo(1L),
                 () -> assertThat(product.getName()).isEqualTo("젤리"),
-                () -> assertThat(product.getPrice().getAmount()).isEqualTo(1000),
+                () -> assertThat(product.getPrice()).isEqualTo(1000),
                 () -> assertThat(product.getImageUrl()).isEqualTo("http://image.com/image.png")
         );
     }

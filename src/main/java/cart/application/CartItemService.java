@@ -4,6 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -28,16 +29,19 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
+        Product product = productDao.findById(cartItemRequest.getProductId())
+                .orElseThrow(IllegalArgumentException::new);// TODO
         CartItem cartItem = CartItem.builder()
                 .member(member)
-                .product(productDao.findById(cartItemRequest.getProductId()))
+                .product(product)
                 .quantity(1)
                 .build();
         return cartItemDao.save(cartItem);
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(IllegalArgumentException::new); // TODO
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -50,7 +54,8 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(IllegalArgumentException::new); // TODO
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
