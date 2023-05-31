@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import static cart.fixture.MemberFixture.MEMBER;
 import static cart.fixture.ProductFixture.CHICKEN;
@@ -13,6 +13,7 @@ import cart.domain.Product;
 import cart.entity.OrderCouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import cart.repository.OrderCouponDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
