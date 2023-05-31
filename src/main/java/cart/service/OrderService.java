@@ -1,15 +1,15 @@
 package cart.service;
 
 import cart.domain.cart.Item;
+import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
-import cart.domain.coupon.Coupon;
 import cart.dto.ItemIdDto;
 import cart.dto.OrderResponse;
 import cart.dto.OrderSaveRequest;
-import cart.exception.CouponNotFoundException;
+import cart.exception.MemberCouponNotFoundException;
 import cart.exception.OrderNotFoundException;
 import cart.repository.CartItemRepository;
-import cart.repository.CouponRepository;
+import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.Objects;
@@ -23,16 +23,13 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
-    private final CouponRepository couponRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
-    public OrderService(
-            final OrderRepository orderRepository,
-            final CartItemRepository cartItemRepository,
-            final CouponRepository couponRepository
-    ) {
+    public OrderService(final OrderRepository orderRepository, final CartItemRepository cartItemRepository,
+                        final MemberCouponRepository memberCouponRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
-        this.couponRepository = couponRepository;
+        this.memberCouponRepository = memberCouponRepository;
     }
 
     public Long save(final OrderSaveRequest orderSaveRequest, final Long memberId) {
@@ -41,12 +38,12 @@ public class OrderService {
                 .collect(Collectors.toList());
         final List<Item> items = cartItemRepository.findAllByIds(itemIds, memberId);
         if (Objects.nonNull(orderSaveRequest.getCouponId())) {
-            final Coupon coupon = couponRepository.findByIdAndMemberId(orderSaveRequest.getCouponId(), memberId)
-                    .orElseThrow(CouponNotFoundException::new);
-            final Order order = orderRepository.save(new Order(coupon, memberId, items));
+            final MemberCoupon memberCoupon = memberCouponRepository.findById(orderSaveRequest.getCouponId())
+                    .orElseThrow(MemberCouponNotFoundException::new);
+            final Order order = orderRepository.save(new Order(memberCoupon, memberId, items));
             return order.getId();
         }
-        final Order order = orderRepository.save(new Order(Coupon.EMPTY, memberId, items));
+        final Order order = orderRepository.save(new Order(MemberCoupon.empty(memberId), memberId, items));
         return order.getId();
     }
 
@@ -57,8 +54,11 @@ public class OrderService {
     }
 
     public OrderResponse findById(final Long id, final Long memberId) {
-        return orderRepository.findById(id, memberId)
-                .map(OrderResponse::from)
+        final Order order = orderRepository.findById(id)
                 .orElseThrow(OrderNotFoundException::new);
+
+        order.checkOwner(memberId);
+
+        return OrderResponse.from(order);
     }
 }

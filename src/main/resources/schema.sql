@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS `CART_ITEM`
 
 CREATE TABLE IF NOT EXISTS `ORDERS`
 (
-    `id`           long PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `delivery_fee` long             NOT NULL,
-    `coupon_id`    long,
-    `member_id`    long             NOT NULL,
-    `created_at`   timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    `updated_at`   timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
+    `id`               long PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `delivery_fee`     long             NOT NULL,
+    `member_coupon_id` long,
+    `member_id`        long             NOT NULL,
+    `created_at`       timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at`       timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE IF NOT EXISTS `ORDER_ITEM`
@@ -51,16 +51,13 @@ CREATE TABLE IF NOT EXISTS `ORDER_ITEM`
 
 CREATE TABLE IF NOT EXISTS `COUPON`
 (
-    `id`                    long PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `name`                  varchar(255)     NOT NULL,
-    `policy_type`           varchar(255)     NOT NULL,
-    `discount_price`        long             NOT NULL,
-    `discount_percent`      int              NOT NULL,
-    `discount_delivery_fee` boolean          NOT NULL,
-    `condition_type`        varchar(255)     NOT NULL,
-    `minimum_price`         long             NOT NULL,
-    `created_at`            timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    `updated_at`            timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
+    `id`             long PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `name`           varchar(255)     NOT NULL,
+    `policy_type`    varchar(255)     NOT NULL,
+    `discount_value` long             NOT NULL,
+    `minimum_price`  long             NOT NULL,
+    `created_at`     timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated_at`     timestamp        NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE (CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE IF NOT EXISTS `MEMBER_COUPON`

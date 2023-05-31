@@ -1,6 +1,9 @@
 package cart.service;
 
-import static cart.domain.coupon.Coupon.EMPTY;
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.ProductFixture.상품_18900원;
+import static cart.fixture.ProductFixture.상품_28900원;
+import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -9,14 +12,13 @@ import cart.domain.cart.Item;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
 import cart.domain.cart.Product;
-import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.NoneDiscountCondition;
 import cart.domain.member.Member;
 import cart.dto.ItemDto;
 import cart.dto.ItemIdDto;
 import cart.dto.OrderResponse;
 import cart.dto.OrderSaveRequest;
+import cart.fixture.CouponFixture;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
@@ -61,17 +63,13 @@ class OrderServiceTest {
     @Test
     void 상품을_주문한다() {
         // given
-        final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
+        final Member member = memberRepository.save(사용자1);
         final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final Coupon coupon = couponRepository.save(new Coupon(
-                "2000원 할인 쿠폰",
-                new AmountDiscountPolicy(2000L),
-                new NoneDiscountCondition()
-        ));
-        memberCouponRepository.saveAll(List.of(new MemberCoupon(member, coupon)));
+        final Coupon coupon = couponRepository.save(CouponFixture._3만원_이상_2천원_할인_쿠폰);
+        memberCouponRepository.saveAll(List.of(new MemberCoupon(member.getId(), coupon)));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
                 List.of(new ItemIdDto(cartItem1.getId()), new ItemIdDto(cartItem2.getId())),
                 coupon.getId()
@@ -90,15 +88,19 @@ class OrderServiceTest {
     @Test
     void 주문_전체_조회() {
         // given
-        final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
-        final Product product3 = productRepository.save(new Product("pizza3", "pizza3.jpg", 18900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
+        final Product product3 = productRepository.save(상품_28900원);
+        final Member member = memberRepository.save(사용자1);
         final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final Item cartItem3 = cartItemRepository.save(new CartItem(member, product3));
-        final Order order1 = orderRepository.save(new Order(EMPTY, member.getId(), List.of(cartItem1, cartItem2)));
-        final Order order2 = orderRepository.save(new Order(EMPTY, member.getId(), List.of(cartItem3)));
+        final Order order1 = orderRepository.save(
+                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem1, cartItem2))
+        );
+        final Order order2 = orderRepository.save(
+                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem3))
+        );
 
         // when
         final List<OrderResponse> result = orderService.findAll(member.getId());
@@ -106,11 +108,11 @@ class OrderServiceTest {
         // then
         assertThat(result).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(List.of(
                 new OrderResponse(order1.getId(), 27800L, 0L, 3000L, List.of(
-                        new ItemDto(null, "pizza1", 8900L, "pizza1.jpg", 1),
-                        new ItemDto(null, "pizza2", 18900L, "pizza2.jpg", 1)
+                        new ItemDto(null, "pizza1", 8900L, "pizza1.png", 1),
+                        new ItemDto(null, "pizza2", 18900L, "pizza2.png", 1)
                 )),
-                new OrderResponse(order2.getId(), 18900L, 0L, 3000L, List.of(
-                        new ItemDto(null, "pizza3", 18900L, "pizza3.jpg", 1)
+                new OrderResponse(order2.getId(), 28900L, 0L, 3000L, List.of(
+                        new ItemDto(null, "pizza3", 28900L, "pizza3.png", 1)
                 ))
         ));
     }
@@ -118,10 +120,12 @@ class OrderServiceTest {
     @Test
     void 주문_단일_조회() {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product = productRepository.save(상품_8900원);
+        final Member member = memberRepository.save(사용자1);
         final Item cartItem = cartItemRepository.save(new CartItem(member, product));
-        final Order order = orderRepository.save(new Order(EMPTY, member.getId(), List.of(cartItem)));
+        final Order order = orderRepository.save(
+                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem))
+        );
 
         // when
         final OrderResponse result = orderService.findById(order.getId(), member.getId());
@@ -129,7 +133,7 @@ class OrderServiceTest {
         // then
         assertThat(result).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(
                 new OrderResponse(order.getId(), 8900L, 0L, 3000L, List.of(
-                        new ItemDto(null, "pizza1", 8900L, "pizza1.jpg", 1)
+                        new ItemDto(null, "pizza1", 8900L, "pizza1.png", 1)
                 ))
         );
     }

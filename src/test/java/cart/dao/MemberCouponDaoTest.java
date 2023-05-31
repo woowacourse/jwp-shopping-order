@@ -1,9 +1,9 @@
 package cart.dao;
 
-import static cart.domain.coupon.DiscountConditionType.MINIMUM_PRICE;
-import static cart.domain.coupon.DiscountConditionType.NONE;
-import static cart.domain.coupon.DiscountPolicyType.DELIVERY;
-import static cart.domain.coupon.DiscountPolicyType.PRICE;
+import static cart.fixture.CouponFixture._3만원_이상_3천원_할인_쿠폰_엔티티;
+import static cart.fixture.CouponFixture._배달비_3천원_할인_쿠폰_엔티티;
+import static cart.fixture.MemberFixture.사용자1_엔티티;
+import static cart.fixture.MemberFixture.사용자2_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -34,12 +34,8 @@ class MemberCouponDaoTest {
     @Test
     void 사용자_쿠폰을_저장한다() {
         // given
-        final CouponEntity couponEntity = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity memberEntity = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
+        final CouponEntity couponEntity = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity memberEntity = memberDao.insert(사용자1_엔티티);
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(
                 memberEntity.getId(),
                 couponEntity.getId(),
@@ -50,20 +46,15 @@ class MemberCouponDaoTest {
         memberCouponDao.insert(memberCouponEntity);
 
         // then
-        assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberCouponEntity.getMemberId()))
-                .hasSize(1);
+        assertThat(memberCouponDao.findAllByUsedAndMemberId(false, memberCouponEntity.getMemberId())).hasSize(1);
     }
 
     @Test
     void 사용자_쿠폰을_전부_저장한다() {
         // given
-        final CouponEntity couponEntity = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity memberEntity1 = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
-        final MemberEntity memberEntity2 = memberDao.insert(new MemberEntity("pizza2@pizza.com", "password"));
+        final CouponEntity couponEntity = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity memberEntity1 = memberDao.insert(사용자1_엔티티);
+        final MemberEntity memberEntity2 = memberDao.insert(사용자2_엔티티);
         final MemberCouponEntity memberCouponEntity1 = new MemberCouponEntity(
                 memberEntity1.getId(),
                 couponEntity.getId(),
@@ -80,9 +71,9 @@ class MemberCouponDaoTest {
 
         // then
         assertAll(
-                () -> assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberCouponEntity1.getMemberId()))
+                () -> assertThat(memberCouponDao.findAllByUsedAndMemberId(false, memberCouponEntity1.getMemberId()))
                         .hasSize(1),
-                () -> assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberCouponEntity2.getMemberId()))
+                () -> assertThat(memberCouponDao.findAllByUsedAndMemberId(false, memberCouponEntity2.getMemberId()))
                         .hasSize(1)
         );
     }
@@ -90,12 +81,8 @@ class MemberCouponDaoTest {
     @Test
     void 사용자_쿠폰을_수정한다() {
         // given
-        final CouponEntity couponEntity = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity memberEntity = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
+        final CouponEntity couponEntity = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity memberEntity = memberDao.insert(사용자1_엔티티);
         final MemberCouponEntity memberCouponEntity = memberCouponDao.insert(new MemberCouponEntity(
                 memberEntity.getId(),
                 couponEntity.getId(),
@@ -111,28 +98,16 @@ class MemberCouponDaoTest {
         memberCouponDao.update(updateMemberCouponEntity);
 
         // then
-        assertThat(memberCouponDao.findAllUnusedMemberCouponByMemberId(memberEntity.getId())).isEmpty();
+        assertThat(memberCouponDao.findAllByUsedAndMemberId(false, memberEntity.getId())).isEmpty();
     }
 
     @Test
     void 사용자_아이디를_입력받아_사용하지_않은_사용자의_쿠폰_엔티티를_조회한다() {
         // given
-        final CouponEntity couponEntity1 = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final CouponEntity couponEntity2 = couponDao.insert(new CouponEntity(
-                "무료 배달 쿠폰",
-                DELIVERY.name(), 0, 0, true,
-                NONE.name(), 0
-        ));
-        final CouponEntity couponEntity3 = couponDao.insert(new CouponEntity(
-                "무료 배달 쿠폰",
-                DELIVERY.name(), 0, 0, true,
-                NONE.name(), 0
-        ));
-        final MemberEntity memberEntity = memberDao.insert(new MemberEntity("pizza1@pizza.com", "password"));
+        final CouponEntity couponEntity1 = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final CouponEntity couponEntity2 = couponDao.insert(_배달비_3천원_할인_쿠폰_엔티티);
+        final CouponEntity couponEntity3 = couponDao.insert(_배달비_3천원_할인_쿠폰_엔티티);
+        final MemberEntity memberEntity = memberDao.insert(사용자1_엔티티);
         final MemberCouponEntity memberCouponEntity1 = memberCouponDao.insert(new MemberCouponEntity(
                 memberEntity.getId(),
                 couponEntity1.getId(),
@@ -146,9 +121,7 @@ class MemberCouponDaoTest {
         memberCouponDao.insert(new MemberCouponEntity(memberEntity.getId(), couponEntity3.getId(), true));
 
         // when
-        final List<MemberCouponEntity> result = memberCouponDao.findAllUnusedMemberCouponByMemberId(
-                memberEntity.getId()
-        );
+        final List<MemberCouponEntity> result = memberCouponDao.findAllByUsedAndMemberId(false, memberEntity.getId());
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(memberCouponEntity1, memberCouponEntity2));

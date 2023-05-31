@@ -24,13 +24,9 @@ public class CouponDao {
         final Long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String policyType = rs.getString("policy_type");
-        final long disCountPrice = rs.getLong("discount_price");
-        final int discountPercent = rs.getInt("discount_percent");
-        final boolean discountDeliveryFee = rs.getBoolean("discount_delivery_fee");
-        final String conditionType = rs.getString("condition_type");
+        final long disCountPrice = rs.getLong("discount_value");
         final long minimumPrice = rs.getLong("minimum_price");
-        return new CouponEntity(id, name, policyType, disCountPrice, discountPercent,
-                discountDeliveryFee, conditionType, minimumPrice);
+        return new CouponEntity(id, name, policyType, disCountPrice, minimumPrice);
     };
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
@@ -38,8 +34,7 @@ public class CouponDao {
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("coupon")
-                .usingColumns("name", "policy_type", "discount_price", "discount_percent",
-                        "discount_delivery_fee", "condition_type", "minimum_price")
+                .usingColumns("name", "policy_type", "discount_value", "minimum_price")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -50,10 +45,7 @@ public class CouponDao {
                 id,
                 couponEntity.getName(),
                 couponEntity.getPolicyType(),
-                couponEntity.getDiscountPrice(),
-                couponEntity.getDiscountPercent(),
-                couponEntity.isDiscountDeliveryFee(),
-                couponEntity.getConditionType(),
+                couponEntity.getDiscountValue(),
                 couponEntity.getMinimumPrice()
         );
     }

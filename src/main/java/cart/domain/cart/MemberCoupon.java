@@ -1,24 +1,40 @@
 package cart.domain.cart;
 
+import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
-import cart.domain.member.Member;
 
 public class MemberCoupon {
 
     private final Long id;
-    private final Member member;
+    private final Long memberId;
     private final Coupon coupon;
     private boolean used;
 
-    public MemberCoupon(final Member member, final Coupon coupon) {
-        this(null, member, coupon, false);
+    public MemberCoupon(final Long memberId, final Coupon coupon) {
+        this(null, memberId, coupon, false);
     }
 
-    public MemberCoupon(final Long id, final Member member, final Coupon coupon, final boolean used) {
+    public MemberCoupon(final Long id, final Long memberId, final Coupon coupon, final boolean used) {
         this.id = id;
-        this.member = member;
+        this.memberId = memberId;
         this.coupon = coupon;
         this.used = used;
+    }
+
+    public static MemberCoupon empty(final Long memberId) {
+        return new MemberCoupon(memberId, Coupon.EMPTY);
+    }
+
+    public boolean isInvalidCoupon(final Money price) {
+        return coupon.isInvalidPrice(price);
+    }
+
+    public Money calculatePrice(final Money price) {
+        return coupon.calculatePrice(price);
+    }
+
+    public Money calculateDeliveryFee(final Money deliveryFee) {
+        return coupon.calculateDeliveryFee(deliveryFee);
     }
 
     public void use() {
@@ -29,12 +45,8 @@ public class MemberCoupon {
         return id;
     }
 
-    public Member getMember() {
-        return member;
-    }
-
     public Long getMemberId() {
-        return member.getId();
+        return memberId;
     }
 
     public Coupon getCoupon() {

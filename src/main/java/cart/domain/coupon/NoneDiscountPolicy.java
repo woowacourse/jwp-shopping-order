@@ -1,6 +1,6 @@
-package cart.domain2.coupon;
+package cart.domain.coupon;
 
-import cart.domain2.common.Money;
+import cart.domain.common.Money;
 
 public class NoneDiscountPolicy implements DiscountPolicy {
 

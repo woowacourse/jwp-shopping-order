@@ -1,5 +1,8 @@
 package cart.controller;
 
+import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
+import static cart.fixture.CouponFixture._3만원_이상_배달비_3천원_할인_쿠폰;
+import static cart.fixture.MemberFixture.사용자1;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -7,11 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.cart.MemberCoupon;
-import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.DeliveryFeeDiscountPolicy;
-import cart.domain.coupon.MinimumPriceDiscountCondition;
-import cart.domain.coupon.NoneDiscountCondition;
 import cart.domain.member.Member;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
@@ -28,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+@SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @AutoConfigureMockMvc
 @Transactional
@@ -49,19 +49,14 @@ public class CouponControllerTest {
     @Test
     void 사용자의_모든_쿠폰을_조회한다() throws Exception {
         // given
-        final Coupon coupon1 = couponRepository.save(new Coupon(
-                "2000원 할인 쿠폰",
-                new AmountDiscountPolicy(2000L),
-                new NoneDiscountCondition()
+        final Coupon coupon1 = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
+        final Coupon coupon2 = couponRepository.save(_3만원_이상_배달비_3천원_할인_쿠폰);
+        final Member member = memberRepository.save(사용자1);
+        memberCouponRepository.saveAll(List.of(
+                new MemberCoupon(member.getId(), coupon1),
+                new MemberCoupon(member.getId(), coupon2)
         ));
-        final Coupon coupon2 = couponRepository.save(new Coupon(
-                "30000원 이상 배달비 할인 쿠폰",
-                new DeliveryFeeDiscountPolicy(),
-                new MinimumPriceDiscountCondition(30000)
-        ));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        memberCouponRepository.saveAll(List.of(new MemberCoupon(member, coupon1), new MemberCoupon(member, coupon2)));
-        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect
         mockMvc.perform(get("/coupons")

@@ -4,41 +4,18 @@ import cart.domain.common.Money;
 
 public class AmountDiscountPolicy implements DiscountPolicy {
 
-    private final DiscountPolicyType discountPolicyType;
-    private final Money discountPrice;
-
-    public AmountDiscountPolicy(final long discountPrice) {
-        this.discountPolicyType = DiscountPolicyType.PRICE;
-        this.discountPrice = Money.from(discountPrice);
+    @Override
+    public Money calculatePrice(final Long discountValue, final Money price) {
+        final Money subtrahend = Money.from(discountValue);
+        final Money result = price.minus(subtrahend);
+        if (result.isGreaterThanOrEqual(Money.ZERO)) {
+            return result;
+        }
+        return Money.ZERO;
     }
 
     @Override
-    public Money calculatePrice(final Money price) {
-        return price.minus(discountPrice);
-    }
-
-    @Override
-    public Money calculateDeliveryFee(final Money deliveryFee) {
+    public Money calculateDeliveryFee(final Long discountValue, final Money deliveryFee) {
         return deliveryFee;
-    }
-
-    @Override
-    public DiscountPolicyType getDiscountPolicyType() {
-        return discountPolicyType;
-    }
-
-    @Override
-    public Money getDiscountPrice() {
-        return discountPrice;
-    }
-
-    @Override
-    public int getDiscountPercent() {
-        return 0;
-    }
-
-    @Override
-    public boolean isDiscountDeliveryFee() {
-        return false;
     }
 }

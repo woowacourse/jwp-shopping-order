@@ -1,7 +1,6 @@
 package cart.domain.coupon;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.common.Money;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -12,43 +11,15 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class DeliveryFeeDiscountPolicyTest {
 
-    @Test
-    void 배달비_할인_가능_여부를_제외하고_0을_반환한다() {
-        // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
-
-        // expect
-        assertAll(
-                () -> assertThat(discountPolicy.getDiscountPercent()).isZero(),
-                () -> assertThat(discountPolicy.getDiscountPrice()).isEqualTo(Money.ZERO)
-        );
-    }
-
-    @Test
-    void 배달비_할인_여부를_true로_반환한다() {
-        // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
-
-        // expect
-        assertThat(discountPolicy.isDiscountDeliveryFee()).isTrue();
-    }
-
-    @Test
-    void 할인_정책_DELIVERY_타입을_반환한다() {
-        // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
-
-        // expect
-        assertThat(discountPolicy.getDiscountPolicyType()).isEqualTo(DiscountPolicyType.DELIVERY);
-    }
+    private final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
 
     @Test
     void 금액은_할인하지_않고_반환한다() {
         // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
+        final Money price = Money.from(30000);
 
         // when
-        final Money result = discountPolicy.calculatePrice(Money.from(30000));
+        final Money result = discountPolicy.calculatePrice(0L, price);
 
         // then
         assertThat(result).isEqualTo(Money.from(30000));
@@ -57,10 +28,10 @@ class DeliveryFeeDiscountPolicyTest {
     @Test
     void 배달비를_전부_할인하여_반환한다() {
         // given
-        final DiscountPolicy discountPolicy = new DeliveryFeeDiscountPolicy();
+        final Money deliveryFee = Money.from(3000);
 
         // when
-        final Money result = discountPolicy.calculateDeliveryFee(Money.from(3000));
+        final Money result = discountPolicy.calculateDeliveryFee(3000L, deliveryFee);
 
         // then
         assertThat(result).isEqualTo(Money.from(0));

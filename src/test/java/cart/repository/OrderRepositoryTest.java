@@ -1,5 +1,9 @@
 package cart.repository;
 
+import static cart.fixture.CouponFixture.배달비_3천원_할인_쿠폰;
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.ProductFixture.상품_28900원;
+import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -10,8 +14,6 @@ import cart.domain.cart.Order;
 import cart.domain.cart.Product;
 import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.DeliveryFeeDiscountPolicy;
-import cart.domain.coupon.NoneDiscountCondition;
 import cart.domain.member.Member;
 import cart.test.RepositoryTest;
 import java.util.List;
@@ -46,19 +48,12 @@ class OrderRepositoryTest {
     @Test
     void 주문을_저장한다() {
         // given
-        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
-        final Product product2 = productRepository.save(new Product("고양이", "cat.jpg", 1000000L));
+        final Member member = memberRepository.save(사용자1);
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_28900원);
         final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final Coupon coupon = couponRepository.save(new Coupon(
-                1L,
-                "배달비 할인 쿠폰",
-                new DeliveryFeeDiscountPolicy(),
-                new NoneDiscountCondition()
-        ));
-        memberCouponRepository.saveAll(List.of(new MemberCoupon(member, coupon)));
-        final Order order = new Order(coupon, member.getId(), List.of(cartItem1, cartItem2));
+        final Order order = Order.of(null, member.getId(), List.of(cartItem1, cartItem2));
 
         // when
         orderRepository.save(order);
@@ -73,19 +68,13 @@ class OrderRepositoryTest {
     @Test
     void 사용자의_주문을_전부_조회한다() {
         // given
-        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
-        final Product product2 = productRepository.save(new Product("고양이", "cat.jpg", 1000000L));
+        final Member member = memberRepository.save(사용자1);
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_28900원);
         final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final Coupon coupon = couponRepository.save(new Coupon(
-                1L,
-                "배달비 할인 쿠폰",
-                new DeliveryFeeDiscountPolicy(),
-                new NoneDiscountCondition()
-        ));
-        final Order order1 = orderRepository.save(new Order(coupon, member.getId(), List.of(cartItem1, cartItem2)));
-        final Order order2 = orderRepository.save(new Order(coupon, member.getId(), List.of(cartItem1, cartItem2)));
+        final Order order1 = orderRepository.save(Order.of(null, member.getId(), List.of(cartItem1, cartItem2)));
+        final Order order2 = orderRepository.save(Order.of(null, member.getId(), List.of(cartItem1, cartItem2)));
 
         // when
         final List<Order> result = orderRepository.findAllByMemberId(member.getId());
@@ -97,23 +86,19 @@ class OrderRepositoryTest {
     @Test
     void 주문을_단일_조회한다() {
         // given
-        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
+        final Member member = memberRepository.save(사용자1);
+        final Product product = productRepository.save(상품_8900원);
         final Item cartItem = cartItemRepository.save(new CartItem(member, product));
-        final Coupon coupon = couponRepository.save(new Coupon(
-                1L,
-                "배달비 할인 쿠폰",
-                new DeliveryFeeDiscountPolicy(),
-                new NoneDiscountCondition()
-        ));
-        final Order order = orderRepository.save(new Order(coupon, member.getId(), List.of(cartItem)));
+        final Coupon coupon = couponRepository.save(배달비_3천원_할인_쿠폰);
+        final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon));
+        final Order order = orderRepository.save(Order.of(memberCoupon, member.getId(), List.of(cartItem)));
 
         // when
-        final Order result = orderRepository.findById(order.getId(), member.getId()).get();
+        final Order result = orderRepository.findById(order.getId()).get();
 
         // then
         assertAll(
-                () -> assertThat(result.calculateTotalPrice()).isEqualTo(Money.from(1000L)),
+                () -> assertThat(result.calculateTotalPrice()).isEqualTo(Money.from(8900L)),
                 () -> assertThat(result.getId()).isEqualTo(order.getId())
         );
     }

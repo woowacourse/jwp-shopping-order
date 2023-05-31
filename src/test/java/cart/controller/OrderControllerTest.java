@@ -1,6 +1,10 @@
 package cart.controller;
 
-import static cart.domain.coupon.Coupon.EMPTY;
+import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.ProductFixture.상품_18900원;
+import static cart.fixture.ProductFixture.상품_28900원;
+import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -15,9 +19,7 @@ import cart.domain.cart.Item;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
 import cart.domain.cart.Product;
-import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.NoneDiscountCondition;
 import cart.domain.member.Member;
 import cart.dto.ItemIdDto;
 import cart.dto.OrderSaveRequest;
@@ -73,22 +75,18 @@ class OrderControllerTest {
     @Test
     void 상품을_주문한다() throws Exception {
         // given
-        final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_28900원);
+        final Member member = memberRepository.save(사용자1);
         final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final Coupon coupon = couponRepository.save(new Coupon(
-                "2000원 할인 쿠폰",
-                new AmountDiscountPolicy(2000L),
-                new NoneDiscountCondition()
-        ));
-        memberCouponRepository.saveAll(List.of(new MemberCoupon(member, coupon)));
+        final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
+        memberCouponRepository.saveAll(List.of(new MemberCoupon(member.getId(), coupon)));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
                 List.of(new ItemIdDto(cartItem1.getId()), new ItemIdDto(cartItem2.getId())),
                 coupon.getId()
         );
-        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
         final String request = objectMapper.writeValueAsString(orderSaveRequest);
 
         // when
@@ -107,16 +105,18 @@ class OrderControllerTest {
     @Test
     void 주문을_전체_조회한다() throws Exception {
         // given
-        final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
-        final Product product3 = productRepository.save(new Product("pizza3", "pizza3.jpg", 18900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
+        final Product product3 = productRepository.save(상품_28900원);
+        final Member member = memberRepository.save(사용자1);
         final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final Item cartItem3 = cartItemRepository.save(new CartItem(member, product3));
-        final Order order1 = orderRepository.save(new Order(EMPTY, member.getId(), List.of(cartItem1, cartItem2)));
-        final Order order2 = orderRepository.save(new Order(EMPTY, member.getId(), List.of(cartItem3)));
-        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final Order order1 = orderRepository.save(
+                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem1, cartItem2)));
+        final Order order2 = orderRepository.save(
+                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem3)));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect
         mockMvc.perform(get("/orders")
@@ -129,7 +129,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$[0].discountPrice", is(0)))
                 .andExpect(jsonPath("$[0].deliveryFee", is(3000)))
                 .andExpect(jsonPath("$[1].id", is(order2.getId().intValue())))
-                .andExpect(jsonPath("$[1].totalItemsPrice", is(18900)))
+                .andExpect(jsonPath("$[1].totalItemsPrice", is(28900)))
                 .andExpect(jsonPath("$[1].discountPrice", is(0)))
                 .andExpect(jsonPath("$[1].deliveryFee", is(3000)))
                 .andDo(print());
@@ -138,11 +138,12 @@ class OrderControllerTest {
     @Test
     void 주문을_단일_조회한다() throws Exception {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product = productRepository.save(상품_8900원);
+        final Member member = memberRepository.save(사용자1);
         final Item cartItem = cartItemRepository.save(new CartItem(member, product));
-        final Order order = orderRepository.save(new Order(EMPTY, member.getId(), List.of(cartItem)));
-        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final Order order = orderRepository.save(
+                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem)));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect
         mockMvc.perform(get("/orders/" + order.getId())

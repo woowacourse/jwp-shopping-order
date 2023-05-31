@@ -1,9 +1,7 @@
 package cart.dao;
 
-import static cart.domain.coupon.DiscountConditionType.MINIMUM_PRICE;
-import static cart.domain.coupon.DiscountConditionType.NONE;
-import static cart.domain.coupon.DiscountPolicyType.DELIVERY;
-import static cart.domain.coupon.DiscountPolicyType.PRICE;
+import static cart.fixture.CouponFixture._3만원_이상_3천원_할인_쿠폰_엔티티;
+import static cart.fixture.CouponFixture._배달비_3천원_할인_쿠폰_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -27,11 +25,7 @@ class CouponDaoTest {
     @Test
     void 쿠폰을_저장한다() {
         // given
-        final CouponEntity couponEntity = new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        );
+        final CouponEntity couponEntity = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
 
         // when
         final CouponEntity savedCouponEntity = couponDao.insert(couponEntity);
@@ -43,16 +37,8 @@ class CouponDaoTest {
     @Test
     void 쿠폰_아이디_리스트를_입력받아_쿠폰을_조회한다() {
         // given
-        final CouponEntity couponEntity1 = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final CouponEntity couponEntity2 = couponDao.insert(new CouponEntity(
-                "무료 배달 쿠폰",
-                DELIVERY.name(), 0, 0, true,
-                NONE.name(), 0
-        ));
+        final CouponEntity couponEntity1 = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final CouponEntity couponEntity2 = couponDao.insert(_배달비_3천원_할인_쿠폰_엔티티);
 
         // when
         final List<CouponEntity> result = couponDao.findByIds(List.of(couponEntity1.getId(), couponEntity2.getId()));
@@ -64,11 +50,7 @@ class CouponDaoTest {
     @Test
     void 단일_쿠폰을_조회한다() {
         // given
-        final CouponEntity couponEntity = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
+        final CouponEntity couponEntity = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
 
         // when
         final Optional<CouponEntity> result = couponDao.findById(couponEntity.getId());

@@ -19,7 +19,7 @@ public class OrderDao {
     private final RowMapper<OrderEntity> rowMapper = (resultSet, rowNum) -> new OrderEntity(
             resultSet.getLong("id"),
             resultSet.getLong("delivery_fee"),
-            resultSet.getLong("coupon_id"),
+            resultSet.getLong("member_coupon_id"),
             resultSet.getLong("member_id")
     );
 
@@ -27,7 +27,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
-                .usingColumns("delivery_fee", "coupon_id", "member_id")
+                .usingColumns("delivery_fee", "member_coupon_id", "member_id")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -35,7 +35,8 @@ public class OrderDao {
     public OrderEntity insert(final OrderEntity orderEntity) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(orderEntity);
         final long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new OrderEntity(id, orderEntity.getDeliveryFee(), orderEntity.getCouponId(), orderEntity.getMemberId());
+        return new OrderEntity(id, orderEntity.getDeliveryFee(), orderEntity.getMemberCouponId(),
+                orderEntity.getMemberId());
     }
 
     public List<OrderEntity> findAllByMemberId(final Long memberId) {

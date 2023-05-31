@@ -1,7 +1,8 @@
 package cart.dao;
 
-import static cart.domain.coupon.DiscountConditionType.MINIMUM_PRICE;
-import static cart.domain.coupon.DiscountPolicyType.PRICE;
+import static cart.fixture.CouponFixture._3만원_이상_3천원_할인_쿠폰_엔티티;
+import static cart.fixture.MemberFixture.사용자1_엔티티;
+import static cart.fixture.OrderItemFixture._주문_상품_아이템_엔티티_생성;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.CouponEntity;
@@ -35,14 +36,10 @@ class OrderItemDaoTest {
     @Test
     void 주문을_저장한다() {
         // given
-        final CouponEntity coupon = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity member = memberDao.insert(new MemberEntity("pizza@pizza.com", "password"));
-        final OrderEntity order = orderDao.insert(new OrderEntity(3000L, coupon.getId(), member.getId()));
-        final OrderItemEntity orderItemEntity = new OrderItemEntity("허브티", "tea.jpg", 1000L, 4, order.getId());
+        final CouponEntity couponEntity = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity memberEntity = memberDao.insert(사용자1_엔티티);
+        final OrderEntity order = orderDao.insert(new OrderEntity(3000L, couponEntity.getId(), memberEntity.getId()));
+        final OrderItemEntity orderItemEntity = _주문_상품_아이템_엔티티_생성(1000, 1, order.getId());
 
         // when
         orderItemDao.insert(orderItemEntity);
@@ -54,18 +51,14 @@ class OrderItemDaoTest {
     @Test
     void 주문목록을_받아_저장한다() {
         // given
-        final CouponEntity coupon = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity member = memberDao.insert(new MemberEntity("pizza@pizza.com", "password"));
-        final OrderEntity order = orderDao.insert(new OrderEntity(3000L, coupon.getId(), member.getId()));
+        final CouponEntity couponEntity = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity member = memberDao.insert(사용자1_엔티티);
+        final OrderEntity order = orderDao.insert(new OrderEntity(3000L, couponEntity.getId(), member.getId()));
 
         // when
         orderItemDao.insertAll(List.of(
-                new OrderItemEntity("허브티", "tea.jpg", 1000L, 1, order.getId()),
-                new OrderItemEntity("공차", "tea.jpg", 1000L, 2, order.getId())
+                _주문_상품_아이템_엔티티_생성(1000, 1, order.getId()),
+                _주문_상품_아이템_엔티티_생성(2000, 2, order.getId())
         ));
 
         // then
@@ -75,19 +68,11 @@ class OrderItemDaoTest {
     @Test
     void 주문_id를_입력받아_전체_주문_상품을_조회한다() {
         // given
-        final CouponEntity coupon = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity member = memberDao.insert(new MemberEntity("pizza@pizza.com", "password"));
+        final CouponEntity coupon = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity member = memberDao.insert(사용자1_엔티티);
         final OrderEntity order = orderDao.insert(new OrderEntity(3000L, coupon.getId(), member.getId()));
-        final OrderItemEntity orderItem1 = orderItemDao.insert(
-                new OrderItemEntity("허브티", "tea.jpg", 1000L, 4, order.getId())
-        );
-        final OrderItemEntity orderItem2 = orderItemDao.insert(
-                new OrderItemEntity("공차", "tea.jpg", 1000L, 4, order.getId())
-        );
+        final OrderItemEntity orderItem1 = orderItemDao.insert(_주문_상품_아이템_엔티티_생성(1000, 1, order.getId()));
+        final OrderItemEntity orderItem2 = orderItemDao.insert(_주문_상품_아이템_엔티티_생성(2000, 2, order.getId()));
 
         // when
         final List<OrderItemEntity> result = orderItemDao.findAllByOrderId(order.getId());
@@ -100,23 +85,13 @@ class OrderItemDaoTest {
     @Test
     void 주문_id목록을_입력받아_전체_주문_상품을_조회한다() {
         // given
-        final CouponEntity coupon = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity member = memberDao.insert(new MemberEntity("pizza@pizza.com", "password"));
+        final CouponEntity coupon = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity member = memberDao.insert(사용자1_엔티티);
         final OrderEntity order1 = orderDao.insert(new OrderEntity(3000L, coupon.getId(), member.getId()));
         final OrderEntity order2 = orderDao.insert(new OrderEntity(3000L, coupon.getId(), member.getId()));
-        final OrderItemEntity orderItem1 = orderItemDao.insert(
-                new OrderItemEntity("허브티", "tea.jpg", 1000L, 1, order1.getId())
-        );
-        final OrderItemEntity orderItem2 = orderItemDao.insert(
-                new OrderItemEntity("공차", "tea.jpg", 1000L, 2, order1.getId())
-        );
-        final OrderItemEntity orderItem3 = orderItemDao.insert(
-                new OrderItemEntity("말차", "tea.jpg", 1000L, 3, order2.getId())
-        );
+        final OrderItemEntity orderItem1 = orderItemDao.insert(_주문_상품_아이템_엔티티_생성(1000, 1, order1.getId()));
+        final OrderItemEntity orderItem2 = orderItemDao.insert(_주문_상품_아이템_엔티티_생성(2000, 2, order1.getId()));
+        final OrderItemEntity orderItem3 = orderItemDao.insert(_주문_상품_아이템_엔티티_생성(3000, 3, order2.getId()));
 
         // when
         final List<OrderItemEntity> result = orderItemDao.findAllByOrderIds(List.of(order1.getId(), order2.getId()));

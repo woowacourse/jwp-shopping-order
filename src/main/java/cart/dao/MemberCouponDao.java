@@ -2,6 +2,8 @@ package cart.dao;
 
 import cart.entity.MemberCouponEntity;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -47,9 +49,9 @@ public class MemberCouponDao {
         jdbcInsert.executeBatch(parameterSources);
     }
 
-    public List<MemberCouponEntity> findAllUnusedMemberCouponByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM member_coupon WHERE member_id = ? and used = false";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
+    public List<MemberCouponEntity> findAllByUsedAndMemberId(final boolean used, final Long memberId) {
+        final String sql = "SELECT * FROM member_coupon WHERE used = ? and member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, used, memberId);
     }
 
     public void update(final MemberCouponEntity memberCouponEntity) {
@@ -60,5 +62,14 @@ public class MemberCouponDao {
                 memberCouponEntity.getCouponId(),
                 memberCouponEntity.getMemberId()
         );
+    }
+
+    public Optional<MemberCouponEntity> findById(final Long id) {
+        final String sql = "SELECT * FROM member_coupon WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

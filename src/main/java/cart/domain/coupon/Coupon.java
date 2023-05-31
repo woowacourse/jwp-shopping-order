@@ -1,49 +1,52 @@
 package cart.domain.coupon;
 
+import static cart.domain.coupon.DiscountPolicyType.NONE;
+
 import cart.domain.common.Money;
 
 public class Coupon {
 
-    public static final Coupon EMPTY = new Coupon(
-            null,
-            "",
-            new AmountDiscountPolicy(0),
-            new NoneDiscountCondition()
-    );
+    public static final Coupon EMPTY = new Coupon("", NONE, 0L, Money.ZERO);
 
     private final Long id;
     private final String name;
-    private final DiscountPolicy discountPolicy;
-    private final DiscountCondition discountCondition;
+    private final DiscountPolicyType discountPolicyType;
+    private final Long discountValue;
+    private final Money minimumPrice;
 
-    public Coupon(final String name, final DiscountPolicy discountPolicy, final DiscountCondition discountCondition) {
-        this(null, name, discountPolicy, discountCondition);
+    public Coupon(
+            final String name,
+            final DiscountPolicyType discountPolicyType,
+            final Long discountValue,
+            final Money minimumPrice
+    ) {
+        this(null, name, discountPolicyType, discountValue, minimumPrice);
     }
 
     public Coupon(
             final Long id,
             final String name,
-            final DiscountPolicy discountPolicy,
-            final DiscountCondition discountCondition
+            final DiscountPolicyType discountPolicyType,
+            final Long discountValue,
+            final Money minimumPrice
     ) {
         this.id = id;
         this.name = name;
-        this.discountPolicy = discountPolicy;
-        this.discountCondition = discountCondition;
+        this.discountPolicyType = discountPolicyType;
+        this.discountValue = discountValue;
+        this.minimumPrice = minimumPrice;
     }
 
-    public Money calculatePrice(final Money totalPrice) {
-        if (discountCondition.isSatisfiedBy(totalPrice)) {
-            return discountPolicy.calculatePrice(totalPrice);
-        }
-        return totalPrice;
+    public boolean isInvalidPrice(final Money price) {
+        return !price.isGreaterThanOrEqual(minimumPrice);
     }
 
-    public Money calculateDeliveryFee(final Money totalPrice, final Money deliveryFee) {
-        if (discountCondition.isSatisfiedBy(totalPrice)) {
-            return discountPolicy.calculateDeliveryFee(deliveryFee);
-        }
-        return deliveryFee;
+    public Money calculatePrice(final Money price) {
+        return discountPolicyType.calculateDiscountValue(discountValue, price);
+    }
+
+    public Money calculateDeliveryFee(final Money deliveryFee) {
+        return discountPolicyType.calculateDeliveryFee(discountValue, deliveryFee);
     }
 
     public Long getId() {
@@ -54,11 +57,19 @@ public class Coupon {
         return name;
     }
 
-    public DiscountPolicy getDiscountPolicy() {
-        return discountPolicy;
+    public DiscountPolicyType getDiscountPolicyType() {
+        return discountPolicyType;
     }
 
-    public DiscountCondition getDiscountCondition() {
-        return discountCondition;
+    public Long getDiscountValue() {
+        return discountValue;
+    }
+
+    public Money getMinimumPrice() {
+        return minimumPrice;
+    }
+
+    public Long getMinimumPriceValue() {
+        return minimumPrice.getLongValue();
     }
 }

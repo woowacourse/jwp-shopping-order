@@ -1,7 +1,7 @@
 package cart.dao;
 
-import static cart.domain.coupon.DiscountConditionType.MINIMUM_PRICE;
-import static cart.domain.coupon.DiscountPolicyType.PRICE;
+import static cart.fixture.CouponFixture._3만원_이상_3천원_할인_쿠폰_엔티티;
+import static cart.fixture.MemberFixture.사용자1_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.CouponEntity;
@@ -32,12 +32,8 @@ class OrderDaoTest {
     @Test
     void 주문을_저장한다() {
         // given
-        final CouponEntity coupon = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity member = memberDao.insert(new MemberEntity("pizza@pizza.com", "password"));
+        final CouponEntity coupon = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity member = memberDao.insert(사용자1_엔티티);
         final OrderEntity orderEntity = new OrderEntity(3000L, coupon.getId(), member.getId());
 
         // when
@@ -50,12 +46,8 @@ class OrderDaoTest {
     @Test
     void 사용자_아이디를_입력받아_전체_주문을_조회한다() {
         // given
-        final CouponEntity coupon = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity member = memberDao.insert(new MemberEntity("pizza@pizza.com", "password"));
+        final CouponEntity coupon = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity member = memberDao.insert(사용자1_엔티티);
         final OrderEntity order1 = orderDao.insert(new OrderEntity(3000L, coupon.getId(), member.getId()));
         final OrderEntity order2 = orderDao.insert(new OrderEntity(3000L, null, member.getId()));
 
@@ -69,12 +61,8 @@ class OrderDaoTest {
     @Test
     void 단일_주문을_조회한다() {
         // given
-        final CouponEntity coupon = couponDao.insert(new CouponEntity(
-                "30000원 이상 3000원 할인 쿠폰",
-                PRICE.name(), 30000, 0, false,
-                MINIMUM_PRICE.name(), 20000
-        ));
-        final MemberEntity member = memberDao.insert(new MemberEntity("pizza@pizza.com", "password"));
+        final CouponEntity coupon = couponDao.insert(_3만원_이상_3천원_할인_쿠폰_엔티티);
+        final MemberEntity member = memberDao.insert(사용자1_엔티티);
         final OrderEntity order = orderDao.insert(new OrderEntity(3000L, coupon.getId(), member.getId()));
 
         // when

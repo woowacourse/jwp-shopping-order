@@ -28,13 +28,14 @@ public class CouponRepository {
         return new Coupon(
                 savedCouponEntity.getId(),
                 coupon.getName(),
-                coupon.getDiscountPolicy(),
-                coupon.getDiscountCondition()
+                coupon.getDiscountPolicyType(),
+                coupon.getDiscountValue(),
+                coupon.getMinimumPrice()
         );
     }
 
     public List<Coupon> findAllByMemberId(final Long memberId) {
-        final List<Long> couponIds = memberCouponDao.findAllUnusedMemberCouponByMemberId(memberId).stream()
+        final List<Long> couponIds = memberCouponDao.findAllByUsedAndMemberId(false, memberId).stream()
                 .map(MemberCouponEntity::getCouponId)
                 .collect(toList());
         return couponDao.findByIds(couponIds).stream()
@@ -47,7 +48,7 @@ public class CouponRepository {
     }
 
     public Optional<Coupon> findByIdAndMemberId(final Long id, final Long memberId) {
-        final boolean invalidCoupon = memberCouponDao.findAllUnusedMemberCouponByMemberId(memberId).stream()
+        final boolean invalidCoupon = memberCouponDao.findAllByUsedAndMemberId(false, memberId).stream()
                 .map(MemberCouponEntity::getCouponId)
                 .noneMatch(couponId -> couponId.equals(id));
         if (invalidCoupon) {

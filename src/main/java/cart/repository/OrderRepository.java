@@ -1,6 +1,5 @@
 package cart.repository;
 
-import static cart.domain.coupon.Coupon.EMPTY;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -11,6 +10,7 @@ import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.cart.Item;
+import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
 import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
@@ -18,7 +18,10 @@ import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import cart.exception.CouponNotFoundException;
+import cart.exception.MemberCouponNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,7 +50,7 @@ public class OrderRepository {
     public Order save(final Order order) {
         final OrderEntity orderEntity = new OrderEntity(
                 order.getDeliveryFee().getLongValue(),
-                order.getCoupon().getId(),
+                order.getMemberCoupon().getId(),
                 order.getMemberId()
         );
         final OrderEntity savedOrderEntity = orderDao.insert(orderEntity);
@@ -56,7 +59,7 @@ public class OrderRepository {
         deleteCartItems(order);
         return new Order(
                 savedOrderEntity.getId(),
-                order.getCoupon(),
+                order.getMemberCoupon(),
                 order.getMemberId(),
                 order.getDeliveryFee(),
                 order.getItems()
@@ -65,7 +68,7 @@ public class OrderRepository {
 
     private void useMemberCoupon(final OrderEntity orderEntity) {
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(
-                orderEntity.getCouponId(),
+                orderEntity.getMemberCouponId(),
                 orderEntity.getMemberId(),
                 true
         );
@@ -87,20 +90,25 @@ public class OrderRepository {
     }
 
     public List<Order> findAllByMemberId(final Long memberId) {
-        final Map<Long, Coupon> couponIdByCoupon = getCouponIdByCoupon(memberId);
+        final Map<Long, MemberCoupon> couponIdByCoupon = getMemberCouponIdByMemberCoupon(memberId);
         final Map<Long, List<OrderItemEntity>> orderIdByOrderItems = getOrderIdByOrderItems(memberId);
         return orderDao.findAllByMemberId(memberId).stream()
                 .map(orderEntity -> toOrder(orderEntity, couponIdByCoupon, orderIdByOrderItems))
                 .collect(toList());
     }
 
-    private Map<Long, Coupon> getCouponIdByCoupon(final Long memberId) {
-        final List<Long> couponIds = orderDao.findAllByMemberId(memberId).stream()
-                .map(OrderEntity::getCouponId)
+    private Map<Long, MemberCoupon> getMemberCouponIdByMemberCoupon(final Long memberId) {
+        final List<MemberCouponEntity> usedMemberCoupons = memberCouponDao.findAllByUsedAndMemberId(true, memberId);
+        final List<Long> couponIds = usedMemberCoupons.stream()
+                .map(MemberCouponEntity::getCouponId)
                 .collect(toList());
-        return couponDao.findByIds(couponIds).stream()
+        final Map<Long, Coupon> couponIdByCoupon = couponDao.findByIds(couponIds).stream()
                 .map(CouponEntity::toDomain)
                 .collect(toMap(Coupon::getId, Function.identity()));
+
+        return usedMemberCoupons.stream()
+                .map(it -> new MemberCoupon(memberId, couponIdByCoupon.get(it.getId())))
+                .collect(toMap(MemberCoupon::getId, Function.identity()));
     }
 
     private Map<Long, List<OrderItemEntity>> getOrderIdByOrderItems(final Long memberId) {
@@ -113,13 +121,13 @@ public class OrderRepository {
 
     private Order toOrder(
             final OrderEntity orderEntity,
-            final Map<Long, Coupon> couponIdByCoupon,
+            final Map<Long, MemberCoupon> memberCouponIdByMemberCoupon,
             final Map<Long, List<OrderItemEntity>> orderIdByOrderItems
     ) {
         final Long id = orderEntity.getId();
-        return new Order(
+        return Order.of(
                 id,
-                couponIdByCoupon.getOrDefault(id, EMPTY),
+                memberCouponIdByMemberCoupon.get(orderEntity.getMemberCouponId()),
                 orderEntity.getMemberId(),
                 Money.from(orderEntity.getDeliveryFee()),
                 orderIdByOrderItems.getOrDefault(id, new ArrayList<>()).stream()
@@ -128,19 +136,29 @@ public class OrderRepository {
         );
     }
 
-    public Optional<Order> findById(final Long id, final Long memberId) {
-        return orderDao.findById(id)
-                .map(orderEntity -> toOrder(orderEntity,
-                        getSingleCouponIdByCoupon(orderEntity),
-                        getSingleOrderIdByOrderItems(orderEntity)
-                ));
+    public Optional<Order> findById(final Long id) {
+        return orderDao.findById(id).map(orderEntity -> toOrder(orderEntity,
+                getSingleMemberCouponIdByMemberCoupon(orderEntity),
+                getSingleOrderIdByOrderItems(orderEntity)
+        ));
     }
 
-    private Map<Long, Coupon> getSingleCouponIdByCoupon(final OrderEntity orderEntity) {
-        final Coupon coupon = couponDao.findById(orderEntity.getCouponId())
+    private Map<Long, MemberCoupon> getSingleMemberCouponIdByMemberCoupon(final OrderEntity orderEntity) {
+        if (orderEntity.getMemberCouponId() == 0) {
+            return Collections.emptyMap();
+        }
+        final MemberCouponEntity memberCouponEntity = memberCouponDao.findById(orderEntity.getMemberCouponId())
+                .orElseThrow(MemberCouponNotFoundException::new);
+        final Coupon coupon = couponDao.findById(memberCouponEntity.getCouponId())
                 .map(CouponEntity::toDomain)
-                .orElse(EMPTY);
-        return Map.of(orderEntity.getCouponId(), coupon);
+                .orElseThrow(CouponNotFoundException::new);
+        final MemberCoupon memberCoupon = new MemberCoupon(
+                memberCouponEntity.getId(),
+                memberCouponEntity.getMemberId(),
+                coupon,
+                memberCouponEntity.isUsed()
+        );
+        return Map.of(orderEntity.getMemberCouponId(), memberCoupon);
     }
 
     private Map<Long, List<OrderItemEntity>> getSingleOrderIdByOrderItems(final OrderEntity orderEntity) {

@@ -4,15 +4,7 @@ import cart.domain.common.Money;
 
 public interface DiscountPolicy {
 
-    Money calculatePrice(final Money price);
+    Money calculatePrice(final Long discountValue, final Money price);
 
-    Money calculateDeliveryFee(final Money deliveryFee);
-
-    DiscountPolicyType getDiscountPolicyType();
-
-    Money getDiscountPrice();
-
-    int getDiscountPercent();
-
-    boolean isDiscountDeliveryFee();
+    Money calculateDeliveryFee(final Long discountValue, final Money deliveryFee);
 }

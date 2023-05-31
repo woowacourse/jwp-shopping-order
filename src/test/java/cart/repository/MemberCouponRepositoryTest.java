@@ -1,12 +1,13 @@
 package cart.repository;
 
+import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.MemberFixture.사용자2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.cart.MemberCoupon;
-import cart.domain.coupon.AmountDiscountPolicy;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.NoneDiscountCondition;
 import cart.domain.member.Member;
 import cart.test.RepositoryTest;
 import java.util.List;
@@ -32,18 +33,14 @@ class MemberCouponRepositoryTest {
     @Test
     void 모든_사용자_쿠폰을_저장한다() {
         // given
-        final Coupon coupon = couponRepository.save(new Coupon(
-                "30000원 이상 2000원 할인 쿠폰",
-                new AmountDiscountPolicy(2000L),
-                new NoneDiscountCondition()
-        ));
-        final Member member1 = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        final Member member2 = memberRepository.save(new Member("pizza2@pizza.com", "password"));
+        final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
+        final Member member1 = memberRepository.save(사용자1);
+        final Member member2 = memberRepository.save(사용자2);
 
         // when
         memberCouponRepository.saveAll(List.of(
-                new MemberCoupon(member1, coupon),
-                new MemberCoupon(member2, coupon)
+                new MemberCoupon(member1.getId(), coupon),
+                new MemberCoupon(member2.getId(), coupon)
         ));
 
         // then
