@@ -10,6 +10,11 @@ public enum CouponExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "잘못된 할인금액입니다."
     ),
+    INVALID_DISCOUNT_RATE(
+            401,
+            HttpStatus.BAD_REQUEST,
+            "잘못된 할인율입니다."
+    ),
     ;
 
     private final int errorCode;
