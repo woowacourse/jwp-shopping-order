@@ -31,4 +31,11 @@ jobs:
 
       - name: deploy
         run: |
-          sudo java -jar build/libs/jwp-shopping-order.jar --spring.profiles.active=prod &
+          echo $DB_USER
+          echo $DB_PASSWORD
+          echo $DB_URL
+          sudo java -jar -DDB_URL=$DB_URL -DDB_USER=$DB_USER -DDB_PASSWORD=$DB_PASSWORD build/libs/jwp-shopping-order.jar --spring.profiles.active=prod &
+        env:
+          DB_URL: ${{secrets.DB_URL}}
+          DB_USER: ${{secrets.DB_USER}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
