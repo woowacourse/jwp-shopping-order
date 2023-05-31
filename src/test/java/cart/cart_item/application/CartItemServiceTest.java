@@ -1,9 +1,13 @@
 package cart.cart_item.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cart.cart_item.application.dto.RemoveCartItemRequest;
 import cart.cart_item.domain.CartItem;
+import cart.cart_item.exception.CanNotRemoveCartItemsMoreThanSavedCartItems;
+import cart.cart_item.exception.CanNotRemoveNotMyCartItemException;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import java.util.List;
@@ -43,5 +47,41 @@ class CartItemServiceTest {
         () -> assertEquals(3, savedCartItemIds.size()),
         () -> assertThat(savedCartItemIds).containsAnyElementsOf(List.of(1L, 2L, 3L))
     );
+  }
+
+  @Test
+  @DisplayName("removeBatch() : 삭제할 카트 물픔 개수가 저장된 카트 물품 개수보다 많으면 CanNotRemoveCartItemsMoreThanSavedCartItems가 발생한다.")
+  void test_removeBatch_CanNotRemoveCartItemsMoreThanSavedCartItems() throws Exception {
+    //given
+    //member 1이 가지고 있는 cartItem [1, 2, 3, 4, 5, 6]
+    //member 2가 가지고 있는 cartItem [1, 2, 7]
+    final Member member = memberDao.getMemberById(2L);
+
+    final List<Long> deleteCartItemIds = List.of(1L, 2L, 7L);
+
+    final RemoveCartItemRequest removeCartItemRequest =
+        new RemoveCartItemRequest(deleteCartItemIds);
+
+    //when & then
+    assertThatThrownBy(() -> cartItemService.removeBatch(member, removeCartItemRequest))
+        .isInstanceOf(CanNotRemoveCartItemsMoreThanSavedCartItems.class);
+  }
+
+  @Test
+  @DisplayName("removeBatch() : 다른 사람의 카트 물품을 삭제하려고 하면 CanNotDeleteNotMyCartItemException가 발생한다.")
+  void test_removeBatch_CanNotDeleteNotMyCartItemException() throws Exception {
+    //given
+    //member 1이 가지고 있는 cartItem [1, 2, 3, 4, 5, 6]
+    //member 2가 가지고 있는 cartItem [1, 2, 7]
+    final Member member = memberDao.getMemberById(1L);
+
+    final List<Long> deleteCartItemIds = List.of(1L, 2L, 7L);
+
+    final RemoveCartItemRequest removeCartItemRequest =
+        new RemoveCartItemRequest(deleteCartItemIds);
+
+    //when & then
+    assertThatThrownBy(() -> cartItemService.removeBatch(member, removeCartItemRequest))
+        .isInstanceOf(CanNotRemoveNotMyCartItemException.class);
   }
 }
