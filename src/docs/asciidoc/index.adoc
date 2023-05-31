@@ -10,4 +10,4 @@ include::cart-items-api.adoc[]
 
 include::member-api.adoc[]
 
-== 회원
+include::order-api.adoc[]

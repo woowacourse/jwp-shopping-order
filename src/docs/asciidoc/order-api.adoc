@@ -1,0 +1,38 @@
+[[order-api]]
+== 주문
+
+[[create]]
+=== 주문 생성
+
+*요청*
+include::{snippets}/orders/create/http-request.adoc[]
+include::{snippets}/orders/create/request-headers.adoc[]
+include::{snippets}/orders/create/request-fields.adoc[]
+
+*응답*
+include::{snippets}/orders/create/http-response.adoc[]
+
+
+[[findAll]]
+=== 회원 주문 조회
+
+*요청*
+include::{snippets}/orders/findAll/http-request.adoc[]
+include::{snippets}/orders/findAll/request-headers.adoc[]
+
+*응답*
+include::{snippets}/orders/findAll/http-response.adoc[]
+include::{snippets}/orders/findAll/response-fields.adoc[]
+
+
+[[findOne]]
+=== 회원 주문 단건 조회
+
+*요청*
+include::{snippets}/orders/findOne/http-request.adoc[]
+include::{snippets}/orders/findOne/request-headers.adoc[]
+include::{snippets}/orders/findOne/path-parameters.adoc[]
+
+*응답*
+include::{snippets}/orders/findOne/http-response.adoc[]
+include::{snippets}/orders/findOne/response-fields.adoc[]
