@@ -27,10 +27,8 @@
 
     ```json
     {
-            "cart_product_ids" : [1, 2, 3],
-            "original_price" : 24700,
-            "discount_price" : 22000,
-            "coupon_id" : 1
+            "selectCartIds" : [1, 2, 3],
+            "couponId" : 1
     }
     ```
 
@@ -63,12 +61,12 @@
     [
       {
         "id" : 1,
-        "order_products" : [
+        "orderProducts" : [
           {
             "products": {
               "id" : 1,
               "name" : "치킨",
-              "image_url" : "url",
+              "imageUrl" : "url",
               "price" : 20000
              },
          "quantity" : 3
@@ -77,7 +75,7 @@
             "products" : {
                "id" : 2,
                "name" : "피자",
-               "image_url" : "url",
+               "imageUrl" : "url",
                "price" : 30000
             },
           "quantity" : 2
@@ -92,13 +90,13 @@
             "products":{
                 "id" : 1,
                 "name" : "치킨",
-                "image_url" : "url",
+                "imageUrl" : "url",
                 "price" : 20000
               },
             "quantity" : 1
           }
         ],
-        "confirm_state" : false
+        "confirmState" : false
       }
     ]
     ```
@@ -127,22 +125,22 @@
           "products" : {
               "id" : 1,
               "name" : "치킨",
-              "image_url" : "url",
+              "imageUrl" : "url",
               "price" : 20000
             },
           "quantity" : 1
         }
         ],
-      "original_price" : 15000,
-      "discount_price" : 12000,
-      "confirm_state" : false,
+      "originalPrice" : 15000,
+      "discountPrice" : 12000,
+      "confirmState" : false,
       "coupon" : {
           "id" : 1,
           "name" : "5월의 달 20% 할인 쿠폰",
-          "discount_type" : "percentage",
-          "discount_rate" : 0.2,
-          "discount_amount" : 0,
-          "minimum_price" : 50000
+          "discountType" : "percentage",
+          "discountRate" : 0.2,
+          "discountAmount" : 0,
+          "minimumPrice" : 50000
         }
     }
     ```
@@ -168,9 +166,9 @@
         "coupon" :{
     		"id" : 1,
     		"name" : "5월의 달 20% 할인 쿠폰",
-    		"discount_type" : "percentage",
-    		"discount_rate" : 0.2,
-    		"discount_amount" : 0
+    		"discountType" : "percentage",
+    		"discountRate" : 0.2,
+    		"discountAmount" : 0
     	}
     }
     ```
@@ -232,17 +230,17 @@
     	{
     		"id" : 1,
     		"name" : "5월의 달 20% 할인 쿠폰",
-    		"discount_type" : "percentage",
-    		"discount_rate" : 0.2,
-    		"discount_amount" : 0, // 원래가격 * (1-discount_rate) + discount_amount
+    		"discountType" : "percentage",
+    		"discountRate" : 0.2,
+    		"discountAmount" : 0, 
     		"issuable" : true
     	},
     	{
-    		"coupon_id" : 2,
+    		"couponId" : 2,
     		"name" : "5월의 달 1000원 할인 쿠폰",
-    		"discount_type" : "deduction",
-    		"discount_rate" : 0.0,
-    		"discount_amount" : 1000,
+    		"discountType" : "deduction",
+    		"discountRate" : 0.0,
+    		"discountAmount" : 1000,
     		"issuable" : false
     	}
     ]
@@ -269,18 +267,18 @@
     	{
     		"id" : 1,
     		"name" : "50000원 이상 구매시 20% 할인 쿠폰",
-    		"discount_type" : "percentage",
-    		"discount_rate" : 0.2,
-    		"discount_amount" : 0,
-    		"minimum_price" : 50000
+    		"discountType" : "percentage",
+    		"discountRate" : 0.2,
+    		"discountAmount" : 0,
+    		"minimumPrice" : 50000
     	},
     	{
     		"coupon_id" : 2,
-    		"name" : "5월의 달 1000원 할인 쿠폰"
-    		"discount_type" : "deduction",
-    		"discount_rate" : 0.0,
-    		"discount_amount" : 1000,
-    		"minimun_price" : 0
+    		"name" : "5월의 달 1000원 할인 쿠폰",
+    		"discountType" : "deduction",
+    		"discountRate" : 0.0,
+    		"discountAmount" : 1000,
+    		"minimumPrice" : 0
     	}
     ]
     ```
