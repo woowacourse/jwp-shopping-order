@@ -1,7 +1,6 @@
 package cart.application;
 
 import cart.dao.CouponDao;
-import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.domain.Coupon;
@@ -26,14 +25,11 @@ public class OrderService {
     private final OrderDao orderDao;
     private final ProductDao productDao;
     private final CouponDao couponDao;
-    private final MemberCouponDao memberCouponDao;
 
-    public OrderService(final OrderDao orderDao, final ProductDao productDao, final CouponDao couponDao,
-        final MemberCouponDao memberCouponDao) {
+    public OrderService(final OrderDao orderDao, final ProductDao productDao, final CouponDao couponDao) {
         this.orderDao = orderDao;
         this.productDao = productDao;
         this.couponDao = couponDao;
-        this.memberCouponDao = memberCouponDao;
     }
 
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
