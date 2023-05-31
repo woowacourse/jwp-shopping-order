@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.*;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class OrderDao {
@@ -125,27 +127,31 @@ public class OrderDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Orders getOrdersByOrderId(Long id) {
-        String sql = "SELECT orders.id, orders.member_id, member.email, orders.point_id, point.earned_point, point.left_point, point.expired_at, point.created_at, orders.used_point, orders.created_at " +
-                "FROM orders " +
-                "INNER JOIN member ON orders.member_id = member.id " +
-                "INNER JOIN point ON orders.point_id = point.id " +
-                "WHERE orders.id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
-            Long pointId = rs.getLong("point_id");
-            int earnedPoint = rs.getInt("earned_point");
-            int leftPoint = rs.getInt("left_point");
-            LocalDateTime pointCreatedAt = rs.getTimestamp("point.created_at").toLocalDateTime();
-            LocalDateTime expiredAt = rs.getTimestamp("expired_at").toLocalDateTime();
-            int usedPoint = rs.getInt("used_point");
-            LocalDateTime ordersCreatedAt = rs.getTimestamp("point.created_at").toLocalDateTime();
-            Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
+    public Optional<Orders> getOrdersByOrderId(Long id) {
+        try {
+            String sql = "SELECT orders.id, orders.member_id, member.email, orders.point_id, point.earned_point, point.left_point, point.expired_at, point.created_at, orders.used_point, orders.created_at " +
+                    "FROM orders " +
+                    "INNER JOIN member ON orders.member_id = member.id " +
+                    "INNER JOIN point ON orders.point_id = point.id " +
+                    "WHERE orders.id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
+                Long pointId = rs.getLong("point_id");
+                int earnedPoint = rs.getInt("earned_point");
+                int leftPoint = rs.getInt("left_point");
+                LocalDateTime pointCreatedAt = rs.getTimestamp("point.created_at").toLocalDateTime();
+                LocalDateTime expiredAt = rs.getTimestamp("expired_at").toLocalDateTime();
+                int usedPoint = rs.getInt("used_point");
+                LocalDateTime ordersCreatedAt = rs.getTimestamp("point.created_at").toLocalDateTime();
+                Long memberId = rs.getLong("member_id");
+                String email = rs.getString("email");
 
-            Member member = new Member(memberId, email, null);
-            Point point = new Point(pointId, earnedPoint, leftPoint, member, expiredAt, pointCreatedAt);
+                Member member = new Member(memberId, email, null);
+                Point point = new Point(pointId, earnedPoint, leftPoint, member, expiredAt, pointCreatedAt);
 
-            return new Orders(id, member, point, earnedPoint, usedPoint, ordersCreatedAt);
-        });
+                return new Orders(id, member, point, earnedPoint, usedPoint, ordersCreatedAt);
+            }));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

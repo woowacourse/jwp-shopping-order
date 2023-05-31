@@ -7,6 +7,8 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.NoSuchCartItemException;
+import cart.exception.NoSuchProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +30,11 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId()).orElseThrow(NoSuchProductException::new)));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id).orElseThrow(NoSuchCartItemException::new);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -45,9 +47,8 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id).orElseThrow(NoSuchCartItemException::new);
         cartItem.checkOwner(member);
-
         cartItemDao.deleteById(id);
     }
 }

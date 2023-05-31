@@ -1,8 +1,9 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.exception.AuthenticationException;
+import cart.exception.NoSuchMemberException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -43,7 +44,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
+        Member member = memberDao.getMemberByEmail(email).orElseThrow(NoSuchMemberException::new);
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }

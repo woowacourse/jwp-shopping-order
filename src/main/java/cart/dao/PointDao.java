@@ -27,7 +27,8 @@ public class PointDao {
         String sql = "SELECT point.id, point.earned_point, point.left_point, point.member_id, member.email, point.expired_at, point.created_at " +
                 "FROM point " +
                 "INNER JOIN member ON point.member_id = member.id " +
-                "WHERE point.member_id = ? AND point.expired_at >= NOW() AND point.left_point > 0";
+                "WHERE point.member_id = ? AND point.expired_at >= NOW() AND point.left_point > 0 " +
+                "ORDER BY point.expired_at";
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             Long id = rs.getLong("point.id");
             int earnedPoint = rs.getInt("earned_point");

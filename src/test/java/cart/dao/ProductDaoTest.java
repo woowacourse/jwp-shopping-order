@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,7 +30,7 @@ ProductDaoTest {
     @Autowired
     private ProductDao productDao;
 
-    @DisplayName("모든 poduct를 조회한다.")
+    @DisplayName("모든 product를 조회한다.")
     @Test
     void getAllProducts() {
         // given
@@ -39,7 +40,6 @@ ProductDaoTest {
 
         // when
         List<Product> products = productDao.getAllProducts();
-
 
         // then
         assertEquals(beforeCount + 2, products.size());
@@ -59,7 +59,7 @@ ProductDaoTest {
         Long productId = insertProduct(new Product("Test Product", 100, "test_image.jpg", 10));
 
         // when
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.getProductById(productId).get();
 
         // then
         assertEquals(productId, product.getId());
@@ -67,6 +67,16 @@ ProductDaoTest {
         assertEquals(100, product.getPrice());
         assertEquals("test_image.jpg", product.getImageUrl());
         assertEquals(10, product.getStock());
+    }
+
+    @DisplayName("없는 id로 조회하면 Optional empty를 반환한다.")
+    @Test
+    void getProductByIdEmpty() {
+        // given
+        Long productId = 99999999999L;
+
+        // when, then
+        assertEquals(Optional.empty(),productDao.getProductById(productId));
     }
 
     @DisplayName("product를 생성한다.")
@@ -79,7 +89,7 @@ ProductDaoTest {
         Long generatedId = productDao.createProduct(product);
 
         // then
-        Product productById = productDao.getProductById(generatedId);
+        Product productById = productDao.getProductById(generatedId).get();
         assertEquals(product.getName(), productById.getName());
         assertEquals(product.getStock(), productById.getStock());
         assertEquals(product.getPrice(), productById.getPrice());
@@ -96,7 +106,7 @@ ProductDaoTest {
         productDao.updateProduct(productId, updatedProduct);
 
         // then
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.getProductById(productId).get();
         assertEquals(updatedProduct.getName(), product.getName());
         assertEquals(updatedProduct.getPrice(), product.getPrice());
         assertEquals(updatedProduct.getImageUrl(), product.getImageUrl());

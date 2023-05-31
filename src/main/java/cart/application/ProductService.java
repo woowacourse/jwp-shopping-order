@@ -1,9 +1,10 @@
 package cart.application;
 
-import cart.domain.Product;
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.NoSuchProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,17 +25,17 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.getProductById(productId).orElseThrow(NoSuchProductException::new);
         return ProductResponse.of(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.getStock());
         return productDao.createProduct(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.getStock());
         productDao.updateProduct(productId, product);
     }
 

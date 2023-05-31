@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -168,10 +169,20 @@ class OrderDaoTest {
         Long generatedId = insertOrders(orders);
 
         // then
-        Orders order = orderDao.getOrdersByOrderId(generatedId);
+        Orders order = orderDao.getOrdersByOrderId(generatedId).get();
         assertEquals(member, order.getMember());
         assertEquals(point, order.getPoint());
         assertEquals(usedPoint, order.getUsedPoint());
+    }
+
+    @DisplayName("없는 id로 조회하면 Optional empty를 반환한다.")
+    @Test
+    void getOrdersByIdEmpty() {
+        // given
+        Long id = 99999999999L;
+
+        // when, then
+        assertEquals(Optional.empty(),orderDao.getOrdersByOrderId(id));
     }
 
     @DisplayName("orders를 생성한다.")
@@ -188,7 +199,7 @@ class OrderDaoTest {
         Long generatedId = orderDao.createOrders(orders);
 
         // then
-        Orders order = orderDao.getOrdersByOrderId(generatedId);
+        Orders order = orderDao.getOrdersByOrderId(generatedId).get();
         assertEquals(member, order.getMember());
         assertEquals(point, order.getPoint());
         assertEquals(EARNED_POINT, order.getEarnedPoint());

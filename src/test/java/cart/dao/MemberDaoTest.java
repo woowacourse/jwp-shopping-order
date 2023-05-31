@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,12 +38,22 @@ class MemberDaoTest {
         Long memberId = insertMember(new Member(null, email, password));
 
         // when
-        Member member = memberDao.getMemberById(memberId);
+        Member member = memberDao.getMemberById(memberId).get();
 
         // then
         assertEquals(memberId, member.getId());
         assertEquals(email, member.getEmail());
         assertEquals(password, member.getPassword());
+    }
+
+    @DisplayName("없는 id로 조회하면 Optional empty를 반환한다.")
+    @Test
+    void getProductByIdEmpty() {
+        // given
+        Long id = 99999999999L;
+
+        // when, then
+        assertEquals(Optional.empty(),memberDao.getMemberById(id));
     }
 
     @DisplayName("email을 기준으로 조회한다.")
@@ -54,12 +65,22 @@ class MemberDaoTest {
         Long memberId = insertMember(new Member(null, email, password));
 
         // when
-        Member member = memberDao.getMemberByEmail(email);
+        Member member = memberDao.getMemberByEmail(email).get();
 
         // then
         assertEquals(memberId, member.getId());
         assertEquals(email, member.getEmail());
         assertEquals(password, member.getPassword());
+    }
+
+    @DisplayName("없는 email로 조회하면 Optional empty를 반환한다.")
+    @Test
+    void getMemberByEmailEmpty() {
+        // given
+        String email = "NotExist";
+
+        // when, then
+        assertEquals(Optional.empty(),memberDao.getMemberByEmail(email));
     }
 
     @DisplayName("member를 추가한다.")
@@ -74,7 +95,7 @@ class MemberDaoTest {
         memberDao.addMember(member);
 
         // then
-        Member insertedMember = memberDao.getMemberByEmail(email);
+        Member insertedMember = memberDao.getMemberByEmail(email).get();
         assertEquals(email, insertedMember.getEmail());
         assertEquals(password, insertedMember.getPassword());
     }
@@ -95,7 +116,7 @@ class MemberDaoTest {
         memberDao.updateMember(updatedMember);
 
         // then
-        Member updated = memberDao.getMemberById(memberId);
+        Member updated = memberDao.getMemberById(memberId).get();
         assertEquals(memberId, updated.getId());
         assertEquals(newEmail, updated.getEmail());
         assertEquals(newPassword, updated.getPassword());

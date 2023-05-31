@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.NotEnoughStockException;
+
 import java.util.Objects;
 
 public class Product {
@@ -14,7 +16,14 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        validateStock(stock);
         this.stock = stock;
+    }
+
+    private void validateStock(int stock) {
+        if (stock < 0) {
+            throw new NotEnoughStockException();
+        }
     }
 
     public Product(Long id, String name, int price, String imageUrl, int stock) {

@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -117,7 +118,7 @@ public class CartItemDaoTest {
         Long savedItemId = cartItemDao.save(cartItem);
 
         // then
-        CartItem item = cartItemDao.findById(savedItemId);
+        CartItem item = cartItemDao.findById(savedItemId).get();
 
         assertEquals(item.getQuantity(), cartItem.getQuantity());
         assertEquals(item.getMember(), member);
@@ -135,12 +136,22 @@ public class CartItemDaoTest {
         Long savedItemId = cartItemDao.save(cartItem);
 
         // when
-        CartItem item = cartItemDao.findById(savedItemId);
+        CartItem item = cartItemDao.findById(savedItemId).get();
 
         // then
         assertEquals(item.getQuantity(), cartItem.getQuantity());
         assertEquals(item.getMember(), member);
         assertEquals(item.getProduct(), product);
+    }
+
+    @DisplayName("없는 id로 조회하면 Optional empty를 반환한다.")
+    @Test
+    void getCartItemByIdEmpty() {
+        // given
+        Long id = 99999999999L;
+
+        // when, then
+        assertEquals(Optional.empty(), cartItemDao.findById(id));
     }
 
     @DisplayName("memberId와 productId를 기준으로 조회한다.")
@@ -185,12 +196,12 @@ public class CartItemDaoTest {
         Long savedItemId = cartItemDao.save(cartItem);
         int newQuantity = 5;
 
-        CartItem original = cartItemDao.findById(savedItemId);
+        CartItem original = cartItemDao.findById(savedItemId).get();
         original.changeQuantity(newQuantity);
 
         // when
         cartItemDao.updateQuantity(original);
-        CartItem updatedCartItem = cartItemDao.findById(savedItemId);
+        CartItem updatedCartItem = cartItemDao.findById(savedItemId).get();
 
         // then
         assertEquals(updatedCartItem.getQuantity(), newQuantity);

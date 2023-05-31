@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("장바구니 관련 기능")
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
@@ -37,11 +38,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 1));
+        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 1));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberDao.getMemberById(1L).get();
+        member2 = memberDao.getMemberById(2L).get();
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
