@@ -23,6 +23,12 @@ public class CartItem {
         this.member = member;
     }
 
+    public CartItem(Member member, Product product, int quantity) {
+        this.member = member;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
     public Long getId() {
         return id;
     }
