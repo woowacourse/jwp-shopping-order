@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -99,7 +101,11 @@ public class CartItemApiDocumentTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("cart-items/showCartItems",
+                                preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                                ),
                                 responseFields(
                                         fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("장바구니 아이디"),
                                         fieldWithPath("[].quantity").type(JsonFieldType.NUMBER).description("장바구니 상품 개수"),
@@ -130,6 +136,9 @@ public class CartItemApiDocumentTest {
                 .andExpect(header().string(HttpHeaders.LOCATION, "/cart-items/" + Dooly_CartItem1.ID))
                 .andDo(document("cart-items/addCartItems",
                                 preprocessRequest(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                                ),
                                 requestFields(
                                         fieldWithPath("productId").type(JsonFieldType.NUMBER).description("장바구니에 추가할 상품 아이디"),
                                         fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("장바구니에 추가할 상품 수량")
@@ -154,6 +163,9 @@ public class CartItemApiDocumentTest {
                 .andExpect(status().isOk())
                 .andDo(document("cart-items/updateCartItemQuantity",
                                 preprocessRequest(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                                ),
                                 pathParameters(
                                         parameterWithName("id").description("수정할 장바구니 아이디")
                                 ),
@@ -176,6 +188,10 @@ public class CartItemApiDocumentTest {
                         .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo))
                 .andExpect(status().isNoContent())
                 .andDo(document("cart-items/removeCartItems",
+                                preprocessRequest(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                                ),
                                 pathParameters(
                                         parameterWithName("id").description("삭제할 장바구니 아이디")
                                 )

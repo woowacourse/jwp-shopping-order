@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -99,7 +101,11 @@ public class ProductApiDocumentTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("products/getAllPagingProductCartItems",
+                                preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                                ),
                                 requestParameters(
                                         parameterWithName("lastId").description("마지막 상품의 아이디 / 첫 페이지면 0으로 요청"),
                                         parameterWithName("pageItemCount").description("한 페이지에 보여줄 상품 개수")
@@ -132,7 +138,11 @@ public class ProductApiDocumentTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("products/getProductCartItems/exist",
+                        preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                        ),
                         pathParameters(
                                 parameterWithName("id").description("조회할 상품 아이디")
                         ),
@@ -163,7 +173,11 @@ public class ProductApiDocumentTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("products/getProductCartItems/not-exist",
+                        preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                        ),
                         pathParameters(
                                 parameterWithName("id").description("조회할 상품 아이디")
                         ),

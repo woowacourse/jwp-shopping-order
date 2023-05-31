@@ -4,43 +4,51 @@
 ==== 1. 장바구니의 모든 상품 목록 조회
 
 [discrete]
-====== 응답
+====== 요청 Header
+include::{snippets}/cart-items/showCartItems/request-headers.adoc[]
+====== 요청
 include::{snippets}/cart-items/showCartItems/http-request.adoc[]
 
 [discrete]
-====== 요청
+====== 응답
 include::{snippets}/cart-items/showCartItems/http-response.adoc[]
 include::{snippets}/cart-items/showCartItems/response-fields.adoc[]
 
 ==== 2. 장바구니에 상품 추가
 
 [discrete]
-====== 응답
+====== 요청 Header
+include::{snippets}/cart-items/showCartItems/request-headers.adoc[]
+====== 요청
 include::{snippets}/cart-items/addCartItems/http-request.adoc[]
 include::{snippets}/cart-items/addCartItems/request-fields.adoc[]
 
 [discrete]
-====== 요청
+====== 응답
 include::{snippets}/cart-items/addCartItems/http-response.adoc[]
 
 ==== 3. 장바구니의 상품 수량 수정
 
 [discrete]
-====== 응답
+====== 요청 Header
+include::{snippets}/cart-items/showCartItems/request-headers.adoc[]
+====== 요청
 include::{snippets}/cart-items/updateCartItemQuantity/http-request.adoc[]
 include::{snippets}/cart-items/updateCartItemQuantity/path-parameters.adoc[]
 
 [discrete]
-====== 요청
+====== 응답
 include::{snippets}/cart-items/updateCartItemQuantity/http-response.adoc[]
 
 ==== 4. 장바구니 상품 삭제
 
 [discrete]
-====== 응답
+====== 요청 Header
+include::{snippets}/cart-items/showCartItems/request-headers.adoc[]
+====== 요청
 include::{snippets}/cart-items/removeCartItems/http-request.adoc[]
 include::{snippets}/cart-items/removeCartItems/path-parameters.adoc[]
 
 [discrete]
-====== 요청
+====== 응답
 include::{snippets}/cart-items/removeCartItems/http-response.adoc[]

@@ -1,30 +1,26 @@
 package cart.document;
 
-import static cart.fixtures.MemberFixtures.*;
+import static cart.fixtures.MemberFixtures.Dooly;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.application.CartItemService;
 import cart.application.MemberService;
 import cart.config.AuthMemberInterceptor;
 import cart.config.MemberArgumentResolver;
 import cart.config.WebMvcConfig;
 import cart.dao.MemberDao;
-import cart.dto.*;
-import cart.fixtures.CartItemFixtures;
-import cart.fixtures.MemberFixtures;
-import cart.fixtures.ProductFixtures;
-import cart.ui.CartItemApiController;
+import cart.dto.AuthMember;
+import cart.dto.MemberCashChargeRequest;
+import cart.dto.MemberCashChargeResponse;
+import cart.dto.MemberShowCurrentCashResponse;
 import cart.ui.MemberApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -97,9 +93,12 @@ public class MemberApiDocumentTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andDo(document("members/cash",
+                .andDo(document("members/chargeCash",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                                ),
                                 requestFields(
                                         fieldWithPath("cashToCharge").type(JsonFieldType.NUMBER).description("충전할 금액")
                                 ),
@@ -124,10 +123,14 @@ public class MemberApiDocumentTest {
                         .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("members/cash",
-                                preprocessResponse(prettyPrint()),
-                                responseFields(
-                                        fieldWithPath("currentCash").type(JsonFieldType.NUMBER).description("사용자의 현재 금액")
+                .andDo(document("members/showCurrentCash",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
+                        ),
+                        responseFields(
+                                fieldWithPath("currentCash").type(JsonFieldType.NUMBER).description("사용자의 현재 금액")
                         )
                 ));
     }

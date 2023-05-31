@@ -1,0 +1,31 @@
+=== 사용자 API
+상품을 조회 / 추가 / 수정 / 삭제를 할 수 있습니다.
+
+
+==== 1. 사용자 금액 충전
+
+[discrete]
+====== 요청 Header
+include::{snippets}/members/chargeCash/request-headers.adoc[]
+====== 요청
+include::{snippets}/members/chargeCash/http-request.adoc[]
+include::{snippets}/members/chargeCash/request-fields.adoc[]
+
+====== 응답
+include::{snippets}/members/chargeCash/http-response.adoc[]
+include::{snippets}/members/chargeCash/response-fields.adoc[]
+
+
+==== 2. 사용자 현재 금액 조회
+[discrete]
+====== 요청 Header
+include::{snippets}/members/showCurrentCash/request-headers.adoc[]
+====== 요청
+include::{snippets}/members/showCurrentCash/http-request.adoc[]
+
+====== 응답
+include::{snippets}/members/showCurrentCash/http-response.adoc[]
+include::{snippets}/members/showCurrentCash/response-fields.adoc[]
+
+
+
