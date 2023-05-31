@@ -3,6 +3,7 @@ package cart.repository.dao;
 import cart.entity.OrderEntity;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -47,5 +48,16 @@ public class OrderDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<OrderEntity> findAllByMemberId(final Long memberId) {
+        String sql = "SELECT id, member_id, original_price, discounted_price, created_at FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            final long id = rs.getLong("id");
+            final int originalPrice = rs.getInt("original_price");
+            final int discountedPrice = rs.getInt("discounted_price");
+            final LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+            return new OrderEntity(id, memberId, originalPrice, discountedPrice, createdAt);
+        }, memberId);
     }
 }
