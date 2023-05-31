@@ -54,10 +54,10 @@ class MemberCouponRepositoryTest {
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "pizza"));
         final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), 3000L, new Money(30000L)));
         final MemberCoupon memberCoupon = new MemberCoupon(member, coupon, false);
-        memberCouponRepository.save(memberCoupon);
+        final MemberCoupon save = memberCouponRepository.save(memberCoupon);
 
         // when
-        final MemberCoupon saved = memberCouponRepository.findById(1L).get();
+        final MemberCoupon saved = memberCouponRepository.findById(save.getId()).get();
 
         // then
         assertAll(
