@@ -13,10 +13,10 @@ public class OrderDetailResponse {
     public OrderDetailResponse() {
     }
 
-    public OrderDetailResponse(final Long orderId,
-                               final List<OrderItemResponse> products,
-                               final Long totalPrice,
-                               final Long deliveryFee) {
+    private OrderDetailResponse(final Long orderId,
+                                final List<OrderItemResponse> products,
+                                final Long totalPrice,
+                                final Long deliveryFee) {
         this.orderId = orderId;
         this.products = products;
         this.totalPrice = totalPrice;

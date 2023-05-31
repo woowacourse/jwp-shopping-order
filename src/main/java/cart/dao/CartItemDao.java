@@ -6,6 +6,7 @@ import cart.domain.Money;
 import cart.domain.Product;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -65,7 +66,7 @@ public class CartItemDao {
         return createdId.longValue();
     }
 
-    public CartItem findById(final Long id) {
+    public Optional<CartItem> findById(final Long id) {
         final String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, " +
                         "product.id as product_id, product.name, product.price, product.image_url, cart_item.quantity "
@@ -75,9 +76,9 @@ public class CartItemDao {
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, CART_ITEM_ROW_MAPPER, id);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CART_ITEM_ROW_MAPPER, id));
         } catch (final EmptyResultDataAccessException exception) {
-            return null;
+            return Optional.empty();
         }
     }
 

@@ -50,7 +50,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @DisplayName("잘못된 사용자 정보로 주문 정보 추가 요청시 실패한다.")
     @Test
-    void addCartItemByIllegalMember() {
+    void addOrderByIllegalMember() {
         // given
         final Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
 
@@ -66,7 +66,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @DisplayName("다른 사용자의 장바구니 정보로 주문 정보 추가 요청시 실패한다.")
     @Test
-    void addCartItemByDifferentMember() {
+    void addOrderByIllegalCartItem() {
         // given, when
         final ExtractableResponse<Response> response = 주문_정보_추가(member2, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),

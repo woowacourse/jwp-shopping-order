@@ -1,32 +1,18 @@
 package cart.domain;
 
+import cart.dao.entity.OrderItemEntity;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrderItem {
 
-    private Long id;
-    private Long orderId;
-    private String name;
-    private Money price;
-    private String imageUrl;
-    private Integer quantity;
-
-    public OrderItem() {
-    }
-
-    public OrderItem(final Long orderId,
-                     final String name,
-                     final Money price,
-                     final String imageUrl,
-                     final Integer quantity) {
-        this.orderId = orderId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.quantity = quantity;
-    }
+    private final Long orderId;
+    private final String name;
+    private final Money price;
+    private final String imageUrl;
+    private final Integer quantity;
+    private final Long id;
 
     public OrderItem(final Long id,
                      final Long orderId,
@@ -42,14 +28,14 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public static List<OrderItem> from(final Long orderId, final List<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(cartItem -> new OrderItem(
-                        orderId,
-                        cartItem.getProduct().getName(),
-                        cartItem.getProduct().getPrice(),
-                        cartItem.getProduct().getImageUrl(),
-                        cartItem.getQuantity()))
+    public static List<OrderItem> from(final List<OrderItemEntity> orderItems) {
+        return orderItems.stream()
+                .map(orderItem -> new OrderItem(orderItem.getId(),
+                        orderItem.getOrderId(),
+                        orderItem.getName(),
+                        new Money(orderItem.getPrice()),
+                        orderItem.getImageUrl(),
+                        orderItem.getQuantity()))
                 .collect(Collectors.toList());
     }
 

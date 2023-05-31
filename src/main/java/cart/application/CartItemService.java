@@ -44,7 +44,8 @@ public class CartItemService {
     }
 
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
-        final CartItem cartItem = cartItemDao.findById(id);
+        final CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(() -> new CartItemException.IllegalId(id));
         cartItem.checkOwner(member);
 
         final int quantity = request.getQuantity();
