@@ -19,7 +19,12 @@ public class Member {
         this.point = new Point(point);
     }
 
-    public void usePoint(final int point) {
+    public void addPoint(int totalPrice) {
+        Point addedPoint = Point.fromTotalPrice(totalPrice);
+        this.point = this.point.accumulate(addedPoint);
+    }
+
+    public void usePoint(int point) {
         Point usedPoint = new Point(point);
         this.point = this.point.use(usedPoint);
     }

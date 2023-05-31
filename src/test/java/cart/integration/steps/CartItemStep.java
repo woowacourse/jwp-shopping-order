@@ -1,5 +1,6 @@
 package cart.integration.steps;
 
+import static cart.integration.steps.CommonStep.헤더_ID_값_파싱;
 import static io.restassured.RestAssured.given;
 
 import cart.domain.Member;
@@ -62,5 +63,10 @@ public class CartItemStep {
                 .then()
                 .log().all()
                 .extract();
+    }
+
+    public static Long 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(Member 멤버, Long 상품_ID) {
+        var 응답 = 장바구니_상품_추가_요청(멤버, 상품_ID);
+        return 헤더_ID_값_파싱(응답);
     }
 }

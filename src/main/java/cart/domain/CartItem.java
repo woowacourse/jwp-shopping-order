@@ -10,7 +10,7 @@ public class CartItem {
     private final Quantity quantity;
 
     public CartItem(Member member, Product product) {
-        this(null, 0, product, member);
+        this(null, 1, product, member);
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {

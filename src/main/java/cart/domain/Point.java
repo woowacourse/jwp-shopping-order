@@ -5,6 +5,7 @@ import cart.exception.MemberException;
 import java.util.Objects;
 
 public class Point {
+    private static final double ACCUMULATION_RATE = 0.1;
     private final int value;
 
     public Point(final int value) {
@@ -18,8 +19,16 @@ public class Point {
         }
     }
 
+    public Point accumulate(Point point) {
+        return new Point(this.value + point.value);
+    }
+
     public Point use(Point point) {
         return new Point(this.value - point.value);
+    }
+
+    public static Point fromTotalPrice(int totalPrice) {
+        return new Point((int) Math.floor(totalPrice * ACCUMULATION_RATE));
     }
 
     public int getValue() {

@@ -4,6 +4,7 @@ import static cart.integration.steps.CartItemStep.장바구니_상품_삭제_요
 import static cart.integration.steps.CartItemStep.장바구니_상품_수정_요청;
 import static cart.integration.steps.CartItemStep.장바구니_상품_조회_요청;
 import static cart.integration.steps.CartItemStep.장바구니_상품_추가_요청;
+import static cart.integration.steps.CartItemStep.장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다;
 import static cart.integration.steps.CommonStep.헤더_ID_값_파싱;
 import static cart.integration.steps.ProductStep.상품_생성_요청_생성;
 import static cart.integration.steps.ProductStep.상품_생성_요청후_상품_ID를_리턴한다;
@@ -174,10 +175,5 @@ public class CartItemIntegrationTest extends IntegrationTest {
     private Member 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(MemberEntity 멤버_엔티티) {
         Long 저장된_멤버_ID = memberDao.save(멤버_엔티티);
         return memberRepository.findById(저장된_멤버_ID);
-    }
-
-    private Long 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(Member 멤버, Long 상품_ID) {
-        var 응답 = 장바구니_상품_추가_요청(멤버, 상품_ID);
-        return 헤더_ID_값_파싱(응답);
     }
 }
