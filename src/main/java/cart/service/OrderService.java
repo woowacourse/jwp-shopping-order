@@ -11,6 +11,8 @@ import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.OrderInfo;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
+import cart.dto.SpecificOrderResponse;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -67,11 +69,15 @@ public class OrderService {
         return orderRepository.addOrder(order);
     }
 
-    public void getAllOrders(final Member member) {
-
+    public List<OrderResponse> getAllOrders(final Member member) {
+        final List<Order> orders = orderRepository.getAllOrders(member);
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    public void getOrderById(final Member member, final Long orderId) {
-
+    public SpecificOrderResponse getOrderById(final Member member, final Long orderId) {
+        final Order order = orderRepository.getOrderById(member, orderId);
+        return SpecificOrderResponse.from(order);
     }
 }

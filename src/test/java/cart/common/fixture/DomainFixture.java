@@ -11,9 +11,7 @@ public class DomainFixture {
     public static final String PRODUCT_NAME = "chicken";
     public static final String PRODUCT_IMAGE = "chicken.jpeg";
 
-    public static Member HUCHU = new Member(1L, EMAIL, PASSWORD, 1000);
-    public static Member HAMAD = new Member(1L, "hamad@woowahan.com", PASSWORD, 1000);
+    public static Member MEMBER_HUCHU = new Member(1L, EMAIL, PASSWORD, 1000);
 
-    public static Product CHICKEN = new Product(1L, "chicken", 20000, "chicken.jpeg");
-
+    public static Product PRODUCT_CHICKEN = new Product(1L, "chicken", 20000, "chicken.jpeg");
 }

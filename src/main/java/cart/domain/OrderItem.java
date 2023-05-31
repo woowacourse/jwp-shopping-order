@@ -22,6 +22,18 @@ public class OrderItem {
         return product.getId();
     }
 
+    public int getProductPriceValue() {
+        return product.getPriceValue();
+    }
+
+    public String getProductNameValue() {
+        return product.getNameValue();
+    }
+
+    public String getProductImageUrlValue() {
+        return product.getImageUrlValue();
+    }
+
     public int getQuantity() {
         return quantity;
     }
