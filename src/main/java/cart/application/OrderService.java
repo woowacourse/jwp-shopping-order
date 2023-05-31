@@ -10,6 +10,9 @@ import cart.domain.OrderedItem;
 import cart.domain.Product;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderItemRequest;
+import cart.dto.OrderResponse;
+import cart.dto.OrderedItemResponse;
+import cart.dto.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +47,7 @@ public class OrderService {
         List<CartItem> cartItems = findCartItems(orderCreateRequest);
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();
-            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImage(), cartItem.getQuantity());
+            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImage(), cartItem.getQuantity(), product.getIsDiscounted(), product.getDiscountRate());
             orderedItemDao.createOrderedItems(orderId, orderedItem);
         }
 
@@ -99,6 +102,20 @@ public class OrderService {
 
     public OrderResponse getOrderById(Long orderId) {
         Order order = orderDao.findById(orderId);
-        return new OrderResponse(order);
+        List<OrderedItem> orderedItems = orderedItemDao.findByOrderId(order.getId());
+        return new OrderResponse(order.getId(), convertToResponse(orderedItems), null, order.getTotalItemPrice(),
+                order.getDiscountedTotalPrice(), order.getShippingFee(),
+                order.getDiscountedTotalPrice() + order.getShippingFee());
+    }
+
+    public List<OrderedItemResponse> convertToResponse(List<OrderedItem> orderedItems){
+        List<OrderedItemResponse> orderedItemResponses = new ArrayList<>();
+        for (OrderedItem orderedItem : orderedItems) {
+            OrderedItemResponse orderedItemResponse = new OrderedItemResponse(orderedItem.getProductQuantity(),
+                    new ProductResponse(orderedItem.getProductName(), orderedItem.getProductPrice(), orderedItem.getProductImage(), orderedItem.getIsDiscounted(), orderedItem.getDiscountedRate()));
+            orderedItemResponses.add(orderedItemResponse);
+        }
+
+        return orderedItemResponses;
     }
 }

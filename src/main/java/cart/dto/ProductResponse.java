@@ -21,6 +21,14 @@ public class ProductResponse {
         this.discountRate = discountRate;
     }
 
+    public ProductResponse(String name, int price, String imageUrl, boolean isDiscounted, int discountRate) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.isDiscounted = isDiscounted;
+        this.discountRate = discountRate;
+    }
+
     public static ProductResponse of(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
                 product.getImage(), product.getIsDiscounted(), product.getDiscountRate());

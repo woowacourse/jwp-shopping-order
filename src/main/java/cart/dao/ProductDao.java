@@ -27,7 +27,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image");
-            boolean isDiscounted = rs.getBoolean("is_discounted");
+            boolean isDiscounted = (rs.getInt("is_discounted") == 1) ? true : false;
             int discountRate = rs.getInt("discount_rate");
 
             return new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
@@ -40,7 +40,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image");
-            boolean isDiscounted = rs.getBoolean("is_discounted");
+            boolean isDiscounted = (rs.getInt("is_discounted") == 1) ? true : false;
             int discountRate = rs.getInt("discount_rate");
 
             return new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
@@ -59,7 +59,7 @@ public class ProductDao {
             ps.setString(1, product.getName());
             ps.setInt(2, product.getPrice());
             ps.setString(3, product.getImage());
-            ps.setBoolean(4, product.getIsDiscounted());
+            ps.setInt(4, product.getIsDiscounted() ? 1 : 0);
             ps.setInt(5, product.getDiscountRate());
 
             return ps;
