@@ -1,10 +1,11 @@
-package cart.ui;
+package cart.ui.controller;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.CartPointsResponse;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderResponse;
+import cart.dto.request.OrderCreateRequest;
+import cart.dto.response.CartPointsResponse;
+import cart.dto.response.OrderResponse;
+import cart.ui.auth.Auth;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,11 +17,11 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-public class OrderController {
+public class OrderApiController {
 
     private final OrderService orderService;
 
-    public OrderController(final OrderService orderService) {
+    public OrderApiController(final OrderService orderService) {
         this.orderService = orderService;
     }
 

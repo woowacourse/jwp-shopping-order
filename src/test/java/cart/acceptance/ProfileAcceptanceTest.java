@@ -1,10 +1,10 @@
 package cart.acceptance;
 
-import cart.dto.ProfileResponse;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import cart.dto.response.ProfileResponse;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProfileAcceptanceTest extends AcceptanceTest {
 

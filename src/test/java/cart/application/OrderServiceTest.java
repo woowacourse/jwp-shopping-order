@@ -1,15 +1,15 @@
 package cart.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import cart.domain.Member;
-import cart.dto.CartItemRequest;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderResponse;
+import cart.dto.request.CartItemRequest;
+import cart.dto.request.OrderCreateRequest;
+import cart.dto.response.OrderResponse;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class OrderServiceTest extends ServiceTest {
 

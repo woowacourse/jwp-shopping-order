@@ -1,6 +1,7 @@
-package cart.dto;
+package cart.dto.response;
 
 public class OrderItemResponse {
+
     private final Long productId;
     private final String name;
     private final int price;

@@ -1,6 +1,7 @@
 package cart.domain;
 
 public class Member {
+
     private static final int ZERO_POINTS = 0;
     private final Long id;
     private final String email;

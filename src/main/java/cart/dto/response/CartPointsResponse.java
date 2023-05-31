@@ -1,6 +1,7 @@
-package cart.dto;
+package cart.dto.response;
 
 public class CartPointsResponse {
+
     private final int savingRate;
     private final int points;
 

@@ -1,9 +1,14 @@
 package cart.acceptance;
 
-import cart.dto.CartItemRequest;
-import cart.dto.CartPointsResponse;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderResponse;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import cart.dto.request.CartItemRequest;
+import cart.dto.request.OrderCreateRequest;
+import cart.dto.response.CartPointsResponse;
+import cart.dto.response.OrderResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -13,11 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class OrderAcceptanceTest extends AcceptanceTest {
 

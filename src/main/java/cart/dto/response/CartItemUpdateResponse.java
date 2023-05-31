@@ -1,6 +1,7 @@
-package cart.dto;
+package cart.dto.response;
 
 public class CartItemUpdateResponse {
+
     private final int quantity;
     private final boolean checked;
 

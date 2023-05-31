@@ -1,11 +1,12 @@
-package cart.ui;
+package cart.ui.controller;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
-import cart.dto.CartItemAddRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.CartItemUpdateRequest;
-import cart.dto.CartItemUpdateResponse;
+import cart.dto.request.CartItemAddRequest;
+import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.response.CartItemResponse;
+import cart.dto.response.CartItemUpdateResponse;
+import cart.ui.auth.Auth;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

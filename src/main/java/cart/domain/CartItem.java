@@ -2,7 +2,6 @@ package cart.domain;
 
 import cart.exception.CartItemException;
 
-import java.util.List;
 import java.util.Objects;
 
 public class CartItem {
@@ -45,17 +44,6 @@ public class CartItem {
 
     public boolean isChecked() {
         return checked;
-    }
-
-    public void validateLegalOrder(final List<CartItem> items) {
-        for (final CartItem item : items) {
-            if (Objects.equals(id, item.id)) {
-                if (this.equals(item)) {
-                    return;
-                }
-            }
-        }
-        throw new IllegalArgumentException();
     }
 
     public void checkOwner(Member member) {

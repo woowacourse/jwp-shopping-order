@@ -1,7 +1,7 @@
-package cart;
+package cart.config;
 
 import cart.dao.MemberDao;
-import cart.ui.MemberArgumentResolver;
+import cart.ui.auth.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

@@ -5,6 +5,7 @@ import cart.exception.IllegalPointUsageException;
 import java.util.List;
 
 public class Order {
+
     private static final int MINIMUM_UNIT_POINTS = 10;
 
     private final Long id;

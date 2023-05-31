@@ -1,8 +1,9 @@
-package cart.dto;
+package cart.dto.response;
 
 import java.util.List;
 
 public class OrderResponse {
+
     private final Long id;
     private final int savingRate;
     private final int points;

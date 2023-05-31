@@ -1,16 +1,16 @@
 package cart.acceptance;
 
-import cart.dao.CartItemDao;
-import cart.dto.CartItemAddRequest;
-import cart.dto.CartItemUpdateRequest;
-import cart.dto.CartItemUpdateResponse;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+
+import cart.dao.CartItemDao;
+import cart.dto.request.CartItemAddRequest;
+import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.response.CartItemUpdateResponse;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 
 public class CartItemsAcceptanceTest extends AcceptanceTest {
 

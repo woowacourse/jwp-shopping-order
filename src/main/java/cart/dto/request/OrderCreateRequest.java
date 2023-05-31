@@ -1,9 +1,10 @@
-package cart.dto;
+package cart.dto.request;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderCreateRequest {
+
     private final int usedPoints;
     private final List<CartItemRequest> cartItems;
 

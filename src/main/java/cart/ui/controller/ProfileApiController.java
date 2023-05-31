@@ -1,14 +1,14 @@
-package cart.ui;
+package cart.ui.controller;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.ProfileResponse;
+import cart.dto.response.ProfileResponse;
+import cart.ui.auth.Auth;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ProfileController {
+public class ProfileApiController {
 
     @GetMapping("/profile")
     public ResponseEntity<ProfileResponse> findProfile(@Auth Member member) {

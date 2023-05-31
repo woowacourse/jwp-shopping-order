@@ -1,6 +1,7 @@
-package cart.dto;
+package cart.dto.request;
 
 public class CartItemAddRequest {
+
     private Long productId;
 
     public CartItemAddRequest() {

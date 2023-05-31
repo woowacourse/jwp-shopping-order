@@ -6,7 +6,6 @@ import java.util.function.ToIntFunction;
 
 public class PointPolicy {
     private static final int TOTAL_PORTION = 100;
-
     private static final int SAVING_RATE = 10;
 
     private PointPolicy() {
