@@ -40,6 +40,22 @@ public class MemberRepository {
                 .collect(Collectors.toList());
     }
 
+    public void updatePoint(Member member) {
+        MemberEntity memberEntity = new MemberEntity(
+                member.getId(),
+                member.getEmail(),
+                member.getPassword(),
+                member.getPoint(),
+                null, null
+        );
+
+        int updatedRow = memberDao.update(memberEntity);
+
+        if (updatedRow == 0) {
+            throw new MemberException(NOT_FOUND_MEMBER);
+        }
+    }
+
     private Member toDomain(MemberEntity memberEntity) {
         return new Member(
                 memberEntity.getId(),

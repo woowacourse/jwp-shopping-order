@@ -61,8 +61,14 @@ public class MemberDao {
 
     public int update(MemberEntity memberEntity) {
         String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getPoint(),
-                memberEntity.getId());
+
+        return jdbcTemplate.update(
+                sql,
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                memberEntity.getPoint(),
+                memberEntity.getId()
+        );
     }
 
     public int delete(Long id) {

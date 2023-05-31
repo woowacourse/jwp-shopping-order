@@ -18,6 +18,10 @@ public class Point {
         }
     }
 
+    public Point use(Point point) {
+        return new Point(this.value - point.value);
+    }
+
     public int getValue() {
         return value;
     }

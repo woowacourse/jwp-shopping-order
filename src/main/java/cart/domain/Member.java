@@ -6,7 +6,7 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
-    private final Point point;
+    private Point point;
 
     public Member(String email, String password, final int point) {
         this(null, email, password, point);
@@ -17,6 +17,15 @@ public class Member {
         this.email = email;
         this.password = password;
         this.point = new Point(point);
+    }
+
+    public void usePoint(final int point) {
+        Point usedPoint = new Point(point);
+        this.point = this.point.use(usedPoint);
+    }
+
+    public boolean isSamePassword(String password) {
+        return this.password.equals(password);
     }
 
     public Long getId() {
@@ -33,10 +42,6 @@ public class Member {
 
     public int getPoint() {
         return point.getValue();
-    }
-
-    public boolean isSamePassword(String password) {
-        return this.password.equals(password);
     }
 
     @Override

@@ -22,6 +22,10 @@ public class MemberEntity {
         this.updatedAt = updatedAt;
     }
 
+    public MemberEntity(final Long id, final String email, final String password, final int point) {
+        this(id, email, password, point, null, null);
+    }
+
     public Long getId() {
         return id;
     }
