@@ -30,7 +30,7 @@ class OrderItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("insert into orders(member_id, used_point) values(1, 1500)");
+        jdbcTemplate.update("insert into orders(member_id, orders_status_id, used_point) values(1, 1, 1500)");
 
         jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(1, 1, 3, 30000)");
         jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(1, 2, 2, 40000)");
