@@ -18,6 +18,15 @@ public class Order {
             final long pointToAdd
     ) {
         this(null, member, orderInfos, originalPrice, usedPoint, pointToAdd);
+        validateOriginalPrice(originalPrice);
+    }
+    
+    private void validateOriginalPrice(final long originalPrice) {
+        final Long calculatedPrice = this.orderInfos.calculateAllProductPriceWithQuantity();
+        if (calculatedPrice != originalPrice) {
+            final String errorMessage = String.format("클라이언트와 서버의 originalPrice가 다릅니다. Client : %d, Server : %d", originalPrice, calculatedPrice);
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
     
     public Order(
@@ -37,6 +46,6 @@ public class Order {
     }
     
     public Long calculatePayment() {
-        return orderInfos.calculateAllProductPriceWithQuantiry() - usedPoint;
+        return orderInfos.calculateAllProductPriceWithQuantity() - usedPoint;
     }
 }

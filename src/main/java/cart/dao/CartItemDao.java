@@ -64,7 +64,7 @@ public class CartItemDao {
     }
 
     public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, product.point_ratio, product.point_available, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.point, product.id, product.name, product.price, product.image_url, product.point_ratio, product.point_available, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +

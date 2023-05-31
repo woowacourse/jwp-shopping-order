@@ -37,4 +37,28 @@ public class OrderInfo {
     public Long calculateProductPriceWithQuantiry() {
         return (long) productPrice * quantity;
     }
+    
+    public Long getId() {
+        return id;
+    }
+    
+    public Product getProduct() {
+        return product;
+    }
+    
+    public String getProductName() {
+        return productName;
+    }
+    
+    public Integer getProductPrice() {
+        return productPrice;
+    }
+    
+    public String getProductImageUrl() {
+        return productImageUrl;
+    }
+    
+    public Integer getQuantity() {
+        return quantity;
+    }
 }

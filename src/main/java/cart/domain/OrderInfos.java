@@ -9,7 +9,7 @@ public class OrderInfos {
         this.orderInfos = orderInfos;
     }
     
-    public Long calculateAllProductPriceWithQuantiry() {
+    public Long calculateAllProductPriceWithQuantity() {
         return orderInfos.stream()
                 .mapToLong(OrderInfo::calculateProductPriceWithQuantiry)
                 .sum();
