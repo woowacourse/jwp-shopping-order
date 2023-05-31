@@ -27,7 +27,6 @@ public class CouponDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public void updateUsageStatus(final Long memberId, final Long couponId) {
         String sql = "UPDATE coupon " +
                 "SET usage_status = 'N' " +
@@ -39,6 +38,15 @@ public class CouponDao {
     public Long create(final Long memberId, final Long couponTypeId) {
         String sql = "INSERT INTO coupon(usage_status, member_id, coupon_type_id) VALUES (?, ?, ?) ";
         return (long) jdbcTemplate.update(sql, "N", memberId, couponTypeId);
+    }
+
+    public Optional<CouponEntity> findById(final Long couponId) {
+        String sql = "SELECT * FROM coupon WHERE id = ?";
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, couponId));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<CouponEntity> findAll(final Long memberId) {
@@ -55,12 +63,4 @@ public class CouponDao {
         jdbcTemplate.update(sql, couponId);
     }
 
-    public Optional<CouponEntity> findById(final Long couponId) {
-        String sql = "SELECT * FROM coupon WHERE id = ?";
-        try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, couponId));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
 }

@@ -1,7 +1,8 @@
 package cart.step2.coupontype.persist;
 
-import cart.step2.coupontype.domain.CouponTypeEntity;
 import cart.step2.coupontype.domain.CouponType;
+import cart.step2.coupontype.domain.CouponTypeEntity;
+import cart.step2.coupontype.exception.CouponTypeNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,18 +47,15 @@ class CouponTypeRepositoryMapperTest {
         );
     }
 
-    @DisplayName("Optional<CouponTypeEntity>를 단건 조회할 때 Optional이 Null이다.")
+    @DisplayName("Optional<CouponTypeEntity>를 단건 조회할 때 예외 발생")
     @Test
     void findByIdFailed() {
         // given
         Optional<CouponTypeEntity> couponTypeEntityOptional = Optional.empty();
         doReturn(couponTypeEntityOptional).when(couponTypeDao).findById(1L);
 
-        // when
-        CouponType couponType = couponTypeRepositoryMapper.findById(1L);
-
-        // then
-
+        // when, then
+        assertThrows(CouponTypeNotFoundException.class, () -> couponTypeRepositoryMapper.findById(1L));
     }
 
     @DisplayName("모든 CouponTypeEntity을 조회해서 List<CouponType>으로 변환해서 반환한다.")
