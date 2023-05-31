@@ -20,7 +20,7 @@ public class OrderItemDao {
             rs.getLong("product.id"),
             rs.getInt("order_item.quantity"),
             rs.getString("product.name"),
-            rs.getInt("product.price"),
+            rs.getInt("order_item.price_at_order_time"),
             rs.getString("product.image_url")
         );
 
@@ -45,7 +45,7 @@ public class OrderItemDao {
 
     public List<OrderItemProductDto> findAllByOrderId(long orderId) {
         String sql = "SELECT order_item.id, product.id, order_item.quantity, product.name, "
-            + "product.price, product.image_url FROM order_item "
+            + "order_item.price_at_order_time, product.image_url FROM order_item "
             + "INNER JOIN product ON order_item.product_id = product.id "
             + "WHERE order_id = ?";
         return jdbcTemplate.query(sql, ORDER_PRODUCT_ROW_MAPPER, orderId);

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.dao.dto.OrderItemProductDto;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
+import cart.dao.entity.ProductEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -66,4 +67,42 @@ class OrderItemDaoTest {
                 new OrderItemProductDto(1L, 1L, 0, "상품명", 0, "img"),
                 new OrderItemProductDto(2L, 2L, 0, "상품명", 0, "img")));
     }
+
+    @Test
+    @DisplayName("주문 당시의 금액과 현재의 상품 금액이 다르다면, 주문 당시의 금액이 조회되어야 한다.")
+    void findAllByOrderId_priceAtOrderTime() {
+        // given
+        ProductEntity productEntity = new ProductEntity(1L, "치킨", "chickenImg", 10000);
+        long productId = productEntity.getId();
+        int priceAtOrderTime = productEntity.getPrice();
+        long orderId = saveOrder(productId, priceAtOrderTime);
+
+        // when
+        int priceToUpdate = 20000;
+        modifyProductPrice(productEntity, priceToUpdate);
+        List<OrderItemProductDto> orderItems = orderItemDao.findAllByOrderId(orderId);
+
+        // then
+        assertThat(orderItems)
+            .usingRecursiveComparison()
+            .isEqualTo(List.of(
+                new OrderItemProductDto(1L, productId, 2, productEntity.getName(), priceAtOrderTime,
+                    productEntity.getImageUrl())
+            ));
+    }
+
+    private long saveOrder(long productId, int priceAtOrderTime) {
+        OrderEntity orderEntity = new OrderEntity(1L);
+        long orderId = orderDao.save(orderEntity);
+        OrderItemEntity chicken = new OrderItemEntity(orderId, productId, 2, priceAtOrderTime);
+        orderItemDao.batchInsert(List.of(chicken));
+        return orderId;
+    }
+
+    private void modifyProductPrice(ProductEntity entity, int price) {
+        ProductDao productDao = new ProductDao(jdbcTemplate);
+        productDao.updateProduct(entity.getId(),
+            new ProductEntity(entity.getId(), entity.getName(), entity.getImageUrl(), price));
+    }
+
 }
