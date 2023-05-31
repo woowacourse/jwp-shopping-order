@@ -40,13 +40,13 @@ public class OrderService {
     
     public Long addOrder(Member member, OrderAddRequest request) {
         Cart cart = new Cart(cartItemDao.findByMemberId(member.getId()));
-        List<OrderItem> itemsToOrder = cart.createOrderItems(findRequestCartItems(member, request.getOrderItemRequestList()));
+        List<OrderItem> itemsToOrder = cart.createOrderItems(findRequestCartItems(member, request.getOrderItems()));
         Order order = new Order(null,
                 member.getId(),
                 itemsToOrder,
                 deliveryFeeCalculator.calculate(member, itemsToOrder),
                 discountCalculator.calculate(member, itemsToOrder),
-                request.getCreatedAt()
+                request.getOrderTime()
                 );
         Long orderId = orderDao.save(order);
         orderItemDao.save(orderId, order.getOrderItems());
@@ -57,7 +57,7 @@ public class OrderService {
     private List<CartItem> findRequestCartItems(Member member, List<OrderItemRequest> requests) {
         List<CartItem> itemsToOrder = new ArrayList<>();
         for (OrderItemRequest request : requests) {
-            Product product = productDao.getProductById(request.getProduct_id());
+            Product product = productDao.getProductById(request.getId());
             int quantity = request.getQuantity();
             itemsToOrder.add(new CartItem(null, quantity, product, member));
         }

@@ -6,12 +6,12 @@ public class OrderItemResponse {
     
     private Long id;
     private int quantity;
-    private ProductResponse productResponse;
+    private ProductResponse product;
     
-    public OrderItemResponse(Long id, int quantity, ProductResponse productResponse) {
+    public OrderItemResponse(Long id, int quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
-        this.productResponse = productResponse;
+        this.product = product;
     }
     
     public static OrderItemResponse of(OrderItem orderItem) {
@@ -27,7 +27,7 @@ public class OrderItemResponse {
         return quantity;
     }
     
-    public ProductResponse getProductResponse() {
-        return productResponse;
+    public ProductResponse getProduct() {
+        return product;
     }
 }
