@@ -55,7 +55,7 @@ class OrderIntegrationTest extends IntegrationTest {
         OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(hongCartItemId, mattCartItemId));
 
         // when
-        // 사용자는 장바구니에 있는 물품들을 선택해서 주문한다. // TODO : 주문하기
+        // 사용자는 장바구니에 있는 물품들을 선택해서 주문한다.
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +69,7 @@ class OrderIntegrationTest extends IntegrationTest {
         OrderResponseDto result = response.as(OrderResponseDto.class);
 
         // then
-        // 사용자는 결제 결과를 응답받는다 // TODO : 주문하기
+        // 사용자는 결제 결과를 응답받는다
         assertThat(result.getTotalPrice())
                 .isEqualTo(PRICE * 2);
         assertThat(result.getOrderProducts())
@@ -77,7 +77,7 @@ class OrderIntegrationTest extends IntegrationTest {
                 .extracting(ProductResponse::getName, ProductResponse::getPrice, ProductResponse::getImageUrl)
                 .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
 
-        // 주문한 물품을 장바구니에서 삭제한다. // TODO : 주문하기
+        // 주문한 물품을 장바구니에서 삭제한다.
         ExtractableResponse<Response> cartItems = requestGetCartItems(member);
         List<CartItemResponse> cartItemResponse = cartItems.as(new TypeRef<>() {});
         assertThat(cartItemResponse).isEmpty();
