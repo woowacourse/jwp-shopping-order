@@ -11,11 +11,13 @@ import cart.exception.NoSuchCartItemException;
 import cart.exception.NoSuchOrderException;
 import cart.exception.PointOverTotalPriceException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service
 public class OrderService {
 
@@ -60,6 +62,7 @@ public class OrderService {
         return createdOrders.getId();
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDetailResponse> findOrderByMember(Member member) {
         List<Orders> orders = orderDao.getOrdersByMemberId(member.getId());
         List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
@@ -75,6 +78,7 @@ public class OrderService {
         return orderDetailResponses;
     }
 
+    @Transactional(readOnly = true)
     public OrderDetailResponse findOrderDetailByOrderId(Long id) {
         Orders order = orderDao.getOrdersByOrderId(id).orElseThrow(NoSuchOrderException::new);
         List<OrderProductResponse> orderProductResponses = new ArrayList<>();

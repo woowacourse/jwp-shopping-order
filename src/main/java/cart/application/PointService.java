@@ -6,10 +6,12 @@ import cart.domain.Member;
 import cart.domain.Point;
 import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Transactional
 @Service
 public class PointService {
 
@@ -27,10 +29,12 @@ public class PointService {
         return new Point(pointId, point.getEarnedPoint(), point.getLeftPoint(), point.getMember(), point.getExpiredAt(), point.getCreatedAt());
     }
 
+    @Transactional(readOnly = true)
     public double findEarnRateByMember(Member member) {
         return MEMBER_ORDER_RATE;
     }
 
+    @Transactional(readOnly = true)
     public int findByMember(Member member) {
         List<Point> remainingPoints = pointDao.getBeforeExpirationAndRemainingPointsByMemberId(member.getId());
         return remainingPoints.stream().mapToInt(Point::getLeftPoint).sum();

@@ -10,10 +10,12 @@ import cart.dto.CartItemResponse;
 import cart.exception.NoSuchCartItemException;
 import cart.exception.NoSuchProductException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class CartItemService {
     private final ProductDao productDao;
@@ -24,6 +26,7 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
