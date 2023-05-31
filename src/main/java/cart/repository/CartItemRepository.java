@@ -4,6 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
+import cart.domain.Member;
 import cart.domain.Product;
 import cart.entity.CartItemEntity;
 import org.springframework.stereotype.Repository;
@@ -41,17 +42,21 @@ public class CartItemRepository {
     }
 
     public Product findProductOf(final Long id) {
-        final CartItem cartItem = cartItemDao.findById(id);
-        return cartItem.getProduct();
+        final CartItemEntity entity = cartItemDao.findById(id);
+        return productDao.getProductById(entity.getProductId()).toProduct();
     }
 
     public int findQuantityOf(final Long id) {
-        final CartItem cartItem = cartItemDao.findById(id);
-        return cartItem.getQuantity();
+        return cartItemDao.findById(id).getQuantity();
     }
 
     public CartItem findById(final Long id) {
-        return cartItemDao.findById(id);
+        final CartItemEntity entity = cartItemDao.findById(id);
+
+        final Member member = memberDao.getMemberById(entity.getMemberId()).toMember();
+        final Product product = productDao.getProductById(entity.getProductId()).toProduct();
+
+        return new CartItem(id, entity.getQuantity(), product, member);
     }
 
     public void deleteById(final Long id) {
