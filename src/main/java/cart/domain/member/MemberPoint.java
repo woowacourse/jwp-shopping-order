@@ -56,4 +56,8 @@ public class MemberPoint {
                 "point=" + point +
                 '}';
     }
+
+    public boolean isLowerThan(final MemberPoint point) {
+        return this.point < point.point;
+    }
 }

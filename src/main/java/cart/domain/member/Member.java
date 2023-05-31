@@ -1,5 +1,7 @@
 package cart.domain.member;
 
+import cart.exception.point.PointAbusedException;
+
 import java.util.Objects;
 
 public class Member {
@@ -35,8 +37,11 @@ public class Member {
         return this.password.equals(new MemberPassword(password));
     }
 
-    public Member updatePoint(final MemberPoint point, final int totalPrice) {
-        final MemberPoint minusPoint = this.point.minus(point);
+    public Member updatePoint(final MemberPoint requestedPoint, final int totalPrice) {
+        if (point.isLowerThan(requestedPoint)) {
+            throw new PointAbusedException(point, requestedPoint);
+        }
+        final MemberPoint minusPoint = this.point.minus(requestedPoint);
         final MemberPoint resultPoint = minusPoint.addPointByTotalPrice(totalPrice);
 
         return new Member(id, email, password, resultPoint);

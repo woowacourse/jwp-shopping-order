@@ -6,10 +6,10 @@ import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.ProductDao;
 import cart.domain.cartitem.CartItem;
-import cart.domain.cartitem.CartItems;
 import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
+import cart.domain.orderproduct.DeliveryFee;
 import cart.domain.orderproduct.Order;
 import cart.domain.orderproduct.OrderProduct;
 import cart.domain.product.Product;
@@ -20,7 +20,6 @@ import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.notfound.OrderNotFoundException;
 import cart.exception.notfound.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -63,27 +62,32 @@ public class OrderServiceTest {
             private final int quantity1 = 1;
             private final int quantity2 = 2;
             private final int usedPoint = 1000;
+            private Long orderId;
 
             @BeforeEach
             void setUp() {
                 final Long cartItemId1 = cartItemDao.insert(new CartItem(member, product1, quantity1));
                 final Long cartItemId2 = cartItemDao.insert(new CartItem(member, product2, quantity2));
                 final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId1, cartItemId2), usedPoint);
-                final Long orderId = orderService.order(member, orderRequest);
+                orderId = orderService.order(member, orderRequest);
             }
 
-            @DisplayName("배송비 3천원을 할인해준다.")
-            @Disabled
+            @DisplayName("배송비 3천원을 추가하지 않는다.")
             @Test
             void it_returns_discounted_delivery_fee() {
                 final Member updatedMember = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
+                final Order order = orderDao.findById(orderId).orElseThrow(OrderNotFoundException::new);
 
                 int remainPoint = member.getPointValue() - usedPoint;
                 final int cartItemPrice1 = product1.getPriceValue() * quantity1;
                 final int cartItemPrice2 = product2.getPriceValue() * quantity2;
-                remainPoint += (cartItemPrice1 + cartItemPrice2 - CartItems.DELIVERY_FEE) * 0.1;
+                final int updatedPoint = (int) (remainPoint + (cartItemPrice1 + cartItemPrice2) * 0.1);
 
-                assertThat(updatedMember.getPoint()).isEqualTo(new MemberPoint(remainPoint));
+                assertAll(
+                        () -> assertThat(updatedMember.getPoint()).isEqualTo(new MemberPoint(updatedPoint)),
+                        () -> assertThat(order.getDeliveryFee()).isEqualTo(new DeliveryFee(0)),
+                        () -> assertThat(order.getUsedPoint()).isEqualTo(new MemberPoint(1000))
+                );
             }
         }
 
@@ -93,26 +97,32 @@ public class OrderServiceTest {
             private final int quantity1 = 1;
             private final int quantity2 = 1;
             private final int usedPoint = 1000;
+            private Long orderId;
+
 
             @BeforeEach
             void setUp() {
                 final Long cartItemId1 = cartItemDao.insert(new CartItem(member, product1, quantity1));
                 final Long cartItemId2 = cartItemDao.insert(new CartItem(member, product2, quantity2));
                 final OrderRequest orderRequest = new OrderRequest(List.of(cartItemId1, cartItemId2), usedPoint);
-                orderService.order(member, orderRequest);
+                orderId = orderService.order(member, orderRequest);
             }
 
-            @DisplayName("배송비 3천원을 할인해주지 않는다.")
+            @DisplayName("배송비 3천원 추가한다.")
             @Test
             void it_returns_discounted_delivery_fee() {
                 final Member updatedMember = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
+                final Order order = orderDao.findById(orderId).orElseThrow(OrderNotFoundException::new);
 
                 int remainPoint = member.getPointValue() - usedPoint;
                 final int cartItemPrice1 = product1.getPriceValue() * quantity1;
                 final int cartItemPrice2 = product2.getPriceValue() * quantity2;
-                remainPoint += (cartItemPrice1 + cartItemPrice2) * 0.1;
-
-                assertThat(updatedMember.getPoint()).isEqualTo(new MemberPoint(remainPoint));
+                final int updatedPoint = (int) (remainPoint + (cartItemPrice1 + cartItemPrice2) * 0.1);
+                assertAll(
+                        () -> assertThat(updatedMember.getPoint()).isEqualTo(new MemberPoint(updatedPoint)),
+                        () -> assertThat(order.getDeliveryFee()).isEqualTo(new DeliveryFee(3000)),
+                        () -> assertThat(order.getUsedPoint()).isEqualTo(new MemberPoint(1000))
+                );
             }
         }
 

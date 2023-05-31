@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 public class CartItems {
 
     public static final int DELIVERY_FEE = 3000;
+    public static final int SALE_THRESHOLD = 50_000;
 
     private final List<CartItem> cartItems;
     private final int totalPrice;
@@ -30,7 +31,7 @@ public class CartItems {
     }
 
     private int calculateDeliveryFee(final int totalPrice) {
-        if (totalPrice >= 50_000) {
+        if (totalPrice >= SALE_THRESHOLD) {
             return 0;
         }
         return DELIVERY_FEE;

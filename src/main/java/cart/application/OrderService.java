@@ -12,7 +12,6 @@ import cart.dto.OrderProductDto;
 import cart.dto.OrderRequest;
 import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.point.InvalidPointUseException;
-import cart.exception.point.PointAbusedException;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,14 +39,12 @@ public class OrderService {
     public Long order(final Member member, final OrderRequest request) {
         final Member findMember = memberDao.findByEmail(member.getEmailValue())
                 .orElseThrow(() -> new MemberNotFoundException(member.getEmailValue()));
-        if (findMember.getPointValue() < request.getPoint()) {
-            throw new PointAbusedException(member.getPointValue(), request.getPoint());
-        }
         final CartItems cartItems = new CartItems(cartItemDao.findAllByIds(request.getCartItemIds()));
         final int totalPrice = cartItems.getTotalPrice();
         if (totalPrice < request.getPoint()) {
             throw new InvalidPointUseException(totalPrice, request.getPoint());
         }
+        // TODO: 배송비를 할인한 가격에 포인트 정책을 적용?
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
         memberDao.update(updatedMember);
 
