@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.exception;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
@@ -27,6 +29,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
         logger.warn("cartItem error: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Void> handleException(NoSuchElementException e) {
+        logger.warn("no such element error: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @ExceptionHandler(Exception.class)
