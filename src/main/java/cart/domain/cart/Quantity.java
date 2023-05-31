@@ -10,7 +10,7 @@ public class Quantity {
         this.quantity = quantity;
     }
 
-    public static Quantity minQuantity(){
+    public static Quantity minQuantity() {
         return new Quantity(MIN_QUANTITY_VALUE);
     }
 

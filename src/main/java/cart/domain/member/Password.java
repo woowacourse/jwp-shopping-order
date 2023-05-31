@@ -25,7 +25,7 @@ public class Password {
 
     private void validateLength(final String password) {
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new IllegalArgumentException("Password 는 "+MIN_PASSWORD_LENGTH+"자 이상이어야 합니다.");
+            throw new IllegalArgumentException("Password 는 " + MIN_PASSWORD_LENGTH + "자 이상이어야 합니다.");
         }
     }
 
