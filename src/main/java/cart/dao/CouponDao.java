@@ -20,8 +20,8 @@ public class CouponDao {
     private final RowMapper<CouponEntity> rowMapper = (rs, rowNum) -> new CouponEntity(
             rs.getLong("id"),
             rs.getString("name"),
-            rs.getInt("min_price"),
-            rs.getInt("max_price"),
+            rs.getInt("min_order_price"),
+            rs.getInt("max_discount_price"),
             rs.getString("type"),
             rs.getInt("discount_amount"),
             rs.getDouble("discount_percentage")

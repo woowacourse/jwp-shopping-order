@@ -22,13 +22,36 @@ public class MemberCouponEntity {
         this.expiredAt = expiredAt;
     }
 
+    
+    public Coupon toCoupon(final CouponEntity couponEntity) {
+        CouponInfo couponInfo = new CouponInfo(
+                id,
+                couponEntity.getName(),
+                couponEntity.getMinOrderPrice(),
+                couponEntity.getMaxDiscountPrice(),
+                expiredAt
+        );
+        // TODO: 5/30/23 type enum 고려
+        if (couponEntity.getType().equals("퍼센트")) {
+            return new PercentageCoupon(
+                    couponInfo,
+                    couponEntity.getDiscountPercentage()
+            );
+        }
+        return new AmountCoupon(
+                couponInfo,
+                couponEntity.getDiscountAmount()
+        );
+    }
+
+    // TODO: 5/31/23 메서드 책임 분리 
     public Coupon toCoupon(final Map<Long, CouponEntity> allCoupons) {
         CouponEntity couponEntity = allCoupons.get(couponId);
         CouponInfo couponInfo = new CouponInfo(
                 id,
                 couponEntity.getName(),
-                couponEntity.getMinPrice(),
-                couponEntity.getMaxPrice(),
+                couponEntity.getMinOrderPrice(),
+                couponEntity.getMaxDiscountPrice(),
                 expiredAt
         );
         // TODO: 5/30/23 type enum 고려
