@@ -2,13 +2,17 @@ package cart.dto;
 
 public class PointResponse {
 
-    private final Double point;
+    private final Long point;
 
-    public PointResponse(Double point) {
+    private PointResponse(Long point) {
         this.point = point;
     }
 
-    public Double getPoint() {
+    public static PointResponse from(Long point) {
+        return new PointResponse(point);
+    }
+
+    public Long getPoint() {
         return point;
     }
 }

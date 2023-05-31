@@ -37,7 +37,7 @@ class PointApiControllerTest {
     @Test
     void getPoint() throws Exception {
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
-        when(pointService.findPointByMemberId(any())).thenReturn(new PointResponse(1000.0));
+        when(pointService.findPointByMemberId(any())).thenReturn(PointResponse.from(1000L));
 
         this.mockMvc.perform(get("/points")
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
