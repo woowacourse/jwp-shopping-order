@@ -16,7 +16,7 @@ public class TestConfig {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("org.h2.Driver");
         dataSourceBuilder.url("jdbc:h2:mem:test?useUnicode=true&characterEncoding=utf8");
-        System.out.println(11123);
+
         dataSourceBuilder.username("sa");
         dataSourceBuilder.password("");
         return dataSourceBuilder.build();

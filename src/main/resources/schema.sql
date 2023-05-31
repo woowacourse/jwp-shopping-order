@@ -56,7 +56,7 @@ CREATE TABLE point (
     FOREIGN KEY (orders_id) REFERENCES orders(id)
 );
 
-CREATE TABLE order_point (
+CREATE TABLE orders_point (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
     point_id BIGINT NOT NULL,

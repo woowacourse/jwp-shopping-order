@@ -22,12 +22,12 @@ public class OrderItemDao {
     }
 
     public List<OrderItem> findAll() {
-        String sql = "select * from orders_item left join product on orders_item.product_id = product.id";
+        String sql = "select product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item left join product on orders_item.product_id = product.id";
         return jdbcTemplate.query(sql, new OrderItemRowMapper());
     }
 
     public List<OrderItem> findByOrderId(Long orderId) {
-        String sql = "select * from orders_item left join product on orders_item.product_id = product.id where orders_id = ?";
+        String sql = "select product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item left join product on orders_item.product_id = product.id where orders_id = ?";
         return jdbcTemplate.query(sql, new OrderItemRowMapper(), orderId);
     }
 

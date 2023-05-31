@@ -23,8 +23,13 @@ public class OrderDao {
 
 
     public OrderEntity findById(Long orderId) {
-        String sql = "select * from orders where id = ?";
+        String sql = "select id, member_id, orders_status_id, create_at from orders where id = ?";
         return jdbcTemplate.queryForObject(sql, new OrderRowMapper(), orderId);
+    }
+
+    public void save(OrderEntity orderEntity) {
+        String sql = "insert into orders(member_id, orders_status_id) values(?, ?)";
+        jdbcTemplate.update(sql, orderEntity.getMemberId(), orderEntity.getOrderStatusId());
     }
 
     private static class OrderRowMapper implements RowMapper<OrderEntity> {
