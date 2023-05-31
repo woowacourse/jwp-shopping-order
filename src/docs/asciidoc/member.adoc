@@ -6,24 +6,24 @@
 
 [discrete]
 ====== 요청
-include::{snippets}/members/postDepositPoint/http-request.adoc[]
-include::{snippets}/members/postDepositPoint/request-headers.adoc[]
-include::{snippets}/members/postDepositPoint/request-fields.adoc[]
+include::{snippets}/members/postDepositCash/http-request.adoc[]
+include::{snippets}/members/postDepositCash/request-headers.adoc[]
+include::{snippets}/members/postDepositCash/request-fields.adoc[]
 
 [discrete]
 ====== 응답
-include::{snippets}/members/postDepositPoint/http-response.adoc[]
-include::{snippets}/members/postDepositPoint/response-fields.adoc[]
+include::{snippets}/members/postDepositCash/http-response.adoc[]
+include::{snippets}/members/postDepositCash/response-fields.adoc[]
 
 
 ==== 2. 포인트 확인
 
 [discrete]
 ====== 요청
-include::{snippets}/members/getTotalPoint/http-request.adoc[]
-include::{snippets}/members/getTotalPoint/request-headers.adoc[]
+include::{snippets}/members/getTotalCash/http-request.adoc[]
+include::{snippets}/members/getTotalCash/request-headers.adoc[]
 
 [discrete]
 ====== 응답
-include::{snippets}/members/getTotalPoint/http-response.adoc[]
-include::{snippets}/members/getTotalPoint/response-fields.adoc[]
+include::{snippets}/members/getTotalCash/http-response.adoc[]
+include::{snippets}/members/getTotalCash/response-fields.adoc[]

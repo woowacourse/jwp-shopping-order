@@ -30,7 +30,7 @@ class MemberTest {
     }
 
     @Test
-    void 포인트를_충전하다() {
+    void 캐시를_충전하다() {
         final Member member = Member.of(1L, "test@test.com", "1234", 0L);
 
         SoftAssertions.assertSoftly(softAssertions -> {
@@ -42,7 +42,7 @@ class MemberTest {
     @Nested
     class withdraw_테스트 {
         @Test
-        void 포인트를_차감하다() {
+        void 캐시를_차감하다() {
             final Member member = Member.of(1L, "test@test.com", "1234", 5000L);
 
             SoftAssertions.assertSoftly(softAssertions -> {
@@ -52,12 +52,12 @@ class MemberTest {
         }
 
         @Test
-        void 원래_있는_포인트_이상의_포인트를_차감할_경우_예외를_반환하다() {
+        void 원래_있는_캐시_이상의_캐시를_차감할_경우_예외를_반환하다() {
             final Member member = Member.of(1L, "test@test.com", "1234", 5000L);
 
             assertThatThrownBy(() -> member.withdraw(10000L))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("포인트는 0원 미만이 될 수 없습니다");
+                    .hasMessage("캐시는 0원 미만이 될 수 없습니다");
         }
     }
 }

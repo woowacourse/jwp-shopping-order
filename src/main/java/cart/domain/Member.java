@@ -29,7 +29,7 @@ public class Member {
 
     public void withdraw(final Long money) {
         if (cash - money < 0) {
-            throw new IllegalArgumentException("포인트는 0원 미만이 될 수 없습니다");
+            throw new IllegalArgumentException("캐시는 0원 미만이 될 수 없습니다");
         }
 
         cash -= money;

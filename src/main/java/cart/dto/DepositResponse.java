@@ -2,17 +2,17 @@ package cart.dto;
 
 public class DepositResponse {
 
-    private final Long cash;
+    private final Long totalCash;
 
-    private DepositResponse(final Long cash) {
-        this.cash = cash;
+    private DepositResponse(final Long totalCash) {
+        this.totalCash = totalCash;
     }
 
     public static DepositResponse from(final Long cash) {
         return new DepositResponse(cash);
     }
 
-    public Long getCash() {
-        return cash;
+    public Long getTotalCash() {
+        return totalCash;
     }
 }

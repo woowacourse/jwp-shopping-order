@@ -74,10 +74,10 @@ public class MemberApiDocumentTest {
     }
 
     @Test
-    void 포인트_충전_문서화() throws Exception {
+    void 캐시_충전_문서화() throws Exception {
         // given
         given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        given(memberService.depositPoint(MemberA.ENTITY, 5000L))
+        given(memberService.depositCash(MemberA.ENTITY, 5000L))
                 .willReturn(15000L);
         final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
         final DepositRequest request = DepositRequest.from(5000L);
@@ -89,27 +89,27 @@ public class MemberApiDocumentTest {
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("members/postDepositPoint",
+                .andDo(document("members/postDepositCash",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
                                         headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
                                 ),
                                 requestFields(
-                                        fieldWithPath("point").type(JsonFieldType.NUMBER).description("충전할 금액")
+                                        fieldWithPath("cashToCharge").type(JsonFieldType.NUMBER).description("충전할 금액")
                                 ),
                                 responseFields(
-                                        fieldWithPath("cash").type(JsonFieldType.NUMBER).description("충전한 이후의 총 금액")
+                                        fieldWithPath("totalCash").type(JsonFieldType.NUMBER).description("충전한 이후의 총 금액")
                                 )
                         )
                 );
     }
 
     @Test
-    void 포인트_확인_문서화() throws Exception {
+    void 캐시_확인_문서화() throws Exception {
         // given
         given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        given(memberService.findPoint(MemberA.ENTITY)).willReturn(MemberA.CASH);
+        given(memberService.findCash(MemberA.ENTITY)).willReturn(MemberA.CASH);
         final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
 
         // when, then
@@ -117,13 +117,13 @@ public class MemberApiDocumentTest {
                         .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("members/getTotalPoint",
+                .andDo(document("members/getTotalCash",
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
                                         headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
                                 ),
                                 responseFields(
-                                        fieldWithPath("totalPoint").type(JsonFieldType.NUMBER).description("유저가 가지고 있는 포인트")
+                                        fieldWithPath("totalCash").type(JsonFieldType.NUMBER).description("유저가 가지고 있는 캐시")
                                 )
                         )
                 );

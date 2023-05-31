@@ -4,7 +4,7 @@ import cart.application.MemberService;
 import cart.domain.Member;
 import cart.dto.DepositRequest;
 import cart.dto.DepositResponse;
-import cart.dto.PointResponse;
+import cart.dto.TotalCashResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,18 +25,18 @@ public class MemberApiController {
     }
 
     @PostMapping("/cash")
-    public ResponseEntity<DepositResponse> postDepositPoint(final Member member,
+    public ResponseEntity<DepositResponse> postDepositCash(final Member member,
                                                             @Valid @RequestBody final DepositRequest request) {
-        final Long point = request.getPoint();
-        final Long totalCash = memberService.depositPoint(member, point);
+        final Long cash = request.getCashToCharge();
+        final Long totalCash = memberService.depositCash(member, cash);
 
         return ResponseEntity.ok(DepositResponse.from(totalCash));
     }
 
     @GetMapping("/cash")
-    public ResponseEntity<PointResponse> getTotalPoint(final Member member) {
-        final Long totalCash = memberService.findPoint(member);
+    public ResponseEntity<TotalCashResponse> getTotalCash(final Member member) {
+        final Long totalCash = memberService.findCash(member);
 
-        return ResponseEntity.ok(PointResponse.from(totalCash));
+        return ResponseEntity.ok(TotalCashResponse.from(totalCash));
     }
 }

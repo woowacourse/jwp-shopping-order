@@ -30,7 +30,7 @@ public class MemberIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 특정_유저의_포인트를_충전하다() {
+    void 특정_유저의_캐시를_충전하다() {
         final DepositRequest request = DepositRequest.from(5000L);
 
         final ExtractableResponse<Response> response = given()
@@ -46,7 +46,7 @@ public class MemberIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 특정_유저의_포인트를_확인하다() {
+    void 특정_유저의_캐시를_확인하다() {
         final ExtractableResponse<Response> response = given()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .accept(MediaType.APPLICATION_JSON_VALUE)

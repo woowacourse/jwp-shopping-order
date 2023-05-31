@@ -29,21 +29,21 @@ class MemberServiceTest {
     MemberDao memberDao;
 
     @Test
-    void 포인트를_충전하다() {
+    void 캐시를_충전하다() {
         // given
         final Member member = Member.of(1L, "test@test.com", "1234", 5000L);
         when(memberDao.getMemberByEmail(member.getEmail())).thenReturn(member);
         doNothing().when(memberDao).updateMember(member);
 
         // when
-        final Long totalCash = memberService.depositPoint(member, 5000L);
+        final Long totalCash = memberService.depositCash(member, 5000L);
 
         // then
         assertThat(totalCash).isEqualTo(10000L);
     }
 
     @Test
-    void 포인트를_차감하다() {
+    void 캐시를_차감하다() {
         // given
         final Member member = Member.of(1L, "test@test.com", "1234", 5000L);
         when(memberDao.getMemberByEmail(member.getEmail())).thenReturn(member);
@@ -51,18 +51,18 @@ class MemberServiceTest {
 
         // when, then
         SoftAssertions.assertSoftly(softAssertions -> {
-            assertDoesNotThrow(() -> memberService.withdrawPoint(member, 5000L));
+            assertDoesNotThrow(() -> memberService.withdrawCash(member, 5000L));
             softAssertions.assertThat(member.getCash()).isEqualTo(0L);
         });
     }
 
     @Test
-    void 현재_포인트를_확인하다() {
+    void 현재_캐시를_확인하다() {
         // given
         when(memberDao.getMemberByEmail(MemberA.EMAIL)).thenReturn(MemberA.ENTITY);
 
         // when
-        final Long totalCash = memberService.findPoint(MemberA.ENTITY);
+        final Long totalCash = memberService.findCash(MemberA.ENTITY);
 
         // then
         assertThat(totalCash).isEqualTo(MemberA.CASH);
