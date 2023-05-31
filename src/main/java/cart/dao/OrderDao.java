@@ -1,12 +1,14 @@
 package cart.dao;
 
 import cart.domain.Order;
+import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -64,5 +66,20 @@ public class OrderDao {
 
             return new Order(id, memberId, null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
         });
+    }
+
+    public List<Order> findByMemberId(Long memberId) {
+        String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long id = rs.getLong("id");
+            int totalItemDiscountAmount = rs.getInt("total_item_discount_amount");
+            int totalMemberDiscountAmount = rs.getInt("total_member_discount_amount");
+            int totalItemPrice = rs.getInt(("total_item_price"));
+            int discountedTotalItemPrice = rs.getInt("discounted_total_item_price");
+            int shippingFee = rs.getInt("shipping_fee");
+            int totalPrice = rs.getInt("total_price");
+
+            return new Order(id, memberId, null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
+        },memberId);
     }
 }

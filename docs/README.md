@@ -20,9 +20,9 @@
 - [x] service에서 domain 객체 생성 (Orders)
   - [x] Order들의 List를 가지고 있다 
 - [x] domain으로 dao에 요청 전송
-- [] dao에서 영속화 작업 수행
-  - [] 전체 주문 목록을 조회하는 쿼리문 작성
-- [] OrdersResponse 생성
+- [x] dao에서 영속화 작업 수행
+  - [x] 전체 주문 목록을 조회하는 쿼리문 작성
+- [x] OrdersResponse 생성
 
 
 ## 특정 멤버의 특정 주문 조회하기
