@@ -9,6 +9,8 @@ import cart.domain.Member;
 import cart.domain.Product;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -24,13 +26,25 @@ public class CartItemRepository {
         cartItemDao.insert(cartItemEntity);
     }
 
-    public CartItem findById(final Long id) {
-        CartItemEntity foundCartItemEntity = cartItemDao.findById(id);
+    public CartItem findById(final Long cartItemId) {
+        CartItemEntity foundCartItemEntity = cartItemDao.findById(cartItemId);
 
-        Member member = memberDao.findById(foundCartItemEntity.getMemberId());
-        Product product = productDao.findById(foundCartItemEntity.getProductId());
-        int quantity = foundCartItemEntity.getQuantity();
+        return toDomain(foundCartItemEntity);
+    }
 
-        return new CartItem(id, member, product, quantity);
+    private CartItem toDomain(final CartItemEntity cartItemEntity) {
+        Member member = memberDao.findById(cartItemEntity.getMemberId());
+        Product product = productDao.findById(cartItemEntity.getProductId());
+        int quantity = cartItemEntity.getQuantity();
+
+        return new CartItem(cartItemEntity.getId(), member, product, quantity);
+    }
+
+    public List<CartItem> findByMemberId(final Long memberId) {
+        List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
+
+        return cartItemEntities.stream()
+                .map(this::toDomain)
+                .collect(Collectors.toList());
     }
 }

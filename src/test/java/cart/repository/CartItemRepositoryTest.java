@@ -2,6 +2,7 @@ package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class CartItemRepositoryTest {
@@ -65,5 +67,21 @@ class CartItemRepositoryTest {
         CartItem expect = new CartItem(id, dummyMember, dummyProduct, 1);
 
         assertThat(cartItem).isEqualTo(expect);
+    }
+
+    @Test
+    void 회원ID로_객체를_조회한다() {
+        // given
+        long memberId = dummyMember.getId();
+
+        List<CartItemEntity> cartItemEntities = List.of(new CartItemEntity(1L, dummyMember.getId(), dummyProduct.getId(), 1));
+        when(cartItemDao.findByMemberId(anyLong()))
+                .thenReturn(cartItemEntities);
+
+        // when
+        List<CartItem> result = repository.findByMemberId(memberId);
+
+        // then
+        assertThat(result).hasSize(1);
     }
 }
