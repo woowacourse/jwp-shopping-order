@@ -13,8 +13,8 @@ public class CartItemEntity {
     private final Long productId;
     private final int quantity;
 
-    public CartItemEntity(final Long member, final Long product, final int quantity) {
-        this(null, product, member, quantity);
+    public CartItemEntity(final Long memberId, final Long productId, final int quantity) {
+        this(null, memberId, productId, quantity);
     }
 
     @Override
