@@ -52,4 +52,11 @@ public class CartItemRepository {
             throw new IllegalArgumentException("존재하지 않는 장바구니 id 입니다.");
         }
     }
+
+    public List<CartItem> findAllByIds(List<Long> ids) {
+        return cartItemDao.findAllByIds(ids)
+            .stream()
+            .map(CartItemProductDto::toDomain)
+            .collect(Collectors.toList());
+    }
 }
