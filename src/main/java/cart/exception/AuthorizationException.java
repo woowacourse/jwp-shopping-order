@@ -1,10 +1,8 @@
 package cart.exception;
 
-public class AuthorizationException extends MemberNotFoundException {
+public class AuthorizationException extends IllegalArgumentException {
 
-    private static final String MESSAGE = "맴버 인증에 실패했습니다.";
-
-    public AuthorizationException() {
-        super(MESSAGE);
+    public AuthorizationException(final String message) {
+        super(message);
     }
 }
