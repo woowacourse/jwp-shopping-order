@@ -20,17 +20,14 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
+        logger.error("Error from AuthenticationException : ", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
     public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
+        logger.error("Error from CartItemException.IllegalMember : ", e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getClass().getSimpleName());
     }
 
     @ExceptionHandler({
