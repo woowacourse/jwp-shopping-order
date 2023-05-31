@@ -3,6 +3,7 @@ package cart.exception;
 import java.util.List;
 
 public class ErrorResponses {
+
     private final ErrorCode errorCode;
     private final List<String> errorMessage;
 

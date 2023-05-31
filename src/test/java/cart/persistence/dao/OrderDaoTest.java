@@ -34,6 +34,24 @@ class OrderDaoTest extends DaoTestHelper {
             .containsExactly(저장된_주문_아이디, 저장된_져니_아이디, 10000, 9000, 3000);
     }
 
+    @Test
+    @DisplayName("특정 회원이 주문한 전체 횟수를 구한다.")
+    void countByMemberId() {
+        // given
+        final Long 저장된_져니_아이디 = 져니_저장();
+        final Long 저장된_신규_가입_축하_쿠폰_아이디 = 신규_가입_쿠폰_저장();
+        져니_쿠폰_저장(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 10000, 9000, 3000, LocalDateTime.now());
+        orderDao.insert(주문_엔티티);
+
+        // when
+        final Long 저장된_주문_횟수 = orderDao.countByMemberId(저장된_져니_아이디);
+
+        // then
+        assertThat(저장된_주문_횟수)
+            .isEqualTo(1L);
+    }
+
     private OrderEntity 주문_엔티티_조회(final Long 저장된_주문_아이디) {
         final String sql = "SELECT id, member_id, total_price, discounted_total_price, delivery_price, ordered_at "
             + "FROM `order` WHERE id = ?";

@@ -20,6 +20,7 @@ public class CouponIntegrationTest extends IntegrationTest {
     @DisplayName("쿠폰 리스트를 조회한다.")
     public void getCoupons() {
         // given
+        /** 쿠폰 저장 */
         final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 20, 365);
         final CouponRequest 첫_주문_쿠폰_등록_요청 = new CouponRequest("첫 주문 감사 쿠폰", 10, 10);
         쿠폰_저장(신규_가입_쿠폰_등록_요청);
@@ -69,6 +70,7 @@ public class CouponIntegrationTest extends IntegrationTest {
             .when()
             .post("/coupons")
             .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("errorCode", equalTo(INVALID_REQUEST.name()))
             .body("errorMessage", containsInAnyOrder("쿠폰 이름은 비어있을 수 없습니다.",
                 "쿠폰 할인율은 비어있을 수 없습니다.", "쿠폰 기간은 비어있을 수 없습니다."));
@@ -78,6 +80,7 @@ public class CouponIntegrationTest extends IntegrationTest {
     @DisplayName("쿠폰 추가 시 이미 존재하는 이름, 할인율을 가진 쿠폰 정보가 들어온다면 예외가 발생한다.")
     public void createCoupon_duplicated_request() {
         // given
+        /** 쿠폰 저장 */
         final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 20, 365);
         쿠폰_저장(신규_가입_쿠폰_등록_요청);
 
@@ -90,6 +93,7 @@ public class CouponIntegrationTest extends IntegrationTest {
             .when()
             .post("/coupons")
             .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("errorCode", equalTo(COUPON_DUPLICATE.name()))
             .body("errorMessage", equalTo("이미 존재하는 쿠폰 정보입니다."));
     }
@@ -98,6 +102,7 @@ public class CouponIntegrationTest extends IntegrationTest {
     @DisplayName("특정 쿠폰을 조회한다.")
     public void getCreatedCoupon() {
         // given
+        /** 쿠폰 저장 */
         final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 20, 365);
         쿠폰_저장(신규_가입_쿠폰_등록_요청);
 
@@ -129,6 +134,7 @@ public class CouponIntegrationTest extends IntegrationTest {
             .when()
             .get("/coupons/1")
             .then()
+            .statusCode(HttpStatus.NOT_FOUND.value())
             .body("errorCode", equalTo(COUPON_NOT_FOUND.name()))
             .body("errorMessage", equalTo("쿠폰 정보를 찾을 수 없습니다."));
     }

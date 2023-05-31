@@ -10,8 +10,8 @@ import static org.hamcrest.Matchers.is;
 
 import cart.application.dto.cartitem.CartItemRequest;
 import cart.application.dto.coupon.CouponRequest;
+import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberLoginRequest;
-import cart.application.dto.member.MemberSaveRequest;
 import cart.application.dto.order.OrderProductRequest;
 import cart.application.dto.order.OrderRequest;
 import cart.application.dto.product.ProductRequest;
@@ -39,7 +39,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         사용자를_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        장바구니_상품을_저장한다(져니_로그인_요청);
+        장바구니에_상품을_추가한다(져니_로그인_요청);
 
         /** 상품 주문 요청 */
         final List<OrderProductRequest> 주문할_상품들 = List.of(
@@ -87,7 +87,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         사용자를_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        장바구니_상품을_저장한다(져니_로그인_요청);
+        장바구니에_상품을_추가한다(져니_로그인_요청);
 
         /** 상품 주문 요청 */
         final List<OrderProductRequest> 주문할_상품들 = List.of(
@@ -137,7 +137,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         만료된_쿠폰을_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        장바구니_상품을_저장한다(져니_로그인_요청);
+        장바구니에_상품을_추가한다(져니_로그인_요청);
 
         /** 상품 주문 요청 */
         final List<OrderProductRequest> 주문할_상품들 = List.of(
@@ -153,6 +153,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body(주문_요청)
             .post("/orders")
             .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("errorCode", equalTo(COUPON_EXPIRED.name()))
             .body("errorMessage", equalTo("만료된 쿠폰입니다."));
     }
@@ -167,7 +168,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         이미_사용한_쿠폰을_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        장바구니_상품을_저장한다(져니_로그인_요청);
+        장바구니에_상품을_추가한다(져니_로그인_요청);
 
         /** 상품 주문 요청 */
         final List<OrderProductRequest> 주문할_상품들 = List.of(
@@ -183,6 +184,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body(주문_요청)
             .post("/orders")
             .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("errorCode", equalTo(COUPON_ALREADY_USED.name()))
             .body("errorMessage", equalTo("이미 사용한 쿠폰입니다."));
     }
@@ -196,7 +198,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         사용자를_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        장바구니_상품을_저장한다(져니_로그인_요청);
+        장바구니에_상품을_추가한다(져니_로그인_요청);
 
         /** 상품 주문 요청 */
         final List<OrderProductRequest> 주문할_상품들 = List.of(
@@ -212,6 +214,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body(주문_요청)
             .post("/orders")
             .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("errorCode", equalTo(ORDER_QUANTITY_EXCEED.name()))
             .body("errorMessage", equalTo("상품은 최대 1000개까지 주문할 수 있습니다."));
     }
@@ -225,7 +228,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         상품을_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        장바구니_상품을_저장한다(져니_로그인_요청);
+        장바구니에_상품을_추가한다(져니_로그인_요청);
 
         /** 상품 주문 요청 */
         final List<OrderProductRequest> 주문할_상품들 = List.of(
@@ -241,11 +244,12 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body(주문_요청)
             .post("/orders")
             .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("errorCode", equalTo(ORDER_INVALID_PRODUCTS.name()))
             .body("errorMessage", equalTo("장바구니에 담기지 않은 상품은 주문할 수 없습니다."));
     }
 
-    private void 장바구니_상품을_저장한다(final MemberLoginRequest 져니_로그인_요청) {
+    private void 장바구니에_상품을_추가한다(final MemberLoginRequest 져니_로그인_요청) {
         final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
         final CartItemRequest 피자_장바구니_저장_요청 = new CartItemRequest(2L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
@@ -253,7 +257,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     private void 사용자를_저장한다() {
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "password");
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("journey", "password");
         사용자_저장(져니_저장_요청);
     }
 

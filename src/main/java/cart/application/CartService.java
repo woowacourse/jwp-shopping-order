@@ -76,12 +76,12 @@ public class CartService {
 
     @Transactional
     public void removeItems(final String memberName, final List<Long> cartItemIds) {
-        final Long count = cartRepository.countByIdsAndMemberId(cartItemIds, memberName);
+        final Long count = cartRepository.countByCartItemIdsAndMemberId(cartItemIds, memberName);
         if (count != cartItemIds.size()) {
             final String cartItemId = cartItemIds.stream().map(String::valueOf).collect(joining(", "));
             throw new ForbiddenException(cartItemId, memberName);
         }
-        cartRepository.deleteByIdsAndMemberId(cartItemIds, memberName);
+        cartRepository.deleteByCartItemIdsAndMemberId(cartItemIds, memberName);
     }
 
     private CartResponse convertCartItemResponse(final CartItemWithId cartItemWithId) {

@@ -7,7 +7,7 @@ import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberLoginResponse;
 import cart.application.dto.member.MemberResponse;
-import cart.application.dto.member.MemberSaveRequest;
+import cart.application.dto.member.MemberJoinRequest;
 import cart.application.mapper.MemberMapper;
 import cart.common.auth.BasicTokenProvider;
 import cart.domain.event.JoinMemberCouponEvent;
@@ -39,11 +39,11 @@ public class MemberService {
     }
 
     @Transactional
-    public long save(final MemberSaveRequest memberSaveRequest) {
-        if (memberRepository.existByName(memberSaveRequest.getName())) {
+    public long save(final MemberJoinRequest memberJoinRequest) {
+        if (memberRepository.existByName(memberJoinRequest.getName())) {
             throw new BadRequestException(ErrorCode.MEMBER_DUPLICATE_NAME);
         }
-        final Member member = convertMember(memberSaveRequest);
+        final Member member = convertMember(memberJoinRequest);
         final long savedMemberId = memberRepository.insert(member);
         applicationEventPublisher.publishEvent(new JoinMemberCouponEvent(savedMemberId));
         return savedMemberId;

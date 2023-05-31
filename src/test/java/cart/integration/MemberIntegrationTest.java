@@ -10,8 +10,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import cart.application.dto.coupon.CouponRequest;
+import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberLoginRequest;
-import cart.application.dto.member.MemberSaveRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -23,13 +23,14 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("사용자를 추가한다.")
     void join() {
         // given
-        final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 10, 365);
+        /** 쿠폰 저장 */
+        final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 20, 365);
         쿠폰_저장(신규_가입_쿠폰_등록_요청);
 
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "password");
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("journey", "password");
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
 
-        // expected
+        // when
         given()
             .when()
             .body(져니_저장_요청)
@@ -39,7 +40,18 @@ public class MemberIntegrationTest extends IntegrationTest {
             .statusCode(HttpStatus.CREATED.value())
             .header(LOCATION, "/users/" + 1);
 
-        // 가입 후 신규 회원 축하 쿠폰이 발급되었는지 확인
+        // then
+        /** 사용자 조회 */
+        given()
+            .when()
+            .get("/users/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("id", equalTo(1))
+            .body("name", equalTo("journey"))
+            .body("password", equalTo("5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"));
+
+        /** 가입 후 신규 회원 축하 쿠폰이 발급되었는지 확인 */
         given()
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .when()
@@ -49,7 +61,7 @@ public class MemberIntegrationTest extends IntegrationTest {
             .body("size", is(1))
             .body("[0].id", equalTo(1))
             .body("[0].name", equalTo("신규 가입 축하 쿠폰"))
-            .body("[0].discountRate", equalTo(10))
+            .body("[0].discountRate", equalTo(20))
             .body("[0].isUsed", equalTo(false));
     }
 
@@ -57,7 +69,7 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("사용자 추가 시 비어있는 정보로 요청이 들어오면 예외가 발생한다.")
     void join_invalid_request() {
         // given
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("", "");
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("", "");
 
         // expected
         given()
@@ -76,9 +88,10 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("사용자 추가 시 이미 존재하는 이름으로 요청이 들어오면 예외가 발생한다.")
     void join_duplicated_name() {
         // given
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "password");
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("journey", "password");
         사용자_저장(져니_저장_요청);
-        final MemberSaveRequest 또다른_져니_저장_요청 = new MemberSaveRequest("journey", "password22");
+
+        final MemberJoinRequest 또다른_져니_저장_요청 = new MemberJoinRequest("journey", "password22");
 
         // expected
         given()
@@ -96,8 +109,9 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("사용자 로그인을 진행한다.")
     void login() {
         // given
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "password");
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("journey", "password");
         사용자_저장(져니_저장_요청);
+
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
 
         // expected
@@ -132,8 +146,9 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("사용자 로그인 시 잘못된 비밀번호로 요청이 들어오면 예외가 발생한다.")
     void login_invalid_password() {
         // given
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "password");
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("journey", "password");
         사용자_저장(져니_저장_요청);
+
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password2");
 
         // expected
@@ -151,7 +166,7 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("사용자 정보를 조회한다.")
     void getMember() {
         // given
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "password");
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("journey", "password");
         사용자_저장(져니_저장_요청);
 
         // expected
@@ -169,9 +184,9 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("전체 사용자 정보를 조회한다.")
     void getMembers() {
         // given
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "jourzura1");
-        final MemberSaveRequest 라온_저장_요청 = new MemberSaveRequest("raon", "jourzura2");
-        final MemberSaveRequest 쥬니_저장_요청 = new MemberSaveRequest("zuny", "jourzura3");
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("journey", "jourzura1");
+        final MemberJoinRequest 라온_저장_요청 = new MemberJoinRequest("raon", "jourzura2");
+        final MemberJoinRequest 쥬니_저장_요청 = new MemberJoinRequest("zuny", "jourzura3");
         사용자_저장(져니_저장_요청);
         사용자_저장(라온_저장_요청);
         사용자_저장(쥬니_저장_요청);
@@ -198,11 +213,14 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("사용자의 쿠폰 목록을 조회한다.")
     void getMyCoupons() {
         // given
-        final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 10, 365);
+        /** 쿠폰 저장 */
+        final CouponRequest 신규_가입_쿠폰_등록_요청 = new CouponRequest("신규 가입 축하 쿠폰", 20, 365);
         쿠폰_저장(신규_가입_쿠폰_등록_요청);
 
-        final MemberSaveRequest 져니_저장_요청 = new MemberSaveRequest("journey", "jourzura1");
+        /** 사용자 저장 */
+        final MemberJoinRequest 져니_저장_요청 = new MemberJoinRequest("journey", "jourzura1");
         사용자_저장(져니_저장_요청);
+
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_저장_요청.getName(), 져니_저장_요청.getPassword());
 
         // expected
@@ -215,7 +233,7 @@ public class MemberIntegrationTest extends IntegrationTest {
             .body("size", is(1))
             .body("[0].id", equalTo(1))
             .body("[0].name", equalTo("신규 가입 축하 쿠폰"))
-            .body("[0].discountRate", equalTo(10))
+            .body("[0].discountRate", equalTo(20))
             .body("[0].isUsed", equalTo(false));
     }
 }

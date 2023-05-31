@@ -2,7 +2,7 @@ package cart.application.mapper;
 
 import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberResponse;
-import cart.application.dto.member.MemberSaveRequest;
+import cart.application.dto.member.MemberJoinRequest;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 
 public class MemberMapper {
 
-    public static Member convertMember(final MemberSaveRequest memberSaveRequest) {
-        final NaturalPassword naturalPassword = NaturalPassword.create(memberSaveRequest.getPassword());
+    public static Member convertMember(final MemberJoinRequest memberJoinRequest) {
+        final NaturalPassword naturalPassword = NaturalPassword.create(memberJoinRequest.getPassword());
         final String encodedPassword = SHA256Service.encrypt(naturalPassword.getPassword());
-        return Member.create(memberSaveRequest.getName(), EncryptedPassword.create(encodedPassword));
+        return Member.create(memberJoinRequest.getName(), EncryptedPassword.create(encodedPassword));
     }
 
     public static MemberResponse convertMemberResponse(final Member member) {

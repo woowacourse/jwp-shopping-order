@@ -43,8 +43,8 @@ class CartDaoTest extends DaoTest {
         final CartItemDto cart = cartItemDao.findById(저장된_장바구니_아이디).get();
         assertThat(cart)
             .extracting(CartItemDto::getCartId, CartItemDto::getMemberId, CartItemDto::getMemberName,
-                CartItemDto::getMemberPassword, CartItemDto::getProductId, CartItemDto::getProductName, CartItemDto::getProductPrice,
-                CartItemDto::getProductImageUrl, CartItemDto::getProductQuantity)
+                CartItemDto::getMemberPassword, CartItemDto::getProductId, CartItemDto::getProductName,
+                CartItemDto::getProductPrice, CartItemDto::getProductImageUrl, CartItemDto::getProductQuantity)
             .containsExactly(저장된_장바구니_아이디, 져장된_져니_아이디, "journey", "password", 저장된_치킨_아이디,
                 "치킨", 20000, "chicken_image_url", 1);
     }

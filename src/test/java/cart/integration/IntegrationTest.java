@@ -5,8 +5,8 @@ import static io.restassured.RestAssured.given;
 import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.application.dto.cartitem.CartItemRequest;
 import cart.application.dto.coupon.CouponRequest;
+import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberLoginRequest;
-import cart.application.dto.member.MemberSaveRequest;
 import cart.application.dto.product.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ public class IntegrationTest {
 
     final String LOCATION = "Location";
 
-    void 사용자_저장(final MemberSaveRequest 사용자_저장_요청) {
+    void 사용자_저장(final MemberJoinRequest 사용자_저장_요청) {
         given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(사용자_저장_요청)

@@ -15,7 +15,7 @@ public interface CartRepository {
 
     Cart findById(final Long cartItemId);
 
-    Long countByIdsAndMemberId(final List<Long> cartItemIds, final String memberName);
+    Long countByCartItemIdsAndMemberId(final List<Long> cartItemIds, final String memberName);
 
-    void deleteByIdsAndMemberId(final List<Long> cartItemIds, final String memberName);
+    void deleteByCartItemIdsAndMemberId(final List<Long> cartItemIds, final String memberName);
 }

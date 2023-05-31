@@ -67,13 +67,13 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public Long countByIdsAndMemberId(final List<Long> cartItemIds, final String memberName) {
+    public Long countByCartItemIdsAndMemberId(final List<Long> cartItemIds, final String memberName) {
         final MemberEntity memberEntity = getMemberEntity(memberName);
         return cartItemDao.countByIdsAndMemberId(cartItemIds, memberEntity.getId());
     }
 
     @Override
-    public void deleteByIdsAndMemberId(final List<Long> cartItemIds, final String memberName) {
+    public void deleteByCartItemIdsAndMemberId(final List<Long> cartItemIds, final String memberName) {
         final MemberEntity memberEntity = getMemberEntity(memberName);
         cartItemDao.deleteByIdsAndMemberId(cartItemIds, memberEntity.getId());
     }

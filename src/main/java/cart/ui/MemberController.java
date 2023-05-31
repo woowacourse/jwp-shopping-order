@@ -5,7 +5,7 @@ import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberLoginResponse;
 import cart.application.dto.member.MemberResponse;
-import cart.application.dto.member.MemberSaveRequest;
+import cart.application.dto.member.MemberJoinRequest;
 import cart.common.auth.MemberName;
 import java.net.URI;
 import java.util.List;
@@ -29,8 +29,8 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Void> join(@RequestBody @Valid final MemberSaveRequest memberSaveRequest) {
-        final long savedMemberId = memberService.save(memberSaveRequest);
+    public ResponseEntity<Void> join(@RequestBody @Valid final MemberJoinRequest memberJoinRequest) {
+        final long savedMemberId = memberService.save(memberJoinRequest);
         return ResponseEntity.created(URI.create("/users/" + savedMemberId)).build();
     }
 
