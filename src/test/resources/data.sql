@@ -21,6 +21,23 @@ CREATE TABLE IF NOT EXISTS cart_item (
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
+CREATE TABLE IF NOT EXISTS shopping_order (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    ordered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    used_point BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(id)
+    );
+
+CREATE TABLE IF NOT EXISTS ordered_item (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT NOT NULL,
+    order_id BIGINT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product(id),
+    FOREIGN KEY (order_id) REFERENCES shopping_order(id)
+    );
+
 INSERT INTO product (name, price, image_url)
 VALUES ('피자', 13000,
         'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
