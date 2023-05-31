@@ -25,3 +25,4 @@
 
 include::cart-item.adoc[]
 include::product.adoc[]
+include::member.adoc[]
