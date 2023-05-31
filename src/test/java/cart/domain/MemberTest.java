@@ -27,18 +27,18 @@ class MemberTest {
 
     @ParameterizedTest
     @ValueSource(longs = {1000, 500})
-    void 회원의_포인트가_일정_포인트_이상인_경우_true를_반환한다(long amount) {
+    void 회원의_포인트가_일정_포인트_보다_부족하지_않은_경우_false를_반환한다(long amount) {
         Member member = new Member(1L, "aaa@google.com", "asdf1234", 1000);
 
-        assertThat(member.hasEnoughPoint(new Point(amount))).isTrue();
+        assertThat(member.hasNotEnoughPoint(new Point(amount))).isFalse();
     }
 
     @ParameterizedTest
     @ValueSource(longs = {1001, 5000})
-    void 회원의_포인트가_일정_포인트_미만인_경우_false를_반환한다(long amount) {
+    void 회원의_포인트가_일정_포인트_보다_부족한_경우_true를_반환한다(long amount) {
         Member member = new Member(1L, "aaa@google.com", "asdf1234", 1000);
 
-        assertThat(member.hasEnoughPoint(new Point(amount))).isFalse();
+        assertThat(member.hasNotEnoughPoint(new Point(amount))).isTrue();
     }
 
     @Test

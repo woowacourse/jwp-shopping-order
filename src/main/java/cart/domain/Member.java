@@ -13,8 +13,8 @@ public class Member {
         this.point = new Point(point);
     }
 
-    public boolean hasEnoughPoint(Point point) {
-        return this.point.getAmount() >= point.getAmount();
+    public boolean hasNotEnoughPoint(Point point) {
+        return this.point.getAmount() < point.getAmount();
     }
 
     public void increasePoint(Point point) {
