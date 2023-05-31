@@ -1,7 +1,5 @@
 package cart.dao;
 
-import cart.domain.coupon.Coupon;
-import cart.entity.CartItemEntity;
 import cart.entity.CouponEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

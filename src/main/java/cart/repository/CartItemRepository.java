@@ -1,14 +1,11 @@
 package cart.repository;
 
 import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
-import cart.domain.member.Member;
 import cart.domain.Product;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
-import cart.exception.MemberNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Repository;
 

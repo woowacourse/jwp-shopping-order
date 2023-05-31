@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.domain.CartItem;
-import cart.domain.member.Member;
 import cart.domain.Product;
+import cart.domain.member.Member;
 import cart.domain.member.MemberValidator;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;

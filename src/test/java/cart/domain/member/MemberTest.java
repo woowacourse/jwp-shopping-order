@@ -1,6 +1,5 @@
 package cart.domain.member;
 
-import cart.domain.member.Member;
 import cart.exception.MemberNotValidException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

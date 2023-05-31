@@ -3,19 +3,16 @@ package cart.repository;
 import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.discountPolicy.PricePolicy;
-import cart.domain.fixture.Fixture;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.test.RepositoryTest;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)

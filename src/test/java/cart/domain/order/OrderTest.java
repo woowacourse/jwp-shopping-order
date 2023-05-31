@@ -5,7 +5,6 @@ import cart.domain.fixture.Fixture;
 import cart.domain.member.MemberValidator;
 import cart.exception.InvalidOrderOwnerException;
 import cart.exception.InvalidOrderSizeException;
-import cart.exception.MemberNotValidException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

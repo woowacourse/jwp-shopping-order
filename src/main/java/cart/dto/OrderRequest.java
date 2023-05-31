@@ -8,7 +8,7 @@ import java.util.List;
 public class OrderRequest {
     @Schema(description = "주문 상품")
     private final List<Long> orderItemIds;
-    // TODO: memberCouponId로 명세 변경
+    //TODO: memberCouponId로 명세 변경
     @Schema(description = "쿠폰 Id", example = "1")
     private final Long couponId;
 

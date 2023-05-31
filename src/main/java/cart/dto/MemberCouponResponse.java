@@ -1,6 +1,5 @@
 package cart.dto;
 
-import cart.domain.coupon.Coupon;
 import cart.domain.member.MemberCoupon;
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class MoneyTest {
-    
+
     @Test
     void 돈은_음수가_될_수_없다() {
         assertThatThrownBy(() -> new Money(-1)).isInstanceOf(InvalidMoneyValueException.class);

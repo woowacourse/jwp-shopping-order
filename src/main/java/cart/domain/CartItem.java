@@ -30,8 +30,10 @@ public class CartItem {
     public void validateOwner(final MemberValidator memberValidator) {
         if (!memberValidator.isOwner(memberId)) {
             throw new InvalidCartItemOwnerException();
-        };
+        }
+        ;
     }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
