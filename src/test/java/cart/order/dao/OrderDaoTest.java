@@ -2,6 +2,7 @@ package cart.order.dao;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cart.order.dao.entity.OrderEntity;
 import java.util.List;
@@ -57,5 +58,20 @@ class OrderDaoTest {
         () -> Assertions.assertThat(orderEntity).isPresent(),
         () -> assertEquals(orderEntity.get().getId(), orderId)
     );
+  }
+
+  @Test
+  @DisplayName("deleteByOrderId() : order Id를 통해 주문을 삭제할 수 있다.")
+  void test_deleteByOrderId() throws Exception {
+    //given
+    final long orderId = 1L;
+
+    //when
+    orderDao.deleteByOrderId(1L);
+
+    //then
+    final Optional<OrderEntity> deletedOrder = orderDao.findByOrderId(orderId);
+
+    assertTrue(deletedOrder.isEmpty());
   }
 }

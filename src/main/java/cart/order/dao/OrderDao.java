@@ -51,4 +51,10 @@ public class OrderDao {
       return Optional.empty();
     }
   }
+
+  public void deleteByOrderId(final Long orderId) {
+    final String sql = "DELETE FROM ORDERS O WHERE O.id = ?";
+
+    jdbcTemplate.update(sql, orderId);
+  }
 }
