@@ -7,14 +7,15 @@
 # 도메인
 1. OrderItemsFactory (또는 Cart)
     - 멤버의 장바구니 Cart : List<CartItem>
-    - [] 주문하려는 멤버와 Product상품과 quantity양이 존재 및 일치하는지 확인하고
-    - [] 주문하려는 List<CartItem>을 List<OrderItem>으로 변환하기
+    - [x] 주문하려는 멤버와 Product상품과 quantity양이 존재 및 일치하는지 확인하고
+    - [x] 주문하려는 List<CartItem>을 List<OrderItem>으로 변환하기
       :네이밍은 createOrderItems (장바구니에서 주문할 상품들 생성및 반환)
 2. OrderItem
-    - orderItemId
-    - memberId
-    - Product
-    - quantity
+    - [x] 필드
+      - orderItemId
+      - memberId
+      - Product
+      - quantity
 
 3. Order
     - 주문Id
