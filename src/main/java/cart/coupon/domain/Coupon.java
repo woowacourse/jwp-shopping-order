@@ -32,6 +32,10 @@ public class Coupon {
         return discountPolicy.getValue();
     }
 
+    public DiscountType discountType() {
+        return discountPolicy.getDiscountType();
+    }
+
     public TargetType targetType() {
         return couponType.getTargetType();
     }

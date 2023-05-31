@@ -15,6 +15,11 @@ public enum CouponExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "잘못된 할인율입니다."
     ),
+    NOT_FOUND_COUPON(
+            402,
+            HttpStatus.BAD_REQUEST,
+            "잘못된 쿠폰 ID 입니다."
+    ),
     ;
 
     private final int errorCode;

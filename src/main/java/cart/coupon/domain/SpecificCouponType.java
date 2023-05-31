@@ -19,4 +19,8 @@ public class SpecificCouponType implements CouponType {
     public TargetType getTargetType() {
         return TargetType.SPECIFIC;
     }
+
+    public Long getProductId() {
+        return productId;
+    }
 }

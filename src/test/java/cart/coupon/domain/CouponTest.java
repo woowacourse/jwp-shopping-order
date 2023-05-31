@@ -29,7 +29,7 @@ class CouponTest {
 
     @Test
     void 가격을_할인한다() {
-// given
+        // given
         Coupon 코코닥_불쌍해서_주는_쿠폰 = new Coupon(
                 "코코닥 불쌍해서 주는 쿠폰",
                 new FixDiscountPolicy(1000),
