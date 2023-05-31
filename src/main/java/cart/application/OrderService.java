@@ -134,7 +134,7 @@ public class OrderService {
 
     private void validateFinalPrice(final int finalPrice, final int requestPrice) {
         if (finalPrice != requestPrice) {
-            throw new IllegalStateException(); // 요청 금액과 실제 정책 계산 금액이 다른 경우
+            throw new IllegalStateException("주문 최종 금액과 해당 금액이 일치하지 않습니다.");
         }
     }
 

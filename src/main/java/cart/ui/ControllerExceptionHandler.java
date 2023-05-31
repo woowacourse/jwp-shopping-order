@@ -32,9 +32,6 @@ public class ControllerExceptionHandler {
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
             final MethodArgumentTypeMismatchException e) {
         final Throwable mostSpecificCause = e.getMostSpecificCause();
-//        if (mostSpecificCause instanceof NumberFormatException) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(mostSpecificCause.getMessage());
