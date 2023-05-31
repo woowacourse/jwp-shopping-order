@@ -29,18 +29,8 @@ public class PageController {
         return "settings";
     }
 
-    @GetMapping("/priceCoupon")
-    public String priceCoupon(final Model model) {
-        return "priceCoupon";
-    }
-
-    @GetMapping("/percentCoupon")
-    public String percentCoupon(final Model model) {
-        return "percentCoupon";
-    }
-
-    @GetMapping("/deliveryFeeCoupon")
-    public String deliveryFeeCoupon(final Model model) {
-        return "deliveryFeeCoupon";
+    @GetMapping("/coupon")
+    public String coupon(final Model model) {
+        return "coupon";
     }
 }

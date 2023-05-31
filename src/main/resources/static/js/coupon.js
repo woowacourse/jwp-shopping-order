@@ -1,6 +1,6 @@
-const percentForm = document.getElementById('percentForm');
+const couponForm = document.getElementById('couponForm');
 
-percentForm.addEventListener('submit', (event) => {
+couponForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -14,7 +14,7 @@ percentForm.addEventListener('submit', (event) => {
 });
 
 const createCoupon = (coupon) => {
-    axios.post('/coupons', coupon)
+    axios.post('/issuance', coupon)
         .then((response) => {
             window.location.reload();
         })

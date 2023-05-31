@@ -3,12 +3,15 @@ package cart.service;
 import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
 import static cart.fixture.CouponFixture._3만원_이상_배달비_3천원_할인_쿠폰;
 import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.MemberFixture.사용자2;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import cart.dto.CouponResponse;
+import cart.dto.CouponSaveRequest;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
@@ -57,5 +60,23 @@ class CouponServiceTest {
                 new CouponResponse(coupon1.getId(), "30000원 이상 2000원 할인 쿠폰", "price", 2000L, 30000L),
                 new CouponResponse(coupon2.getId(), "30000원 이상 배달비 할인 쿠폰", "delivery", 3000L, 30000L)
         ));
+    }
+
+    @Test
+    void 쿠폰을_모든_사용자에게_발급한다() {
+        // given
+        final Member member1 = memberRepository.save(사용자1);
+        final Member member2 = memberRepository.save(사용자2);
+        final CouponSaveRequest request = new CouponSaveRequest("배달비 할인 쿠폰", "delivery", 3000L, 0L);
+
+        // when
+        final Long couponId = couponService.issuance(request);
+
+        // then
+        assertAll(
+                () -> assertThat(couponRepository.findById(couponId)).isPresent(),
+                () -> assertThat(memberCouponRepository.findAllByMemberId(member1.getId())).hasSize(1),
+                () -> assertThat(memberCouponRepository.findAllByMemberId(member2.getId())).hasSize(1)
+        );
     }
 }

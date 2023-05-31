@@ -1,5 +1,6 @@
 package cart.service;
 
+import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
 import static cart.fixture.MemberFixture.사용자1;
 import static cart.fixture.ProductFixture.상품_18900원;
 import static cart.fixture.ProductFixture.상품_28900원;
@@ -17,7 +18,6 @@ import cart.domain.member.Member;
 import cart.dto.ItemDto;
 import cart.dto.OrderResponse;
 import cart.dto.OrderSaveRequest;
-import cart.fixture.CouponFixture;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
@@ -67,11 +67,11 @@ class OrderServiceTest {
         final Member member = memberRepository.save(사용자1);
         final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final Coupon coupon = couponRepository.save(CouponFixture._3만원_이상_2천원_할인_쿠폰);
-        memberCouponRepository.saveAll(List.of(new MemberCoupon(member.getId(), coupon)));
+        final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
+        final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
                 List.of(cartItem1.getId(), cartItem2.getId()),
-                coupon.getId()
+                memberCoupon.getId()
         );
 
         // when
