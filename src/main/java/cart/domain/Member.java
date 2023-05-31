@@ -4,7 +4,7 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
-    private final int point;
+    private final Point point;
 
     public Member(Long id, String email, String password) {
         this(id, email, password, 0);
@@ -14,7 +14,7 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.point = point;
+        this.point = new Point(point);
     }
 
     public Long getId() {
@@ -30,7 +30,7 @@ public class Member {
     }
 
     public int getPoint() {
-        return point;
+        return point.getValue();
     }
 
     public boolean checkPassword(String password) {
