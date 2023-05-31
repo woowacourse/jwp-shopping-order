@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS product
     price         INT          NOT NULL,
     image_url     VARCHAR(255) NOT NULL,
     is_discounted TINYINT      NOT NULL,
-    discount_rate INT(3)       NOT NULL
+    discount_rate INT          NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS member
@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS cart_item
 
 CREATE TABLE IF NOT EXISTS orders
 (
-    id                     BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    total_price            BIGINT   NOT NULL,
-    discounted_total_price BIGINT   NOT NULL,
-    delivery_fee           INT      NOT NULL,
-    ordered_at             DATETIME NOT NULL,
-    member_id              BIGINT   NOT NULL,
+    id                          BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    total_item_price            BIGINT   NOT NULL,
+    discounted_total_item_price BIGINT   NOT NULL,
+    delivery_fee                INT      NOT NULL,
+    ordered_at                  DATETIME NOT NULL,
+    member_id                   BIGINT   NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 

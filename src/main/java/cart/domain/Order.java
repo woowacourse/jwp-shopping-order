@@ -2,6 +2,7 @@ package cart.domain;
 
 import cart.domain.value.Money;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order {
@@ -13,6 +14,7 @@ public class Order {
     private final Long id;
     private final Member member;
     private final List<OrderItem> orderItems;
+    private final LocalDateTime generateTime;
     private Money shippingFee;
     private Money purchaseItemPrice;
     private Money discountPurchaseItemPrice;
@@ -28,6 +30,7 @@ public class Order {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
+        this.generateTime = LocalDateTime.now();
         this.shippingFee = shippingFee;
         this.purchaseItemPrice = purchaseItemPrice;
         this.discountPurchaseItemPrice = discountPurchaseItemPrice;
@@ -99,6 +102,10 @@ public class Order {
 
     public List<OrderItem> getOrderItems() {
         return orderItems;
+    }
+
+    public LocalDateTime getGenerateTime() {
+        return generateTime;
     }
 
     public int getShippingFee() {
