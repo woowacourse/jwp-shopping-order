@@ -1,12 +1,12 @@
 package shop.application.member;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.application.coupon.CouponService;
 import shop.application.member.dto.MemberDto;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
-import shop.domain.coupon.CouponType;
+import shop.domain.event.MemberJoinedEvent;
 import shop.domain.member.Member;
 import shop.domain.repository.MemberRepository;
 import shop.exception.AuthenticationException;
@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @Service
 public class MemberService {
+    private final ApplicationEventPublisher eventPublisher;
     private final MemberRepository memberRepository;
-    private final CouponService couponService;
 
-    public MemberService(MemberRepository memberRepository, CouponService couponService) {
+    public MemberService(ApplicationEventPublisher eventPublisher, MemberRepository memberRepository) {
+        this.eventPublisher = eventPublisher;
         this.memberRepository = memberRepository;
-        this.couponService = couponService;
     }
 
     @Transactional
@@ -31,7 +31,7 @@ public class MemberService {
         Member member = new Member(memberDto.getName(), memberDto.getPassword());
 
         Long memberId = memberRepository.save(member);
-        couponService.issueCoupon(memberId, CouponType.WELCOME_JOIN);
+        eventPublisher.publishEvent(new MemberJoinedEvent(memberId));
     }
 
     public String login(MemberLoginDto memberDto) {
