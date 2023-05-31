@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static cart.ShoppingOrderFixture.member1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,10 +46,9 @@ class CartItemApiControllerTest {
     @DisplayName("사용자의 장바구니 아이템 목록을 보여준다")
     @Test
     void showCartItems() throws Exception {
-        Member member = new Member(1L, "a@a.com", "password1");
-        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member);
+        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(cartItemService.findByMember(any()))
-                .thenReturn(List.of(CartItemResponse.of(new CartItem(1L, 2, new Product(1L, "치킨", 10000, "imageUrl", 10.0, true), member))));
+                .thenReturn(List.of(CartItemResponse.of(new CartItem(1L, 2, new Product(1L, "치킨", 10000, "imageUrl", 10.0, true), member1))));
 
         this.mockMvc.perform(get("/cart-items")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +69,7 @@ class CartItemApiControllerTest {
         String body = objectMapper.writeValueAsString(
                 new CartItemRequest(1L));
 
-        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(new Member(1L, "a@a.com", "password1"));
+        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(cartItemService.add(any(), any())).thenReturn(1L);
 
         this.mockMvc.perform(post("/cart-items")
@@ -86,7 +86,7 @@ class CartItemApiControllerTest {
         String body = objectMapper.writeValueAsString(
                 new CartItemQuantityUpdateRequest(2));
 
-        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(new Member(1L, "a@a.com", "password1"));
+        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
 
         this.mockMvc.perform(patch("/cart-items/1")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -98,7 +98,7 @@ class CartItemApiControllerTest {
     @DisplayName("장바구니를 삭제한다")
     @Test
     void removeCartItems() throws Exception {
-        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(new Member(1L, "a@a.com", "password1"));
+        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
 
         this.mockMvc.perform(delete("/cart-items/1")
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))

@@ -6,8 +6,16 @@ public class Member {
     private String password;
     private Long point;
 
-    public Member(Long id, String email, String password) {
-        this(id, email, password, 0L);
+    public Member(String email, String password, Long point) {
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
+    public Member(Long id, String email, Long point) {
+        this.id = id;
+        this.email = email;
+        this.point = point;
     }
 
     public Member(Long id, String email, String password, Long point) {

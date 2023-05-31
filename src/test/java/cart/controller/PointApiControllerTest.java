@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static cart.ShoppingOrderFixture.member1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,7 +36,7 @@ class PointApiControllerTest {
     @DisplayName("사용자가 가진 포인트를 가져온다")
     @Test
     void getPoint() throws Exception {
-        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(new Member(1L, "a@a.com", "password1"));
+        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(pointService.findPointByMemberId(any())).thenReturn(new PointResponse(1000.0));
 
         this.mockMvc.perform(get("/points")
