@@ -28,7 +28,7 @@ public class MemberService {
             return member;
         }
 
-        throw new AuthenticationException();
+        throw new AuthenticationException("회원의 비밀번호가 일치하지 않습니다.");
     }
 
     public Member findMemberById(final long memberId) {

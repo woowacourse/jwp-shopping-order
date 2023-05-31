@@ -30,12 +30,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
                                   final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("인증에 사용되는 헤더 값이 존재하지 않습니다.");
         }
 
         final String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("유효하지 않은 인증 스킴입니다.");
         }
 
         final byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);

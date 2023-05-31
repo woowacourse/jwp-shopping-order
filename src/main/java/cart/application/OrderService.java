@@ -14,6 +14,7 @@ import cart.dto.response.OrderResponse;
 import cart.dto.response.ProductInOrderResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.NoSuchDataExistException;
+import cart.exception.UnauthorizedAccessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class OrderService {
         final Order order = orderDao.findById(orderId)
                 .orElseThrow(NoSuchDataExistException::new);
         if (!order.getMember().matchMemberByInfo(member)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("해당 주문에 접근 할 권한이 없습니다.");
         }
 
         final List<OrderProduct> orderProducts = orderProductDao.findByOrderId(orderId);
@@ -118,7 +119,7 @@ public class OrderService {
                 .allMatch(member::matchMemberByInfo);
 
         if (!isMembersCartItem) {
-            throw new AuthenticationException();
+            throw new UnauthorizedAccessException();
         }
     }
 

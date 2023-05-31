@@ -1,8 +1,8 @@
 package cart.ui;
 
 import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
 import cart.exception.NoSuchDataExistException;
+import cart.exception.UnauthorizedAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,13 +13,15 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(final AuthenticationException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<String> handlerAuthenticationException(final AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(e.getMessage());
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(final CartItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<String> handleException(final UnauthorizedAccessException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(e.getMessage());
     }
 
     @ExceptionHandler(NoSuchDataExistException.class)
@@ -37,4 +39,11 @@ public class ControllerExceptionHandler {
                 .body(mostSpecificCause.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleRuntimeException() {
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("예기치 못한 오류가 발생했습니다.");
+    }
 }
