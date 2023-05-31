@@ -4,6 +4,7 @@ import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderSelectResponse;
+import cart.dto.OrdersSelectResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,5 +36,12 @@ public class OrderApiController {
         OrderSelectResponse orderSelectResponse = orderService.getOrder(member, orderId);
 
         return ResponseEntity.ok(orderSelectResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<OrdersSelectResponse> showOrders(Member member) {
+        OrdersSelectResponse ordersSelectResponse = orderService.getAllOrders(member);
+
+        return ResponseEntity.ok(ordersSelectResponse);
     }
 }
