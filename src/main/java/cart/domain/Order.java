@@ -54,7 +54,33 @@ public class Order {
         }
     }
     
-    public Long calculatePayment() {
+    public Long order() {
+        member.usePoint(usedPoint);
+        member.accumulatePoint(orderInfos.calculatePointToAdd());
         return orderInfos.calculateAllProductPriceWithQuantity() - usedPoint;
+    }
+    
+    public Long getId() {
+        return id;
+    }
+    
+    public Member getMember() {
+        return member;
+    }
+    
+    public OrderInfos getOrderInfos() {
+        return orderInfos;
+    }
+    
+    public Long getOriginalPrice() {
+        return originalPrice;
+    }
+    
+    public Long getUsedPoint() {
+        return usedPoint;
+    }
+    
+    public Long getPointToAdd() {
+        return pointToAdd;
     }
 }

@@ -32,4 +32,12 @@ public class Member {
     public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
+    
+    public void usePoint(final Long usedPoint) {
+        this.point -= usedPoint;
+    }
+    
+    public void accumulatePoint(final Long pointToAdd) {
+        this.point += pointToAdd;
+    }
 }
