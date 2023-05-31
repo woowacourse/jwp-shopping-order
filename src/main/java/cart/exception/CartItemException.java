@@ -13,6 +13,12 @@ public class CartItemException extends RuntimeException {
         }
     }
 
+    public static class InvalidCartItem extends CartItemException {
+        public InvalidCartItem() {
+            super("더 이상 존재하지 않는 상품입니다");
+        }
+    }
+
     public static class DuplicatedCartItem extends CartItemException {
         public DuplicatedCartItem() {
             super("이미 장바구니에 존재하는 상품입니다");

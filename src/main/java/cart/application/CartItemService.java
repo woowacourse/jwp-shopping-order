@@ -8,6 +8,7 @@ import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
 import cart.exception.CartItemException.DuplicatedCartItem;
+import cart.exception.CartItemException.InvalidCartItem;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -54,6 +55,9 @@ public class CartItemService {
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
+        if (cartItem == null) {
+            throw new InvalidCartItem();
+        }
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
