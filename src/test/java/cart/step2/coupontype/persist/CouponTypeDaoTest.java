@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.step2.coupontype.persist;
 
 import cart.step2.coupontype.domain.CouponType;
 import cart.step2.coupontype.domain.CouponTypeEntity;

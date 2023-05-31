@@ -15,4 +15,7 @@ fi
 
 echo ''
 sudo chmod +x $PROJECT_NAME.jar
-sudo nohup java -jar -Dspring.config.location=env.properties $PROJECT_NAME.jar > ~/application.log 2>&1 &
+sudo nohup java -jar \
+-Dspring.profiles.active=prod \
+-Dspring.config.import=env.properties \
+$PROJECT_NAME.jar > ~/application.log 2>&1 &

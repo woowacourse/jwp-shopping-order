@@ -19,17 +19,17 @@ public class CouponTypeRepositoryMapper implements CouponTypeRepository {
     }
 
     @Override
-    public List<CouponType> findAll() {
-        return couponTypeDao.findAll().stream()
-                .map(CouponTypeEntity::toDomain)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public CouponType findById(final Long couponTypeId) {
         return couponTypeDao.findById(couponTypeId)
                 .orElseThrow(() -> CouponTypeNotFoundException.THROW)
                 .toDomain();
+    }
+
+    @Override
+    public List<CouponType> findAll() {
+        return couponTypeDao.findAll().stream()
+                .map(CouponTypeEntity::toDomain)
+                .collect(Collectors.toList());
     }
 
 }
