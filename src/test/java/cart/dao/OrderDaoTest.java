@@ -11,7 +11,7 @@ import cart.domain.discount.BasicDiscountPolicy;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderItems;
-import cart.domain.price.OrderPrice;
+import cart.domain.order.OrderPrice;
 import cart.dto.OrderDto;
 import java.time.LocalDateTime;
 import java.util.List;

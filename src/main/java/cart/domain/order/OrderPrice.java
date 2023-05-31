@@ -1,4 +1,4 @@
-package cart.domain.price;
+package cart.domain.order;
 
 import cart.domain.delivery.DeliveryPolicy;
 import cart.domain.discount.DiscountPolicy;

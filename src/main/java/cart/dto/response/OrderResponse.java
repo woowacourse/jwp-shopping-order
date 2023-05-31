@@ -1,6 +1,6 @@
 package cart.dto.response;
 
-import cart.domain.price.OrderPrice;
+import cart.domain.order.OrderPrice;
 import java.util.List;
 
 public class OrderResponse {

@@ -2,7 +2,7 @@ package cart.dao;
 
 import cart.domain.order.Order;
 import cart.domain.order.OrderItems;
-import cart.domain.price.OrderPrice;
+import cart.domain.order.OrderPrice;
 import cart.dto.OrderDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
