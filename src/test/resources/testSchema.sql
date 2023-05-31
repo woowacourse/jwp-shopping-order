@@ -1,10 +1,16 @@
+DROP TABLE IF EXISTS order_detail;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
     price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL
-);
+    );
 
 CREATE TABLE IF NOT EXISTS member
 (
@@ -12,7 +18,7 @@ CREATE TABLE IF NOT EXISTS member
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     point    BIGINT UNSIGNED NOT NULL
-);
+    );
 
 CREATE TABLE IF NOT EXISTS cart_item
 (
@@ -22,7 +28,7 @@ CREATE TABLE IF NOT EXISTS cart_item
     quantity   INT    NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS orders
 (
@@ -32,7 +38,7 @@ CREATE TABLE IF NOT EXISTS orders
     discount_point BIGINT UNSIGNED NOT NULL,
     order_date     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member (id)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS order_detail
 (
@@ -42,4 +48,4 @@ CREATE TABLE IF NOT EXISTS order_detail
     quantity   BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
-);
+    );
