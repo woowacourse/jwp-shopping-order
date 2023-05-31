@@ -1,7 +1,6 @@
 package cart.application.repository;
 
-import cart.domain.Member;
-import cart.domain.Order;
+import cart.application.domain.Order;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

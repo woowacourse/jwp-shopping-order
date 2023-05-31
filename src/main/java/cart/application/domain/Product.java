@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.application.domain;
 
 public class Product {
 

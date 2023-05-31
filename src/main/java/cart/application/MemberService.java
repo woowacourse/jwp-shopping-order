@@ -1,9 +1,9 @@
 package cart.application;
 
 import cart.application.repository.MemberRepository;
-import cart.domain.Member;
-import cart.dto.PointResponse;
-import cart.exception.AuthenticationException;
+import cart.application.domain.Member;
+import cart.presentation.dto.response.PointResponse;
+import cart.application.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

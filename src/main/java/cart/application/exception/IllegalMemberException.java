@@ -1,7 +1,7 @@
-package cart.exception;
+package cart.application.exception;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.application.domain.CartItem;
+import cart.application.domain.Member;
 
 public class IllegalMemberException extends CartItemException {
 

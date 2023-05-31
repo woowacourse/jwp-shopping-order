@@ -1,9 +1,9 @@
 package cart.application;
 
 import cart.application.repository.ProductRepository;
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.application.domain.Product;
+import cart.presentation.dto.request.ProductRequest;
+import cart.presentation.dto.response.ProductResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

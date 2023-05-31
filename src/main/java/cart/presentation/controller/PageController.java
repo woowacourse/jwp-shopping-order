@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.presentation.controller;
 
 import cart.application.MemberService;
 import cart.application.ProductService;

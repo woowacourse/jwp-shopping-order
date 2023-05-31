@@ -1,10 +1,10 @@
-package cart.ui;
+package cart.presentation.controller;
 
 import cart.application.OrderService;
-import cart.domain.Member;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
-import cart.dto.SpecificOrderResponse;
+import cart.application.domain.Member;
+import cart.presentation.dto.request.OrderRequest;
+import cart.presentation.dto.response.OrderResponse;
+import cart.presentation.dto.response.SpecificOrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

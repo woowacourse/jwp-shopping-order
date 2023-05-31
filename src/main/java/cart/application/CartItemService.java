@@ -2,12 +2,12 @@ package cart.application;
 
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.ProductRepository;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
-import cart.dto.CartItemQuantityRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.application.domain.CartItem;
+import cart.application.domain.Member;
+import cart.application.domain.Product;
+import cart.presentation.dto.request.CartItemQuantityRequest;
+import cart.presentation.dto.request.CartItemRequest;
+import cart.presentation.dto.response.CartItemResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

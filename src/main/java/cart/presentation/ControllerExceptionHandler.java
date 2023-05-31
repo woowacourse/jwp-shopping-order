@@ -1,7 +1,7 @@
-package cart.ui;
+package cart.presentation;
 
-import cart.exception.AuthenticationException;
-import cart.exception.IllegalMemberException;
+import cart.application.exception.AuthenticationException;
+import cart.application.exception.IllegalMemberException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

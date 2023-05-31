@@ -1,9 +1,8 @@
 package cart.application;
 
 import cart.application.repository.MemberRepository;
-import cart.domain.Member;
-import cart.domain.Product;
-import cart.exception.AuthenticationException;
+import cart.application.domain.Member;
+import cart.application.exception.AuthenticationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

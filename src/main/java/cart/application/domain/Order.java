@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.application.domain;
 
 import java.util.List;
 

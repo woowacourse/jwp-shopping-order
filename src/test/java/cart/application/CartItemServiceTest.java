@@ -2,11 +2,11 @@ package cart.application;
 
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.ProductRepository;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.application.domain.CartItem;
+import cart.application.domain.Member;
+import cart.application.domain.Product;
+import cart.presentation.dto.request.CartItemRequest;
+import cart.presentation.dto.response.CartItemResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

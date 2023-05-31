@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.presentation.dto.response;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.presentation.dto.request;
 
 import java.util.List;
 
