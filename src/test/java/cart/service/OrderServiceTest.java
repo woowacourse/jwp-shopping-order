@@ -15,7 +15,6 @@ import cart.domain.cart.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import cart.dto.ItemDto;
-import cart.dto.ItemIdDto;
 import cart.dto.OrderResponse;
 import cart.dto.OrderSaveRequest;
 import cart.fixture.CouponFixture;
@@ -71,7 +70,7 @@ class OrderServiceTest {
         final Coupon coupon = couponRepository.save(CouponFixture._3만원_이상_2천원_할인_쿠폰);
         memberCouponRepository.saveAll(List.of(new MemberCoupon(member.getId(), coupon)));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
-                List.of(new ItemIdDto(cartItem1.getId()), new ItemIdDto(cartItem2.getId())),
+                List.of(cartItem1.getId(), cartItem2.getId()),
                 coupon.getId()
         );
 

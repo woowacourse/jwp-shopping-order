@@ -7,18 +7,18 @@ import java.util.List;
 public class OrderSaveRequest {
 
     @Schema(description = "장바구니 상품 아이디 목록")
-    private final List<ItemIdDto> orderItems;
+    private final List<Long> orderItemIds;
 
     @Schema(description = "쿠폰 아이디", example = "1")
     private final Long couponId;
 
-    public OrderSaveRequest(final List<ItemIdDto> orderItems, final Long couponId) {
-        this.orderItems = orderItems;
+    public OrderSaveRequest(final List<Long> orderItemIds, final Long couponId) {
+        this.orderItemIds = orderItemIds;
         this.couponId = couponId;
     }
 
-    public List<ItemIdDto> getOrderItems() {
-        return orderItems;
+    public List<Long> getOrderItemIds() {
+        return orderItemIds;
     }
 
     public Long getCouponId() {

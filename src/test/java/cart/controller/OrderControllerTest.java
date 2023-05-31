@@ -21,7 +21,6 @@ import cart.domain.cart.Order;
 import cart.domain.cart.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.dto.ItemIdDto;
 import cart.dto.OrderSaveRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
@@ -83,7 +82,7 @@ class OrderControllerTest {
         final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
         memberCouponRepository.saveAll(List.of(new MemberCoupon(member.getId(), coupon)));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
-                List.of(new ItemIdDto(cartItem1.getId()), new ItemIdDto(cartItem2.getId())),
+                List.of(cartItem1.getId(), cartItem2.getId()),
                 coupon.getId()
         );
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));

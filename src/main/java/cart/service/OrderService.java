@@ -3,7 +3,6 @@ package cart.service;
 import cart.domain.cart.Item;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
-import cart.dto.ItemIdDto;
 import cart.dto.OrderResponse;
 import cart.dto.OrderSaveRequest;
 import cart.exception.MemberCouponNotFoundException;
@@ -33,10 +32,7 @@ public class OrderService {
     }
 
     public Long save(final OrderSaveRequest orderSaveRequest, final Long memberId) {
-        final List<Long> itemIds = orderSaveRequest.getOrderItems().stream()
-                .map(ItemIdDto::getId)
-                .collect(Collectors.toList());
-        final List<Item> items = cartItemRepository.findAllByIds(itemIds, memberId);
+        final List<Item> items = cartItemRepository.findAllByIds(orderSaveRequest.getOrderItemIds(), memberId);
         if (Objects.nonNull(orderSaveRequest.getCouponId())) {
             final MemberCoupon memberCoupon = memberCouponRepository.findById(orderSaveRequest.getCouponId())
                     .orElseThrow(MemberCouponNotFoundException::new);
