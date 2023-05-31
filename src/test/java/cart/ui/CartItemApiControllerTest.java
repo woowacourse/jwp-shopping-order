@@ -1,5 +1,6 @@
 package cart.ui;
 
+import static cart.helper.RestDocsHelper.prettyDocument;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -20,7 +21,6 @@ import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import cart.helper.RestDocsHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +53,6 @@ class CartItemApiControllerTest {
     @Test
     @DisplayName("회원의 모든 장바구니 품목을 조회한다.")
     void showCartItems() throws Exception {
-
         Product product = new Product(1L, "곰돌이", 10000, "http:localhost:8080");
         Member member = new Member(1L, "aa@aaa.com", "1234", 1000);
         CartItem cartItem = new CartItem(1L, 3, product, member);
@@ -64,7 +63,7 @@ class CartItemApiControllerTest {
         mockMvc.perform(get("/cart-items")
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0"))
                 .andExpect(status().isOk())
-                .andDo(RestDocsHelper.prettyDocument(
+                .andDo(prettyDocument(
                         "cart-items/showCartItems"
                 ))
                 .andDo(print());
@@ -83,7 +82,7 @@ class CartItemApiControllerTest {
                         .content(objectMapper.writeValueAsString(cartItemRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andDo(RestDocsHelper.prettyDocument(
+                .andDo(prettyDocument(
                         "cart-items/addCartItems"
                 ))
                 .andDo(print());
@@ -103,7 +102,7 @@ class CartItemApiControllerTest {
                         .content(objectMapper.writeValueAsString(updateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(RestDocsHelper.prettyDocument(
+                .andDo(prettyDocument(
                         "cart-items/updateCartItems",
                         pathParameters(
                                 parameterWithName("id").description("장바구니 ID")
@@ -126,7 +125,7 @@ class CartItemApiControllerTest {
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/cart-items/{id}", 1L)
                         .header("Authorization", "basic " + "YUBhLmNvbToxMjM0"))
                 .andExpect(status().isOk())
-                .andDo(RestDocsHelper.prettyDocument(
+                .andDo(prettyDocument(
                         "cart-items/deleteCartItems",
                         pathParameters(
                                 parameterWithName("id").description("장바구니 ID")
