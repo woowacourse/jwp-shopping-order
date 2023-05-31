@@ -11,6 +11,10 @@ public class Coupon {
     private final Amount minAmount;
     private final boolean isUsed;
 
+    public Coupon(final String name, final Amount discountAmount, final Amount minAmount, final boolean isUsed) {
+        this(null, name, discountAmount, minAmount, isUsed);
+    }
+
     public Coupon(final Long id, final String name, final Amount discountAmount, final Amount minAmount,
         final boolean isUsed) {
         this.id = id;
@@ -31,7 +35,7 @@ public class Coupon {
     }
 
     public Coupon use() {
-        return new Coupon(this.id, this.name, this.discountAmount, this.minAmount, this.isUsed);
+        return new Coupon(this.id, this.name, this.discountAmount, this.minAmount, true);
     }
 
     public Long getId() {

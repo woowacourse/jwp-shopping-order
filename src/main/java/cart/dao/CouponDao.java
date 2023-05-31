@@ -4,16 +4,20 @@ import cart.domain.Coupon;
 import cart.domain.vo.Amount;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CouponDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     private final RowMapper<Coupon> rowMapper = new RowMapper<Coupon>() {
         @Override
@@ -30,6 +34,22 @@ public class CouponDao {
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+            .withTableName("coupon")
+            .usingGeneratedKeyColumns("id");
+    }
+
+    public Coupon save(final Coupon coupon, final Long memberId) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("name", coupon.getName());
+        params.put("min_Amount", coupon.getMinAmount().getValue());
+        params.put("discount_amount", coupon.getDiscountAmount().getValue());
+        final long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+
+        final String sql = "INSERT INTO member_coupon(member_id, coupon_id, is_used) "
+            + "VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, memberId, id, coupon.isUsed());
+        return new Coupon(id, coupon.getName(), coupon.getDiscountAmount(), coupon.getMinAmount(), coupon.isUsed());
     }
 
     public Optional<Coupon> findByCouponIdAndMemberId(final long couponId, final Long memberId) {
@@ -51,7 +71,8 @@ public class CouponDao {
             + "    min_amount      = ?, "
             + "    discount_amount = ? "
             + "WHERE id = ?";
-        jdbcTemplate.update(couponSql, usedCoupon.getName(), usedCoupon.getMinAmount(), usedCoupon.getDiscountAmount(),
+        jdbcTemplate.update(couponSql, usedCoupon.getName(), usedCoupon.getMinAmount().getValue(),
+            usedCoupon.getDiscountAmount().getValue(),
             usedCoupon.getId());
     }
 }
