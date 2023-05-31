@@ -16,21 +16,21 @@ public class ControllerExceptionHandler {
 
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
-    warnLogging(e);
+    infoLogging(e);
 
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
 
   @ExceptionHandler(CartItemException.IllegalMember.class)
   public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
-    warnLogging(e);
+    infoLogging(e);
 
     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
   }
 
   @ExceptionHandler(BusinessException.class)
   public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException exception) {
-    warnLogging(exception);
+    infoLogging(exception);
 
     return new ResponseEntity<>(new ExceptionResponse(exception.getMessage()),
         exception.getHttpStatus());
@@ -45,15 +45,11 @@ public class ControllerExceptionHandler {
   }
 
   private void errorLogging(final Exception exception) {
-    log.error(
-        "클래스 이름 = {} 메시지 = {}",
-        exception.getClass().getSimpleName(),
-        exception.getMessage()
-    );
+    log.error("error stack = ", exception);
   }
 
-  private void warnLogging(Exception exception) {
-    log.warn(
+  private void infoLogging(Exception exception) {
+    log.info(
         "클래스 이름 = {} 메시지 = {}",
         exception.getClass().getSimpleName(),
         exception.getMessage()
