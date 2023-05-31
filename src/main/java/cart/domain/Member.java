@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.application.service.MemberRequest;
+import cart.ui.member.dto.MemberRequest;
 
 public class Member {
     private final Long id;

@@ -1,8 +1,8 @@
-package cart.application.service;
+package cart.application.service.member.dto;
 
 import cart.domain.Member;
 
-public class MemberResponse {
+public class MemberDto {
 
     private final Long id;
     private final String name;
@@ -10,15 +10,15 @@ public class MemberResponse {
     private final String password;
 
 
-    private MemberResponse(final Long id, final String name, final String email, final String password) {
+    private MemberDto(final Long id, final String name, final String email, final String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public static MemberResponse from(Member member) {
-        return new MemberResponse(member.getId(), member.getName(), member.getEmail(), member.getPassword());
+    public static MemberDto from(Member member) {
+        return new MemberDto(member.getId(), member.getName(), member.getEmail(), member.getPassword());
     }
 
     public Long getId() {

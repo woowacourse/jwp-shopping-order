@@ -1,6 +1,7 @@
-package cart.application.service;
+package cart.application.service.member;
 
 import cart.application.repository.MemberRepository;
+import cart.application.service.member.dto.MemberDto;
 import cart.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,23 +20,23 @@ public class MemberReadService {
         this.memberRepository = memberRepository;
     }
 
-    public List<MemberResponse> findAllMembers() {
+    public List<MemberDto> findAllMembers() {
         List<Member> members = memberRepository.findAllMembers();
         return members.stream()
-                .map(MemberResponse::from)
+                .map(MemberDto::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public MemberResponse findMemberById(final Long id) {
+    public MemberDto findMemberById(final Long id) {
         final Member member = memberRepository.findMemberById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 사용자가 존재하지 않습니다."));
-        return MemberResponse.from(member);
+        return MemberDto.from(member);
     }
 
-    public MemberResponse findMemberByEmail(final String email) {
+    public MemberDto findMemberByEmail(final String email) {
         final Member member = memberRepository.findMemberByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 사용자가 존재하지 않습니다."));
-        return MemberResponse.from(member);
+        return MemberDto.from(member);
     }
 
 }

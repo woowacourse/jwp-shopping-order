@@ -1,4 +1,4 @@
-package cart.application.service;
+package cart.ui.member.dto;
 
 public class MemberRequest {
 

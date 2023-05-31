@@ -1,6 +1,7 @@
 package cart.application.service;
 
 import cart.application.repository.MemberRepository;
+import cart.application.service.member.MemberReadService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
