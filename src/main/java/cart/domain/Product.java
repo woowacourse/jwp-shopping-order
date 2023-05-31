@@ -48,4 +48,12 @@ public class Product {
     public Boolean getPointAvailable() {
         return pointAvailable;
     }
+    
+    public int calculatePointToAdd() {
+        if (pointAvailable) {
+            return (int) Math.round(price * (pointRatio / 100.0));
+        }
+        
+        return 0;
+    }
 }
