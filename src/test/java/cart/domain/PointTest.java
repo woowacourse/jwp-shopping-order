@@ -16,7 +16,7 @@ class PointTest {
     void validate() {
         assertThatThrownBy(() -> new Point(-1))
                 .isInstanceOf(InvalidPointException.class)
-                .hasMessage("포인트는 음수가 될 수 없습니다.");
+                .hasMessage("남은 포인트는 음수가 될 수 없습니다.");
     }
 
     @ParameterizedTest
