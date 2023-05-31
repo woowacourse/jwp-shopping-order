@@ -56,32 +56,37 @@
         Content-Type: application/json
         ```
         ```json
-        [
-          {
-            "orderId": 1,
-            "payAmount": 10000, // 최종 결재 금액 (전체 - 포인트)
-            "orderAt": "2024-10-23",
-            "productName": "마우스",
-            "productImageUrl": "http://example.com/chicken.jpg",
-            "totalProductCount": 4
-          },
-          {
-            "orderId": 1,
-            "totalPrice": 10000,
-            "orderAt": "2024-10-23",
-            "productName": "마우스",
-            "productImageUrl": "http://example.com/chicken.jpg",
-            "totalProductCount": 4
-          },
-          {
-            "orderId": 1,
-            "totalPrice": 10000,
-            "orderAt": "2024-10-23",
-            "productName": "마우스",
-            "productImageUrl": "http://example.com/chicken.jpg",
-            "totalProductCount": 4
-          }
-        ]
+        {
+          "totalPages": 10,
+          "currentPage": 1,
+          "pageSize": 4,
+          "contents": [
+            {
+              "orderId": 1,
+              "payAmount": 10000, // 최종 결재 금액 (전체 - 포인트)
+              "orderAt": "2024-10-23",
+              "productName": "마우스",
+            " productImageUrl": "http://example.com/chicken.jpg",
+              "totalProductCount": 4
+            },
+            {
+              "orderId": 1,
+              "totalPrice": 10000,
+              "orderAt": "2024-10-23",
+              "productName": "마우스",
+              "productImageUrl": "http://example.com/chicken.jpg",
+              "totalProductCount": 4
+            },
+            {
+              "orderId": 1,
+              "totalPrice": 10000,
+              "orderAt": "2024-10-23",
+              "productName": "마우스",
+              "productImageUrl": "http://example.com/chicken.jpg",
+              "totalProductCount": 4
+            }
+          ]
+        }
         ```
           
 
@@ -130,9 +135,9 @@
         ```
 
 
-  - [ ] 주문 삭제
+  - [ ] 주문 취소
     - [ ] DELETE /orders/{orderId} 요청과 매핑
-    - [ ] db에서 주문을 삭제한다
+    - [ ] db에서 주문을 상태를 변경한다
     - API 명세
       - 요청
         ```text
