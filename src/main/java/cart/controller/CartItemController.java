@@ -5,7 +5,7 @@ import cart.auth.Credential;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;
-import cart.exception.ExceptionResponse;
+import cart.exception.common.ExceptionResponse;
 import cart.service.CartItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

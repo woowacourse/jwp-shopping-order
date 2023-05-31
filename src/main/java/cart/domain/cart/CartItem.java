@@ -2,7 +2,7 @@ package cart.domain.cart;
 
 import cart.domain.VO.Money;
 import cart.domain.member.Member;
-import cart.exception.InvalidCartItemOwnerException;
+import cart.exception.cart.InvalidCartItemOwnerException;
 import java.util.Objects;
 
 public class CartItem implements Item {

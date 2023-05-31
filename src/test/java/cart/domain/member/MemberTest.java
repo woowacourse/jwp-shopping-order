@@ -2,7 +2,7 @@ package cart.domain.member;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.exception.MemberNotValidException;
+import cart.exception.member.MemberNotValidException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

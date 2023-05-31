@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.member;
+
+import cart.exception.common.CartException;
 
 public class MemberNotValidException extends CartException {
 

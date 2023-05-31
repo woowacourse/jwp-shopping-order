@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.VO.Money;
 import cart.domain.member.Member;
-import cart.exception.InvalidCartItemOwnerException;
+import cart.exception.cart.InvalidCartItemOwnerException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

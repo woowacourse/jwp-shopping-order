@@ -3,7 +3,7 @@ package cart.domain.coupon;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.exception.DiscountPolicyNotFoundException;
+import cart.exception.coupon.DiscountPolicyNotFoundException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

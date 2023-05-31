@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.coupon;
+
+import cart.exception.common.CartException;
 
 public class InvalidDiscountPolicyException extends CartException {
 

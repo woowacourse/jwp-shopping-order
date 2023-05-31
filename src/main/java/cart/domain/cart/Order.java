@@ -1,7 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.VO.Money;
-import cart.exception.InvalidOrderException;
+import cart.exception.cart.InvalidOrderException;
 import java.util.List;
 import java.util.Objects;
 

@@ -1,7 +1,7 @@
 package cart.domain.coupon;
 
 import cart.domain.VO.Money;
-import cart.exception.DiscountPolicyNotFoundException;
+import cart.exception.coupon.DiscountPolicyNotFoundException;
 import java.util.Arrays;
 
 public enum DiscountPolicyType {

@@ -1,5 +1,6 @@
-package cart.exception;
+package cart.exception.common;
 
+import cart.exception.auth.AuthenticationException;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,8 @@ public class GlobalExceptionHandler {
                 .body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleProductNotFoundException(final ProductNotFoundException e) {
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleCartNotFoundException(final CartNotFoundException e) {
         logger.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionResponse(e.getMessage()));

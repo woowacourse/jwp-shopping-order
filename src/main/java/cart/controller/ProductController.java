@@ -3,7 +3,7 @@ package cart.controller;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
-import cart.exception.ExceptionResponse;
+import cart.exception.common.ExceptionResponse;
 import cart.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

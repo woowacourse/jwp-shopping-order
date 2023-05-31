@@ -1,6 +1,6 @@
 package cart.domain.member;
 
-import cart.exception.MemberNotValidException;
+import cart.exception.member.MemberNotValidException;
 import java.util.Objects;
 
 public class Member {
