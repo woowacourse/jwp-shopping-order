@@ -17,6 +17,7 @@ import java.util.Objects;
 
 @Repository
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
@@ -24,46 +25,54 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.checked, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, cart_item.checked, member.email, product.id, product.name, product.price, product.image_url " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
             boolean checked = rs.getBoolean("cart_item.checked");
+
+            String email = rs.getString("email");
+
+            Long productId = rs.getLong("product.id");
+            String name = rs.getString("product.name");
+            int price = rs.getInt("product.price");
+            String imageUrl = rs.getString("product.image_url");
+
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member, checked);
-        });
+        }, memberId);
     }
 
     public List<CartItem> findByMemberIdAndChecked(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.checked, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.checked, cart_item.quantity, member.email, product.id, product.name, product.price, product.image_url " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ? " +
                 "AND cart_item.checked = true";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
             boolean checked = rs.getBoolean("cart_item.checked");
+
+            String email = rs.getString("email");
+
+            Long productId = rs.getLong("product.id");
+            String name = rs.getString("product.name");
+            int price = rs.getInt("product.price");
+            String imageUrl = rs.getString("product.image_url");
+
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member, checked);
-        });
+        }, memberId);
     }
 
     public Long save(CartItem cartItem) {
@@ -87,25 +96,28 @@ public class CartItemDao {
     }
 
     public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.checked, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, cart_item.checked, member.email, product.id, product.name, product.price, product.image_url " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
-            Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
+        List<CartItem> cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long cartItemId = rs.getLong("cart_item.id");
+            Long memberId = rs.getLong("cart_item.member_id");
             int quantity = rs.getInt("cart_item.quantity");
             boolean checked = rs.getBoolean("cart_item.checked");
+
+            String email = rs.getString("email");
+
+            Long productId = rs.getLong("product.id");
+            String name = rs.getString("product.name");
+            int price = rs.getInt("product.price");
+            String imageUrl = rs.getString("product.image_url");
+
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member, checked);
-        });
+        }, id);
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
