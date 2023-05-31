@@ -46,10 +46,10 @@ class CouponServiceTest {
         );
 
         doReturn(coupons).when(couponRepository).findAll(1L);
-        doReturn(new CouponType(1L, "할인쿠폰1", "1000원 할인 쿠폰", 1000)).when(couponTypeRepository).findById(1L);
-        doReturn(new CouponType(2L, "할인쿠폰2", "3000원 할인 쿠폰", 3000)).when(couponTypeRepository).findById(2L);
-        doReturn(new CouponType(3L, "할인쿠폰3", "5000원 할인 쿠폰", 5000)).when(couponTypeRepository).findById(3L);
-        doReturn(new CouponType(4L, "할인쿠폰4", "10000원 할인 쿠폰", 10000)).when(couponTypeRepository).findById(4L);
+        doReturn(new CouponType(1L, "1000원 할인 쿠폰", "상품할인쿠폰", 1000)).when(couponTypeRepository).findById(1L);
+        doReturn(new CouponType(2L, "3000원 할인 쿠폰", "배송비할인쿠폰", 3000)).when(couponTypeRepository).findById(2L);
+        doReturn(new CouponType(3L, "5000원 할인 쿠폰", "브랜드할인쿠폰", 5000)).when(couponTypeRepository).findById(3L);
+        doReturn(new CouponType(4L, "10000원 할인 쿠폰", "오픈기념쿠폰", 10000)).when(couponTypeRepository).findById(4L);
 
         // when
         List<CouponResponse> responses = couponService.getMemberCoupons(memberId);
@@ -59,9 +59,9 @@ class CouponServiceTest {
                 () -> assertThat(responses).extracting(CouponResponse::getId)
                         .contains(1L, 2L, 3L, 4L),
                 () -> assertThat(responses).extracting(CouponResponse::getName)
-                        .contains("할인쿠폰1", "할인쿠폰2", "할인쿠폰3", "할인쿠폰4"),
-                () -> assertThat(responses).extracting(CouponResponse::getDescription)
                         .contains("1000원 할인 쿠폰", "3000원 할인 쿠폰", "5000원 할인 쿠폰", "10000원 할인 쿠폰"),
+                () -> assertThat(responses).extracting(CouponResponse::getDescription)
+                        .contains("상품할인쿠폰", "배송비할인쿠폰", "브랜드할인쿠폰", "오픈기념쿠폰"),
                 () -> assertThat(responses).extracting(CouponResponse::getDiscountAmount)
                         .contains(1000, 3000, 5000, 10000)
         );

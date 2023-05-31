@@ -40,9 +40,9 @@ class CouponTypeDaoTest {
                 () -> assertThat(couponTypeEntities).extracting(CouponTypeEntity::getDiscountAmount)
                         .contains(1000, 3000, 5000, 10000),
                 () -> assertThat(couponTypeEntities).extracting(CouponTypeEntity::getName)
-                        .contains("할인쿠폰1", "할인쿠폰2", "할인쿠폰3", "할인쿠폰4"),
+                        .contains("1000원 할인 쿠폰", "3000원 할인 쿠폰", "5000원 할인 쿠폰", "10000원 할인 쿠폰"),
                 () -> assertThat(couponTypeEntities).extracting(CouponTypeEntity::getDescription)
-                        .contains("1000원 할인 쿠폰", "3000원 할인 쿠폰", "5000원 할인 쿠폰", "10000원 할인 쿠폰")
+                        .contains("상품할인쿠폰", "배송비할인쿠폰", "브랜드할인쿠폰", "오픈기념쿠폰")
         );
     }
 
@@ -57,8 +57,8 @@ class CouponTypeDaoTest {
         Assertions.assertAll(
                 () -> assertThat(couponTypeEntity.getId()).isEqualTo(1L),
                 () -> assertThat(couponTypeEntity.getDiscountAmount()).isEqualTo(1000),
-                () -> assertThat(couponTypeEntity.getName()).isEqualTo("할인쿠폰1"),
-                () -> assertThat(couponTypeEntity.getDescription()).isEqualTo("1000원 할인 쿠폰")
+                () -> assertThat(couponTypeEntity.getName()).isEqualTo("1000원 할인 쿠폰"),
+                () -> assertThat(couponTypeEntity.getDescription()).isEqualTo("상품할인쿠폰")
         );
     }
 
