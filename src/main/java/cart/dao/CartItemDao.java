@@ -105,8 +105,6 @@ public class CartItemDao {
         List<CartItem> cartItemsToRemove = savedCartItem.stream()
                 .filter(cartItem -> !updatedCartItem.contains(cartItem))
                 .collect(Collectors.toList());
-        System.out.println(cartItemsToRemove);
-        System.out.println("개수"+ cartItemsToRemove.size());
         
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id =?";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
