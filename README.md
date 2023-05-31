@@ -57,6 +57,14 @@
 
 ---
 
+## 도커 구동 방법 (Local)
+```
+cd ./docker
+docker-compose up -d
+```
+
+---
+
 ## HTTP 요청 가이드
 - http 디렉터리를 http client를 활용하여 실행하시면 더 편하게 API 요청을 진행하실 수 있습니다!
 - Run With 옵션을 `local`로 설정해 주세요.
