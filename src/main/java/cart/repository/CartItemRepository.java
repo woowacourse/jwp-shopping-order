@@ -41,9 +41,8 @@ public class CartItemRepository {
                 .collect(Collectors.toList());
     }
 
-    public Product findProductOf(final Long id) {
-        final CartItemEntity entity = cartItemDao.findById(id);
-        return productDao.getProductById(entity.getProductId()).toProduct();
+    public long findProductIdOf(final Long id) {
+        return cartItemDao.findById(id).getProductId();
     }
 
     public int findQuantityOf(final Long id) {

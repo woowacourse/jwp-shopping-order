@@ -7,6 +7,7 @@ import cart.exception.InvalidPointException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -15,15 +16,18 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
     private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
 
     public OrderService(
             final MemberRepository memberRepository,
+            final ProductRepository productRepository,
             final CartItemRepository cartItemRepository,
             final OrderRepository orderRepository
     ) {
         this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
     }
@@ -37,7 +41,10 @@ public class OrderService {
 
         final Map<Product, Integer> products = request.getCartItemIds().stream()
                 .collect(Collectors.toMap(
-                        cartItemRepository::findProductOf,
+                        id -> {
+                            final long productId = cartItemRepository.findProductIdOf(id);
+                            return productRepository.getProductById(productId);
+                        },
                         cartItemRepository::findQuantityOf
                 ));
 
