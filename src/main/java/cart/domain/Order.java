@@ -8,22 +8,28 @@ import java.util.Objects;
 
 public class Order {
 
+    private final Long id;
     private final Member member;
     private final Money payment;
     private final Point point;
     private final List<OrderItem> orderItems;
 
-    private Order(final Member member, final Money payment, final Point point, final List<OrderItem> orderItems) {
+    private Order(final Long id, final Member member, final Money payment, final Point point, final List<OrderItem> orderItems) {
         validatePointAvailability(member, point);
         validatePayment(payment, point, orderItems);
+        this.id = id;
         this.member = member;
         this.payment = payment;
         this.point = point;
         this.orderItems = orderItems;
     }
 
+    public static Order from(final Long id, final Member member, final int payment, final int point, final List<OrderItem> orderItems) {
+        return new Order(id, member, Money.valueOf(payment), Point.valueOf(point), orderItems);
+    }
+
     public static Order from(final Member member, final int payment, final int point, final List<OrderItem> orderItems) {
-        return new Order(member, Money.valueOf(payment), Point.valueOf(point), orderItems);
+        return new Order(null, member, Money.valueOf(payment), Point.valueOf(point), orderItems);
     }
 
     private void validatePointAvailability(final Member member, final Point point) {
@@ -44,6 +50,10 @@ public class Order {
 
     public Member calculateMemberPoint(final Point savePoint) {
         return member.calculatePoint(point, savePoint);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Member getMember() {

@@ -28,7 +28,7 @@ class OrderTest {
         final List<OrderItem> orderItems = List.of(CHICKEN_ORDER_ITEM, COKE_ORDER_ITEM);
 
         //expect
-        assertThatNoException().isThrownBy(() -> Order.from(MEMBER, 21000, 1000, orderItems));
+        assertThatNoException().isThrownBy(() -> Order.from(1L, MEMBER, 21000, 1000, orderItems));
     }
 
     @Test
@@ -37,7 +37,7 @@ class OrderTest {
         final List<OrderItem> orderItems = List.of(CHICKEN_ORDER_ITEM, COKE_ORDER_ITEM);
 
         //expect
-        assertThatThrownBy(() -> Order.from(MEMBER, 21000, 1001, orderItems))
+        assertThatThrownBy(() -> Order.from(1L, MEMBER, 21000, 1001, orderItems))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("가용 포인트를 초과했습니다.");
     }
@@ -48,7 +48,7 @@ class OrderTest {
         final List<OrderItem> orderItems = List.of(CHICKEN_ORDER_ITEM, COKE_ORDER_ITEM);
 
         //expect
-        assertThatThrownBy(() -> Order.from(MEMBER, 21001, 1000, orderItems))
+        assertThatThrownBy(() -> Order.from(1L, MEMBER, 21001, 1000, orderItems))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("총 결제 금액이 총 상품 가격과 맞지 않습니다.");
     }
@@ -56,7 +56,7 @@ class OrderTest {
     @Test
     void 회원의_포인트를_계산한다() {
         //given
-        final Order order = Order.from(MEMBER, 21500, 500, List.of(CHICKEN_ORDER_ITEM, COKE_ORDER_ITEM));
+        final Order order = Order.from(1L, MEMBER, 21500, 500, List.of(CHICKEN_ORDER_ITEM, COKE_ORDER_ITEM));
         final Point savePoint = Point.valueOf(1000);
 
         //when
