@@ -1,6 +1,8 @@
 package cart.domain.VO;
 
+import static cart.domain.VO.Money.from;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -14,40 +16,48 @@ import org.junit.jupiter.params.provider.CsvSource;
 class MoneyTest {
 
     @Test
+    void null을_입력받으면_IllegalArugmentException을_던진다() {
+        // expect
+        assertThatThrownBy(() -> Money.from(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Money의 값은 null일 수 없습니다.");
+    }
+
+    @Test
     void _10000원에서_2000원을_더하면_12000원이다() {
         // given
-        final Money money = Money.from(10000);
+        final Money money = from(10000L);
 
         // when
-        final Money result = money.plus(Money.from(2000));
+        final Money result = money.plus(from(2000L));
 
         // then
-        assertThat(result).isEqualTo(Money.from(12000));
+        assertThat(result).isEqualTo(from(12000L));
     }
 
     @Test
     void _10000원에서_2000원을_빼면_8000원이다() {
         // given
-        final Money money = Money.from(10000);
+        final Money money = from(10000L);
 
         // when
-        final Money result = money.minus(Money.from(2000));
+        final Money result = money.minus(from(2000L));
 
         // then
-        assertThat(result).isEqualTo(Money.from(8000));
+        assertThat(result).isEqualTo(from(8000L));
     }
 
     @Test
     void _10000원의_10퍼센트는_1000원이다() {
         // given
-        final Money money = Money.from(10000);
+        final Money money = from(10000L);
         final double ratio = 0.1;
 
         // when
         final Money result = money.times(ratio);
 
         // then
-        assertThat(result).isEqualTo(Money.from(1000));
+        assertThat(result).isEqualTo(from(1000L));
     }
 
     @Test
@@ -56,13 +66,13 @@ class MoneyTest {
         final Money zero = Money.ZERO;
 
         // expect
-        assertThat(zero).isEqualTo(Money.from(0));
+        assertThat(zero).isEqualTo(from(0L));
     }
 
     @Test
     void BigDecimal_타입의_값을_반환한다() {
         // given
-        final Money money = Money.from(10000);
+        final Money money = from(10000L);
 
         // when
         final BigDecimal result = money.getValue();
@@ -74,7 +84,7 @@ class MoneyTest {
     @Test
     void Long_타입의_값을_반환한다() {
         // given
-        final Money money = Money.from(10000);
+        final Money money = from(10000L);
 
         // when
         final long result = money.getLongValue();
@@ -87,8 +97,8 @@ class MoneyTest {
     @CsvSource(value = {"10000, true", "10001, true", "9999, false"})
     void 입력받는_금액과_비교하여_입력받은_금액_이상인지_확인한다(final Long amount, final boolean returnValue) {
         // given
-        final Money minAmount = Money.from(10000);
-        final Money price = Money.from(amount);
+        final Money minAmount = from(10000L);
+        final Money price = from(amount);
 
         // when
         final boolean result = price.isGreaterThanOrEqual(minAmount);

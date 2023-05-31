@@ -16,24 +16,24 @@ class AmountDiscountPolicyTest {
     @Test
     void 고정된_금액을_할인하여_반환한다() {
         // given
-        final Money price = Money.from(30000);
+        final Money price = Money.from(30000L);
 
         // when
         final Money result = discountPolicy.calculatePrice(3000L, price);
 
         // then
-        assertThat(result).isEqualTo(Money.from(27000));
+        assertThat(result).isEqualTo(Money.from(27000L));
     }
 
     @Test
     void 배달비는_할인하지_않고_그대로_반환한다() {
         // given
-        final Money deliveryFee = Money.from(3000);
+        final Money deliveryFee = Money.from(3000L);
 
         // when
         final Money result = discountPolicy.calculateDeliveryFee(0L, deliveryFee);
 
         // then
-        assertThat(result).isEqualTo(Money.from(3000));
+        assertThat(result).isEqualTo(Money.from(3000L));
     }
 }

@@ -34,7 +34,7 @@ class CartItemTest {
         final CartItem cartItem = new CartItem(null, 3, member, product);
 
         // expect
-        assertThat(cartItem.calculateTotalPrice()).isEqualTo(Money.from(26700));
+        assertThat(cartItem.calculateTotalPrice()).isEqualTo(Money.from(26700L));
     }
 
     @Test

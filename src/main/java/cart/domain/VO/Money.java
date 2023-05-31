@@ -5,16 +5,23 @@ import java.util.Objects;
 
 public class Money {
 
-    public static final Money ZERO = Money.from(0);
+    public static final Money ZERO = Money.from(0L);
 
     private final BigDecimal value;
 
-    Money(BigDecimal value) {
+    private Money(BigDecimal value) {
         this.value = value;
     }
 
-    public static Money from(long value) {
+    public static Money from(Long value) {
+        validate(value);
         return new Money(BigDecimal.valueOf(value));
+    }
+
+    private static void validate(final Long value) {
+        if (Objects.isNull(value)) {
+            throw new IllegalArgumentException("Money의 값은 null일 수 없습니다.");
+        }
     }
 
     public Money plus(Money other) {

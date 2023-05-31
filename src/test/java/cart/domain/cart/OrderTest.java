@@ -47,7 +47,7 @@ class OrderTest {
         final Money result = order.calculateDiscountPrice();
 
         // then
-        assertThat(result).isEqualTo(Money.from(34540));
+        assertThat(result).isEqualTo(Money.from(34540L));
     }
 
     @Test
@@ -65,7 +65,7 @@ class OrderTest {
         final Money result = order.calculateDiscountPrice();
 
         // then
-        assertThat(result).isEqualTo(Money.from(172700));
+        assertThat(result).isEqualTo(Money.from(172700L));
     }
 
     @Test

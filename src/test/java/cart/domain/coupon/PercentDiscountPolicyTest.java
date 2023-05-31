@@ -32,13 +32,13 @@ class PercentDiscountPolicyTest {
     @Test
     void 할인_비율에_해당하는_금액을_할인하여_반환한다() {
         // given
-        final Money price = Money.from(30000);
+        final Money price = Money.from(30000L);
 
         // when
         final Money result = discountPolicy.calculatePrice(30L, price);
 
         // then
-        assertThat(result).isEqualTo(Money.from(21000));
+        assertThat(result).isEqualTo(Money.from(21000L));
     }
 
     @Test
@@ -50,6 +50,6 @@ class PercentDiscountPolicyTest {
         final Money result = discountPolicy.calculateDeliveryFee(3000L, deliveryFee);
 
         // then
-        assertThat(result).isEqualTo(Money.from(3000));
+        assertThat(result).isEqualTo(Money.from(3000L));
     }
 }

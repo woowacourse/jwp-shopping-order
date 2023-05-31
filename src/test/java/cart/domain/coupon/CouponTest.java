@@ -31,10 +31,10 @@ class CouponTest {
         final Coupon coupon = new Coupon(1L, "2000원 할인", PRICE, 2000L, Money.from(30000L));
 
         // when
-        final Money result = coupon.calculatePrice(Money.from(53000));
+        final Money result = coupon.calculatePrice(Money.from(53000L));
 
         // then
-        assertThat(result).isEqualTo(Money.from(51000));
+        assertThat(result).isEqualTo(Money.from(51000L));
     }
 
     @Test
@@ -43,7 +43,7 @@ class CouponTest {
         final Coupon coupon = new Coupon(1L, "배달비", DELIVERY, 3000L, Money.from(30000L));
 
         // when
-        final Money result = coupon.calculateDeliveryFee(Money.from(3000));
+        final Money result = coupon.calculateDeliveryFee(Money.from(3000L));
 
         // then
         assertThat(result).isEqualTo(Money.ZERO);
