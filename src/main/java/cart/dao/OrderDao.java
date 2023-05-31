@@ -22,9 +22,8 @@ public class OrderDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public OrderEntity insert(final OrderEntity source) {
+    public long insert(final OrderEntity source) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(source);
-        final long id = insertAction.executeAndReturnKey(params).longValue();
-        return OrderEntity.of(id, source);
+        return insertAction.executeAndReturnKey(params).longValue();
     }
 }

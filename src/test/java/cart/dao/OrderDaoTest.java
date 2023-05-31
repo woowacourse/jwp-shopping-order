@@ -12,8 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 @JdbcTest
 @DisplayName("Order Dao 테스트")
@@ -38,14 +37,8 @@ class OrderDaoTest {
         // given
         final OrderEntity orderEntity = new OrderEntity(1L, 15_000, 0);
 
-        // when
-        final OrderEntity insertedEntity = orderDao.insert(orderEntity);
-
-        // then
-        assertAll(
-                () -> assertThat(orderEntity.getMemberId()).isEqualTo(insertedEntity.getMemberId()),
-                () -> assertThat(orderEntity.getOriginalPrice()).isEqualTo(insertedEntity.getOriginalPrice()),
-                () -> assertThat(orderEntity.getDiscountPrice()).isEqualTo(insertedEntity.getDiscountPrice())
-        );
+        // when, then
+        assertThatCode(() -> orderDao.insert(orderEntity))
+                .doesNotThrowAnyException();
     }
 }
