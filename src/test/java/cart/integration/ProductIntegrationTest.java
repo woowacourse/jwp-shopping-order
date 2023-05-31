@@ -1,60 +1,54 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
-    @Test
-    public void getProducts() {
-        var result = given()
+    private static final ProductRequest dummyRequest = new ProductRequest("name", 1_000, "imageUrl", 10);
+    private static final String URI = "/products";
+
+    private ExtractableResponse<Response> postDummyProduct() {
+        return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(dummyRequest)
                 .when()
-                .get("/products")
+                .post(URI)
                 .then()
                 .extract();
-
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
-    public void createProduct() {
-        var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+    public void 상품을_추가한다() {
+        // when
+        var response = postDummyProduct();
+        String location = response.header("Location");
+        String id = location.substring(location.length() - 1);
 
-        var response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(product)
-                .when()
-                .post("/products")
-                .then()
-                .extract();
-
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isEqualTo(URI + "/" + id);
     }
 
     @Test
-    public void getCreatedProduct() {
-        var product = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
-
-        // create product
-        var location =
-                given()
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(product)
-                        .when()
-                        .post("/products")
-                        .then()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract().header("Location");
+    public void 상품을_조회한다() {
+        // post product
+        var postResponseBody = postDummyProduct();
+        String location = postResponseBody.header("Location");
 
         // get product
-        var responseProduct = given().log().all()
+        var response = given().log().all()
                 .when()
                 .get(location)
                 .then()
@@ -63,8 +57,78 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .jsonPath()
                 .getObject(".", ProductResponse.class);
 
-        assertThat(responseProduct.getId()).isNotNull();
-        assertThat(responseProduct.getName()).isEqualTo("피자");
-        assertThat(responseProduct.getPrice()).isEqualTo(15_000);
+        // then
+        assertThat(response.getId()).isNotNull();
+        assertThat(response.getName()).isEqualTo(dummyRequest.getName());
+        assertThat(response.getPrice()).isEqualTo(dummyRequest.getPrice());
+    }
+
+    @Test
+    public void 모든_상품을_조회한다() {
+        // given
+        postDummyProduct();
+
+        // when
+        var result = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get(URI)
+                .then()
+                .extract();
+
+        List<ProductResponse> body = result.jsonPath().getList(".", ProductResponse.class);
+
+        // then
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(body).isNotNull();
+        assertThat(body).hasSize(1);
+    }
+
+    @Test
+    void 상품을_수정한다() {
+        // given
+        var responseBody = postDummyProduct();
+        String location = responseBody.header("Location");
+        String id = location.substring(location.length() - 1);
+
+        // when
+        ProductRequest newRequest = new ProductRequest("newName", 9_999, "newImageUrl", 99);
+        var result = given()
+                .contentType(ContentType.JSON)
+                .body(newRequest)
+                .when()
+                .put(URI + "/{productId}", id)
+                .then()
+                .extract();
+
+        // then
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    void 상품을_삭제한다() {
+        // given
+        var responseBody = postDummyProduct();
+        String location = responseBody.header("Location");
+        String id = location.substring(location.length() - 1);
+
+        // when
+        var result = when()
+                .delete(URI + "/{productId}", id)
+                .then()
+                .extract();
+
+        // then
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void 존재하지_않는_상품의_ID로_조회를_요청하면_Bad_Request를_응답한다() {
+        var result = when()
+                .get(URI + "/{productId}", 24124)
+                .then()
+                .extract();
+
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }
