@@ -45,7 +45,7 @@ public class CartItemDao {
     }
 
     public List<CartItem> findDescByMemberId(Long memberId) {
-        String sql = JOIN_SQL + "WHERE cart_item.member_id = ? ORDER BY id DESC";
+        String sql = JOIN_SQL + "WHERE cart_item.member_id = ? ORDER BY cart_item.id DESC";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
