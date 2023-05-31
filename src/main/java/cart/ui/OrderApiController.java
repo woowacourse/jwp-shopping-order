@@ -2,9 +2,9 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.OrderPostRequest;
-import cart.dto.OrderPreviewResponse;
-import cart.dto.OrderResponse;
+import cart.dto.request.OrderPostRequest;
+import cart.dto.response.OrderPreviewResponse;
+import cart.dto.response.OrderResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;

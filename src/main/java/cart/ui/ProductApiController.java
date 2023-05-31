@@ -1,9 +1,9 @@
 package cart.ui;
 
 import cart.application.ProductService;
-import cart.dto.Ids;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.Ids;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.request;
 
 import java.util.Arrays;
 import java.util.List;

@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.application.MemberService;
 import cart.domain.Member;
-import cart.dto.OrderPostRequest;
-import cart.dto.ProductInOrderResponse;
+import cart.dto.request.OrderPostRequest;
+import cart.dto.response.ProductInOrderResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.ArrayList;
