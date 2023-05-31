@@ -183,7 +183,7 @@ public class OrderService {
         List<OrderedItemResponse> orderedItemResponses = new ArrayList<>();
         for (OrderedItem orderedItem : orderedItems) {
             OrderedItemResponse orderedItemResponse = new OrderedItemResponse(orderedItem.getProductQuantity(),
-                    new ProductResponse(orderedItem.getProductName(), orderedItem.getProductPrice(), orderedItem.getProductImage(), orderedItem.getIsDiscounted(), orderedItem.getDiscountedRate()));
+                    new ProductResponse(orderedItem.getProductName(), orderedItem.getProductPrice(), orderedItem.getProductImage(), orderedItem.getIsDiscounted(), orderedItem.getDiscountedRate(), orderedItem.calculateDiscountedPrice()));
             orderedItemResponses.add(orderedItemResponse);
         }
 

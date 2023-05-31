@@ -29,8 +29,9 @@ public class ProductDao {
             String imageUrl = rs.getString("image");
             boolean isDiscounted = (rs.getInt("is_discounted") == 1) ? true : false;
             int discountRate = rs.getInt("discount_rate");
+            int discountedPrice = rs.getInt("discounted_price");
 
-            return new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
+            return new Product(productId, name, price, imageUrl, isDiscounted, discountRate );
         });
     }
 

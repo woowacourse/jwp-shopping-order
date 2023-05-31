@@ -32,6 +32,14 @@ public class OrderedItem {
         this.discountedRate = discountedRate;
     }
 
+    public int calculateDiscountedPrice(){
+        if(discountedRate > 0){
+            return (discountedRate * productPrice / 100 - productPrice) * -1;
+        }
+
+        return productPrice;
+    }
+
     public Long getId() {
         return id;
     }
