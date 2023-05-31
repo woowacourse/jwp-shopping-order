@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.repository;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CartItemDao {
+public class CartItemRepository {
 
     private static final String CART_ITEM_JOIN_MEMBER_SQL = "SELECT cart_item.id, cart_item.member_id, member.email, cart_item.product_id, cart_item.product_name, cart_item.price, cart_item.image_url, cart_item.quantity " +
             "FROM cart_item " +
@@ -38,7 +38,7 @@ public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
+    public CartItemRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")

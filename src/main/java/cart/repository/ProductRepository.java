@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.repository;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class ProductDao {
+public class ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
