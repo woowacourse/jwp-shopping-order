@@ -11,7 +11,6 @@ import cart.domain.coupon.Coupon;
 import cart.dto.OrderSaveRequest;
 import cart.dto.OrdersDto;
 import cart.repository.CartItemRepository;
-import cart.repository.CouponRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import cart.repository.ProductRepository;
@@ -44,9 +43,6 @@ class OrderServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private CouponRepository couponRepository;
-
     @Test
     void 해당멤버의_장바구니에_담긴_상품들을_주문한다() {
         // given
@@ -74,6 +70,9 @@ class OrderServiceTest {
                         new OrderItem(product1.getName(), product1.getPrice(), product1.getImageUrl(), 1),
                         new OrderItem(product2.getName(), product2.getPrice(), product2.getImageUrl(), 1)
                 ));
+
+        List<CartItem> findCartItems = cartItemRepository.findAllByMemberId(member.getId());
+        assertThat(findCartItems).isEmpty();
     }
 
     @Test
