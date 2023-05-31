@@ -2,7 +2,7 @@ package cart.domain.policy;
 
 import cart.domain.Price;
 
-public class FreePolicy implements DiscountPolicy {
+public class FreeDiscountPolicy implements DiscountPolicy {
     public static final String NAME = "free";
 
     @Override

@@ -1,10 +1,6 @@
 package cart.dao;
 
-import cart.domain.Coupon;
 import cart.domain.Member;
-import cart.domain.policy.DiscountPolicyResolver;
-import cart.domain.policy.PercentPolicy;
-import cart.domain.policy.PricePolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

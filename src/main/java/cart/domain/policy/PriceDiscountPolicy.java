@@ -2,11 +2,11 @@ package cart.domain.policy;
 
 import cart.domain.Price;
 
-public class PricePolicy implements DiscountPolicy {
+public class PriceDiscountPolicy implements DiscountPolicy {
     public static final String NAME = "price";
     private final Price price;
 
-    public PricePolicy(int value) {
+    public PriceDiscountPolicy(int value) {
         Price price = new Price(value);
         validateIsZero(price);
         this.price = price;

@@ -3,12 +3,12 @@ package cart.domain.policy;
 import cart.domain.Percent;
 import cart.domain.Price;
 
-public class PercentPolicy implements DiscountPolicy {
+public class PercentDiscountPolicy implements DiscountPolicy {
 
     public static final String NAME = "percent";
     private final Percent percent;
 
-    public PercentPolicy(int value) {
+    public PercentDiscountPolicy(int value) {
         Percent percent = new Percent(value);
         validateIsZero(percent);
         this.percent = percent;

@@ -21,11 +21,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cart-items")
-public class CartItemApiController {
+public class CartItemController {
 
     private final CartItemService cartItemService;
 
-    public CartItemApiController(CartItemService cartItemService) {
+    public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 
