@@ -25,12 +25,10 @@ import static java.util.stream.Collectors.toMap;
 public class CartItemRepository {
 
     private final CartItemDao cartItemDao;
-    private final MemberDao memberDao;
     private final ProductDao productDao;
 
-    public CartItemRepository(final CartItemDao cartItemDao, final MemberDao memberDao, final ProductDao productDao) {
+    public CartItemRepository(final CartItemDao cartItemDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.memberDao = memberDao;
         this.productDao = productDao;
     }
 
