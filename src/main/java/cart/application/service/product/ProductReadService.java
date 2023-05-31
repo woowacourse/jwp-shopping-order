@@ -1,8 +1,8 @@
-package cart.application.service;
+package cart.application.service.product;
 
 import cart.application.repository.ProductRepository;
+import cart.application.service.product.dto.ProductResultDto;
 import cart.domain.Product;
-import cart.ui.product.dto.ProductResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,15 +20,15 @@ public class ProductReadService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
+    public List<ProductResultDto> getAllProducts() {
         final List<Product> products = productRepository.findAll();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return products.stream().map(ProductResultDto::of).collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
+    public ProductResultDto getProductById(Long productId) {
         final Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("일치하는 상품이 없습니다."));
-        return ProductResponse.of(product);
+        return ProductResultDto.of(product);
     }
 
 }

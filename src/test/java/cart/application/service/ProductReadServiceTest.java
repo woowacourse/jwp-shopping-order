@@ -1,6 +1,7 @@
 package cart.application.service;
 
 import cart.application.repository.ProductRepository;
+import cart.application.service.product.ProductReadService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +13,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static cart.fixture.ProductFixture.디노;
-import static cart.fixture.ProductFixture.비버꼬리요리;
+import static cart.fixture.ProductFixture.통구이;
+import static cart.fixture.ProductFixture.꼬리요리;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.any;
@@ -33,7 +34,7 @@ class ProductReadServiceTest {
     @DisplayName("정상적인 전체 상품 조회 테스트")
     void getAllProductsTest() {
         given(productRepository.findAll())
-                .willReturn(List.of(디노, 비버꼬리요리));
+                .willReturn(List.of(통구이, 꼬리요리));
 
         assertDoesNotThrow(() -> productReadService.getAllProducts());
     }
@@ -42,7 +43,7 @@ class ProductReadServiceTest {
     @DisplayName("정상적인 특정 상품 조회 테스트")
     void getProductByIdTest() {
         given(productRepository.findById(any()))
-                .willReturn(Optional.of(비버꼬리요리));
+                .willReturn(Optional.of(꼬리요리));
 
         assertDoesNotThrow(() -> productReadService.getProductById(any()));
     }

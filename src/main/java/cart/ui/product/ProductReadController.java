@@ -1,6 +1,7 @@
 package cart.ui.product;
 
-import cart.application.service.ProductReadService;
+import cart.application.service.product.ProductReadService;
+import cart.application.service.product.dto.ProductResultDto;
 import cart.ui.product.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -22,12 +24,18 @@ public class ProductReadController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productReadService.getAllProducts());
+        final List<ProductResultDto> productResultDtos = productReadService.getAllProducts();
+
+        final List<ProductResponse> productResponses = productResultDtos.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toUnmodifiableList());
+        return ResponseEntity.ok(productResponses);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productReadService.getProductById(id));
+        final ProductResultDto productResultDto = productReadService.getProductById(id);
+        return ResponseEntity.ok(ProductResponse.of(productResultDto));
     }
 
 }

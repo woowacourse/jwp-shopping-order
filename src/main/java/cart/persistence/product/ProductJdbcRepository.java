@@ -50,7 +50,7 @@ public class ProductJdbcRepository implements ProductRepository {
     public Optional<Product> findById(final Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {
-            Product product = jdbcTemplate.queryForObject(sql, productRowMapper, productId);
+            final Product product = jdbcTemplate.queryForObject(sql, productRowMapper, productId);
             return Optional.of(product);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
