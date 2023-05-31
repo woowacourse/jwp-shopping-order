@@ -23,9 +23,9 @@ public class OrderDaoTest {
     @Autowired
     private OrderDao orderDao;
 
-    @DisplayName("주문을 조회한다.")
+    @DisplayName("주문을 저장하고 조회한다.")
     @Test
-    void findById() {
+    void insertAndFind() {
         // given
         final Member member = new Member(1L, "a@a.com", null);
         final Order order = new Order(member, new MemberPoint(1000), new DeliveryFee(3000));

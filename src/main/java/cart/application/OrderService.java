@@ -45,6 +45,7 @@ public class OrderService {
         }
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
         memberRepository.save(updatedMember);
+        //TODO : 소유권 확인, 없는 cartItem에 대한 주문 요청
 
         return orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
     }
