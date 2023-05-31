@@ -73,27 +73,22 @@ class MemberReadServiceTest {
     @DisplayName("이메일로 특정 사용자 정보를 조회한다.")
     void findMemberByEmailTest() {
         // given
-        given(memberRepository.findMemberByEmail(any()))
-                .willReturn(Optional.of(비버));
+        given(memberRepository.isMemberExist(any(), any()))
+                .willReturn(true);
 
         // when, then
-        assertThat(memberReadService.findMemberByEmail(any()))
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(비버);
+        assertThat(memberReadService.isMemberExist(any(), any())).isTrue();
     }
 
     @Test
     @DisplayName("존재하지 않는 이메일로 사용자 조회 시 예외 처리한다.")
     void findMemberByEmailExceptionTest() {
         // given
-        given(memberRepository.findMemberByEmail(any()))
-                .willReturn(Optional.empty());
+        given(memberRepository.isMemberExist(any(), any()))
+                .willReturn(false);
 
         // when, then
-        assertThatThrownBy(() -> memberReadService.findMemberByEmail(any()))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당하는 사용자가 존재하지 않습니다.");
+        assertThat(memberReadService.isMemberExist(any(), any())).isFalse();
     }
 
 }

@@ -27,6 +27,9 @@ public class MemberJdbcRepository implements MemberRepository {
                     rs.getString("password")
             );
 
+    private final RowMapper<Boolean> booleanRowMapper = (rs, rowNum) ->
+            rs.getBoolean("isExist");
+
     public MemberJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -58,14 +61,11 @@ public class MemberJdbcRepository implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findMemberByEmail(final String email) {
-        final String sql = "SELECT id, name, email, password FROM member WHERE email = ?";
-        try {
-            final Member member = jdbcTemplate.queryForObject(sql, memberRowMapper, email);
-            return Optional.of(member);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public Boolean isMemberExist(final String email, final String password) {
+        final String sql = "SELECT EXISTS(SELECT id, name, email, password FROM member WHERE email = ? AND password = ?) AS isExist";
+
+        return jdbcTemplate.queryForObject(sql, booleanRowMapper, email, password);
     }
 
 }
+

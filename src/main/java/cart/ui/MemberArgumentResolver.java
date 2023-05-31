@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
+import cart.application.service.member.MemberReadService;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -16,10 +16,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(MemberArgumentResolver.class);
-    private final MemberDao memberDao;
+    private final MemberReadService memberReadService;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(MemberReadService memberReadService) {
+        this.memberReadService = memberReadService;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorization == null) {
@@ -50,11 +50,11 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
+        if (!memberReadService.isMemberExist(email, password)) {
             logger.warn("Invalid Password, Input Email: {}", email);
             throw new AuthenticationException();
         }
-        return member;
+        return new MemberAuth(email, password);
     }
+
 }

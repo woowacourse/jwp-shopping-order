@@ -13,6 +13,6 @@ public interface MemberRepository {
 
     Optional<Member> findMemberById(Long id);
 
-    Optional<Member> findMemberByEmail(String email);
+    Boolean isMemberExist(String email, String password);
 
 }

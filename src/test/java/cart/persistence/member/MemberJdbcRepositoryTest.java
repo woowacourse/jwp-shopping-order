@@ -87,10 +87,10 @@ class MemberJdbcRepositoryTest {
         final Long dinoId = memberRepository.createMember(dino);
 
         // when
-        final Optional<Member> member = memberRepository.findMemberByEmail(beaver.getEmail());
+        final Boolean result = memberRepository.isMemberExist(beaver.getEmail(), beaver.getPassword());
 
         // then
-        assertThat(member.get()).usingRecursiveComparison().ignoringFields("id").isEqualTo(beaver);
+        assertThat(result).isTrue();
     }
 
 }
