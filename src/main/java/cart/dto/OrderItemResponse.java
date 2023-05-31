@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 
 public class OrderItemResponse {
 
-    private long id;
-    private String name;
-    private String imageUrl;
-    private int quantity;
-    private long totalPrice;
+    private final long id;
+    private final String name;
+    private final String imageUrl;
+    private final int quantity;
+    private final long totalPrice;
 
     public OrderItemResponse(final long id,
                              final String name,
@@ -31,7 +31,7 @@ public class OrderItemResponse {
                         orderItem.getName(),
                         orderItem.getImageUrl(),
                         orderItem.getQuantity(),
-                        orderItem.getPrice()))
+                        (orderItem.getQuantity() * orderItem.getPrice())))
                 .collect(Collectors.toList());
     }
 

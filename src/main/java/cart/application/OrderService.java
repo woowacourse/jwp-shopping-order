@@ -10,14 +10,16 @@ import cart.domain.OrderItem;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.CartItemException.IllegalId;
+import cart.exception.OrderException.OutOfDatedProductPrice;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class OrderService {
 
-    private static final Money DELIVERY_FEE_BASIC = new Money(3000L);
     private final OrderDao orderDao;
     private final CartItemDao cartItemDao;
 
@@ -27,8 +29,10 @@ public class OrderService {
     }
 
     public Long add(final Member member, final OrderRequest orderRequest) {
-        final Long orderId = orderDao.save(member.getId(), DELIVERY_FEE_BASIC);
-        orderDao.saveOrderItems(createOrderItems(orderId, member, orderRequest));
+        final Long orderId = orderDao.save(member.getId(), new Money(orderRequest.getDeliveryFee()));
+        final List<OrderItem> orderItems = createOrderItems(orderId, member, orderRequest);
+
+        orderDao.saveOrderItems(orderItems);
         return orderId;
     }
 
@@ -36,6 +40,7 @@ public class OrderService {
         final List<Long> cartItemIds = orderRequest.getCartItemIds();
         final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
         validateIds(member, cartItemIds, cartItems);
+        validateTotalPrice(orderRequest.getTotalPrice(), cartItems);
         return OrderItem.from(orderId, cartItems);
     }
 
@@ -53,8 +58,17 @@ public class OrderService {
         cartItem.checkOwner(member);
     }
 
+    private void validateTotalPrice(final Long totalPrice, final List<CartItem> cartItems) {
+        final long totalPriceFromQuery = cartItems.stream()
+                .mapToLong(item -> item.getProduct().getPrice().getValue() * item.getQuantity())
+                .sum();
+        if (totalPriceFromQuery != totalPrice) {
+            throw new OutOfDatedProductPrice();
+        }
+    }
+
     public List<OrderResponse> findOrdersByMember(final Member member) {
-        List<Order> orders = orderDao.findByMemberId(member.getId());
+        final List<Order> orders = orderDao.findByMemberId(member.getId());
         return OrderResponse.from(orders);
     }
 }

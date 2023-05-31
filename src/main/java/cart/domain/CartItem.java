@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
-
 import java.util.Objects;
 
 public class CartItem {
@@ -21,6 +20,10 @@ public class CartItem {
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+    public CartItem(final int quantity, final Product product, final Member member) {
+        this(null, quantity, product, member);
     }
 
     public Long getId() {

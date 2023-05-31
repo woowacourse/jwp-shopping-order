@@ -9,12 +9,10 @@ import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
 import cart.exception.CartItemException.IllegalId;
-import java.util.Objects;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
