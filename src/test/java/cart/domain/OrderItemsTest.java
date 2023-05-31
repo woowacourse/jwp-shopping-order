@@ -29,7 +29,7 @@ class OrderItemsTest {
     @DisplayName("원래 가격 계산 테스트")
     void calculate_original_price_test() {
         // given, when
-        final Price price = orderItems.calculateTotalPrice();
+        final Price price = orderItems.calculateOriginalPrice();
 
         // then
         final Price expected = new Price(17000 * 2 + 16000 + 30000 * 3);

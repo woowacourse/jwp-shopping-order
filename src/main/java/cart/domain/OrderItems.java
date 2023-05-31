@@ -12,11 +12,15 @@ public class OrderItems {
         this.discountPriceCalculator = discountPriceCalculator;
     }
 
-    public Price calculateTotalPrice() {
-        return null;
+    public Price calculateOriginalPrice() {
+        return orderItems.stream()
+                .map(OrderItem::calculateTotalPrice)
+                .reduce(Price::add)
+                .orElse(new Price(0));
     }
 
     public Price calculateDiscountPrice() {
-        return null;
+        final Price originalPrice = calculateOriginalPrice();
+        return discountPriceCalculator.calculate(originalPrice);
     }
 }
