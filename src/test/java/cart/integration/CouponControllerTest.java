@@ -1,7 +1,7 @@
 package cart.integration;
 
-import cart.dto.CouponRequest;
-import cart.dto.CouponResponse;
+import cart.dto.coupon.CouponRequest;
+import cart.dto.coupon.CouponResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

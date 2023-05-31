@@ -4,8 +4,8 @@ import cart.application.CouponService;
 import cart.dao.MemberCouponDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
-import cart.dto.CouponRequest;
-import cart.dto.CouponResponse;
+import cart.dto.coupon.CouponRequest;
+import cart.dto.coupon.CouponResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

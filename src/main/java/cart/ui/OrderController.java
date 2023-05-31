@@ -3,8 +3,8 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

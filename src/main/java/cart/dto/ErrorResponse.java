@@ -1,17 +1,14 @@
 package cart.dto;
 
-import java.time.LocalDateTime;
-
 import cart.exception.ApplicationException;
+
+import java.time.LocalDateTime;
 
 public class ErrorResponse {
 
     private int status;
     private String message;
     private LocalDateTime timestamp;
-
-    private ErrorResponse() {
-    }
 
     private ErrorResponse(int status, String message, LocalDateTime timestamp) {
         this.status = status;

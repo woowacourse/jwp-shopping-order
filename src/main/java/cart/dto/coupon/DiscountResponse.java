@@ -1,18 +1,21 @@
-package cart.dto;
+package cart.dto.coupon;
 
 import cart.domain.Discount;
 
-public class DiscountDto {
+public class DiscountResponse {
 
-    private final String type;
-    private final int amount;
+    private String type;
+    private int amount;
 
-    public DiscountDto(final String type, final int amount) {
+    private DiscountResponse() {
+    }
+
+    public DiscountResponse(final String type, final int amount) {
         this.type = type;
         this.amount = amount;
     }
 
-    public DiscountDto(final Discount discount) {
+    public DiscountResponse(final Discount discount) {
         this(discount.getDiscountType().name(), discount.getAmount());
     }
 

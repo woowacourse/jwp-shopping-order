@@ -1,26 +1,20 @@
-package cart.dto;
+package cart.dto.order;
 
-import cart.domain.Product;
-
-public class ProductResponse {
+public class OrderProductRequest {
 
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
 
-    private ProductResponse() {
+    private OrderProductRequest() {
     }
 
-    public ProductResponse(Long id, String name, int price, String imageUrl) {
+    public OrderProductRequest(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {

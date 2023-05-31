@@ -1,17 +1,22 @@
-package cart.dto;
+package cart.dto.order;
 
 import cart.domain.Order;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderResponse {
 
-    private final Long orderId;
-    private final List<OrderItemResponse> orderItems;
+    @JsonProperty("orderId")
+    private Long id;
+    private List<OrderItemResponse> orderItems;
 
-    public OrderResponse(final Long orderId, final List<OrderItemResponse> orderItems) {
-        this.orderId = orderId;
+    private OrderResponse() {
+    }
+
+    public OrderResponse(final Long id, final List<OrderItemResponse> orderItems) {
+        this.id = id;
         this.orderItems = orderItems;
     }
 
@@ -23,8 +28,8 @@ public class OrderResponse {
         return new OrderResponse(order.getId(), responses);
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Long getId() {
+        return id;
     }
 
     public List<OrderItemResponse> getOrderItems() {

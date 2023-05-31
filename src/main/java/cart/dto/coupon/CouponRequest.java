@@ -1,11 +1,13 @@
-package cart.dto;
+package cart.dto.coupon;
 
 public class CouponRequest {
 
-    private final String name;
-    private final String type;
-    private final int amount;
+    private String name;
+    private String type;
+    private int amount;
 
+    private CouponRequest() {
+    }
 
     public CouponRequest(final String name, final String type, final int amount) {
         this.name = name;

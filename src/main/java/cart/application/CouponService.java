@@ -3,7 +3,7 @@ package cart.application;
 import cart.dao.CouponDao;
 import cart.domain.Coupon;
 import cart.domain.Discount;
-import cart.dto.CouponRequest;
+import cart.dto.coupon.CouponRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
