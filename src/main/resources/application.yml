@@ -4,4 +4,4 @@ spring:
       mode: always
 
   profiles:
-    active: prod
+    default: local

@@ -3,6 +3,7 @@ package cart.step2.coupon.persist;
 import cart.step2.coupon.domain.Coupon;
 import cart.step2.coupon.domain.CouponEntity;
 import cart.step2.coupon.domain.repository.CouponRepository;
+import cart.step2.coupon.exception.CouponNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class CouponRepositoryMapper implements CouponRepository {
     @Override
     public Coupon findById(final Long couponId) {
         return couponDao.findById(couponId)
-                .orElseThrow(() -> new IllegalArgumentException("쿠폰을 찾을 수 없습니다. 쿠폰 ID가 일치하는지 확인해주세요."))
+                .orElseThrow(() -> CouponNotFoundException.THROW)
                 .toDomain();
     }
 

@@ -1,6 +1,5 @@
 package cart.step2.coupon.persist;
 
-import cart.step2.coupon.domain.Coupon;
 import cart.step2.coupon.domain.CouponEntity;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
