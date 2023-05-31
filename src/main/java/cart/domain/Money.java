@@ -23,6 +23,20 @@ public class Money {
         }
     }
 
+    public Money multiply(int multiplicand) {
+        BigDecimal result = value.multiply(BigDecimal.valueOf(multiplicand));
+        return new Money(result);
+    }
+
+    public Money add(Money otherMoney) {
+        BigDecimal result = value.add(otherMoney.value);
+        return new Money(result);
+    }
+
+    public boolean isNotSameValue(BigDecimal otherValue) {
+        return !this.value.equals(otherValue);
+    }
+
     public BigDecimal getValue() {
         return value;
     }
@@ -42,10 +56,5 @@ public class Money {
     @Override
     public int hashCode() {
         return Objects.hash(value);
-    }
-
-    public Money multiply(int multiplicand) {
-        BigDecimal result = value.multiply(BigDecimal.valueOf(multiplicand));
-        return new Money(result);
     }
 }
