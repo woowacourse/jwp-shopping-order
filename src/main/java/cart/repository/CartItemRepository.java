@@ -36,7 +36,7 @@ public class CartItemRepository {
                         it.getQuantity(),
                         productDao.getProductById(it.getProductId()).toProduct(),
                         memberDao.getMemberById(it.getMemberId()).toMember()
-                        ))
+                ))
                 .collect(Collectors.toList());
     }
 
@@ -48,5 +48,17 @@ public class CartItemRepository {
     public int findQuantityOf(final Long id) {
         final CartItem cartItem = cartItemDao.findById(id);
         return cartItem.getQuantity();
+    }
+
+    public CartItem findById(final Long id) {
+        return cartItemDao.findById(id);
+    }
+
+    public void deleteById(final Long id) {
+        cartItemDao.deleteById(id);
+    }
+
+    public void updateQuantity(final CartItem cartItem) {
+        cartItemDao.updateQuantity(cartItem);
     }
 }
