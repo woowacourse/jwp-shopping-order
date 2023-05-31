@@ -47,6 +47,9 @@ public class OrderService {
 
         final Long savedOrderId = orderRepository.save(newOrder).getId();
 
+        for (CartItem findCartItem : findCartItems) {
+            cartItemRepository.deleteById(findCartItem.getId(), member.getId());
+        }
         memberCouponRepository.useMemberCoupon(memberId, memberCoupon.getId());
         return savedOrderId;
     }
