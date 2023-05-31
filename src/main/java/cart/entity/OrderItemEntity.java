@@ -1,5 +1,8 @@
 package cart.entity;
 
+import cart.domain.OrderItem;
+import cart.domain.Product;
+
 public class OrderItemEntity {
 
     private Long id;
@@ -24,6 +27,12 @@ public class OrderItemEntity {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
+    }
+
+    public static OrderItemEntity from(OrderItem orderItem, Long orderId) {
+        Product product = orderItem.getProduct();
+        return new OrderItemEntity(orderId, product.getId(), orderItem.getQuantity(), product.getName(),
+                product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {

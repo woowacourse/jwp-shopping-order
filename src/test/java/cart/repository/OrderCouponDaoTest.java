@@ -4,6 +4,7 @@ import static cart.fixture.MemberFixture.MEMBER;
 import static cart.fixture.ProductFixture.CHICKEN;
 import static cart.fixture.ProductFixture.PIZZA;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 import cart.domain.Coupon;
 import cart.domain.CouponType;
@@ -56,6 +57,28 @@ class OrderCouponDaoTest {
 
         // then
         assertThat(actual).isPositive();
+    }
+
+    @Test
+    void 배치_세이브_테스트() {
+        // given
+        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId());
+        OrderItemEntity orderItemChicken = getOrderItemEntity(1L, orderEntity.getId(), CHICKEN, 10);
+        OrderItemEntity orderItemPizza = getOrderItemEntity(2L, orderEntity.getId(), PIZZA, 5);
+        Coupon coupon = new Coupon(1L, "10% 쿠폰", CouponType.RATE, 10);
+        insertMember(MEMBER);
+        insertProduct(CHICKEN);
+        insertProduct(PIZZA);
+        insertCoupon(coupon);
+        insertOrder(orderEntity);
+        insertOrderItem(orderItemChicken);
+        insertOrderItem(orderItemPizza);
+        List<OrderCouponEntity> orderCouponEntities = List.of(
+                new OrderCouponEntity(orderItemChicken.getId(), coupon.getId()),
+                new OrderCouponEntity(orderItemChicken.getId(), coupon.getId()));
+
+        // when
+        assertThatNoException().isThrownBy(() -> orderCouponDao.batchSave(orderCouponEntities));
     }
 
     @Test

@@ -1,5 +1,7 @@
 package cart.repository;
 
+import static java.util.stream.Collectors.toList;
+
 import cart.entity.OrderCouponEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,6 +34,14 @@ public class OrderCouponDao {
     public Long save(OrderCouponEntity orderCouponEntity) {
         final SqlParameterSource source = new BeanPropertySqlParameterSource(orderCouponEntity);
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
+    }
+
+    public void batchSave(List<OrderCouponEntity> orderCouponEntities) {
+        final SqlParameterSource[] array = orderCouponEntities.stream()
+                .map(BeanPropertySqlParameterSource::new)
+                .collect(toList())
+                .toArray(new SqlParameterSource[orderCouponEntities.size()]);
+        simpleJdbcInsert.executeBatch(array);
     }
 
     public List<OrderCouponEntity> findByOrderId(Long orderId) {

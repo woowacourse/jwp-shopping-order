@@ -16,6 +16,7 @@ public class OrderCouponEntity {
         this.couponId = couponId;
     }
 
+
     public Long getId() {
         return id;
     }

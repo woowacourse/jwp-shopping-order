@@ -1,5 +1,7 @@
 package cart.entity;
 
+import cart.domain.Order;
+
 public class OrderEntity {
 
     private Long id;
@@ -12,6 +14,10 @@ public class OrderEntity {
     public OrderEntity(Long id, Long memberId) {
         this.id = id;
         this.memberId = memberId;
+    }
+
+    public static OrderEntity from(Order order) {
+        return new OrderEntity(order.getMemberId());
     }
 
     public Long getId() {

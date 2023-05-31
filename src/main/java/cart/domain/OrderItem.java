@@ -19,4 +19,20 @@ public class OrderItem {
         this.quantity = quantity;
         this.coupons = coupons;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public List<Coupon> getCoupons() {
+        return coupons;
+    }
 }
