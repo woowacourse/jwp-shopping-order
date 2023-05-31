@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
-@Import({MemberDao.class, CouponDao.class, MemberCouponDao.class})
+@Import({MemberDao.class})
 class MemberDaoTest extends DaoTest {
 
     @Autowired

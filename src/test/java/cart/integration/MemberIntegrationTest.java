@@ -89,7 +89,7 @@ public class MemberIntegrationTest extends IntegrationTest {
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("errorCode", equalTo(MEMBER_DUPLICATE_NAME.name()))
-            .body("errorMessage", containsInAnyOrder("이미 등록된 사용자 이름입니다."));
+            .body("errorMessage", equalTo("이미 등록된 사용자 이름입니다."));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class MemberIntegrationTest extends IntegrationTest {
             .post("/users/login")
             .then()
             .body("errorCode", equalTo(MEMBER_NOT_FOUND.name()))
-            .body("errorMessage", containsInAnyOrder("사용자 정보를 찾을 수 없습니다."));
+            .body("errorMessage", equalTo("사용자 정보를 찾을 수 없습니다."));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class MemberIntegrationTest extends IntegrationTest {
             .post("/users/login")
             .then()
             .body("errorCode", equalTo(MEMBER_PASSWORD_INVALID.name()))
-            .body("errorMessage", containsInAnyOrder("비밀번호가 일치하지 않습니다."));
+            .body("errorMessage", equalTo("비밀번호가 일치하지 않습니다."));
     }
 
     @Test

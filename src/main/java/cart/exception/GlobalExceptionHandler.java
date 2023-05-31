@@ -22,45 +22,45 @@ public class GlobalExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> methodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponses> methodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e);
         final List<String> errorMessage = getErrorMessage(e);
-        final ErrorResponse errorResponse = new ErrorResponse(INVALID_REQUEST, errorMessage);
+        final ErrorResponses errorResponse = new ErrorResponses(INVALID_REQUEST, errorMessage);
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> authenticationException(final AuthenticationException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = new ErrorResponse(UNAUTHORIZED, List.of(UNAUTHORIZED.getMessage()));
+        final ErrorResponse errorResponse = new ErrorResponse(UNAUTHORIZED, UNAUTHORIZED.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ErrorResponse> forbiddenException(final ForbiddenException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = new ErrorResponse(FORBIDDEN, List.of(FORBIDDEN.getMessage()));
+        final ErrorResponse errorResponse = new ErrorResponse(FORBIDDEN, FORBIDDEN.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> notFoundException(final NotFoundException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), List.of(e.getErrorCode().getMessage()));
+        final ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorCode().getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> badRequestException(final BadRequestException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), List.of(e.getErrorCode().getMessage()));
+        final ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorCode().getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(DBException.class)
     public ResponseEntity<ErrorResponse> dbException(final DBException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), List.of(e.getErrorCode().getMessage()));
+        final ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorCode().getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> exception(final Exception e) {
         log.error(INTERNAL_SERVER_ERROR.getMessage(), e);
         final ErrorResponse errorResponse = new ErrorResponse(INTERNAL_SERVER_ERROR,
-            List.of(INTERNAL_SERVER_ERROR.getMessage()));
+            INTERNAL_SERVER_ERROR.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 

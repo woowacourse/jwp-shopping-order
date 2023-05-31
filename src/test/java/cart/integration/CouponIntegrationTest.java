@@ -91,7 +91,7 @@ public class CouponIntegrationTest extends IntegrationTest {
             .post("/coupons")
             .then()
             .body("errorCode", equalTo(COUPON_DUPLICATE.name()))
-            .body("errorMessage", containsInAnyOrder("이미 존재하는 쿠폰 정보입니다."));
+            .body("errorMessage", equalTo("이미 존재하는 쿠폰 정보입니다."));
     }
 
     @Test
@@ -130,6 +130,6 @@ public class CouponIntegrationTest extends IntegrationTest {
             .get("/coupons/1")
             .then()
             .body("errorCode", equalTo(COUPON_NOT_FOUND.name()))
-            .body("errorMessage", containsInAnyOrder("쿠폰 정보를 찾을 수 없습니다."));
+            .body("errorMessage", equalTo("쿠폰 정보를 찾을 수 없습니다."));
     }
 }

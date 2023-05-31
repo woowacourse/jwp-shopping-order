@@ -2,12 +2,11 @@ package cart.exception;
 
 import java.util.List;
 
-public class ErrorResponse {
-
+public class ErrorResponses {
     private final ErrorCode errorCode;
-    private final String errorMessage;
+    private final List<String> errorMessage;
 
-    public ErrorResponse(final ErrorCode errorCode, final String errorMessage) {
+    public ErrorResponses(final ErrorCode errorCode, final List<String> errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
@@ -16,7 +15,7 @@ public class ErrorResponse {
         return errorCode;
     }
 
-    public String getErrorMessage() {
+    public List<String> getErrorMessage() {
         return errorMessage;
     }
 }
