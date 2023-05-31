@@ -33,7 +33,7 @@ public class Order {
         if (coupon.isAvailable(price)) {
             throw new IllegalArgumentException("사용할 수 없는 쿠폰입니다");
         }
-        return coupon.calculateDiscount(price) + shippingFee.getCharge();
+        return price - coupon.calculateDiscount(price) + shippingFee.getCharge();
     }
 
     public Long getId() {

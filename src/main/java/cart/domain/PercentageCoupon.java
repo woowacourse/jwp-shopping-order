@@ -23,10 +23,10 @@ public class PercentageCoupon implements Coupon{
         }
         double discountPrice = totalPrice * discountPercentage;
         if (discountPrice > couponInfo.getMaxPrice()) {
-            return totalPrice - couponInfo.getMaxPrice();
+            return couponInfo.getMaxPrice();
         }
-        // TODO: 5/29/23 이거 반올림? 
-        return totalPrice - (int)discountPrice;
+        // TODO: 5/29/23 이거 반올림?
+        return (int)discountPrice;
     }
 
     @Override
