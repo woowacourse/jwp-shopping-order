@@ -35,11 +35,12 @@ CREATE TABLE cart_item
 
 CREATE TABLE orders
 (
-    id         BIGINT    NOT NULL AUTO_INCREMENT,
-    member_id  BIGINT    NOT NULL,
-    used_point INT       NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id           BIGINT    NOT NULL AUTO_INCREMENT,
+    member_id    BIGINT    NOT NULL,
+    used_point   INT       NOT NULL,
+    delivery_fee INT       NOT NULL,
+    created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
