@@ -30,22 +30,6 @@ public class ProductDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<Product> getAllProducts() {
-		String sql = "SELECT * FROM product";
-		return jdbcTemplate.query(sql, (rs, rowNum) -> {
-			Long productId = rs.getLong("id");
-			String name = rs.getString("name");
-			int price = rs.getInt("price");
-			String imageUrl = rs.getString("image_url");
-			return new Product(productId, name, price, imageUrl);
-		});
-	}
-
-	public ProductEntity getProductById(Long productId) {
-		String sql = "SELECT * FROM product WHERE id = ?";
-		return jdbcTemplate.queryForObject(sql, productRowMapper, productId);
-	}
-
 	public Long createProduct(Product product) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -63,6 +47,22 @@ public class ProductDao {
 		}, keyHolder);
 
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
+	}
+
+	public List<Product> getAllProducts() {
+		String sql = "SELECT * FROM product";
+		return jdbcTemplate.query(sql, (rs, rowNum) -> {
+			Long productId = rs.getLong("id");
+			String name = rs.getString("name");
+			int price = rs.getInt("price");
+			String imageUrl = rs.getString("image_url");
+			return new Product(productId, name, price, imageUrl);
+		});
+	}
+
+	public ProductEntity getProductById(Long productId) {
+		String sql = "SELECT * FROM product WHERE id = ?";
+		return jdbcTemplate.queryForObject(sql, productRowMapper, productId);
 	}
 
 	public void updateProduct(Long productId, Product product) {
