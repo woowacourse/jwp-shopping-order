@@ -4,6 +4,7 @@ import cart.domain.product.Product;
 
 import java.util.List;
 
+
 public interface ProductRepository {
     Long save(Product product);
 
@@ -11,7 +12,7 @@ public interface ProductRepository {
 
     Product findById(Long id);
 
-    void update(Long productId, Product product);
+    void update(Product product);
 
     void deleteById(Long id);
 }

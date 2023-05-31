@@ -48,11 +48,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void update(Long productId, Product product) {
-        int countOfUpdatedProduct = productDao.updateProduct(productId, toEntity(product));
+    public void update(Product product) {
+        int countOfUpdatedProduct = productDao.updateProduct(product.getId(), toEntity(product));
 
         if (countOfUpdatedProduct == 0) {
-            throw new PersistenceException(productId + "에 해당하는 상품이 없습니다.");
+            throw new PersistenceException(product.getId() + "에 해당하는 상품이 없습니다.");
         }
     }
 
