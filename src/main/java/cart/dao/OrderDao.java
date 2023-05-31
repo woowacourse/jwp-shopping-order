@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.OrderEntity;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,4 +49,8 @@ public class OrderDao {
         }
     }
 
+    public List<OrderEntity> findAllByMemberId(long memberId) {
+        String sql = "SELECT * from `order` WHERE member_id = ?";
+        return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
+    }
 }

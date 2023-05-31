@@ -1,21 +1,28 @@
 package cart.domain;
 
 import cart.exception.IllegalOrderException;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Order {
 
     private Long id;
-    private List<OrderItem> items;
+    private final List<OrderItem> items;
+    private final Timestamp createdAt;
 
     public Order(List<OrderItem> items) {
-        this(null, items);
+        this(items, null);
     }
 
-    public Order(Long id, List<OrderItem> items) {
+    public Order(List<OrderItem> items, Timestamp createdAt) {
+        this(null, items, createdAt);
+    }
+
+    public Order(Long id, List<OrderItem> items, Timestamp createdAt) {
         validate(items);
         this.id = id;
         this.items = items;
+        this.createdAt = createdAt;
     }
 
     private void validate(List<OrderItem> items) {
@@ -36,5 +43,9 @@ public class Order {
 
     public List<OrderItem> getItems() {
         return items;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 }

@@ -9,7 +9,9 @@ import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
 import cart.domain.Quantity;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class OrderMapper {
@@ -30,8 +32,12 @@ public class OrderMapper {
     public static OrderItem toOrderItem(OrderItemProductDto orderItemProductDto) {
         return new OrderItem(
             orderItemProductDto.getOrderItemId(),
-            new Product(orderItemProductDto.getProductId(), orderItemProductDto.getProductName(), Money.from(orderItemProductDto.getPrice()),
-                orderItemProductDto.getProductImageUrl()),
+            new Product(
+                orderItemProductDto.getProductId(),
+                orderItemProductDto.getProductName(),
+                Money.from(orderItemProductDto.getPrice()),
+                orderItemProductDto.getProductImageUrl()
+            ),
             Quantity.from(orderItemProductDto.getQuantity())
         );
     }
@@ -42,12 +48,22 @@ public class OrderMapper {
         );
     }
 
-    public static Order toOrder(OrderEntity orderEntity, List<OrderItemProductDto> orderItemProducts) {
+    public static Order toOrder(OrderEntity orderEntity,
+        List<OrderItemProductDto> orderItemProducts) {
         List<OrderItem> orderItems = orderItemProducts.stream()
             .map(OrderMapper::toOrderItem)
             .collect(Collectors.toList());
-        return new Order(orderEntity.getId(), orderItems);
+        return new Order(orderEntity.getId(), orderItems, orderEntity.getCreatedAt());
+    }
 
+    public static List<Order> toOrdersSortedById(
+        Map<OrderEntity, List<OrderItemProductDto>> orderProductsByOrderEntity) {
+        return orderProductsByOrderEntity.entrySet()
+            .stream()
+            .map(orderWithItem -> OrderMapper.toOrder(orderWithItem.getKey(),
+                orderWithItem.getValue()))
+            .sorted(Comparator.comparing(Order::getId))
+            .collect(Collectors.toList());
     }
 
 }

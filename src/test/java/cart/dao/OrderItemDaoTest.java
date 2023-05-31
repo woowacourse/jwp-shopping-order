@@ -6,7 +6,9 @@ import cart.dao.dto.OrderItemProductDto;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.dao.entity.ProductEntity;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,21 +53,16 @@ class OrderItemDaoTest {
     @DisplayName("주문번호에 따른 모든 주문 상품을 조회할 수 있다.")
     void findAllByOrderId() {
         // given
-        OrderEntity orderEntity = new OrderEntity(1L);
-        long orderId = orderDao.save(orderEntity);
-        OrderItemEntity chicken = new OrderItemEntity(orderId, 1L, 3, 10_000);
-        OrderItemEntity pizza = new OrderItemEntity(orderId, 2L, 2, 20_000);
+        long orderId = saveOrder(
+            new ProductEntity(1L, "치킨", "chickenImg", 10000),
+            new ProductEntity(3L, "피자", "pizzaImg", 13000));
 
-        // when
-        orderItemDao.batchInsert(List.of(chicken, pizza));
-
-        // then
+        // when, then
         assertThat(orderItemDao.findAllByOrderId(orderId))
             .usingRecursiveComparison()
-            .comparingOnlyFields("orderItemId", "productId")
             .isEqualTo(List.of(
-                new OrderItemProductDto(1L, 1L, 0, "상품명", 0, "img"),
-                new OrderItemProductDto(2L, 2L, 0, "상품명", 0, "img")));
+                new OrderItemProductDto(orderId, 1L, 1L, 2, "치킨", 10000, "chickenImg"),
+                new OrderItemProductDto(orderId, 2L, 3L, 2, "피자", 13000, "pizzaImg")));
     }
 
     @Test
@@ -75,7 +72,7 @@ class OrderItemDaoTest {
         ProductEntity productEntity = new ProductEntity(1L, "치킨", "chickenImg", 10000);
         long productId = productEntity.getId();
         int priceAtOrderTime = productEntity.getPrice();
-        long orderId = saveOrder(productId, priceAtOrderTime);
+        long orderId = saveOrder(productEntity);
 
         // when
         int priceToUpdate = 20000;
@@ -86,16 +83,19 @@ class OrderItemDaoTest {
         assertThat(orderItems)
             .usingRecursiveComparison()
             .isEqualTo(List.of(
-                new OrderItemProductDto(1L, productId, 2, productEntity.getName(), priceAtOrderTime,
+                new OrderItemProductDto(orderId, 1L, productId, 2, productEntity.getName(), priceAtOrderTime,
                     productEntity.getImageUrl())
             ));
     }
 
-    private long saveOrder(long productId, int priceAtOrderTime) {
+    private long saveOrder(ProductEntity... productEntities) {
         OrderEntity orderEntity = new OrderEntity(1L);
         long orderId = orderDao.save(orderEntity);
-        OrderItemEntity chicken = new OrderItemEntity(orderId, productId, 2, priceAtOrderTime);
-        orderItemDao.batchInsert(List.of(chicken));
+
+        List<OrderItemEntity> orderItemsToSave = Arrays.stream(productEntities)
+            .map(product -> new OrderItemEntity(orderId, product.getId(), 2, product.getPrice()))
+            .collect(Collectors.toList());
+        orderItemDao.batchInsert(orderItemsToSave);
         return orderId;
     }
 
@@ -103,6 +103,30 @@ class OrderItemDaoTest {
         ProductDao productDao = new ProductDao(jdbcTemplate);
         productDao.updateProduct(entity.getId(),
             new ProductEntity(entity.getId(), entity.getName(), entity.getImageUrl(), price));
+    }
+
+    @Test
+    @DisplayName("주문 id 여러 개에 대한 모든 주문 상품을 조회할 수 있다.")
+    void findAllByOrderIds() {
+        // given
+        long orderId1 = saveOrder(
+            new ProductEntity(1L, "치킨", "chickenImg", 10000),
+            new ProductEntity(3L, "피자", "pizzaImg", 13000));
+        long orderId2 = saveOrder(
+            new ProductEntity(1L, "치킨", "chickenImg", 10000));
+
+        // when
+        List<OrderItemProductDto> orderItemProducts = orderItemDao.findAllByOrderIds(
+            List.of(orderId1, orderId2));
+
+        // then
+        assertThat(orderItemProducts)
+            .usingRecursiveComparison()
+            .isEqualTo(List.of(
+                new OrderItemProductDto(orderId1, 1L, 1L, 2, "치킨", 10000, "chickenImg"),
+                new OrderItemProductDto(orderId1, 2L, 3L, 2, "피자", 13000, "pizzaImg"),
+                new OrderItemProductDto(orderId2, 3L, 1L, 2, "치킨", 10000, "chickenImg")
+            ));
     }
 
 }

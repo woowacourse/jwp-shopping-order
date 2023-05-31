@@ -76,18 +76,21 @@ class OrderRepositoryTest {
             Optional.of(new OrderEntity(1L, 1L, createdAt)));
         given(orderItemDao.findAllByOrderId(1L)).willReturn(
             List.of(
-                new OrderItemProductDto(1L, 1L, 2, "치킨", 10_000, "chickenImg"),
-                new OrderItemProductDto(2L, 2L, 1, "피자", 20_000, "pizzaImg")));
+                new OrderItemProductDto(1L, 1L, 1L, 2, "치킨", 10_000, "chickenImg"),
+                new OrderItemProductDto(1L, 2L, 2L, 1, "피자", 20_000, "pizzaImg")));
 
         // when
         Order order = orderRepository.findById(1L);
 
         // then
-        assertThat(order).usingRecursiveComparison().isEqualTo(new Order(1L, List.of(
-            new OrderItem(1L, new Product(1L, "치킨", Money.from(10_000), "chickenImg"),
-                Quantity.from(2)),
-            new OrderItem(2L, new Product(2L, "피자", Money.from(20_000), "pizzaImg"),
-                Quantity.from(1)))));
+        assertThat(order).usingRecursiveComparison().isEqualTo(new Order(
+            1L,
+            List.of(
+                new OrderItem(1L, new Product(1L, "치킨", Money.from(10_000), "chickenImg"),
+                    Quantity.from(2)),
+                new OrderItem(2L, new Product(2L, "피자", Money.from(20_000), "pizzaImg"),
+                    Quantity.from(1))),
+            createdAt));
     }
 
     @Test
@@ -100,6 +103,43 @@ class OrderRepositoryTest {
         // when, then
         assertThatThrownBy(() -> orderRepository.findById(1L)).isInstanceOf(
             IllegalOrderException.class);
+    }
+
+    @Test
+    @DisplayName("사용자의 전체 주문 내역을 조회할 수 있다.")
+    void findAllByMemberId() {
+        // given
+        long memberId = 1L;
+        LocalDateTime time = LocalDateTime.of(2023, 6, 1, 12, 41, 0);
+        Timestamp createdAt = Timestamp.valueOf(time);
+        given(orderDao.findAllByMemberId(anyLong())).willReturn(
+            List.of(
+                new OrderEntity(1L, memberId, createdAt),
+                new OrderEntity(2L, memberId, createdAt)));
+        given(orderItemDao.findAllByOrderIds(List.of(1L, 2L))).willReturn(List.of(
+            new OrderItemProductDto(1L, 1L, 1L, 2, "치킨", 10_000, "chickenImg"),
+            new OrderItemProductDto(1L, 2L, 2L, 1, "피자", 20_000, "pizzaImg"),
+            new OrderItemProductDto(2L, 4L, 1L, 4, "치킨", 10_000, "chickenImg")));
+
+        // when
+        List<Order> orders = orderRepository.findAllByMemberId(memberId);
+
+        // then
+        assertThat(orders).hasSize(2);
+        assertThat(orders).usingRecursiveComparison()
+            .isEqualTo(
+                List.of(
+                    new Order(1L,
+                        List.of(
+                            new OrderItem(1L, new Product(1L, "치킨", Money.from(10_000), "chickenImg"),
+                                Quantity.from(2)),
+                            new OrderItem(2L, new Product(2L, "피자", Money.from(20_000), "pizzaImg"),
+                                Quantity.from(1))), createdAt),
+                    new Order(2L,
+                        List.of(
+                            new OrderItem(4L, new Product(1L, "치킨", Money.from(10_000), "chickenImg"),
+                                Quantity.from(4))), createdAt)
+            ));
     }
 
 }

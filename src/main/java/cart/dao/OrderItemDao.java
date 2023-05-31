@@ -3,10 +3,12 @@ package cart.dao;
 import cart.dao.dto.OrderItemProductDto;
 import cart.dao.entity.OrderItemEntity;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,7 @@ public class OrderItemDao {
 
     private static final RowMapper<OrderItemProductDto> ORDER_PRODUCT_ROW_MAPPER = (rs, rowNum) ->
         new OrderItemProductDto(
+            rs.getLong("order_item.order_id"),
             rs.getLong("order_item.id"),
             rs.getLong("product.id"),
             rs.getInt("order_item.quantity"),
@@ -26,12 +29,14 @@ public class OrderItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public OrderItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
             .withTableName("order_item")
             .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public void batchInsert(List<OrderItemEntity> orderItemEntities) {
@@ -44,11 +49,20 @@ public class OrderItemDao {
     }
 
     public List<OrderItemProductDto> findAllByOrderId(long orderId) {
-        String sql = "SELECT order_item.id, product.id, order_item.quantity, product.name, "
+        String sql = "SELECT order_item.order_id, order_item.id, product.id, order_item.quantity, product.name, "
             + "order_item.price_at_order_time, product.image_url FROM order_item "
             + "INNER JOIN product ON order_item.product_id = product.id "
             + "WHERE order_id = ?";
         return jdbcTemplate.query(sql, ORDER_PRODUCT_ROW_MAPPER, orderId);
     }
 
+    public List<OrderItemProductDto> findAllByOrderIds(List<Long> orderIds) {
+        String sql = "SELECT order_item.order_id, order_item.id, product.id, order_item.quantity, product.name, "
+            + "order_item.price_at_order_time, product.image_url "
+            + "FROM order_item "
+            + "INNER JOIN product ON order_item.product_id = product.id "
+            + "WHERE order_id IN (:orderIds)";
+
+        return namedParameterJdbcTemplate.query(sql, Map.of("orderIds", orderIds), ORDER_PRODUCT_ROW_MAPPER);
+    }
 }
