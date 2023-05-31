@@ -4,11 +4,34 @@ import cart.exception.NotEnoughQuantityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("Quantity 단위 테스트")
 class QuantityTest {
+
+    @Test
+    @DisplayName("수량이 양수인 경우 객체 생성에 성공한다.")
+    void construct_success_when_value_is_positive() {
+        // given
+        assertThatCode(() -> new Quantity(50))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("수량이 0인 경우 객체 생성에 성공한다.")
+    void construct_success_when_value_is_zero() {
+        // given
+        assertThatCode(() -> new Quantity(0))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("수량이 음수인 경우 객체 생성에 실패한다.")
+    void construct_success_when_value_is_negative() {
+        // given
+        assertThatThrownBy(() -> new Quantity(-10))
+                .isInstanceOf(NotEnoughQuantityException.class);
+    }
 
     @Test
     @DisplayName("뺄셈에 성공한다.")

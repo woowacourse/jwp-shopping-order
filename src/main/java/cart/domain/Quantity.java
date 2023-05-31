@@ -11,13 +11,12 @@ public final class Quantity {
     private final int value;
 
     public Quantity(final int value) {
+        validateNotNegative(value);
         this.value = value;
     }
 
     public Quantity subtract(final Quantity quantity) {
-        final int subtractedValue = value - quantity.value;
-        validateNotNegative(subtractedValue);
-        return new Quantity(subtractedValue);
+        return new Quantity(value - quantity.value);
     }
 
     private void validateNotNegative(final int value) {
