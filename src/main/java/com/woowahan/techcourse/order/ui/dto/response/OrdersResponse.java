@@ -4,7 +4,10 @@ import java.util.List;
 
 public class OrdersResponse {
 
-    private final List<OrderResponse> orders;
+    private List<OrderResponse> orders;
+
+    private OrdersResponse() {
+    }
 
     public OrdersResponse(List<OrderResponse> orders) {
         this.orders = orders;
