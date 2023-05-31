@@ -10,6 +10,7 @@ import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,26 +87,6 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-//    @DisplayName("장바구니에 아이템이 멤버의 등급에 따라 가격이 할인된다")
-//    @Test
-//    void addCartItem() {
-//        //given
-//        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
-//
-//        //when
-//        requestOrder(member2, cartItemId4);
-//        ExtractableResponse<Response> response = requestGetCartItems(member2);
-//
-//        Optional<CartItemResponse> selectedCartItemResponse = response.jsonPath()
-//                .getList(".", CartItemResponse.class)
-//                .stream()
-//                .filter(cartItemResponse -> cartItemResponse.getId().equals(productId2))
-//                .findFirst();
-//
-//
-//        assertThat(selectedCartItemResponse.get().get).isEqualTo(5_000);
-//    }
-
     private ExtractableResponse<Response> requestOrder(Member member, Long cartItemId) {
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -131,7 +112,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void getCreatedOrder() {
+    @DisplayName("상품 할인 적용")
+    public void product_discount() {
         //given
         Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
 
@@ -148,19 +130,37 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.CREATED.value())
                 .extract().header("Location");
 
-        System.out.println(location);
+        OrderResponse orderResponse = given().log().all()
+                .when()
+                .get(location)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .jsonPath()
+                .getObject(".", OrderResponse.class);
 
-        // create product
-//        var location1 =
-//                given()
-//                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                        .body(product)
-//                        .when()
-//                        .post("/products")
-//                        .then()
-//                        .statusCode(HttpStatus.CREATED.value())
-//                        .extract().header("Location");
+        assertThat(orderResponse.getId()).isNotNull();
+        assertThat(orderResponse.getDiscountedTotalItemPrice()).isEqualTo(5_000);
+    }
 
+    @Test
+    @DisplayName("멤버 할인 적용")
+    public void member_discount() {
+        //given
+        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId));
+
+        //when
+        var location = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
+                .body(new OrderCreateRequest(List.of(
+                        new OrderItemRequest(cartItemId4, 1)
+                )))
+                .when()
+                .post("/orders")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
 
         OrderResponse orderResponse = given().log().all()
                 .when()
@@ -171,18 +171,42 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .jsonPath()
                 .getObject(".", OrderResponse.class);
 
+        assertThat(orderResponse.getId()).isNotNull();
+        assertThat(orderResponse.getDiscountedTotalItemPrice()).isEqualTo(9_000);
+    }
 
-        // get product
-//        var responseProduct = given().log().all()
-//                .when()
-//                .get(location)
-//                .then()
-//                .statusCode(HttpStatus.OK.value())
-//                .extract()
-//                .jsonPath()
-//                .getObject(".", ProductResponse.class);
+    @Test
+    @DisplayName("상품의 원가격, 할인된 가격, 배송비, 총구매금액을 구한다")
+    public void testAllPrices() {
+        //given
+        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
+
+        //when
+        var location = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
+                .body(new OrderCreateRequest(List.of(
+                        new OrderItemRequest(cartItemId4, 1)
+                )))
+                .when()
+                .post("/orders")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
+
+        OrderResponse orderResponse = given().log().all()
+                .when()
+                .get(location)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .jsonPath()
+                .getObject(".", OrderResponse.class);
 
         assertThat(orderResponse.getId()).isNotNull();
         assertThat(orderResponse.getDiscountedTotalItemPrice()).isEqualTo(5_000);
+        assertThat(orderResponse.getTotalItemPrice()).isEqualTo(10_000);
+        assertThat(orderResponse.getShippingFee()).isEqualTo(3_000);
+        assertThat(orderResponse.getTotalPrice()).isEqualTo(8_000);
     }
 }
