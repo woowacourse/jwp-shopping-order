@@ -37,14 +37,12 @@ public class OrderIntegrationTest extends IntegrationTest {
     CartItemDao cartItemDao;
 
     Member member;
-    Member member2;
 
     @Override
     @BeforeEach
     void setUp() {
         super.setUp();
         member = memberDao.findById(1L).get();
-        member2 = memberDao.findById(2L).get();
     }
 
     @Test
