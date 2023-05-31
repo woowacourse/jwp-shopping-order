@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
+import cart.domain.orderproduct.DeliveryFee;
 import cart.domain.orderproduct.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,7 +26,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("orders")
-                .usingColumns("member_id", "used_point")
+                .usingColumns("member_id", "used_point", "delivery_fee")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -40,19 +41,21 @@ public class OrderDao {
                 result.getLong("order_id"),
                 member,
                 new MemberPoint(result.getInt("used_point")),
+                new DeliveryFee(result.getInt("delivery_fee")),
                 result.getTimestamp("created_at").toLocalDateTime());
     };
 
     public Long insert(final Order order) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", order.getMemberId())
-                .addValue("used_point", order.getUsedPointValue());
+                .addValue("used_point", order.getUsedPointValue())
+                .addValue("delivery_fee", order.getDeliveryFeeValue());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public Optional<Order> findById(final Long id) {
-        final String sql = "SELECT o.id AS order_id, o.used_point, o.created_at, " +
+        final String sql = "SELECT o.id AS order_id, o.used_point, o.created_at, o.delivery_fee, " +
                 "m.id AS member_id, m.email, m.point " +
                 "FROM orders o " +
                 "JOIN member m ON m.id = o.member_id " +
@@ -65,7 +68,7 @@ public class OrderDao {
     }
 
     public List<Order> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT o.id AS order_id, o.used_point, o.created_at, " +
+        final String sql = "SELECT o.id AS order_id, o.used_point, o.created_at, o.delivery_fee, " +
                 "m.id AS member_id, m.email, m.point " +
                 "FROM orders o " +
                 "JOIN member m ON m.id = o.member_id " +

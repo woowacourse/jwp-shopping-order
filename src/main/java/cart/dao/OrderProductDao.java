@@ -3,9 +3,12 @@ package cart.dao;
 import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
+import cart.domain.orderproduct.DeliveryFee;
 import cart.domain.orderproduct.Order;
 import cart.domain.orderproduct.OrderProduct;
-import cart.domain.product.Product;
+import cart.domain.product.ProductImageUrl;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,19 +36,16 @@ public class OrderProductDao {
                 result.getLong("order_id"),
                 member,
                 new MemberPoint(result.getInt("used_point")),
+                new DeliveryFee(result.getInt("delivery_fee")),
                 result.getTimestamp("created_at").toLocalDateTime());
-        final Product product = new Product(
-                result.getLong("product_id"),
-                result.getString("name"),
-                result.getInt("price"),
-                result.getString("image_url"));
 
         return new OrderProduct(
                 result.getLong("orderproduct_id"),
-                order, product,
-                product.getProductName(),
-                product.getProductPrice(),
-                product.getProductImageUrl(),
+                order,
+                result.getLong("product_id"),
+                new ProductName(result.getString("product_name")),
+                new ProductPrice(result.getInt("product_price")),
+                new ProductImageUrl(result.getString("product_image_url")),
                 new Quantity(result.getInt("quantity")));
     };
 
@@ -72,13 +72,12 @@ public class OrderProductDao {
     }
 
     public List<OrderProduct> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT op.id AS orderproduct_id, op.quantity, " +
+        final String sql = "SELECT op.id AS orderproduct_id, op.product_id AS product_id, " +
+                "op.product_name, op.product_price, op.product_image_url, op.quantity, " +
                 "m.id AS member_id, m.email, " +
-                "o.id AS order_id, o.used_point, o.created_at, " +
-                "p.id AS product_id, p.name, p.price, p.image_url " +
+                "o.id AS order_id, o.used_point, o.delivery_fee, o.created_at, " +
                 "FROM order_product op " +
                 "JOIN orders o ON o.id = op.order_id " +
-                "JOIN product p ON p.id = op.product_id " +
                 "JOIN member m ON m.id = o.member_id " +
                 "WHERE m.id = ?";
 
@@ -86,13 +85,12 @@ public class OrderProductDao {
     }
 
     public List<OrderProduct> findAllByOrderId(final Long orderId) {
-        final String sql = "SELECT op.id AS orderproduct_id, op.quantity, " +
+        final String sql = "SELECT op.id AS orderproduct_id, op.product_id AS product_id, " +
+                "op.product_name, op.product_price, op.product_image_url, op.quantity, " +
                 "m.id AS member_id, m.email, " +
-                "o.id AS order_id, o.used_point, o.created_at, " +
-                "p.id AS product_id, p.name, p.price, p.image_url " +
+                "o.id AS order_id, o.used_point, o.delivery_fee, o.created_at, " +
                 "FROM order_product op " +
                 "JOIN orders o ON o.id = op.order_id " +
-                "JOIN product p ON p.id = op.product_id " +
                 "JOIN member m ON m.id = o.member_id " +
                 "WHERE o.id = ?";
 

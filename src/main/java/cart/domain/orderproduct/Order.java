@@ -11,17 +11,23 @@ public class Order {
     private Long id;
     private final Member member;
     private final MemberPoint usedPoint;
+    private final DeliveryFee deliveryFee;
     private LocalDateTime orderedAt;
 
-    public Order(final Member member, final MemberPoint usedPoint) {
+    public Order(final Member member, final MemberPoint usedPoint, final DeliveryFee deliveryFee) {
         this.member = member;
         this.usedPoint = usedPoint;
+        this.deliveryFee = deliveryFee;
     }
 
-    public Order(final Long id, final Member member, final MemberPoint usedPoint, final LocalDateTime orderedAt) {
+    public Order(final Long id, final Member member,
+                 final MemberPoint usedPoint,
+                 final DeliveryFee deliveryFee,
+                 final LocalDateTime orderedAt) {
         this.id = id;
         this.member = member;
         this.usedPoint = usedPoint;
+        this.deliveryFee = deliveryFee;
         this.orderedAt = orderedAt;
     }
 
@@ -43,6 +49,14 @@ public class Order {
 
     public Integer getUsedPointValue() {
         return usedPoint.getPoint();
+    }
+
+    public DeliveryFee getDeliveryFee() {
+        return deliveryFee;
+    }
+
+    public int getDeliveryFeeValue() {
+        return deliveryFee.getDeliveryFee();
     }
 
     public LocalDateTime getOrderedAt() {

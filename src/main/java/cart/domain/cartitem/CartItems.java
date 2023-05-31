@@ -11,29 +11,36 @@ import java.util.stream.IntStream;
 
 public class CartItems {
 
-    public static final int SHIPPING_FEE = 3000;
+    public static final int DELIVERY_FEE = 3000;
 
     private final List<CartItem> cartItems;
+    private final int totalPrice;
+    private final int deliveryFee;
 
     public CartItems(final List<CartItem> cartItems) {
         this.cartItems = cartItems;
+        this.totalPrice = calculateTotalPrice(cartItems);
+        this.deliveryFee = calculateDeliveryFee(totalPrice);
     }
 
-    public int calculateTotalPrice() {
-        int totalPrice = cartItems.stream()
+    private int calculateTotalPrice(final List<CartItem> cartItems) {
+        return cartItems.stream()
                 .mapToInt(cartitem -> cartitem.getProductPrice() * cartitem.getQuantityValue())
                 .sum();
+    }
+
+    private int calculateDeliveryFee(final int totalPrice) {
         if (totalPrice >= 50_000) {
-            totalPrice -= SHIPPING_FEE;
+            return 0;
         }
-        return totalPrice;
+        return DELIVERY_FEE;
     }
 
     public List<OrderProduct> toOrderProducts(final Order order, final List<Product> products) {
         return IntStream.range(0, products.size())
                 .mapToObj(index -> new OrderProduct(
                         order,
-                        products.get(index),
+                        products.get(index).getId(),
                         products.get(index).getProductName(),
                         products.get(index).getProductPrice(),
                         products.get(index).getProductImageUrl(),
@@ -53,14 +60,16 @@ public class CartItems {
                 .collect(Collectors.toList());
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
-
     public Optional<CartItem> find(final Product product) {
         return cartItems.stream()
                 .filter(m -> m.getProduct().equals(product))
                 .findFirst();
+    }
+    public int getTotalPrice() {
+        return totalPrice;
+    }
 
+    public int getDeliveryFee() {
+        return deliveryFee;
     }
 }

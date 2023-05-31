@@ -7,6 +7,7 @@ import cart.dao.ProductDao;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
+import cart.domain.orderproduct.DeliveryFee;
 import cart.domain.orderproduct.Order;
 import cart.domain.orderproduct.OrderProduct;
 import cart.domain.product.Product;
@@ -32,7 +33,7 @@ public class OrderRepository {
     }
 
     public Long order(final CartItems cartItems, final Member member, final MemberPoint usedPoint) {
-        final Long orderId = orderDao.insert(new Order(member, usedPoint));
+        final Long orderId = orderDao.insert(new Order(member, usedPoint, new DeliveryFee(cartItems.getDeliveryFee())));
         final Order findOrder = orderDao.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
         final List<Product> products = productDao.findAllByIds(cartItems.getProductIds());

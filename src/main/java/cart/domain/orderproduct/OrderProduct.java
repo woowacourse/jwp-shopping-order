@@ -1,7 +1,6 @@
 package cart.domain.orderproduct;
 
 import cart.domain.cartitem.Quantity;
-import cart.domain.product.Product;
 import cart.domain.product.ProductImageUrl;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
@@ -12,22 +11,22 @@ public class OrderProduct {
 
     private final Long id;
     private final Order order;
-    private final Product product;
+    private final Long productId;
     private final ProductName productName;
     private final ProductPrice productPrice;
     private final ProductImageUrl productImageUrl;
     private final Quantity quantity;
 
-    public OrderProduct(final Order order, final Product product, final ProductName productName,
+    public OrderProduct(final Order order, final Long productId, final ProductName productName,
                         final ProductPrice productPrice, final ProductImageUrl productImageUrl, final Quantity quantity) {
-        this(null, order, product, productName, productPrice, productImageUrl, quantity);
+        this(null, order, productId, productName, productPrice, productImageUrl, quantity);
     }
 
-    public OrderProduct(final Long id, final Order order, final Product product, final ProductName productName,
+    public OrderProduct(final Long id, final Order order,final Long productId, final ProductName productName,
                         final ProductPrice productPrice, final ProductImageUrl productImageUrl, final Quantity quantity) {
         this.id = id;
         this.order = order;
-        this.product = product;
+        this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
@@ -46,12 +45,8 @@ public class OrderProduct {
         return order.getId();
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
     public Long getProductId() {
-        return product.getId();
+        return productId;
     }
 
     public ProductName getProductName() {
@@ -110,7 +105,6 @@ public class OrderProduct {
         return "OrderProduct{" +
                 "id=" + id +
                 ", order=" + order +
-                ", product=" + product +
                 ", productName=" + productName +
                 ", productPrice=" + productPrice +
                 ", productImageUrl=" + productImageUrl +
