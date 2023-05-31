@@ -44,7 +44,7 @@ create table if not exists order_item
 create table if not exists shipping_fee
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	fee int NOT NULL
+	fee BIGINT NOT NULL
 );
 
 create table if not exists shipping_discount_policy

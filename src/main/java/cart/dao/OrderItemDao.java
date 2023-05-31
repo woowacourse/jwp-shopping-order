@@ -51,9 +51,15 @@ public class OrderItemDao {
 //        simpleJdbcInsert.executeBatch(parameterSources);
 //    }
 
+    public List<OrderItemEntity> findAllByOrderId(final Long orderId) {
+        final String sql = "SELECT * FROM order_item WHERE order_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, orderId);
+    }
+
     public List<OrderItemEntity> findAllByOrderIds(final List<Long> orderIds) {
         if (orderIds.isEmpty()) {
             return Collections.emptyList();
+
         }
         final String sql = "SELECT * FROM order_item WHERE order_id IN (:ids)";
         SqlParameterSource parameters = new MapSqlParameterSource("ids", orderIds);

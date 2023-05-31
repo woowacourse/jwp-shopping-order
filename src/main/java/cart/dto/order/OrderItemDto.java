@@ -1,7 +1,6 @@
 package cart.dto.order;
 
 public class OrderItemDto {
-
     private Long cartItemId;
     private Long quantity;
 

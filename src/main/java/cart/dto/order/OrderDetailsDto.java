@@ -3,7 +3,6 @@ package cart.dto.order;
 import cart.dto.ProductResponse;
 
 public class OrderDetailsDto {
-
     private Long quantity;
     private ProductResponse productResponse;
 
