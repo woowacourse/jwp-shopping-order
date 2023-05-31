@@ -33,7 +33,8 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDetailResponse> findOrderDetailById(@PathVariable Long id) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<OrderDetailResponse> findOrderDetailById(Member member, @PathVariable Long id) {
+        final OrderDetailResponse response = orderService.findOrderDetailById(member, id);
+        return ResponseEntity.ok(response);
     }
 }

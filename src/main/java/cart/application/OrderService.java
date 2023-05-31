@@ -9,6 +9,7 @@ import cart.domain.CreditCard;
 import cart.domain.Member;
 import cart.domain.Point;
 import cart.dto.OrderCreateRequest;
+import cart.dto.OrderDetailResponse;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import java.util.List;
@@ -83,5 +84,9 @@ public class OrderService {
                 ))
                 .collect(Collectors.toUnmodifiableList());
         orderItemDao.create(orderItemEntities);
+    }
+
+    public OrderDetailResponse findOrderDetailById(Member member, final Long id) {
+        return null;
     }
 }
