@@ -12,6 +12,7 @@ import cart.exception.OrderException.InvalidOrder;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -49,6 +50,9 @@ public class OrderRepository {
         List<Order> orders = new ArrayList<>();
         Member member = memberDao.getMemberById(memberId);
         List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
+        if(orderEntities.isEmpty()){
+            return Collections.emptyList();
+        }
         for (OrderEntity orderEntity : orderEntities) {
             List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderEntity.getId());
             orders.add(new Order(

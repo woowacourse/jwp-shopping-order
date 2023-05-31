@@ -95,7 +95,6 @@ public class OrderService {
         return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails);
     }
 
-    // todo: 전체적으로 사용자 검증 필요
     public List<OrderResponse> getOrdersByMember(final Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         List<OrderResponse> orderResponses = new ArrayList<>();
