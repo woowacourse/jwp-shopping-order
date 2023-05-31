@@ -59,8 +59,7 @@ public class OrderService {
         }
         final MemberCoupon memberCoupon = memberCouponRepository.findById(couponId)
                 .orElseThrow(MemberCouponNotFoundException::new);
-        final MemberCoupon usedCoupon = memberCoupon.use();
-        return memberCouponRepository.save(usedCoupon);
+        return memberCoupon.use();
     }
 
     @Transactional(readOnly = true)
