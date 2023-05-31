@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.ProductService;
+import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import java.net.URI;
@@ -38,8 +39,8 @@ public class ProductApiController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        Long id = productService.createProduct(productRequest);
-        return ResponseEntity.created(URI.create("/products/" + id)).build();
+        final Product product = productService.createProduct(productRequest);
+        return ResponseEntity.created(URI.create("/products/" + product.getId())).build();
     }
 
     @PutMapping("/{id}")

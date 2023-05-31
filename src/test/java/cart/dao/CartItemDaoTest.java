@@ -58,8 +58,7 @@ class CartItemDaoTest {
 
     private Product createProduct(final String name, final int price, final String imageUrl) {
         final Product product = new Product(name, price, imageUrl);
-        final Long productId = productDao.createProduct(product);
-        return new Product(productId, product.getName(), product.getPrice(), product.getImageUrl());
+        return productDao.createProduct(product);
     }
 
 }
