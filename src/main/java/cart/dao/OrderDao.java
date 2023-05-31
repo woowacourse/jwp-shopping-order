@@ -27,6 +27,7 @@ public class OrderDao {
                     rs.getLong("id"),
                     rs.getLong("member_id"),
                     rs.getInt("used_point"),
+                    rs.getInt("delivery_fee"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
                     rs.getTimestamp("updated_at").toLocalDateTime()
             );
@@ -36,6 +37,7 @@ public class OrderDao {
                 rs.getLong("order_id"),
                 rs.getLong("member_id"),
                 rs.getInt("used_point"),
+                rs.getInt("delivery_fee"),
                 rs.getTimestamp("created_at").toLocalDateTime(),
                 null
         );
@@ -59,7 +61,7 @@ public class OrderDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("id")
                 .withTableName("orders")
-                .usingColumns("member_id", "used_point");
+                .usingColumns("member_id", "used_point", "delivery_fee");
     }
 
     public Long save(OrderEntity orderEntity) {
@@ -70,6 +72,7 @@ public class OrderDao {
         String sql = "SELECT o.id AS order_id, "
                 + "o.member_id AS member_id, "
                 + "o.created_at AS created_at, "
+                + "o.delivery_fee AS delivery_fee, "
                 + "op.id AS order_product_id, "
                 + "op.product_id AS product_id, "
                 + "op.product_name AS product_name, "
@@ -99,6 +102,7 @@ public class OrderDao {
     public List<OrderWithOrderProductEntities> findOrdersByMemberId(Long memberId) {
         String sql = "SELECT o.id AS order_id, "
                 + "o.member_id AS member_id, "
+                + "o.delivery_fee AS delivery_fee, "
                 + "o.created_at AS created_at, "
                 + "op.id AS order_product_id, "
                 + "op.product_id AS product_id, "

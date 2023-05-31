@@ -39,7 +39,7 @@ public class OrderRepository {
     private OrderEntity toEntity(Order order) {
         return new OrderEntity(
                 order.getId(), order.getMember().getId(),
-                order.getUsedPoint(), null, null
+                order.getUsedPoint(), order.getDeliveryFee(), null, null
         );
     }
 

@@ -8,28 +8,41 @@ public class Order {
     private final Long id;
     private final List<OrderProduct> orderProducts;
     private final Member member;
+    private final DeliveryFee deliveryFee;
     private final Point usedPoint;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public Order(final Long id, final List<OrderProduct> orderProducts, final Member member, final Point usedPoint,
+    public Order(final Long id, final List<OrderProduct> orderProducts, final Member member,
+                 final DeliveryFee deliveryFee, final Point usedPoint,
                  final LocalDateTime createdAt, final LocalDateTime updatedAt) {
         this.id = id;
         this.orderProducts = orderProducts;
         this.member = member;
+        this.deliveryFee = calculateDeliverFee(orderProducts);
         this.usedPoint = usedPoint;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     public Order(final Long id, final List<OrderProduct> orderProducts, final Member member, final int usedPoint) {
-        this(id, orderProducts, member, new Point(usedPoint), null, null);
+        this(id, orderProducts, member, calculateDeliverFee(orderProducts), new Point(usedPoint), null, null);
+    }
+
+    private static DeliveryFee calculateDeliverFee(List<OrderProduct> orderProducts) {
+        int totalPrice = orderProducts.stream()
+                .mapToInt(orderProduct -> orderProduct.getProduct().getPrice() * orderProduct.getQuantity())
+                .sum();
+
+        if(totalPrice < 50000) {
+            return DeliveryFee.DEFAULT;
+        }
+        return DeliveryFee.FREE;
     }
 
     public int getTotalPrice() {
         return orderProducts.stream()
-                .map(OrderProduct::getProduct)
-                .mapToInt(Product::getPrice)
+                .mapToInt(orderProduct -> orderProduct.getProduct().getPrice() * orderProduct.getQuantity())
                 .sum();
     }
 
@@ -43,6 +56,10 @@ public class Order {
 
     public Member getMember() {
         return member;
+    }
+
+    public int getDeliveryFee() {
+        return deliveryFee.getValue();
     }
 
     public int getUsedPoint() {

@@ -37,6 +37,7 @@ class OrderDaoTest {
     private final ProductEntity 두번째_상품_엔티티 = new ProductEntity(null,
             "피자", 20_000, "http://example.com/pizza.jpg", null, null
     );
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private OrderDao orderDao;
@@ -58,7 +59,7 @@ class OrderDaoTest {
         MemberEntity 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
         ProductEntity ID가_있는_상품 = 상품을_저장하고_ID를_갖는_상품을_리턴한다(상품_엔티티);
         int 사용한_포인트 = 10000;
-        OrderEntity 주문 = new OrderEntity(null, 멤버.getId(), 사용한_포인트, null, null);
+        OrderEntity 주문 = new OrderEntity(null, 멤버.getId(), 사용한_포인트, 3000, null, null);
 
         // when
         Long 저장된_주문_ID = orderDao.save(주문);
@@ -83,11 +84,11 @@ class OrderDaoTest {
         // given
         MemberEntity 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
         ProductEntity 첫번째_상품 = 상품을_저장하고_ID를_갖는_상품을_리턴한다(상품_엔티티);
-        OrderEntity 첫번째_주문 = new OrderEntity(null, 멤버.getId(), 10000, null, null);
+        OrderEntity 첫번째_주문 = new OrderEntity(null, 멤버.getId(), 10000, 3000, null, null);
         Long 저장된_첫번째_주문_ID = orderDao.save(첫번째_주문);
         orderProductDao.save(new OrderProductEntity(null, 저장된_첫번째_주문_ID, 첫번째_상품, 10));
 
-        OrderEntity 두번째_주문 = new OrderEntity(null, 멤버.getId(), 10000, null, null);
+        OrderEntity 두번째_주문 = new OrderEntity(null, 멤버.getId(), 10000, 3000, null, null);
         Long 저장된_두번째_주문_ID = orderDao.save(두번째_주문);
         ProductEntity 두번째_상품 = 상품을_저장하고_ID를_갖는_상품을_리턴한다(두번째_상품_엔티티);
         orderProductDao.save(new OrderProductEntity(null, 저장된_두번째_주문_ID, 두번째_상품, 10));
