@@ -20,10 +20,10 @@ public class CartItemRepository {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
-    public void add(final CartItem cartItem) {
+    public Long add(final CartItem cartItem) {
         CartItemEntity cartItemEntity = new CartItemEntity(cartItem.getMember().getId(), cartItem.getProduct().getId(), cartItem.getQuantity());
 
-        cartItemDao.insert(cartItemEntity);
+        return cartItemDao.insert(cartItemEntity);
     }
 
     public CartItem findById(final Long cartItemId) {
