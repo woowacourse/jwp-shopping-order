@@ -17,9 +17,9 @@
 
 ## 특정 멤버의 주문 전체 목록 조회하기
 - [x] GET 요청, URI = "/members/{memberId}/orders"인 API 작성
-- [] service에서 domain 객체 생성 (Orders)
-  - [] Order들의 List를 가지고 있다 
-- [] domain으로 dao에 요청 전송
+- [x] service에서 domain 객체 생성 (Orders)
+  - [x] Order들의 List를 가지고 있다 
+- [x] domain으로 dao에 요청 전송
 - [] dao에서 영속화 작업 수행
   - [] 전체 주문 목록을 조회하는 쿼리문 작성
 - [] OrdersResponse 생성

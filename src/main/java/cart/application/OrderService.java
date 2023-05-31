@@ -197,4 +197,17 @@ public class OrderService {
                 order.getDiscountedTotalItemPrice(), order.getShippingFee(),
                 order.getDiscountedTotalItemPrice() + order.getShippingFee());
     }
+
+    public List<OrderResponse> getAllOrders(Long memberId) {
+        List<Order> orders = orderDao.findByMemberId(memberId);
+
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Order order : orders) {
+            List<OrderedItem> orderedItems = orderedItemDao.findByOrderId(order.getId());
+            orderResponses.add(new OrderResponse(order.getId(), convertToResponse(orderedItems), null, order.getTotalItemPrice(),
+                    order.getDiscountedTotalItemPrice(), order.getShippingFee(),
+                    order.getDiscountedTotalItemPrice() + order.getShippingFee()));
+        }
+        return orderResponses;
+    }
 }
