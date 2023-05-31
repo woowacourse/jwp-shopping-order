@@ -18,21 +18,22 @@
 | GET        | /products      | 200        | 전체 상품을 조회한다.   |
 | GET        | /products/{id} | 200        | 특정 상품을 조회한다.   |
 | POST       | /products      | 201        | 상품을 추가한다.      |
-| POST       | /products      | 201        | 상품을 추가한다.      |
 | PUT        | /products/{id} | 200        | 상품 정보를 업데이트한다. |
 | DELETE     | /products/{id} | 204        | 상품을 삭제한다.      |
 
 ### Member API
 
-| HttpMethod | URL             | HttpStatus | Description    |
-|------------|-----------------|------------|----------------|
-| GET        | /members/points | 200        | 멤버의 포인트를 조회한다. |
+| HttpMethod | URL                       | HttpStatus | Description         |
+|------------|---------------------------|------------|---------------------|
+| GET        | /members/points           | 200        | 멤버의 포인트를 조회한다.      |
+| GET        | /members/orders           | 200        | 멤버의 주문 목록을 조회한다.    |
+| GET        | /members/orders/{orderId} | 200        | 멤버의 주문 상세 정보를 조회한다. |
 
-### Order API
+### Pay API
 
-| HttpMethod | URL                 | HttpStatus | Description        |
-|------------|---------------------|------------|--------------------|
-| POST       | /cart-items/payment | 201        | 카트 내 선택한 상품을 주문한다. |
+| HttpMethod | URL  | HttpStatus | Description        |
+|------------|------|------------|--------------------|
+| POST       | /pay | 201        | 카트 내 선택한 상품을 주문한다. |
 
 ## 💋 결제 시나리오
 
@@ -67,7 +68,25 @@ Body
 }
 ```
 
-### `POST /cart-items/payment`
+### `PATCH /cart-items/1`
+
+#### Request
+
+Body
+
+```json
+{
+  "quantity": 5
+}
+```
+
+#### Response
+
+```
+200 OK
+```
+
+### `POST /pay`
 
 #### Request
 
@@ -91,6 +110,7 @@ Body
       "cartItemId": 3
     }
   ],
+  "totalPrice": 4000,
   "points": 100
 }
 ```
@@ -98,5 +118,82 @@ Body
 #### Response
 
 ```
-201 CREATED  /orders/histories/1
+201 CREATED  /members/orders/1
 ```
+
+### `GET /members/orders`
+
+#### Request
+
+Header
+
+```yaml
+{
+  "Authorization": Basic ${ credentials }
+}
+```
+
+#### Response
+
+```
+200 OK
+```
+
+Body
+
+```json
+[
+  {
+    "orderId": 1,
+    "totalPrice": 25000,
+    "totalAmount": 2,
+    "previewName": "PET보틀-정사각(370ml)"
+  },
+  {
+    "orderId": 2,
+    "totalPrice": 1400,
+    "totalAmount": 3,
+    "previewName": "[든든] 동원 스위트콘"
+  }
+]
+```
+
+### `GET /members/orders/{orderId}`
+
+#### Request
+
+Header
+
+```yaml
+{
+  "Authorization": Basic ${ credentials }
+}
+```
+
+#### Response
+
+Body
+
+```json
+{
+  "orderItems": [
+    {
+      "name": "[든든] 동원 스위트콘",
+      "imageUrl": "http://image/test1.png",
+      "count": 2,
+      "price": 99800
+    },
+    {
+      "name": "PET보틀-원형(500ml)",
+      "imageUrl": "http://image/test2.png",
+      "count": 3,
+      "price": 84400
+    }
+  ],
+  "totalPrice": 184400,
+  "usedPoints": 1000,
+  "orderPrice": 183400
+}
+```
+
+
