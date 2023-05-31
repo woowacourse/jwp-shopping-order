@@ -38,13 +38,14 @@ public class OrderService {
 
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
         final List<Product> products = findProducts(orderRequest);
-        final Coupon coupon = couponDao.findById(orderRequest.getCouponId(), member.getId())
+        final Coupon coupon = couponDao.findByCouponIdAndMemberId(orderRequest.getCouponId(), member.getId())
             .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
+
         final Order order = orderDao.save(
             new Order(new Products(products), coupon, Amount.of(orderRequest.getDeliveryAmount()),
-                orderRequest.getAddress()));
+                orderRequest.getAddress()), member.getId());
         final Coupon usedCoupon = coupon.use();
-        couponDao.update(usedCoupon);
+        couponDao.update(usedCoupon, member.getId());
         final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest,
             products);
         return new OrderResponse(order.getId(), orderRequest.getTotalAmount(),

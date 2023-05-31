@@ -18,4 +18,8 @@ public class Products {
             .collect(Collectors.toList());
         return Amount.of(amounts);
     }
+
+    public List<Product> getValue() {
+        return value;
+    }
 }

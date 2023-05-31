@@ -339,3 +339,5 @@ HTTP/1.1 204 No Content
 ## 고민
 
 - 상품 주문 중 금액이 바뀔 경우 어떻게 대처해야 되는가?
+- orderDao에서 비즈니스 로직을 호출하고 있음
+    - order.discountProductAmount().getValue()

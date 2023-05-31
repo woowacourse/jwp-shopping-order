@@ -33,4 +33,24 @@ public class Coupon {
     public Coupon use() {
         return new Coupon(this.id, this.name, this.discountAmount, this.minAmount, this.isUsed);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Amount getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public Amount getMinAmount() {
+        return minAmount;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
 }
