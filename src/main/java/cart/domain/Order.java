@@ -1,5 +1,6 @@
 package cart.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,10 +11,10 @@ public class Order {
     private final List<OrderItem> orderItems;
     private final int deliveryFee;
     private final int discountPrice;
-    private final String createdAt;
+    private final LocalDateTime createdAt;
     
     public Order(Long id, Long memberId, List<OrderItem> orderItems, int deliveryFee, int discountPrice,
-            String createdAt) {
+            LocalDateTime createdAt) {
         this.id = id;
         this.memberId = memberId;
         this.orderItems = orderItems;
@@ -70,7 +71,7 @@ public class Order {
         return discountPrice;
     }
     
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 }
