@@ -12,6 +12,14 @@ public class Order {
         this.orderItems = orderItems;
     }
 
+    public int getOriginalPrice() {
+        return orderItems.calculateOriginalPrice().getAmount();
+    }
+
+    public int getDiscountPrice() {
+        return orderItems.calculateDiscountPrice().getAmount();
+    }
+
     public Long getId() {
         return id;
     }

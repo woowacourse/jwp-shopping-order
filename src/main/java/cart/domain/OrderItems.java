@@ -23,4 +23,8 @@ public class OrderItems {
         final Price originalPrice = calculateOriginalPrice();
         return discountPriceCalculator.calculate(originalPrice);
     }
+
+    public List<OrderItem> getOrderItems() {
+        return List.copyOf(orderItems);
+    }
 }
