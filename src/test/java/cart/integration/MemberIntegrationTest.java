@@ -6,11 +6,10 @@ import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.domain.Member;
 import cart.dto.CartItemRequest;
+import cart.dto.CartItemResponse;
 import cart.dto.OrderCreateRequest;
-import cart.dto.OrderItemRequest;
 import cart.dto.OrderResponse;
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.util.List;
+import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -148,5 +148,43 @@ public class MemberIntegrationTest extends IntegrationTest {
                 .extract()
                 .jsonPath()
                 .getObject(".", OrderResponse.class);
+    }
+
+    @Test
+    @DisplayName("멤버의 모든 주문들을 조회한다")
+    public void getOrders() {
+        var result = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/members/" + member2.getId() + "/orders")
+                .then()
+                .extract();
+
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("멤버의 모든 주문들을 조회한다")
+    public void getOrders2() {
+        Long cartItemId = createCartItem(member2, new CartItemRequest(productId2));
+        Long cartItemId2 = createCartItem(member2, new CartItemRequest(productId));
+        Long orderId = requestOrder(member2, cartItemId, cartItemId2);
+        ExtractableResponse<Response> response = requestGetOrder(member2, orderId);
+        OrderResponse orderResponse = getOrderResponse(member2, orderId);
+
+        ExtractableResponse<Response> allOrdersResponse = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/members/" + member2.getId() + "/orders")
+                .then()
+                .extract();
+
+        Optional<OrderResponse> selectedCartItemResponse = allOrdersResponse.jsonPath()
+                .getList(".", OrderResponse.class)
+                .stream()
+                .filter(cartItemResponse -> cartItemResponse.getId().equals(orderId))
+                .findFirst();
+
+        assertThat(selectedCartItemResponse.isPresent()).isTrue();
     }
 }
