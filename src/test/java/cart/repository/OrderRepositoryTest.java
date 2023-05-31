@@ -6,18 +6,20 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.product.Product;
 import cart.entity.OrderItemEntity;
+import cart.integration.IntegrationTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
-class OrderRepositoryTest {
+class OrderRepositoryTest extends IntegrationTest {
 
     @Autowired
     private OrderRepository orderRepository;

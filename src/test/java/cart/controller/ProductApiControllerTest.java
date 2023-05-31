@@ -1,7 +1,7 @@
 package cart.controller;
 
+import cart.WebMvcConfig;
 import cart.application.ProductService;
-import cart.dao.MemberDao;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import cart.ui.ProductApiController;
@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -34,7 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureRestDocs
 @SuppressWarnings("NonAsciiCharacters")
-@WebMvcTest(ProductApiController.class)
+@WebMvcTest(value = ProductApiController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class)
+})
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class ProductApiControllerTest {
 
@@ -45,8 +49,6 @@ public class ProductApiControllerTest {
     private ProductService productService;
     @Autowired
     private ObjectMapper objectMapper;
-    @MockBean
-    private MemberDao memberDao;
 
     @Test
     void 상품_생성_테스트() throws Exception {

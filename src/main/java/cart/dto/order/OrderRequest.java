@@ -28,7 +28,7 @@ public class OrderRequest {
         return quantity;
     }
 
-    public List<Long> getCouponId() {
+    public List<Long> getCouponIds() {
         return couponId;
     }
 }
