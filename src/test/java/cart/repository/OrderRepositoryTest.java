@@ -2,6 +2,7 @@ package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
@@ -38,7 +39,11 @@ class OrderRepositoryTest {
     @BeforeEach
     void beforeEach() {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        orderRepository = new OrderRepository(new OrderDao(dataSource), new OrderProductDao(dataSource));
+        orderRepository = new OrderRepository(
+                new OrderDao(dataSource),
+                new OrderProductDao(dataSource),
+                new CartItemDao(dataSource)
+        );
         memberDao = new MemberDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
     }

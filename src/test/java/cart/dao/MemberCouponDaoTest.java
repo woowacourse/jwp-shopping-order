@@ -3,7 +3,9 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import cart.dao.dto.OrderDto;
 import cart.dto.MemberCouponDto;
+import java.time.LocalDateTime;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,17 +43,27 @@ class MemberCouponDaoTest {
         Long insert = memberCouponDao.insert(saveCouponDto);
 
         String sql = "SELECT * FROM member_coupon where id = ?";
-
         MemberCouponDto memberCouponDto = jdbcTemplate.queryForObject(
                 sql,
                 memberCouponDtoRowMapper,
                 insert);
-
         assertThat(memberCouponDto).extracting(
                 MemberCouponDto::getId,
                 MemberCouponDto::getMemberId,
                 MemberCouponDto::getCouponId
         ).contains(1L, 2L, 3L);
+    }
+
+    @Test
+    @DisplayName("Member Coupon Dto 를 조회하는 기능 테스트")
+    void findByIdTest() {
+        MemberCouponDto memberCouponDto = new MemberCouponDto(1L, 2L, 3L);
+        String sql = "INSERT INTO member_coupon(id, member_id, coupon_id) VALUES(?, ?, ?)";
+        jdbcTemplate.update(sql, 1L, 2L, 3L);
+        MemberCouponDto queryResult = memberCouponDao.findById(1L).orElseThrow(IllegalArgumentException::new);
+        assertThat(queryResult.getId()).isEqualTo(1L);
+        assertThat(queryResult.getMemberId()).isEqualTo(2L);
+        assertThat(queryResult.getCouponId()).isEqualTo(3L);
     }
 
 }

@@ -1,4 +1,4 @@
-create table if not exists TABLE product
+create table if not exists product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
@@ -27,7 +27,9 @@ create table if not exists orders
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
-    time_stamp TIMESTAMP NOT NULL,
+    time_stamp VARCHAR(255) NOT NULL,
+    discount_price BIGINT NOT NULL,
+    coupon_name VARCHAR(255) NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
