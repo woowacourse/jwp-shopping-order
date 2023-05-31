@@ -25,8 +25,8 @@
     - [x] 전체 주문을 조회한다.
     - [x] 특정 주문을 조회한다.
 
-- [ ] 포인트
-    - [ ] 포인트를 조회한다
+- [x] 포인트
+    - [x] 포인트를 조회한다
     - [x] 포인트를 차감한다
     - [x] 포인트를 지급한다
 
@@ -439,6 +439,8 @@ CREATE TABLE order_detail if not exists (
 - unsigned 잠시 지움
 - order 는 예약어 인 것 같음
 - 주문 취소도 기능 만들까?
+- 포인트 조회의 명세는 "/members/{memberId}/point" 여야 하지 않을까?
+- Member와 Credential 을 구분해야 하지 않을까?
 
 orderAdd 할 때
 
