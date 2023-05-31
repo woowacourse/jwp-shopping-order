@@ -1,6 +1,7 @@
 package cart.integration;
 
 import static cart.fixture.MemberFixture.MEMBER;
+import static cart.integration.MemberUtils.회원_추가;
 import static cart.integration.ProductIntegrationTest.상품을_추가하고_아이디를_반환;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
@@ -36,7 +37,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void 장바구니에_상품을_추가한다() {
         // given
-        회원_추가(MEMBER);
+        회원_추가(MEMBER, jdbcTemplate);
         long 치킨_아이디 = 상품을_추가하고_아이디를_반환("치킨", 10_000, "www.naver.com");
 
         // when
@@ -50,7 +51,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void 장바구니에_담긴_모든_상품을_조회한다() {
         // given
-        회원_추가(MEMBER);
+        회원_추가(MEMBER, jdbcTemplate);
         long 치킨_아이디 = 상품을_추가하고_아이디를_반환("치킨", 10_000, "www.naver.com");
         long 피자_아이디 = 상품을_추가하고_아이디를_반환("피자", 15_000, "www.kakao.com");
         장바구니_상품_추가(치킨_아이디, MEMBER);
@@ -76,7 +77,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void 장바구니_상품_수량을_변경한다() {
         // given
-        회원_추가(MEMBER);
+        회원_추가(MEMBER,jdbcTemplate);
         long 치킨_아이디 = 상품을_추가하고_아이디를_반환("치킨", 10_000, "www.naver.com");
         Long 장바구니_치킨_아이디 = 장바구니에_상품_추가하고_아이디_반환(치킨_아이디, MEMBER);
 
@@ -92,7 +93,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void 장바구니_상품을_삭제한다() {
         // given
-        회원_추가(MEMBER);
+        회원_추가(MEMBER,jdbcTemplate);
         long 치킨_아이디 = 상품을_추가하고_아이디를_반환("치킨", 10_000, "www.naver.com");
         Long 장바구니_치킨_아이디 = 장바구니에_상품_추가하고_아이디_반환(치킨_아이디, MEMBER);
 
@@ -105,10 +106,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(cartItemResponses.size()).isEqualTo(0);
     }
 
-    private void 회원_추가(Member member) {
-        String memberSql = "INSERT INTO member (id, email, password) VALUES (?, ?,?)";
-        jdbcTemplate.update(memberSql, member.getId(), member.getEmail(), member.getPassword());
-    }
 
     private void 아이템_검증(CartItemResponse 아이템, String 이름, int 가격, String 이미지_URL, int 수량) {
         assertAll(
