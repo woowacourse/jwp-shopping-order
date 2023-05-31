@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class CartItem {
     private final Long id;
-    private int quantity;
+    private final int quantity;
     private final Product product;
     private final Member member;
 
@@ -43,7 +43,7 @@ public class CartItem {
         }
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+    public CartItem changeQuantity(int quantity) {
+        return new CartItem(id, quantity, product, member);
     }
 }

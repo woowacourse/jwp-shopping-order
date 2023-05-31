@@ -49,8 +49,8 @@ public class CartItemService {
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemRepository.updateQuantity(cartItem);
+        final CartItem updatedCartItem = cartItem.changeQuantity(request.getQuantity());
+        cartItemRepository.updateQuantity(updatedCartItem);
     }
 
     public void remove(Member member, Long id) {
