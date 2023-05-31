@@ -31,4 +31,9 @@ public class FixDiscountPolicy implements DiscountPolicy {
     public int getValue() {
         return discountAmount;
     }
+
+    @Override
+    public DiscountType getDiscountType() {
+        return DiscountType.FIX;
+    }
 }
