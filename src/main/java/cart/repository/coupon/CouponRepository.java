@@ -19,4 +19,6 @@ public interface CouponRepository {
     Coupon findCouponByCouponIdAndMemberId(final Long couponId, final Long memberId);
 
     void deleteCoupon(final Long id);
+
+    Coupon findCouponById(final Long couponId);
 }

@@ -78,4 +78,22 @@ public class CouponJdbcRepository implements CouponRepository {
     public void deleteCoupon(final Long id) {
         couponDao.deleteCoupon(id);
     }
+
+    @Override
+    public Coupon findCouponById(final Long couponId) {
+        final CouponTypeEntity entity = couponDao.findById(couponId)
+                .orElseThrow(() -> new NoSuchElementException("쿠폰을 찾을 수 없습니다."));
+        return toDomain(entity);
+    }
+
+    private Coupon toDomain(final CouponTypeEntity entity) {
+        return new Coupon(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getDiscountAmount(),
+                false
+        );
+    }
+
 }

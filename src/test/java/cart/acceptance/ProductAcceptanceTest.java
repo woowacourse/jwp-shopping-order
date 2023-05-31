@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProductAcceptanceTest extends IntegrationTest {
+public class ProductAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void getProducts() {

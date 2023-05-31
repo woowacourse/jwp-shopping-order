@@ -79,6 +79,19 @@ public class CouponDao {
         jdbcTemplate.update(sql, params);
     }
 
+    public Optional<CouponTypeEntity> findById(final Long couponId) {
+        final String sql = "SELECT id, name, description, discount_amount FROM coupon_type WHERE coupon_id = :couponId";
+
+        final Map<String, Long> params = Collections.singletonMap("couponId", couponId);
+
+        try {
+            final CouponTypeEntity couponTypeEntity = jdbcTemplate.queryForObject(sql, params, couponTypeEntityRowMapper);
+            return Optional.ofNullable(couponTypeEntity);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public List<CouponTypeEntity> findAll() {
         final String sql = "SELECT id, name, description, discount_amount FROM coupon_type";
 

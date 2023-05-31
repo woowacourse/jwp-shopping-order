@@ -6,13 +6,10 @@ import cart.dto.CouponReissueRequest;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -21,7 +18,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Import(MemberDao.class)
-public class CouponAcceptanceTest extends IntegrationTest {
+public class CouponAcceptanceTest extends AcceptanceTest {
 
     /**
      * given 쿠폰 ID와 사용자 정보를 가지고
@@ -152,9 +149,4 @@ public class CouponAcceptanceTest extends IntegrationTest {
                 .extract();
     }
 
-    private RequestSpecification givenBasic() {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic("a@a.com", "1234");
-    }
 }

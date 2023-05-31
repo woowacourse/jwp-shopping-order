@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CartItemAcceptanceTest extends IntegrationTest {
+public class CartItemAcceptanceTest extends AcceptanceTest {
 
     private Long productId;
     private Long productId2;

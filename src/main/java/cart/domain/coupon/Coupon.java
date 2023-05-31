@@ -2,6 +2,8 @@ package cart.domain.coupon;
 
 public class Coupon {
 
+    private static final Coupon EMPTY_COUPON = new Coupon(null, "empty", "empty", 1, true);
+
     private final Long id;
     private final Name name;
     private final Description description;
@@ -27,6 +29,10 @@ public class Coupon {
             final int discountAmount
     ) {
         return new Coupon(id, name, description, discountAmount, true);
+    }
+
+    public static Coupon empty() {
+        return EMPTY_COUPON;
     }
 
     public boolean isNotUsed() {

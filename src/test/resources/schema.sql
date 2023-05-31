@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS coupon;
 DROP TABLE IF EXISTS coupon_type;
 DROP TABLE IF EXISTS cart_item;
@@ -48,12 +49,22 @@ CREATE TABLE coupon
     FOREIGN KEY (coupon_type_id) REFERENCES coupon_type (id)
 );
 
+CREATE TABLE orders
+(
+    id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    price         INT    NOT NULL,
+    coupon_id     BIGINT NULL,
+    member_id     BIGINT NOT NULL,
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id),
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
 CREATE TABLE order_item
 (
-    id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    price        INT    NOT NULL,
-    cart_item_id BIGINT NOT NULL,
-    coupon_id    BIGINT NOT NULL,
-    FOREIGN KEY (cart_item_id) REFERENCES cart_item (id),
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT NOT NULL,
+    order_id   BIGINT NOT NULL,
+    quantity   INT    NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product (id),
+    FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE
 );
