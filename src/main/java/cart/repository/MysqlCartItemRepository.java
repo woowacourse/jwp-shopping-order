@@ -63,6 +63,11 @@ public class MysqlCartItemRepository implements CartItemRepository {
         return new CartItem(id, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
     }
 
+    private CartItemEntity toCartItemEntity(final CartItem cartItem) {
+        return new CartItemEntity(cartItem.getId(), cartItem.getMember().getId(), cartItem.getProduct().getId(),
+                cartItem.getQuantity());
+    }
+
     @Override
     public void deleteById(final long id) {
         cartItemDao.deleteById(id);
@@ -72,10 +77,5 @@ public class MysqlCartItemRepository implements CartItemRepository {
     public void updateQuantity(final CartItem cartItem) {
         final CartItemEntity cartItemEntity = toCartItemEntity(cartItem);
         cartItemDao.updateQuantity(cartItemEntity);
-    }
-
-    private CartItemEntity toCartItemEntity(final CartItem cartItem) {
-        return new CartItemEntity(cartItem.getId(), cartItem.getMember().getId(), cartItem.getProduct().getId(),
-                cartItem.getQuantity());
     }
 }
