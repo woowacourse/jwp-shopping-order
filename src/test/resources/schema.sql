@@ -1,21 +1,22 @@
 CREATE TABLE IF NOT EXISTS product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    price INT NOT NULL,
+    price BIGINT NOT NULL,
     image_url VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS member (
-     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-     email VARCHAR(255) NOT NULL UNIQUE,
-     password VARCHAR(255) NOT NULL
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    point BIGINT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS cart_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
+    quantity BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
@@ -33,7 +34,7 @@ CREATE TABLE IF NOT EXISTS ordered_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id BIGINT NOT NULL,
     order_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
+    quantity BIGINT NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product(id),
     FOREIGN KEY (order_id) REFERENCES shopping_order(id)
 );
