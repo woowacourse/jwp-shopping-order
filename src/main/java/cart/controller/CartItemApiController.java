@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.auth.Auth;
 import cart.controller.dto.request.CartItemQuantityUpdateRequest;
 import cart.controller.dto.request.CartItemRequest;
 import cart.controller.dto.response.CartItemResponse;
@@ -24,33 +25,31 @@ public class CartItemApiController {
 
     private final CartItemService cartItemService;
 
-    public CartItemApiController(CartItemService cartItemService) {
+    public CartItemApiController(final CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
+    public ResponseEntity<List<CartItemResponse>> showMembersCartItem(@Auth final Member member) {
         return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
-
-        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+    public ResponseEntity<Void> add(@Auth final Member member, @RequestBody final CartItemRequest cartItemRequest) {
+        final long id = cartItemService.save(member, cartItemRequest);
+        return ResponseEntity.created(URI.create("/cart-items/" + id)).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Void> updateQuantity(
+            @Auth final Member member, @PathVariable final Long id, @RequestBody final CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
-
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
+    public ResponseEntity<Void> removeCartItems(@Auth final Member member, @PathVariable final Long id) {
         cartItemService.remove(member, id);
-
         return ResponseEntity.noContent().build();
     }
 }

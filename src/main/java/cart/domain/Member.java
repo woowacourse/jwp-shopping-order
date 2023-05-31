@@ -10,6 +10,10 @@ public class Member {
         this.email = email;
     }
 
+    public boolean isIdEquals(final long id) {
+        return this.id == id;
+    }
+
     public Long getId() {
         return id;
     }

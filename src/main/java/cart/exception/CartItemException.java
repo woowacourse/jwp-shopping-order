@@ -4,6 +4,7 @@ import cart.domain.Member;
 import cart.entity.CartItemEntity;
 
 public class CartItemException extends RuntimeException {
+
     public CartItemException(String message) {
         super(message);
     }

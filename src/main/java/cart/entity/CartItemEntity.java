@@ -1,52 +1,45 @@
 package cart.entity;
 
-import cart.domain.Member;
-import cart.exception.CartItemException;
-
-import java.util.Objects;
-
 public class CartItemEntity {
-    private Long id;
-    private int quantity;
-    private final ProductEntity productEntity;
-    private final Member member;
+    private final Long id;
+    private final long memberId;
+    private final long productId;
+    private final int quantity;
 
-    public CartItemEntity(Member member, ProductEntity productEntity) {
-        this.quantity = 1;
-        this.member = member;
-        this.productEntity = productEntity;
+    public CartItemEntity(final Long id, final long memberId, final long productId, final int quantity) {
+        this.id = id;
+        this.memberId = memberId;
+        this.productId = productId;
+        this.quantity = quantity;
     }
 
-    public CartItemEntity(Long id, int quantity, ProductEntity productEntity, Member member) {
-        this.id = id;
-        this.quantity = quantity;
-        this.productEntity = productEntity;
-        this.member = member;
+    public CartItemEntity(final long memberId, final long productId, final int quantity) {
+        this(null, memberId, productId, quantity);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public long getMemberId() {
+        return memberId;
     }
 
-    public ProductEntity getProduct() {
-        return productEntity;
+    public long getProductId() {
+        return productId;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
-    }
-
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+//    public void checkOwner(Member member) {
+//        if (!Objects.equals(this.member.getId(), member.getId())) {
+//            throw new CartItemException.IllegalMember(this, member);
+//        }
+//    }
+//
+//    public void changeQuantity(int quantity) {
+//        this.quantity = quantity;
+//    }
 }

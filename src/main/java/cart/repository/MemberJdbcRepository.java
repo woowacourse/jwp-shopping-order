@@ -27,6 +27,6 @@ public class MemberJdbcRepository implements MemberRepository {
     }
 
     private Member toDomain(final MemberEntity entity) {
-        return new Member(entity.getId(), entity.getEmail(), entity.getPassword());
+        return new Member(entity.getId(), entity.getEmail());
     }
 }

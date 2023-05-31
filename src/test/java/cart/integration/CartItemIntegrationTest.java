@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("장바구니 통합 테스트")
 @Sql("/member_data.sql")
 public class CartItemIntegrationTest extends IntegrationTest {
 

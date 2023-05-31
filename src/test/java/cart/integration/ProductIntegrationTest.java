@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.controller.dto.request.ProductRequest;
 import cart.controller.dto.response.ProductResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("상품 통합 테스트")
 public class ProductIntegrationTest extends IntegrationTest {
 
     @Test

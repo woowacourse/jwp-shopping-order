@@ -1,23 +1,24 @@
 package cart.controller.dto.response;
 
-import cart.entity.CartItemEntity;
+import cart.domain.CartItem;
 
 public class CartItemResponse {
-    private Long id;
-    private int quantity;
-    private ProductResponse product;
 
-    private CartItemResponse(Long id, int quantity, ProductResponse product) {
+    private final long id;
+    private final int quantity;
+    private final ProductResponse product;
+
+    private CartItemResponse(final long id, final int quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
     }
 
-    public static CartItemResponse of(CartItemEntity cartItemEntity) {
+    public static CartItemResponse of(final CartItem cartItem) {
         return new CartItemResponse(
-                cartItemEntity.getId(),
-                cartItemEntity.getQuantity(),
-                ProductResponse.of(cartItemEntity.getProduct())
+                cartItem.getId(),
+                cartItem.getQuantity().getValue(),
+                ProductResponse.of(cartItem.getProduct())
         );
     }
 

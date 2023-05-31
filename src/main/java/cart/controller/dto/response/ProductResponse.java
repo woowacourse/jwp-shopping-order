@@ -1,22 +1,22 @@
 package cart.controller.dto.response;
 
-import cart.entity.ProductEntity;
+import cart.domain.Product;
 
 public class ProductResponse {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
-    private ProductResponse(Long id, String name, int price, String imageUrl) {
+    private ProductResponse(final long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponse of(ProductEntity productEntity) {
-        return new ProductResponse(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
+    public static ProductResponse of(final Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice().getAmount(), product.getImageUrl());
     }
 
     public Long getId() {
