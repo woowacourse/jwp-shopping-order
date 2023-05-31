@@ -1,8 +1,12 @@
 package cart.domain;
 
+import cart.exception.NotEnoughQuantityException;
+
 import java.util.Objects;
 
 public final class Quantity {
+
+    private static final int BOUNDARY_VALUE = 0;
 
     private final int value;
 
@@ -11,7 +15,15 @@ public final class Quantity {
     }
 
     public Quantity subtract(final Quantity quantity) {
-        return new Quantity(value - quantity.value);
+        final int subtractedValue = value - quantity.value;
+        validateNotNegative(subtractedValue);
+        return new Quantity(subtractedValue);
+    }
+
+    private void validateNotNegative(final int value) {
+        if (value < BOUNDARY_VALUE) {
+            throw new NotEnoughQuantityException();
+        }
     }
 
     public int getValue() {
