@@ -80,7 +80,7 @@ public class CouponDao {
     }
 
     public Optional<CouponTypeEntity> findById(final Long couponId) {
-        final String sql = "SELECT id, name, description, discount_amount FROM coupon_type WHERE coupon_id = :couponId";
+        final String sql = "SELECT id, name, description, discount_amount FROM coupon_type WHERE id = :couponId";
 
         final Map<String, Long> params = Collections.singletonMap("couponId", couponId);
 
