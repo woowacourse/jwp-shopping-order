@@ -36,7 +36,7 @@ class OrderItemDaoTest {
         jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(1, 2, 2, 40000)");
     }
 
-    @DisplayName("주문 정보를 조회할 수 있다.")
+    @DisplayName("주문 상품 정보를 조회할 수 있다.")
     @Test
     void findAll() {
         List<OrderItem> orderItems = orderItemDao.findAll();
@@ -44,7 +44,15 @@ class OrderItemDaoTest {
         assertThat(orderItems).containsExactlyInAnyOrder(new OrderItem(product1, 3, 30000), new OrderItem(product2, 2, 40000));
     }
 
-    @DisplayName("주문 정보를 추가할 수 있다.")
+    @DisplayName("주문 번호를 기준으로 주문 상품 정보를 조회할 수 있다.")
+    @Test
+    void findByOrderId() {
+        List<OrderItem> orderItems = orderItemDao.findByOrderId(1L);
+
+        assertThat(orderItems).containsAnyOf(new OrderItem(product1, 3, 30000), new OrderItem(product2, 2, 40000));
+    }
+
+    @DisplayName("주문 상품 정보를 추가할 수 있다.")
     @Test
     void saveAll() {
         OrderItem orderItem1 = new OrderItem(product1, 4, 40000);

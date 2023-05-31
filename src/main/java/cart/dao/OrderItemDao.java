@@ -26,6 +26,11 @@ public class OrderItemDao {
         return jdbcTemplate.query(sql, new OrderItemRowMapper());
     }
 
+    public List<OrderItem> findByOrderId(Long orderId) {
+        String sql = "select * from orders_item left join product on orders_item.product_id = product.id where orders_id = ?";
+        return jdbcTemplate.query(sql, new OrderItemRowMapper(), orderId);
+    }
+
     public void saveAll(Long orderId, List<OrderItem> orderItems) {
         jdbcTemplate.batchUpdate("insert into orders_item(orders_id, product_id, quantity, total_price) values(?, ?, ?, ?)",
                 new BatchPreparedStatementSetter() {
