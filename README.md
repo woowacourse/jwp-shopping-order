@@ -25,8 +25,8 @@
    
     - 배송비 delivery_fee
     - 할인 금액 discount_price
-    - [] 상품 금액 product_price
-    - [] 총 금액 total_price
+    - [x] 상품 금액 product_price
+    - [x] 총 금액 total_price
 
 4. DiscountCalculator (인터페이스)
 
