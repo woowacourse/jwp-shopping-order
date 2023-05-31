@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Product;
+import cart.domain.Product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -50,9 +50,9 @@ public class ProductDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
+            ps.setString(1, product.getName().name());
+            ps.setInt(2, product.getPrice().price());
+            ps.setString(3, product.getImageUrl().imageUrl());
 
             return ps;
         }, keyHolder);
@@ -62,7 +62,7 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getName().name(), product.getPrice().price(), product.getImageUrl().imageUrl(), productId);
     }
 
     public void deleteProduct(Long productId) {

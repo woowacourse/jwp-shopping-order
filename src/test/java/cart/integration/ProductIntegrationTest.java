@@ -53,6 +53,8 @@ public class ProductIntegrationTest extends IntegrationTest {
                         .statusCode(HttpStatus.CREATED.value())
                         .extract().header("Location");
 
+        System.out.println(location);
+
         // get product
         var responseProduct = given().log().all()
                 .when()
@@ -67,4 +69,5 @@ public class ProductIntegrationTest extends IntegrationTest {
         assertThat(responseProduct.getName()).isEqualTo("피자");
         assertThat(responseProduct.getPrice()).isEqualTo(15_000);
     }
+
 }
