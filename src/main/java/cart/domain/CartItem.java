@@ -6,21 +6,26 @@ import java.util.Objects;
 
 public class CartItem {
     private Long id;
-    private int quantity;
+    private QuantityVO quantityVo;
     private final Product product;
     private final Member member;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
+        this(null, 1, product, member);
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
         this.id = id;
-        this.quantity = quantity;
         this.product = product;
         this.member = member;
+        validateQuantityUnderStock(quantity);
+        this.quantityVo = new QuantityVO(quantity);
+    }
+
+    private void validateQuantityUnderStock(int quantity) {
+        if (quantity > product.getStock()) {
+            throw new IllegalArgumentException("장바구니의 수량은 재고 이하여야 합니다.");
+        }
     }
 
     public Long getId() {
@@ -36,7 +41,7 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantityVo.getQuantity();
     }
 
     public void checkOwner(Member member) {
@@ -46,7 +51,8 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+        validateQuantityUnderStock(quantity);
+        this.quantityVo = new QuantityVO(quantity);
     }
 
     @Override

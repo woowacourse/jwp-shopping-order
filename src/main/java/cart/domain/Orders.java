@@ -8,24 +8,20 @@ public class Orders {
     private Long id;
     private final Member member;
     private final Point point;
-    private int earnedPoint;
-    private int usedPoint;
-    private LocalDateTime createdAt;
+    private final PointVO earnedPoint;
+    private final PointVO usedPoint;
+    private final LocalDateTime createdAt;
 
     public Orders(Member member, Point point, int earnedPoint, int usedPoint, LocalDateTime createdAt) {
-        this.member = member;
-        this.point = point;
-        this.earnedPoint = earnedPoint;
-        this.usedPoint = usedPoint;
-        this.createdAt = createdAt;
+        this(null, member, point, earnedPoint, usedPoint, createdAt);
     }
 
     public Orders(Long id, Member member, Point point, int earnedPoint, int usedPoint, LocalDateTime createdAt) {
         this.id = id;
         this.member = member;
         this.point = point;
-        this.earnedPoint = earnedPoint;
-        this.usedPoint = usedPoint;
+        this.earnedPoint = new PointVO(earnedPoint);
+        this.usedPoint = new PointVO(usedPoint);
         this.createdAt = createdAt;
     }
 
@@ -42,11 +38,11 @@ public class Orders {
     }
 
     public int getEarnedPoint() {
-        return earnedPoint;
+        return earnedPoint.getValue();
     }
 
     public int getUsedPoint() {
-        return usedPoint;
+        return usedPoint.getValue();
     }
 
     public LocalDateTime getCreatedAt() {

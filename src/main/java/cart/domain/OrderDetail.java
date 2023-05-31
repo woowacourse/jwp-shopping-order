@@ -7,18 +7,13 @@ public class OrderDetail {
     private Long id;
     private final Orders orders;
     private final Product product;
-    private String productName;
-    private int ProductPrice;
-    private String productImageUrl;
-    private int orderQuantity;
+    private final String productName;
+    private final PriceVO productPriceVo;
+    private final String productImageUrl;
+    private final QuantityVO orderQuantityVO;
 
     public OrderDetail(Orders orders, Product product, String productName, int productPrice, String productImageUrl, int orderQuantity) {
-        this.orders = orders;
-        this.product = product;
-        this.productName = productName;
-        ProductPrice = productPrice;
-        this.productImageUrl = productImageUrl;
-        this.orderQuantity = orderQuantity;
+        this(null, orders, product, productName, productPrice, productImageUrl, orderQuantity);
     }
 
     public OrderDetail(Long id, Orders orders, Product product, String productName, int productPrice, String productImageUrl, int orderQuantity) {
@@ -26,9 +21,9 @@ public class OrderDetail {
         this.orders = orders;
         this.product = product;
         this.productName = productName;
-        ProductPrice = productPrice;
+        this.productPriceVo = new PriceVO(productPrice);
         this.productImageUrl = productImageUrl;
-        this.orderQuantity = orderQuantity;
+        this.orderQuantityVO = new QuantityVO(orderQuantity);
     }
 
     public Long getId() {
@@ -48,7 +43,7 @@ public class OrderDetail {
     }
 
     public int getProductPrice() {
-        return ProductPrice;
+        return productPriceVo.getPrice();
     }
 
     public String getProductImageUrl() {
@@ -56,7 +51,7 @@ public class OrderDetail {
     }
 
     public int getOrderQuantity() {
-        return orderQuantity;
+        return orderQuantityVO.getQuantity();
     }
 
     @Override

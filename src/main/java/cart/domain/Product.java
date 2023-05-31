@@ -7,16 +7,21 @@ import java.util.Objects;
 public class Product {
     private Long id;
     private String name;
-    private int price;
+    private PriceVO price;
     private String imageUrl;
     private int stock;
 
 
     public Product(String name, int price, String imageUrl, int stock) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this(null, name, price, imageUrl, stock);
+    }
+
+    public Product(Long id, String name, int price, String imageUrl, int stock) {
         validateStock(stock);
+        this.id = id;
+        this.name = name;
+        this.price = new PriceVO(price);
+        this.imageUrl = imageUrl;
         this.stock = stock;
     }
 
@@ -24,14 +29,6 @@ public class Product {
         if (stock < 0) {
             throw new OrderException.NotEnoughStockException(this);
         }
-    }
-
-    public Product(Long id, String name, int price, String imageUrl, int stock) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.stock = stock;
     }
 
     public Long getId() {
@@ -43,7 +40,7 @@ public class Product {
     }
 
     public int getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     public String getImageUrl() {
