@@ -1,8 +1,8 @@
 package cart.config;
 
-import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
+import cart.repository.dao.CartItemDao;
+import cart.repository.dao.MemberDao;
+import cart.repository.dao.ProductDao;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;

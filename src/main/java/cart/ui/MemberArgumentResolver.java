@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
+import cart.repository.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
