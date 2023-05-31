@@ -15,6 +15,10 @@ public class OrderProduct {
         this.quantity = quantity;
     }
 
+    public OrderProduct(String name, Integer price, String imageUrl, Integer quantity) {
+        this(null, name, price, imageUrl, quantity);
+    }
+
     public Long getId() {
         return id;
     }

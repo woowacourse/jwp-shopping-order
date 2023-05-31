@@ -10,13 +10,21 @@ public class Order {
     private final Integer discountPrice;
     private final List<OrderProduct> orderProducts;
     private final Coupon usedCoupon;
+    private final Boolean confirmState;
+    private final Member member;
 
-    public Order(Long id, Integer originalPrice, Integer discountPrice, List<OrderProduct> orderProducts, Coupon usedCoupon) {
+    public Order(Long id, Integer originalPrice, Integer discountPrice, List<OrderProduct> orderProducts, Coupon usedCoupon, Boolean confirmState, Member member) {
         this.id = id;
         this.originalPrice = originalPrice;
         this.discountPrice = discountPrice;
         this.orderProducts = orderProducts;
         this.usedCoupon = usedCoupon;
+        this.confirmState = confirmState;
+        this.member = member;
+    }
+
+    public Order(Integer originalPrice, Integer discountPrice, List<OrderProduct> orderProducts, Coupon usedCoupon, Member member) {
+        this(null, originalPrice, discountPrice, orderProducts, usedCoupon, false, member);
     }
 
     public Long getId() {
@@ -37,5 +45,13 @@ public class Order {
 
     public Coupon getUsedCoupon() {
         return usedCoupon;
+    }
+
+    public Boolean getConfirmState() {
+        return confirmState;
+    }
+
+    public Member getMember() {
+        return member;
     }
 }
