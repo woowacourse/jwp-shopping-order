@@ -2,6 +2,7 @@ package cart.ui.controller.dto.response;
 
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,12 +15,13 @@ public class OrderResponse {
     private int totalPrice;
     private int usedPoint;
     private int deliveryFee;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime orderedAt;
 
     private OrderResponse() {
     }
 
-    public OrderResponse(
+    private OrderResponse(
             Long orderId,
             List<OrderProductResponse> products,
             int totalPrice,
@@ -36,13 +38,14 @@ public class OrderResponse {
     }
 
     public static OrderResponse from(Order order) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         return new OrderResponse(
                 order.getId(),
                 generateOrderProducts(order.getOrderProducts()),
                 order.calculateTotalPrice(),
                 order.getUsedPoint(),
                 order.getDeliveryFee(),
-                order.getOrderedAt()
+                LocalDateTime.parse(order.getOrderedAt().format(dateTimeFormatter), dateTimeFormatter)
         );
     }
 
@@ -72,7 +75,7 @@ public class OrderResponse {
         return deliveryFee;
     }
 
-    public String getOrderedAt() {
-        return orderedAt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
     }
 }

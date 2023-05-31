@@ -47,15 +47,12 @@ class MemberServiceTest {
     void GetMemberByEmailAndPassword() {
         Member member = new Member("a@a.com", "password1", 0);
         Long memberId = memberDao.addMember(MemberMapper.toEntity(member));
+        member.assignId(memberId);
 
         MemberResponse response = memberService.getMemberByEmailAndPassword("a@a.com", "password1");
 
-        assertAll(
-                () -> assertThat(response.getId()).isEqualTo(memberId),
-                () -> assertThat(response.getEmail()).isEqualTo(member.getEmail()),
-                () -> assertThat(response.getPassword()).isEqualTo(member.getPassword()),
-                () -> assertThat(response.getPoint()).isEqualTo(member.getPoint())
-        );
+        MemberResponse expected = MemberResponse.from(member);
+        assertThat(response).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test

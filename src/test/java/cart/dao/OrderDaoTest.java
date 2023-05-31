@@ -7,6 +7,7 @@ import cart.dao.entity.MemberEntity;
 import cart.dao.entity.OrderEntity;
 import cart.test.RepositoryTest;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +22,30 @@ class OrderDaoTest {
 
     @Autowired
     private MemberDao memberDao;
+
+    @Test
+    @DisplayName("findAllByMemberId 메서드는 멤버의 주문 정보 목록을 반환한다.")
+    void findAllByMemberId() {
+        MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
+        Long memberId = memberDao.addMember(memberEntity);
+
+        OrderEntity orderEntityA = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
+        OrderEntity orderEntityB = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
+        Long orderIdA = orderDao.save(orderEntityA);
+        Long orderIdB = orderDao.save(orderEntityB);
+
+        List<OrderEntity> result = orderDao.findAllByMemberId(memberId);
+
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result.get(0)).usingRecursiveComparison()
+                        .ignoringFieldsOfTypes(LocalDateTime.class)
+                        .isEqualTo(orderEntityA.assignId(orderIdA)),
+                () -> assertThat(result.get(1)).usingRecursiveComparison()
+                        .ignoringFieldsOfTypes(LocalDateTime.class)
+                        .isEqualTo(orderEntityB.assignId(orderIdB))
+        );
+    }
 
     @Nested
     @DisplayName("findById 메서드는 ")

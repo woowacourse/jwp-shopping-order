@@ -35,7 +35,7 @@ public class OrderProductDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_product")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("order_id", "product_name", "product_price", "product_image_url", "quantity");
+                .usingColumns("order_id", "product_id", "product_name", "product_price", "product_image_url", "quantity");
     }
 
     private static ProductEntity extractProduct(ResultSet rs) throws SQLException {
@@ -58,8 +58,7 @@ public class OrderProductDao {
                 + " order_product.product_image_url, order_product.quantity, order_product.created_at, order_product.updated_at,"
                 + " product.id, product.name, product.price, product.image_url, product.created_at, product.updated_at"
                 + " FROM order_product"
-                + " LEFT JOIN order_product_record ON order_product.id = order_product_record.order_product_id"
-                + " LEFT JOIN product ON order_product_record.product_id = product.id"
+                + " LEFT JOIN product ON order_product.product_id = product.id"
                 + " WHERE order_id = ?";
         return jdbcTemplate.query(sql, ROW_MAPPER, orderId);
     }

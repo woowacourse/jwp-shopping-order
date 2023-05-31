@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderProductEntity;
-import cart.dao.entity.OrderProductRecordEntity;
 import cart.dao.entity.ProductEntity;
 import cart.test.RepositoryTest;
 import java.time.LocalDateTime;
@@ -26,9 +25,6 @@ class OrderProductDaoTest {
     private OrderDao orderDao;
 
     @Autowired
-    private OrderProductRecordDao orderProductRecordDao;
-
-    @Autowired
     private ProductDao productDao;
 
     @Autowired
@@ -44,15 +40,18 @@ class OrderProductDaoTest {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
             Long memberId = memberDao.addMember(memberEntity);
 
+            ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
+            Long productId = productDao.createProduct(productEntity);
+
             OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 10, 0);
             Long orderId = orderDao.save(orderEntity);
 
             OrderProductEntity orderProductEntityA =
-                    new OrderProductEntity(orderId, null, "치킨", 13000, "http://chicken.com", 10);
+                    new OrderProductEntity(orderId, productEntity.assignId(productId), "치킨", 13000, "http://chicken.com", 10);
             Long orderProductIdA = orderProductDao.save(orderProductEntityA);
 
             OrderProductEntity orderProductEntityB =
-                    new OrderProductEntity(orderId, null, "치킨", 13000, "http://chicken.com", 10);
+                    new OrderProductEntity(orderId, productEntity.assignId(productId), "치킨", 13000, "http://chicken.com", 10);
             Long orderProductIdB = orderProductDao.save(orderProductEntityB);
 
             List<OrderProductEntity> result = orderProductDao.findAllByOrderId(orderId);
@@ -87,9 +86,6 @@ class OrderProductDaoTest {
             OrderProductEntity orderProductEntityB =
                     new OrderProductEntity(orderId, productEntity.assignId(productId), "치킨", 13000, "http://chicken.com", 10);
             Long orderProductIdB = orderProductDao.save(orderProductEntityB);
-
-            orderProductRecordDao.save(new OrderProductRecordEntity(orderProductIdA, productId));
-            orderProductRecordDao.save(new OrderProductRecordEntity(orderProductIdB, productId));
 
             List<OrderProductEntity> result = orderProductDao.findAllByOrderId(orderId);
 
