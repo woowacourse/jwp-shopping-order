@@ -4,6 +4,8 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderItems;
 import cart.domain.price.OrderPrice;
 import cart.dto.OrderDto;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,20 +15,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderDao {
-
-    private static final RowMapper<OrderDto> ORDER_DTO_ROW_MAPPER = (rs, rowNum) -> new OrderDto(
-        rs.getLong("order_id"),
-        rs.getTimestamp("order_time").toLocalDateTime(),
-        rs.getLong("order_product_price"),
-        rs.getLong("order_discount_price"),
-        rs.getLong("order_delivery_fee"),
-        rs.getLong("order_total_price"),
-        rs.getLong("order_item_id"),
-        rs.getString("order_item_name"),
-        rs.getInt("order_item_price"),
-        rs.getString("order_item_image_url"),
-        rs.getInt("order_item_quantity")
-    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -69,7 +57,7 @@ public class OrderDao {
             + "INNER JOIN order_items AS IT ON IT.order_id = ORD.id "
             + "WHERE ORD.id = ?";
 
-        return jdbcTemplate.query(sql, ORDER_DTO_ROW_MAPPER, orderId);
+        return jdbcTemplate.query(sql, new OrderDtoRowMapper(), orderId);
     }
 
     public List<OrderDto> findAllByMemberId(final Long memberId) {
@@ -89,6 +77,26 @@ public class OrderDao {
             + "INNER JOIN order_items AS IT ON IT.order_id = ORD.id "
             + "WHERE ORD.member_id = ?";
 
-        return jdbcTemplate.query(sql, ORDER_DTO_ROW_MAPPER, memberId);
+        return jdbcTemplate.query(sql, new OrderDtoRowMapper(), memberId);
+    }
+
+    private static class OrderDtoRowMapper implements RowMapper<OrderDto> {
+
+        @Override
+        public OrderDto mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+            return new OrderDto(
+                rs.getLong("order_id"),
+                rs.getTimestamp("order_time").toLocalDateTime(),
+                rs.getLong("order_product_price"),
+                rs.getLong("order_discount_price"),
+                rs.getLong("order_delivery_fee"),
+                rs.getLong("order_total_price"),
+                rs.getLong("order_item_id"),
+                rs.getString("order_item_name"),
+                rs.getInt("order_item_price"),
+                rs.getString("order_item_image_url"),
+                rs.getInt("order_item_quantity")
+            );
+        }
     }
 }
