@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.cart_item.application.dto.CartItemQuantityUpdateRequest;
 import cart.cart_item.application.dto.CartItemRequest;
 import cart.cart_item.application.dto.CartItemResponse;
+import cart.cart_item.application.dto.RemoveCartItemRequest;
 import cart.helper.IntegrationTestHelper;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
@@ -147,6 +148,26 @@ public class CartItemApiControllerIntegrationTest extends IntegrationTestHelper 
         .findFirst();
 
     assertThat(selectedCartItemResponse.isPresent()).isFalse();
+  }
+
+  @DisplayName("removeBatchCartItems() : 여러 cartItem id들을 통해서 정상적으로 한번에 삭제된다면 204 No Content를 반환한다.")
+  @Test
+  void test_removeBatchCartItems() {
+    //given
+    final List<Long> removedCartItemIds = List.of(1L, 2L, 3L);
+
+    final RemoveCartItemRequest removeCartItemRequest =
+        new RemoveCartItemRequest(removedCartItemIds);
+
+    //when & then
+    given().log().all()
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        .body(removeCartItemRequest)
+        .when()
+        .delete("/cart-items")
+        .then().log().all()
+        .statusCode(HttpStatus.NO_CONTENT.value());
   }
 
   private Long createProduct(ProductRequest productRequest) {

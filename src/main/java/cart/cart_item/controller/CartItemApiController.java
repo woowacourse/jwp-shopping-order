@@ -4,6 +4,7 @@ import cart.cart_item.application.CartItemService;
 import cart.cart_item.application.dto.CartItemQuantityUpdateRequest;
 import cart.cart_item.application.dto.CartItemRequest;
 import cart.cart_item.application.dto.CartItemResponse;
+import cart.cart_item.application.dto.RemoveCartItemRequest;
 import cart.member.domain.Member;
 import java.net.URI;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -51,6 +53,17 @@ public class CartItemApiController {
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
     cartItemService.remove(member, id);
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @DeleteMapping
+  @ResponseStatus
+  public ResponseEntity<Void> removeBatchCartItems(
+      Member member,
+      @RequestBody RemoveCartItemRequest removeCartItemRequest
+  ) {
+    cartItemService.removeBatch(member, removeCartItemRequest);
 
     return ResponseEntity.noContent().build();
   }
