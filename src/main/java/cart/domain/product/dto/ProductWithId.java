@@ -4,16 +4,16 @@ import cart.domain.product.Product;
 
 public class ProductWithId {
 
-    private final Long id;
+    private final Long productId;
     private final Product product;
 
-    public ProductWithId(final Long id, final Product product) {
-        this.id = id;
+    public ProductWithId(final Long productId, final Product product) {
+        this.productId = productId;
         this.product = product;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
     public Product getProduct() {

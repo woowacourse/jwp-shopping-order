@@ -23,7 +23,7 @@ public class CouponService {
 
     public List<CouponResponse> getAllCoupons() {
         return couponRepository.findAll().stream()
-            .map(couponWithId -> new CouponResponse(couponWithId.getId(), couponWithId.getCoupon().name(),
+            .map(couponWithId -> new CouponResponse(couponWithId.getCouponId(), couponWithId.getCoupon().name(),
                 couponWithId.getCoupon().discountRate(), couponWithId.getCoupon().expiredAt()))
             .collect(Collectors.toUnmodifiableList());
     }

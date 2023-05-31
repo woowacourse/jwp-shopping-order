@@ -88,7 +88,7 @@ public class CartService {
         final ProductWithId productWithId = cartItemWithId.getProduct();
         final Product product = productWithId.getProduct();
         return new CartResponse(cartItemWithId.getId(), cartItemWithId.getQuantity(),
-            new ProductResponse(productWithId.getId(), product.getName(), product.getPrice(),
+            new ProductResponse(productWithId.getProductId(), product.getName(), product.getPrice(),
                 product.getImageUrl()));
     }
 }

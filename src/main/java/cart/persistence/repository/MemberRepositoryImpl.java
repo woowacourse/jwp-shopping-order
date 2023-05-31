@@ -8,6 +8,7 @@ import cart.domain.member.MemberRepository;
 import cart.domain.member.dto.MemberWithId;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
+import cart.persistence.dao.MemberCouponDao;
 import cart.persistence.dao.MemberDao;
 import cart.persistence.dao.dto.MemberCouponDto;
 import cart.persistence.entity.MemberEntity;
@@ -20,9 +21,11 @@ import org.springframework.stereotype.Repository;
 public class MemberRepositoryImpl implements MemberRepository {
 
     private final MemberDao memberDao;
+    private final MemberCouponDao memberCouponDao;
 
-    public MemberRepositoryImpl(final MemberDao memberDao) {
+    public MemberRepositoryImpl(final MemberDao memberDao, final MemberCouponDao memberCouponDao) {
         this.memberDao = memberDao;
+        this.memberCouponDao = memberCouponDao;
     }
 
     @Override
@@ -65,7 +68,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public Member findMyCouponsByName(final String memberName) {
         final MemberEntity memberEntity = getMemberEntityByName(memberName);
-        final List<MemberCouponDto> myCouponsByName = memberDao.findMyCouponsByName(memberName);
+        final List<MemberCouponDto> myCouponsByName = memberCouponDao.findMyCouponsByName(memberName);
         return convertMember(myCouponsByName, memberEntity);
     }
 

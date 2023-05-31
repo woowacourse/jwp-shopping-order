@@ -19,7 +19,8 @@ public class Member {
         return new Member(MemberName.create(name), password, Collections.emptyList());
     }
 
-    public static Member create(final String name, final MemberPassword password, final List<MemberCoupon> memberCoupons) {
+    public static Member create(final String name, final MemberPassword password,
+                                final List<MemberCoupon> memberCoupons) {
         return new Member(MemberName.create(name), password, memberCoupons);
     }
 

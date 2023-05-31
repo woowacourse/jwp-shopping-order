@@ -24,14 +24,14 @@ public class MemberMapper {
     }
 
     public static MemberResponse convertMemberResponse(final MemberWithId memberWithId) {
-        return new MemberResponse(memberWithId.getId(), memberWithId.getMember().name(),
+        return new MemberResponse(memberWithId.getMemberId(), memberWithId.getMember().name(),
             memberWithId.getMember().password());
     }
 
     public static MemberCouponResponse convertMemberCouponResponse(final MemberCoupon memberCoupon) {
         final CouponWithId coupon = memberCoupon.getCoupon();
         return new MemberCouponResponse(
-            coupon.getId(), coupon.getCoupon().name(), coupon.getCoupon().discountRate(),
+            coupon.getCouponId(), coupon.getCoupon().name(), coupon.getCoupon().discountRate(),
             coupon.getCoupon().expiredAt(), memberCoupon.isUsed());
     }
 }

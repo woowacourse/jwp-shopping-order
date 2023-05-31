@@ -4,16 +4,16 @@ import cart.domain.coupon.Coupon;
 
 public class CouponWithId {
 
-    private final Long id;
+    private final Long couponId;
     private final Coupon coupon;
 
-    public CouponWithId(final Long id, final Coupon coupon) {
-        this.id = id;
+    public CouponWithId(final Long couponId, final Coupon coupon) {
+        this.couponId = couponId;
         this.coupon = coupon;
     }
 
-    public Long getId() {
-        return id;
+    public Long getCouponId() {
+        return couponId;
     }
 
     public Coupon getCoupon() {

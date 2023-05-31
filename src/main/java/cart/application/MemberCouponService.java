@@ -35,7 +35,7 @@ public class MemberCouponService {
         final LocalDateTime issuedAt = LocalDateTime.now();
         validateExpiredCoupon(coupon, issuedAt);
 
-        validateAlreadyIssued(memberId, coupon.getId());
+        validateAlreadyIssued(memberId, coupon.getCouponId());
 
         final MemberCoupon memberCoupon = new MemberCoupon(coupon, issuedAt,
             issuedAt.plusDays(coupon.getCoupon().period()), false);
