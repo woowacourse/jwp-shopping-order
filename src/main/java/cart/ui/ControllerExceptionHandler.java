@@ -2,6 +2,8 @@ package cart.ui;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.PointException;
+import cart.exception.PriceInconsistencyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,4 +22,13 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
+    @ExceptionHandler(PriceInconsistencyException.class)
+    public ResponseEntity<Void> handlerPriceInconsistencyException(PriceInconsistencyException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    @ExceptionHandler(PointException.class)
+    public ResponseEntity<Void> handlerPointException(PointException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
 }
