@@ -35,7 +35,7 @@ class MemberDaoTest {
     @Test
     void getMemberByIdTest() {
         long memberId = memberDao.addMember(ADDED_MEMBER);
-        Member member = memberDao.getMemberById(1L);
+        Member member = memberDao.getMemberById(memberId);
 
         assertSoftly(softly -> {
             softly.assertThat(member.getId()).isEqualTo(memberId);

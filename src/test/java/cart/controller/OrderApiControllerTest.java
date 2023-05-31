@@ -2,6 +2,8 @@ package cart.controller;
 
 import cart.application.OrderService;
 import cart.dao.MemberDao;
+import cart.domain.Order;
+import cart.domain.OrderInfo;
 import cart.dto.OrderInfoResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cart.ShoppingOrderFixture.chicken;
 import static cart.ShoppingOrderFixture.member1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -66,7 +69,7 @@ class OrderApiControllerTest {
     void getOrders() throws Exception {
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(orderService.findOrdersByMember(member1))
-                .thenReturn(List.of(new OrderResponse(1L, List.of(new OrderInfoResponse(1L, 10000, "치킨", "imageUrl", 1)), 10000, 5000, 1000)));
+                .thenReturn(List.of(OrderResponse.of(new Order(1L, member1, 10000L, 5000L, 1000L), List.of(new OrderInfo(1L, chicken, 1L)))));
 
         this.mockMvc.perform(get("/orders")
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
@@ -84,7 +87,7 @@ class OrderApiControllerTest {
     void getOrderDetail() throws Exception {
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(orderService.findOrderDetail(1L))
-                .thenReturn(new OrderResponse(1L, List.of(new OrderInfoResponse(1L, 10000, "치킨", "imageUrl", 1)), 10000, 5000, 1000));
+                .thenReturn(OrderResponse.of(new Order(1L, member1, 10000L, 5000L, 1000L), List.of(new OrderInfo(1L, chicken, 1L))));
 
 
         this.mockMvc.perform(get("/orders/{orderId}", 1)

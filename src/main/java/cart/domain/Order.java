@@ -19,7 +19,7 @@ public class Order {
         validateUsedPoint(member, cartItems, usedPoint);
         validatePointToAdd(cartItems, pointToAdd);
 
-        this.member = member;
+        this.member = applyPoint(member, usedPoint, pointToAdd);
         this.cartItems = cartItems;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
@@ -82,12 +82,22 @@ public class Order {
         }
     }
 
+    private Member applyPoint(Member member, Long usedPoint, Long pointToAdd) {
+        member.minusPoint(usedPoint);
+        member.plusPoint(pointToAdd);
+        return member;
+    }
+
     public Long getId() {
         return id;
     }
 
     public Member getMember() {
         return member;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
     public Long getOriginalPrice() {

@@ -27,6 +27,14 @@ public class Member {
         this.point = point;
     }
 
+    public void plusPoint(Long plusPoint) {
+        point += plusPoint;
+    }
+
+    public void minusPoint(Long minusPoint) {
+        point -= minusPoint;
+    }
+
     public Long getId() {
         return id;
     }
