@@ -31,6 +31,10 @@ public class MemberRepository {
 
     public Member getMemberByEmail(final Email email) {
         final MemberEntity memberEntity = memberDao.getMemberByEmail(email.getAddress());
-        return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword(), 0);
+        return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getPoint());
+    }
+
+    public void updateMemberPoint(final Member updateMember) {
+        memberDao.updateMember(new MemberEntity(updateMember.getId(), updateMember.getEmailValue(), updateMember.getPasswordValue(), updateMember.getPointAmount()));
     }
 }

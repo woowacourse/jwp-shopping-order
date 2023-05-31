@@ -47,6 +47,14 @@ public class CartItem {
         }
     }
 
+    public boolean hasSameProduct(final Product product) {
+        return this.product.equals(product);
+    }
+
+    public boolean isSameQuantity(final int quantity) {
+        return this.quantity == quantity;
+    }
+
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
