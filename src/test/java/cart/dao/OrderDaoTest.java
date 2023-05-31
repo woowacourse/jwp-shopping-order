@@ -83,6 +83,19 @@ class OrderDaoTest {
     }
 
     @Test
+    void 회원_id로_주문_정보를_얻는다() {
+        //given
+        orderDao.addOrder(new OrderEntity(memberId, 19000, 1000));
+
+        //when
+        final List<OrderEntity> orderEntities = orderDao.getOrderEntityByMemberId(memberId);
+
+        //then
+        assertThat(orderEntities).usingRecursiveComparison()
+                .isEqualTo(List.of(new OrderEntity(1L, 1L, 19000, 1000)));
+    }
+
+    @Test
     void 모든_주문_정보를_얻는다() {
         //given
         orderDao.addOrder(new OrderEntity(memberId, 19000, 1000));

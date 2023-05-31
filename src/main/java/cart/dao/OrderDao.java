@@ -71,6 +71,11 @@ public class OrderDao {
         }
     }
 
+    public List<OrderEntity> getOrderEntityByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, orderEntityRowMapper, memberId);
+    }
+
     public List<OrderDetailEntity> getOrderDetailEntitiesByOrderId(final Long orderId) {
         final String sql = "SELECT * FROM order_detail WHERE order_id = ?";
         return jdbcTemplate.query(sql, orderDetailEntityRowMapper, orderId);
