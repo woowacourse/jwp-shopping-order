@@ -4,10 +4,10 @@ import cart.domain.CartItem;
 
 public class CartItemResponse {
 
-    private Long id;
-    private int quantity;
-    private ProductResponse product;
-    private boolean checked;
+    private final Long id;
+    private final int quantity;
+    private final ProductResponse product;
+    private final boolean checked;
 
     private CartItemResponse(Long id, int quantity, ProductResponse product, boolean checked) {
         this.id = id;

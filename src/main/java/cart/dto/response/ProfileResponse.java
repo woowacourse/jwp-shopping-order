@@ -1,12 +1,12 @@
 package cart.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class ProfileResponse {
 
-    private int points;
+    private final int points;
 
-    public ProfileResponse() {
-    }
-
+    @JsonCreator
     public ProfileResponse(final int points) {
         this.points = points;
     }
