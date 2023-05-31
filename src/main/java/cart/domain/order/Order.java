@@ -1,19 +1,33 @@
 package cart.domain.order;
 
-import cart.domain.cart.Cart;
-import cart.domain.member.Member;
+import cart.domain.product.Price;
+import java.util.List;
 
 public class Order {
 
     private final Long id;
-    private final Member member;
-    private final Cart cart;
+    private final List<OrderItem> orderItems;
 
-    public Order(final Long id, final Member member, final Cart cart) {
-        this.id = id;
-        this.member = member;
-        this.cart = cart;
+    public Order(final List<OrderItem> orderItemList) {
+        this(null, orderItemList);
     }
 
+    public Order(final Long id, final List<OrderItem> orderItemList) {
+        this.id = id;
+        this.orderItems = orderItemList;
+    }
 
+    public Price getTotalPrice() {
+        return orderItems.stream()
+                .map(OrderItem::getTotalPrice)
+                .reduce(Price.minPrice(), Price::add);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
 }
