@@ -3,7 +3,7 @@ package cart.document;
 import cart.WebMvcConfig;
 import cart.application.MemberService;
 import cart.dao.MemberDao;
-import cart.dto.WithdrawRequest;
+import cart.dto.DepositRequest;
 import cart.ui.MemberApiController;
 import cart.ui.MemberArgumentResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -79,7 +79,7 @@ public class MemberApiDocumentTest {
         given(memberService.depositPoint(MemberA.ENTITY, 5000L))
                 .willReturn(15000L);
         final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
-        final WithdrawRequest request = new WithdrawRequest(5000L);
+        final DepositRequest request = DepositRequest.from(5000L);
 
         // when, then
         mockMvc.perform(post("/members/cash")

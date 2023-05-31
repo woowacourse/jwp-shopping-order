@@ -2,16 +2,20 @@ package cart.dto;
 
 import javax.validation.constraints.NotNull;
 
-public class WithdrawRequest {
+public class DepositRequest {
 
     @NotNull(message = "충전할 금액을 입력하세요")
     private Long point;
 
-    public WithdrawRequest() {
+    private DepositRequest() {
     }
 
-    public WithdrawRequest(final Long point) {
+    private DepositRequest(final Long point) {
         this.point = point;
+    }
+
+    public static DepositRequest from(final Long point) {
+        return new DepositRequest(point);
     }
 
     public Long getPoint() {

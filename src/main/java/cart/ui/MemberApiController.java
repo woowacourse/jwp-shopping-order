@@ -2,8 +2,8 @@ package cart.ui;
 
 import cart.application.MemberService;
 import cart.domain.Member;
-import cart.dto.WithdrawRequest;
-import cart.dto.WithdrawResponse;
+import cart.dto.DepositRequest;
+import cart.dto.DepositResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +23,11 @@ public class MemberApiController {
     }
 
     @PostMapping("/cash")
-    public ResponseEntity<WithdrawResponse> getWithdrawPoint(final Member member,
-                                                             @Valid @RequestBody final WithdrawRequest request) {
+    public ResponseEntity<DepositResponse> getDepositPoint(final Member member,
+                                                            @Valid @RequestBody final DepositRequest request) {
         final Long point = request.getPoint();
         final Long totalCash = memberService.depositPoint(member, point);
 
-        return ResponseEntity.ok(WithdrawResponse.from(totalCash));
+        return ResponseEntity.ok(DepositResponse.from(totalCash));
     }
 }
