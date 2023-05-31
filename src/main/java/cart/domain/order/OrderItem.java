@@ -3,6 +3,8 @@ package cart.domain.order;
 import cart.domain.CartItem;
 import cart.domain.Money;
 
+import java.util.Objects;
+
 public class OrderItem {
 
     private final Long id;
@@ -25,6 +27,19 @@ public class OrderItem {
 
     public Money priceWithQuantity() {
         return price.mul(quantity);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final OrderItem orderItem = (OrderItem) o;
+        return Objects.equals(id, orderItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public Long getId() {

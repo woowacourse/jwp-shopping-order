@@ -8,6 +8,7 @@ import cart.exception.InvalidOrderOwnerException;
 import cart.exception.InvalidOrderSizeException;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
 
@@ -53,6 +54,19 @@ public class Order {
 
     public Money discountDeliveryFee() {
         return memberCoupon.discountDeliveryFee(orderItems.sumPrice(), deliveryFee);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Order order = (Order) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public Money getOrderPrice() {

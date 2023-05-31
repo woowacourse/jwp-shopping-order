@@ -1,11 +1,15 @@
 package cart.dao;
 
+import cart.domain.coupon.Coupon;
+import cart.entity.CartItemEntity;
 import cart.entity.CouponEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +20,7 @@ public class CouponDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<CouponEntity> rowMapper = (rs, rowNum) -> {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
@@ -28,6 +33,10 @@ public class CouponDao {
     public CouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("coupon")
+                .usingColumns("name", "policy_type", "discount_value", "minimum_price")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Optional<CouponEntity> findById(final Long id) {
@@ -54,5 +63,22 @@ public class CouponDao {
     public List<CouponEntity> findAll() {
         String sql = "SELECT * FROM coupon";
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public CouponEntity insert(final CouponEntity entity) {
+        final BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(entity);
+        final long id = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        return new CouponEntity(
+                id,
+                entity.getName(),
+                entity.getPolicyType(),
+                entity.getDiscountValue(),
+                entity.getMinimumPrice()
+        );
+    }
+
+    public void update(final CouponEntity entity) {
+        String sql = "UPDATE coupon SET name = ?, policy_type = ?, discount_value = ?, minimum_price = ?";
+        jdbcTemplate.update(sql, entity.getName(), entity.getPolicyType(), entity.getDiscountValue(), entity.getMinimumPrice());
     }
 }

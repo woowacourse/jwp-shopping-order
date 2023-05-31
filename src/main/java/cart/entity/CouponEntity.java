@@ -13,7 +13,7 @@ public class CouponEntity {
     private final Long id;
     private final String name;
     private final String policyType;
-    private final long value;
+    private final long discountValue;
     private final long minimumPrice;
 
     public CouponEntity(
@@ -26,8 +26,18 @@ public class CouponEntity {
         this.id = id;
         this.name = name;
         this.policyType = policyType;
-        this.value = value;
+        this.discountValue = value;
         this.minimumPrice = minimumPrice;
+    }
+
+    public static CouponEntity from(final Coupon coupon) {
+        return new CouponEntity(
+                null,
+                coupon.getName(),
+                coupon.getDiscountPolicy().getName(),
+                coupon.getValue(),
+                coupon.getMinimumPrice().getValue()
+        );
     }
 
     public Coupon toDomain() {
@@ -35,7 +45,7 @@ public class CouponEntity {
                 id,
                 name,
                 getDiscountPolicy(),
-                value,
+                discountValue,
                 new Money(minimumPrice)
         );
     }
@@ -65,5 +75,9 @@ public class CouponEntity {
 
     public long getMinimumPrice() {
         return minimumPrice;
+    }
+
+    public long getDiscountValue() {
+        return discountValue;
     }
 }
