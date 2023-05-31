@@ -6,6 +6,8 @@ import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderItemSelectResponse;
 import cart.dto.OrderSelectResponse;
+import cart.dto.OrderSimpleInfoResponse;
+import cart.dto.OrdersSelectResponse;
 import cart.repository.dao.MemberDao;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -72,6 +74,31 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .isEqualTo(cartItemIds);
     }
 
+    @DisplayName("주문을 전체 조회한다")
+    @Test
+    void showOrders() {
+        // given
+        final List<Long> cartItemIds1 = List.of(1L);
+        final int totalPrice1 = 20_000;
+        final OrderCreateRequest orderCreateRequest1 = new OrderCreateRequest(cartItemIds1, totalPrice1);
+        final ExtractableResponse<Response> createResponse1 = orderCreateRequest(orderCreateRequest1);
+        final Long saveId1 = Long.parseLong(createResponse1.header("Location").split("/")[2]);
+
+        final List<Long> cartItemIds2 = List.of(2L);
+        final int totalPrice2 = 78_000;
+        final OrderCreateRequest orderCreateRequest2 = new OrderCreateRequest(cartItemIds2, totalPrice2);
+        final ExtractableResponse<Response> createResponse2 = orderCreateRequest(orderCreateRequest2);
+        final Long saveId2 = Long.parseLong(createResponse2.header("Location").split("/")[2]);
+
+        // when
+        final ExtractableResponse<Response> response = selectAllOrdersByMemberRequest();
+        OrdersSelectResponse ordersSelectResponse = response.as(OrdersSelectResponse.class);
+
+        // then
+        assertThat(ordersSelectResponse.getOrders()).map(OrderSimpleInfoResponse::getId)
+                .containsExactly(saveId1, saveId2);
+    }
+
     private ExtractableResponse<Response> orderCreateRequest(final OrderCreateRequest orderCreateRequest) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -87,6 +114,15 @@ public class OrderIntegrationTest extends IntegrationTest {
         return RestAssured.given().log().all()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().get("/orders/" + saveId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
+
+    private ExtractableResponse<Response> selectAllOrdersByMemberRequest() {
+        return RestAssured.given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/orders")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
