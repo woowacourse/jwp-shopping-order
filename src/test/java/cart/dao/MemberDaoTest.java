@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -34,7 +35,7 @@ class MemberDaoTest {
     @Test
     void getMemberByIdTest() {
         long memberId = memberDao.addMember(ADDED_MEMBER);
-        Member member = memberDao.getMemberById(memberId);
+        Member member = memberDao.getMemberById(1L);
 
         assertSoftly(softly -> {
             softly.assertThat(member.getId()).isEqualTo(memberId);
@@ -86,7 +87,8 @@ class MemberDaoTest {
 
         assertSoftly(softly -> {
             softly.assertThat(affectedRow).isEqualTo(1);
-            softly.assertThat(memberDao.getMemberById(memberId)).isNull();
+            softly.assertThatThrownBy(() -> memberDao.getMemberById(memberId))
+                    .isInstanceOf(DataAccessException.class);
         });
     }
 
