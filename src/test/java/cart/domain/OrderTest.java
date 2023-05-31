@@ -29,7 +29,7 @@ public class OrderTest {
     }
     
     @Test
-    void 주문_후_적립금_현재_상황을_구한다() {
+    void 주문_후_적립금을_계산한다() {
         // given
         final Member member = new Member(null, "아벨", "1234", 1000L);
         final Product product1 = new Product("사과", 25000L, "aa", 10.0, true);
@@ -73,7 +73,7 @@ public class OrderTest {
                 .isThrownBy(() -> new Order(member, List.of(orderInfo1, orderInfo2), 475000L, 600L, 47600L));
     }
     
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName} : usedPoint = {0}")
     @ValueSource(longs = {-1L, 1275001L})
     void 입력된_usedPoint가_정상_범위를_벗어나면_예외_처리(final Long usedPoint) {
         // given

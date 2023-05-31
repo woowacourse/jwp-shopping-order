@@ -34,6 +34,9 @@ public class Member {
     }
     
     public void usePoint(final Long usedPoint) {
+        if (usedPoint < 0 || usedPoint > this.point) {
+            throw new IllegalArgumentException("사용할 포인트가 현재 보유중인 포인트의 범위를 넘었습니다. 현재 보유 포인트 : " + this.point + ", 사용할 포인트 : " + usedPoint);
+        }
         this.point -= usedPoint;
     }
     
