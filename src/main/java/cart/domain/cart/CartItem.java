@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.member.Member;
+import cart.domain.product.Price;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
 import java.util.Objects;
@@ -48,5 +49,9 @@ public class CartItem {
 
     public void changeQuantity(final Quantity quantity) {
         this.quantity = quantity;
+    }
+
+    public Price getTotalPrice(){
+        return product.getPrice().multiply(quantity.quantity());
     }
 }

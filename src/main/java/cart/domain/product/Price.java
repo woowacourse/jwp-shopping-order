@@ -19,4 +19,8 @@ public class Price {
     public int price() {
         return price;
     }
+
+    public Price multiply(final int ratio) {
+        return new Price(price * ratio);
+    }
 }
