@@ -5,6 +5,7 @@ import cart.dto.response.exception.Payload;
 import cart.dto.response.exception.CartItemIdExceptionResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.OrderException;
 import cart.exception.ProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         ExceptionResponse response = new ExceptionResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Payload(response));
+    }
+
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<Payload> handleException(OrderException e) {
+        log.error(e.getMessage(), e);
+        ExceptionResponse response = new ExceptionResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Payload(response));
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)

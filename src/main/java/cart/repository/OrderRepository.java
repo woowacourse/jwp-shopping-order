@@ -7,6 +7,8 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.entity.OrderEntity;
+import cart.exception.OrderException;
+import cart.exception.OrderException.InvalidOrder;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -34,10 +36,10 @@ public class OrderRepository {
         return orderId;
     }
 
-    // todo: 없는 orderId 들어온경우 처리
     // todo: Member가 삭제된 경우?
     public Order findByOrderId(final long orderId) {
-        OrderEntity orderEntity = orderDao.findById(orderId);
+        OrderEntity orderEntity = orderDao.findById(orderId)
+                .orElseThrow(InvalidOrder::new);
         Member member = memberDao.getMemberById(orderEntity.getMemberId());
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderId);
         return new Order(orderId, member, orderEntity.getShippingFee(), orderEntity.getTotalPrice(), orderItems, orderEntity.getCreatedAt());
