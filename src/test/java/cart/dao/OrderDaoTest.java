@@ -44,7 +44,7 @@ class OrderDaoTest {
         // then
         assertAll(
                 () -> assertThat(orderEntity.getMemberId()).isEqualTo(insertedEntity.getMemberId()),
-                () -> assertThat(orderEntity.getTotalPrice()).isEqualTo(insertedEntity.getTotalPrice()),
+                () -> assertThat(orderEntity.getOriginalPrice()).isEqualTo(insertedEntity.getOriginalPrice()),
                 () -> assertThat(orderEntity.getDiscountPrice()).isEqualTo(insertedEntity.getDiscountPrice())
         );
     }
