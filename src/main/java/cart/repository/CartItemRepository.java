@@ -17,15 +17,15 @@ public class CartItemRepository {
     }
 
     public Long save(final CartItem cartItem) {
-        return cartItemDao.insert(cartItem);
+        if (cartItem.getId() == null || cartItemDao.findById(cartItem.getId()).isEmpty()) {
+            return cartItemDao.insert(cartItem);
+        }
+        cartItemDao.update(cartItem);
+        return cartItem.getId();
     }
 
     public List<CartItem> findAllByMemberId(final Long id) {
         return cartItemDao.findAllByMemberId(id);
-    }
-
-    public void updateQuantity(final CartItem cartItem) {
-        cartItemDao.updateQuantity(cartItem);
     }
 
     public CartItem findById(final Long id) {

@@ -130,7 +130,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, productId);
     }
 
-    public void updateQuantity(final CartItem cartItem) {
+    public void update(final CartItem cartItem) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, cartItem.getQuantityValue(), cartItem.getId());

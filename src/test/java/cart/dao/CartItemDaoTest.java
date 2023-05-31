@@ -121,7 +121,7 @@ public class CartItemDaoTest {
 
         // when
         final CartItem updateCartItem = new CartItem(cartItem.getId(), cartItem.getMember(), cartItem.getProduct(), 5);
-        cartItemDao.updateQuantity(updateCartItem);
+        cartItemDao.update(updateCartItem);
 
         // then
         final CartItem result = cartItemDao.findById(1L).orElseThrow(CartItemNotFoundException::new);
