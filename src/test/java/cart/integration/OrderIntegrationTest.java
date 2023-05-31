@@ -64,6 +64,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("orderId", is(1))
                 .body("totalPrice", is(100_000))
+                .body("deliveryFee", is(0))
                 .body("usedPoint", is(1_000))
                 .body("products", hasSize(2))
                 .body("products[0].productId", is(1))
@@ -91,6 +92,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("[0].orderId", is(1))
                 .body("[0].totalPrice", is(100_000))
+                .body("[0].deliveryFee", is(0))
                 .body("[0].usedPoint", is(1_000))
                 .body("[0].orderedAt", notNullValue())
                 .body("[0].products", hasSize(2))
@@ -99,6 +101,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
                 .body("[1].orderId", is(2))
                 .body("[1].totalPrice", is(82_000))
+                .body("[1].deliveryFee", is(0))
                 .body("[1].usedPoint", is(0))
                 .body("[1].orderedAt", notNullValue())
                 .body("[1].products", hasSize(3))

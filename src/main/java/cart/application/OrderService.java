@@ -44,7 +44,6 @@ public class OrderService {
         if (totalPrice < request.getPoint()) {
             throw new InvalidPointUseException(totalPrice, request.getPoint());
         }
-        // TODO: 배송비를 할인한 가격에 포인트 정책을 적용?
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
         memberDao.update(updatedMember);
 
@@ -76,6 +75,7 @@ public class OrderService {
                         .mapToInt(orderProduct -> orderProduct.getProductPriceValue() * orderProduct.getQuantityValue())
                         .sum(),
                 order.getUsedPointValue(),
+                order.getDeliveryFeeValue(),
                 order.getOrderedAt(),
                 orderProducts.stream()
                         .map(orderProduct -> new OrderProductDto(
