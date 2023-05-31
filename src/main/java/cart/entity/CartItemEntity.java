@@ -1,7 +1,6 @@
 package cart.entity;
 
 import cart.domain.Member;
-import cart.entity.ProductEntity;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
