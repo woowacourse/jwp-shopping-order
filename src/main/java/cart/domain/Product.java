@@ -24,6 +24,13 @@ public class Product {
         this.stock = stock;
     }
 
+    public void sold(int quantity) {
+        if (this.stock < quantity) {
+            throw new IllegalArgumentException("상품 재고가 부족합니다.");
+        }
+        this.stock -= quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -33,7 +40,8 @@ public class Product {
             return false;
         }
         Product product = (Product) o;
-        return Objects.equals(id, product.id);
+        return price == product.price && id.equals(product.id) && name.equals(product.name) && imageUrl.equals(
+                product.imageUrl);
     }
 
     @Override
