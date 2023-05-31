@@ -29,4 +29,12 @@ public class Order {
             .map(OrderItem::calculatePrice)
             .reduce(Money.MIN, Money::add);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
 }

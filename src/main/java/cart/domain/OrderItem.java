@@ -19,4 +19,20 @@ public class OrderItem {
     public Money calculatePrice() {
         return product.getPrice().multiply(quantity.getCount());
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Quantity getQuantity() {
+        return quantity;
+    }
+
+    public int getQuantityCount() {
+        return quantity.getCount();
+    }
 }
