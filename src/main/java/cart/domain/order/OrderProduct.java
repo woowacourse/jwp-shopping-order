@@ -1,5 +1,6 @@
 package cart.domain.order;
 
+import cart.domain.CartItem;
 import cart.domain.Product;
 
 public class OrderProduct {
@@ -9,6 +10,10 @@ public class OrderProduct {
     public OrderProduct(final Product product, final int quantity) {
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public static OrderProduct of(final CartItem cartItem) {
+        return new OrderProduct(cartItem.getProduct(), cartItem.getQuantity());
     }
 
     public int price() {

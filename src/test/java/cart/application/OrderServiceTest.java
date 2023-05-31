@@ -38,7 +38,7 @@ class OrderServiceTest {
                 ));
 
         final Member member = new Member(1L, "email", "password");
-        final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1, 3), 1000, 1);
+        final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1L, 3L), 1000, 1);
 
         //when, then
         assertThatThrownBy(() -> orderService.order(member, orderRequestDto))

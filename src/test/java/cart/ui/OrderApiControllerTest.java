@@ -47,7 +47,7 @@ class OrderApiControllerTest {
                 .willReturn(new Member(1L, "email", "password"));
 
         final OrderRequestDto orderRequestDto = new OrderRequestDto(
-                List.of(1, 2),
+                List.of(1L, 2L),
                 10000,
                 1
         );
