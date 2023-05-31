@@ -2,6 +2,7 @@ package cart.auth;
 
 import cart.exception.auth.InvalidBasicCredentialException;
 import java.util.Base64;
+import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +16,7 @@ public class BasicAuthorizationParser {
     private static final String EMPTY = "";
 
     public Credential parse(final String authorizationHeader) {
-        if (authorizationHeader.isBlank()) {
+        if (Objects.isNull(authorizationHeader) || authorizationHeader.isBlank()) {
             throw new InvalidBasicCredentialException(authorizationHeader);
         }
         final String[] credential = parseCredential(authorizationHeader);
