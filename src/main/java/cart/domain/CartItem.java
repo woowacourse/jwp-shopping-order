@@ -11,6 +11,7 @@ public class CartItem {
     private final Member member;
 
     public CartItem(Member member, Product product) {
+        this.id = null;
         this.quantity = 1;
         this.member = member;
         this.product = product;
@@ -23,6 +24,9 @@ public class CartItem {
         this.member = member;
     }
 
+    public OrderItem toOrderItem() {
+        return new OrderItem(null, product, quantity);
+    }
     public Long getId() {
         return id;
     }
