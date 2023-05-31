@@ -4,8 +4,6 @@ import cart.application.repository.CartItemRepository;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.persistence.dao.CartItemDao;
-import cart.persistence.dao.MemberDao;
-import cart.persistence.dao.ProductDao;
 import cart.persistence.dto.CartDetailDTO;
 import cart.persistence.entity.CartItemEntity;
 import java.util.List;
@@ -17,14 +15,9 @@ import org.springframework.stereotype.Repository;
 public class CartItemJdbcRepository implements CartItemRepository {
 
     private final CartItemDao cartItemDao;
-    private final MemberDao memberDao;
-    private final ProductDao productDao;
 
-    public CartItemJdbcRepository(final CartItemDao cartItemDao, final MemberDao memberDao,
-            final ProductDao productDao) {
+    public CartItemJdbcRepository(final CartItemDao cartItemDao) {
         this.cartItemDao = cartItemDao;
-        this.memberDao = memberDao;
-        this.productDao = productDao;
     }
 
     @Override
