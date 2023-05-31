@@ -40,15 +40,10 @@ public class CartItemException extends RuntimeException {
 
     public static class QuantityNotSame extends CartItemException {
 
-        private final List<Long> strangeQuantityCartItemIds;
-        public QuantityNotSame(final List<Long> strangeQuantityCartItemIds) {
+        public QuantityNotSame() {
             super("문제가 발생했습니다. 상품의 수량을 다시 한번 확인해주세요");
-            this.strangeQuantityCartItemIds = strangeQuantityCartItemIds;
         }
 
-        public List<Long> getStrangeQuantityCartItemIds() {
-            return strangeQuantityCartItemIds;
-        }
     }
 
     public static class TotalPriceNotSame extends CartItemException {

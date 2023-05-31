@@ -10,7 +10,10 @@ import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailsDto;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.ProductResponse;
+import cart.exception.CartItemException;
 import cart.exception.CartItemException.IllegalMember;
+import cart.exception.CartItemException.InvalidCartItem;
+import cart.exception.CartItemException.QuantityNotSame;
 import cart.exception.CartItemException.UnknownCartItem;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -37,6 +41,7 @@ public class OrderService {
 
         checkIllegalMember(member, cartItems);
         checkUnknownCartItemIds(extractOrderCartItemIds(orderRequest), cartItems);
+        checkQuantity(orderRequest.getOrder(), cartItems);
 
         Order order = Order.of(member, 3000, OrderItem.of(cartItems), 30000);
         order.checkPrice(orderRequest.getTotalPrice());
@@ -46,6 +51,18 @@ public class OrderService {
             cartItemDao.deleteById(cartItem.getId());
         }
         return orderId;
+    }
+
+    private void checkQuantity(final List<OrderItemDto> orders, final List<CartItem> cartItems) {
+        for(OrderItemDto orderItemDto : orders){
+            CartItem cartItem = cartItems.stream()
+                    .filter(item -> Objects.equals(item.getId(), orderItemDto.getCartItemId())).
+                    findFirst()
+                    .orElseThrow(InvalidCartItem::new);
+            if(orderItemDto.getQuantity() != cartItem.getQuantity()){
+                throw new QuantityNotSame();
+            }
+        }
     }
 
     private void checkIllegalMember(final Member member, final List<CartItem> cartItems) {
