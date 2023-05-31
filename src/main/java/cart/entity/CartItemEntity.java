@@ -1,23 +1,24 @@
-package cart.domain;
+package cart.entity;
 
+import cart.domain.Member;
 import cart.entity.ProductEntity;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
 
-public class CartItem {
+public class CartItemEntity {
     private Long id;
     private int quantity;
     private final ProductEntity productEntity;
     private final Member member;
 
-    public CartItem(Member member, ProductEntity productEntity) {
+    public CartItemEntity(Member member, ProductEntity productEntity) {
         this.quantity = 1;
         this.member = member;
         this.productEntity = productEntity;
     }
 
-    public CartItem(Long id, int quantity, ProductEntity productEntity, Member member) {
+    public CartItemEntity(Long id, int quantity, ProductEntity productEntity, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.productEntity = productEntity;

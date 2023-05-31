@@ -1,6 +1,6 @@
 package cart.exception;
 
-import cart.domain.CartItem;
+import cart.entity.CartItemEntity;
 import cart.domain.Member;
 
 public class CartItemException extends RuntimeException {
@@ -9,8 +9,8 @@ public class CartItemException extends RuntimeException {
     }
 
     public static class IllegalMember extends CartItemException {
-        public IllegalMember(CartItem cartItem, Member member) {
-            super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
+        public IllegalMember(CartItemEntity cartItemEntity, Member member) {
+            super("Illegal member attempts to cart; cartItemId=" + cartItemEntity.getId() + ", memberId=" + member.getId());
         }
     }
 }

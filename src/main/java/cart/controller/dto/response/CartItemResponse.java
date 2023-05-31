@@ -1,6 +1,6 @@
 package cart.controller.dto.response;
 
-import cart.domain.CartItem;
+import cart.entity.CartItemEntity;
 
 public class CartItemResponse {
     private Long id;
@@ -13,11 +13,11 @@ public class CartItemResponse {
         this.product = product;
     }
 
-    public static CartItemResponse of(CartItem cartItem) {
+    public static CartItemResponse of(CartItemEntity cartItemEntity) {
         return new CartItemResponse(
-                cartItem.getId(),
-                cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
+                cartItemEntity.getId(),
+                cartItemEntity.getQuantity(),
+                ProductResponse.of(cartItemEntity.getProduct())
         );
     }
 

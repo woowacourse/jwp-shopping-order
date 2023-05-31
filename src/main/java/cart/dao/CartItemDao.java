@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartItem;
+import cart.entity.CartItemEntity;
 import cart.domain.Member;
 import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +21,7 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
+    public List<CartItemEntity> findByMemberId(Long memberId) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
@@ -37,11 +37,11 @@ public class CartItemDao {
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             ProductEntity productEntity = new ProductEntity(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, productEntity, member);
+            return new CartItemEntity(cartItemId, quantity, productEntity, member);
         });
     }
 
-    public Long save(CartItem cartItem) {
+    public Long save(CartItemEntity cartItemEntity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -50,9 +50,9 @@ public class CartItemDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, cartItem.getMember().getId());
-            ps.setLong(2, cartItem.getProduct().getId());
-            ps.setInt(3, cartItem.getQuantity());
+            ps.setLong(1, cartItemEntity.getMember().getId());
+            ps.setLong(2, cartItemEntity.getProduct().getId());
+            ps.setInt(3, cartItemEntity.getQuantity());
 
             return ps;
         }, keyHolder);
@@ -60,13 +60,13 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public CartItem findById(Long id) {
+    public CartItemEntity findById(Long id) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
+        List<CartItemEntity> cartItemEntities = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Long productId = rs.getLong("id");
@@ -77,9 +77,9 @@ public class CartItemDao {
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
             ProductEntity productEntity = new ProductEntity(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, productEntity, member);
+            return new CartItemEntity(cartItemId, quantity, productEntity, member);
         });
-        return cartItems.isEmpty() ? null : cartItems.get(0);
+        return cartItemEntities.isEmpty() ? null : cartItemEntities.get(0);
     }
 
 
@@ -93,9 +93,9 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void updateQuantity(CartItem cartItem) {
+    public void updateQuantity(CartItemEntity cartItemEntity) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+        jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
     }
 }
 
