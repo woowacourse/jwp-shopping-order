@@ -1,8 +1,9 @@
-package cart.domain;
+package cart.domain.coupon;
 
 import java.util.function.BiFunction;
 
 public enum DiscountType {
+
     rate((price, amount) -> (int) Math.ceil(price * (amount / 100.0))),
     price((price, amount) -> (int) Math.ceil(amount));
 

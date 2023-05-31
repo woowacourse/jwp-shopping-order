@@ -2,8 +2,8 @@ package cart.repository;
 
 import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
-import cart.domain.Coupon;
-import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

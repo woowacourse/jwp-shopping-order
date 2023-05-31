@@ -2,8 +2,8 @@ package cart.ui;
 
 import cart.application.CouponService;
 import cart.dao.MemberCouponDao;
-import cart.domain.Coupon;
-import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import cart.dto.coupon.CouponRequest;
 import cart.dto.coupon.CouponResponse;
 import org.springframework.http.ResponseEntity;

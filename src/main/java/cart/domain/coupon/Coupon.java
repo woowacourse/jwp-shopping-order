@@ -1,10 +1,10 @@
-package cart.domain;
+package cart.domain.coupon;
 
 public class Coupon {
 
-    private Long id;
-    private String name;
-    private Discount discount;
+    private final Long id;
+    private final String name;
+    private final Discount discount;
 
     public Coupon(final Long id, final String name, final Discount discount) {
         this.id = id;
@@ -13,8 +13,7 @@ public class Coupon {
     }
 
     public Coupon(final String name, final Discount discount) {
-        this.name = name;
-        this.discount = discount;
+        this(null, name, discount);
     }
 
     public Long getId() {

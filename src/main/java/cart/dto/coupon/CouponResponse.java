@@ -1,6 +1,6 @@
 package cart.dto.coupon;
 
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CouponResponse {

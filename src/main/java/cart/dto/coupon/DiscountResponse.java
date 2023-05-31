@@ -1,6 +1,6 @@
 package cart.dto.coupon;
 
-import cart.domain.Discount;
+import cart.domain.coupon.Discount;
 
 public class DiscountResponse {
 

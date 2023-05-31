@@ -1,4 +1,6 @@
-package cart.domain;
+package cart.domain.member;
+
+import cart.domain.coupon.Coupon;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,10 +20,7 @@ public class Member {
     }
 
     public Member(Long id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.coupons = Collections.emptyList();
+        this(id, email, password, Collections.emptyList());
     }
 
     public Long getId() {

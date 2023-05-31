@@ -1,10 +1,10 @@
 package cart.application;
 
 import cart.dao.CouponDao;
-import cart.domain.Coupon;
-import cart.domain.Order;
-import cart.domain.OrderItem;
-import cart.domain.Product;
+import cart.domain.coupon.Coupon;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.product.Product;
 import cart.dto.order.OrderProductRequest;
 import cart.dto.order.OrderRequest;
 import cart.repository.OrderRepository;

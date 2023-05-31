@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.domain.Coupon;
-import cart.domain.Discount;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Discount;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

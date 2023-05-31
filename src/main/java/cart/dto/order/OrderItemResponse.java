@@ -1,7 +1,7 @@
 package cart.dto.order;
 
-import cart.domain.Coupon;
-import cart.domain.OrderItem;
+import cart.domain.coupon.Coupon;
+import cart.domain.order.OrderItem;
 import cart.dto.product.ProductResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

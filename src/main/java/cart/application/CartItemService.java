@@ -2,8 +2,8 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
+import cart.domain.cartItem.CartItem;
+import cart.domain.member.Member;
 import cart.dto.cartItem.CartItemQuantityUpdateRequest;
 import cart.dto.cartItem.CartItemRequest;
 import cart.dto.cartItem.CartItemResponse;
@@ -40,8 +40,8 @@ public class CartItemService {
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        CartItem updateCartItem = cartItem.changeQuantity(request.getQuantity());
+        cartItemDao.updateQuantity(updateCartItem);
     }
 
     public void remove(Member member, Long id) {

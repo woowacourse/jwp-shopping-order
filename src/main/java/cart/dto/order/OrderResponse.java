@@ -1,6 +1,6 @@
 package cart.dto.order;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
