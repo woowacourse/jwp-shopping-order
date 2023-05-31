@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.Coupon;
-import cart.dto.CouponResponse;
 import cart.dto.CouponSaveRequest;
+import cart.dto.MemberCouponResponse;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
@@ -30,9 +30,9 @@ public class CouponService {
         this.memberRepository = memberRepository;
     }
 
-    public List<CouponResponse> findAllByMemberId(final Long memberId) {
+    public List<MemberCouponResponse> findAllByMemberId(final Long memberId) {
         return memberCouponRepository.findAllByMemberId(memberId).stream()
-                .map(CouponResponse::from)
+                .map(memberCoupon -> MemberCouponResponse.of(memberCoupon.getCouponId(), memberCoupon.getCoupon()))
                 .collect(toUnmodifiableList());
     }
 

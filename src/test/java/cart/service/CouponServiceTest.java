@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.dto.CouponResponse;
 import cart.dto.CouponSaveRequest;
+import cart.dto.MemberCouponResponse;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
@@ -53,12 +53,12 @@ class CouponServiceTest {
         ));
 
         // when
-        final List<CouponResponse> result = couponService.findAllByMemberId(member.getId());
+        final List<MemberCouponResponse> result = couponService.findAllByMemberId(member.getId());
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new CouponResponse(coupon1.getId(), "30000원 이상 2000원 할인 쿠폰", "price", 2000L, 30000L),
-                new CouponResponse(coupon2.getId(), "30000원 이상 배달비 할인 쿠폰", "delivery", 3000L, 30000L)
+                new MemberCouponResponse(coupon1.getId(), "30000원 이상 2000원 할인 쿠폰", "price", 2000L, 30000L),
+                new MemberCouponResponse(coupon2.getId(), "30000원 이상 배달비 할인 쿠폰", "delivery", 3000L, 30000L)
         ));
     }
 

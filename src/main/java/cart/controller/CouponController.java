@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
-import cart.dto.CouponResponse;
+import cart.dto.MemberCouponResponse;
 import cart.service.CouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,11 +32,12 @@ public class CouponController {
     @ApiResponse(
             responseCode = "200",
             description = "전체 쿠폰 조회 성공.",
-            content = @Content(schema = @Schema(implementation = CouponResponse.class))
+            content = @Content(schema = @Schema(implementation = MemberCouponResponse.class))
     )
     @GetMapping
-    public ResponseEntity<List<CouponResponse>> findAll(@Auth final Credential credential) {
-        final List<CouponResponse> couponResponses = couponService.findAllByMemberId(credential.getMemberId());
-        return ResponseEntity.ok(couponResponses);
+    public ResponseEntity<List<MemberCouponResponse>> findAll(@Auth final Credential credential) {
+        final List<MemberCouponResponse> memberCouponRespons = couponService.findAllByMemberId(
+                credential.getMemberId());
+        return ResponseEntity.ok(memberCouponRespons);
     }
 }

@@ -60,12 +60,13 @@ public class MemberCouponRepository {
         ));
     }
 
-    public List<Coupon> findAllByMemberId(final Long memberId) {
+    public List<MemberCoupon> findAllByMemberId(final Long memberId) {
         final List<Long> couponIds = memberCouponDao.findAllByUsedAndMemberId(false, memberId).stream()
                 .map(MemberCouponEntity::getCouponId)
                 .collect(toList());
         return couponDao.findByIds(couponIds).stream()
                 .map(CouponEntity::toDomain)
+                .map(coupon -> new MemberCoupon(memberId, coupon))
                 .collect(toList());
     }
 }

@@ -1,6 +1,7 @@
 package cart.repository;
 
 import static cart.fixture.CouponFixture._3만원_이상_2천원_할인_쿠폰;
+import static cart.fixture.CouponFixture._3만원_이상_배달비_3천원_할인_쿠폰;
 import static cart.fixture.MemberFixture.사용자1;
 import static cart.fixture.MemberFixture.사용자2;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,5 +49,23 @@ class MemberCouponRepositoryTest {
                 () -> assertThat(couponRepository.findAllByMemberId(member1.getId())).hasSize(1),
                 () -> assertThat(couponRepository.findAllByMemberId(member2.getId())).hasSize(1)
         );
+    }
+
+    @Test
+    void 사용자_아이디를_입력받아_전체_쿠폰을_조회한다() {
+        // given
+        final Coupon coupon1 = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
+        final Coupon coupon2 = couponRepository.save(_3만원_이상_배달비_3천원_할인_쿠폰);
+        final Member member = memberRepository.save(사용자1);
+        memberCouponRepository.saveAll(List.of(
+                new MemberCoupon(member.getId(), coupon1),
+                new MemberCoupon(member.getId(), coupon2)
+        ));
+
+        // when
+        final List<MemberCoupon> result = memberCouponRepository.findAllByMemberId(member.getId());
+
+        // then
+        assertThat(result).hasSize(2);
     }
 }
