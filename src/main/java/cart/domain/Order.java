@@ -1,11 +1,13 @@
 package cart.domain;
 
+import cart.exception.OrderException;
 import java.util.List;
 
 public class Order {
 
-    private final Long id;
     private final List<OrderItem> orderItems;
+    private Long id;
+    private Member member;
     private Money deliveryFee;
 
     public Order(final Long id, final List<OrderItem> orderItems) {
@@ -19,6 +21,21 @@ public class Order {
         this.deliveryFee = deliveryFee;
     }
 
+    public Order(final Member member, final List<OrderItem> orderItems, final Money deliveryFee) {
+        this.member = member;
+        this.orderItems = orderItems;
+        this.deliveryFee = deliveryFee;
+    }
+
+    public void checkTotalPrice(final Long totalPrice) {
+        final long totalPriceFromOrder = orderItems.stream()
+                .mapToLong(item -> item.getPrice() * item.getQuantity())
+                .sum();
+        if (totalPriceFromOrder != totalPrice) {
+            throw new OrderException.OutOfDatedProductPrice();
+        }
+    }
+
     public Long totalPrice() {
         return orderItems.stream()
                 .mapToLong(item -> item.getPrice() * item.getQuantity())
@@ -27,6 +44,10 @@ public class Order {
 
     public Long getId() {
         return id;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public List<OrderItem> getOrderItems() {

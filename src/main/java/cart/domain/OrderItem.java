@@ -7,44 +7,62 @@ import java.util.stream.Collectors;
 
 public class OrderItem {
 
-    private final Long orderId;
     private final String name;
     private final Money price;
     private final String imageUrl;
     private final Integer quantity;
-    private final Long id;
+    private Long id;
 
-    public OrderItem(final Long id,
-                     final Long orderId,
-                     final String name,
-                     final Money price,
-                     final String imageUrl,
-                     final Integer quantity) {
-        this.id = id;
-        this.orderId = orderId;
+    private OrderItem(final String name,
+                      final Money price,
+                      final String imageUrl,
+                      final Integer quantity) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
     }
 
-    public static List<OrderItem> from(final List<OrderItemEntity> orderItems) {
-        return orderItems.stream()
-                .map(orderItem -> new OrderItem(orderItem.getId(),
-                        orderItem.getOrderId(),
-                        orderItem.getName(),
-                        new Money(orderItem.getPrice()),
-                        orderItem.getImageUrl(),
-                        orderItem.getQuantity()))
+    private OrderItem(final long id,
+                      final String name,
+                      final Money price,
+                      final String imageUrl,
+                      final Integer quantity) {
+        this(name, price, imageUrl, quantity);
+        this.id = id;
+    }
+
+    public static OrderItem convert(final CartItem cartItem) {
+        final Product product = cartItem.getProduct();
+        return new OrderItem(product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                cartItem.getQuantity());
+    }
+
+    public static List<OrderItem> convert(final List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(OrderItem::convert)
+                .collect(Collectors.toList());
+    }
+
+    public static OrderItem from(final OrderItemEntity orderItemEntity) {
+        return new OrderItem(
+                orderItemEntity.getId(),
+                orderItemEntity.getName(),
+                new Money(orderItemEntity.getPrice()),
+                orderItemEntity.getImageUrl(),
+                orderItemEntity.getQuantity());
+    }
+
+    public static List<OrderItem> from(final List<OrderItemEntity> orderItemEntities) {
+        return orderItemEntities.stream()
+                .map(OrderItem::from)
                 .collect(Collectors.toList());
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Long getOrderId() {
-        return orderId;
     }
 
     public String getName() {
@@ -72,26 +90,13 @@ public class OrderItem {
             return false;
         }
         final OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(id, orderItem.id) && Objects.equals(orderId, orderItem.orderId)
-                && Objects.equals(name, orderItem.name) && Objects.equals(price, orderItem.price)
+        return Objects.equals(name, orderItem.name) && Objects.equals(price, orderItem.price)
                 && Objects.equals(imageUrl, orderItem.imageUrl) && Objects.equals(quantity,
                 orderItem.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderId, name, price, imageUrl, quantity);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderItem{" +
-                "id=" + id +
-                ", orderId=" + orderId +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", quantity=" + quantity +
-                '}';
+        return Objects.hash(name, price, imageUrl, quantity);
     }
 }

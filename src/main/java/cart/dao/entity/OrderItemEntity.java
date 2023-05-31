@@ -1,7 +1,6 @@
 package cart.dao.entity;
 
-import cart.domain.CartItem;
-import cart.domain.Product;
+import cart.domain.OrderItem;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -37,18 +36,18 @@ public class OrderItemEntity {
         this.quantity = quantity;
     }
 
-    public static OrderItemEntity of(final long orderId, final CartItem cartItem) {
-        final Product product = cartItem.getProduct();
-        return new OrderItemEntity(orderId,
-                product.getName(),
-                product.getPrice().getValue(),
-                product.getImageUrl(),
-                cartItem.getQuantity());
+    public static OrderItemEntity of(final long orderId, final OrderItem orderItem) {
+        return new OrderItemEntity(
+                orderId,
+                orderItem.getName(),
+                orderItem.getPrice(),
+                orderItem.getImageUrl(),
+                orderItem.getQuantity());
     }
 
-    public static List<OrderItemEntity> of(final long orderId, final List<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(cartItem -> OrderItemEntity.of(orderId, cartItem))
+    public static List<OrderItemEntity> of(final long orderId, final List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(orderItem -> OrderItemEntity.of(orderId, orderItem))
                 .collect(Collectors.toList());
     }
 
