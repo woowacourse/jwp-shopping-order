@@ -50,12 +50,6 @@ public class ProductApiController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable final Long id) {
-        final Product product = productService.getProductById(id);
-        return ResponseEntity.ok(ProductResponse.of(product));
-    }
-
     @GetMapping("/cart-items")
     public ResponseEntity<HomePagingResponse> getHomePagingProduct(@RequestParam final Long lastId,
                                                                    @RequestParam final int pageItemCount) {
@@ -63,6 +57,12 @@ public class ProductApiController {
         final boolean isLast = productService.hasLastProduct(lastId, pageItemCount);
 
         return ResponseEntity.ok(HomePagingResponse.of(products, isLast));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable final Long id) {
+        final Product product = productService.getProductById(id);
+        return ResponseEntity.ok(ProductResponse.of(product));
     }
 
     @GetMapping("/{productId}/cart-items")

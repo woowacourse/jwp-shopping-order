@@ -14,20 +14,7 @@ include::{snippets}/products/getAllProducts/http-response.adoc[]
 include::{snippets}/products/getAllProducts/response-fields.adoc[]
 
 
-==== 2. 특정 상품 조회
-
-[discrete]
-====== 요청
-include::{snippets}/products/getProductById/http-request.adoc[]
-include::{snippets}/products/getProductById/path-parameters.adoc[]
-
-[discrete]
-====== 응답
-include::{snippets}/products/getProductById/http-response.adoc[]
-include::{snippets}/products/getProductById/response-fields.adoc[]
-
-
-==== 3. 모든 상품 조회 (페이징)
+==== 2. 특정 상품 목록 조회 (페이징)
 
 [discrete]
 ====== 요청
@@ -38,6 +25,19 @@ include::{snippets}/products/getHomePagingProduct/request-parameters.adoc[]
 ====== 응답
 include::{snippets}/products/getHomePagingProduct/http-response.adoc[]
 include::{snippets}/products/getHomePagingProduct/response-fields.adoc[]
+
+
+==== 3. 특정 상품 조회
+
+[discrete]
+====== 요청
+include::{snippets}/products/getProductById/http-request.adoc[]
+include::{snippets}/products/getProductById/path-parameters.adoc[]
+
+[discrete]
+====== 응답
+include::{snippets}/products/getProductById/http-response.adoc[]
+include::{snippets}/products/getProductById/response-fields.adoc[]
 
 
 ==== 4. 상품 상세

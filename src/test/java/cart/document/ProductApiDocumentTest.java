@@ -94,31 +94,7 @@ public class ProductApiDocumentTest {
     }
 
     @Test
-    void 특정_상품_조회_문서화() throws Exception {
-        // given
-        given(productService.getProductById(any()))
-                .willReturn(CHICKEN.ENTITY);
-
-        // when, then
-        mockMvc.perform(get("/products/{id}", CHICKEN.ID)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("products/getProductById",
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("id").description("조회할 상품 아이디")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 아이디"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL")
-                        )
-                ));
-    }
-
-    @Test
-    void 상품_페이지_조회_문서화() throws Exception {
+    void 특정_상품_목록_페이징_문서화() throws Exception {
         // given
         given(productService.getProductsInPaging(3L, 2))
                 .willReturn(List.of(SALAD.ENTITY, CHICKEN.ENTITY));
@@ -145,6 +121,30 @@ public class ProductApiDocumentTest {
                                 fieldWithPath("products.[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
                                 fieldWithPath("products.[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 경로"),
                                 fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("가져온 상품 목록에 마지막 상품이 들어있는지 여부")
+                        )
+                ));
+    }
+
+    @Test
+    void 특정_상품_조회_문서화() throws Exception {
+        // given
+        given(productService.getProductById(any()))
+                .willReturn(CHICKEN.ENTITY);
+
+        // when, then
+        mockMvc.perform(get("/products/{id}", CHICKEN.ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("products/getProductById",
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("조회할 상품 아이디")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 아이디"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL")
                         )
                 ));
     }

@@ -30,7 +30,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 모든_상품을_조회하다() {
+    void 모든_상품_목록을_조회하다() {
         final ExtractableResponse<Response> result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -39,6 +39,20 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .extract();
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    void 특정_상품_목록을_페이징해서_조회하다() {
+        final ExtractableResponse<Response> response = given()
+                .param("lastId", 3)
+                .param("pageItemCount", 2)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products/cart-items")
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
@@ -51,20 +65,6 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .extract();
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    @Test
-    void 상품_목록을_원하는_구간만큼_조회하다() {
-        final ExtractableResponse<Response> response = given()
-                .param("lastId", 3)
-                .param("pageItemCount", 2)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/products/cart-items")
-                .then()
-                .extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @Test
