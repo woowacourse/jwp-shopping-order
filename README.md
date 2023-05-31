@@ -154,7 +154,6 @@ Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ...
 
 {
-"memberId": 1,
 "productIds": [1, 2, 5], // 상품에 대한 더 자세한 정보는 줄 필요 없을 것 같음
 "totalAmount": 30000, // 배달비를 포함하지 않은 상품 금액만 전부 더한 금액?
 "deliveryAmount": 2000,
@@ -287,3 +286,50 @@ HTTP/1.1 200 OK
   ...
 ]
 ```
+
+## 수정 사항 반영
+
+### 장바구니 상품 추가
+
+Request
+
+```
+POST /cart-items HTTP/1.1
+Authorization: Basic ${credentials}
+Content-Type: application/json
+
+{
+   "productId": 1,
+   "quantity": 5
+}
+```
+
+Response
+
+```
+HTTP/1.1 201 Created
+Location: /cart-items/{cartItemId}
+```
+
+### 장바구니 상품 삭제 (여러 개)
+
+Request
+
+```
+DELETE /cart-items
+Authorization: Basic ${credentials}
+
+{
+   "cartItemIds": [1, 3, 5]
+}
+```
+
+Response
+
+```
+HTTP/1.1 204 No Content
+```
+
+## 고민
+
+- 상품 주문 중 금액이 바뀔 경우 어떻게 대처해야 되는가?
