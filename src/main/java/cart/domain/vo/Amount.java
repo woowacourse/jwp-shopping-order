@@ -33,6 +33,10 @@ public class Amount {
         return new Amount(value - amount.value);
     }
 
+    public Amount multiply(final int quantity) {
+        return new Amount(value * quantity);
+    }
+
     public boolean isLessThan(final Amount minAmount) {
         return value < minAmount.value;
     }

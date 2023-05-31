@@ -16,7 +16,7 @@ class OrderTest {
         final Products products = new Products(List.of(
             new Product("name1", Amount.of(1_000), "url1"),
             new Product("name2", Amount.of(2_000), "url2")));
-        final Coupon amountCoupon = new AmountCoupon(1L, "name", Amount.of(1_000), Amount.of(1_000));
+        final Coupon amountCoupon = new AmountCoupon(1L, "name", Amount.of(1_000), Amount.of(1_000), isUsed);
         final Order order = new Order(1L, products, amountCoupon, Amount.of(3000), "여기저기");
 
         //when

@@ -9,12 +9,15 @@ public class AmountCoupon implements Coupon {
     private final String name;
     private final Amount discountAmount;
     private final Amount minAmount;
+    private final boolean isUsed;
 
-    public AmountCoupon(final Long id, final String name, final Amount discountAmount, final Amount minAmount) {
+    public AmountCoupon(final Long id, final String name, final Amount discountAmount, final Amount minAmount,
+        final boolean isUsed) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
         this.minAmount = minAmount;
+        this.isUsed = isUsed;
     }
 
     @Override
@@ -28,5 +31,10 @@ public class AmountCoupon implements Coupon {
     @Override
     public Amount calculateDelivery(final Amount deliveryAmount) {
         return deliveryAmount;
+    }
+
+    @Override
+    public Coupon use() {
+        return new AmountCoupon(this.id, this.name, this.discountAmount, this.minAmount, this.isUsed);
     }
 }

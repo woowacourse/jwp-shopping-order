@@ -154,9 +154,19 @@ Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ...
 
 {
-"productIds": [1, 2, 5], // 상품에 대한 더 자세한 정보는 줄 필요 없을 것 같음
-"totalAmount": 30000, // 배달비를 포함하지 않은 상품 금액만 전부 더한 금액?
+"products": [
+{
+"id": 1,
+"quantity": 3,
+},
+{
+"id": 2,
+"quantity": 1,
+},
+]
+"totalProductAmount": 30000, // 배달비를 포함하지 않은 상품 금액만 전부 더한 금액?
 "deliveryAmount": 2000,
+"discountedProductAmount": 27000,
 "address": "서울특별시 송파구 ...",
 "couponId": 1
 }
@@ -185,10 +195,10 @@ HTTP/1.1 201 Created
       "quantity": 2
     }
   ],
-  "total_amount": 55000,
+   "totalProductAmount" 55000,
   // 배달비를 포함하지 않은 상품 금액만 전부 더한 금액?
-  "delivery_amount": 2000,
-  "discounted_amount": 3000,
+   "deliveryAmount": 2000,
+   "discountedProductAmount": 3000,
   // 할인 금액을 할 건지 or 할인된 총 금액을 할 건지
   "address": "서울특별시 송파구 ..."
 }
@@ -231,10 +241,10 @@ HTTP/1.1 200 OK
       "quantity": 2
     }
   ],
-  "total_amount": 55000,
+  "totalProductAmount": 55000,
   // 배달비를 포함하지 않은 상품 금액만 전부 더한 금액?
-  "delivery_amount": 2000,
-  "discounted_amount": 53000,
+  "deliveryAmount": 2000,
+  "discountedProductAmount": 53000,
   //할인된 총 금액을 할 건지
   "address": "서울특별시 송파구 ..."
 }

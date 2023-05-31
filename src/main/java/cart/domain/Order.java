@@ -10,6 +10,10 @@ public class Order {
     private final Amount deliveryAmount;
     private final String address;
 
+    public Order(final Products products, final Coupon coupon, final Amount deliveryAmount, final String address) {
+        this(null, products, coupon, deliveryAmount, address);
+    }
+
     public Order(final Long id, final Products products, final Coupon coupon, final Amount deliveryAmount,
         final String address) {
         this.id = id;
@@ -26,5 +30,25 @@ public class Order {
 
     public Amount discountDeliveryAmount() {
         return coupon.calculateDelivery(deliveryAmount);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Products getProducts() {
+        return products;
+    }
+
+    public Coupon getCoupon() {
+        return coupon;
+    }
+
+    public Amount getDeliveryAmount() {
+        return deliveryAmount;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }
