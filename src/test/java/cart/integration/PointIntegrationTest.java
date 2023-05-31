@@ -27,7 +27,7 @@ public class PointIntegrationTest extends IntegrationTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getInt("points")).isEqualTo(3000)
+                () -> assertThat(response.jsonPath().getInt("point")).isEqualTo(3000)
         );
 
     }
@@ -40,5 +40,23 @@ public class PointIntegrationTest extends IntegrationTest {
                 .get("/points")
                 .then()
                 .extract();
+    }
+
+    @Test
+    @DisplayName("결제 금액에 따른 적립될 포인트를 계산한다.")
+    void calculatePointByPayment() {
+        final ExtractableResponse<Response> response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("totalPrice", 3000)
+                .when()
+                .get("/saving-point")
+                .then()
+                .log().all()
+                .extract();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getInt("savingPoint")).isEqualTo(300)
+        );
     }
 }
