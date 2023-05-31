@@ -34,6 +34,18 @@ public class Coupon {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
+    }
+
+    public double getDiscountValue() {
+        return discountValue;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
