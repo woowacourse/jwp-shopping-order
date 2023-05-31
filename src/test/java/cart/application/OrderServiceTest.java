@@ -51,26 +51,26 @@ class OrderServiceTest {
                 List.of(new OrderItemRequest(3L, 3)));
         orderService.addOrder(member, firstRequest);
         orderService.addOrder(member, secondRequest);
-    
+        
         //expected
         Order firstOrder = new Order(1L,
                 member.getId(),
-                List.of(new OrderItem(1L, member.getId(), new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
-                        new OrderItem(2l, member.getId(), new Product(2l, "2번 상품", 2000, "2번 상품url"), 5)),
+                List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
+                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5)),
                 3000,
                 0,
                 createdAt
         );
         Order secondOrder = new Order(2L,
                 member.getId(),
-                List.of(new OrderItem(3L, member.getId(), new Product(3l, "3번 상품", 1000, "3번 상품url"), 3)),
+                List.of(new OrderItem(3L, new Product(3l, "3번 상품", 1000, "3번 상품url"), 3)),
                 3000,
                 0,
                 createdAt
         );
         List<Order> expected = List.of(firstOrder, secondOrder);
+        
         assertThat(orderService.findOrdersByMember(member))
-                .usingRecursiveComparison()
                 .isEqualTo(expected);
     }
     
