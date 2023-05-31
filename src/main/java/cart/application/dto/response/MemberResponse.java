@@ -3,6 +3,7 @@ package cart.application.dto.response;
 import cart.domain.member.Member;
 
 public class MemberResponse {
+
     private final Long id;
     private final String email;
     private final String password;

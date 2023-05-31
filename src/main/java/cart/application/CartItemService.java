@@ -41,7 +41,7 @@ public class CartItemService {
     @Transactional(readOnly = true)
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         final Product product = cartItemRepository.getProductById(cartItemRequest.getProductId());
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(member, product, cartItemRequest.getQuantity());
         return cartItemRepository.saveCartItem(cartItem);
     }
 

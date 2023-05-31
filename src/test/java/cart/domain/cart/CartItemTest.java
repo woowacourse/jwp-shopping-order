@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CartItemTest {
 
+    private static final int DEFAULT_QUANTITY = 1;
+
     private Member member1;
     private Member member2;
     private Product product;
@@ -25,7 +27,7 @@ class CartItemTest {
     @DisplayName("장바구니 상품 소유자와 멤버 id가 다를 경우 Exception을 반환한다.")
     @Test
     void checkOwnerTest() {
-        final CartItem cartItem = new CartItem(member1, product);
+        final CartItem cartItem = new CartItem(member1, product, DEFAULT_QUANTITY);
 
         assertThrows(CartItemException.IllegalMember.class, () -> cartItem.checkOwner(member2));
     }

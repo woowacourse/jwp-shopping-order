@@ -73,6 +73,16 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("장바구니에 수량과 함께 아이템을 추가한다.")
+    @Test
+    void addWithQuantityCartItem() {
+        final int quantity = 10;
+        final CartItemRequest cartItemRequest = new CartItemRequest(product1.getId(), quantity);
+        final ExtractableResponse<Response> response = requestAddCartItem(member1, cartItemRequest);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {

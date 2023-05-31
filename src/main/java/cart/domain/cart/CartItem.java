@@ -6,8 +6,6 @@ import cart.exception.CartItemException;
 
 public class CartItem {
 
-    private static final int DEFAULT_QUANTITY = 1;
-
     private final Long id;
     private final Member member;
     private final Product product;
@@ -20,8 +18,8 @@ public class CartItem {
         this.quantity = new Quantity(quantity);
     }
 
-    public CartItem(final Member member, final Product product) {
-        this(null, member, product, DEFAULT_QUANTITY);
+    public CartItem(final Member member, final Product product, final Integer quantity) {
+        this(null, member, product, quantity);
     }
 
     public Long getId() {
