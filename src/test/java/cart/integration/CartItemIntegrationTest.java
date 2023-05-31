@@ -1,5 +1,8 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
@@ -9,147 +12,39 @@ import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
 
-    private Long productId;
+    private Long productId1;
     private Long productId2;
-    private Member member;
+    private Member member1;
     private Member member2;
 
     @BeforeEach
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 10));
+        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 20));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        memberDao.insert(new Member("a@a.com", "password1", 0));
+        memberDao.insert(new Member("b@b.com", "password2", 0));
+        member1 = memberDao.findById(1L);
+        member2 = memberDao.findById(2L);
     }
 
-    @DisplayName("장바구니에 아이템을 추가한다.")
-    @Test
-    void addCartItem() {
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-
-    @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
-    @Test
-    void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
-    @Test
-    void getCartItems() {
-        Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
-        Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
-
-        ExtractableResponse<Response> response = requestGetCartItems(member);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-
-        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
-                .map(CartItemResponse::getId)
-                .collect(Collectors.toList());
-        assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
-    }
-
-    @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
-    @Test
-    void increaseCartItemQuantity() {
-        Long cartItemId = requestAddCartItemAndGetId(member, productId);
-
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-
-        ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
-
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
-                .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
-                .findFirst();
-
-        assertThat(selectedCartItemResponse.isPresent()).isTrue();
-        assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
-    }
-
-    @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
-    @Test
-    void decreaseCartItemQuantityToZero() {
-        Long cartItemId = requestAddCartItemAndGetId(member, productId);
-
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-
-        ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
-
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
-                .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
-                .findFirst();
-
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
-    }
-
-    @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
-    @Test
-    void updateOtherMembersCartItem() {
-        Long cartItemId = requestAddCartItemAndGetId(member, productId);
-
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-    }
-
-    @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
-    @Test
-    void removeCartItem() {
-        Long cartItemId = requestAddCartItemAndGetId(member, productId);
-
-        ExtractableResponse<Response> response = requestDeleteCartItem(cartItemId);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
-        ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
-
-        Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
-                .getList(".", CartItemResponse.class)
-                .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
-                .findFirst();
-
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
-    }
-
-    private Long createProduct(ProductRequest productRequest) {
-        ExtractableResponse<Response> response = given()
+    private Long createProduct(final ProductRequest productRequest) {
+        var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
@@ -165,55 +60,172 @@ public class CartItemIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
-        return given().log().all()
+    @Test
+    void 장바구니에_아이템을_추가한다() {
+        // given
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1);
+
+        // when
+        var response = requestAddCartItem(member1, cartItemRequest);
+        long savedId = getIdFromCreatedResponse(response);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isEqualTo("/cart-items/" + savedId);
+    }
+
+    private ExtractableResponse<Response> requestAddCartItem(final Member member, final CartItemRequest cartItemRequest) {
+        return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(cartItemRequest)
                 .when()
                 .post("/cart-items")
                 .then()
-                .log().all()
                 .extract();
     }
 
-    private Long requestAddCartItemAndGetId(Member member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
+    @Test
+    void 사용자가_담은_장바구니_아이템을_조회한다() {
+        // given
+        Long cartItemId1 = requestAddCartItemAndGetId(member1, productId1);
+        Long cartItemId2 = requestAddCartItemAndGetId(member1, productId2);
+
+        // when
+        var response = requestGetCartItems(member1);
+
+        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
+                .map(CartItemResponse::getCartItemId)
+                .collect(Collectors.toList());
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
+    }
+
+    private Long requestAddCartItemAndGetId(final Member member, final Long productId) {
+        var response = requestAddCartItem(member, new CartItemRequest(productId));
+
         return getIdFromCreatedResponse(response);
     }
 
-    private ExtractableResponse<Response> requestGetCartItems(Member member) {
-        return given().log().all()
+    private ExtractableResponse<Response> requestGetCartItems(final Member member) {
+        return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .get("/cart-items")
                 .then()
-                .log().all()
                 .extract();
+    }
+
+    @Test
+    void 틀린_비밀번호로_장바구니에_아이템을_추가_요청시_실패한다() {
+        // given
+        Member illegalMember = new Member(member1.getId(), member1.getEmail(), member1.getPassword() + "asdf");
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1);
+
+        // when
+        var response = requestAddCartItem(illegalMember, cartItemRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+
+    @Test
+    void 장바구니에_담긴_아이템의_수량을_변경한다() {
+        // given
+        int quantity = 99;
+        Long cartItemId = requestAddCartItemAndGetId(member1, productId1);
+
+        // when
+        var response = requestUpdateCartItemQuantity(member1, cartItemId, quantity);
+        var cartItemsResponse = requestGetCartItems(member1);
+
+        var selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartItemResponse.class)
+                .stream()
+                .filter(cartItemResponse -> cartItemResponse.getCartItemId().equals(cartItemId))
+                .findFirst();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(selectedCartItemResponse.isPresent()).isTrue();
+        assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(quantity);
     }
 
     private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
-        return given().log().all()
+        return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .body(quantityUpdateRequest)
                 .patch("/cart-items/{cartItemId}", cartItemId)
                 .then()
-                .log().all()
                 .extract();
     }
 
+    @Test
+    void 장바구니에_담긴_아이템의_수량을_0으로_변경하면_장바구니에서_아이템이_삭제된다() {
+        // given
+        Long cartItemId = requestAddCartItemAndGetId(member1, productId1);
+
+        // when
+        var response = requestUpdateCartItemQuantity(member1, cartItemId, 0);
+        var cartItemsResponse = requestGetCartItems(member1);
+
+        var selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartItemResponse.class)
+                .stream()
+                .filter(cartItemResponse -> cartItemResponse.getCartItemId().equals(cartItemId))
+                .findFirst();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(selectedCartItemResponse.isEmpty()).isTrue();
+    }
+
+    @Test
+    void 다른_사용자가_담은_장바구니_아이템의_수량을_변경하려_하면_실패한다() {
+        // given
+        Long cartItemId = requestAddCartItemAndGetId(member1, productId1);
+
+        // when
+        var response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    void 장바구니에_담긴_아이템을_삭제한다() {
+        // given
+        Long cartItemId = requestAddCartItemAndGetId(member1, productId1);
+
+        // when
+        var response = requestDeleteCartItem(cartItemId);
+
+        var cartItemsResponse = requestGetCartItems(member1);
+
+        var selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .getList(".", CartItemResponse.class)
+                .stream()
+                .filter(cartItemResponse -> cartItemResponse.getCartItemId().equals(cartItemId))
+                .findFirst();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(selectedCartItemResponse.isEmpty()).isTrue();
+    }
+
     private ExtractableResponse<Response> requestDeleteCartItem(Long cartItemId) {
-        return given().log().all()
+        return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
                 .when()
                 .delete("/cart-items/{cartItemId}", cartItemId)
                 .then()
-                .log().all()
                 .extract();
     }
 }

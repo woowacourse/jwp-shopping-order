@@ -1,16 +1,15 @@
 package cart.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public class CartItemQuantityUpdateRequest {
-    private int quantity;
 
-    public CartItemQuantityUpdateRequest() {
-    }
+    private final Integer quantity;
 
-    public CartItemQuantityUpdateRequest(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    private CartItemQuantityUpdateRequest() {
+        this.quantity = null;
     }
 }

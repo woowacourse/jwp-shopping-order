@@ -1,16 +1,15 @@
 package cart.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public class CartItemRequest {
-    private Long productId;
 
-    public CartItemRequest() {
-    }
+    private final Long productId;
 
-    public CartItemRequest(Long productId) {
-        this.productId = productId;
-    }
-
-    public Long getProductId() {
-        return productId;
+    private CartItemRequest() {
+        this.productId = null;
     }
 }
