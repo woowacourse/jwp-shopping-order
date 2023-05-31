@@ -105,15 +105,40 @@ class ProductDaoTest extends DaoTestHelper {
     @Test
     void deleteProduct() {
         // given
-        final Long productId = 치킨_저장();
+        final Long 저장된_치킨_아이디 = 치킨_저장();
 
         // when
-        int deletedCount = productDao.deleteProduct(productId);
+        int deletedCount = productDao.deleteProduct(저장된_치킨_아이디);
 
         // then
-        final Optional<ProductEntity> product = productDao.getProductById(productId);
+        final Optional<ProductEntity> product = productDao.getProductById(저장된_치킨_아이디);
 
         assertThat(product).isEmpty();
         assertThat(deletedCount).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("주어진 상품 아이디에 해당하는 상품이 있으면 true를 반환한다.")
+    void existById_true() {
+        // given
+        final Long 저장된_치킨_아이디 = 치킨_저장();
+
+        // when
+        final boolean result = productDao.existById(저장된_치킨_아이디);
+
+        // then
+        assertThat(result)
+            .isTrue();
+    }
+
+    @Test
+    @DisplayName("주어진 상품 아이디에 해당하는 상품이 없으면 false를 반환한다.")
+    void existById_false() {
+        // when
+        final boolean result = productDao.existById(1L);
+
+        // then
+        assertThat(result)
+            .isFalse();
     }
 }

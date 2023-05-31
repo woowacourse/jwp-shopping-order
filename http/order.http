@@ -1,4 +1,4 @@
-### 주문 추가
+### 주문 추가 (쿠폰 있음)
 POST {{host}}/orders
 Content-Type: application/json
 Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
@@ -13,6 +13,20 @@ Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
     {
       "productId": 2,
       "quantity": 5
+    }
+  ]
+}
+
+### 주문 추가 (쿠폰 없음)
+POST {{host}}/orders
+Content-Type: application/json
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+{
+  "items": [
+    {
+      "productId": 3,
+      "quantity": 20
     }
   ]
 }

@@ -1,12 +1,13 @@
 package cart.integration;
 
+import static cart.exception.ErrorCode.PRODUCT_NOT_FOUND;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
-import cart.application.dto.cartitem.CartItemRequest;
+import cart.application.dto.cartitem.CartRequest;
 import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.product.ProductRequest;
@@ -25,7 +26,7 @@ public class CartIntegrationTest extends IntegrationTest {
         상품을_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        final CartItemRequest 장바구니_저장_요청 = new CartItemRequest(1L);
+        final CartRequest 장바구니_저장_요청 = new CartRequest(1L);
 
         // expected
         given()
@@ -40,23 +41,27 @@ public class CartIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
-    void addCartItemByIllegalMember() {
+    @DisplayName("존재하지 않는 상품을 장바구니에 추가하려고 하면 예외가 발생한다.")
+    void addCartItem_not_exists_product() {
         // given
         사용자를_저장한다();
+
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        final CartRequest 장바구니_저장_요청 = new CartRequest(1L);
 
         // expected
-        final CartItemRequest 장바구니_저장_요청 = new CartItemRequest(1L);
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().preemptive().basic(져니_로그인_요청.getName(), "test123")
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
             .body(장바구니_저장_요청)
             .when()
             .post("/cart-items")
             .then()
-            .statusCode(HttpStatus.UNAUTHORIZED.value());
+            .statusCode(HttpStatus.NOT_FOUND.value())
+            .body("errorCode", equalTo(PRODUCT_NOT_FOUND.name()))
+            .body("errorMessage", equalTo("상품이 존재하지 않습니다."));
     }
+
 
     @Test
     @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
@@ -126,7 +131,7 @@ public class CartIntegrationTest extends IntegrationTest {
         상품_저장(치킨_등록_요청);
 
         /** 장바구니 상품 저장 */
-        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
 
@@ -167,7 +172,7 @@ public class CartIntegrationTest extends IntegrationTest {
 
         /** 장바구니 상품 저장 */
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
-        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
 
         // expected
@@ -191,7 +196,7 @@ public class CartIntegrationTest extends IntegrationTest {
         상품을_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
 
         // when
@@ -213,6 +218,35 @@ public class CartIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("다른 사용자가 담은 장바구니 아이템을 삭제하려고 하면 실패한다.")
+    void removeCartItem_other_member_items() {
+        /** 사용자 저장 */
+        final MemberJoinRequest 져니_등록_요청 = new MemberJoinRequest("journey", "password");
+        final MemberJoinRequest 라온_등록_요청 = new MemberJoinRequest("raon", "jourzura!");
+        사용자_저장(져니_등록_요청);
+        사용자_저장(라온_등록_요청);
+
+        /** 상품 저장 */
+        final ProductRequest 치킨_등록_요청 = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
+        상품_저장(치킨_등록_요청);
+
+        /** 장바구니 상품 저장 */
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
+        장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
+
+        // expected
+        given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(라온_등록_요청.getName(), 라온_등록_요청.getPassword())
+            .when()
+            .delete("/cart-items/{cartItemId}", 1)
+            .then()
+            .statusCode(FORBIDDEN.value())
+            .extract();
+    }
+
+    @Test
     @DisplayName("장바구니에 담긴 아이템을 여러 개 삭제한다.")
     void removeCartItems() {
         // given
@@ -220,9 +254,9 @@ public class CartIntegrationTest extends IntegrationTest {
         상품을_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
-        final CartItemRequest 피자_장바구니_저장_요청 = new CartItemRequest(2L);
+        final CartRequest 피자_장바구니_저장_요청 = new CartRequest(2L);
         장바구니_상품_저장(져니_로그인_요청, 피자_장바구니_저장_요청);
 
         // when
@@ -251,7 +285,7 @@ public class CartIntegrationTest extends IntegrationTest {
         상품을_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
-        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
 
         // when
@@ -279,8 +313,8 @@ public class CartIntegrationTest extends IntegrationTest {
     }
 
     private void 장바구니에_상품을_추가한다(final MemberLoginRequest 져니_로그인_요청) {
-        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
-        final CartItemRequest 피자_장바구니_저장_요청 = new CartItemRequest(2L);
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
+        final CartRequest 피자_장바구니_저장_요청 = new CartRequest(2L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
         장바구니_상품_저장(져니_로그인_요청, 피자_장바구니_저장_요청);
     }

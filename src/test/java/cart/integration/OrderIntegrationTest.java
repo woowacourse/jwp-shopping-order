@@ -8,7 +8,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-import cart.application.dto.cartitem.CartItemRequest;
+import cart.application.dto.cartitem.CartRequest;
 import cart.application.dto.coupon.CouponRequest;
 import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberLoginRequest;
@@ -250,8 +250,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     private void 장바구니에_상품을_추가한다(final MemberLoginRequest 져니_로그인_요청) {
-        final CartItemRequest 치킨_장바구니_저장_요청 = new CartItemRequest(1L);
-        final CartItemRequest 피자_장바구니_저장_요청 = new CartItemRequest(2L);
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
+        final CartRequest 피자_장바구니_저장_요청 = new CartRequest(2L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
         장바구니_상품_저장(져니_로그인_요청, 피자_장바구니_저장_요청);
     }

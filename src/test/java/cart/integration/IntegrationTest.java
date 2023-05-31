@@ -3,7 +3,7 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 
 import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
-import cart.application.dto.cartitem.CartItemRequest;
+import cart.application.dto.cartitem.CartRequest;
 import cart.application.dto.coupon.CouponRequest;
 import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberLoginRequest;
@@ -52,7 +52,7 @@ public class IntegrationTest {
             .statusCode(HttpStatus.CREATED.value());
     }
 
-    void 장바구니_상품_저장(final MemberLoginRequest 사용자_로그인_요청, final CartItemRequest 장바구니_저장_요청) {
+    void 장바구니_상품_저장(final MemberLoginRequest 사용자_로그인_요청, final CartRequest 장바구니_저장_요청) {
         given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(사용자_로그인_요청.getName(), 사용자_로그인_요청.getPassword())

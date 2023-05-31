@@ -54,4 +54,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void deleteProduct(final Long productId) {
         productDao.deleteProduct(productId);
     }
+
+    @Override
+    public boolean existById(final Long id) {
+        return productDao.existById(id);
+    }
 }

@@ -53,6 +53,11 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orderDao.countByMemberId(memberId);
     }
 
+    @Override
+    public void getById(final Long id) {
+        orderDao.findById(id);
+    }
+
     private Long saveOrder(final Order order) {
         final MemberWithId member = order.getMember();
         final OrderEntity orderEntity = convertOrderEntity(order, member);

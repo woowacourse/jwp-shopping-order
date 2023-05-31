@@ -7,11 +7,13 @@ public interface ProductRepository {
 
     List<ProductWithId> getAllProducts();
 
-    Product getProductById(final Long productId);
+    Product getProductById(final Long id);
 
     Long save(final Product product);
 
-    void updateProduct(final Long productId, final Product product);
+    void updateProduct(final Long id, final Product product);
 
-    void deleteProduct(final Long productId);
+    void deleteProduct(final Long id);
+
+    boolean existById(final Long id);
 }

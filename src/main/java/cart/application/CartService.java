@@ -3,7 +3,7 @@ package cart.application;
 import static java.util.stream.Collectors.joining;
 
 import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
-import cart.application.dto.cartitem.CartItemRequest;
+import cart.application.dto.cartitem.CartRequest;
 import cart.application.dto.cartitem.CartResponse;
 import cart.application.dto.product.ProductResponse;
 import cart.domain.cartitem.Cart;
@@ -13,8 +13,11 @@ import cart.domain.cartitem.dto.CartItemSaveReq;
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
 import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
 import cart.domain.product.dto.ProductWithId;
+import cart.exception.ErrorCode;
 import cart.exception.ForbiddenException;
+import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -27,12 +30,15 @@ public class CartService {
     private static final int EMPTY_CART_ITEM_QUANTITY = 0;
     private static final int INIT_CART_ITEM_QUANTITY = 1;
 
-    private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-    public CartService(final MemberRepository memberRepository, final CartRepository cartRepository) {
-        this.memberRepository = memberRepository;
+    public CartService(final CartRepository cartRepository, final MemberRepository memberRepository,
+                       final ProductRepository productRepository) {
         this.cartRepository = cartRepository;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
     public List<CartResponse> findByMember(final String memberName) {
@@ -45,9 +51,10 @@ public class CartService {
     }
 
     @Transactional
-    public long addCart(final String memberName, final CartItemRequest cartItemRequest) {
-        final CartItemSaveReq cartItemSaveReq = new CartItemSaveReq(cartItemRequest.getProductId(),
-            INIT_CART_ITEM_QUANTITY);
+    public long addCart(final String memberName, final CartRequest cartRequest) {
+        final Long productId = cartRequest.getProductId();
+        validateProduct(productId);
+        final CartItemSaveReq cartItemSaveReq = new CartItemSaveReq(productId, INIT_CART_ITEM_QUANTITY);
         return cartRepository.save(memberName, cartItemSaveReq);
     }
 
@@ -82,6 +89,12 @@ public class CartService {
             throw new ForbiddenException(cartItemId, memberName);
         }
         cartRepository.deleteByCartItemIdsAndMemberId(cartItemIds, memberName);
+    }
+
+    private void validateProduct(final Long productId) {
+        if (!productRepository.existById(productId)) {
+            throw new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
     }
 
     private CartResponse convertCartItemResponse(final CartItemWithId cartItemWithId) {

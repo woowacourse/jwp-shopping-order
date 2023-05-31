@@ -5,6 +5,7 @@ import static cart.application.mapper.OrderMapper.convertCouponOrder;
 
 import cart.application.dto.order.OrderProductRequest;
 import cart.application.dto.order.OrderRequest;
+import cart.application.dto.order.OrderResponse;
 import cart.domain.cartitem.Cart;
 import cart.domain.cartitem.CartItemWithId;
 import cart.domain.cartitem.CartRepository;
@@ -19,8 +20,10 @@ import cart.domain.order.OrderRepository;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -54,7 +57,6 @@ public class OrderService {
         validateOrderQuantity(orderRequest);
         final Cart cart = cartRepository.findByMemberName(memberName);
         final List<CartItemWithId> cartItems = cart.getCartItems();
-
         final List<Long> productIds = getProductIds(cartItems);
         validateOrderProductIds(orderRequest, productIds);
 
@@ -62,7 +64,8 @@ public class OrderService {
         final Long couponId = orderRequest.getCouponId();
         final Long memberId = memberWithId.getMemberId();
 
-        final long savedOrderId = saveOrder(cartItems, memberWithId, couponId);
+        final List<CartItemWithId> requestCartItems = getOrderRequestCartItems(orderRequest, cartItems);
+        final long savedOrderId = saveOrder(requestCartItems, memberWithId, couponId);
         cartRepository.deleteByCartItemIdsAndMemberId(productIds, memberName);
         applicationEventPublisher.publishEvent(new FirstOrderCouponEvent(memberId));
         return savedOrderId;
@@ -91,6 +94,15 @@ public class OrderService {
         if (!new HashSet<>(productIds).containsAll(requestProductIds)) {
             throw new BadRequestException(ErrorCode.ORDER_INVALID_PRODUCTS);
         }
+    }
+
+    private List<CartItemWithId> getOrderRequestCartItems(final OrderRequest orderRequest,
+                                                          final List<CartItemWithId> cartItems) {
+        return cartItems.stream()
+            .filter(cartItem -> orderRequest.getItems().stream()
+                .anyMatch(orderProductRequest ->
+                    Objects.equals(cartItem.getProduct().getProductId(), orderProductRequest.getProductId())))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private long saveOrder(final List<CartItemWithId> productWithIds,

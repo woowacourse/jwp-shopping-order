@@ -21,15 +21,15 @@ public class CartItemDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final RowMapper<CartItemDto> cartItemDtoRowMapper = (rs, rowNum) -> {
-        final Long cartItemId = rs.getLong("cart_item.id");
-        final Long memberId = rs.getLong("member_id");
-        final Long productId = rs.getLong("id");
-        final String memberName = rs.getString("member_name");
+        final Long cartItemId = rs.getLong("cartItemId");
+        final Long memberId = rs.getLong("memberId");
+        final Long productId = rs.getLong("productId");
+        final String memberName = rs.getString("memberName");
         final String memberPassword = rs.getString("password");
-        final String productName = rs.getString("product_name");
+        final String productName = rs.getString("productName");
         final int productPrice = rs.getInt("price");
-        final String productImageUrl = rs.getString("image_url");
-        final int productQuantity = rs.getInt("cart_item.quantity");
+        final String productImageUrl = rs.getString("imageUrl");
+        final int productQuantity = rs.getInt("quantity");
         return new CartItemDto(cartItemId, memberId, memberName, memberPassword, productId, productName,
             productImageUrl, productPrice, productQuantity);
     };
@@ -41,8 +41,10 @@ public class CartItemDao {
     }
 
     public List<CartItemDto> findByMemberName(final String memberName) {
-        final String sql = "SELECT cart_item.id, cart_item.member_id, member.name AS member_name, member.password, "
-            + "product.id, product.name AS product_name, product.price, product.image_url, cart_item.quantity " +
+        final String sql = "SELECT cart_item.id AS cartItemId, cart_item.member_id AS memberId, "
+            + "member.name AS memberName, member.password AS password, product.id AS productId, "
+            + "product.name AS productName, product.price AS price, product.image_url AS imageUrl, "
+            + "cart_item.quantity AS quantity " +
             "FROM cart_item " +
             "INNER JOIN member ON cart_item.member_id = member.id " +
             "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -66,8 +68,10 @@ public class CartItemDao {
 
     public Optional<CartItemDto> findById(final Long id) {
         try {
-            final String sql = "SELECT cart_item.id, cart_item.member_id, member.name AS member_name, member.password, "
-                + "product.id, product.name AS product_name, product.price, product.image_url, cart_item.quantity " +
+            final String sql = "SELECT cart_item.id AS cartItemId, cart_item.member_id AS memberId, "
+                + "member.name AS memberName, member.password AS password, product.id AS productId, "
+                + "product.name AS productName, product.price AS price, product.image_url AS imageUrl, "
+                + "cart_item.quantity AS quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
