@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -45,21 +45,21 @@ public class OrderService {
     }
 
     public Long createOrder(final OrderCreateRequest orderCreateRequest, final Member member) {
-        final List<Long> cartItemIds = orderCreateRequest.getCartItems().stream()
+        List<Long> cartItemIds = orderCreateRequest.getCartItems().stream()
                 .map(CartItemRequest::getId)
                 .collect(Collectors.toList());
-        final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
-        final List<CartItemRequest> requests = orderCreateRequest.getCartItems();
+        List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
+        List<CartItemRequest> requests = orderCreateRequest.getCartItems();
 
         validateLegalOrder(cartItems, requests);
 
-        final List<CartItem> cartItemsByRequest = toCartItems(member, requests);
+        List<CartItem> cartItemsByRequest = toCartItems(member, requests);
         cartItemDao.deleteAll(cartItemIds);
 
-        final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsByRequest);
+        Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsByRequest);
         order.validatePoints(member.getPoints());
 
-        final Long id = orderDao.createOrder(
+        Long id = orderDao.createOrder(
                 orderCreateRequest.getUsedPoints(),
                 cartItemsByRequest,
                 PointPolicy.getSavingRate(),
@@ -72,7 +72,7 @@ public class OrderService {
     }
 
     private void validateLegalOrder(final List<CartItem> cartItems, final List<CartItemRequest> requests) {
-        for (final CartItem cartItem : cartItems) {
+        for (CartItem cartItem : cartItems) {
             iterateRequests(requests, cartItem);
         }
     }
@@ -170,3 +170,4 @@ public class OrderService {
         return new CartPointsResponse(PointPolicy.getSavingRate(), savingPoints);
     }
 }
+

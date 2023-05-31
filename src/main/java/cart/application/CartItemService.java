@@ -17,29 +17,33 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class CartItemService {
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
+    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
+    public List<CartItemResponse> findByMember(final Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
-    public CartItemResponse findById(Long cartItemId) {
-        final CartItem cartItem = cartItemDao.findById(cartItemId);
+    public CartItemResponse findById(final Long cartItemId) {
+        CartItem cartItem = cartItemDao.findById(cartItemId);
         return CartItemResponse.of(cartItem);
     }
 
-    public Long add(Member member, CartItemAddRequest cartItemAddRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemAddRequest.getProductId())));
+    public Long add(final Member member, final CartItemAddRequest cartItemAddRequest) {
+        CartItem cartItem = new CartItem(member, productDao.getProductById(cartItemAddRequest.getProductId()));
+        return cartItemDao.save(cartItem);
     }
 
-    public CartItemUpdateResponse updateQuantity(Member member, Long id, CartItemUpdateRequest request) {
+    public CartItemUpdateResponse updateQuantity(final Member member, final Long id, final CartItemUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
@@ -54,7 +58,7 @@ public class CartItemService {
         return new CartItemUpdateResponse(cartItem.getQuantity(), cartItem.isChecked());
     }
 
-    public void remove(Member member, Long id) {
+    public void remove(final Member member, final Long id) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
