@@ -38,7 +38,7 @@ public class OrderService {
         this.orderDao = orderDao;
     }
     
-    public Long addOrder(Member member, OrderAddRequest request) {
+    public Order addOrder(Member member, OrderAddRequest request) {
         Cart cart = new Cart(cartItemDao.findByMemberId(member.getId()));
         List<OrderItem> itemsToOrder = cart.createOrderItems(findRequestCartItems(member, request.getOrderItems()));
         Order order = new Order(null,
@@ -51,7 +51,7 @@ public class OrderService {
         Long orderId = orderDao.save(order);
         orderItemDao.save(orderId, order.getOrderItems());
         cartItemDao.deleteAll(member.getId(), cart.getCartItems());
-        return orderId;
+        return new Order(orderId, order.getMemberId(), order.getOrderItems(), order.getDeliveryFee(), order.getDiscountPrice(),order.getCreatedAt());
     }
     
     private List<CartItem> findRequestCartItems(Member member, List<OrderItemRequest> requests) {
