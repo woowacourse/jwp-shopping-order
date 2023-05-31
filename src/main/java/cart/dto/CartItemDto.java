@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class CartItemDto {
 
     @Schema(description = "장바구니 상품 id", example = "1")
-    private Long id;
+    private final Long id;
 
     @Schema(description = "장바구니 상품 수량", example = "1")
-    private Integer quantity;
-    private ProductDto product;
+    private final Integer quantity;
+    private final ProductDto product;
 
     public CartItemDto(final Long id, final Integer quantity, final ProductDto product) {
         this.id = id;

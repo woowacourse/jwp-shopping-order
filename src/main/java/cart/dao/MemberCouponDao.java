@@ -6,16 +6,12 @@ import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MemberCouponDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
     private final RowMapper<MemberCouponEntity> rowMapper = (rs, rowNum) -> {
         final Long id = rs.getLong("id");
@@ -27,11 +23,6 @@ public class MemberCouponDao {
 
     public MemberCouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("member_coupon")
-                .usingColumns("coupon_id", "member_id", "used")
-                .usingGeneratedKeyColumns("id");
     }
 
     public List<MemberCouponEntity> findAllNotUsedMemberCouponByMemberId(final Long memberId) {

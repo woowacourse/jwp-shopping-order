@@ -1,7 +1,6 @@
 package cart.repository;
 
 import cart.dao.CouponDao;
-import cart.dao.MemberCouponDao;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.policy.DiscountPolicy;
 import cart.domain.coupon.policy.DiscountPolicyType;
@@ -11,11 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CouponRepository {
 
-    private final MemberCouponDao memberCouponDao;
     private final CouponDao couponDao;
 
-    public CouponRepository(final MemberCouponDao memberCouponDao, final CouponDao couponDao) {
-        this.memberCouponDao = memberCouponDao;
+    public CouponRepository(final CouponDao couponDao) {
         this.couponDao = couponDao;
     }
 
