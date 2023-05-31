@@ -32,7 +32,7 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(AuthMember authMember) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
-        List<CartItem> cartItems = cartItemDao.findByMemberId(findMember.getId());
+        List<CartItem> cartItems = cartItemDao.findDescByMemberId(findMember.getId());
         return cartItems.stream().map(CartItemResponse::from).collect(Collectors.toList());
     }
 
