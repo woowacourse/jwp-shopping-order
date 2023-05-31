@@ -26,13 +26,13 @@ public class DataInitializer {
 
     @PostConstruct
     public void init() {
-        final Long 깃짱 = productRepository.createProduct(new Product("깃짱", 13000, "https://lh3.google.com/u/0/d/1YelRXToHj3qh19EiTZzXHa5D8UVSy95n=w2940-h1546-iv1"));
-        final Long 제리 = productRepository.createProduct(new Product("제리", 13000, "https://lh3.google.com/u/0/d/1lKBDu_66U0dX15yOtHieAuuIclKDEWB-=w1294-h1546-iv1"));
-        final Long 호이 = productRepository.createProduct(new Product("호이", 13000, "https://lh3.google.com/u/0/d/1Pcyd8ngTr0TFBBSnANJsXhCwnnXGCLZz=w1294-h1546-iv1"));
-        final Long 링링 = productRepository.createProduct(new Product("링링", 13000, "https://lh3.google.com/u/0/d/1bMoOTubWF_gKvF4rSxN3woBY6PjjQMl4=w1294-h1546-iv1"));
-        final Long 글로 = productRepository.createProduct(new Product("글로", 13000, "https://lh3.google.com/u/0/d/1KIhTiIEn0NyXVYpY4Lv9XqzAAAyBIkVx=w1294-h1546-iv1"));
-        final Long 주노 = productRepository.createProduct(new Product("주노", 130000, "https://lh3.google.com/u/0/d/1e-ssyT6u7aREJB7mNpR9jMY_wX3XYFBS=w1294-h1546-iv1"));
-        final Long 리내 = productRepository.createProduct(new Product("이리내", 13000, "https://lh3.google.com/u/0/d/1H7YT80v_2Pif2QOyy4uqll-NEKD030Qq=w1294-h1546-iv1"));
+        final Long 깃짱 = productRepository.createProduct(new Product("깃짱", 13000, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFGJ81oHOa1sliugOaQaRcinBq9LyWbwL8X1_jFn_WhgE6K9RaHyeb7UUHQaW8APSDVuF3oafXcf-TEGpTNLks_BK2nyI6EtRQ=w1470-h1546"));
+        final Long 제리 = productRepository.createProduct(new Product("제리", 13000, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFGJ81qOHC6fmRBVgeBwdwqxQUV4nrhF4U-kfihqaGbtrYwrUTXvaxCC0bRnOoQiAjhPGpztqnyNqX3ZmWI_CFMszdLwMGwiOg=w1470-h1546"));
+        final Long 호이 = productRepository.createProduct(new Product("호이", 13000, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFGJ81oHOa1sliugOaQaRcinBq9LyWbwL8X1_jFn_WhgE6K9RaHyeb7UUHQaW8APSDVuF3oafXcf-TEGpTNLks_BK2nyI6EtRQ=w1470-h1546"));
+        final Long 링링 = productRepository.createProduct(new Product("링링", 13000, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFGJ81oB2HgBpMMwH10OZ_IEK9VocgjXLZWZScpK3ckZCao1cQQ4mvf7r-_tRWoUDvTULut4MJezdsqrhRX_YIwOrWthAFNi=w1470-h1546"));
+        final Long 글로 = productRepository.createProduct(new Product("글로", 13000, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFGJ81qK0iC7W3jm65K99d1hFNxvLjJfoqR1HuQusLcj2wGfl4J3vn-NTBMTlRhONMozARu-0zZws6OJmVT0EQGxKOjJ-ELitA=w1470-h1546"));
+        final Long 주노 = productRepository.createProduct(new Product("주노", 130000, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFGJ81qqjh0GfuPMQ9cdRtm87_mDsspllcIMj7-xGLal4AP1EBaGPTXTjBb1sgxk-_Vg8Z93PLDGHWNiXmKf62JKdTKW5M6Sfg=w1470-h1546"));
+        final Long 리내 = productRepository.createProduct(new Product("이리내", 13000, "https://lh3.googleusercontent.com/drive-viewer/AFGJ81q1kSc2EAZwZT_zwpumBoAFR3VqLcnkWHBVY5gNUifsVnhclYyjQM_4I0i3Hhi4a3wq7Tvn1kDNjV_205z3_tH96avW=w1470-h1546"));
 
         final Member savedMember1 = memberRepository.addMember(new Member("a@a.com", "1234"));
         final Member savedMember2 = memberRepository.addMember(new Member("b@b.com", "1234"));
