@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS orders (
     member_id BIGINT NOT NULL,
     original_price BIGINT NOT NULL,
     used_point BIGINT NOT NULL,
-    point_to_add BIGINT NOT NULL
+    point_to_add BIGINT NOT NULL,
+    finalPrice BIGINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS order_info (
