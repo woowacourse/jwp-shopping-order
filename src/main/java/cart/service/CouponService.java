@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class CouponService {
 
@@ -30,6 +30,7 @@ public class CouponService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<MemberCouponResponse> findAllByMemberId(final Long memberId) {
         return memberCouponRepository.findAllByMemberId(memberId).stream()
                 .map(memberCoupon -> MemberCouponResponse.of(memberCoupon.getCouponId(), memberCoupon.getCoupon()))

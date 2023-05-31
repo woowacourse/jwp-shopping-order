@@ -45,12 +45,14 @@ public class OrderService {
         return order.getId();
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findAll(final Long memberId) {
         return orderRepository.findAllByMemberId(memberId).stream()
                 .map(OrderResponse::from)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findById(final Long id, final Long memberId) {
         final Order order = orderRepository.findById(id)
                 .orElseThrow(OrderNotFoundException::new);
