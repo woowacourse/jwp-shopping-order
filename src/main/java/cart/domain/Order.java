@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.PointInconsistencyException;
 import cart.exception.PriceInconsistencyException;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class Order {
 
     public Order(Member member, List<CartItem> cartItems, Long originalPrice, Long usedPoint, Long pointToAdd) {
         validateOriginalPrice(cartItems, originalPrice);
+        validatePointToAdd(cartItems, pointToAdd);
 
         this.member = member;
         this.cartItems = cartItems;
@@ -38,8 +40,19 @@ public class Order {
             price += item.getProduct().getPrice() * item.getQuantity();
         }
 
-        if (originalPrice.intValue() != price) {
+        if (originalPrice != price) {
             throw new PriceInconsistencyException("주문 총액에 문제가 있습니다");
+        }
+    }
+
+    private void validatePointToAdd(List<CartItem> cartItems, Long pointToAdd) {
+        Double point = 0.0;
+        for (CartItem item : cartItems) {
+             point += item.getProduct().getPrice() * item.getQuantity() * item.getProduct().getPointRatio() / 100;
+        }
+
+        if (pointToAdd != Math.round(point)) {
+            throw new PointInconsistencyException("적립될 포인트에 문제가 있습니다");
         }
     }
 
