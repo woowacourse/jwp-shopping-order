@@ -17,13 +17,14 @@ import java.util.List;
 
 @SecurityRequirement(name = "basicAuth")
 @Tag(name = "쿠폰", description = "쿠폰을 조회한다")
+// TODO: member-coupons로 변경
 @RequestMapping("/coupons")
 @RestController
-public class CouponController {
+public class MemberCouponController {
 
     private final MemberCouponService memberCouponService;
 
-    public CouponController(final MemberCouponService memberCouponService) {
+    public MemberCouponController(final MemberCouponService memberCouponService) {
         this.memberCouponService = memberCouponService;
     }
 

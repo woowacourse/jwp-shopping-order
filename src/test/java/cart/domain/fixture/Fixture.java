@@ -22,8 +22,8 @@ public class Fixture {
 
     public static Product product1 = new Product(1L, "치즈피자", "치즈피자.png", new Money(8900L));
     public static Product product2 = new Product(2L, "불고기피자", "불고기피자.png", new Money(7900L));
-    public static CartItem cartItem1 = new CartItem(1L, 2, member1.getId(), product1);
-    public static CartItem cartItem2 = new CartItem(2L, 3, member2.getId(), product2);
+    public static CartItem cartItem1 = new CartItem(member1.getId(), product1);
+    public static CartItem cartItem2 = new CartItem(member2.getId(), product2);
     public static OrderItem orderItem1 = new OrderItem(1L, "치즈피자", "치즈피자.png", new Money(8900L), 2);
     public static OrderItem orderItem2 = new OrderItem(2L, "불고기피자", "불고기피자.png", new Money(7900L), 3);
 }

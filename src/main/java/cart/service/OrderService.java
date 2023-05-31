@@ -46,18 +46,18 @@ public class OrderService {
     public Long save(final Long memberId, final OrderRequest request) {
         final List<CartItem> cartItems = cartItemRepository.findAllByMemberId(memberId);
 
-        final MemberCoupon usedCoupon = useCouponIfExist(memberId, request.getCouponId());
+        final MemberCoupon usedCoupon = useCouponIfExist(request.getCouponId());
         final Order order = Order.createFromCartItems(cartItems, new Money(3000L), usedCoupon, memberId);
 
         cartItemRepository.deleteAll(cartItems);
         return orderRepository.save(order).getId();
     }
 
-    private MemberCoupon useCouponIfExist(final Long memberId, final Long couponId) {
+    private MemberCoupon useCouponIfExist(final Long couponId) {
         if (Objects.isNull(couponId)) {
             return new MemberCoupon.NullMemberCoupon();
         }
-        final MemberCoupon memberCoupon = memberCouponRepository.findByMemberIdAndCouponId(memberId, couponId)
+        final MemberCoupon memberCoupon = memberCouponRepository.findById(couponId)
                 .orElseThrow(MemberCouponNotFoundException::new);
         final MemberCoupon usedCoupon = memberCoupon.use();
         return memberCouponRepository.save(usedCoupon);
