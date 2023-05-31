@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.exception.CouponDiscountOverPriceException;
 import cart.exception.NegativeCouponException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,20 +24,10 @@ class CouponTest {
         final Coupon coupon = new Coupon(1L, 1000, "1000원 할인 쿠폰");
 
         //when
-        final int discountedPrice = coupon.discount(2000);
+        final int discountedPrice = coupon.calculateDiscount();
 
         //then
         assertThat(discountedPrice).isEqualTo(1000);
     }
-
-    @DisplayName("주문 금액보다 할인 금액이 더 크면 예외가 발생한다..")
-    @Test
-    void discount_invalid_discountIsBiggerThanPrice() {
-        //given
-        final Coupon coupon = new Coupon(1L, 1000, "1000원 할인 쿠폰");
-
-        //when, then
-        assertThatThrownBy(() -> coupon.discount(500))
-                .isInstanceOf(CouponDiscountOverPriceException.class);
-    }
+    
 }

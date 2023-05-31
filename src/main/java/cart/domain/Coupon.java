@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.exception.CouponDiscountOverPriceException;
 import cart.exception.NegativeCouponException;
 
 public class Coupon {
@@ -21,10 +20,7 @@ public class Coupon {
         }
     }
 
-    public int discount(final int price) {
-        if (price < discountPrice) {
-            throw new CouponDiscountOverPriceException("쿠폰 할인 금액이 상품 계산 값보다 더 큽니다.");
-        }
-        return price - discountPrice;
+    public int calculateDiscount() {
+        return discountPrice;
     }
 }
