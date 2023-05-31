@@ -1,11 +1,13 @@
 package cart.domain;
 
+import cart.exception.PriceInconsistencyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static cart.ShoppingOrderFixture.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class OrderTest {
@@ -24,4 +26,10 @@ class OrderTest {
         assertThat(order.getOriginalPrice()).isEqualTo(79000);
     }
 
+    @DisplayName("요청된 주문의 originalPrice와 실제 주문된 Product의 값의 합이 다르면 예외를 반환한다")
+    @Test
+    void throwExceptionWithWrongOriginalPrice() {
+        assertThatThrownBy(() -> new Order(member1, cartItems, 80000L, 0L, 6900L))
+                .isInstanceOf(PriceInconsistencyException.class);
+    }
 }
