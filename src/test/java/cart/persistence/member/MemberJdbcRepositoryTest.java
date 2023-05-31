@@ -88,7 +88,6 @@ class MemberJdbcRepositoryTest {
 
         // when
         final Optional<Member> member = memberRepository.findMemberByEmail(beaver.getEmail());
-
         // then
         assertThat(member.get()).usingRecursiveComparison().ignoringFields("id").isEqualTo(beaver);
     }
