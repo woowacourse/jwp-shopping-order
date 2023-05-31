@@ -16,6 +16,12 @@ public class OrderItem {
         this(null, product, quantity);
     }
 
+    public Price calculateTotalPrice() {
+        final Price productPrice = product.getPrice();
+        final int productQuantity = quantity.getValue();
+        return productPrice.multiply(productQuantity);
+    }
+
     public Long getId() {
         return id;
     }
