@@ -1,6 +1,7 @@
 package cart.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ public class Order {
             LocalDateTime createdAt) {
         this.id = id;
         this.memberId = memberId;
-        this.orderItems = orderItems;
+        this.orderItems = new ArrayList<>(orderItems);
         this.deliveryFee = deliveryFee;
         this.discountPrice = discountPrice;
         this.createdAt = createdAt;
@@ -60,7 +61,7 @@ public class Order {
     }
     
     public List<OrderItem> getOrderItems() {
-        return orderItems;
+        return new ArrayList<>(orderItems);
     }
     
     public int getDeliveryFee() {

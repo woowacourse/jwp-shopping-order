@@ -13,13 +13,11 @@ public class Cart {
     }
     
     public List<OrderItem> createOrderItems(List<CartItem> itemsToOrder) {
-        List<CartItem> orderedItem = deleteCartItems(itemsToOrder);
-        cartItems.removeAll(orderedItem);
-        return orderedItem.stream()
+        List<CartItem> orderedItems = deleteCartItems(itemsToOrder);
+        return orderedItems.stream()
                 .map(itemToOrder ->
                         new OrderItem(
                                 null,
-                                itemToOrder.getMember().getId(),
                                 itemToOrder.getProduct(),
                                 itemToOrder.getQuantity()
                         ))
@@ -39,10 +37,11 @@ public class Cart {
             }
             orderedItems.add(productInCart);
         }
+        cartItems.removeAll(orderedItems);
         return orderedItems;
     }
     
     public List<CartItem> getCartItems() {
-        return cartItems;
+        return new ArrayList<>(cartItems);
     }
 }
