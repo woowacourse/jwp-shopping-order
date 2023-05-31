@@ -5,10 +5,7 @@ import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
@@ -24,7 +21,7 @@ public class OrdersApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getPastOrders(Member member) {
+    public ResponseEntity<List<OrderResponse>> getOrders(Member member) {
         return ResponseEntity.ok(orderService.findOrdersByMember(member));
     }
 
@@ -32,5 +29,10 @@ public class OrdersApiController {
     public ResponseEntity<Void> order(Member member, OrderRequest orderRequest) {
         Long orderId = orderService.orderItems(member.getId(), orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> getOrderDetail(@PathVariable Long orderId, Member member) {
+        return ResponseEntity.ok(orderService.findOrderDetail(orderId));
     }
 }

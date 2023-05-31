@@ -16,4 +16,8 @@ public class OrderService {
     public List<OrderResponse> findOrdersByMember(Member member) {
         return null;
     }
+
+    public OrderResponse findOrderDetail(Long orderId) {
+        return null;
+    }
 }
