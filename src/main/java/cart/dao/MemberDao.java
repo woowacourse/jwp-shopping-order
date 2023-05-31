@@ -1,13 +1,13 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.domain.Point;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -51,11 +51,21 @@ public class MemberDao {
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
+    public void updatePoints(Long point, Member member) {
+        String sql = "UPDATE member SET point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, point, member.getId());
+    }
+
+    public Point findPoints(Member member) {
+        String sql = "SELECT point FROM member WHERE id = ?";
+        return new Point(jdbcTemplate.queryForObject(sql, Long.class, member.getId()));
+    }
+
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(rs.getLong("id"), rs.getString("email"),
+                    rs.getString("password"), new Point(rs.getLong("point")));
         }
     }
 }
-
