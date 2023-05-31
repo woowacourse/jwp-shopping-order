@@ -76,7 +76,7 @@ ProductDaoTest {
         Long productId = 99999999999L;
 
         // when, then
-        assertEquals(Optional.empty(),productDao.getProductById(productId));
+        assertEquals(Optional.empty(), productDao.getProductById(productId));
     }
 
     @DisplayName("product를 생성한다.")

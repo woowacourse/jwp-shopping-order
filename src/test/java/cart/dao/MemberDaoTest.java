@@ -53,7 +53,7 @@ class MemberDaoTest {
         Long id = 99999999999L;
 
         // when, then
-        assertEquals(Optional.empty(),memberDao.getMemberById(id));
+        assertEquals(Optional.empty(), memberDao.getMemberById(id));
     }
 
     @DisplayName("email을 기준으로 조회한다.")
@@ -80,7 +80,7 @@ class MemberDaoTest {
         String email = "NotExist";
 
         // when, then
-        assertEquals(Optional.empty(),memberDao.getMemberByEmail(email));
+        assertEquals(Optional.empty(), memberDao.getMemberByEmail(email));
     }
 
     @DisplayName("member를 추가한다.")
