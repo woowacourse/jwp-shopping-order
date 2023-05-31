@@ -3,12 +3,14 @@ package cart.repository;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.entity.CouponEntity;
+import cart.dao.entity.MemberCouponEntity;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -29,5 +31,13 @@ public class CouponRepository {
         return memberCouponDao.findUsableByMemberId(member.getId()).stream()
                 .map(memberCouponEntity -> memberCouponEntity.toCoupon(allCouponsById))
                 .collect(Collectors.toList());
+    }
+
+    public Coupon findById(final Long id) {
+        MemberCouponEntity memberCouponEntity = memberCouponDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 멤버의 쿠폰이 존재하지 않습니다."));
+        CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getCouponId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 쿠폰이 존재하지 않습니다."));
+        return memberCouponEntity.toCoupon(couponEntity);
     }
 }
