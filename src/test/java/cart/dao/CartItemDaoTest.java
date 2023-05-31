@@ -82,7 +82,10 @@ class CartItemDaoTest {
         final CartItemEntity cartItem3 = cartItemDao.insert(new CartItemEntity(member.getId(), product3.getId(), 1));
 
         // when
-        final List<CartItemEntity> result = cartItemDao.findByIds(List.of(cartItem1.getId(), cartItem2.getId()));
+        final List<CartItemEntity> result = cartItemDao.findAllByIdsAndMemberId(
+                List.of(cartItem1.getId(), cartItem2.getId()),
+                member.getId()
+        );
 
         // then
         assertThat(result).hasSize(2);

@@ -31,14 +31,16 @@ public class OrderService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
-    public Long save(final OrderSaveRequest orderSaveRequest, final Long memberId) {
-        final List<Item> items = cartItemRepository.findAllByIds(orderSaveRequest.getOrderItemIds(), memberId);
-        if (Objects.nonNull(orderSaveRequest.getCouponId())) {
-            final MemberCoupon memberCoupon = memberCouponRepository.findById(orderSaveRequest.getCouponId())
+    public Long save(final OrderSaveRequest request, final Long memberId) {
+        final List<Item> items = cartItemRepository.findAllByIdsAndMemberId(request.getOrderItemIds(), memberId);
+
+        if (Objects.nonNull(request.getCouponId())) {
+            final MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
                     .orElseThrow(MemberCouponNotFoundException::new);
             final Order order = orderRepository.save(new Order(memberCoupon, memberId, items));
             return order.getId();
         }
+
         final Order order = orderRepository.save(new Order(MemberCoupon.empty(memberId), memberId, items));
         return order.getId();
     }

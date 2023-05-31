@@ -61,13 +61,14 @@ public class CartItemDao {
         }
     }
 
-    public List<CartItemEntity> findByIds(final List<Long> ids) {
+    public List<CartItemEntity> findAllByIdsAndMemberId(final List<Long> ids, final Long memberId) {
         if (ids.isEmpty()) {
             return Collections.emptyList();
         }
-        final String sql = "SELECT * FROM cart_item WHERE id IN (:ids)";
+        final String sql = "SELECT * FROM cart_item WHERE member_id = (:member_id) AND id IN (:ids)";
         final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("ids", ids);
+        parameterSource.addValue("member_id", memberId);
         return namedJdbcTemplate.query(sql, parameterSource, rowMapper);
     }
 

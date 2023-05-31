@@ -74,7 +74,7 @@ class CartItemRepositoryTest {
         final Item cartItem3 = cartItemRepository.save(new CartItem(member, product3));
 
         // when
-        final List<Item> result = cartItemRepository.findAllByIds(
+        final List<Item> result = cartItemRepository.findAllByIdsAndMemberId(
                 List.of(cartItem1.getId(), cartItem2.getId()),
                 member.getId()
         );

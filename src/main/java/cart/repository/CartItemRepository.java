@@ -84,8 +84,8 @@ public class CartItemRepository {
         return Optional.of(new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), member, product));
     }
 
-    public List<Item> findAllByIds(final List<Long> ids, final Long memberId) {
-        final List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(ids);
+    public List<Item> findAllByIdsAndMemberId(final List<Long> ids, final Long memberId) {
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByIdsAndMemberId(ids, memberId);
         return getItems(memberId, cartItemEntities);
     }
 
