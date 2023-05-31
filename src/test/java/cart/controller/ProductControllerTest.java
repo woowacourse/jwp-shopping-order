@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.domain.VO.Money;
 import cart.domain.cart.Product;
-import cart.domain.common.Money;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
 import cart.repository.ProductRepository;

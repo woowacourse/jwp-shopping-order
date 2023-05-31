@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DiscountPolicyType;
 

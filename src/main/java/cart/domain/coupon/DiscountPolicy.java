@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 
 public interface DiscountPolicy {
 

@@ -1,4 +1,4 @@
-package cart.domain.common;
+package cart.domain.VO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

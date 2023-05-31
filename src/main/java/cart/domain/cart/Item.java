@@ -1,6 +1,6 @@
 package cart.domain.cart;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 import cart.domain.member.Member;
 
 public interface Item {

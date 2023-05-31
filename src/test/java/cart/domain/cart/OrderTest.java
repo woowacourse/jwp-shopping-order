@@ -5,7 +5,7 @@ import static cart.domain.coupon.DiscountPolicyType.PERCENT;
 import static cart.domain.coupon.DiscountPolicyType.PRICE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 import cart.domain.coupon.Coupon;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;

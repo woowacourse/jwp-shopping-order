@@ -2,7 +2,7 @@ package cart.domain.coupon;
 
 import static cart.domain.coupon.DiscountPolicyType.NONE;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 
 public class Coupon {
 

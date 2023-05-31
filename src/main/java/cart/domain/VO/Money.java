@@ -1,4 +1,4 @@
-package cart.domain.common;
+package cart.domain.VO;
 
 import java.math.BigDecimal;
 import java.util.Objects;

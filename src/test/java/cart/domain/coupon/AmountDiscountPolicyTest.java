@@ -2,7 +2,7 @@ package cart.domain.coupon;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

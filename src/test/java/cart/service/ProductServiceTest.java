@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.VO.Money;
 import cart.domain.cart.Product;
-import cart.domain.common.Money;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;

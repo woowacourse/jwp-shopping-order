@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 import cart.exception.InvalidDiscountPolicyException;
 
 public class PercentDiscountPolicy implements DiscountPolicy {

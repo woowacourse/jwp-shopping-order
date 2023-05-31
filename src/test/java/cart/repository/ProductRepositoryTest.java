@@ -3,8 +3,8 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.VO.Money;
 import cart.domain.cart.Product;
-import cart.domain.common.Money;
 import cart.test.RepositoryTest;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;

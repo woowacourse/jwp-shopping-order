@@ -3,7 +3,7 @@ package cart.fixture;
 import static cart.domain.coupon.DiscountPolicyType.DELIVERY;
 import static cart.domain.coupon.DiscountPolicyType.PRICE;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 import cart.domain.coupon.Coupon;
 import cart.entity.CouponEntity;
 

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.domain.common.Money;
+import cart.domain.VO.Money;
 import cart.domain.member.Member;
 import cart.exception.InvalidCartItemOwnerException;
 import org.junit.jupiter.api.DisplayNameGeneration;

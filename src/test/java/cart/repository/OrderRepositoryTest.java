@@ -7,12 +7,12 @@ import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.VO.Money;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Item;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
 import cart.domain.cart.Product;
-import cart.domain.common.Money;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import cart.test.RepositoryTest;
