@@ -39,3 +39,33 @@ CREATE TABLE if not exists member_coupon
     FOREIGN KEY (coupon_id) REFERENCES coupon (id),
     PRIMARY KEY (member_id, coupon_id)
 );
+
+CREATE TABLE if not exists cart_order
+(
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE if not exists order_item
+(
+    id         BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id   BIGINT       NOT NULL,
+    product_id BIGINT       NOT NULL,
+    name       VARCHAR(255) NOT NULL,
+    price      INT          NOT NULL,
+    image_url  VARCHAR(255) NOT NULL,
+    quantity   INT          NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES cart_order (id)
+);
+
+
+CREATE TABLE if not exists order_coupon
+(
+    order_item_id BIGINT NOT NULL,
+    coupon_id     BIGINT NOT NULL,
+    FOREIGN KEY (order_item_id) REFERENCES order_item (id),
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id),
+    PRIMARY KEY (order_item_id, coupon_id)
+);
+
