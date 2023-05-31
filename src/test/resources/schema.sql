@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS cart_item (
 CREATE TABLE IF NOT EXISTS orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    total_price INT NOT NULL,
+    original_price INT NOT NULL,
     discount_price INT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id)
 );

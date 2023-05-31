@@ -23,14 +23,14 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 
 -- 30000원 이하 주문
-INSERT INTO orders (member_id, total_price, discount_price) VALUES (1, 23000, 0);
+INSERT INTO orders (member_id, original_price, discount_price) VALUES (1, 23000, 0);
 INSERT INTO order_item (order_id, product_id, quantity) VALUES (1, 1, 1);
 INSERT INTO order_item (order_id, product_id, quantity) VALUES (1, 3, 1);
 -- 30000원~50000원 주문
-INSERT INTO orders (member_id, total_price, discount_price) VALUES (1, 30000, 2000);
+INSERT INTO orders (member_id, original_price, discount_price) VALUES (1, 30000, 2000);
 INSERT INTO order_item (order_id, product_id, quantity) VALUES (2, 1, 3);
 -- 50000원 이상 주문
-INSERT INTO orders (member_id, total_price, discount_price) VALUES (1, 63000, 5000);
+INSERT INTO orders (member_id, original_price, discount_price) VALUES (1, 63000, 5000);
 INSERT INTO order_item (order_id, product_id, quantity) VALUES (3, 1, 1);
 INSERT INTO order_item (order_id, product_id, quantity) VALUES (3, 2, 2);
 INSERT INTO order_item (order_id, product_id, quantity) VALUES (3, 3, 1);
