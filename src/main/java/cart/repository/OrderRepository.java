@@ -3,10 +3,14 @@ package cart.repository;
 import cart.dao.OrderHistoryDao;
 import cart.dao.OrderProductDao;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.domain.Product;
 import cart.entity.OrderHistoryEntity;
 import cart.entity.OrderProductEntity;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
@@ -35,5 +39,12 @@ public class OrderRepository {
                 quantity);
         final OrderProductEntity savedEntity = orderProductDao.insert(entity);
         return savedEntity.getId();
+    }
+
+    public List<Order> findOrdersOf(final Member member) {
+        return orderHistoryDao.findByMemberId(member.getId())
+                .stream()
+                .map(OrderHistoryEntity::toOrder)
+                .collect(Collectors.toList());
     }
 }

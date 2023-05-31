@@ -1,8 +1,9 @@
 package cart.entity;
 
+import cart.domain.Order;
+
 public class OrderHistoryEntity {
     private final Long id;
-
     private final Long memberId;
     private final int usedPoint;
     private final int orderPrice;
@@ -41,5 +42,9 @@ public class OrderHistoryEntity {
 
     public int getOrderPrice() {
         return orderPrice;
+    }
+
+    public Order toOrder() {
+        return null;
     }
 }

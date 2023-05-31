@@ -1,15 +1,17 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.domain.Product;
 import cart.dto.request.OrderRequest;
-import cart.exception.InvalidPointException;
+import cart.dto.response.OrderResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,9 +37,6 @@ public class OrderService {
     public long orderCartItems(final Member member, final OrderRequest request) {
         final int savedPoint = memberRepository.findPointOf(member);
         final int usedPoint = request.getPoints();
-        final int updatedPoint = savedPoint - usedPoint;
-        validatePointAmount(updatedPoint);
-        memberRepository.updatePoint(member, updatedPoint);
 
         final Map<Product, Integer> products = request.getCartItemIds().stream()
                 .collect(Collectors.toMap(
@@ -48,33 +47,28 @@ public class OrderService {
                         cartItemRepository::findQuantityOf
                 ));
 
-        final int totalPrice = calculateTotalPrice(products);
-        final int orderPrice = totalPrice - usedPoint;
+        final Order order = new Order(savedPoint, usedPoint, products, member);
 
+        final int totalPrice = order.calculateTotalPrice();
+        final int orderPrice = order.calculateOrderPrice();
+
+        final int updatedPoint = order.calculatedUpdatedPoint();
+
+        memberRepository.updatePoint(member, updatedPoint);
         final long orderHistoryId = orderRepository.createOrderHistory(member, usedPoint, orderPrice);
 
-        for (final Product product : products.keySet()) {
-            orderRepository.addOrderProductTo(orderHistoryId, product, products.get(product));
-        }
+        products.keySet()
+                .forEach(product -> orderRepository.addOrderProductTo(
+                                orderHistoryId, product,
+                                products.get(product)
+                        )
+                );
 
         return orderHistoryId;
     }
 
-    private static int calculateTotalPrice(final Map<Product, Integer> products) {
-        return products.keySet().stream()
-                .mapToInt(
-                        product -> {
-                            final int price = product.getPrice();
-                            final int quantity = products.get(product);
-                            return price * quantity;
-                        }
-                )
-                .sum();
-    }
-
-    private static void validatePointAmount(final int updatedPoint) {
-        if (updatedPoint < 0) {
-            throw new InvalidPointException("존재하는 포인트보다 더 많은 포인트를 사용할 수 없습니다.");
-        }
+    public List<OrderResponse> getAllOrdersOf(final Member member) {
+        orderRepository.findOrdersOf(member);
+        return null;
     }
 }
