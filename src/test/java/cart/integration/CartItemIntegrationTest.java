@@ -47,8 +47,8 @@ class CartItemIntegrationTest extends IntegrationTest {
         final MemberEntity memberEntity = memberDao.findById(1L);
         final MemberEntity memberEntity2 = memberDao.findById(2L);
 
-        member = memberEntity.toMember();
-        member2 = memberEntity2.toMember();
+        member = Member.from(memberEntity);
+        member2 = Member.from(memberEntity2);
     }
 
     @Test
@@ -86,7 +86,7 @@ class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void 장바구니에_담긴_아이템의_수량을_변경한다() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
-
+        System.out.println(cartItemId);
         ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
@@ -102,9 +102,8 @@ class CartItemIntegrationTest extends IntegrationTest {
         assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
     }
 
-    @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     @Test
-    void decreaseCartItemQuantityToZero() {
+    void 장바구니에_담긴_아이템의_수량을_0으로_변경하면_장바구니에서_아이템이_삭제된다() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
         ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0);

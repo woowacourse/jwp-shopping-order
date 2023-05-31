@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.MemberEntity;
-import java.util.Optional;
+import cart.exception.AuthenticationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,12 +22,12 @@ public class AuthDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<MemberEntity> findByEmail(final String email) {
+    public MemberEntity findByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, MAPPER, email));
+            return jdbcTemplate.queryForObject(sql, MAPPER, email);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new AuthenticationException();
         }
     }
 }

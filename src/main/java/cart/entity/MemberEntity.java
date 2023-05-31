@@ -1,7 +1,5 @@
 package cart.entity;
 
-import cart.domain.Member;
-
 public class MemberEntity {
 
     private final Long id;
@@ -14,10 +12,6 @@ public class MemberEntity {
         this.grade = grade;
         this.email = email;
         this.password = password;
-    }
-
-    public Member toMember() {
-        return new Member(id, grade, email, password);
     }
 
     public Long getId() {
