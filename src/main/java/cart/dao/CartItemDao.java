@@ -1,13 +1,13 @@
 package cart.dao;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Money;
-import cart.domain.Product;
-import cart.domain.Quantity;
+import cart.dao.dto.CartItemProductDto;
+import cart.dao.entity.CartItemEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -16,20 +16,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CartItemDao {
 
-    private static final String EMPTY_PASSWORD = null;
-    private static final RowMapper<CartItem> ROW_MAPPER = (rs, rowNum) -> {
-        Member member = new Member(
-            rs.getLong("member.id"), rs.getString("email"), EMPTY_PASSWORD);
-        Product product = new Product(
-            rs.getLong("product.id"),
-            rs.getString("name"),
-            Money.from(rs.getInt("price")),
-            rs.getString("image_url"));
-        return new CartItem(
+    private static final RowMapper<CartItemProductDto> ITEM_PRODUCT_ROW_MAPPER = (rs, rowNum) ->
+        new CartItemProductDto(
             rs.getLong("cart_item.id"),
-            Quantity.from(rs.getInt("cart_item.quantity")),
-            product, member);
-    };
+            rs.getLong("product.id"),
+            rs.getLong("member.id"),
+            rs.getString("email"),
+            rs.getInt("cart_item.quantity"),
+            rs.getString("name"),
+            rs.getInt("price"),
+            rs.getString("image_url"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
@@ -41,7 +37,7 @@ public class CartItemDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
+    public List<CartItemProductDto> findByMemberId(Long memberId) {
         String sql =
             "SELECT cart_item.id, cart_item.member_id, member.id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                 +
@@ -49,19 +45,19 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
+        return jdbcTemplate.query(sql, ITEM_PRODUCT_ROW_MAPPER, memberId);
     }
 
-    public Long save(CartItem cartItem) {
+    public long save(CartItemEntity cartItemEntity) {
         Number generatedKey = insertAction.executeAndReturnKey(
-            Map.of("member_id", cartItem.getMember().getId(),
-                "product_id", cartItem.getProduct().getId(),
-                "quantity", cartItem.getQuantityCount()));
+            Map.of("member_id", cartItemEntity.getMemberId(),
+                "product_id", cartItemEntity.getProductId(),
+                "quantity", cartItemEntity.getQuantity()));
 
         return Objects.requireNonNull(generatedKey).longValue();
     }
 
-    public CartItem findById(Long id) {
+    public Optional<CartItemProductDto> findById(long id) {
         String sql =
             "SELECT cart_item.id, cart_item.member_id, member.email, member.id, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                 +
@@ -69,14 +65,12 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, ROW_MAPPER, id);
-        return cartItems.isEmpty() ? null : cartItems.get(0);
-    }
-
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                ITEM_PRODUCT_ROW_MAPPER, id));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void deleteById(Long id) {
@@ -84,9 +78,20 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void updateQuantity(CartItem cartItem) {
+    public void updateQuantity(CartItemEntity cartItemEntity) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantityCount(), cartItem.getId());
+        int quantity = cartItemEntity.getQuantity();
+        jdbcTemplate.update(sql, quantity, cartItemEntity.getId());
+    }
+
+    public boolean isExistingId(long cartItemId) {
+        String sql = "SELECT EXISTS(SELECT cart_item_id FROM cart_item WHERE id = ?) "
+            + "AS cart_item_exist";
+        try {
+            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new Object[]{cartItemId}, Boolean.class));
+        } catch (EmptyResultDataAccessException exception) {
+            return false;
+        }
     }
 }
 
