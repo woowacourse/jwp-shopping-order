@@ -1,22 +1,24 @@
 package cart.dao;
 
 import cart.entity.CartItemEntity;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertAction;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
+    public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<CartItemEntity> findByMemberId(final Long memberId) {
@@ -33,23 +35,12 @@ public class CartItemDao {
         });
     }
 
-    public long save(final CartItemEntity cartItemEntity) {
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setLong(1, cartItemEntity.getMemberId());
-            ps.setLong(2, cartItemEntity.getProductId());
-            ps.setInt(3, cartItemEntity.getQuantity());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    public long createCartItem(final CartItemEntity cartItemEntity) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("member_id", cartItemEntity.getMemberId());
+        params.put("product_id", cartItemEntity.getProductId());
+        params.put("quantity", cartItemEntity.getQuantity());
+        return insertAction.executeAndReturnKey(params).longValue();
     }
 
     public CartItemEntity findById(final long id) {

@@ -14,7 +14,7 @@ public enum Grade {
     }
 
     public String getGrade() {
-        return name().toLowerCase();
+        return name();
     }
 
     public int getDiscountRate() {

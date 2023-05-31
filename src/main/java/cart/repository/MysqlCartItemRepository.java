@@ -59,7 +59,7 @@ public class MysqlCartItemRepository implements CartItemRepository {
     @Override
     public CartItem save(final CartItem cartItem) {
         final CartItemEntity cartItemEntity = toCartItemEntity(cartItem);
-        final long id = cartItemDao.save(cartItemEntity);
+        final long id = cartItemDao.createCartItem(cartItemEntity);
         return new CartItem(id, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
     }
 

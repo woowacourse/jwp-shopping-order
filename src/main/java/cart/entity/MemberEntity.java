@@ -19,7 +19,7 @@ public class MemberEntity {
     }
 
     public String getGrade() {
-        return grade;
+        return grade.toUpperCase();
     }
 
     public String getEmail() {

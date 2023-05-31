@@ -1,38 +1,40 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertAction;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
+            final long productId = rs.getLong("id");
+            final String name = rs.getString("name");
+            final int price = rs.getInt("price");
+            final String imageUrl = rs.getString("image_url");
             return new ProductEntity(productId, name, price, imageUrl);
         });
     }
 
     public ProductEntity findById(final long id) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+        final String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
             final String name = rs.getString("name");
             final int price = rs.getInt("price");
@@ -42,22 +44,11 @@ public class ProductDao {
     }
 
     public long createProduct(final ProductEntity productEntity) {
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setString(1, productEntity.getName());
-            ps.setInt(2, productEntity.getPrice());
-            ps.setString(3, productEntity.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        final Map<String, Object> params = new HashMap<>();
+        params.put("name", productEntity.getName());
+        params.put("price", productEntity.getPrice());
+        params.put("image_url", productEntity.getImageUrl());
+        return insertAction.executeAndReturnKey(params).longValue();
     }
 
     public void updateProduct(final Long id, final ProductEntity productEntity) {
