@@ -3,6 +3,7 @@ package cart.domain;
 import java.util.Objects;
 
 public class Price {
+    public static final Price DELIVERY = new Price(3000);
     private final int value;
 
     public Price(int value) {

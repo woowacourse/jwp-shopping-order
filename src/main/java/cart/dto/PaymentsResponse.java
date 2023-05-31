@@ -1,20 +1,22 @@
 package cart.dto;
 
+import cart.domain.Price;
+
 import java.util.List;
 
 public class PaymentsResponse {
-    private final List<CartItemResponse> cartItems;
-    private final int deliveryPrice;
+    private final List<ProductResponse> products;
     private final List<CouponResponse> coupons;
+    private final int deliveryPrice;
 
-    public PaymentsResponse(List<CartItemResponse> cartItems, int deliveryPrice, List<CouponResponse> coupons) {
-        this.cartItems = cartItems;
-        this.deliveryPrice = deliveryPrice;
+    public PaymentsResponse(List<ProductResponse> products, List<CouponResponse> coupons, Price deliveryPrice) {
+        this.products = products;
         this.coupons = coupons;
+        this.deliveryPrice = deliveryPrice.getValue();
     }
 
-    public List<CartItemResponse> getCartItems() {
-        return cartItems;
+    public List<ProductResponse> getProducts() {
+        return products;
     }
 
     public int getDeliveryPrice() {
