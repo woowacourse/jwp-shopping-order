@@ -16,6 +16,9 @@ import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderResponse;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import cart.exception.InvalidOrderCheckedException;
+import cart.exception.InvalidOrderProductException;
+import cart.exception.InvalidOrderQuantityException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,13 +86,19 @@ public class OrderService {
     }
 
     private void compareEachCartItem(final CartItem cartItem, final CartItemRequest request) {
-        if (isInvalidProduct(cartItem, request) || isInvalidQuantity(cartItem, request) || isNotChecked(cartItem)) {
-            throw new IllegalArgumentException("주문 정보가 일치하지 않습니다.");
+        if (isInvalidProduct(cartItem, request)) {
+            throw new InvalidOrderProductException();
+        }
+        if (isInvalidQuantity(cartItem, request)) {
+            throw new InvalidOrderQuantityException();
+        }
+        if (isNotChecked(cartItem)) {
+            throw new InvalidOrderCheckedException();
         }
     }
 
     private boolean isInvalidProduct(final CartItem cartItem, final CartItemRequest request) {
-        return !cartItem.getProduct().getId().equals(request.getProductId());
+        return !cartItem.equalsId(request.getId());
     }
 
     private boolean isInvalidQuantity(final CartItem cartItem, final CartItemRequest request) {

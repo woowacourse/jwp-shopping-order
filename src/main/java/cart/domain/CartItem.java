@@ -40,6 +40,10 @@ public class CartItem {
         this.checked = checked;
     }
 
+    public boolean equalsId(final Long id) {
+        return Objects.equals(this.id, id);
+    }
+
     public Long getId() {
         return id;
     }

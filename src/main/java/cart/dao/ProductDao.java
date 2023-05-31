@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
+import cart.exception.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -40,7 +41,7 @@ public class ProductDao {
             return new Product(productId, name, price, imageUrl);
         }, productId);
         if (product.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new ProductNotFoundException();
         }
         return product.get(0);
     }
