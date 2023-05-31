@@ -23,7 +23,7 @@ class OrderTest {
 
     @Test
     void 주문이_정상적으로_생성된다() {
-        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), new Point(500), LocalDateTime.now());
+        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), 500, LocalDateTime.now());
 
         assertAll(
                 () -> assertThat(order.getId()).isEqualTo(1L),
@@ -34,7 +34,7 @@ class OrderTest {
 
     @Test
     void 주문의_총_가격을_계산한다() {
-        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), new Point(500), LocalDateTime.now());
+        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), 500, LocalDateTime.now());
 
         Price totalPrice = order.calculateTotalPrice();
 
@@ -43,7 +43,7 @@ class OrderTest {
 
     @Test
     void 주문의_결제_가격을_계산한다() {
-        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), new Point(500), LocalDateTime.now());
+        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), 500, LocalDateTime.now());
 
         Price spendPrice = order.calculateSpendPrice();
 
@@ -52,7 +52,7 @@ class OrderTest {
 
     @Test
     void 주문의_썸네일은_첫번째_상품의_이미지_주소다() {
-        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), new Point(500), LocalDateTime.now());
+        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), 500, LocalDateTime.now());
 
         String thumbnailUrl = order.getThumbnailUrl();
 
@@ -62,7 +62,7 @@ class OrderTest {
     @ParameterizedTest
     @CsvSource(value = {"10,500", "1,50", "0.1,5"})
     void 결제_금액의_일정_비율만큼_포인트가_계산된다(double percent, long point) {
-        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), new Point(5000), LocalDateTime.now());
+        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), 5000, LocalDateTime.now());
 
         Point rewardPoint = order.calculateRewardPoint(percent);
 
@@ -71,7 +71,7 @@ class OrderTest {
 
     @Test
     void 결제_금액이_0원이면_적립_포인트가_0원이어야_한다() {
-        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), new Point(10000), LocalDateTime.now());
+        Order order = new Order(1L, member, List.of(orderItemA, orderItemB), 10000, LocalDateTime.now());
 
         Point rewardPoint = order.calculateRewardPoint(1);
 

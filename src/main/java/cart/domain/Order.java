@@ -12,11 +12,11 @@ public class Order {
     private Point spendPoint;
     private LocalDateTime createdAt;
 
-    public Order(Long id, Member member, List<OrderItem> orderItems, Point spendPoint, LocalDateTime createdAt) {
+    public Order(Long id, Member member, List<OrderItem> orderItems, long spendPoint, LocalDateTime createdAt) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
-        this.spendPoint = spendPoint;
+        this.spendPoint = new Point(spendPoint);
         this.createdAt = createdAt;
     }
 
