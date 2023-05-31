@@ -8,16 +8,16 @@ public class ProductPayResponse {
     private final String productName;
     private final int price;
     private final int quantity;
-    private final String imgUrl;
+    private final String imageUrl;
     private final Boolean isOnSale;
     private final int salePrice;
 
-    private ProductPayResponse(final long productId, final String productName, final int price, final int quantity, final String imgUrl, final Boolean isOnSale, final int salePrice) {
+    private ProductPayResponse(final long productId, final String productName, final int price, final int quantity, final String imageUrl, final Boolean isOnSale, final int salePrice) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
         this.isOnSale = isOnSale;
         this.salePrice = salePrice;
     }
@@ -43,7 +43,7 @@ public class ProductPayResponse {
     }
 
     public String getImgUrl() {
-        return imgUrl;
+        return imageUrl;
     }
 
     public boolean getIsOnSale() {
