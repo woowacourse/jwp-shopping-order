@@ -1,28 +1,18 @@
 package cart.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class ProductRequest {
-    private String name;
-    private int price;
-    private String imageUrl;
 
-    public ProductRequest() {
-    }
+    private final String name;
+    private final Integer price;
+    private final String imageUrl;
+    private final Integer stock;
 
-    public ProductRequest(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    private ProductRequest() {
+        this(null, null, null, null);
     }
 }
