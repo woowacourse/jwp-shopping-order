@@ -1,0 +1,18 @@
+package cart.application.repository;
+
+import cart.domain.Member;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface MemberRepository {
+
+    Long createMember(Member member);
+
+    List<Member> findAllMembers();
+
+    Optional<Member> findMemberById(Long id);
+
+    Optional<Member> findMemberByEmail(String email);
+
+}
