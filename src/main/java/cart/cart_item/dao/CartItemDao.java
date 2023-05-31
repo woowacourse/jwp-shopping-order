@@ -132,5 +132,15 @@ public class CartItemDao {
       return new CartItem(cartItemId, quantity, product, member);
     });
   }
+
+  public void batchDeleteByIdsIn(final List<Long> cartItemIds, final Long memberId) {
+    final String sql = "DELETE FROM CART_ITEM CI WHERE CI.member_id = :memberId and CI.id IN (:ids)";
+
+    final MapSqlParameterSource parameterSource =
+        new MapSqlParameterSource().addValue("memberId", memberId)
+            .addValue("ids", cartItemIds);
+
+    namedParameterJdbcTemplate.update(sql, parameterSource);
+  }
 }
 
