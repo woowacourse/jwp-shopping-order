@@ -1,8 +1,8 @@
 package cart.ui;
 
+import cart.application.request.CreateProductRequest;
 import cart.config.ControllerTestConfig;
-import cart.domain.Product;
-import cart.dto.ProductRequest;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -14,7 +14,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 class ProductApiControllerTest extends ControllerTestConfig {
 
     Long 상품_계란_등록() {
-        return productDao.createProduct(new Product("계란", 1000, "https://계란_이미지_주소.png"));
+        return productDao.insertProduct(new ProductEntity("계란", 1000, "https://계란_이미지_주소.png"));
     }
 
     @Test
@@ -70,7 +70,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
-                .body(new ProductRequest("계란", 1000, "https://계란_이미지_주소.png"))
+                .body(new CreateProductRequest("계란", 1000, "https://계란_이미지_주소.png"))
                 .post("/products")
         .then()
                 .statusCode(HttpStatus.CREATED.value());
@@ -90,7 +90,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
         .when()
-                .body(new ProductRequest("수정된 계란", 1000, "https://계란_이미지_주소.png"))
+                .body(new CreateProductRequest("수정된 계란", 1000, "https://계란_이미지_주소.png"))
                 .pathParam("id", 상품_계란_식별자값)
                 .put("/products/{id}")
         .then()

@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.application.response;
 
 import cart.domain.Product;
 
@@ -16,7 +16,7 @@ public class ProductResponse {
     }
 
     public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new ProductResponse(product.getId(), product.getName().getValue(), product.getPrice().getValue().intValue(), product.getImageUrl());
     }
 
     public Long getId() {
