@@ -19,6 +19,14 @@ public class OrderItem {
         this(null, name, quantity, imageUrl, orderPrice);
     }
 
+    public static OrderItem from(CartItem cartItem) {
+        int quantity = cartItem.getQuantity();
+        Product product = cartItem.getProduct();
+        int price = product.getPrice();
+        Money orderPrice = Money.from(price * quantity);
+        return new OrderItem(product.getName(), quantity, product.getImageUrl(), orderPrice);
+    }
+
     public Money getOrderPrice() {
         return orderPrice;
     }

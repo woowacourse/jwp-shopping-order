@@ -10,6 +10,10 @@ public class Money {
         this.value = value;
     }
 
+    public static Money from(int value) {
+        return new Money(value);
+    }
+
     private void validate(int value) {
         if (value < 0) {
             throw new IllegalArgumentException("");
