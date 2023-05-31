@@ -8,6 +8,7 @@ import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,12 @@ public class OrderApiController {
     
     @GetMapping
     public ResponseEntity<OrdersResponse> findAllOrders(Member member) {
+        OrdersResponse ordersResponse= OrdersResponse.of(orderService.findOrdersByMember(member));
+        return ResponseEntity.status(HttpStatus.OK).body(ordersResponse);
+    }
+    
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrdersResponse> findOrder(Member member, @PathVariable Long orderId) {
         OrdersResponse ordersResponse= OrdersResponse.of(orderService.findOrdersByMember(member));
         return ResponseEntity.status(HttpStatus.OK).body(ordersResponse);
     }

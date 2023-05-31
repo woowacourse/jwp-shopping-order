@@ -51,7 +51,7 @@ public class OrderDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
     
-    public List<Order> findById(Long id) {
+    public List<Order> findOrders(Long id) {
         String sql = "SELECT orders.id, orders.member_id, orders.delivery_fee, orders.discount_price, orders.created_at, "
                 + "order_items.id, order_items.product_name, order_items.product_price, order_items.product_image_url, order_items.product_quantity "
                 + "FROM orders "
@@ -60,6 +60,19 @@ public class OrderDao {
         Map<Long, Order> orderMap = new HashMap<>();
         jdbcTemplate.query(sql, new OrderMapper(orderMap), id);
         return new ArrayList<>(orderMap.values());
+    }
+    
+    public Order findOrder(Long memberId, Long orderId) {
+        String sql = "SELECT orders.id, orders.member_id, orders.delivery_fee, orders.discount_price, orders.created_at, "
+                + "order_items.id, order_items.product_name, order_items.product_price, order_items.product_image_url, order_items.product_quantity "
+                + "FROM orders "
+                + "INNER JOIN order_items ON orders.id = order_items.order_id "
+                + "WHERE orders.member_id = ? AND orders.id = ?";
+        Map<Long, Order> orderMap = new HashMap<>();
+        jdbcTemplate.query(sql, new OrderMapper(orderMap), memberId, orderId);
+        List<Order> order = new ArrayList<>(orderMap.values());
+        return order.isEmpty() ? null : order.get(0);
+        
     }
     
     
