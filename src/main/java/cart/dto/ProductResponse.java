@@ -10,30 +10,33 @@ public class ProductResponse {
     private String imageUrl;
     private boolean isDiscounted;
     private int discountRate;
+    private int discountedPrice;
 
-    public ProductResponse() {
-    }
-
-    public ProductResponse(Long id, String name, int price, String imageUrl, boolean isDiscounted, int discountRate) {
+    public ProductResponse(Long id, String name, int price, String imageUrl, boolean isDiscounted, int discountRate, int discountedPrice) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
+        this.discountedPrice = discountedPrice;
     }
 
-    public ProductResponse(String name, int price, String imageUrl, boolean isDiscounted, int discountRate) {
+    public ProductResponse(String name, int price, String imageUrl, boolean isDiscounted, int discountRate, int discountedPrice) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
+        this.discountedPrice = discountedPrice;
+    }
+
+    public ProductResponse() {
     }
 
     public static ProductResponse of(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-                product.getImage(), product.getIsDiscounted(), product.getDiscountRate());
+                product.getImage(), product.getIsDiscounted(), product.getDiscountRate(), product.getDiscountedPrice());
     }
 
     public Long getId() {
@@ -58,5 +61,9 @@ public class ProductResponse {
 
     public int getDiscountRate() {
         return discountRate;
+    }
+
+    public int getDiscountedPrice() {
+        return discountedPrice;
     }
 }

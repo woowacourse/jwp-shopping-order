@@ -7,6 +7,7 @@ public class Product {
     private String image;
     private boolean isDiscounted;
     private int discountRate;
+    private int discountedPrice;
 
     public Product(String name, int price, String image) {
         this.name = name;
@@ -21,6 +22,15 @@ public class Product {
         this.image = image;
         this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
+        initDiscountedPrice(price, discountRate);
+    }
+
+    private void initDiscountedPrice(int price, int discountRate) {
+        if(discountRate > 0){
+            this.discountedPrice = calculateDiscountedPrice();
+        }else{
+            this.discountedPrice = price;
+        }
     }
 
     public Product(String name, int price, String image, boolean isDiscounted, int discountRate) {
@@ -29,6 +39,38 @@ public class Product {
         this.image = image;
         this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
+        initDiscountedPrice(price, discountRate);
+    }
+
+    public int calculateDiscountedPrice(int memberDiscount) {
+        if (getIsDiscounted()) {
+            return (discountRate * price / 100 - price) * -1;
+        } else {
+            return (memberDiscount * price / 100 - price) * -1;
+        }
+    }
+
+    public int calculateProductDiscountedPrice() {
+        return (discountRate * price / 100 - price) * -1;
+    }
+
+    public int calculateProductDiscountAmount(){
+        int discountedPrice = calculateProductDiscountedPrice();
+        return price - discountedPrice;
+    }
+
+    public int calculateMemberDiscountedPrice(int memberDiscount) {
+        if (!getIsDiscounted()) {
+            return (memberDiscount * price / 100 - price) * -1;
+        }
+        throw new IllegalArgumentException("해당 상품은 멤버 할인 상품이 아닙니다");
+    }
+
+    public int calculateDiscountedPrice() {
+        if (getIsDiscounted()) {
+            return (discountRate * price / 100 - price) * -1;
+        }
+        return price;
     }
 
     public Long getId() {
@@ -54,28 +96,7 @@ public class Product {
     public int getDiscountRate() {
         return discountRate;
     }
-
-    public int calculateDiscountedPrice(int memberDiscount) {
-        if (getIsDiscounted()) {
-            return (discountRate * price / 100 - price) * -1;
-        } else {
-            return (memberDiscount * price / 100 - price) * -1;
-        }
-    }
-
-    public int calculateProductDiscountedPrice() {
-        return (discountRate * price / 100 - price) * -1;
-    }
-
-    public int calculateProductDiscountAmount(){
-        int discountedPrice = calculateProductDiscountedPrice();
-        return price - discountedPrice;
-    }
-
-    public int calculateMemberDiscountedPrice(int memberDiscount) {
-        if (!getIsDiscounted()) {
-            return (memberDiscount * price / 100 - price) * -1;
-        }
-        throw new IllegalArgumentException("해당 상품은 멤버 할인 상품이 아닙니다");
+    public int getDiscountedPrice() {
+        return discountedPrice;
     }
 }

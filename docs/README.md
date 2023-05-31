@@ -40,13 +40,7 @@
 - [x] MemberResponse 작성 
 
 ## 상품 전체 조회하기
-- [] GET 요청, URI = "/products"인 API 작성
-- [] service에서 domain 객체 생성(Products)
-  - [] Product의 List를 가지고 있다 
-- [] domain으로 dao에 요청 전송
-- [] dao에서 영속화 작업 수행
-  - [] 모든 상품들을 조회하는 쿼리문 작성 
-- [] ProductsResponse 작성
+- [x] ProductsResponse 수정
 
 
 ## 주디가 했던 고민들
