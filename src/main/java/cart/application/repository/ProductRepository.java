@@ -8,11 +8,11 @@ import java.util.List;
 @Repository
 public interface ProductRepository {
 
-    List<Product> findAll();
+    Long insert(Product product);
 
     Product findById(Long productId);
 
-    Long insert(Product product);
+    List<Product> findAll();
 
     void update(Product product);
 

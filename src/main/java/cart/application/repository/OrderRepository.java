@@ -5,13 +5,14 @@ import cart.domain.Order;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository {
 
-    void insert(Order order);
+    Order insert(Order order);
 
     List<Order> findByMemberId(Long id);
 
-    Order findById(Member member);
+    Optional<Order> findById(Long id);
 }

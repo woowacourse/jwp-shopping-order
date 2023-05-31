@@ -29,7 +29,8 @@ public class MemberService {
     }
 
     public Member getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 멤버는 존재하지 않습니다."));
     }
 
     public List<Member> getAllMembers() {

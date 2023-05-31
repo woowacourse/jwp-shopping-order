@@ -42,6 +42,8 @@ public class OrderService {
     private List<CartItem> makeCartItemsFromId(OrderRequest request) {
         return request.getOrder().stream()
                 .map(cartItemRepository::findById)
+                .map(optional -> optional.orElseThrow(() ->
+                        new IllegalArgumentException("해당 ID를 가진 장바구니 품목이 존재하지 않습나다.")))
                 .collect(Collectors.toList());
     }
 
@@ -73,8 +75,9 @@ public class OrderService {
                 product.getImageUrl(),cartItem.getQuantity());
     }
 
-    public SpecificOrderResponse getSpecificOrder(Member member) {
-        Order order = orderRepository.findById(member);
+    public SpecificOrderResponse getSpecificOrder(Member member, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문은 존재하지 않습니다."));
         return new SpecificOrderResponse(order.getId(), mapCartItemsToOrderInfo(order.getCartItems()),
                 order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());
     }

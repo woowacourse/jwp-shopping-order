@@ -4,17 +4,18 @@ import cart.domain.CartItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartItemRepository {
 
+    CartItem insert(CartItem cartItem);
+
+    Optional<CartItem> findById(Long id);
+
     List<CartItem> findByMemberId(Long id);
 
-    CartItem findById(Long id);
-
-    Long insert(CartItem cartItem);
+    void update(CartItem cartItem);
 
     void deleteById(Long id);
-
-    void update(CartItem cartItem);
 }

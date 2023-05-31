@@ -38,7 +38,7 @@ class CartItemServiceTest {
 
     @BeforeEach
     void setup() {
-        member = new Member(1L, "teo", "1234");
+        member = new Member(1L, "teo", "1234", 0);
         pizza = new Product(1L, "피자", 20000, "https://a.com", 0, false);
     }
 
@@ -61,7 +61,7 @@ class CartItemServiceTest {
         // given
         CartItemRequest request = new CartItemRequest(1L);
         when(productRepository.findById(1L)).thenReturn(pizza);
-        when(cartItemRepository.insert(any())).thenReturn(1L);
+        when(cartItemRepository.insert(any())).thenReturn(new CartItem(1L, 1, pizza, member));
 
         // when
         Long cartItemId = cartItemService.createCartItem(member, request);

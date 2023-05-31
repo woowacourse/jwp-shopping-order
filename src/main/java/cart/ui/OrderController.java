@@ -8,6 +8,7 @@ import cart.dto.SpecificOrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +32,8 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SpecificOrderResponse> getSpecificOrder(Member member) {
-        SpecificOrderResponse response = orderService.getSpecificOrder(member);
+    public ResponseEntity<SpecificOrderResponse> getSpecificOrder(@PathVariable Long id, Member member) {
+        SpecificOrderResponse response = orderService.getSpecificOrder(member, id);
         return ResponseEntity.ok(response);
     }
 

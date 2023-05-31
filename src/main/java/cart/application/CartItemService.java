@@ -33,7 +33,8 @@ public class CartItemService {
 
     public Long createCartItem(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId());
-        return cartItemRepository.insert(new CartItem(null, 1, product, member));
+        CartItem inserted = cartItemRepository.insert(new CartItem(null, 1, product, member));
+        return inserted.getId();
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityRequest request) {
@@ -41,7 +42,9 @@ public class CartItemService {
             cartItemRepository.deleteById(id);
             return;
         }
-        CartItem cartItem = cartItemRepository.findById(id);
+        CartItem cartItem = cartItemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 장바구니 품목은 존재하지 않습니다."));
+
         cartItem.validateIsOwnedBy(member);
         CartItem updated = new CartItem(cartItem.getId(), request.getQuantity(),
                 cartItem.getProduct(), cartItem.getMember());
@@ -49,7 +52,9 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemRepository.findById(id);
+        CartItem cartItem = cartItemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 장바구니 품목은 존재하지 않습니다."));
+
         cartItem.validateIsOwnedBy(member);
         cartItemRepository.deleteById(id);
     }
