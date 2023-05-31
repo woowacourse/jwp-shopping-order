@@ -57,7 +57,6 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public Long createCartItem(final CartItem cartItem) {
-        System.out.println(cartItem.getMember().getName()+"    "+cartItem.getProduct().getName());
         final SqlParameterSource parameter = new BeanPropertySqlParameterSource(cartItem);
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
@@ -76,6 +75,8 @@ public class CartItemJdbcRepository implements CartItemRepository {
             return Optional.empty();
         }
     }
+
+
 
     @Override
     public List<CartItem> findAllCartItemsByMemberId(final Long memberId) {
