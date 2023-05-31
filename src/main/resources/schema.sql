@@ -21,15 +21,14 @@ CREATE TABLE cart_item (
 );
 
 CREATE TABLE orders_status (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     status VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    orders_status_id BIGINT NOT NULL,
-    used_point INT NOT NULL,
+    orders_status_id INT NOT NULL,
     create_at DATE NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (orders_status_id) REFERENCES orders_status(id)
