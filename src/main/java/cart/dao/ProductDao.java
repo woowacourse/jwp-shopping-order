@@ -1,84 +1,68 @@
 package cart.dao;
 
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Name;
-import cart.domain.product.Price;
-import cart.domain.product.Product;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import cart.entity.ProductEntity;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import java.util.Optional;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertAction;
+    private final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
+            new ProductEntity(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("image_url"),
+                    rs.getInt("price")
+            );
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductEntity> getAllProducts() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(
-                    productId,
-                    new Name(name),
-                    new ImageUrl(imageUrl),
-                    new Price(price)
-            );
-        });
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Product getProductById(Long productId) {
+    public Optional<ProductEntity> getProductById(final Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(
-                    productId,
-                    new Name(name),
-                    new ImageUrl(imageUrl),
-                    new Price(price)
-            );
-        });
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, productId));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public Long createProduct(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long createProduct(final ProductEntity product) {
+        final Map<String, Object> parameters = new HashMap<>();
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
+        parameters.put("name", product.getName());
+        parameters.put("price", product.getPrice());
+        parameters.put("image_url", product.getImage());
 
-            ps.setString(1, product.getName().name());
-            ps.setInt(2, product.getPrice().price());
-            ps.setString(3, product.getImage().imageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return insertAction.executeAndReturnKey(parameters).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void updateProduct(Long productId, ProductEntity product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(
                 sql,
-                product.getName().name(),
-                product.getPrice().price(),
-                product.getImage().imageUrl(),
+                product.getName(),
+                product.getPrice(),
+                product.getImage(),
                 productId
         );
     }

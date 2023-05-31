@@ -1,10 +1,10 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
 import cart.domain.member.Email;
 import cart.domain.member.Member;
 import cart.domain.member.Password;
 import cart.exception.AuthenticationException;
+import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -14,10 +14,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(new Email(email));
+        Member member = memberRepository.getMemberByEmail(new Email(email));
         if (!member.checkPassword(new Password(password))) {
             throw new AuthenticationException();
         }
