@@ -1,10 +1,10 @@
-package cart.ui;
+package cart.ui.cart;
 
 import cart.application.CartItemService;
 import cart.domain.member.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.ui.cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.ui.cart.dto.request.CartItemRequest;
+import cart.ui.cart.dto.response.CartItemResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
