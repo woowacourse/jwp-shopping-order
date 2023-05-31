@@ -2,10 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.HomePagingRequest;
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import cart.fixtures.MemberFixtures;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static cart.fixtures.MemberFixtures.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,12 +55,10 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
     void 상품_목록을_원하는_구간만큼_조회하다() {
-        final HomePagingRequest request = HomePagingRequest.of(4L, 2);
         final ExtractableResponse<Response> response = given()
                 .param("lastId", 3)
                 .param("pageItemCount", 2)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
                 .when()
                 .get("/products/cart-items")
                 .then()

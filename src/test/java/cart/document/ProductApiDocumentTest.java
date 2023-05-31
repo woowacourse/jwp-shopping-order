@@ -3,7 +3,6 @@ package cart.document;
 import cart.WebMvcConfig;
 import cart.application.CartItemService;
 import cart.application.ProductService;
-import cart.dto.HomePagingRequest;
 import cart.fixtures.MemberFixtures;
 import cart.ui.ProductApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +30,8 @@ import static cart.fixtures.ProductFixtures.SALAD;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -123,7 +124,6 @@ public class ProductApiDocumentTest {
                 .willReturn(List.of(SALAD.ENTITY, CHICKEN.ENTITY));
         given(productService.hasLastProduct(3L, 2))
                 .willReturn(true);
-        final HomePagingRequest request = HomePagingRequest.of(3L, 2);
 
         // when, then
         mockMvc.perform(get("/products/cart-items")
@@ -168,6 +168,9 @@ public class ProductApiDocumentTest {
                     .andExpect(status().isOk())
                     .andDo(document("products/getProductCartItemByProductId/existCartItem",
                             preprocessResponse(prettyPrint()),
+                            requestHeaders(
+                                    headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
+                            ),
                             pathParameters(
                                     parameterWithName("productId").description("조회할 상품 아이디")
                             ),
