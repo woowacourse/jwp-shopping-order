@@ -9,7 +9,6 @@ import cart.dto.request.OrderItemDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailsDto;
 import cart.dto.response.OrderResponse;
-import cart.dto.response.OrdersResponse;
 import cart.dto.response.ProductResponse;
 import cart.exception.CartItemException.IllegalMember;
 import cart.exception.CartItemException.UnknownCartItem;
@@ -97,7 +96,7 @@ public class OrderService {
         return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails);
     }
 
-    public OrdersResponse getOrdersByMember(final Member member) {
+    public List<OrderResponse> getOrdersByMember(final Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         List<OrderResponse> orderResponses = new ArrayList<>();
         for(Order order : orders){
@@ -107,7 +106,7 @@ public class OrderService {
                     collect(Collectors.toUnmodifiableList());
             orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails));
         }
-        return new OrdersResponse(orderResponses);
+        return orderResponses;
     }
 
 

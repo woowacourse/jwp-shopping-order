@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.dto.request.OrderItemDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.CartItemResponse;
+import cart.dto.response.OrderResponse;
 import cart.dto.response.exception.CartItemIdExceptionResponse;
 import cart.dto.response.exception.ExceptionResponse;
 import io.restassured.response.ExtractableResponse;
@@ -24,6 +25,9 @@ import static cart.acceptence.fixtures.ProductFixtures.피자_15000원;
 import static cart.acceptence.steps.CartItemSteps.장바구니_아이템_추가_요청;
 import static cart.acceptence.steps.CartItemSteps.장바구니_조회_요청;
 import static cart.acceptence.steps.OrderSteps.주문_등록_요청;
+import static cart.acceptence.steps.OrderSteps.주문_등록하고_아이디_반환;
+import static cart.acceptence.steps.OrderSteps.주문_목록_조회_요청;
+import static cart.acceptence.steps.OrderSteps.주문_상세_조회_요청;
 import static cart.acceptence.steps.ProductSteps.상품_추가하고_아이디_반환;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -143,6 +147,65 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .isEqualTo(new ExceptionResponse("잘못된 접근입니다."));
         }
 
+    }
+
+    @Nested
+    class 주문_목록을_조회할_때 {
+
+        @Test
+        void 정상_요청이면_성공적으로_조회한다() {
+            // given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
+            장바구니_아이템_추가_요청(등록된_사용자1, 피자_아이디);
+            장바구니_아이템_추가_요청(등록된_사용자1, 치킨_아이디);
+            List<OrderItemDto> 장바구니 = 장바구니_조회_요청(등록된_사용자1).jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
+                    .collect(Collectors.toList());
+            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(28_000L, 장바구니));
+            System.out.println(주문_아이디);
+
+            // when
+            ExtractableResponse<Response> 주문_목록_조회_결과 = 주문_목록_조회_요청(등록된_사용자1);
+            List<OrderResponse> 주문_목록 = 주문_목록_조회_결과.jsonPath().getList(".", OrderResponse.class);
+
+            // then
+            assertThat(주문_목록_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertThat(주문_목록.get(0).getOrderId()).isEqualTo(주문_아이디);
+            assertThat(주문_목록.get(0).getTotalPrice()).isEqualTo(28_000L);
+            assertThat(주문_목록.get(0).getOrderDetails().size()).isEqualTo(2);
+        }
+    }
+
+    @Nested
+    class 특정_주문의_상세_정보를_조회할_때 {
+
+        @Test
+        void 정상_요청이면_성공적으로_조회한다() {
+            // given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
+            장바구니_아이템_추가_요청(등록된_사용자1, 피자_아이디);
+            장바구니_아이템_추가_요청(등록된_사용자1, 치킨_아이디);
+            List<OrderItemDto> 장바구니 = 장바구니_조회_요청(등록된_사용자1).jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
+                    .collect(Collectors.toList());
+            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(28_000L, 장바구니));
+            System.out.println(주문_아이디);
+
+            // when
+            ExtractableResponse<Response> 주문_상세_조회_결과 = 주문_상세_조회_요청(등록된_사용자1, 주문_아이디);
+            OrderResponse 주문_상세 = 주문_상세_조회_결과.jsonPath().getObject(".", OrderResponse.class);
+
+            // then
+            assertThat(주문_상세_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertThat(주문_상세.getOrderId()).isEqualTo(주문_아이디);
+            assertThat(주문_상세.getTotalPrice()).isEqualTo(28_000L);
+        }
     }
 
 }

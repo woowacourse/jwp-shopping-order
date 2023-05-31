@@ -8,12 +8,10 @@ import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.entity.OrderEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
 @Repository
 public class OrderRepository {
 
@@ -27,10 +25,10 @@ public class OrderRepository {
         this.orderItemDao = orderItemDao;
     }
 
-    public long save(final Order order){
+    public long save(final Order order) {
         OrderEntity orderEntity = order.toEntity();
         long orderId = orderDao.save(orderEntity);
-        for(OrderItem orderItem : order.getOrderItems()){
+        for (OrderItem orderItem : order.getOrderItems()) {
             orderItemDao.insert(orderId, orderItem);
         }
         return orderId;
@@ -38,7 +36,7 @@ public class OrderRepository {
 
     // todo: 없는 orderId 들어온경우 처리
     // todo: Member가 삭제된 경우?
-    public Order findByOrderId(final long orderId){
+    public Order findByOrderId(final long orderId) {
         OrderEntity orderEntity = orderDao.findById(orderId);
         Member member = memberDao.getMemberById(orderEntity.getMemberId());
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderId);
@@ -49,7 +47,7 @@ public class OrderRepository {
         List<Order> orders = new ArrayList<>();
         Member member = memberDao.getMemberById(memberId);
         List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
-        for(OrderEntity orderEntity : orderEntities){
+        for (OrderEntity orderEntity : orderEntities) {
             List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderEntity.getId());
             orders.add(new Order(
                     orderEntity.getId(),

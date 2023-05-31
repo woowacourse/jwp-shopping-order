@@ -26,6 +26,7 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
+        //todo : 존재하지 않는 productId 예외처리
         Product product = productDao.getProductById(productId);
         return ProductResponse.of(product);
     }
