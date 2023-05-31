@@ -1,5 +1,6 @@
 package cart.integration;
 
+import cart.application.PointService;
 import cart.dao.*;
 import cart.domain.CartItem;
 import cart.domain.Member;
@@ -34,6 +35,8 @@ public class OrdersIntegrationTest extends IntegrationTest {
     private MemberDao memberDao;
     @Autowired
     private PointDao pointDao;
+    @Autowired
+    private PointService pointService;
     @Autowired
     private ProductDao productDao;
 
@@ -103,7 +106,7 @@ public class OrdersIntegrationTest extends IntegrationTest {
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(cartItemDao.findByMemberId(member.getId()).stream().mapToLong(CartItem::getId)).doesNotContain(cartItem1, cartItem2);
-        assertThat(pointDao.getBeforeExpirationAndRemainingPointsByMemberId(member.getId()).stream().mapToInt(Point::getLeftPoint).sum()).isEqualTo(beforePoint - usePoint);
+        assertThat(pointDao.getBeforeExpirationAndRemainingPointsByMemberId(member.getId()).stream().mapToInt(Point::getLeftPoint).sum()).isEqualTo((int) (beforePoint - usePoint + (orderRequest.getTotalPrice() - orderRequest.getPoint()) * pointService.findEarnRateByMember(member)));
         assertThat(productDao.getProductById(product1.getId()).get().getStock()).isEqualTo(beforeStock1 - cart1Quantity);
         assertThat(productDao.getProductById(product2.getId()).get().getStock()).isEqualTo(beforeStock2 - cart2Quantity);
     }

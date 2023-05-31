@@ -22,8 +22,8 @@ public class PointService {
 
     public Point savePointByMember(Member member, int amount, LocalDateTime issueDateTime) {
         int earnedPoint = (int) (amount * findEarnRateByMember(member));
-        Point point = new Point(earnedPoint, earnedPoint, member, issueDateTime, issueDateTime.plusDays(ExpiredCategory.ORDER.getValue()));
-        Long pointId = createPoint(point);
+        Point point = new Point(earnedPoint, earnedPoint, member, issueDateTime.plusDays(ExpiredCategory.ORDER.getValue()), issueDateTime);
+        Long pointId = pointDao.createPoint(point);
         return new Point(pointId, point.getEarnedPoint(), point.getLeftPoint(), point.getMember(), point.getExpiredAt(), point.getCreatedAt());
     }
 
@@ -34,10 +34,6 @@ public class PointService {
     public int findByMember(Member member) {
         List<Point> remainingPoints = pointDao.getBeforeExpirationAndRemainingPointsByMemberId(member.getId());
         return remainingPoints.stream().mapToInt(Point::getLeftPoint).sum();
-    }
-
-    public Long createPoint(Point point) {
-        return pointDao.createPoint(point);
     }
 
     public void usePointByMember(Member member, int usingPoint) {

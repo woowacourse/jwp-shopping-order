@@ -38,7 +38,7 @@ public class OrderService {
             throw new PointOverTotalPriceException();
         }
         pointService.usePointByMember(member, orderRequest.getPoint());
-        Point point = pointService.savePointByMember(member, orderRequest.getTotalPrice(), now);
+        Point point = pointService.savePointByMember(member, orderRequest.getTotalPrice() - orderRequest.getPoint(), now);
         Orders orders = new Orders(member, point, point.getEarnedPoint(), orderRequest.getPoint(), now);
         Long id = orderDao.createOrders(orders);
         Orders createdOrders = new Orders(id, orders.getMember(), orders.getPoint(), orders.getEarnedPoint(), orders.getUsedPoint(), orders.getCreatedAt());
