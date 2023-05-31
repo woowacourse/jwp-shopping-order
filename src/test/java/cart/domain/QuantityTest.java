@@ -12,7 +12,6 @@ class QuantityTest {
     @Test
     @DisplayName("수량이 양수인 경우 객체 생성에 성공한다.")
     void construct_success_when_value_is_positive() {
-        // given
         assertThatCode(() -> new Quantity(50))
                 .doesNotThrowAnyException();
     }
@@ -20,7 +19,6 @@ class QuantityTest {
     @Test
     @DisplayName("수량이 0인 경우 객체 생성에 성공한다.")
     void construct_success_when_value_is_zero() {
-        // given
         assertThatCode(() -> new Quantity(0))
                 .doesNotThrowAnyException();
     }
@@ -34,8 +32,8 @@ class QuantityTest {
     }
 
     @Test
-    @DisplayName("뺄셈에 성공한다.")
-    void subtract_success() {
+    @DisplayName("50개에서 10개를 빼면 40개이다.")
+    void subtract_50_and_10_result_40() {
         // given
         final Quantity quantity = new Quantity(50);
         final Quantity subtraction = new Quantity(10);
