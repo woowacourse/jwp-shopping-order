@@ -7,5 +7,6 @@ INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
-
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO coupon (name, discount_type, discount_percent, discount_amount, minimum_price) VALUES ('1000원 할인 쿠폰', 'deduction', 0.0, 1000, 0);
