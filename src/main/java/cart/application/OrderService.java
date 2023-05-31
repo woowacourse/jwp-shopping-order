@@ -52,15 +52,15 @@ public class OrderService {
 
     private Coupon checkCoupon(final OrderRequest request, final Long memberId) {
         Coupon coupon = Coupon.empty();
-        if (hasCoupon(request)) {
+        if (hasCoupon(request.getCouponId())) {
             coupon = findCouponAndUse(request.getCouponId(), memberId);
         }
 
         return coupon;
     }
 
-    private boolean hasCoupon(final OrderRequest request) {
-        return ObjectUtils.isEmpty(request.getCouponId());
+    private boolean hasCoupon(final Long couponId) {
+        return !ObjectUtils.isEmpty(couponId);
     }
 
     private Coupon findCouponAndUse(final Long couponId, final Long memberId) {
