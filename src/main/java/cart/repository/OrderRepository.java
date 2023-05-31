@@ -11,6 +11,7 @@ import cart.entity.OrderItemEntity;
 import cart.repository.dao.OrderDao;
 import cart.repository.dao.OrderItemDao;
 import cart.repository.dao.ProductDao;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,6 +42,11 @@ public class OrderRepository {
 
     public Optional<Order> findById(final Member member, final Long orderId) {
         Optional<OrderEntity> findOrder = orderDao.findById(orderId);
+        return findOrder.map(orderEntity -> mapToDomain(member, orderEntity));
+    }
+
+    private Order mapToDomain(final Member member, final OrderEntity orderEntity) {
+        final Long orderId = orderEntity.getId();
 
         final List<OrderItemEntity> findOrderItems = orderItemDao.getOrderItemsByOrderId(orderId);
         final List<Long> productIds = findOrderItems.stream()
@@ -52,6 +58,18 @@ public class OrderRepository {
         final OrderItems orderItems = OrderItems.of(findOrderItems, findProducts, member);
         final DiscountPolicy discountPolicy = FixedDiscountPolicy.from(orderItems.sumOfPrice());
 
-        return findOrder.map(orderEntity -> orderEntity.toDomain(member, orderItems, discountPolicy));
+        return orderEntity.toDomain(member, orderItems, discountPolicy);
+    }
+
+    public List<Order> findAll(final Member member) {
+        final List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
+
+        List<Order> orders = new ArrayList<>();
+        for (OrderEntity orderEntity : orderEntities) {
+            final Order order = mapToDomain(member, orderEntity);
+            orders.add(order);
+        }
+
+        return orders;
     }
 }
