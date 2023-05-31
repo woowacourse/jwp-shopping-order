@@ -2,6 +2,8 @@ package cart.domain;
 
 import java.util.List;
 
+import cart.exception.IllegalPointUsageException;
+
 public class Order {
     private static final int MINIMUM_UNIT_POINTS = 10;
 
@@ -21,10 +23,10 @@ public class Order {
 
     public void validatePoints(final int memberPoints) {
         if (points > memberPoints) {
-            throw new IllegalArgumentException();
+            throw new IllegalPointUsageException();
         }
         if (points % MINIMUM_UNIT_POINTS != 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalPointUsageException();
         }
     }
 

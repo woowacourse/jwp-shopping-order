@@ -13,6 +13,9 @@ import cart.dto.CartPointsResponse;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderItemResponse;
 import cart.dto.OrderResponse;
+import cart.exception.IllegalPointUsageException;
+import cart.exception.InvalidOrderProductException;
+import cart.exception.InvalidOrderQuantityException;
 
 class OrderServiceTest extends ServiceTest {
 
@@ -53,7 +56,7 @@ class OrderServiceTest extends ServiceTest {
 
 		// then
 		assertThatThrownBy(() -> orderService.createOrder(request, member))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(IllegalPointUsageException.class);
 	}
 
 	@Test
@@ -67,7 +70,7 @@ class OrderServiceTest extends ServiceTest {
 
 		// then
 		assertThatThrownBy(() -> orderService.createOrder(request, member))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(InvalidOrderProductException.class);
 	}
 
 	@Test
@@ -81,7 +84,7 @@ class OrderServiceTest extends ServiceTest {
 
 		// then
 		assertThatThrownBy(() -> orderService.createOrder(request, member))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(InvalidOrderQuantityException.class);
 	}
 
 	@Test
