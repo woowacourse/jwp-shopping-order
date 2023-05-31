@@ -35,14 +35,14 @@ public class OrderApiController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getAllOrders(@Auth final Member member) {
-        orderService.getAllOrders(member);
-        return null;
+        final List<OrderResponse> responses = orderService.getAllOrders(member);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<SpecificOrderResponse> getOrder(@Auth final Member member, @PathVariable final Long orderId) {
-        orderService.getOrderById(member, orderId);
-        return null;
+        final SpecificOrderResponse response = orderService.getOrderById(member, orderId);
+        return ResponseEntity.ok(response);
     }
 
 }
