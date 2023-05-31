@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
-import cart.dto.CouponResponse;
+import cart.dto.MemberCouponResponse;
 import cart.service.MemberCouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,8 +34,8 @@ public class MemberCouponController {
             description = "사용자 쿠폰 조회 성공"
     )
     @GetMapping
-    public ResponseEntity<List<CouponResponse>> findAll(@Auth final Credential credential) {
-        final List<CouponResponse> result = memberCouponService.findAllByMemberId(credential.getMemberId());
+    public ResponseEntity<List<MemberCouponResponse>> findAll(@Auth final Credential credential) {
+        final List<MemberCouponResponse> result = memberCouponService.findAllByMemberId(credential.getMemberId());
         return ResponseEntity.ok(result);
     }
 }

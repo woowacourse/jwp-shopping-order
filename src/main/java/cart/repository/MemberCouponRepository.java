@@ -41,32 +41,24 @@ public class MemberCouponRepository {
 
     public Optional<MemberCoupon> findById(final Long id) {
         return memberCouponDao.findById(id)
-                .map(entity -> new MemberCoupon(
-                        entity.getId(),
-                        memberDao.findById(entity.getMemberId())
-                                .orElseThrow(MemberNotFoundException::new).toDomain(),
-                        couponDao.findById(entity.getCouponId())
-                                .orElseThrow(CouponNotFoundException::new).toDomain(),
-                        entity.isUsed()
-                ));
+                .map(this::getMemberCoupon);
     }
 
-    public List<Coupon> findAllByMemberId(final Long memberId) {
+    private MemberCoupon getMemberCoupon(final MemberCouponEntity entity) {
+        return new MemberCoupon(
+                entity.getId(),
+                memberDao.findById(entity.getMemberId())
+                        .orElseThrow(MemberNotFoundException::new).toDomain(),
+                couponDao.findById(entity.getCouponId())
+                        .orElseThrow(CouponNotFoundException::new).toDomain(),
+                entity.isUsed()
+        );
+    }
+
+    public List<MemberCoupon> findAllByMemberId(final Long memberId) {
         final List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(memberId);
-        final List<Long> couponIds = mapToCouponIds(memberCouponEntities);
-        final List<CouponEntity> couponEntities = couponDao.findByIds(couponIds);
-        return mapToCoupons(couponEntities);
-    }
-
-    private List<Long> mapToCouponIds(final List<MemberCouponEntity> memberCouponEntities) {
         return memberCouponEntities.stream()
-                .map(MemberCouponEntity::getCouponId)
-                .collect(Collectors.toList());
-    }
-
-    private List<Coupon> mapToCoupons(final List<CouponEntity> couponEntities) {
-        return couponEntities.stream()
-                .map(CouponEntity::toDomain)
+                .map(this::getMemberCoupon)
                 .collect(Collectors.toList());
     }
 }

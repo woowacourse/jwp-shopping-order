@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.domain.coupon.Coupon;
-import cart.dto.CouponResponse;
+import cart.domain.member.MemberCoupon;
+import cart.dto.MemberCouponResponse;
 import cart.repository.MemberCouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +19,10 @@ public class MemberCouponService {
     }
 
     @Transactional(readOnly = true)
-    public List<CouponResponse> findAllByMemberId(final Long memberId) {
-        final List<Coupon> coupons = memberCouponRepository.findAllByMemberId(memberId);
-        return coupons.stream()
-                .map(CouponResponse::from)
+    public List<MemberCouponResponse> findAllByMemberId(final Long memberId) {
+        final List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByMemberId(memberId);
+        return memberCoupons.stream()
+                .map(MemberCouponResponse::from)
                 .collect(Collectors.toList());
     }
 }

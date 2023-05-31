@@ -1,6 +1,6 @@
 package cart.acceptance;
 
-import cart.dto.CouponResponse;
+import cart.dto.MemberCouponResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -31,8 +31,8 @@ public class CouponAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-        final List<CouponResponse> couponResponses = response.jsonPath().getList("", CouponResponse.class);
-        final CouponResponse couponResponse = couponResponses.get(0);
+        final List<MemberCouponResponse> couponResponses = response.jsonPath().getList("", MemberCouponResponse.class);
+        final MemberCouponResponse couponResponse = couponResponses.get(0);
         assertAll(
                 () -> assertThat(couponResponses.size()).isEqualTo(2),
                 () -> assertThat(couponResponse.getId()).isEqualTo(1),

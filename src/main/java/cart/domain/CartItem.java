@@ -12,14 +12,14 @@ public class CartItem {
     private final Product product;
     private Integer quantity;
 
-    public CartItem(final Long member, final Product product) {
-        this(null, 1, member, product);
+    public CartItem(final Long memberId, final Product product) {
+        this(null, 1, memberId, product);
     }
 
-    public CartItem(final Long id, final Integer quantity, final Long member, final Product product) {
+    public CartItem(final Long id, final Integer quantity, final Long memberId, final Product product) {
         this.id = id;
         this.quantity = quantity;
-        this.memberId = member;
+        this.memberId = memberId;
         this.product = product;
     }
 
@@ -31,6 +31,22 @@ public class CartItem {
         if (!memberValidator.isOwner(memberId)) {
             throw new InvalidCartItemOwnerException();
         };
+    }
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public Long getId() {
@@ -49,20 +65,4 @@ public class CartItem {
         return product;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final CartItem cartItem = (CartItem) o;
-        return Objects.equals(id, cartItem.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
