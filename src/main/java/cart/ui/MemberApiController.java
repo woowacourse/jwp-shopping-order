@@ -26,7 +26,7 @@ public class MemberApiController {
     public ResponseEntity<WithdrawResponse> getWithdrawPoint(final Member member,
                                                              @Valid @RequestBody final WithdrawRequest request) {
         final Long point = request.getPoint();
-        final Long totalCash = memberService.withdrawPoint(member, point);
+        final Long totalCash = memberService.depositPoint(member, point);
 
         return ResponseEntity.ok(WithdrawResponse.from(totalCash));
     }

@@ -1,0 +1,16 @@
+=== 멤버 API
+- 특정 멤버의 포인트를 충전할 수 있습니다.
+
+
+==== 1. 포인트 충전
+
+[discrete]
+====== 요청
+include::{snippets}/members/cash/http-request.adoc[]
+include::{snippets}/members/cash/request-headers.adoc[]
+include::{snippets}/members/cash/request-fields.adoc[]
+
+[discrete]
+====== 응답
+include::{snippets}/members/cash/http-response.adoc[]
+include::{snippets}/members/cash/response-fields.adoc[]

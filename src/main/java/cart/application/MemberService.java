@@ -13,17 +13,17 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public Long withdrawPoint(final Member member, final Long point) {
-        final Member memberEntity = memberDao.getMemberById(member.getId());
-        memberEntity.withdraw(point);
+    public Long depositPoint(final Member member, final Long point) {
+        final Member memberEntity = memberDao.getMemberByEmail(member.getEmail());
+        memberEntity.deposit(point);
         memberDao.updateMember(member);
 
         return memberEntity.getCash();
     }
 
-    public void depositPoint(final Member member, final Long point) {
-        final Member memberEntity = memberDao.getMemberById(member.getId());
-        member.deposit(point);
-        memberDao.updateMember(member);
+    public void withdrawPoint(final Member member, final Long point) {
+        final Member memberEntity = memberDao.getMemberByEmail(member.getEmail());
+        memberEntity.withdraw(point);
+        memberDao.updateMember(memberEntity);
     }
 }

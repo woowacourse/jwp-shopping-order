@@ -4,6 +4,7 @@
 :source-highlighter: highlightjs
 :toc: left
 :toclevels: 3
+:hardbreaks:
 
 === 개요
 우아한테크코스 레벨 2 쇼핑 주문 협업 미션 API 문서입니다.
@@ -23,5 +24,6 @@
 
 == API
 
-include::cart-item.adoc[]
+include::member.adoc[]
 include::product.adoc[]
+include::cart-item.adoc[]

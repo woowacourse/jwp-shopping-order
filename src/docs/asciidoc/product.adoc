@@ -32,12 +32,13 @@ include::{snippets}/products/getProductById/response-fields.adoc[]
 [discrete]
 ====== 요청
 include::{snippets}/products/getHomePagingProduct/http-request.adoc[]
-include::{snippets}/products/getHomePagingProduct/request-fields.adoc[]
+include::{snippets}/products/getHomePagingProduct/request-parameters.adoc[]
 
 [discrete]
 ====== 응답
 include::{snippets}/products/getHomePagingProduct/http-response.adoc[]
 include::{snippets}/products/getHomePagingProduct/response-fields.adoc[]
+
 
 ==== 4. 상품 상세
 
