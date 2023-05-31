@@ -28,4 +28,9 @@ public class RateDiscountPolicy implements DiscountPolicy {
     public int getValue() {
         return discountRate;
     }
+
+    @Override
+    public DiscountType getDiscountType() {
+        return DiscountType.RATE;
+    }
 }
