@@ -60,5 +60,4 @@ public class CartItemService {
         return cartItemDao.findById(id).orElseThrow(() -> new CartItemNotFoundException("해당 카트 아이템은 존재하지 않습니다."));
     }
 
-
 }
