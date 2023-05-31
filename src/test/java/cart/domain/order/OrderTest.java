@@ -33,7 +33,7 @@ class OrderTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 100, 1_000})
     void getTotalAmountTest(final int usingPoint) {
-        final Order order = new Order(member, usingPoint, orderProducts);
+        final Order order = new Order(null, member, usingPoint, orderProducts);
 
         assertThat(order.getTotalAmount()).isEqualTo(orderProducts.getTotalAmount() - usingPoint);
     }

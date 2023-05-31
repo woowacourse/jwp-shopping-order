@@ -73,7 +73,7 @@ public class CartItemService {
         final List<CartItem> cartItems = getCartItems(member, cartIds);
         member.usePoint(request.getPoint());
         final OrderProducts orderProducts = new OrderProducts(cartItems);
-        final Order order = new Order(member, request.getPoint(), orderProducts);
+        final Order order = new Order(null, member, request.getPoint(), orderProducts);
         final Long orderId = orderHistoryDao.createOrder(order);
         member.savePoint(order.getSavedPoint());
         orderProductDao.createProducts(orderId, order.getOrderProducts());
