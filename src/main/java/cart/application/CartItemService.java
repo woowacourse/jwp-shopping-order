@@ -4,6 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.request.CartItemAddRequest;
 import cart.dto.request.CartItemUpdateRequest;
 import cart.dto.response.CartItemResponse;
@@ -26,7 +27,7 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItemResponse> findByMember(final Member member) {
+    public List<CartItemResponse> findAllByMember(final Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream()
                 .map(CartItemResponse::of)
@@ -39,11 +40,16 @@ public class CartItemService {
     }
 
     public Long add(final Member member, final CartItemAddRequest cartItemAddRequest) {
-        CartItem cartItem = new CartItem(member, productDao.getProductById(cartItemAddRequest.getProductId()));
+        Product newProduct = productDao.getProductById(cartItemAddRequest.getProductId());
+        CartItem cartItem = new CartItem(member, newProduct);
         return cartItemDao.save(cartItem);
     }
 
-    public CartItemUpdateResponse updateQuantity(final Member member, final Long id, final CartItemUpdateRequest request) {
+    public CartItemUpdateResponse updateQuantity(
+            final Member member,
+            final Long id,
+            final CartItemUpdateRequest request
+    ) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 

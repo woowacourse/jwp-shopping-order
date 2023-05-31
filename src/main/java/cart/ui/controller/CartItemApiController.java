@@ -32,7 +32,7 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(@Auth Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        return ResponseEntity.ok(cartItemService.findAllByMember(member));
     }
 
     @PostMapping

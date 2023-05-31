@@ -65,7 +65,11 @@ public class CartItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final CartItem cartItem = (CartItem) o;
-        return quantity == cartItem.quantity && checked == cartItem.checked && Objects.equals(id, cartItem.id) && Objects.equals(product, cartItem.product) && Objects.equals(member, cartItem.member);
+        return quantity == cartItem.quantity
+                && checked == cartItem.checked
+                && Objects.equals(id, cartItem.id)
+                && Objects.equals(product, cartItem.product)
+                && Objects.equals(member, cartItem.member);
     }
 
     @Override
