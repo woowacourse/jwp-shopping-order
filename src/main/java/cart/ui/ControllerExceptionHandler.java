@@ -21,6 +21,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler({
+            IllegalArgumentException.class,
             PointOverTotalPriceException.class,
             NoSuchCartItemException.class,
             NoSuchOrderException.class,
@@ -35,7 +36,6 @@ public class ControllerExceptionHandler {
             OrderException.NotEnoughPointException.class,
     })
     public ResponseEntity<ExceptionResponse> handleOrderException(OrderException e) {
-        System.out.println(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionResponse(e.getErrorCode(), e.getMessage()));
     }
 
