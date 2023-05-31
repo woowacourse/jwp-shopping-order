@@ -18,6 +18,7 @@ import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.OrdersResponse;
 import cart.exception.MemberNotExistException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,13 +52,16 @@ public class OrderService {
 
     public OrderResponse createOrder(final Long memberId, final OrderRequest orderRequest) {
         final Member member = findExistMemberById(memberId);
-        final Order order = Order.beforePersisted(member, generateOrderItems(orderRequest));
-        final Order persistOrder = orderDao.insert(order);
+        final Order order = Order.beforePersisted(member, generateOrderItems(orderRequest),
+            orderRequest.getOrderTime());
+        final Long productPrice = order.getProductPrice();
+        final Order persistOrder = orderDao.insert(order, discountPolicy.calculate(productPrice),
+            deliveryPolicy.getDeliveryFee(productPrice));
 
         saveOrderItems(persistOrder);
         deleteCartItems(persistOrder);
 
-        return generateOrderResponse(persistOrder);
+        return generateOrderResponseAfterCreate(persistOrder);
     }
 
     private void saveOrderItems(final Order order) {
@@ -74,7 +78,7 @@ public class OrderService {
         cartItemDao.deleteByMemberIdAndProductIds(order.getMemberId(), productIds);
     }
 
-    private OrderResponse generateOrderResponse(final Order order) {
+    private OrderResponse generateOrderResponseAfterCreate(final Order order) {
         final Long productPrice = order.getProductPrice();
         final Long discountPrice = discountPolicy.calculate(productPrice);
         final Long deliveryFee = deliveryPolicy.getDeliveryFee(productPrice);
@@ -105,19 +109,35 @@ public class OrderService {
         return new OrderItems(orderItems);
     }
 
-    public OrderResponse getOrderById(final Long memberId, final Long orderId) {
-        final Member member = findExistMemberById(memberId);
-        final List<OrderDto> orderDtos = orderDao.findByOrderId(orderId);
-        final Order order = makeOrder(orderId, member, orderDtos);
-
-        return generateOrderResponse(order);
-    }
-
-    private Order makeOrder(final Long orderId, final Member member, final List<OrderDto> orderDtos) {
+    private Order makeOrder(final Member member, final List<OrderDto> orderDtos) {
+        final Long orderId = orderDtos.get(0).getOrderId();
+        final LocalDateTime orderTime = orderDtos.get(0).getOrderTime();
         final List<OrderItem> orderItems = orderDtos.stream()
             .map(OrderDto::getOrderItem)
             .collect(Collectors.toList());
-        return Order.persisted(orderId, member, new OrderItems(orderItems));
+        return Order.persisted(orderId, member, new OrderItems(orderItems), orderTime);
+    }
+
+    public OrderResponse getOrderById(final Long memberId, final Long orderId) {
+        final Member member = findExistMemberById(memberId);
+        final List<OrderDto> orderDtos = orderDao.findByOrderId(orderId);
+        final Order order = makeOrder(member, orderDtos);
+
+        return generateOrderResponseAfterFind(order, orderDtos.get(0));
+    }
+
+    private OrderResponse generateOrderResponseAfterFind(final Order order, final OrderDto orderDto) {
+        final Long productPrice = orderDto.getOrderProductPrice();
+        final Long discountPrice = orderDto.getOrderDiscountPrice();
+        final Long deliveryFee = orderDto.getOrderDeliveryFee();
+
+        return new OrderResponse(
+            order.getId(),
+            OrderItemResponse.of(order.getOrderItems()), productPrice,
+            discountPrice,
+            deliveryFee,
+            calculateTotalPrice(productPrice, discountPrice, deliveryFee)
+        );
     }
 
     public OrdersResponse getOrderByMemberId(final Long memberId) {
@@ -125,10 +145,10 @@ public class OrderService {
         final Map<Long, List<OrderDto>> memberOrderDtos = orderDao.findAllByMemberId(memberId).stream()
             .collect(Collectors.groupingBy(OrderDto::getOrderId));
 
-        final List<OrderResponse> orderResponses = memberOrderDtos.entrySet().stream()
-            .map((entry) -> {
-                final Order order = makeOrder(entry.getKey(), member, entry.getValue());
-                return generateOrderResponse(order);
+        final List<OrderResponse> orderResponses = memberOrderDtos.values().stream()
+            .map(orderDtos -> {
+                final Order order = makeOrder(member, orderDtos);
+                return generateOrderResponseAfterCreate(order);
             })
             .collect(Collectors.toList());
 

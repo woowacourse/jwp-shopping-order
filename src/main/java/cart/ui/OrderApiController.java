@@ -22,7 +22,7 @@ public class OrderApiController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/cart-items/order")
+    @PostMapping("/orders")
     public ResponseEntity<OrderResponse> createOrder(Member member, @RequestBody OrderRequest orderRequest) {
         final OrderResponse orderResponse = orderService.createOrder(member.getId(), orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderResponse.getOrderId())).body(orderResponse);

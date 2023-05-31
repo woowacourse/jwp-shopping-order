@@ -2,37 +2,69 @@ package cart.dto;
 
 import cart.domain.Product;
 import cart.domain.order.OrderItem;
+import java.time.LocalDateTime;
 
 public class OrderDto {
 
     private Long orderId;
-    private Long productId;
-    private String productName;
-    private int productPrice;
-    private String productImageUrl;
-    private Long orderItemId;
-    private int productQuantity;
+    private LocalDateTime orderTime;
+    private Long orderProductPrice;
+    private Long orderDiscountPrice;
+    private Long orderDeliveryFee;
+    private Long orderTotalPrice;
+    private Long orderITemId;
+    private String orderItemName;
+    private int orderItemPrice;
+    private String orderItemImageUrl;
+    private int orderItemQuantity;
 
-    public OrderDto(final Long orderId, final Long productId, final String productName,
-        final int productPrice, final String productImageUrl, final Long orderItemId, final int productQuantity) {
+    public OrderDto(final Long orderId, final LocalDateTime orderTime, final Long orderProductPrice,
+        final Long orderDiscountPrice,
+        final Long orderDeliveryFee, final Long orderTotalPrice, final Long orderITemId, final String orderItemName,
+        final int orderItemPrice,
+        final String orderItemImageUrl, final int orderItemQuantity) {
         this.orderId = orderId;
-        this.productId = productId;
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.productImageUrl = productImageUrl;
-        this.orderItemId = orderItemId;
-        this.productQuantity = productQuantity;
+        this.orderTime = orderTime;
+        this.orderProductPrice = orderProductPrice;
+        this.orderDiscountPrice = orderDiscountPrice;
+        this.orderDeliveryFee = orderDeliveryFee;
+        this.orderTotalPrice = orderTotalPrice;
+        this.orderITemId = orderITemId;
+        this.orderItemName = orderItemName;
+        this.orderItemPrice = orderItemPrice;
+        this.orderItemImageUrl = orderItemImageUrl;
+        this.orderItemQuantity = orderItemQuantity;
     }
 
     public Long getOrderId() {
         return orderId;
     }
-    
+
     public Product getProduct() {
-        return new Product(productId, productName, productPrice, productImageUrl);
+        return new Product(orderItemName, orderItemPrice, orderItemImageUrl);
     }
 
     public OrderItem getOrderItem() {
-        return OrderItem.persisted(orderItemId, getProduct(), productQuantity);
+        return OrderItem.persisted(orderITemId, getProduct(), orderItemQuantity);
+    }
+
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public Long getOrderProductPrice() {
+        return orderProductPrice;
+    }
+
+    public Long getOrderDiscountPrice() {
+        return orderDiscountPrice;
+    }
+
+    public Long getOrderDeliveryFee() {
+        return orderDeliveryFee;
+    }
+
+    public Long getOrderTotalPrice() {
+        return orderTotalPrice;
     }
 }

@@ -9,8 +9,11 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderItems;
 import cart.dto.OrderDto;
+import java.time.LocalDateTime;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -40,8 +43,24 @@ class OrderDaoTest {
 
     }
 
+    @DisplayName("주문을 생성한다.")
     @Test
-    void findAll() {
+    void insert() {
+        //given
+        final Order order = createOrder(member, List.of(OrderItem.notPersisted(product1, 5)));
+
+        //when
+        final Order persistedOrder = orderDao.insert(order, 1000L, 2000L);
+
+        //then
+        Assertions.assertThat(persistedOrder.getOrderTime()).isEqualTo(order.getOrderTime());
+        Assertions.assertThat(persistedOrder.getProductPrice()).isEqualTo(order.getProductPrice());
+        Assertions.assertThat(persistedOrder.getMember()).usingRecursiveComparison().isEqualTo(order.getMember());
+    }
+
+    @DisplayName("멤버의 주문 내역을 모두 가져온다.")
+    @Test
+    void findAllByMemberId() {
         //given
         final Order order1 = createOrder(member, List.of(OrderItem.notPersisted(product1, 5)));
         final Order order2 = createOrder(member, List.of(OrderItem.notPersisted(product1, 4)));
@@ -58,7 +77,7 @@ class OrderDaoTest {
     }
 
     private Member findMemberById(final Long memberId) {
-        return memberDao.getMemberById(1L);
+        return memberDao.getMemberById(memberId);
     }
 
     private Product createProduct(final String name, final int price, final String imageUrl) {
@@ -68,7 +87,8 @@ class OrderDaoTest {
     }
 
     private Order createOrder(final Member member, final List<OrderItem> orderItems) {
-        final Order order = orderDao.insert(Order.beforePersisted(member, new OrderItems(orderItems)));
+        final Order order = orderDao.insert(
+            Order.beforePersisted(member, new OrderItems(orderItems), LocalDateTime.now()), 3000L, 2000L);
         order.getOrderItems().forEach((orderItem -> orderItemDao.insert(order.getId(), orderItem)));
         return order;
     }

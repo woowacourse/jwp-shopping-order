@@ -13,6 +13,7 @@ import cart.dto.response.OrderResponse;
 import cart.dto.response.OrdersResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +30,6 @@ public class OrderIntegrationTest extends IntegrationTest {
     private Long productId2;
     private Long productId3;
     private Member member1;
-    private Member member2;
     private OrderRequest orderRequest1;
     private OrderRequest orderRequest2;
 
@@ -42,12 +42,15 @@ public class OrderIntegrationTest extends IntegrationTest {
         productId3 = createProduct(new ProductRequest("셀러드", 20_000, "http://example.com/salad.jpg"));
 
         member1 = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
 
-        orderRequest1 = new OrderRequest(List.of(new OrderItemRequest(productId, 3), new OrderItemRequest(productId2,
-            3)));
-        orderRequest2 = new OrderRequest(List.of(new OrderItemRequest(productId2, 1), new OrderItemRequest(productId3,
-            5)));
+        orderRequest1 = new OrderRequest(
+            List.of(new OrderItemRequest(productId, 3), new OrderItemRequest(productId2, 3)),
+            LocalDateTime.of(2023, 4, 4, 4, 4)
+        );
+        orderRequest2 = new OrderRequest(
+            List.of(new OrderItemRequest(productId2, 1), new OrderItemRequest(productId3, 5)),
+            LocalDateTime.of(2023, 4, 4, 4, 4)
+        );
     }
 
     @DisplayName("장바구니에 담긴 상품을 주문하고 주문내역을 저장한다.")
@@ -60,7 +63,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
             .body(orderRequest1)
             .when()
-            .post("/cart-items/order")
+            .post("/orders")
             .then().log().all()
             .extract();
 
@@ -165,7 +168,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
             .body(orderRequest)
             .when()
-            .post("/cart-items/order")
+            .post("/orders")
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .extract();
