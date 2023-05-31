@@ -1,13 +1,12 @@
 package cart.domain;
 
-import cart.exception.UsedCouponException;
+import java.util.Objects;
 
 public class Coupon {
 
     private final Long id;
     private final int amount;
     private final DiscountPolicy discountPolicy;
-    private boolean isUsed;
 
     public Coupon(Long id, int amount, DiscountPolicy discountPolicy) {
         this.id = id;
@@ -16,15 +15,7 @@ public class Coupon {
     }
 
     public Money discount(Money money) {
-        validateUnused();
-        this.isUsed = true;
         return discountPolicy.discount(money, amount);
-    }
-
-    private void validateUnused() {
-        if (this.isUsed) {
-            throw new UsedCouponException();
-        }
     }
 
     public Long getId() {
@@ -39,7 +30,20 @@ public class Coupon {
         return discountPolicy;
     }
 
-    public boolean isUsed() {
-        return this.isUsed;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Coupon coupon = (Coupon)o;
+
+        return Objects.equals(id, coupon.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

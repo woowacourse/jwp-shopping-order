@@ -6,6 +6,7 @@ import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.DiscountPolicy;
 import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
@@ -52,6 +53,9 @@ public class TestFixture {
 
     public static OrderItem ORDERED_치킨_COUPON_USED = new OrderItem(null, 치킨, 1);
 
-    public static Coupon FIXED_COUPON_2000 = new Coupon(1L, 2000, DiscountPolicy.FIXED);
+    public static Coupon COUPON_FIXED_2000 = new Coupon(1L, 2000, DiscountPolicy.FIXED);
+    public static Coupon COUPON_PERCENTAGE_50 = new Coupon(2L, 50, DiscountPolicy.PERCENTAGE);
+    public static MemberCoupon MEMBER_A_COUPON_FIXED_2000 = new MemberCoupon(1L, MEMBER_A, COUPON_FIXED_2000);
+    public static MemberCoupon MEMBER_A_COUPON_PERCENTAGE_50 = new MemberCoupon(2L, MEMBER_A, COUPON_PERCENTAGE_50);
 
 }

@@ -42,3 +42,19 @@ CREATE TABLE if not exists order_item
     quantity   INT          NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
+
+CREATE TABLE if not exists coupon
+(
+    id              BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    amount          INT          NOT NULL,
+    discount_policy VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE if not exists member_coupon
+(
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    owner_id  BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL,
+    is_used   BOOL   NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES member (id)
+);

@@ -2,7 +2,7 @@ package cart.controller;
 
 import static cart.fixture.TestFixture.AUTHORIZATION_HEADER_MEMBER_A;
 import static cart.fixture.TestFixture.CART_ITEM_샐러드_MEMBER_A;
-import static cart.fixture.TestFixture.FIXED_COUPON_2000;
+import static cart.fixture.TestFixture.COUPON_FIXED_2000;
 import static cart.fixture.TestFixture.MEMBER_A;
 import static cart.fixture.TestFixture.ORDER_ONE_MEMBER_A;
 import static cart.fixture.TestFixture.ORDER_TWO_MEMBER_A;
@@ -104,7 +104,7 @@ public class OrderControllerTest extends ControllerTestWithDocs {
                                 샐러드.getImageUrl()
                         ),
                         10,
-                        List.of(FIXED_COUPON_2000.getId())
+                        List.of(COUPON_FIXED_2000.getId())
                 )
         );
         String body = objectMapper.writeValueAsString(orderRequest);
