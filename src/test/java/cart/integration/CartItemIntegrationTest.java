@@ -1,8 +1,7 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
+import cart.Repository.MemberRepository;
 import cart.domain.Member.Member;
-import cart.domain.Member.Password;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -27,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     private Long productId;
     private Long productId2;
@@ -41,8 +40,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.getMemberById(1L);
+        member2 = memberRepository.getMemberById(2L);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
