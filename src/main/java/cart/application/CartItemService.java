@@ -45,25 +45,28 @@ public class CartItemService {
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = findCartItem(id);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
             cartItemDao.deleteById(id);
             return;
         }
-
         cartItem.changeQuantity(request.getQuantity());
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
+    private CartItem findCartItem(final Long id) {
         CartItem cartItem = cartItemDao.findById(id);
-        if (cartItem == null) {
+        if(cartItem == null){
             throw new InvalidCartItem();
         }
-        cartItem.checkOwner(member);
+        return cartItem;
+    }
 
+    public void remove(Member member, Long id) {
+        CartItem cartItem = findCartItem(id);
+        cartItem.checkOwner(member);
         cartItemDao.deleteById(id);
     }
 }
