@@ -4,7 +4,7 @@ import cart.dao.PointDao;
 import cart.domain.ExpiredCategory;
 import cart.domain.Member;
 import cart.domain.Point;
-import cart.exception.NotEnoughPointException;
+import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,7 +44,7 @@ public class PointService {
         List<Point> remainingPoints = pointDao.getBeforeExpirationAndRemainingPointsByMemberId(member.getId());
         int balance = remainingPoints.stream().mapToInt(Point::getLeftPoint).sum();
         if (balance < usingPoint) {
-            throw new NotEnoughPointException();
+            throw new OrderException.NotEnoughPointException();
         }
 
         if (usingPoint == balance) {

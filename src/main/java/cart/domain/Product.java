@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.NotEnoughStockException;
+import cart.exception.OrderException;
 
 import java.util.Objects;
 
@@ -22,7 +22,7 @@ public class Product {
 
     private void validateStock(int stock) {
         if (stock < 0) {
-            throw new NotEnoughStockException();
+            throw new OrderException.NotEnoughStockException(this);
         }
     }
 

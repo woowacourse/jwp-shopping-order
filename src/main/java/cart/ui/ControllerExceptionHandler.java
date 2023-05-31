@@ -1,5 +1,6 @@
 package cart.ui;
 
+import cart.dto.ExceptionResponse;
 import cart.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,22 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler({
-            NotEnoughStockException.class,
-            NotEnoughPointException.class,
             PointOverTotalPriceException.class,
             NoSuchCartItemException.class,
             NoSuchOrderException.class,
             NoSuchProductException.class
     })
-    public ResponseEntity<Void> handleOrderException(RuntimeException e) {
+    public ResponseEntity<Void> handleInputException(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    @ExceptionHandler({
+            OrderException.NotEnoughStockException.class,
+            OrderException.NotEnoughPointException.class,
+    })
+    public ResponseEntity<ExceptionResponse> handleOrderException(OrderException e) {
+        System.out.println(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionResponse(e.getErrorCode(), e.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)

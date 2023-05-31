@@ -5,9 +5,9 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Point;
 import cart.domain.Product;
+import cart.dto.ExceptionResponse;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
-import cart.dto.OrdersResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +74,7 @@ public class OrdersIntegrationTest extends IntegrationTest {
         product3 = productDao.getProductById(productId3).get();
         cartItem3 = cartItemDao.save(new CartItem(member, product3));
 
-        beforePoint = 10000;
+        beforePoint = 2000;
         pointDao.createPoint(new Point(beforePoint, beforePoint, member, LocalDateTime.now().plusDays(3), LocalDateTime.now()));
     }
 
@@ -127,7 +127,10 @@ public class OrdersIntegrationTest extends IntegrationTest {
                 .extract();
 
         // then
+        ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        assertThat(exceptionResponse.getMessage()).endsWith("의 재고가 부족합니다.");
+        assertThat(exceptionResponse.getErrorCode()).isEqualTo(1);
     }
 
     @DisplayName("가진 포인트 이상으로 사용할 수 없다.")
@@ -137,7 +140,7 @@ public class OrdersIntegrationTest extends IntegrationTest {
         List<Point> remainingPoint = pointDao.getBeforeExpirationAndRemainingPointsByMemberId(member.getId());
         int sum = remainingPoint.stream().mapToInt(Point::getLeftPoint).sum();
 
-        OrderRequest orderRequest = new OrderRequest(List.of(cartItem1), sum + 1000, 1000);
+        OrderRequest orderRequest = new OrderRequest(List.of(cartItem1), sum + 1000, 5000);
 
         // when
         ExtractableResponse<Response> response = given().log().all()
@@ -152,7 +155,10 @@ public class OrdersIntegrationTest extends IntegrationTest {
                 .extract();
 
         // then
+        ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        assertThat(exceptionResponse.getMessage()).isEqualTo("포인트가 부족합니다.");
+        assertThat(exceptionResponse.getErrorCode()).isEqualTo(2);
     }
 
     @DisplayName("예상 금액보다 포인트를 더 많이 사용할 수 없다.")
