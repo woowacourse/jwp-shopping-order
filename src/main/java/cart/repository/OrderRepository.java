@@ -7,8 +7,8 @@ import cart.dao.OrderItemDao;
 import cart.dao.OrdersDao;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.domain.Orders;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.policy.DiscountPolicy;
 import cart.domain.coupon.policy.DiscountPolicyType;
@@ -42,17 +42,17 @@ public class OrderRepository {
         this.memberCouponDao = memberCouponDao;
     }
 
-    public Orders save(final Orders orders) {
+    public Order save(final Order order) {
         final OrdersEntity ordersEntity = new OrdersEntity(
-                orders.getDeliveryFee(),
-                orders.getMemberCoupon().getId(),
-                orders.getMember().getId());
+                order.getDeliveryFee(),
+                order.getMemberCoupon().getId(),
+                order.getMember().getId());
 
         final OrdersEntity savedOrders = ordersDao.insert(ordersEntity);
         final Long savedOrderId = savedOrders.getId();
 
         List<OrderItem> savedOrderItems = new ArrayList<>();
-        for (OrderItem orderItem : orders.getOrderItems()) {
+        for (OrderItem orderItem : order.getOrderItems()) {
             final OrderItemEntity orderItemEntity = new OrderItemEntity(
                     orderItem.getName(),
                     orderItem.getPrice(),
@@ -69,23 +69,23 @@ public class OrderRepository {
             ));
         }
 
-        return new Orders(
+        return new Order(
                 savedOrderId,
                 3000L,
-                orders.getMemberCoupon(),
-                orders.getMember(),
+                order.getMemberCoupon(),
+                order.getMember(),
                 savedOrderItems
         );
     }
 
-    public Orders findByOrderIdAndMemberId(final Long orderId, final Long memberId) {
+    public Order findByOrderIdAndMemberId(final Long orderId, final Long memberId) {
         final OrdersEntity ordersEntity = ordersDao.findByOrderIdAndMemberId(orderId, memberId);
 
         final List<OrderItem> orderItems = makeOrderItems(orderItemDao.findAllByOrderId(orderId));
         final Member member = getMember(memberId);
         final MemberCoupon memberCoupon = getMemberCoupon(member, ordersEntity.getMemberCouponId());
 
-        return new Orders(
+        return new Order(
                 orderId,
                 ordersEntity.getDeliveryFee(),
                 memberCoupon,
@@ -111,19 +111,19 @@ public class OrderRepository {
                 .collect(Collectors.toList());
     }
 
-    public List<Orders> findAllByMemberId(final Long memberId) {
+    public List<Order> findAllByMemberId(final Long memberId) {
         List<OrdersEntity> findOrderEntities = ordersDao.findByMemberId(memberId);
         return findOrderEntities.stream()
                 .map(this::makeOrder)
                 .collect(Collectors.toList());
     }
 
-    private Orders makeOrder(final OrdersEntity ordersEntity) {
+    private Order makeOrder(final OrdersEntity ordersEntity) {
         final Long orderEntityId = ordersEntity.getId();
         final Member member = getMember(ordersEntity.getMemberId());
 
         final MemberCoupon memberCoupon = getMemberCoupon(member, ordersEntity.getMemberCouponId());
-        return new Orders(
+        return new Order(
                 orderEntityId,
                 ordersEntity.getDeliveryFee(),
                 memberCoupon,

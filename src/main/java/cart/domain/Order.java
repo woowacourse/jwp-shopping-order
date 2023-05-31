@@ -4,7 +4,7 @@ import cart.domain.coupon.Coupon;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Orders {
+public class Order {
 
     private static final Long DEFAULT_DELIVERY_FEE = 3000L;
     private final Long id;
@@ -14,12 +14,12 @@ public class Orders {
 
     private final List<OrderItem> orderItems;
 
-    public Orders(final MemberCoupon memberCoupon, final Member member, final List<OrderItem> orderItems) {
+    public Order(final MemberCoupon memberCoupon, final Member member, final List<OrderItem> orderItems) {
         this(null, DEFAULT_DELIVERY_FEE, memberCoupon, member, orderItems);
     }
 
-    public Orders(final Long id, final Long deliveryFee, final MemberCoupon memberCoupon, final Member member,
-                  final List<OrderItem> orderItems) {
+    public Order(final Long id, final Long deliveryFee, final MemberCoupon memberCoupon, final Member member,
+                 final List<OrderItem> orderItems) {
         this.id = id;
         this.deliveryFee = deliveryFee;
         this.memberCoupon = memberCoupon;

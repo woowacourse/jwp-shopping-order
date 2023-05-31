@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.domain.Orders;
 import cart.domain.Product;
 import cart.dto.OrderSaveRequest;
 import cart.repository.CartItemRepository;
@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 @SpringBootTest
-class OrdersControllerTest {
+class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -90,8 +90,8 @@ class OrdersControllerTest {
         List<CartItem> findCartItems = cartItemRepository.findAllByMemberId(member.getId());
         assertThat(findCartItems).hasSize(2);
 
-        Orders findOrders = orderRepository.findByOrderIdAndMemberId(Long.valueOf(orderId), member.getId());
-        assertThat(findOrders.getOrderItems()).hasSize(2);
+        Order findOrder = orderRepository.findByOrderIdAndMemberId(Long.valueOf(orderId), member.getId());
+        assertThat(findOrder.getOrderItems()).hasSize(2);
     }
 
     @Test
@@ -103,20 +103,20 @@ class OrdersControllerTest {
 
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
-        final Orders orders = new Orders(MemberCoupon.makeNonMemberCoupon(), member, List.of(
+        final Order order = new Order(MemberCoupon.makeNonMemberCoupon(), member, List.of(
                 new OrderItem(product1.getName(), product1.getPrice(), product1.getImageUrl(), 2),
                 new OrderItem(product2.getName(), product2.getPrice(), product2.getImageUrl(), 1))
         );
-        Long savedOrdersId = orderRepository.save(orders).getId();
+        Long savedOrdersId = orderRepository.save(order).getId();
         // when
         mockMvc.perform(get("/orders/" + savedOrdersId)
                         .header("Authorization", header)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(savedOrdersId.intValue())))
-                .andExpect(jsonPath("$.totalItemsPrice", is(orders.getCalculateDiscountPrice().intValue())))
+                .andExpect(jsonPath("$.totalItemsPrice", is(order.getCalculateDiscountPrice().intValue())))
                 .andExpect(jsonPath("$.discountPrice", is(0)))
-                .andExpect(jsonPath("$.deliveryFee", is(orders.getDeliveryFee().intValue())))
+                .andExpect(jsonPath("$.deliveryFee", is(order.getDeliveryFee().intValue())))
                 .andExpect(jsonPath("$.orderItems", hasSize(2)))
                 .andExpect(jsonPath("$.orderItems[0].name", is(product1.getName())))
                 .andExpect(jsonPath("$.orderItems[0].imageUrl", is(product1.getImageUrl())))
@@ -140,32 +140,32 @@ class OrdersControllerTest {
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         final List<CartItem> result = cartItemRepository.findAllByMemberId(member.getId());
-        final Orders orders1 = new Orders(MemberCoupon.makeNonMemberCoupon(), member, List.of(
+        final Order order1 = new Order(MemberCoupon.makeNonMemberCoupon(), member, List.of(
                 new OrderItem(product1.getName(), product1.getPrice(), product1.getImageUrl(), 2))
         );
-        final Orders orders2 = new Orders(MemberCoupon.makeNonMemberCoupon(), member, List.of(
+        final Order order2 = new Order(MemberCoupon.makeNonMemberCoupon(), member, List.of(
                 new OrderItem(product2.getName(), product2.getPrice(), product2.getImageUrl(), 1))
         );
-        Long savedOrdersId1 = orderRepository.save(orders1).getId();
-        Long savedOrdersId2 = orderRepository.save(orders2).getId();
+        Long savedOrdersId1 = orderRepository.save(order1).getId();
+        Long savedOrdersId2 = orderRepository.save(order2).getId();
         // when
         mockMvc.perform(get("/orders")
                         .header("Authorization", header)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(savedOrdersId1.intValue())))
-                .andExpect(jsonPath("$[0].totalItemsPrice", is(orders1.getCalculateDiscountPrice().intValue())))
+                .andExpect(jsonPath("$[0].totalItemsPrice", is(order1.getCalculateDiscountPrice().intValue())))
                 .andExpect(jsonPath("$[0].discountPrice", is(0)))
-                .andExpect(jsonPath("$[0].deliveryFee", is(orders1.getDeliveryFee().intValue())))
+                .andExpect(jsonPath("$[0].deliveryFee", is(order1.getDeliveryFee().intValue())))
                 .andExpect(jsonPath("$[0].orderItems", hasSize(1)))
                 .andExpect(jsonPath("$[0].orderItems[0].name", is(product1.getName())))
                 .andExpect(jsonPath("$[0].orderItems[0].imageUrl", is(product1.getImageUrl())))
                 .andExpect(jsonPath("$[0].orderItems[0].price", is((int) product1.getPrice())))
 
                 .andExpect(jsonPath("$[1].id", is(savedOrdersId2.intValue())))
-                .andExpect(jsonPath("$[1].totalItemsPrice", is(orders2.getCalculateDiscountPrice().intValue())))
+                .andExpect(jsonPath("$[1].totalItemsPrice", is(order2.getCalculateDiscountPrice().intValue())))
                 .andExpect(jsonPath("$[1].discountPrice", is(0)))
-                .andExpect(jsonPath("$[1].deliveryFee", is(orders2.getDeliveryFee().intValue())))
+                .andExpect(jsonPath("$[1].deliveryFee", is(order2.getDeliveryFee().intValue())))
                 .andExpect(jsonPath("$[1].orderItems", hasSize(1)))
                 .andExpect(jsonPath("$[1].orderItems[0].name", is(product2.getName())))
                 .andExpect(jsonPath("$[1].orderItems[0].imageUrl", is(product2.getImageUrl())))

@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @JdbcTest
-class OrdersDaoTest {
+class OrderDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

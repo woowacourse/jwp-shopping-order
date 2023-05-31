@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.domain.Orders;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
 import cart.dto.OrderSaveRequest;
@@ -62,7 +62,7 @@ class OrderServiceTest {
         Long savedOrderId = orderService.order(member.getId(), request);
 
         // then
-        Orders result = orderRepository.findByOrderIdAndMemberId(savedOrderId, member.getId());
+        Order result = orderRepository.findByOrderIdAndMemberId(savedOrderId, member.getId());
         assertThat(result.getCalculateDiscountPrice().intValue()).isEqualTo(18000L);
         assertThat(result.getCoupon()).isEqualTo(Coupon.makeNonDiscountPolicyCoupon());
         assertThat(result.getDeliveryFee()).isEqualTo(3000L);

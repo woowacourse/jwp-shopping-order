@@ -3,8 +3,8 @@ package cart.service;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.domain.Orders;
 import cart.dto.OrderSaveRequest;
 import cart.dto.OrdersDto;
 import cart.exception.MemberNotFoundException;
@@ -43,9 +43,9 @@ public class OrderService {
         final List<CartItem> findCartItems = getCartItems(memberId, request);
         final List<OrderItem> orderItems = getOrderItems(findCartItems);
 
-        final Orders newOrders = new Orders(memberCoupon, member, orderItems);
+        final Order newOrder = new Order(memberCoupon, member, orderItems);
 
-        final Long savedOrderId = orderRepository.save(newOrders).getId();
+        final Long savedOrderId = orderRepository.save(newOrder).getId();
 
         memberCouponRepository.useMemberCoupon(memberId, memberCoupon.getId());
         return savedOrderId;

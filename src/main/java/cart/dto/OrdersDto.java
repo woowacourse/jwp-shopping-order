@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Orders;
+import cart.domain.Order;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,12 +13,12 @@ public class OrdersDto {
     private final Long deliveryFee;
     private final List<OrderItemDto> orderItems;
 
-    public OrdersDto(final Orders orders) {
-        this.id = orders.getId();
-        this.totalItemsPrice = orders.getCalculateDiscountPrice().toBigInteger();
-        this.discountPrice = orders.getDiscountPrice().toBigInteger();
-        this.deliveryFee = orders.getDeliveryFee();
-        this.orderItems = orders.getOrderItems().stream()
+    public OrdersDto(final Order order) {
+        this.id = order.getId();
+        this.totalItemsPrice = order.getCalculateDiscountPrice().toBigInteger();
+        this.discountPrice = order.getDiscountPrice().toBigInteger();
+        this.deliveryFee = order.getDeliveryFee();
+        this.orderItems = order.getOrderItems().stream()
                 .map(it -> new OrderItemDto(it.getId(), it.getName(), it.getPrice(), it.getImageUrl(),
                         it.getQuantity()))
                 .collect(Collectors.toList());
