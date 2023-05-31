@@ -124,3 +124,55 @@ include::{snippets}/cart-item-api-controller-test/remove-cart-items/request-head
 
 ==== 응답
 include::{snippets}/cart-item-api-controller-test/remove-cart-items/http-response.adoc[]
+
+
+== 주문 API
+
+=== 주문 확인
+
+==== 요청
+include::{snippets}/cart-item-api-controller-test/checkout-order/http-request.adoc[]
+include::{snippets}/cart-item-api-controller-test/checkout-order/request-headers.adoc[]
+
+==== 응답
+include::{snippets}/cart-item-api-controller-test/checkout-order/http-response.adoc[]
+include::{snippets}/cart-item-api-controller-test/checkout-order/response-fields.adoc[]
+
+=== 주문 요청
+
+==== 요청
+include::{snippets}/order-api-controller-test/add-order/http-request.adoc[]
+include::{snippets}/order-api-controller-test/add-order/request-headers.adoc[]
+include::{snippets}/order-api-controller-test/add-order/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/order-api-controller-test/add-order/http-response.adoc[]
+include::{snippets}/order-api-controller-test/add-order/response-headers.adoc[]
+
+
+=== 주문 건별 조회(상세 조회)
+
+==== 요청
+include::{snippets}/order-api-controller-test/show-order-by-id/http-request.adoc[]
+include::{snippets}/order-api-controller-test/show-order-by-id/request-headers.adoc[]
+include::{snippets}/order-api-controller-test/show-order-by-id/path-parameters.adoc[]
+
+==== 응답
+include::{snippets}/order-api-controller-test/show-order-by-id/http-response.adoc[]
+include::{snippets}/order-api-controller-test/show-order-by-id/response-fields.adoc[]
+
+
+=== 주문 전체 조회
+
+==== 요청
+===== 첫 요청인 경우
+include::{snippets}/order-api-controller-test/show-orders-first/http-request.adoc[]
+===== 두번째 페이지 이후의 요청인 경우
+include::{snippets}/order-api-controller-test/show-orders/http-request.adoc[]
+
+include::{snippets}/order-api-controller-test/show-orders/request-headers.adoc[]
+include::{snippets}/order-api-controller-test/show-orders/request-parameters.adoc[]
+
+==== 응답
+include::{snippets}/order-api-controller-test/show-orders/http-response.adoc[]
+include::{snippets}/order-api-controller-test/show-orders/response-fields.adoc[]
