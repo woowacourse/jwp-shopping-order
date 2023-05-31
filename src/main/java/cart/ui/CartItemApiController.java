@@ -3,10 +3,9 @@ package cart.ui;
 import cart.application.CartItemService;
 import cart.application.MemberService;
 import cart.domain.Member;
-import cart.domain.Point;
+import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.CartItemDto;
 import cart.dto.CartResponse;
 import java.net.URI;
 import java.util.List;
@@ -25,19 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartItemApiController {
 
     private final CartItemService cartItemService;
-    private final MemberService memberService;
 
-    public CartItemApiController(CartItemService cartItemService, MemberService memberService) {
+    public CartItemApiController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
-        this.memberService = memberService;
     }
 
     @GetMapping
     public ResponseEntity<CartResponse> showCart(Member member) {
         List<CartItemDto> cartItems = cartItemService.findByMember(member);
-        Point memberPoint = member.getPoint();
-        Point minUsagePoint = Point.MINIMUM_USAGE_POINT;
-        return ResponseEntity.ok(new CartResponse(cartItems, memberPoint.getValue(), minUsagePoint.getValue()));
+        CartResponse response = new CartResponse(cartItems);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

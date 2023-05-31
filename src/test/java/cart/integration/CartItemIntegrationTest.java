@@ -42,15 +42,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     }
 
-    @Test
-    void testest() {
-        memberDao.addMember(new Member("abc", "1234"));
-        Member abc = memberDao.getMemberByEmail("abc");
-        System.out.println(abc.getEmail());
-        System.out.println(abc.getPassword());
-        System.out.println(abc.getPoint().getValue());
-    }
-
     @DisplayName("[장바구니 추가] 장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
@@ -79,8 +70,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = requestGetCartItems(member);
         CartResponse cart = response.as(CartResponse.class);
 
-        assertThat(cart.getUserPoint()).isEqualTo(0);
-        assertThat(cart.getMinUsagePoints()).isEqualTo(3_000);
         assertThat(cart.getCartItems()).isNotEmpty();
     }
 

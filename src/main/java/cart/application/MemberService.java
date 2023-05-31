@@ -2,7 +2,6 @@ package cart.application;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.domain.Point;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
