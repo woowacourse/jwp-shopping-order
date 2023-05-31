@@ -2,6 +2,8 @@ package cart.domain.coupon;
 
 import cart.domain.Order;
 
+import java.util.Objects;
+
 public abstract class Coupon implements DiscountAction, CouponUseConditionAction {
     private final Long id;
     private final String name;
@@ -51,5 +53,18 @@ public abstract class Coupon implements DiscountAction, CouponUseConditionAction
 
     public Integer getMinimumPrice() {
         return minimumPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coupon coupon = (Coupon) o;
+        return Objects.equals(id, coupon.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

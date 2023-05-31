@@ -1,22 +1,26 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class OrderProduct {
     private final Long id;
     private final String name;
     private final Integer price;
     private final String imageUrl;
     private final Integer quantity;
+    private final Product product;
 
-    public OrderProduct(Long id, String name, Integer price, String imageUrl, Integer quantity) {
+    public OrderProduct(Long id, String name, Integer price, String imageUrl, Integer quantity, Product product) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+        this.product = product;
     }
 
-    public OrderProduct(String name, Integer price, String imageUrl, Integer quantity) {
-        this(null, name, price, imageUrl, quantity);
+    public OrderProduct(String name, Integer price, String imageUrl, Integer quantity, Product product) {
+        this(null, name, price, imageUrl, quantity, product);
     }
 
     public Long getId() {
@@ -37,5 +41,22 @@ public class OrderProduct {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderProduct that = (OrderProduct) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
