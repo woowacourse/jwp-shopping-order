@@ -7,7 +7,7 @@ public class DiscountPriceCalculator {
     private static final Price SECOND_STEP_DISCOUNT_BOUNDARY_PRICE = new Price(50000);
     private static final Price SECOND_STEP_DISCOUNT_AMOUNT = new Price(5000);
 
-    public static Price calculateDiscountPrice(final Price price) {
+    public Price calculate(final Price price) {
         return null;
     }
 }
