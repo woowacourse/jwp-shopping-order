@@ -28,10 +28,6 @@ public class Order {
         return coupon.calculateProduct(productAmount);
     }
 
-    public Amount discountDeliveryAmount() {
-        return coupon.calculateDelivery(deliveryAmount);
-    }
-
     public Long getId() {
         return id;
     }

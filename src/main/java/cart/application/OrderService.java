@@ -48,7 +48,7 @@ public class OrderService {
         final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest,
             products);
         return new OrderResponse(order.getId(), orderRequest.getTotalAmount(),
-            order.discountDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
+            order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
             orderProductResponses);
     }
 
