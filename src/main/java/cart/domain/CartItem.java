@@ -1,51 +1,28 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
-
+import cart.exception.IllegalAccessCartException;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import java.util.Objects;
 
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
 public class CartItem {
-    private Long id;
-    private int quantity;
+
+    private final Long id;
     private final Product product;
     private final Member member;
+    private final int quantity;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
-    }
-
-    public CartItem(Long id, int quantity, Product product, Member member) {
-        this.id = id;
-        this.quantity = quantity;
-        this.product = product;
-        this.member = member;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void checkOwner(Member member) {
+    public void validateOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new IllegalAccessCartException(this, member);
         }
     }
 
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+    public CartItem changeQuantity(final int quantity) {
+        return new CartItem(id, product, member, quantity);
     }
 }
