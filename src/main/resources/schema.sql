@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS `order`
     id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT    NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    used_point BIGINT    NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
