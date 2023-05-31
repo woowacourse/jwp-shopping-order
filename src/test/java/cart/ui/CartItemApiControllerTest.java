@@ -4,6 +4,7 @@ import cart.WebMvcConfig;
 import cart.application.CartItemService;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.OrderCheckout;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -187,7 +188,8 @@ class CartItemApiControllerTest {
     void checkoutOrder() throws Exception {
         final Product product = new Product(1L, "A", 1000, "http://image.com");
         final CartItem cartItem = new CartItem(1L, 3, product, member);
-        final CheckoutResponse response = CheckoutResponse.of(List.of(cartItem), 1000, 1000, 100, 100);
+        final OrderCheckout orderCheckout = OrderCheckout.generate(1000, List.of(cartItem));
+        final CheckoutResponse response = CheckoutResponse.of(orderCheckout);
 
         given(cartItemService.makeCheckout(any(Member.class), any())).willReturn(response);
 

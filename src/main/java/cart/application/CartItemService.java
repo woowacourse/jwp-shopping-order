@@ -4,6 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.OrderCheckout;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -64,6 +65,15 @@ public class CartItemService {
     }
 
     public CheckoutResponse makeCheckout(final Member member, final List<Long> ids) {
-        return CheckoutResponse.of(List.of(), 0, 0, 0, 0);
+        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+
+        final List<CartItem> checkedCartItems = ids.stream().map(id -> cartItems.stream()
+                .filter(cartItem -> cartItem.getId().equals(id))
+                .findAny()
+                .orElseThrow(() -> new CartItemException.NotFound(id))).collect(Collectors.toList());
+
+        final OrderCheckout orderCheckout = OrderCheckout.generate(member.getPoints(), checkedCartItems);
+
+        return CheckoutResponse.of(orderCheckout);
     }
 }

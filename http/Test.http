@@ -1,0 +1,5 @@
+
+###
+GET http://localhost:8080/cart-items/checkout?ids=1,2
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json

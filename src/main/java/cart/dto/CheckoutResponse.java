@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.CartItem;
+import cart.domain.OrderCheckout;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,15 +20,15 @@ public class CheckoutResponse {
         this.availablePoints = availablePoints;
     }
 
-    public static CheckoutResponse of(final List<CartItem> cartItems, final int totalPrice, final int currentPoints, final int earnedPoints, final int availablePoints) {
-        final List<CartItemResponse> cartItemResponses = cartItems.stream().map(CartItemResponse::of)
+    public static CheckoutResponse of(final OrderCheckout orderCheckout) {
+        final List<CartItemResponse> cartItemResponses = orderCheckout.getCartItems().stream().map(CartItemResponse::of)
                 .collect(Collectors.toList());
         return new CheckoutResponse(
                 cartItemResponses,
-                totalPrice,
-                currentPoints,
-                earnedPoints,
-                availablePoints
+                orderCheckout.getTotalPrice(),
+                orderCheckout.getCurrentPoints(),
+                orderCheckout.getEarnedPoints(),
+                orderCheckout.getAvailablePoints()
         );
     }
 
