@@ -36,3 +36,24 @@ CREATE TABLE IF NOT EXISTS cart_item (
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+
+CREATE TABLE IF NOT EXISTS purchase_order (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    original_price INT NOT NULL,
+    discount_price INT NOT NULL,
+    used_coupon_id BIGINT NOT NULL,
+    confirm_state BOOL NOT NULL,
+    member_id BIGINT NOT NULL,
+    FOREIGN KEY (used_coupon_id) REFERENCES coupon(id),
+    FOREIGN KEY (member_id) REFERENCES member(id)
+);
+
+CREATE TABLE IF NOT EXISTS order_product (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    order_id BIGINT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES purchase_order(id)
+);
