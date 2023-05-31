@@ -1,72 +1,78 @@
 package cart.dao;
 
-import cart.domain.Product;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import cart.entity.ProductEntity;
 import java.util.List;
-import java.util.Objects;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public ProductDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
-    }
-
-    public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
-    }
-
-    public Long createProduct(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
+    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<ProductEntity> productRowMapper = (rs, rowNum) ->
+            new ProductEntity(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getString("image_url"),
+                    rs.getBoolean("is_discounted"),
+                    rs.getInt("discount_rate")
             );
 
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+    public ProductEntity save(final ProductEntity productEntity) {
+        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
+        final long savedId = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+        return new ProductEntity(
+                savedId,
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl(),
+                productEntity.isDiscounted(),
+                productEntity.getDiscountRate()
+        );
     }
 
-    public void deleteProduct(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+    public List<ProductEntity> findAll() {
+        final String sql = "select * from product";
+        return jdbcTemplate.query(sql, productRowMapper);
+    }
+
+
+    public ProductEntity findById(final Long id) {
+        final String sql = "select * from product where id = ?";
+        return jdbcTemplate.queryForObject(sql, productRowMapper, id);
+    }
+
+    public void updateById(final Long id, final ProductEntity productEntity) {
+        final String sql = "update product set "
+                + "name = ?, price = ?, image_url = ?, is_discounted = ?, discount_rate = ? "
+                + "where id = ?";
+        jdbcTemplate.update(
+                sql,
+                productRowMapper,
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl(),
+                productEntity.isDiscounted(),
+                productEntity.getDiscountRate(),
+                id
+        );
+    }
+
+    public void deleteById(final Long id) {
+        final String sql = "delete from product where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
