@@ -44,7 +44,7 @@ class OrderProductDaoTest {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
             Long memberId = memberDao.addMember(memberEntity);
 
-            OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 10);
+            OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 10, 0);
             Long orderId = orderDao.save(orderEntity);
 
             OrderProductEntity orderProductEntityA =
@@ -77,7 +77,7 @@ class OrderProductDaoTest {
             ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
             Long productId = productDao.createProduct(productEntity);
 
-            OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 10);
+            OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 10, 0);
             Long orderId = orderDao.save(orderEntity);
 
             OrderProductEntity orderProductEntityA =

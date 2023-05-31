@@ -13,16 +13,25 @@ public class Order {
     private Member member;
     private List<OrderProduct> orderProducts;
     private int usedPoint;
+    private int deliveryFee;
     private LocalDateTime orderedAt;
 
     private Order() {
     }
 
-    public Order(Long id, Member member, List<OrderProduct> orderProducts, int usedPoint, LocalDateTime orderedAt) {
+    public Order(
+            Long id,
+            Member member,
+            List<OrderProduct> orderProducts,
+            int usedPoint,
+            int deliveryFee,
+            LocalDateTime orderedAt
+    ) {
         this.id = id;
         this.member = member;
         this.orderProducts = orderProducts;
         this.usedPoint = usedPoint;
+        this.deliveryFee = deliveryFee;
         this.orderedAt = orderedAt;
     }
 
@@ -50,6 +59,10 @@ public class Order {
 
     public int getUsedPoint() {
         return usedPoint;
+    }
+
+    public int getDeliveryFee() {
+        return deliveryFee;
     }
 
     public LocalDateTime getOrderedAt() {

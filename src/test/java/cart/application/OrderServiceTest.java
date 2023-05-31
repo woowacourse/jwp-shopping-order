@@ -60,7 +60,7 @@ class OrderServiceTest {
             Long productId = productDao.createProduct(productEntity);
             productEntity = productEntity.assignId(productId);
 
-            orderEntity = new OrderEntity(memberEntity, 0);
+            orderEntity = new OrderEntity(memberEntity, 0, 0);
             Long orderId = orderDao.save(orderEntity);
             orderEntity = orderEntity.assignId(orderId);
 

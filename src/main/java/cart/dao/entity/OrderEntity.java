@@ -8,27 +8,36 @@ public class OrderEntity {
     private final Long id;
     private final MemberEntity memberEntity;
     private final Integer usedPoint;
+    private final Integer deliveryFee;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public OrderEntity(MemberEntity memberEntity, Integer usedPoint) {
-        this(null, memberEntity, usedPoint, null, null);
+    public OrderEntity(MemberEntity memberEntity, Integer usedPoint, Integer deliveryFee) {
+        this(null, memberEntity, usedPoint, deliveryFee, null, null);
     }
 
-    public OrderEntity(Long id, MemberEntity memberEntity, Integer usedPoint) {
-        this(id, memberEntity, usedPoint, null, null);
+    public OrderEntity(Long id, MemberEntity memberEntity, Integer usedPoint, Integer deliveryFee) {
+        this(id, memberEntity, usedPoint, deliveryFee, null, null);
     }
 
-    public OrderEntity(Long id, MemberEntity memberEntity, Integer usedPoint, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public OrderEntity(
+            Long id,
+            MemberEntity memberEntity,
+            Integer usedPoint,
+            Integer deliveryFee,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
+    ) {
         this.id = id;
         this.memberEntity = memberEntity;
         this.usedPoint = usedPoint;
+        this.deliveryFee = deliveryFee;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     public OrderEntity assignId(Long id) {
-        return new OrderEntity(id, memberEntity, usedPoint, createdAt, updatedAt);
+        return new OrderEntity(id, memberEntity, usedPoint, deliveryFee, createdAt, updatedAt);
     }
 
     public Long getId() {
@@ -45,6 +54,10 @@ public class OrderEntity {
 
     public Integer getUsedPoint() {
         return usedPoint;
+    }
+
+    public Integer getDeliveryFee() {
+        return deliveryFee;
     }
 
     public LocalDateTime getCreatedAt() {

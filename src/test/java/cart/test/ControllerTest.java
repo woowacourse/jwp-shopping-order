@@ -21,6 +21,7 @@ public class ControllerTest {
 
     @MockBean
     protected MemberService memberService;
+
     @Autowired
     private WebApplicationContext webApplicationContext;
 

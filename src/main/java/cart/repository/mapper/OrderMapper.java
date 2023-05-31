@@ -15,6 +15,7 @@ public class OrderMapper {
                 MemberMapper.toDomain(orderEntity.getMemberEntity()),
                 generateOrderProducts(orderProductEntities),
                 orderEntity.getUsedPoint(),
+                orderEntity.getDeliveryFee(),
                 orderEntity.getCreatedAt()
         );
     }
@@ -29,7 +30,8 @@ public class OrderMapper {
         return new OrderEntity(
                 order.getId(),
                 MemberMapper.toEntity(order.getMember()),
-                order.getUsedPoint()
+                order.getUsedPoint(),
+                order.getDeliveryFee()
         );
     }
 }

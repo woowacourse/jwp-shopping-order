@@ -20,6 +20,7 @@ public class OrderDao {
             rs.getLong("orders.id"),
             extractMember(rs),
             rs.getInt("orders.used_point"),
+            rs.getInt("orders.delivery_fee"),
             rs.getTimestamp("orders.created_at").toLocalDateTime(),
             rs.getTimestamp("orders.updated_at").toLocalDateTime()
     );
@@ -32,7 +33,7 @@ public class OrderDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id", "used_point");
+                .usingColumns("member_id", "used_point", "delivery_fee");
     }
 
     private static MemberEntity extractMember(ResultSet rs) throws SQLException {
@@ -47,7 +48,7 @@ public class OrderDao {
     }
 
     public Optional<OrderEntity> findById(Long id) {
-        String sql = "SELECT orders.id, orders.used_point, orders.created_at, orders.updated_at,"
+        String sql = "SELECT orders.id, orders.used_point, orders.created_at, orders.delivery_fee, orders.updated_at,"
                 + " member.id, member.email, member.password, member.point, member.created_at, member.updated_at"
                 + " FROM orders"
                 + " INNER JOIN member ON orders.member_id = member.id"

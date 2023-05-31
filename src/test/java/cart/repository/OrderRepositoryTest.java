@@ -46,7 +46,7 @@ class OrderRepositoryTest {
         ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
         productDao.createProduct(productEntity);
 
-        OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0);
+        OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
         Long orderId = orderDao.save(orderEntity);
 
         OrderProductEntity orderProductEntity =
