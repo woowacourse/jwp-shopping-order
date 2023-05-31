@@ -1,7 +1,7 @@
 package cart.persistence.dao;
 
 import cart.exception.DatabaseException;
-import cart.domain.dto.CartItemDetail;
+import cart.persistence.CartItemDetail;
 import cart.persistence.entity.CartEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -8,7 +8,6 @@ import cart.domain.product.Product;
 import cart.domain.repository.CartRepository;
 import cart.exception.PersistenceException;
 import cart.persistence.dao.CartDao;
-import cart.domain.dto.CartItemDetail;
 import cart.persistence.entity.CartEntity;
 import org.springframework.stereotype.Repository;
 

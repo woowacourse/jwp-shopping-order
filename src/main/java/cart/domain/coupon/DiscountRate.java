@@ -2,6 +2,7 @@ package cart.domain.coupon;
 
 import cart.exception.GlobalException;
 
+// TODO: 2023-05-31 원시타입 vs wrapper
 public class DiscountRate {
     private static final int MIN_DISCOUNT_RATE = 5;
     private static final int MAX_DISCOUNT_RATE = 90;

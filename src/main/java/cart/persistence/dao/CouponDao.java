@@ -57,4 +57,11 @@ public class CouponDao {
 
         return Optional.ofNullable(couponEntity);
     }
+
+    public Optional<CouponEntity> findByNameAndDiscountRate(String name, Integer discountRate) {
+        String sql = "SELECT * FROM coupon WHERE name = ? AND discount_rate = ?";
+        CouponEntity couponEntity = jdbcTemplate.queryForObject(sql, rowMapper, name, discountRate);
+
+        return Optional.ofNullable(couponEntity);
+    }
 }

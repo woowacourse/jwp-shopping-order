@@ -1,6 +1,7 @@
 package cart.persistence;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponType;
 import cart.domain.repository.CouponRepository;
 import cart.exception.PersistenceException;
 import cart.persistence.dao.CouponDao;
@@ -24,7 +25,7 @@ public class CouponRepositoryImpl implements CouponRepository {
                 coupon.getName(),
                 coupon.getDiscountRate(),
                 coupon.getPeriod(),
-                coupon.getExpiredDate()
+                coupon.getExpiredAt()
         );
 
         return couponDao.insert(couponEntity);
@@ -47,8 +48,22 @@ public class CouponRepositoryImpl implements CouponRepository {
         return toCoupon(couponEntity);
     }
 
+    @Override
+    public Coupon findByCouponType(CouponType couponType) {
+        String name = couponType.getName();
+        Integer discountRate = couponType.getDiscountRate();
+
+        CouponEntity couponEntity = couponDao.findByNameAndDiscountRate(name, discountRate)
+                .orElseThrow(() -> new PersistenceException(
+                        name + "(" + discountRate + ")에 해당하는 쿠폰을 찾을 수 없습니다.")
+                );
+
+        return toCoupon(couponEntity);
+    }
+
     private Coupon toCoupon(CouponEntity couponEntity) {
         return new Coupon(
+                couponEntity.getId(),
                 couponEntity.getName(),
                 couponEntity.getDiscountRate(),
                 couponEntity.getPeriod(),
