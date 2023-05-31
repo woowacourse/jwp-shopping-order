@@ -64,6 +64,10 @@ public class OrderService {
         return itemsToOrder;
     }
     
+    public List<Order> findOrdersByMember(Member member) {
+        return orderDao.findById(member.getId());
+    }
+    
     //todo : addOrder메서드에서  productDao.getProductById()메서드에서 id없는 경우 Optional설정해줘야함?
     // 그게 아니면, 예외 처리 어떻게 해야하는지 생각해보기!
 }

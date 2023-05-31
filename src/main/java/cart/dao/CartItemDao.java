@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -101,19 +102,24 @@ public class CartItemDao {
     
     public void deleteAll(Long memberId, List<CartItem> updatedCartItem) {
         List<CartItem> savedCartItem = findByMemberId(memberId);
-        savedCartItem.removeAll(updatedCartItem);
+        List<CartItem> cartItemsToRemove = savedCartItem.stream()
+                .filter(cartItem -> !updatedCartItem.contains(cartItem))
+                .collect(Collectors.toList());
+        System.out.println(cartItemsToRemove);
+        System.out.println("개수"+ cartItemsToRemove.size());
+        
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id =?";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                for(CartItem cartItem : savedCartItem) {
+                for(CartItem cartItem : cartItemsToRemove) {
                     ps.setLong(1, cartItem.getMember().getId());
                     ps.setLong(2, cartItem.getProduct().getId());
                 }
             }
             @Override
             public int getBatchSize() {
-                return savedCartItem.size();
+                return cartItemsToRemove.size();
             }
         });
     }
