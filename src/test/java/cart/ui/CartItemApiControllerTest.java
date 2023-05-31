@@ -8,6 +8,7 @@ import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.CheckoutResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +57,6 @@ class CartItemApiControllerTest {
 
     @MockBean
     MemberArgumentResolver memberArgumentResolver;
-
     @MockBean
     CartItemService cartItemService;
 
@@ -66,10 +66,12 @@ class CartItemApiControllerTest {
     RestDocumentationResultHandler restDocs;
     @Autowired
     ObjectMapper objectMapper;
+
     MockMvc mockMvc;
+    Member member;
 
     @BeforeEach
-    void setUp(@Autowired final RestDocumentationContextProvider provider) {
+    void setUp(@Autowired final RestDocumentationContextProvider provider) throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(cartItemApiController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .setCustomArgumentResolvers(memberArgumentResolver)
@@ -78,13 +80,14 @@ class CartItemApiControllerTest {
                 .alwaysDo(print())
                 .alwaysDo(restDocs)
                 .build();
+
+        final Member member = new Member(1L, "a@a.com", "1234");
+        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
     }
 
     @Test
     void showCartItems() throws Exception {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
         final Product product = new Product(1L, "A", 1000, "http://image.com");
         final CartItem cartItem = new CartItem(1L, 3, product, member);
         final CartItemResponse response = CartItemResponse.of(cartItem);
@@ -112,10 +115,6 @@ class CartItemApiControllerTest {
 
     @Test
     void addCartItems() throws Exception {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
-
         final CartItemRequest request = new CartItemRequest(1L);
         given(cartItemService.add(any(Member.class), any(CartItemRequest.class))).willReturn(1L);
 
@@ -137,15 +136,10 @@ class CartItemApiControllerTest {
                                 )
                         )
                 );
-
     }
 
     @Test
     void updateCartItemQuantity() throws Exception {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
-
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(3);
         willDoNothing().given(cartItemService).updateQuantity(any(Member.class), anyLong(), any(CartItemQuantityUpdateRequest.class));
 
@@ -172,10 +166,6 @@ class CartItemApiControllerTest {
 
     @Test
     void removeCartItems() throws Exception {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
-
         willDoNothing().given(cartItemService).remove(any(Member.class), anyLong());
 
         mockMvc.perform(delete("/cart-items/{id}", 1L)
@@ -188,6 +178,38 @@ class CartItemApiControllerTest {
                                 ),
                                 pathParameters(
                                         parameterWithName("id").description("장바구니 상품 ID")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    void checkoutOrder() throws Exception {
+        final Product product = new Product(1L, "A", 1000, "http://image.com");
+        final CartItem cartItem = new CartItem(1L, 3, product, member);
+        final CheckoutResponse response = CheckoutResponse.of(List.of(cartItem), 1000, 1000, 100, 100);
+
+        given(cartItemService.makeCheckout(any(Member.class), any())).willReturn(response);
+
+        mockMvc.perform(get("/cart-items/checkout?ids=1")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic ababababaababab"))
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("사용자 Basic 인증 정보").attributes(field("constraint", "Basic 형식 토큰"))
+                                ),
+                                responseFields(
+                                        fieldWithPath("cartItems.[0].id").type(JsonFieldType.NUMBER).description("장바구니 상품 ID"),
+                                        fieldWithPath("cartItems.[0].quantity").type(JsonFieldType.NUMBER).description("장바구니 상품 수량"),
+                                        fieldWithPath("cartItems.[0].product.id").type(JsonFieldType.NUMBER).description("상품 ID"),
+                                        fieldWithPath("cartItems.[0].product.name").type(JsonFieldType.STRING).description("상품 이름"),
+                                        fieldWithPath("cartItems.[0].product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                        fieldWithPath("cartItems.[0].product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소"),
+                                        fieldWithPath("totalPrice").type(JsonFieldType.NUMBER).description("주문 총 금액"),
+                                        fieldWithPath("currentPoints").type(JsonFieldType.NUMBER).description("소유 포인트"),
+                                        fieldWithPath("earnedPoints").type(JsonFieldType.NUMBER).description("적립 예정 포인트"),
+                                        fieldWithPath("availablePoints").type(JsonFieldType.NUMBER).description("사용 가능 포인트")
                                 )
                         )
                 );
