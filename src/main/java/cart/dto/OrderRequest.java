@@ -5,7 +5,7 @@ import java.util.List;
 
 public class OrderRequest {
 
-    @JsonProperty("cartItemList")
+    @JsonProperty("cartItemIdList")
     private List<Long> cartItemIds;
     private Long totalPrice;
     private Long deliveryFee;
