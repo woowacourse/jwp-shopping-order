@@ -12,7 +12,9 @@ import cart.exception.NoSuchDataExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 public class CartItemService {
     private final ProductDao productDao;
@@ -28,12 +30,14 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(final Member member, final CartItemRequest cartItemRequest) {
+    @Transactional
+    public Long addCartItem(final Member member, final CartItemRequest cartItemRequest) {
         final Product productById = productDao.findProductById(cartItemRequest.getProductId())
                 .orElseThrow(NoSuchDataExistException::new);
         return cartItemDao.saveCartItem(new CartItem(1, member, productById));
     }
 
+    @Transactional
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
         final CartItem cartItem = cartItemDao.findById(id)
                 .orElseThrow(NoSuchDataExistException::new);
@@ -48,7 +52,8 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem.getId(), request.getQuantity());
     }
 
-    public void remove(final Member member, final Long id) {
+    @Transactional
+    public void removeCartItem(final Member member, final Long id) {
         final CartItem cartItem = cartItemDao.findById(id)
                 .orElseThrow(NoSuchDataExistException::new);
         cartItem.checkOwner(member);

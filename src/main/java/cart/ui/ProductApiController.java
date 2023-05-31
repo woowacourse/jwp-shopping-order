@@ -46,7 +46,7 @@ public class ProductApiController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
-        final Long id = productService.saveProduct(productRequest);
+        final Long id = productService.addProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
@@ -59,7 +59,7 @@ public class ProductApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
-        productService.deleteProduct(id);
+        productService.removeProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

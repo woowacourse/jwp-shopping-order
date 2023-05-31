@@ -8,7 +8,9 @@ import cart.exception.NoSuchDataExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 public class ProductService {
 
@@ -38,7 +40,8 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Long saveProduct(final ProductRequest productRequest) {
+    @Transactional
+    public Long addProduct(final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl());
         return productDao.saveProduct(product);
@@ -50,7 +53,8 @@ public class ProductService {
         productDao.updateProduct(productId, product);
     }
 
-    public void deleteProduct(final Long productId) {
+    @Transactional
+    public void removeProduct(final Long productId) {
         productDao.deleteProduct(productId);
     }
 }
