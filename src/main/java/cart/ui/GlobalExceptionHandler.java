@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.dto.response.ExceptionResponse;
-import cart.dto.response.Payload;
-import cart.dto.response.IdsExceptionResponse;
+import cart.dto.response.exception.ExceptionResponse;
+import cart.dto.response.exception.Payload;
+import cart.dto.response.exception.IdsExceptionResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.ProductException;

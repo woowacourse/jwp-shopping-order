@@ -1,4 +1,6 @@
-package cart.dto.response;
+package cart.dto.response.exception;
+
+import cart.dto.response.exception.IdsExceptionResponse;
 
 public class Payload {
 

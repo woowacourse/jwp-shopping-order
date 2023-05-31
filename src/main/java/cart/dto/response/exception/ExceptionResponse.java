@@ -1,4 +1,4 @@
-package cart.dto.response;
+package cart.dto.response.exception;
 
 public class ExceptionResponse {
 
