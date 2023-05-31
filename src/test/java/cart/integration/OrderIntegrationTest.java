@@ -88,12 +88,22 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     private ExtractableResponse<Response> requestOrder(Member member, Long cartItemId) {
+        List<Long> cartItemIds = List.of(cartItemId);
+        int totalItemDiscountAmount = 5_000;
+        int totalMemberDiscountAmount = 0;
+
+        int totalItemPrice = 10_000;
+        int discountedTotalItemPrice = 5_000;
+        int shippingFee = 3_000;
+        int totalPrice = 8_000;
+
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member2.getPassword())
-                .body(new OrderCreateRequest(List.of(
-                        new OrderItemRequest(cartItemId, 1)
-                )))
+                .body(new OrderCreateRequest(
+                        cartItemIds, totalItemDiscountAmount, totalMemberDiscountAmount,
+                        totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice
+                ))
                 .when()
                 .post("/orders")
                 .then()
@@ -115,15 +125,25 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("상품 할인 적용")
     public void product_discount() {
         //given
+
         Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
+        List<Long> cartItemIds = List.of(cartItemId4);
+        int totalItemDiscountAmount = 5_000;
+        int totalMemberDiscountAmount = 0;
+
+        int totalItemPrice = 10_000;
+        int discountedTotalItemPrice = 5_000;
+        int shippingFee = 3_000;
+        int totalPrice = 8_000;
 
         //when
         var location = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
-                .body(new OrderCreateRequest(List.of(
-                        new OrderItemRequest(cartItemId4, 1)
-                )))
+                .body(new OrderCreateRequest(
+                        cartItemIds, totalItemDiscountAmount, totalMemberDiscountAmount,
+                        totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice
+                ))
                 .when()
                 .post("/orders")
                 .then()
@@ -148,14 +168,23 @@ public class OrderIntegrationTest extends IntegrationTest {
     public void member_discount() {
         //given
         Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId));
+        List<Long> cartItemIds = List.of(cartItemId4);
+        int totalItemDiscountAmount = 0;
+        int totalMemberDiscountAmount = 1_000;
+
+        int totalItemPrice = 10_000;
+        int discountedTotalItemPrice = 9_000;
+        int shippingFee = 3_000;
+        int totalPrice = 12_000;
 
         //when
         var location = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
-                .body(new OrderCreateRequest(List.of(
-                        new OrderItemRequest(cartItemId4, 1)
-                )))
+                .body(new OrderCreateRequest(
+                        cartItemIds, totalItemDiscountAmount, totalMemberDiscountAmount,
+                        totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice
+                ))
                 .when()
                 .post("/orders")
                 .then()
@@ -180,14 +209,22 @@ public class OrderIntegrationTest extends IntegrationTest {
     public void testAllPrices() {
         //given
         Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
+        List<Long> cartItemIds = List.of(cartItemId4);
+        int totalItemDiscountAmount = 5_000;
+        int totalMemberDiscountAmount = 0;
+
+        int totalItemPrice = 10_000;
+        int discountedTotalItemPrice = 5_000;
+        int shippingFee = 3_000;
+        int totalPrice = 8_000;
 
         //when
         var location = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
-                .body(new OrderCreateRequest(List.of(
-                        new OrderItemRequest(cartItemId4, 1)
-                )))
+                .body(new OrderCreateRequest(
+                        cartItemIds, totalItemDiscountAmount, totalMemberDiscountAmount,
+                        totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice))
                 .when()
                 .post("/orders")
                 .then()

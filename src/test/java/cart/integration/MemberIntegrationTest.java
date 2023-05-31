@@ -101,13 +101,22 @@ public class MemberIntegrationTest extends IntegrationTest {
     }
 
     private Long requestOrder(Member member, Long cartItemId, Long cartItemId2) {
+        List<Long> cartItemIds = List.of(cartItemId, cartItemId2);
+        int totalItemDiscountAmount = 6_000;
+        int totalMemberDiscountAmount = 1_000;
+
+        int totalItemPrice = 20_000;
+        int discountedTotalItemPrice = 14_000;
+        int shippingFee = 3_000;
+        int totalPrice = 17_000;
+
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(new OrderCreateRequest(List.of(
-                        new OrderItemRequest(cartItemId, 1),
-                        new OrderItemRequest(cartItemId2, 1)
-                )))
+                .body(new OrderCreateRequest(
+                        cartItemIds, totalItemDiscountAmount, totalMemberDiscountAmount,
+                        totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice
+                ))
                 .when()
                 .post("/orders")
                 .then()

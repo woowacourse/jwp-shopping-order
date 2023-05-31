@@ -8,10 +8,10 @@ import cart.domain.Order;
 import cart.domain.OrderedItem;
 import cart.domain.Product;
 import cart.dto.OrderCreateRequest;
-import cart.dto.OrderItemRequest;
 import cart.dto.OrderResponse;
 import cart.dto.OrderedItemResponse;
 import cart.dto.ProductResponse;
+import cart.exception.PriceValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,8 @@ public class OrderService {
     private OrderedItemDao orderedItemDao;
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
+        //TODO: 가격들 validate 추가
+
         //totalItemPrice = 상품의 원가(할인 적용 전)
         int totalItemPrice = findTotalItemPrice(orderCreateRequest);
         //shippingFee = 배송비
@@ -58,12 +60,21 @@ public class OrderService {
         return orderId;
     }
 
-    public List<CartItem> findCartItems(OrderCreateRequest orderCreateRequest) {
-        List<OrderItemRequest> orderItemRequests = orderCreateRequest.getOrderItemRequests();
-        List<CartItem> cartItems = new ArrayList<>();
+    private int findTotalItemPrice(OrderCreateRequest orderCreateRequest) {
+        int price = calculateTotalItemPrice(orderCreateRequest);
+        int requestPrice = orderCreateRequest.getTotalItemPrice();
 
-        for (OrderItemRequest orderItemRequest : orderItemRequests) {
-            CartItem cartItem = cartItemDao.findById(orderItemRequest.getCartItemId());
+        if(price == requestPrice){
+            return price;
+        }
+
+        throw new PriceValidationException();
+    }
+
+    public List<CartItem> findCartItems(OrderCreateRequest orderCreateRequest) {
+        List<CartItem> cartItems = new ArrayList<>();
+        for (Long cartItemId : orderCreateRequest.getCartItemIds()) {
+            CartItem cartItem = cartItemDao.findById(cartItemId);
             cartItems.add(cartItem);
         }
 
@@ -71,12 +82,10 @@ public class OrderService {
     }
 
 
-    public int findTotalItemPrice(OrderCreateRequest orderCreateRequest) {
-        List<OrderItemRequest> orderItemRequests = orderCreateRequest.getOrderItemRequests();
+    public int calculateTotalItemPrice(OrderCreateRequest orderCreateRequest) {
         List<Integer> prices = new ArrayList<>();
-
-        for (OrderItemRequest orderItemRequest : orderItemRequests) {
-            CartItem cartItem = cartItemDao.findById(orderItemRequest.getCartItemId());
+        for (Long cartItemId : orderCreateRequest.getCartItemIds()) {
+            CartItem cartItem = cartItemDao.findById(cartItemId);
             int price = cartItem.getProduct().getPrice();
             prices.add(price);
         }
@@ -85,14 +94,11 @@ public class OrderService {
     }
 
     public int findDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest, int totalItemPrice) {
-        List<OrderItemRequest> orderItemRequests = orderCreateRequest.getOrderItemRequests();
         List<Integer> discountedPrice = new ArrayList<>();
-
-        for (OrderItemRequest orderItemRequest : orderItemRequests) {
-            CartItem cartItem = cartItemDao.findById(orderItemRequest.getCartItemId());
+        for (Long cartItemId : orderCreateRequest.getCartItemIds()) {
+            CartItem cartItem = cartItemDao.findById(cartItemId);
             Product product = cartItem.getProduct();
             int memberDiscount = member.calculateDiscountedPercentage();
-
             int price = product.calculateDiscountedPrice(memberDiscount);
             discountedPrice.add(price);
         }
