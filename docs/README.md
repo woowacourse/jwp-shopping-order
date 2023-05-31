@@ -24,6 +24,7 @@
     - [x] 404 - 없는 cart_item id 이다.
 - [x] 주문 dao 테스트 작성
 - [x] 주문 dao 코드 작성
+- [ ] 주문 repository 코드 작성
 - [ ] 주문 service 코드 작성
 - [ ] 주문 controller 코드 작성
 
@@ -36,6 +37,7 @@
         - [ ] 401 - 유저 인증에 실패한다.
 - [ ] 주문 목록 조회 dao 테스트 작성
 - [ ] 주문 목록 조회 dao 코드 작성
+- [ ] 주문 목록 조회 repository 코드 작성
 - [ ] 주문 목록 조회 service 코드 작성
 - [ ] 주문 목록 조회 controller 코드 작성
 
@@ -48,6 +50,7 @@
         - [ ] 404 - 없는 order id 이다.
 - [ ] 주문 상세 조회 dao 테스트 작성
 - [ ] 주문 상세 조회 dao 코드 작성
+- [ ] 주문 상세 조회 repository 코드 작성
 - [ ] 주문 상세 조회 service 코드 작성
 - [ ] 주문 상세 조회 controller 코드 작성
 
@@ -60,6 +63,7 @@
         - [ ] 404 - 없는 product id 이다.
 - [ ] 여러 상품 한 번에 조회 dao 테스트 작성
 - [ ] 여러 상품 한 번에 조회 dao 코드 작성
+- [ ] 여러 상품 한 번에 조회 repository 코드 작성
 - [ ] 여러 상품 한 번에 조회 service 코드 작성
 - [ ] 여러 상품 한 번에 조회 controller 코드 작성
 
