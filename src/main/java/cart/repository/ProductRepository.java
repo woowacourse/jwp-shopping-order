@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
+import cart.exception.notfound.ProductNotFoundException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,5 +20,10 @@ public class ProductRepository {
     public void deleteProduct(final Product product) {
         cartItemDao.deleteByProductId(product.getId());
         productDao.delete(product.getId());
+    }
+
+    public Product findById(final Long id) {
+        return productDao.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }

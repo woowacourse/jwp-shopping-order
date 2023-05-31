@@ -1,15 +1,13 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.exception.notfound.CartItemNotFoundException;
-import cart.exception.notfound.ProductNotFoundException;
+import cart.repository.CartItemRepository;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,53 +18,50 @@ import java.util.Optional;
 @Service
 public class CartItemService {
 
-    private final ProductDao productDao;
-    private final CartItemDao cartItemDao;
+    private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao) {
-        this.productDao = productDao;
-        this.cartItemDao = cartItemDao;
+    public CartItemService(final ProductRepository productRepository, final CartItemRepository cartItemRepository) {
+        this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     public List<CartItem> getCartItemsByMember(final Member member) {
-        return cartItemDao.findAllByMemberId(member.getId());
+        return cartItemRepository.findAllByMemberId(member.getId());
     }
 
     @Transactional
     public Long addCartItem(final Member member, final CartItemRequest request) {
-        final Product product = productDao.findById(request.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException(request.getProductId()));
-        final CartItems cartItems = new CartItems(cartItemDao.findAllByMemberId(member.getId()));
+        final Product product = productRepository.findById(request.getProductId());
+        final CartItems cartItems = new CartItems(cartItemRepository.findAllByMemberId(member.getId()));
         final Optional<CartItem> cartItemOptional = cartItems.find(product);
         if (cartItemOptional.isEmpty()) {
-            return cartItemDao.insert(new CartItem(member, product));
+            return cartItemRepository.save(new CartItem(member, product));
         }
         final CartItem cartItem = cartItemOptional.get();
         cartItem.checkOwner(member);
         final CartItem addedCartItem = cartItem.addQuantity();
-        cartItemDao.updateQuantity(addedCartItem);
+        cartItemRepository.updateQuantity(addedCartItem);
 
         return cartItem.getId();
     }
 
     @Transactional
     public void updateQuantity(final Member member, final Long cartItemId, final CartItemQuantityUpdateRequest request) {
-        final CartItem cartItem = cartItemDao.findById(cartItemId)
-                .orElseThrow(() -> new CartItemNotFoundException(cartItemId));
+        final CartItem cartItem = cartItemRepository.findById(cartItemId);
         cartItem.checkOwner(member);
         if (request.getQuantity() == 0) {
-            cartItemDao.delete(cartItemId);
+            cartItemRepository.delete(cartItem);
             return;
         }
         final CartItem updatedCartItem = cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(updatedCartItem);
+        cartItemRepository.updateQuantity(updatedCartItem);
     }
 
     @Transactional
     public void remove(final Member member, final Long cartItemId) {
-        final CartItem cartItem = cartItemDao.findById(cartItemId)
-                .orElseThrow(() -> new CartItemNotFoundException(cartItemId));
+        final CartItem cartItem = cartItemRepository.findById(cartItemId);
         cartItem.checkOwner(member);
-        cartItemDao.delete(cartItemId);
+        cartItemRepository.delete(cartItem);
     }
 }
