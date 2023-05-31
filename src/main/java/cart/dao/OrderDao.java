@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dao.entity.OrderEntity;
-import cart.domain.order.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -35,8 +34,8 @@ public class OrderDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long createOrder(final Order order) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(order);
+    public Long createOrder(final OrderEntity orderEntity) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(orderEntity);
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 

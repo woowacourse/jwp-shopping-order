@@ -36,21 +36,6 @@ public class OrderItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-//    public void saveAll(final Long orderId, final List<OrderItem> orderItems) {
-//        List<OrderItemEntity> orderItemEntityList = orderItems.stream()
-//                .map(orderItem -> new OrderItemEntity(
-//                        orderId,
-//                        orderItem.getProductId(),
-//                        orderItem.getQuantity()
-//                ))
-//                .collect(Collectors.toList());
-//
-//        final BeanPropertySqlParameterSource[] parameterSources = orderItemEntityList.stream()
-//                .map(BeanPropertySqlParameterSource::new)
-//                .toArray(BeanPropertySqlParameterSource[]::new);
-//        simpleJdbcInsert.executeBatch(parameterSources);
-//    }
-
     public List<OrderItemEntity> findAllByOrderId(final Long orderId) {
         final String sql = "SELECT * FROM order_item WHERE order_id = ?";
         return jdbcTemplate.query(sql, rowMapper, orderId);

@@ -7,8 +7,8 @@ public class OrderEntity {
     private final Long totalPrice;
     private final String createdAt;
 
-    public OrderEntity(Long memberId, Long shippingFee, Long totalPrice,String createdAt) {
-        this(null, memberId, shippingFee, totalPrice,createdAt);
+    public OrderEntity(Long memberId, Long shippingFee, Long totalPrice) {
+        this(null, memberId, shippingFee, totalPrice,null);
     }
 
     public OrderEntity(Long id, Long memberId, Long shippingFee, Long totalPrice,String createdAt) {

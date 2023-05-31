@@ -36,11 +36,12 @@ public class OrderService {
         ShippingFee shippingFee = orderRepository.findShippingFee();
         ShippingDiscountPolicy shippingDiscountPolicy = orderRepository.findShippingDiscountPolicy();
 
+
         Order newOrder = Order.of(member,
                 shippingFee.getFee(),
                 orderItemList,
                 shippingDiscountPolicy.getThreshold());
-        return OrderResponse.from(newOrder).getOrderId();
+        return orderRepository.saveOrder(newOrder);
     }
 
     public List<OrdersResponse> findAllOrdersByMember(Member member) {
@@ -54,4 +55,5 @@ public class OrderService {
         Order order = orderRepository.findOrderById(member, orderId);
         return OrderResponse.from(order);
     }
+
 }

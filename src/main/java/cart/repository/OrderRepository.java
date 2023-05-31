@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -92,12 +91,20 @@ public class OrderRepository {
 
     public ShippingFee findShippingFee() {
         // TODO: optional 에러처리
-        ShippingFeeEntity shippingFeeEntity = shippingFeeDao.findFee().get();
+        final ShippingFeeEntity shippingFeeEntity = shippingFeeDao.findFee().get();
         return ShippingFee.from(shippingFeeEntity);
     }
 
     public ShippingDiscountPolicy findShippingDiscountPolicy() {
-        ShippingDiscountPolicyEntity shippingDiscountPolicyEntity = shippingDiscountPolicyDao.findShippingDiscountPolicy().get();
+        final ShippingDiscountPolicyEntity shippingDiscountPolicyEntity = shippingDiscountPolicyDao.findShippingDiscountPolicy().get();
         return ShippingDiscountPolicy.from(shippingDiscountPolicyEntity);
+    }
+
+    public Long saveOrder(final Member member, final Order order) {
+        final OrderEntity orderEntity = new OrderEntity(
+                member.getId(),
+                order.getShippingFee(),
+                order.getTotalPrice());
+        return orderDao.createOrder(orderEntity);
     }
 }
