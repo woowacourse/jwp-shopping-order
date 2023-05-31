@@ -32,7 +32,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
+            throw new AuthenticationException("인증 정보가 존재하지 않습니다.");
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);

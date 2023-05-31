@@ -67,7 +67,7 @@ public class CouponRepositoryImpl implements CouponRepository {
                 couponEntity.getName(),
                 couponEntity.getDiscountRate(),
                 couponEntity.getPeriod(),
-                couponEntity.getExpiredDate()
+                couponEntity.getExpiredAt()
         );
     }
 }

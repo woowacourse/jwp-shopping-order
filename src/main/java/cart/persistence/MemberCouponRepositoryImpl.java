@@ -30,7 +30,7 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
 
     private MemberCouponEntity toEntity(MemberCoupon memberCoupon) {
         return new MemberCouponEntity(
-                memberCoupon.getUserId(),
+                memberCoupon.getMemberId(),
                 memberCoupon.getCouponId(),
                 memberCoupon.getIssuedAt(),
                 memberCoupon.getMemberCouponExpiredAt(),

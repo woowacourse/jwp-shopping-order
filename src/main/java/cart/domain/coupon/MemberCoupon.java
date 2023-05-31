@@ -26,16 +26,15 @@ public class MemberCoupon {
         LocalDateTime issuedAt = LocalDateTime.now();
         int period = coupon.getPeriod();
         LocalDateTime expiredAt = LocalDateTime.now().plusDays(period);
-        Boolean isUsed = false;
 
-        return new MemberCoupon(null, owner, coupon, issuedAt, expiredAt, isUsed);
+        return new MemberCoupon(null, owner, coupon, issuedAt, expiredAt, Boolean.FALSE);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getUserId() {
+    public Long getMemberId() {
         return owner.getId();
     }
 

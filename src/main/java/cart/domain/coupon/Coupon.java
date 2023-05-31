@@ -17,6 +17,11 @@ public class Coupon {
         this.expiredAt = expiredAt;
     }
 
+    public Coupon(CouponType couponType) {
+        this(null, couponType.getName(), couponType.getDiscountRate(),
+                couponType.getPeriod(), couponType.getExpiredAt());
+    }
+
     public Long getId() {
         return id;
     }
