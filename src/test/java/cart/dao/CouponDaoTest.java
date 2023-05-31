@@ -1,8 +1,12 @@
 package cart.dao;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.dto.CouponDto;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,6 +67,13 @@ class CouponDaoTest {
         assertThat(queryResult.getName()).isEqualTo("홍실 할인");
         assertThat(queryResult.getDiscountRate()).isEqualTo(2d);
         assertThat(queryResult.getDiscountCharge()).isZero();
+    }
+
+    @Test
+    @DisplayName("찾는 Coupon Dto 가 없는 경우 빈 Optional 을 반환한다.")
+    void findById_returnEmpty() {
+        Optional<CouponDto> couponDto = couponDao.findById(1L);
+        assertThat(couponDto).isNotPresent();
     }
 
 }

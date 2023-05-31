@@ -2,7 +2,9 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -62,6 +64,13 @@ class MemberCouponDaoTest {
         assertThat(queryResult.getId()).isEqualTo(1L);
         assertThat(queryResult.getMemberId()).isEqualTo(2L);
         assertThat(queryResult.getCouponId()).isEqualTo(3L);
+    }
+
+    @Test
+    @DisplayName("찾는 Member Coupon Dto 가 없는 경우 빈 Optional 을 반환한다.")
+    void findById_returnEmpty() {
+        Optional<MemberCouponDto> memberCouponDto = memberCouponDao.findById(1L);
+        assertThat(memberCouponDto).isNotPresent();
     }
 
 }
