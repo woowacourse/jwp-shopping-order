@@ -2,7 +2,7 @@ package cart.dao;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

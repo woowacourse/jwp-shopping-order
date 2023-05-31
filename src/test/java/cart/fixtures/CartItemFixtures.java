@@ -2,7 +2,7 @@ package cart.fixtures;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.CartItemResponse;
 
 import static cart.fixtures.MemberFixtures.MemberA;
