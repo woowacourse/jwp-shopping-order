@@ -86,27 +86,17 @@ public class OrderService {
 	}
 
 	private void validateLegalOrder(final List<CartItem> cartItems, final List<CartItemRequest> requests) {
-		for (final CartItem cartItem : cartItems) {
-			iterateRequests(requests, cartItem);
-		}
-	}
-
-	private void iterateRequests(final List<CartItemRequest> requests, final CartItem cartItem) {
-		for (final CartItemRequest request : requests) {
-			compareEachCartItemIfIdEquals(cartItem, request);
-		}
+		cartItems.forEach(cartItem -> requests
+			.forEach(request -> compareEachCartItemIfIdEquals(cartItem, request))
+		);
 	}
 
 	private void compareEachCartItemIfIdEquals(final CartItem cartItem, final CartItemRequest request) {
 		if (cartItem.getId().equals(request.getId())) {
-			compareEachCartItem(cartItem, request);
+			isInvalidProduct(cartItem, request);
+			isInvalidQuantity(cartItem, request);
+			isNotChecked(cartItem);
 		}
-	}
-
-	private void compareEachCartItem(final CartItem cartItem, final CartItemRequest request) {
-		isInvalidProduct(cartItem, request);
-		isInvalidQuantity(cartItem, request);
-		isNotChecked(cartItem);
 	}
 
 	private void isInvalidProduct(final CartItem cartItem, final CartItemRequest request) {
@@ -116,13 +106,13 @@ public class OrderService {
 	}
 
 	private void isInvalidQuantity(final CartItem cartItem, final CartItemRequest request) {
-		if(cartItem.getQuantity() != request.getQuantity()){
+		if (cartItem.getQuantity() != request.getQuantity()) {
 			throw new InvalidOrderQuantityException();
 		}
 	}
 
 	private void isNotChecked(final CartItem cartItem) {
-		if(!cartItem.isChecked()){
+		if (!cartItem.isChecked()) {
 			throw new InvalidOrderCheckedException();
 		}
 	}
