@@ -3,6 +3,7 @@ package cart.integration;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.ProductRequest;
+import cart.fixtures.MemberFixtures;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +45,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     @Test
     void 특정_상품_목록을_페이징해서_조회하다() {
         final ExtractableResponse<Response> response = given()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .param("lastId", 3)
                 .param("pageItemCount", 2)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

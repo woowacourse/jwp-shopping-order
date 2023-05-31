@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.ProductCartItem;
 import cart.domain.cartitem.CartItem;
 import cart.domain.product.Product;
 
@@ -15,13 +16,23 @@ public class ProductCartItemResponse {
         this.cartItem = cartItem;
     }
 
+    public static ProductCartItemResponse from(final ProductCartItem productCartItem) {
+        final Product product = productCartItem.getProduct();
+        final CartItem cartItem = productCartItem.getCartItem();
+
+        return Optional.ofNullable(cartItem)
+                .map(item -> new CartItemInProductCartItemDto(item.getId(), item.getQuantity()))
+                .map(cartItemDto -> new ProductCartItemResponse(product, cartItemDto))
+                .orElse(new ProductCartItemResponse(product, null));
+    }
+
     public static ProductCartItemResponse of(final Product product, final CartItem cartItem) {
         final Optional<CartItem> nullableCartItem = Optional.ofNullable(cartItem);
         if (nullableCartItem.isEmpty()) {
             return new ProductCartItemResponse(product, null);
         }
 
-        final CartItemInProductCartItemDto cartItemDto = CartItemInProductCartItemDto.of(cartItem.getId(), cartItem.getQuantity());
+        final CartItemInProductCartItemDto cartItemDto = new CartItemInProductCartItemDto(cartItem.getId(), cartItem.getQuantity());
         return new ProductCartItemResponse(product, cartItemDto);
     }
 

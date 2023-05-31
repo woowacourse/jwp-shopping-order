@@ -3,7 +3,8 @@ package cart.document;
 import cart.WebMvcConfig;
 import cart.application.CartItemService;
 import cart.application.ProductService;
-import cart.fixtures.MemberFixtures;
+import cart.domain.ProductCartItem;
+import cart.domain.product.Product;
 import cart.ui.ProductApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -23,11 +24,14 @@ import org.springframework.util.Base64Utils;
 import java.util.List;
 
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
+import static cart.fixtures.CartItemFixtures.MemberA_CartItem2;
+import static cart.fixtures.MemberFixtures.MemberA;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PANCAKE;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static cart.fixtures.ProductFixtures.SALAD;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -96,13 +100,23 @@ public class ProductApiDocumentTest {
     @Test
     void 특정_상품_목록_페이징_문서화() throws Exception {
         // given
+        final List<Product> products = List.of(SALAD.ENTITY, CHICKEN.ENTITY);
+        final List<ProductCartItem> productCartItems = List.of(
+                new ProductCartItem(SALAD.ENTITY, MemberA_CartItem2.ENTITY),
+                new ProductCartItem(CHICKEN.ENTITY, MemberA_CartItem1.ENTITY)
+        );
+
         given(productService.getProductsInPaging(3L, 2))
-                .willReturn(List.of(SALAD.ENTITY, CHICKEN.ENTITY));
+                .willReturn(products);
+        given(productService.getProductCartItemsByProduct(any(), any()))
+                .willReturn(productCartItems);
         given(productService.hasLastProduct(3L, 2))
                 .willReturn(true);
+        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/products/cart-items")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
                         .accept(MediaType.APPLICATION_JSON)
                         .param("lastId", "3")
                         .param("pageItemCount", "2"))
@@ -116,10 +130,12 @@ public class ProductApiDocumentTest {
                         ),
                         responseFields(
                                 fieldWithPath("products").type(JsonFieldType.ARRAY).description("상품 목록"),
-                                fieldWithPath("products.[].id").type(JsonFieldType.NUMBER).description("상품 아이디"),
-                                fieldWithPath("products.[].name").type(JsonFieldType.STRING).description("상품 이름"),
-                                fieldWithPath("products.[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                fieldWithPath("products.[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 경로"),
+                                fieldWithPath("products.[].product.id").type(JsonFieldType.NUMBER).description("상품 아이디"),
+                                fieldWithPath("products.[].product.name").type(JsonFieldType.STRING).description("상품 이름"),
+                                fieldWithPath("products.[].product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("products.[].product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 경로"),
+                                fieldWithPath("products.[].cartItem.id").type(JsonFieldType.NUMBER).description("장바구니 아이디"),
+                                fieldWithPath("products.[].cartItem.quantity").type(JsonFieldType.NUMBER).description("장바구니 수량"),
                                 fieldWithPath("isLast").type(JsonFieldType.BOOLEAN).description("가져온 상품 목록에 마지막 상품이 들어있는지 여부")
                         )
                 ));
@@ -159,7 +175,7 @@ public class ProductApiDocumentTest {
                     .willReturn(CHICKEN.ENTITY);
             given(cartItemService.findByMemberAndProduct(any(), any()))
                     .willReturn(MemberA_CartItem1.ENTITY);
-            final String encodeAuthInfo = Base64Utils.encodeToString((MemberFixtures.MemberA.EMAIL + ":" + MemberFixtures.MemberA.PASSWORD).getBytes());
+            final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
 
             // when, then
             mockMvc.perform(get("/products/{productId}/cart-items", CHICKEN.ID)
@@ -194,7 +210,7 @@ public class ProductApiDocumentTest {
                     .willReturn(PANCAKE.ENTITY);
             given(cartItemService.findByMemberAndProduct(any(), any()))
                     .willReturn(null);
-            final String encodeAuthInfo = Base64Utils.encodeToString((MemberFixtures.MemberA.EMAIL + ":" + MemberFixtures.MemberA.PASSWORD).getBytes());
+            final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
 
             // when, then
             mockMvc.perform(get("/products/{productId}/cart-items", PANCAKE.ID)

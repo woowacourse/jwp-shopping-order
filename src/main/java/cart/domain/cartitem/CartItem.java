@@ -5,18 +5,26 @@ import cart.domain.product.Product;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class CartItem {
     private Long id;
     private Quantity quantity;
-    private final Product product;
-    private final Member member;
+    private Product product;
+    private Member member;
+
+    private CartItem(){
+    }
 
     private CartItem(final Long id, final Quantity quantity, final Product product, final Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+    public static CartItem create() {
+        return new CartItem();
     }
 
     public static CartItem of(final Member member, final Product product) {

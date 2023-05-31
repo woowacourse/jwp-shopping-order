@@ -2,8 +2,9 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.application.ProductService;
-import cart.domain.cartitem.CartItem;
 import cart.domain.Member;
+import cart.domain.ProductCartItem;
+import cart.domain.cartitem.CartItem;
 import cart.domain.product.Product;
 import cart.dto.HomePagingResponse;
 import cart.dto.ProductCartItemResponse;
@@ -51,12 +52,19 @@ public class ProductApiController {
     }
 
     @GetMapping("/cart-items")
-    public ResponseEntity<HomePagingResponse> getHomePagingProduct(@RequestParam final Long lastId,
+    public ResponseEntity<HomePagingResponse> getHomePagingProduct(final Member member,
+                                                                   @RequestParam final Long lastId,
                                                                    @RequestParam final int pageItemCount) {
         final List<Product> products = productService.getProductsInPaging(lastId, pageItemCount);
+
+        final List<ProductCartItem> productCartItems = productService.getProductCartItemsByProduct(member, products);
         final boolean isLast = productService.hasLastProduct(lastId, pageItemCount);
 
-        return ResponseEntity.ok(HomePagingResponse.of(products, isLast));
+        final List<ProductCartItemResponse> responses = productCartItems.stream()
+                .map(ProductCartItemResponse::from)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(HomePagingResponse.of(responses, isLast));
     }
 
     @GetMapping("/{id}")
