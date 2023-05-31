@@ -2,10 +2,9 @@ package cart.ui.member;
 
 import cart.application.CouponService;
 import cart.application.MemberService;
-import cart.domain.coupon.MemberCoupon;
 import cart.domain.member.Member;
-import cart.ui.member.dto.MemberCouponResponse;
 import cart.ui.member.dto.request.MemberJoinRequest;
+import cart.ui.member.dto.response.MemberCouponResponse;
 import cart.ui.member.dto.response.MemberLoginResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Base64Utils;
@@ -47,12 +46,10 @@ public class MemberRestController {
 
     @GetMapping("/me/coupons")
     public ResponseEntity<List<MemberCouponResponse>> getCouponsOfMember(Member member) {
-        List<MemberCoupon> memberCoupons = couponService.getAllCouponsOfMember(member);
+        List<MemberCouponResponse> responses = couponService.getAllCouponsOfMember(member).stream()
+                .map(MemberCouponResponse::of)
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(
-                memberCoupons.stream()
-                        .map(MemberCouponResponse::of)
-                        .collect(Collectors.toList())
-        );
+        return ResponseEntity.ok(responses);
     }
 }

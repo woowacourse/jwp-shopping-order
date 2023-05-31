@@ -1,4 +1,4 @@
-package cart.ui.member.dto;
+package cart.ui.member.dto.response;
 
 import cart.domain.coupon.MemberCoupon;
 
