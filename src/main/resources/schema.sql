@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS member
     email                 VARCHAR(255) NOT NULL UNIQUE,
     password              VARCHAR(255) NOT NULL,
     rank                  VARCHAR(255) NOT NULL,
-    total_purchase_amount BIGINT       NOT NULL
+    total_purchase_amount INT       NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS cart_item
@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS cart_item
 CREATE TABLE IF NOT EXISTS orders
 (
     id                          BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    total_item_price            BIGINT   NOT NULL,
-    discounted_total_item_price BIGINT   NOT NULL,
+    total_item_price            INT   NOT NULL,
+    discounted_total_item_price INT   NOT NULL,
     delivery_fee                INT      NOT NULL,
     ordered_at                  DATETIME NOT NULL,
     member_id                   BIGINT   NOT NULL,
