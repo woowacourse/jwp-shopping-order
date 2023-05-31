@@ -1,11 +1,11 @@
 # 기능 목록
 
-
 ## 장바구니에 담은 상품들 주문하기
 - [x] POST 요청, URI = "/orders"인 API 작성
 - [x] OrderCreateRequest 생성
 - [x] service에서 domain 객체 생성 (Cart)
-  - [x] CartItem들의 List를 가지고 있다
+  - [x] CartItem의 id에 대한 List를 가지고 있다
+  - [x] request안의 금액들이 올바른지 검증
 - [x] domain으로 dao에 요청 전송
 - [x] 주문한 상품들의 총액을 계산
 - [x] 배송비 계산

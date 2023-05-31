@@ -47,7 +47,7 @@ public class Member {
         }
     }
 
-    public int calculateDiscountedPercentage() {
+    public int findDiscountedPercentage() {
         if (rank.equals("일반")) {
             return 0;
         }else if(rank.equals("silver")){

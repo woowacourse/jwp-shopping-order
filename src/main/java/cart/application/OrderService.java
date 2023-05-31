@@ -29,18 +29,16 @@ public class OrderService {
     private OrderedItemDao orderedItemDao;
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
-        //TODO: 가격들 validate 추가
-
-        //totalItemPrice = 상품의 원가(할인 적용 전)
         int totalItemPrice = findTotalItemPrice(orderCreateRequest);
-        //shippingFee = 배송비
-        int shippingFee = Order.calculateShippingFee(totalItemPrice);
-        //discountedItemTotalPrice = 할인이 적용된 상품들의 가격
-        int discountedItemTotalPrice = findDiscountedTotalItemPrice(member, orderCreateRequest, totalItemPrice);
-        int totalPurchaseAmount = totalItemPrice + shippingFee;
+        int discountedTotalItemPrice = findDiscountedTotalItemPrice(member, orderCreateRequest);
+        int shippingFee = findShippingFee(orderCreateRequest, totalItemPrice);
+        int totalPrice = discountedTotalItemPrice + shippingFee;
+        int totalItemDiscountAmount = findTotalItemDiscountAmount(orderCreateRequest);
+        int totalMemberDiscountAmount = findTotalMemberDiscountAmount(member, orderCreateRequest);
 
-        Order order = new Order(member.getId(), totalPurchaseAmount, totalItemPrice, null, shippingFee, discountedItemTotalPrice);
-        member.order(totalPurchaseAmount);
+
+        Order order = new Order(member.getId(), totalPrice, totalItemPrice, null, shippingFee, discountedTotalItemPrice);
+        member.order(totalPrice);
         Long orderId = orderDao.createOrder(member.getId(), order);
 
 
@@ -60,15 +58,57 @@ public class OrderService {
         return orderId;
     }
 
+    private int findTotalMemberDiscountAmount(Member member, OrderCreateRequest orderCreateRequest) {
+        int totalMemberDiscountAmount = calculateMemberDiscountAmount(member, orderCreateRequest);
+        int requestAmount = orderCreateRequest.getTotalMemberDiscountAmount();
+
+        return isSamePrice(totalMemberDiscountAmount, requestAmount);
+    }
+
+    private int calculateMemberDiscountAmount(Member member, OrderCreateRequest orderCreateRequest) {
+        List<Integer> prices = new ArrayList<>();
+
+        for (Long cartItemId : orderCreateRequest.getCartItemIds()) {
+            CartItem cartItem = cartItemDao.findById(cartItemId);
+            Product product = cartItem.getProduct();
+            int originalPrice = product.getPrice();
+            int memberDiscount = member.findDiscountedPercentage();
+
+            if(!product.getIsDiscounted() && memberDiscount > 0){
+               int memberDiscountAmount = originalPrice - product.calculateMemberDiscountedPrice(memberDiscount);
+                prices.add(memberDiscountAmount);
+            }
+
+        }
+        return Order.calculatePriceSum(prices);
+    }
+
     private int findTotalItemPrice(OrderCreateRequest orderCreateRequest) {
         int price = calculateTotalItemPrice(orderCreateRequest);
         int requestPrice = orderCreateRequest.getTotalItemPrice();
 
-        if(price == requestPrice){
-            return price;
-        }
+        return isSamePrice(price, requestPrice);
+    }
 
+    public int isSamePrice(int original, int compare){
+        if(original == compare){
+            return original;
+        }
         throw new PriceValidationException();
+    }
+
+    private int findDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest) {
+        int price = calculateDiscountedTotalItemPrice(member, orderCreateRequest);
+        int requestPrice = orderCreateRequest.getDiscountedTotalItemPrice();
+
+        return isSamePrice(price, requestPrice);
+    }
+
+    private int findShippingFee(OrderCreateRequest orderCreateRequest, int totalItemPrice) {
+        int shippingFee = orderCreateRequest.getShippingFee();
+        int requestFee = Order.calculateShippingFee(totalItemPrice);
+
+        return isSamePrice(shippingFee, requestFee);
     }
 
     public List<CartItem> findCartItems(OrderCreateRequest orderCreateRequest) {
@@ -81,7 +121,6 @@ public class OrderService {
         return cartItems;
     }
 
-
     public int calculateTotalItemPrice(OrderCreateRequest orderCreateRequest) {
         List<Integer> prices = new ArrayList<>();
         for (Long cartItemId : orderCreateRequest.getCartItemIds()) {
@@ -93,17 +132,39 @@ public class OrderService {
         return Order.calculatePriceSum(prices);
     }
 
-    public int findDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest, int totalItemPrice) {
+    public int calculateDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest) {
         List<Integer> discountedPrice = new ArrayList<>();
+
         for (Long cartItemId : orderCreateRequest.getCartItemIds()) {
             CartItem cartItem = cartItemDao.findById(cartItemId);
             Product product = cartItem.getProduct();
-            int memberDiscount = member.calculateDiscountedPercentage();
+            int memberDiscount = member.findDiscountedPercentage();
             int price = product.calculateDiscountedPrice(memberDiscount);
             discountedPrice.add(price);
         }
 
         return Order.calculatePriceSum(discountedPrice);
+    }
+
+    private int findTotalItemDiscountAmount(OrderCreateRequest orderCreateRequest) {
+        int totalItemDiscountAmount = calculateTotalItemDiscountAmount(orderCreateRequest);
+        int requestAmount = orderCreateRequest.getTotalItemDiscountAmount();
+
+        return isSamePrice(totalItemDiscountAmount, requestAmount);
+    }
+
+    private int calculateTotalItemDiscountAmount(OrderCreateRequest orderCreateRequest) {
+        List<Integer> prices = new ArrayList<>();
+        for (Long cartItemId : orderCreateRequest.getCartItemIds()) {
+            CartItem cartItem = cartItemDao.findById(cartItemId);
+            Product product = cartItem.getProduct();
+
+            if(product.getIsDiscounted()){
+                int price = product.calculateProductDiscountAmount();
+                prices.add(price);
+            }
+        }
+        return Order.calculatePriceSum(prices);
     }
 
     public OrderResponse getOrderByIds(Long memberId, Long orderId) {

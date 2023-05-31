@@ -59,7 +59,23 @@ public class Product {
         if (getIsDiscounted()) {
             return (discountRate * price / 100 - price) * -1;
         } else {
-            return (memberDiscount * price / 100  - price) * -1;
+            return (memberDiscount * price / 100 - price) * -1;
         }
+    }
+
+    public int calculateProductDiscountedPrice() {
+        return (discountRate * price / 100 - price) * -1;
+    }
+
+    public int calculateProductDiscountAmount(){
+        int discountedPrice = calculateProductDiscountedPrice();
+        return price - discountedPrice;
+    }
+
+    public int calculateMemberDiscountedPrice(int memberDiscount) {
+        if (!getIsDiscounted()) {
+            return (memberDiscount * price / 100 - price) * -1;
+        }
+        throw new IllegalArgumentException("해당 상품은 멤버 할인 상품이 아닙니다");
     }
 }
