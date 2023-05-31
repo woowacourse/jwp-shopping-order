@@ -13,6 +13,7 @@ import cart.domain.discount.DiscountPolicy;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderItems;
+import cart.domain.price.OrderPrice;
 import cart.dto.OrderDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderItemResponse;
@@ -60,12 +61,9 @@ public class OrderService {
         checkOrderItemInCart(cartItems, orderItems.getItems());
 
         final Order order = Order.beforePersisted(member, orderItems, orderRequest.getOrderTime());
-        final Long productPrice = order.getProductPrice();
-        final Long discountPrice = discountPolicy.calculate(productPrice);
-        final Long deliveryFee = deliveryPolicy.getDeliveryFee(productPrice);
+        final OrderPrice orderPrice = new OrderPrice(order.getProductPrice(), discountPolicy, deliveryPolicy);
 
-        final Order persistOrder = orderDao.insert(order, discountPrice,
-            deliveryFee, calculateTotalPrice(productPrice, discountPrice, deliveryFee));
+        final Order persistOrder = orderDao.insert(order, orderPrice);
 
         saveOrderItems(persistOrder);
         deleteCartItems(persistOrder);
@@ -95,18 +93,9 @@ public class OrderService {
     }
 
     private OrderResponse generateOrderResponseAfterCreate(final Order order) {
-        final Long productPrice = order.getProductPrice();
-        final Long discountPrice = discountPolicy.calculate(productPrice);
-        final Long deliveryFee = deliveryPolicy.getDeliveryFee(productPrice);
+        final OrderPrice orderPrice = new OrderPrice(order.getProductPrice(), discountPolicy, deliveryPolicy);
 
-        return new OrderResponse(
-            order.getId(),
-            OrderItemResponse.of(order.getOrderItems()),
-            productPrice,
-            discountPrice,
-            deliveryFee,
-            calculateTotalPrice(productPrice, discountPrice, deliveryFee)
-        );
+        return OrderResponse.of(order.getId(), OrderItemResponse.of(order.getOrderItems()), orderPrice);
     }
 
     private Long calculateTotalPrice(final Long productPrice, final Long discountPrice, final Long deliveryFee) {
@@ -147,7 +136,7 @@ public class OrderService {
         final Long discountPrice = orderDto.getOrderDiscountPrice();
         final Long deliveryFee = orderDto.getOrderDeliveryFee();
 
-        return new OrderResponse(
+        return OrderResponse.of(
             order.getId(),
             OrderItemResponse.of(order.getOrderItems()), productPrice,
             discountPrice,

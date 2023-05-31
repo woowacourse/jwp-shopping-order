@@ -6,9 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.delivery.BasicDeliveryPolicy;
+import cart.domain.discount.BasicDiscountPolicy;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderItems;
+import cart.domain.price.OrderPrice;
 import cart.dto.OrderDto;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,9 +55,10 @@ class OrderDaoTest {
         //given
         createCartItem(new CartItem(member, product1));
         final Order order = createOrder(member, List.of(OrderItem.notPersisted(product1, 1)));
-
+        final OrderPrice orderPrice = new OrderPrice(order.getProductPrice(), new BasicDiscountPolicy(),
+            new BasicDeliveryPolicy());
         //when
-        final Order persistedOrder = orderDao.insert(order, 1000L, 2000L, order.getProductPrice() - 1000L + 2000L);
+        final Order persistedOrder = orderDao.insert(order, orderPrice);
 
         //then
         Assertions.assertThat(persistedOrder.getOrderTime()).isEqualTo(order.getOrderTime());
@@ -94,7 +98,10 @@ class OrderDaoTest {
 
     private Order createOrder(final Member member, final List<OrderItem> orderItems) {
         final Order order = Order.beforePersisted(member, new OrderItems(orderItems), LocalDateTime.now());
-        final Order persistedOrder = orderDao.insert(order, 3000L, 2000L, order.getProductPrice() - 3000L + 2000L);
+        final OrderPrice orderPrice = new OrderPrice(order.getProductPrice(), new BasicDiscountPolicy(),
+            new BasicDeliveryPolicy());
+
+        final Order persistedOrder = orderDao.insert(order, orderPrice);
         order.getOrderItems().forEach((orderItem -> orderItemDao.insert(persistedOrder.getId(), orderItem)));
         return persistedOrder;
     }

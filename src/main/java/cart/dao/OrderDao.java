@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.order.Order;
 import cart.domain.order.OrderItems;
+import cart.domain.price.OrderPrice;
 import cart.dto.OrderDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -37,15 +38,13 @@ public class OrderDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Order insert(final Order order, final Long discountPrice, final Long deliveryFee, final Long totalPrice) {
-        final Long productPrice = order.getProductPrice();
-
+    public Order insert(final Order order, final OrderPrice orderPrice) {
         final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("member_id", order.getMemberId());
-        params.addValue("product_price", productPrice);
-        params.addValue("discount_price", discountPrice);
-        params.addValue("delivery_fee", deliveryFee);
-        params.addValue("total_price", totalPrice);
+        params.addValue("product_price", orderPrice.getProductPrice());
+        params.addValue("discount_price", orderPrice.getDiscountPrice());
+        params.addValue("delivery_fee", orderPrice.getDeliveryFee());
+        params.addValue("total_price", orderPrice.getTotalPrice());
         params.addValue("created_at", order.getOrderTime());
 
         final long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
