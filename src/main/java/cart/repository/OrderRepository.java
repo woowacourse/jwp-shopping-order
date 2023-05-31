@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.repository.dto.OrderEntity;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -40,5 +41,16 @@ public class OrderRepository {
         Member member = memberDao.findById(orderEntity.getMemberId())
                 .orElseThrow(IllegalArgumentException::new);// TODO
         return new Order(orderId, member, orderItems, orderEntity.getSpendPoint(), orderEntity.getCreatedAt());
+    }
+
+    public List<Order> findAllByMember(Member member) {
+        List<Order> orders = new ArrayList<>();
+        List<OrderEntity> orderEntities = orderDao.findAllByMember(member.getId());
+        for (OrderEntity orderEntity : orderEntities) {
+            Long orderId = orderEntity.getId();
+            orders.add(new Order(orderId, member, orderItemDao.findByOrderId(orderId), orderEntity.getSpendPoint(),
+                    orderEntity.getCreatedAt()));
+        }
+        return orders;
     }
 }

@@ -67,6 +67,12 @@ public class Order {
         return createdAt;
     }
 
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member, member)) {
+            throw new IllegalArgumentException(); // TODO
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

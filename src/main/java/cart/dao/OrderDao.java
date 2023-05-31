@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.repository.dto.OrderEntity;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,5 +43,12 @@ public class OrderDao {
                 "WHERE id = ?";
 
         return jdbcTemplate.query(sql, rowMapper, orderId).stream().findAny();
+    }
+
+    public List<OrderEntity> findAllByMember(Long memberId) {
+        String sql = "SELECT id, created_at, spend_point, member_id " +
+                "FROM orders " +
+                "WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }
