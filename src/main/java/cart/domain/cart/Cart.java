@@ -21,9 +21,8 @@ public class Cart {
 		return cartItems.keySet().containsAll(cartItemIds);
 	}
 
-	public Optional<CartItem> findCartItemById(final Long cartItemId) {
-		final CartItem cartItem = cartItems.get(cartItemId);
-		return Optional.ofNullable(cartItem);
+	public Optional<CartItem> getCartItem(final Long cartItemId) {
+		return Optional.ofNullable(cartItems.get(cartItemId));
 	}
 
 	public Long getMemberId() {

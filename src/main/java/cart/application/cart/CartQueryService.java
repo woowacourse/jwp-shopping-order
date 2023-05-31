@@ -20,7 +20,7 @@ public class CartQueryService {
 		this.cartRepository = cartRepository;
 	}
 
-	public List<CartItemDto> findByMember(Long memberId) {
+	public List<CartItemDto> findByMemberId(Long memberId) {
 		final Cart cart = cartRepository.findByMemberId(memberId);
 		final List<CartItem> cartItems = cart.getCartItems();
 

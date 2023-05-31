@@ -40,10 +40,8 @@ public class CartCommandService {
 
 	public void updateQuantity(CartItemUpdateQuantityDto cartDto) {
 		final Cart cart = cartRepository.findByMemberId(cartDto.getMemberId());
-
-		final CartItem cartItem = cart.findCartItemById(cartDto.getCartItemId())
-			.orElseThrow(() -> new CartItemException.IllegalMember(cartDto.getMemberId()));
-
+		final CartItem cartItem = cart.getCartItem(cartDto.getCartItemId())
+			.orElseThrow(() -> new CartItemException.IllegalMember(cart.getMemberId()));
 		cartItem.changeQuantity(cartDto.getQuantity());
 
 		if (cartItem.getQuantity() == 0) {

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface ProductRepository {
 
-	Long createProduct(final Product product);
+	Long save(final Product product);
 
 	List<Product> findAll();
 

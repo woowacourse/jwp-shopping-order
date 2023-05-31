@@ -46,7 +46,7 @@ public class CartApiController {
 	@GetMapping
 	public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
 		final List<CartItemResponse> cartItemResponses =
-			cartQueryService.findByMember(member.getId()).stream()
+			cartQueryService.findByMemberId(member.getId()).stream()
 				.map(CartItemResponse::from)
 				.collect(Collectors.toList());
 

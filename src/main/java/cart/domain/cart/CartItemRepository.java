@@ -9,7 +9,7 @@ public interface CartItemRepository {
 
 	void updateQuantity(CartItem cartItem);
 
-	void delete(Long memberId, Long productId);
+	void deleteByMemberIdAndProductId(Long memberId, Long productId);
 
 	void deleteByIds(List<Long> ids);
 }

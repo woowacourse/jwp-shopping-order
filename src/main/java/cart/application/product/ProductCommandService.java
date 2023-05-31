@@ -19,7 +19,7 @@ public class ProductCommandService {
 
 	public Long createProduct(ProductDto productDto) {
 		Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
-		return productRepository.createProduct(product);
+		return productRepository.save(product);
 	}
 
 	public void updateProduct(ProductDto productDto) {

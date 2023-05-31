@@ -28,7 +28,7 @@ public class ProductJdbcRepository implements ProductRepository {
 	}
 
 	@Override
-	public Long createProduct(Product product) {
+	public Long save(Product product) {
 		final String sql = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
 
 		final KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -22,7 +22,7 @@ public class MemberJdbcRepository implements MemberRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public void addMember(Member member) {
+	public void save(Member member) {
 		String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
 		jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
 	}
