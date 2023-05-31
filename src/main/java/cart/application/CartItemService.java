@@ -2,8 +2,8 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.dto.request.CartItemCreateRequest;
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
@@ -30,8 +30,14 @@ public class CartItemService {
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemRepository.save(new CartItem(member, productRepository.getProductById(cartItemRequest.getProductId())));
+    public Long add(Member member, CartItemCreateRequest request) {
+        return cartItemRepository.save(
+                new CartItem(
+                        member,
+                        productRepository.getProductById(request.getProductId()),
+                        request.getQuantity()
+                )
+        );
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

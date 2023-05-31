@@ -1,7 +1,7 @@
 package cart.acceptance;
 
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
+import cart.dto.request.CartItemCreateRequest;
 import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -26,7 +26,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         memberRepository.addMember(MEMBER_GITCHAN);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
 
-        final ExtractableResponse<Response> response = 카트에_아이템_추가_요청(MEMBER_GITCHAN, new CartItemRequest(productId));
+        final ExtractableResponse<Response> response = 카트에_아이템_추가_요청(MEMBER_GITCHAN, new CartItemCreateRequest(productId, 1));
         final Long cartItemId = 추가된_카트_아이템_아이디_반환(response);
 
         assertAll(
@@ -39,7 +39,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     void 카트에_저장된_아이템의_개수를_변경한다() {
         memberRepository.addMember(MEMBER_GITCHAN);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
-        final Long cartItemId = 카트에_아이템_추가하고_아이디_반환(MEMBER_GITCHAN, new CartItemRequest(productId));
+        final Long cartItemId = 카트에_아이템_추가하고_아이디_반환(MEMBER_GITCHAN, new CartItemCreateRequest(productId, 1));
 
         final ExtractableResponse<Response> response = 카트에_저장된_아이템의_개수_변경_요청(
                 MEMBER_GITCHAN,
@@ -53,7 +53,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     void 카트에_저장된_아이템을_삭제한다() {
         memberRepository.addMember(MEMBER_GITCHAN);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
-        final Long cartItemId = 카트에_아이템_추가하고_아이디_반환(MEMBER_GITCHAN, new CartItemRequest(productId));
+        final Long cartItemId = 카트에_아이템_추가하고_아이디_반환(MEMBER_GITCHAN, new CartItemCreateRequest(productId, 1));
 
         final ExtractableResponse<Response> response = 카트에_저장된_아이템_삭제_요청(MEMBER_GITCHAN, cartItemId);
 

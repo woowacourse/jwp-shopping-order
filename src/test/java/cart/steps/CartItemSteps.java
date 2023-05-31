@@ -2,7 +2,7 @@ package cart.steps;
 
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
+import cart.dto.request.CartItemCreateRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -11,7 +11,7 @@ import static io.restassured.http.ContentType.JSON;
 
 public class CartItemSteps {
 
-    public static ExtractableResponse<Response> 카트에_아이템_추가_요청(final Member member, final CartItemRequest request) {
+    public static ExtractableResponse<Response> 카트에_아이템_추가_요청(final Member member, final CartItemCreateRequest request) {
         return RestAssured.given()
                 .log().all()
                 .contentType(JSON)
@@ -32,7 +32,7 @@ public class CartItemSteps {
         return Long.parseLong(locationHeader.replace("/cart-items/", ""));
     }
 
-    public static Long 카트에_아이템_추가하고_아이디_반환(final Member member, final CartItemRequest request) {
+    public static Long 카트에_아이템_추가하고_아이디_반환(final Member member, final CartItemCreateRequest request) {
         return 추가된_카트_아이템_아이디_반환(카트에_아이템_추가_요청(member, request));
     }
 

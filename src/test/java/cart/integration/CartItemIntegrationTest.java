@@ -2,7 +2,7 @@ package cart.integration;
 
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
-import cart.dto.request.CartItemRequest;
+import cart.dto.request.CartItemCreateRequest;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.CartItemResponse;
 import cart.repository.MemberRepository;
@@ -47,8 +47,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
+        CartItemCreateRequest cartItemCreateRequest = new CartItemCreateRequest(productId, 1);
+        ExtractableResponse<Response> response = requestAddCartItem(member, cartItemCreateRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -57,8 +57,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void addCartItemByIllegalMember() {
         Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
-        CartItemRequest cartItemRequest = new CartItemRequest(productId);
-        ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
+        CartItemCreateRequest cartItemCreateRequest = new CartItemCreateRequest(productId, 1);
+        ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemCreateRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -165,11 +165,11 @@ public class CartItemIntegrationTest extends IntegrationTest {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemCreateRequest cartItemCreateRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(cartItemRequest)
+                .body(cartItemCreateRequest)
                 .when()
                 .post("/cart-items")
                 .then()
@@ -178,7 +178,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private Long requestAddCartItemAndGetId(Member member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
+        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemCreateRequest(productId, 1));
         return getIdFromCreatedResponse(response);
     }
 

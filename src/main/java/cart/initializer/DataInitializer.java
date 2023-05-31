@@ -38,13 +38,13 @@ public class DataInitializer {
         final Member savedMember2 = memberRepository.addMember(new Member("b@b.com", "1234"));
         final Member savedMember3 = memberRepository.addMember(new Member("ringlo@email.com", "ringlo1010235"));
 
-        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(깃짱)));
-        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(제리)));
-        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(호이)));
+        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(깃짱), 1));
+        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(제리), 1));
+        cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(호이), 1));
 
-        cartItemRepository.save(new CartItem(savedMember2, productRepository.getProductById(깃짱)));
-        cartItemRepository.save(new CartItem(savedMember2, productRepository.getProductById(제리)));
+        cartItemRepository.save(new CartItem(savedMember2, productRepository.getProductById(깃짱), 1));
+        cartItemRepository.save(new CartItem(savedMember2, productRepository.getProductById(제리), 1));
 
-        cartItemRepository.save(new CartItem(savedMember3, productRepository.getProductById(깃짱)));
+        cartItemRepository.save(new CartItem(savedMember3, productRepository.getProductById(깃짱), 1));
     }
 }
