@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
-import cart.dto.MemberCouponResponse;
+import cart.dto.coupon.MemberCouponResponse;
 import cart.service.CouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

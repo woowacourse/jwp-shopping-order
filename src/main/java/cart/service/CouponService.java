@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.domain.cart.MemberCoupon;
 import cart.domain.coupon.Coupon;
-import cart.dto.CouponSaveRequest;
-import cart.dto.MemberCouponResponse;
+import cart.dto.coupon.CouponSaveRequest;
+import cart.dto.coupon.MemberCouponResponse;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;

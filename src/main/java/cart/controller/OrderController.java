@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
-import cart.dto.OrderResponse;
-import cart.dto.OrderSaveRequest;
+import cart.dto.cart.OrderResponse;
+import cart.dto.cart.OrderSaveRequest;
 import cart.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

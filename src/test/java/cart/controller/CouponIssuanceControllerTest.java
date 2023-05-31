@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.member.Member;
-import cart.dto.CouponSaveRequest;
+import cart.dto.coupon.CouponSaveRequest;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

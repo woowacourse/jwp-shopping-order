@@ -2,7 +2,7 @@ package cart.service;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
-import cart.dto.MemberDto;
+import cart.dto.member.MemberDto;
 import cart.repository.MemberRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;

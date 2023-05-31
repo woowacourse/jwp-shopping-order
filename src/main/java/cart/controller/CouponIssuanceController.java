@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.CouponSaveRequest;
+import cart.dto.coupon.CouponSaveRequest;
 import cart.service.CouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -2,9 +2,9 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
-import cart.dto.CartItemDto;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemSaveRequest;
+import cart.dto.cart.CartItemDto;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemSaveRequest;
 import cart.exception.common.ExceptionResponse;
 import cart.service.CartItemService;
 import io.swagger.v3.oas.annotations.Operation;

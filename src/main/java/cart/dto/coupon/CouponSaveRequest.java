@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.coupon;
 
 import cart.domain.VO.Money;
 import cart.domain.coupon.Coupon;

@@ -21,7 +21,7 @@ import cart.domain.cart.Order;
 import cart.domain.cart.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.dto.OrderSaveRequest;
+import cart.dto.cart.OrderSaveRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;

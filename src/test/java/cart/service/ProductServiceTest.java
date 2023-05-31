@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.VO.Money;
 import cart.domain.cart.Product;
-import cart.dto.ProductDto;
-import cart.dto.ProductSaveRequest;
-import cart.dto.ProductUpdateRequest;
+import cart.dto.cart.ProductDto;
+import cart.dto.cart.ProductSaveRequest;
+import cart.dto.cart.ProductUpdateRequest;
 import cart.exception.cart.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import java.util.List;

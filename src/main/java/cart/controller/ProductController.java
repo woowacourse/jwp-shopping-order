@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
-import cart.dto.ProductSaveRequest;
-import cart.dto.ProductUpdateRequest;
+import cart.dto.cart.ProductDto;
+import cart.dto.cart.ProductSaveRequest;
+import cart.dto.cart.ProductUpdateRequest;
 import cart.exception.common.ExceptionResponse;
 import cart.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;

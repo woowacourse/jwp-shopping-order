@@ -14,8 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.domain.VO.Money;
 import cart.domain.cart.Product;
-import cart.dto.ProductSaveRequest;
-import cart.dto.ProductUpdateRequest;
+import cart.dto.cart.ProductSaveRequest;
+import cart.dto.cart.ProductUpdateRequest;
 import cart.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;

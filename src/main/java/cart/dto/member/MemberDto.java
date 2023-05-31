@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.member;
 
 import cart.domain.member.Member;
 

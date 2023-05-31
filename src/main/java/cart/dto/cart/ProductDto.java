@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.cart;
 
 import cart.domain.cart.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
