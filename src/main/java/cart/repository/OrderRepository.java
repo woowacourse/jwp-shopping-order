@@ -17,6 +17,7 @@ import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import cart.exception.CouponNotFoundException;
 import cart.exception.MemberNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -83,7 +84,6 @@ public class OrderRepository {
         final List<OrderItem> orderItems = getOrderItems(orderEntity.getId());
         final Member member = getMember(orderEntity.getMemberId());
         final MemberCoupon memberCoupon = getMemberCoupon(orderEntity.getCouponId(), member);
-
         return new Order(orderEntity.getId(), new OrderItems(orderItems), new Money(orderEntity.getDeliveryFee()), memberCoupon, orderEntity.getMemberId());
     }
 
@@ -102,8 +102,8 @@ public class OrderRepository {
     private MemberCoupon getMemberCoupon(final Long memberCouponId, final Member member) {
         return memberCouponDao.findById(memberCouponId)
                 .map(entity -> {
-                    final CouponEntity couponEntity = couponDao.findById(entity.getMemberId())
-                            .orElseThrow();
+                    final CouponEntity couponEntity = couponDao.findById(entity.getCouponId())
+                            .orElseThrow(CouponNotFoundException::new);
                     final Coupon coupon = couponEntity.toDomain();
                     return new MemberCoupon(entity.getId(), member, coupon, entity.isUsed());
                 })

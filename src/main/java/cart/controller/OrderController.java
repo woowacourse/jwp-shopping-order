@@ -49,7 +49,7 @@ public class OrderController {
             )
     })
     @PostMapping
-    public ResponseEntity<Void> order(@Auth final Credential credential, @RequestBody final OrderRequest request) {
+    public ResponseEntity<Void> save(@Auth final Credential credential, @RequestBody final OrderRequest request) {
         final Long id = orderService.save(credential.getMemberId(), request);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
