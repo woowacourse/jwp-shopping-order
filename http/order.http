@@ -1,0 +1,18 @@
+### 주문 추가
+POST {{host}}/orders
+Content-Type: application/json
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+{
+  "couponId": 1,
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 10
+    },
+    {
+      "productId": 2,
+      "quantity": 5
+    }
+  ]
+}

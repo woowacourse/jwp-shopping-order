@@ -17,14 +17,6 @@ public class Coupon {
         this.expiredAt = expiredAt;
     }
 
-    public static Coupon create(final String name, final int discountRate, final int period) {
-        return new Coupon(
-            CouponName.create(name),
-            CouponDiscountRate.create(discountRate),
-            CouponPeriod.create(period),
-            LocalDateTime.now().plusDays(period));
-    }
-
     public static Coupon create(final String name, final int discountRate, final int period,
                                 final LocalDateTime expiredAt) {
         return new Coupon(

@@ -6,6 +6,7 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class CouponService {
         if (couponRepository.existByNameAndDiscountRate(name, discountRate)) {
             throw new BadRequestException(ErrorCode.COUPON_DUPLICATE);
         }
-        final Coupon coupon = Coupon.create(name, discountRate, period);
+        final Coupon coupon = Coupon.create(name, discountRate, period, LocalDateTime.now().plusDays(period));
         return couponRepository.insert(coupon);
     }
 

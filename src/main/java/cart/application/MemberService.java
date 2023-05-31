@@ -10,7 +10,7 @@ import cart.application.dto.member.MemberResponse;
 import cart.application.dto.member.MemberSaveRequest;
 import cart.application.mapper.MemberMapper;
 import cart.common.auth.BasicTokenProvider;
-import cart.domain.coupon.CouponSaveEvent;
+import cart.domain.event.JoinMemberCouponEvent;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
@@ -45,7 +45,7 @@ public class MemberService {
         }
         final Member member = convertMember(memberSaveRequest);
         final long savedMemberId = memberRepository.insert(member);
-        applicationEventPublisher.publishEvent(new CouponSaveEvent(savedMemberId));
+        applicationEventPublisher.publishEvent(new JoinMemberCouponEvent(savedMemberId));
         return savedMemberId;
     }
 

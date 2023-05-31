@@ -1,5 +1,14 @@
-### 사용자 생성
+### 사용자 가입
 POST {{host}}/users/join
+Content-Type: application/json
+
+{
+  "name": "journey",
+  "password": "test1234"
+}
+
+### 사용자 로그인
+POST {{host}}/users/login
 Content-Type: application/json
 
 {
@@ -13,11 +22,6 @@ GET {{host}}/users/1
 ### 사용자 전체 조회
 GET {{host}}/users
 
-### 사용자 로그인
-POST {{host}}/users/login
-Content-Type: application/json
-
-{
-  "name": "journey",
-  "password": "test1234"
-}
+### 사용자 쿠폰 조회
+GET {{host}}/users/me/coupons
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==

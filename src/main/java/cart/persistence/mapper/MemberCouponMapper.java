@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MemberCouponMapper {
+
     public static MemberCoupon convertMemberCoupon(final MemberCouponDto memberCouponDto) {
         final CouponWithId coupon = new CouponWithId(memberCouponDto.getCouponId(),
             convertCoupon(memberCouponDto));

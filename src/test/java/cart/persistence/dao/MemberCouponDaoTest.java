@@ -73,7 +73,7 @@ class MemberCouponDaoTest extends DaoTestHelper {
         // then
         assertThat(result).isFalse();
     }
-    
+
     @Test
     @DisplayName("사용자 아이디와 쿠폰 아이디로 사용자의 쿠폰이 존재하면 반환한다.")
     void findByMemberIdAndCouponId_success() {
@@ -81,11 +81,11 @@ class MemberCouponDaoTest extends DaoTestHelper {
         final Long 저장된_져니_아이디 = 져니_저장();
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = 신규_가입_쿠폰_저장();
         져니_쿠폰_저장(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
-        
+
         // when
         final MemberCouponDto memberCouponDto = memberCouponDao.findByMemberIdAndCouponId(저장된_져니_아이디,
             저장된_신규_가입_축하_쿠폰_아이디).get();
-        
+
         // then
         assertThat(memberCouponDto)
             .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getMemberName,
@@ -93,7 +93,7 @@ class MemberCouponDaoTest extends DaoTestHelper {
                 MemberCouponDto::getCouponPeriod, MemberCouponDto::getDiscountRate,
                 MemberCouponDto::isUsed)
             .containsExactly(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰",
-                    10, 20, false);
+                10, 20, false);
     }
 
     @Test
@@ -129,7 +129,7 @@ class MemberCouponDaoTest extends DaoTestHelper {
                 tuple(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰",
                     10, 20, false));
     }
-    
+
     @Test
     @DisplayName("쿠폰의 사용 정보를 1로 (사용 완료) 업데이트한다.")
     void updateUsed() {

@@ -27,7 +27,7 @@ public enum ErrorCode {
     COUPON_NOT_FOUND("쿠폰 정보를 찾을 수 없습니다."),
     COUPON_EXPIRED("만료된 쿠폰입니다."),
     COUPON_ALREADY_EXIST("이미 발급된 쿠폰입니다."),
-    COUPON_ALREADY_USED("이미 사용된 쿠폰입니다."),
+    COUPON_ALREADY_USED("이미 사용한 쿠폰입니다."),
     COUPON_NOT_FIRST_ORDER("첫 주문이 아닙니다."),
 
     /**
@@ -40,7 +40,7 @@ public enum ErrorCode {
      */
     ORDER_INVALID_PRODUCTS("장바구니에 담기지 않은 상품은 주문할 수 없습니다."),
     NATUAL_ORDER_HAS_COUPON("쿠폰이 적용되지 않은 주문입니다."),
-    ORDER_QUANTITY_EXCEED("제품은 최대 1000개까지 주문할 수 있습니다."),
+    ORDER_QUANTITY_EXCEED("상품은 최대 1000개까지 주문할 수 있습니다."),
 
     /**
      * HTTP STATUS CODE - 400

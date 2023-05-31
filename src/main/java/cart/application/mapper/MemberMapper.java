@@ -10,6 +10,7 @@ import cart.domain.member.MemberCoupon;
 import cart.domain.member.NaturalPassword;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.security.SHA256Service;
+import java.time.LocalDateTime;
 
 public class MemberMapper {
 
@@ -33,5 +34,9 @@ public class MemberMapper {
         return new MemberCouponResponse(
             coupon.getCouponId(), coupon.getCoupon().name(), coupon.getCoupon().discountRate(),
             coupon.getCoupon().expiredAt(), memberCoupon.isUsed());
+    }
+
+    public static MemberCoupon convertMemberCoupon(final CouponWithId coupon, final LocalDateTime issuedAt) {
+        return new MemberCoupon(coupon, issuedAt, issuedAt.plusDays(coupon.getCoupon().period()), false);
     }
 }

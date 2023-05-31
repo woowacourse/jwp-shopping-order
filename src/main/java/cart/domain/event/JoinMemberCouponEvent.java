@@ -1,10 +1,10 @@
-package cart.domain.coupon;
+package cart.domain.event;
 
-public class CouponSaveEvent {
+public class JoinMemberCouponEvent {
 
     private final Long memberId;
 
-    public CouponSaveEvent(final Long memberId) {
+    public JoinMemberCouponEvent(final Long memberId) {
         this.memberId = memberId;
     }
 

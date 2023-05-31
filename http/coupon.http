@@ -3,7 +3,7 @@ POST {{host}}/coupons
 Content-Type: application/json
 
 {
-  "name": "신규 가입 축하 쿠폰",
+  "name": "행운의 쿠폰",
   "discountRate": 10,
   "period": 10
 }
