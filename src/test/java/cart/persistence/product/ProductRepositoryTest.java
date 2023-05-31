@@ -44,12 +44,12 @@ class ProductRepositoryTest {
     void findAllProductsTest() {
         // given
         final Long savedPadId = productRepository.createProduct(배변패드);
-        final Long savedTailId = productRepository.createProduct(비버꼬리요리);
-        final Long savedDinoId = productRepository.createProduct(디노);
+        final Long savedTailId = productRepository.createProduct(꼬리요리);
+        final Long savedDinoId = productRepository.createProduct(통구이);
 
         final Product savedPad = new Product(savedPadId, 배변패드.getName(), 배변패드.getPrice(), 배변패드.getImageUrl());
-        final Product savedTail = new Product(savedTailId, 비버꼬리요리.getName(), 비버꼬리요리.getPrice(), 비버꼬리요리.getImageUrl());
-        final Product savedDino = new Product(savedDinoId, 디노.getName(), 디노.getPrice(), 디노.getImageUrl());
+        final Product savedTail = new Product(savedTailId, 꼬리요리.getName(), 꼬리요리.getPrice(), 꼬리요리.getImageUrl());
+        final Product savedDino = new Product(savedDinoId, 통구이.getName(), 통구이.getPrice(), 통구이.getImageUrl());
 
         // when
         final List<Product> products = productRepository.findAll();
@@ -63,10 +63,10 @@ class ProductRepositoryTest {
     void findProductByIdTest() {
         // given
         final Long savedPadId = productRepository.createProduct(배변패드);
-        final Long savedTailId = productRepository.createProduct(비버꼬리요리);
+        final Long savedTailId = productRepository.createProduct(꼬리요리);
 
         final Product savedPad = new Product(savedPadId, 배변패드.getName(), 배변패드.getPrice(), 배변패드.getImageUrl());
-        final Product savedTail = new Product(savedTailId, 비버꼬리요리.getName(), 비버꼬리요리.getPrice(), 비버꼬리요리.getImageUrl());
+        final Product savedTail = new Product(savedTailId, 꼬리요리.getName(), 꼬리요리.getPrice(), 꼬리요리.getImageUrl());
 
         // when
         final Optional<Product> product = productRepository.findById(savedTailId);
@@ -88,7 +88,7 @@ class ProductRepositoryTest {
         // given
         final Long savedPadId = productRepository.createProduct(배변패드);
 
-        final Product changeProduct = new Product(savedPadId, 비버꼬리요리.getName(), 비버꼬리요리.getPrice(), 비버꼬리요리.getImageUrl());
+        final Product changeProduct = new Product(savedPadId, 꼬리요리.getName(), 꼬리요리.getPrice(), 꼬리요리.getImageUrl());
 
         // when
         productRepository.updateProduct(changeProduct);
@@ -103,7 +103,7 @@ class ProductRepositoryTest {
     void deleteProductTest() {
         // given
         final Long savedPadId = productRepository.createProduct(배변패드);
-        final Long savedTailId = productRepository.createProduct(비버꼬리요리);
+        final Long savedTailId = productRepository.createProduct(꼬리요리);
 
         // when
         productRepository.deleteProduct(savedPadId);
