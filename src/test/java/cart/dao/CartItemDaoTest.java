@@ -58,4 +58,18 @@ class CartItemDaoTest {
                 new CartItemProductDto(2L, 2L, 1L, "", 0, "", 0, "")
             ));
     }
+
+    @Test
+    @DisplayName("장바구니에 있는 상품들 중, 요청한 id를 가진 상품을 모두 삭제할 수 있다.")
+    void removeAllByIds() {
+        // given
+        List<Long> ids = List.of(1L);
+
+        // when
+        cartItemDao.removeAllByIds(ids);
+
+        // then
+        assertThat(cartItemDao.findByMemberId(1L)).hasSize(1);
+
+    }
 }

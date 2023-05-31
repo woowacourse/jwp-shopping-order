@@ -54,9 +54,14 @@ public class CartItemRepository {
     }
 
     public List<CartItem> findAllByIds(List<Long> ids) {
+        // TODO: 2023-06-01 조회한 결과 갯수 != ids 크기이면 존재하지 않는 CartId 요청으로 예외?
         return cartItemDao.findAllByIds(ids)
             .stream()
             .map(CartItemProductDto::toDomain)
             .collect(Collectors.toList());
+    }
+
+    public void removeAllByIds(List<Long> ids) {
+        cartItemDao.removeAllByIds(ids);
     }
 }

@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Quantity;
@@ -53,5 +54,14 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemRepository.delete(cartItem);
+    }
+
+    public void removeOrderedItems(Cart cart) {
+        List<Long> cartItemIds = cart.getCartItemIds();
+        cartItemRepository.removeAllByIds(cartItemIds);
+    }
+
+    public Cart findAllByIds(List<Long> ids) {
+        return new Cart(cartItemRepository.findAllByIds(ids));
     }
 }

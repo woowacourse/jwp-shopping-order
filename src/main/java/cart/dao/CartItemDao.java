@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dao.dto.CartItemProductDto;
-import cart.dao.dto.OrderItemProductDto;
 import cart.dao.entity.CartItemEntity;
 import java.util.List;
 import java.util.Map;
@@ -93,22 +92,30 @@ public class CartItemDao {
         String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE id = ?) "
             + "AS cart_item_exist";
         try {
-            return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, new Object[]{cartItemId}, Boolean.class));
+            return Boolean.FALSE.equals(
+                jdbcTemplate.queryForObject(sql, new Object[]{cartItemId}, Boolean.class));
         } catch (EmptyResultDataAccessException exception) {
             return true;
         }
     }
 
     public List<CartItemProductDto> findAllByIds(List<Long> ids) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.id, product.id, product.name, product.price, product.image_url, cart_item.quantity "
-                +
-                "FROM cart_item " +
-                "LEFT JOIN product ON cart_item.product_id = product.id " +
-                "LEFT JOIN member ON cart_item.member_id = member.id " +
-                "WHERE cart_item.id IN (:ids)";
+        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, " +
+            "member.email, member.id, product.id, product.name, product.price, product.image_url " +
+            "FROM cart_item " +
+            "LEFT JOIN product ON cart_item.product_id = product.id " +
+            "LEFT JOIN member ON cart_item.member_id = member.id " +
+            "WHERE cart_item.id IN (:ids)";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
         return namedParameterJdbcTemplate.query(sql, parameters, ITEM_PRODUCT_ROW_MAPPER);
+    }
+
+    public void removeAllByIds(List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", ids);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 }
 
