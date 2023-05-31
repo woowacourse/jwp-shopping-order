@@ -26,4 +26,10 @@ public class CartItemDao2 {
         final String sql = "SELECT * FROM cart_item WHERE member_id = ? ";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
+
+    public List<CartItemEntity> findByIds(final List<Long> cartItemsIds) {
+        final String sql = "SELECT * FROM cart_item WHERE id IN (?) ";
+        // TODO: 5/31/23 대체 있나 생각해보기
+        return jdbcTemplate.query(sql, cartItemsIds.toArray(), rowMapper);
+    }
 }
