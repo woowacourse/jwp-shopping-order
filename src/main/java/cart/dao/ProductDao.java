@@ -32,12 +32,14 @@ public class ProductDao {
 
     public Product findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                new Product(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("image_url")
+                ),
+                productId);
     }
 
     public Long create(Product product) {

@@ -5,11 +5,14 @@ import java.util.List;
 
 public class OrderDetailResponse {
 
-    private final Long id;
-    private final int usedPoint;
-    private final int savedPoint;
-    private final LocalDateTime orderedAt;
-    private final List<OrderItemResponse> products;
+    private Long id;
+    private int usedPoint;
+    private int savedPoint;
+    private LocalDateTime orderedAt;
+    private List<OrderItemResponse> products;
+
+    public OrderDetailResponse() {
+    }
 
     public OrderDetailResponse(
             final Long id,

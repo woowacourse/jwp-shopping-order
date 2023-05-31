@@ -36,7 +36,7 @@ public class MemberDao {
 
     public void update(Member member) {
         String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint(), member.getId());
     }
 
     public void deleteById(Long id) {

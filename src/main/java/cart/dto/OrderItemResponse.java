@@ -6,7 +6,7 @@ public class OrderItemResponse {
     private final int quantity;
     private final ProductResponse product;
 
-    private OrderItemResponse(Long id, int quantity, ProductResponse product) {
+    public OrderItemResponse(Long id, int quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
