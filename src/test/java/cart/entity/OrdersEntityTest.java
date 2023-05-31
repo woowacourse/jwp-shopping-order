@@ -26,6 +26,22 @@ class OrdersEntityTest {
     }
 
     @Test
+    void constructWithNoId() {
+        final OrdersEntity result = new OrdersEntity(
+                2L, 3L, 100, 200,
+                Timestamp.valueOf("2023-05-31 10:00:00")
+        );
+        assertAll(
+                () -> assertThat(result.getId()).isNull(),
+                () -> assertThat(result.getMemberId()).isEqualTo(2L),
+                () -> assertThat(result.getPointId()).isEqualTo(3L),
+                () -> assertThat(result.getEarnedPoint()).isEqualTo(100),
+                () -> assertThat(result.getUsedPoint()).isEqualTo(200),
+                () -> assertThat(result.getCreatedAt()).isEqualTo(Timestamp.valueOf("2023-05-31 10:00:00"))
+        );
+    }
+
+    @Test
     void constructWithOther() {
         final OrdersEntity ordersEntity = new OrdersEntity(
                 1L, 2L, 3L, 100, 200,

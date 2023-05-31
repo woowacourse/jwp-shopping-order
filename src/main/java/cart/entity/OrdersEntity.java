@@ -15,6 +15,10 @@ public class OrdersEntity {
         this(id, other.memberId, other.pointId, other.earnedPoint, other.usedPoint, other.createdAt);
     }
 
+    public OrdersEntity(final Long memberId, final Long pointId, final int earnedPoint, final int usedPoint, final Timestamp createdAt) {
+        this(null, memberId, pointId, earnedPoint, usedPoint, createdAt);
+    }
+
     public OrdersEntity(
             final Long id,
             final Long memberId,
