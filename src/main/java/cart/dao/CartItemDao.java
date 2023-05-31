@@ -32,7 +32,7 @@ public class CartItemDao {
             final long point = rs.getLong("point");
             Long productId = rs.getLong("product.id");
             String name = rs.getString("name");
-            int price = rs.getInt("price");
+            Long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
             final double pointRatio = rs.getDouble("point_ratio");
             final boolean pointAvailable = rs.getBoolean("point_available");
@@ -75,7 +75,7 @@ public class CartItemDao {
             final long point = rs.getLong("point");
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
-            int price = rs.getInt("price");
+            Long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
             final double pointRatio = rs.getDouble("point_ratio");
             final boolean pointAvailable = rs.getBoolean("point_available");

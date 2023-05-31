@@ -11,13 +11,19 @@ public class OrderInfos {
     
     public Long calculateAllProductPriceWithQuantity() {
         return orderInfos.stream()
-                .mapToLong(OrderInfo::calculateProductPriceWithQuantiry)
+                .mapToLong(OrderInfo::calculateProductPriceWithQuantity)
                 .sum();
     }
     
     public Long calculatePointToAdd() {
         return orderInfos.stream()
                 .mapToLong(OrderInfo::calculatePointToAdd)
+                .sum();
+    }
+    
+    public Long calculateAvailablePoint() {
+        return orderInfos.stream()
+                .mapToLong(OrderInfo::calculateAvailablePoint)
                 .sum();
     }
 }

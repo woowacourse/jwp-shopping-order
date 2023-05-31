@@ -4,16 +4,16 @@ public class OrderInfo {
     private final Long id;
     private final Product product;
     private final String productName;
-    private final Integer productPrice;
+    private final Long productPrice;
     private final String productImageUrl;
-    private final Integer quantity;
+    private final Long quantity;
     
     public OrderInfo(
             final Product product,
             final String productName,
-            final int productPrice,
+            final Long productPrice,
             final String productImageUrl,
-            final int quantity
+            final Long quantity
     ) {
         this(null, product, productName, productPrice, productImageUrl, quantity);
     }
@@ -22,9 +22,9 @@ public class OrderInfo {
             final Long id,
             final Product product,
             final String productName,
-            final int productPrice,
+            final Long productPrice,
             final String productImageUrl,
-            final int quantity
+            final Long quantity
     ) {
         this.id = id;
         this.product = product;
@@ -34,12 +34,16 @@ public class OrderInfo {
         this.quantity = quantity;
     }
     
-    public Long calculateProductPriceWithQuantiry() {
-        return (long) productPrice * quantity;
+    public Long calculateProductPriceWithQuantity() {
+        return productPrice * quantity;
     }
     
     public Long calculatePointToAdd() {
         return product.calculatePointToAdd() * quantity;
+    }
+    
+    public Long calculateAvailablePoint() {
+        return product.calculateAvailablePoint() * quantity;
     }
     
     public Long getId() {
@@ -54,7 +58,7 @@ public class OrderInfo {
         return productName;
     }
     
-    public Integer getProductPrice() {
+    public Long getProductPrice() {
         return productPrice;
     }
     
@@ -62,7 +66,7 @@ public class OrderInfo {
         return productImageUrl;
     }
     
-    public Integer getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 }

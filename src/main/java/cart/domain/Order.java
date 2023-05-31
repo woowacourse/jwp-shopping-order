@@ -36,6 +36,7 @@ public class Order {
         this.pointToAdd = pointToAdd;
         validateOriginalPrice(originalPrice);
         validateOriginalPointToAdd(pointToAdd);
+        validateUsedPoint(usedPoint);
     }
     
     private void validateOriginalPrice(final long originalPrice) {
@@ -51,6 +52,13 @@ public class Order {
         if (calculatedPointToAdd != pointToAdd) {
             final String errorMessage = String.format("클라이언트와 서버의 pointToAdd가 다릅니다. Client : %d, Server : %d", pointToAdd, calculatedPointToAdd);
             throw new IllegalArgumentException(errorMessage);
+        }
+    }
+    
+    private void validateUsedPoint(final long usedPoint) {
+        final Long availablePoint = orderInfos.calculateAvailablePoint();
+        if (usedPoint < 0 || usedPoint > availablePoint) {
+            throw new IllegalArgumentException("사용할 수 있는 적립금은 0 ~ " + availablePoint + " 입니다. 입력된 사용 적립금 : " + usedPoint);
         }
     }
     

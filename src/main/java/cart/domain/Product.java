@@ -3,12 +3,12 @@ package cart.domain;
 public class Product {
     private Long id;
     private String name;
-    private Integer price;
+    private Long price;
     private String imageUrl;
     private Double pointRatio;
     private Boolean pointAvailable;
     
-    public Product(final String name, final Integer price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
+    public Product(final String name, final Long price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -16,7 +16,7 @@ public class Product {
         this.pointAvailable = pointAvailable;
     }
     
-    public Product(final Long id, final String name, final Integer price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
+    public Product(final Long id, final String name, final Long price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -29,6 +29,14 @@ public class Product {
         return Math.round(price * (pointRatio / 100.0));
     }
     
+    public Long calculateAvailablePoint() {
+        if (pointAvailable) {
+            return price;
+        }
+        
+        return 0L;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -37,7 +45,7 @@ public class Product {
         return name;
     }
     
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
     
