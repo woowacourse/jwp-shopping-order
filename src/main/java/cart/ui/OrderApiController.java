@@ -26,9 +26,9 @@ public class OrderApiController {
     }
     
     @PostMapping
-    public ResponseEntity<Void> addOrder(Member member, @RequestBody OrderAddRequest request) {
-        Long orderId = orderService.addOrder(member, request);
-        return ResponseEntity.created(URI.create("/cart-items/orders" + orderId)).build();
+    public ResponseEntity<OrderResponse> addOrder(Member member, @RequestBody OrderAddRequest request) {
+        OrderResponse orderResponse = OrderResponse.of(orderService.addOrder(member, request));
+        return ResponseEntity.created(URI.create("/cart-items/orders" + orderResponse.getOrderId())).body(orderResponse);
     }
     
     @GetMapping
