@@ -4,7 +4,6 @@ import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.domain.*;
 import cart.dto.CouponResponse;
-import cart.dto.PaymentsResponse;
 import cart.dto.ProductResponse;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +20,16 @@ public class PaymentsService {
         this.cartItemDao = cartItemDao;
     }
 
-    public PaymentsResponse getPayments(Member member) {
+    public void applyCoupons(Member member){
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        List<ProductResponse> productResponses = cartItems.stream()
+        List<Product> products = cartItems.stream()
                 .map(cartItem -> cartItem.getProduct())
-                .map(ProductResponse::of)
                 .collect(Collectors.toList());
 
-        List<Coupon> coupons = couponDao.findByMemberId(member.getId());
-        List<CouponResponse> couponResponses = coupons.stream()
-                .map(CouponResponse::of)
-                .collect(Collectors.toList());
 
-        return new PaymentsResponse(productResponses, couponResponses, Price.DELIVERY);
+
+
+
     }
 
 }
