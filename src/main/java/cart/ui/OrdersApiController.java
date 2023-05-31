@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,5 +44,11 @@ public class OrdersApiController {
     public ResponseEntity<Void> addOrder(Member member, @RequestBody @Valid PostOrderRequest request) {
         Long orderId = orderService.addOrder(member, request);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
+    }
+
+    @DeleteMapping("/orders/{orderId}")
+    public ResponseEntity<Void> cancel(Member member, @PathVariable Long orderId) {
+        orderService.cancelOrder(member, orderId);
+        return ResponseEntity.ok().build();
     }
 }

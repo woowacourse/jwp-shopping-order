@@ -21,4 +21,7 @@ public class OrderDao {
     public Long save(Order order) {
         return null;
     }
+
+    public void update(Order order) {
+    }
 }

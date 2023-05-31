@@ -44,6 +44,11 @@ public class Order {
             quantityAndProducts);
     }
 
+    public Order cancel() {
+        return new Order(orderId, member, orderAt, payAmount, usedPoint, savedPoint, OrderStatus.CANCELLED,
+            quantityAndProducts);
+    }
+
     public Long getOrderId() {
         return orderId;
     }

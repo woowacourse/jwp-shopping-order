@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import cart.dao.OrderDao;
 import cart.dao.PointDao;
 import cart.dao.ProductDao;
 import cart.domain.Order;
+import cart.domain.OrderStatus;
 import cart.domain.Page;
 import cart.domain.Paginator;
 import cart.domain.Point;
@@ -119,7 +121,6 @@ class OrderServiceTest {
             assertThatThrownBy(() -> orderService.addOrder(member1, request))
                 .isInstanceOf(IllegalOrderException.class)
                 .hasMessage("존재하지 않는 상품을 주문할 수 없습니다");
-
         }
 
         @Test
@@ -152,6 +153,49 @@ class OrderServiceTest {
             given(pointCalculator.calculatePoint(anyInt())).willReturn(anyInt());
 
             assertDoesNotThrow(() -> orderService.addOrder(member1, request));
+        }
+    }
+
+    @Nested
+    class 주문을_취소한다 {
+
+        @Test
+        void 다른_사용자의_주문을_취소하려_하면_예외가_발생한다() {
+            // given
+            Order orderByMember2 = new Order(member2, LocalDateTime.now(), 0, 0, 0, OrderStatus.PENDING,
+                Collections.emptyList());
+            given(orderDao.findById(anyLong())).willReturn(orderByMember2);
+
+            // when & then
+            assertThatThrownBy(() -> orderService.cancelOrder(member1, 1L))
+                .isInstanceOf(IllegalOrderException.class)
+                .hasMessage("올바르지 않은 요청입니다");
+        }
+
+        @Test
+        void 결제_완료_상태가_아닌_주문을_취소하려_하면_예외가_발생한다() {
+            // given
+            Order orderByMember1 = new Order(member1, LocalDateTime.now(), 0, 0, 0, OrderStatus.PROCESSING,
+                Collections.emptyList());
+            given(orderDao.findById(anyLong())).willReturn(orderByMember1);
+
+            // when & then
+            assertThatThrownBy(() -> orderService.cancelOrder(member1, 1L))
+                .isInstanceOf(IllegalOrderException.class)
+                .hasMessage(OrderStatus.PENDING.getDisplayName() + " 상태인 주문만 취소가 가능합니다");
+        }
+
+        @Test
+        void 정상적인_주문_취소가_이루어진다() {
+            // given
+            Order orderByMember1 = new Order(member1, LocalDateTime.now(), 100, 100, 5, OrderStatus.PENDING,
+                Collections.emptyList());
+            Point originalPoint = new Point(1L, 0, member1);
+            given(orderDao.findById(anyLong())).willReturn(orderByMember1);
+            given(pointDao.findByMemberId(anyLong())).willReturn(originalPoint);
+
+            // when & then
+            assertDoesNotThrow(() -> orderService.cancelOrder(member1, 1L));
         }
     }
 }

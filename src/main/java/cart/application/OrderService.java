@@ -22,6 +22,7 @@ import cart.dao.PointDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderStatus;
 import cart.domain.Page;
 import cart.domain.Paginator;
 import cart.domain.Point;
@@ -112,10 +113,28 @@ public class OrderService {
         return orderDao.save(Order.from(member, payAmount, usedPoint, savedPoint, quantityAndProducts));
     }
 
+    @Transactional
     public void cancelOrder(Member member, Long orderId) {
         // 주문 취소
-        // 1. 주문의 상태가 삭제 가능한지 검증한다
-        // 2. 포인트를 반환한다
-        // 3. 주문의 상태를 변경한다
+        Order order = orderDao.findById(orderId);
+        // 1. 해당 주문자가 신청한 주문인지 검증한다
+        if (order.getMember() != member) {
+            throw new IllegalOrderException("올바르지 않은 요청입니다");
+        }
+        // 2. 주문의 상태가 삭제 가능한지 검증한다
+        if (order.getOrderStatus().canNotCancel()) {
+            throw new IllegalOrderException(OrderStatus.PENDING.getDisplayName() + " 상태인 주문만 취소가 가능합니다");
+        }
+        // 3. 포인트를 반환한다
+        int savedPoint = order.getSavedPoint();
+        int usedPoint = order.getUsedPoint();
+        int difference = usedPoint - savedPoint;
+        if (difference != 0) {
+            Point originalPoint = pointDao.findByMemberId(member.getId());
+            Point changedPoint = originalPoint.changeBy(difference);
+            pointDao.update(changedPoint);
+        }
+        // 4. 주문의 상태를 변경한다
+        orderDao.update(order.cancel());
     }
 }
