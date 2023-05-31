@@ -14,9 +14,9 @@ INSERT INTO member (email, password, points)
 VALUES ('b@b.com', '1234', 100);
 
 INSERT INTO cart_item (member_id, product_id, quantity, checked)
-VALUES (1, 1, 2, true);
-INSERT INTO cart_item (member_id, product_id, quantity, checked)
-VALUES (1, 2, 4, true);
+VALUES (1, 1, 2, true),
+       (1, 2, 4, true),
+       (2, 1, 2, false);
 
 INSERT INTO cart_item (member_id, product_id, quantity, checked)
 VALUES (2, 3, 5, true);

@@ -11,7 +11,6 @@ import org.springframework.test.context.jdbc.Sql;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTest {
 
-
     protected static final String EMAIL = "a@a.com";
     protected static final String PASSWORD = "1234";
 

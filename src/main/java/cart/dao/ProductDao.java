@@ -33,12 +33,16 @@ public class ProductDao {
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+        final List<Product> product = jdbcTemplate.query(sql, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
-        });
+        }, productId);
+        if (product.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return product.get(0);
     }
 
     public Long createProduct(Product product) {

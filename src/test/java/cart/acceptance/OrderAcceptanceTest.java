@@ -92,4 +92,17 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
+
+    @Test
+    void 체크가_되지_않은_상품을_주문한다() {
+        final OrderCreateRequest request = new OrderCreateRequest(100, List.of(new CartItemRequest(3L, 1L, 2)));
+        given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
