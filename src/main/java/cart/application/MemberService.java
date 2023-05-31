@@ -26,4 +26,10 @@ public class MemberService {
         memberEntity.withdraw(point);
         memberDao.updateMember(memberEntity);
     }
+
+    public Long findPoint(final Member member) {
+        final Member memberEntity = memberDao.getMemberByEmail(member.getEmail());
+
+        return memberEntity.getCash();
+    }
 }

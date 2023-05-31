@@ -2,8 +2,6 @@ package cart.application;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.fixtures.MemberFixtures;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -13,10 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static cart.fixtures.MemberFixtures.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
+import static cart.fixtures.MemberFixtures.MemberA;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -57,5 +54,17 @@ class MemberServiceTest {
             assertDoesNotThrow(() -> memberService.withdrawPoint(member, 5000L));
             softAssertions.assertThat(member.getCash()).isEqualTo(0L);
         });
+    }
+
+    @Test
+    void 현재_포인트를_확인하다() {
+        // given
+        when(memberDao.getMemberByEmail(MemberA.EMAIL)).thenReturn(MemberA.ENTITY);
+
+        // when
+        final Long totalCash = memberService.findPoint(MemberA.ENTITY);
+
+        // then
+        assertThat(totalCash).isEqualTo(MemberA.CASH);
     }
 }

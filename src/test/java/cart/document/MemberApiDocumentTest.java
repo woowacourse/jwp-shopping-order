@@ -31,6 +31,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -88,7 +89,7 @@ public class MemberApiDocumentTest {
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("members/cash",
+                .andDo(document("members/postDepositPoint",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestHeaders(
@@ -98,7 +99,32 @@ public class MemberApiDocumentTest {
                                         fieldWithPath("point").type(JsonFieldType.NUMBER).description("충전할 금액")
                                 ),
                                 responseFields(
-                                        fieldWithPath("cash").type(JsonFieldType.NUMBER).description("충전한 이후의 총 금액"))
+                                        fieldWithPath("cash").type(JsonFieldType.NUMBER).description("충전한 이후의 총 금액")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    void 포인트_확인_문서화() throws Exception {
+        // given
+        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
+        given(memberService.findPoint(MemberA.ENTITY)).willReturn(MemberA.CASH);
+        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+
+        // when, then
+        mockMvc.perform(get("/members/cash")
+                        .header(HttpHeaders.AUTHORIZATION, BASIC_PREFIX + encodeAuthInfo)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("members/getTotalPoint",
+                                preprocessResponse(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
+                                ),
+                                responseFields(
+                                        fieldWithPath("totalPoint").type(JsonFieldType.NUMBER).description("유저가 가지고 있는 포인트")
+                                )
                         )
                 );
     }
