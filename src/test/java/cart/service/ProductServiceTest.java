@@ -116,7 +116,7 @@ class ProductServiceTest {
         // then
         verify(productRepository).updateProduct(any());
         assertAll(
-                () -> assertThat(product.getPrice()).isEqualTo(valueOf(10)),
+                () -> assertThat(product.getPrice().getValue()).isEqualTo(valueOf(10)),
                 () -> assertThat(product.getName()).isEqualTo("박스터"),
                 () -> assertThat(product.getImageUrl()).isEqualTo("http://boxster.com")
         );
