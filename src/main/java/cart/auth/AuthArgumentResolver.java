@@ -2,6 +2,7 @@ package cart.auth;
 
 import cart.auth.dao.AuthDao;
 import cart.auth.dto.AuthorizationDto;
+import cart.domain.Member;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -22,7 +23,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.getParameterType().equals(Long.class) &&
+        return parameter.getParameterType().equals(Member.class) &&
                 parameter.hasParameterAnnotation(Auth.class);
     }
 
@@ -32,6 +33,8 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         final String authorizationHeader = httpServletRequest.getHeader(AUTHORIZATION);
         final AuthorizationDto authorizationDto = BasicAuthorizationExtractor.extract(authorizationHeader);
-        return authDao.findIdByEmailAndPassword(authorizationDto.getEmail(), authorizationDto.getPassword());
+        final String email = authorizationDto.getEmail();
+        final long memberId = authDao.findIdByEmailAndPassword(email, authorizationDto.getPassword());
+        return new Member(memberId, email);
     }
 }
