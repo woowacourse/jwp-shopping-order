@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.entity.ProductEntity;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
@@ -7,19 +8,19 @@ import java.util.Objects;
 public class CartItem {
     private Long id;
     private int quantity;
-    private final Product product;
+    private final ProductEntity productEntity;
     private final Member member;
 
-    public CartItem(Member member, Product product) {
+    public CartItem(Member member, ProductEntity productEntity) {
         this.quantity = 1;
         this.member = member;
-        this.product = product;
+        this.productEntity = productEntity;
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, int quantity, ProductEntity productEntity, Member member) {
         this.id = id;
         this.quantity = quantity;
-        this.product = product;
+        this.productEntity = productEntity;
         this.member = member;
     }
 
@@ -31,8 +32,8 @@ public class CartItem {
         return member;
     }
 
-    public Product getProduct() {
-        return product;
+    public ProductEntity getProduct() {
+        return productEntity;
     }
 
     public int getQuantity() {

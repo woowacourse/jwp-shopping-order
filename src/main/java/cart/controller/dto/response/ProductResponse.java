@@ -1,6 +1,6 @@
 package cart.controller.dto.response;
 
-import cart.domain.Product;
+import cart.entity.ProductEntity;
 
 public class ProductResponse {
     private Long id;
@@ -15,8 +15,8 @@ public class ProductResponse {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public static ProductResponse of(ProductEntity productEntity) {
+        return new ProductResponse(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
     }
 
     public Long getId() {

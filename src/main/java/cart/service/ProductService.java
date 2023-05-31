@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.domain.Product;
+import cart.entity.ProductEntity;
 import cart.dao.ProductDao;
 import cart.controller.dto.request.ProductRequest;
 import cart.controller.dto.response.ProductResponse;
@@ -19,23 +19,23 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        List<ProductEntity> productEntities = productDao.getAllProducts();
+        return productEntities.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
-        return ProductResponse.of(product);
+        ProductEntity productEntity = productDao.getProductById(productId);
+        return ProductResponse.of(productEntity);
     }
 
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        ProductEntity productEntity = new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        return productDao.createProduct(productEntity);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        ProductEntity productEntity = new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        productDao.updateProduct(productId, productEntity);
     }
 
     public void deleteProduct(Long productId) {
