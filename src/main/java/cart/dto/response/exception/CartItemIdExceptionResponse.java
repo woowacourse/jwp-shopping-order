@@ -4,18 +4,18 @@ import java.util.List;
 
 public class CartItemIdExceptionResponse extends ExceptionResponse {
 
-    private List<Long> cartItemIds;
+    private List<Long> unknownCartItemIds;
 
     private CartItemIdExceptionResponse(){
         super();
     }
 
-    public CartItemIdExceptionResponse(final String errorMessage, final List<Long> cartItemIds) {
+    public CartItemIdExceptionResponse(final String errorMessage, final List<Long> unknownCartItemIds) {
         super(errorMessage);
-        this.cartItemIds = cartItemIds;
+        this.unknownCartItemIds = unknownCartItemIds;
     }
 
-    public List<Long> getCartItemIds() {
-        return cartItemIds;
+    public List<Long> getUnknownCartItemIds() {
+        return unknownCartItemIds;
     }
 }

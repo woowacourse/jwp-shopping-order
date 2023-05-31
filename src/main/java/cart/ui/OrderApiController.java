@@ -3,6 +3,7 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderAdditionResponse;
 import cart.dto.response.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +27,9 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> saveOrder(Member member, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderAdditionResponse> saveOrder(Member member, @RequestBody OrderRequest orderRequest) {
         long orderId = orderService.saveOrder(member, orderRequest);
-        return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
+        return ResponseEntity.created(URI.create("/orders/" + orderId)).body(new OrderAdditionResponse(orderId));
     }
 
     @GetMapping("/{orderId}")

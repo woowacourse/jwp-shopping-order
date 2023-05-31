@@ -4,6 +4,7 @@ import cart.application.CartItemService;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemAdditionResponse;
 import cart.dto.response.CartItemResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,10 +35,10 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<CartItemAdditionResponse> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
 
-        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).body(new CartItemAdditionResponse(cartItemId));
     }
 
     @PatchMapping("/{id}")
