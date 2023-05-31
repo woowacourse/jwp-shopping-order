@@ -34,6 +34,10 @@ public class Product {
         return !discountPercent.isZero();
     }
 
+    public Price applyCoupon(Coupon coupon) {
+        return coupon.apply(gerPriceOnSale());
+    }
+
     public Price getDiscountPrice() {
         return price.minus(gerPriceOnSale());
     }

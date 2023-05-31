@@ -17,6 +17,10 @@ public class Coupon {
         this(null, name, discountPolicy);
     }
 
+    public Price apply(Price price) {
+        return discountPolicy.discount(price);
+    }
+
     public Long getId() {
         return id;
     }
