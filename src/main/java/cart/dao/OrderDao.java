@@ -3,9 +3,14 @@ package cart.dao;
 import cart.entity.OrderEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class OrderDao {
@@ -28,7 +33,17 @@ public class OrderDao {
 
     public long save(final OrderEntity orderEntity) {
         String sql = "INSERT INTO orders (member_id, shipping_fee, total_price) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(sql, orderEntity.getMemberId(), orderEntity.getShippingFee(), orderEntity.getTotalPrice());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pst.setLong(1, orderEntity.getMemberId());
+            pst.setLong(2, orderEntity.getShippingFee());
+            pst.setLong(3, orderEntity.getTotalPrice());
+            return pst;
+        }, keyHolder);
+        Map<String, Object> keys = keyHolder.getKeys();
+        Object id = keys.get("id");
+        return ((Number) id).longValue();
     }
 
     public OrderEntity findById(final long id) {
