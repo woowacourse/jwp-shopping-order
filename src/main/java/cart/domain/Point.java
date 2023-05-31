@@ -27,9 +27,10 @@ public class Point {
     }
 
     private void validateTime(LocalDateTime expiredAt, LocalDateTime createdAt) {
-        if (createdAt.isAfter(expiredAt)) {
-            throw new IllegalArgumentException("유효시각이 만료시각 이전이어야 합니다.");
+        if (createdAt.isBefore(expiredAt)) {
+            return;
         }
+        throw new IllegalArgumentException("유효시각이 만료시각 이전이어야 합니다.");
     }
 
     private void validatePointAmount(int earnedPoint, int leftPoint) {

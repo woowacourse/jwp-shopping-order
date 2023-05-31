@@ -4,9 +4,6 @@ import cart.domain.Product;
 
 public class OrderException extends RuntimeException {
 
-    private static final int NOT_ENOUGH_STOCK_ERROR_CODE = 1;
-    private static final int NOT_ENOUGH_POINT_ERROR_CODE = 2;
-
     private final int errorCode;
 
     public OrderException(int errorCode, String message) {
@@ -16,13 +13,13 @@ public class OrderException extends RuntimeException {
 
     public static class NotEnoughPointException extends OrderException {
         public NotEnoughPointException() {
-            super(NOT_ENOUGH_POINT_ERROR_CODE, "포인트가 부족합니다.");
+            super(ErrorCode.NOT_ENOUGH_POINT.getErrorCode(), "포인트가 부족합니다.");
         }
     }
 
     public static class NotEnoughStockException extends OrderException {
         public NotEnoughStockException(Product product) {
-            super(NOT_ENOUGH_STOCK_ERROR_CODE, product.getName() + "의 재고가 부족합니다.");
+            super(ErrorCode.NOT_ENOUGH_STOCK.getErrorCode(), product.getName() + "의 재고가 부족합니다.");
         }
     }
 

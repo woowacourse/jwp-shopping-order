@@ -97,7 +97,7 @@ class OrderDaoTest {
             ps.setInt(1, EARNED_POINT);
             ps.setInt(2, EARNED_POINT);
             ps.setLong(3, memberId);
-            ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now().plusDays(2)));
             ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
 
             return ps;
@@ -110,10 +110,11 @@ class OrderDaoTest {
     @Test
     void getOrderDetailsByOrdersId() {
         // given
-        Member member = new Member(memberId, MEMBER_EMAIL, null);
-        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, null, null);
-        int usedPoint = 50;
         LocalDateTime now = LocalDateTime.now();
+
+        Member member = new Member(memberId, MEMBER_EMAIL, null);
+        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, now.plusDays(1), now);
+        int usedPoint = 50;
         Orders orders = new Orders(member, point, EARNED_POINT, usedPoint, now);
         Long generatedId = insertOrders(orders);
         Orders createdOrders = new Orders(generatedId, orders.getMember(), orders.getPoint(), orders.getEarnedPoint(), orders.getUsedPoint(), orders.getCreatedAt());
@@ -139,10 +140,11 @@ class OrderDaoTest {
     @Test
     void getOrdersByMemberId() {
         // given
-        Member member = new Member(memberId, MEMBER_EMAIL, null);
-        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, null, null);
-        int usedPoint = 50;
         LocalDateTime now = LocalDateTime.now();
+
+        Member member = new Member(memberId, MEMBER_EMAIL, null);
+        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, now.plusDays(1), now);
+        int usedPoint = 50;
         Orders orders1 = new Orders(member, point, EARNED_POINT, usedPoint, now);
         Orders orders2 = new Orders(member, point, EARNED_POINT, usedPoint, now);
         insertOrders(orders1);
@@ -159,10 +161,11 @@ class OrderDaoTest {
     @Test
     void getOrdersByOrdersId() {
         // given
-        Member member = new Member(memberId, MEMBER_EMAIL, null);
-        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, null, null);
-        int usedPoint = 50;
         LocalDateTime now = LocalDateTime.now();
+
+        Member member = new Member(memberId, MEMBER_EMAIL, null);
+        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, now.plusDays(1), now);
+        int usedPoint = 50;
         Orders orders = new Orders(member, point, EARNED_POINT, usedPoint, now);
 
         // when
@@ -182,17 +185,18 @@ class OrderDaoTest {
         Long id = 99999999999L;
 
         // when, then
-        assertEquals(Optional.empty(),orderDao.getOrdersByOrderId(id));
+        assertEquals(Optional.empty(), orderDao.getOrdersByOrderId(id));
     }
 
     @DisplayName("orders를 생성한다.")
     @Test
     void createOrders() {
         // given
-        Member member = new Member(memberId, MEMBER_EMAIL, null);
-        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, null, null);
-        int usedPoint = 50;
         LocalDateTime now = LocalDateTime.now();
+
+        Member member = new Member(memberId, MEMBER_EMAIL, null);
+        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, now.plusDays(1), now);
+        int usedPoint = 50;
         Orders orders = new Orders(member, point, EARNED_POINT, usedPoint, now);
 
         // when
@@ -210,10 +214,11 @@ class OrderDaoTest {
     @Test
     void createOrderDetail() {
         // given
-        Member member = new Member(memberId, MEMBER_EMAIL, null);
-        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, null, null);
-        int usedPoint = 50;
         LocalDateTime now = LocalDateTime.now();
+
+        Member member = new Member(memberId, MEMBER_EMAIL, null);
+        Point point = new Point(pointId, EARNED_POINT, EARNED_POINT, member, now.plusDays(1), now);
+        int usedPoint = 50;
         Orders orders = new Orders(member, point, EARNED_POINT, usedPoint, now);
         Long generatedId = insertOrders(orders);
         Orders createdOrders = new Orders(generatedId, orders.getMember(), orders.getPoint(), orders.getEarnedPoint(), orders.getUsedPoint(), orders.getCreatedAt());
