@@ -1,7 +1,8 @@
 package cart.integration;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
+import cart.domain.member.Password;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -56,7 +57,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        Member illegalMember = new Member(member.getId(), member.getEmail(), new Password(member.getPassword().password() + "asdf"));
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
@@ -168,7 +169,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
                 .body(cartItemRequest)
                 .when()
                 .post("/cart-items")
@@ -185,7 +186,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     private ExtractableResponse<Response> requestGetCartItems(Member member) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
                 .when()
                 .get("/cart-items")
                 .then()
@@ -197,7 +198,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
                 .when()
                 .body(quantityUpdateRequest)
                 .patch("/cart-items/{cartItemId}", cartItemId)
@@ -209,7 +210,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     private ExtractableResponse<Response> requestDeleteCartItem(Long cartItemId) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .auth().preemptive().basic(member.getEmail().email(), member.getPassword().password())
                 .when()
                 .delete("/cart-items/{cartItemId}", cartItemId)
                 .then()

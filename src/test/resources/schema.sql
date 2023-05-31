@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS point_history;
+DROP TABLE IF EXISTS point;
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS product;
+
+
 CREATE TABLE product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -21,4 +30,42 @@ CREATE TABLE cart_item
     quantity   INT    NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
+);
+
+CREATE TABLE orders
+(
+    id          BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id   BIGINT    NOT NULL,
+    created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE order_item
+(
+    id                  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id          BIGINT NOT NULL,
+    price_at_order_time INT    NOT NULL,
+    quantity            INT    NOT NULL,
+    order_id            BIGINT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product (id),
+    FOREIGN KEY (order_id) REFERENCES orders (id)
+);
+
+CREATE TABLE point
+(
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    point     INT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE point_history
+(
+    id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT NOT NULL,
+    points_used  INT    NOT NULL,
+    points_saved INT    NOT NULL,
+    order_id     BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (order_id) REFERENCES orders (id)
 );

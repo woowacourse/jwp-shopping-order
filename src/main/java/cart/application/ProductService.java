@@ -1,6 +1,9 @@
 package cart.application;
 
-import cart.domain.Product;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Name;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
 import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -29,12 +32,20 @@ public class ProductService {
     }
 
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = new Product(
+                new Name(productRequest.getName()),
+                new ImageUrl(productRequest.getImageUrl()),
+                new Price(productRequest.getPrice())
+        );
         return productDao.createProduct(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        Product product = new Product(
+                new Name(productRequest.getName()),
+                new ImageUrl(productRequest.getImageUrl()),
+                new Price(productRequest.getPrice())
+        );
         productDao.updateProduct(productId, product);
     }
 
