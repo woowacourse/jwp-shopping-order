@@ -11,7 +11,8 @@ public class OrderEntity {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public OrderEntity(final Long id, final Long memberId, final int usedPoint, final int deliveryFee, final LocalDateTime createdAt,
+    public OrderEntity(final Long id, final Long memberId, final int usedPoint, final int deliveryFee,
+                       final LocalDateTime createdAt,
                        final LocalDateTime updatedAt) {
         this.id = id;
         this.memberId = memberId;

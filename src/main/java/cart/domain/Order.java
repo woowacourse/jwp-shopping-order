@@ -19,22 +19,22 @@ public class Order {
         this.id = id;
         this.orderProducts = orderProducts;
         this.member = member;
-        this.deliveryFee = calculateDeliverFee(orderProducts);
+        this.deliveryFee = calculateDeliveryFee(orderProducts);
         this.usedPoint = usedPoint;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     public Order(final Long id, final List<OrderProduct> orderProducts, final Member member, final int usedPoint) {
-        this(id, orderProducts, member, calculateDeliverFee(orderProducts), new Point(usedPoint), null, null);
+        this(id, orderProducts, member, calculateDeliveryFee(orderProducts), new Point(usedPoint), null, null);
     }
 
-    private static DeliveryFee calculateDeliverFee(List<OrderProduct> orderProducts) {
+    private static DeliveryFee calculateDeliveryFee(List<OrderProduct> orderProducts) {
         int totalPrice = orderProducts.stream()
                 .mapToInt(orderProduct -> orderProduct.getProduct().getPrice() * orderProduct.getQuantity())
                 .sum();
 
-        if(totalPrice < 50000) {
+        if (totalPrice < 50000) {
             return DeliveryFee.DEFAULT;
         }
         return DeliveryFee.FREE;
@@ -44,6 +44,14 @@ public class Order {
         return orderProducts.stream()
                 .mapToInt(orderProduct -> orderProduct.getProduct().getPrice() * orderProduct.getQuantity())
                 .sum();
+    }
+
+    public boolean isOwner(Member member) {
+        if (member.getId() == null || this.member.getId() == null) {
+            return false;
+        }
+
+        return this.member.equals(member);
     }
 
     public Long getId() {
@@ -66,8 +74,8 @@ public class Order {
         return usedPoint.getValue();
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     @Override

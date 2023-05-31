@@ -4,7 +4,10 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
+import cart.domain.Product;
+import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.exception.ErrorMessage;
 import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
@@ -31,6 +34,12 @@ public class OrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    private static void validateMemberIsOwnerOfOrder(final Member member, final Order order) {
+        if (!order.isOwner(member)) {
+            throw new OrderException(ErrorMessage.INVALID_CART_ITEM_OWNER);
+        }
+    }
+
     @Transactional
     public Long save(Member member, @Valid OrderRequest orderRequest) {
         List<Long> cartItemIds = orderRequest.getCartItemIds();
@@ -48,6 +57,8 @@ public class OrderService {
         validateUsedPointIsLessThanPrice(orderRequest.getPoint(), order.getTotalPrice());
 
         accumulatePoint(member, orderRequest, order);
+
+        cartItemRepository.deleteOrderedCartItem(cartItemIds);
 
         return orderRepository.save(order);
     }
@@ -93,5 +104,39 @@ public class OrderService {
                         cartItem.getQuantity()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public OrderResponse findById(Member member, Long orderId) {
+        Order order = orderRepository.findById(orderId, member);
+        validateMemberIsOwnerOfOrder(member, order);
+
+        return toResponse(order);
+    }
+
+    private OrderResponse toResponse(Order order) {
+        List<OrderProductResponse> orderProductResponses = order.getOrderProducts().stream()
+                .map(this::toProductResponse)
+                .collect(Collectors.toList());
+
+        return new OrderResponse(
+                order.getId(),
+                orderProductResponses,
+                order.getTotalPrice(),
+                order.getUsedPoint(),
+                order.getDeliveryFee(),
+                order.getCreatedAt()
+        );
+    }
+
+    private OrderProductResponse toProductResponse(OrderProduct orderProduct) {
+        Product product = orderProduct.getProduct();
+
+        return new OrderProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                orderProduct.getQuantity()
+        );
     }
 }

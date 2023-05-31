@@ -13,6 +13,10 @@ public class Point {
         this.value = value;
     }
 
+    public static Point fromTotalPrice(int totalPrice) {
+        return new Point((int) Math.floor(totalPrice * ACCUMULATION_RATE));
+    }
+
     private void validate(int value) {
         if (value < 0) {
             throw new MemberException(ErrorMessage.INVALID_POINT);
@@ -25,10 +29,6 @@ public class Point {
 
     public Point use(Point point) {
         return new Point(this.value - point.value);
-    }
-
-    public static Point fromTotalPrice(int totalPrice) {
-        return new Point((int) Math.floor(totalPrice * ACCUMULATION_RATE));
     }
 
     public int getValue() {

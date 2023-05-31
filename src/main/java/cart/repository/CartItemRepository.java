@@ -64,7 +64,7 @@ public class CartItemRepository {
     public void deleteByMemberId(Long memberId) {
         int deletedRow = cartItemDao.deleteByMemberId(memberId);
 
-        if(deletedRow == 0) {
+        if (deletedRow == 0) {
             throw new CartItemException(NOT_FOUND_CART_ITEM);
         }
     }
@@ -100,5 +100,10 @@ public class CartItemRepository {
 
         CartItemEntity cartItem = cartItemEntity.getCartItemEntity();
         return new CartItem(cartItem.getId(), cartItem.getQuantity(), product, member);
+    }
+
+    public void deleteOrderedCartItem(final List<Long> cartItemIds) {
+
+        cartItemDao.deleteByIds(cartItemIds);
     }
 }

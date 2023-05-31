@@ -7,8 +7,8 @@ import java.util.Objects;
 public class DeliveryFee {
 
     private static final int DEFAULT_FEE = 3000;
-    private static final int FREE_FEE = 0;
     public static final DeliveryFee DEFAULT = new DeliveryFee(DEFAULT_FEE);
+    private static final int FREE_FEE = 0;
     public static final DeliveryFee FREE = new DeliveryFee(FREE_FEE);
     private final int value;
 
@@ -18,7 +18,7 @@ public class DeliveryFee {
     }
 
     private void validate(int value) {
-        if(value < 0) {
+        if (value < 0) {
             throw new OrderException(ErrorMessage.INVALID_DELIVERY_FEE);
         }
     }

@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 @SuppressWarnings("NonAsciiCharacters")
 public class ProductStep {
     public static Long 상품_생성_요청후_상품_ID를_리턴한다(ProductRequest productRequest) {
-        ExtractableResponse<Response> response = given()
+        ExtractableResponse<Response> 응답 = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
@@ -25,7 +25,7 @@ public class ProductStep {
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
 
-        return 헤더_ID_값_파싱(response);
+        return 헤더_ID_값_파싱(응답);
     }
 
     public static ProductRequest 상품_생성_요청_생성(String 상품_이름, int 상품_가격, String 상품_이미지_URL) {

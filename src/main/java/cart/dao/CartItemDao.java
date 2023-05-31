@@ -4,10 +4,13 @@ import cart.dao.entity.CartItemEntity;
 import cart.dao.entity.CartItemWithMemberAndProductEntity;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.ProductEntity;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -118,6 +121,23 @@ public class CartItemDao {
         String sql = "DELETE FROM cart_item WHERE member_id = ?";
 
         return jdbcTemplate.update(sql, memberId);
+    }
+
+    public void deleteByIds(final List<Long> orderIds) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                Long recordId = orderIds.get(i);
+                ps.setLong(1, recordId);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return orderIds.size();
+            }
+        });
     }
 }
 

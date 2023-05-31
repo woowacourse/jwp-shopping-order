@@ -30,4 +30,14 @@ public class OrderStep {
                 .log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> 주문_조회_요청(Member 멤버, Long 주문_ID) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(멤버.getEmail(), 멤버.getPassword())
+                .when().get("/orders/" + 주문_ID)
+                .then()
+                .log().all()
+                .extract();
+    }
 }
