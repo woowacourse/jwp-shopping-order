@@ -1,7 +1,6 @@
 package cart.domain;
 
 public class Point {
-    public static final Point MINIMUM_USAGE_POINT = new Point(3000);
 
     private final int value;
 
@@ -15,6 +14,10 @@ public class Point {
 
     public Point subtract(Point other) {
         return new Point(this.value - other.value);
+    }
+
+    public boolean isSmallerThan(Point other) {
+        return this.value < other.value;
     }
 
     public int getValue() {
