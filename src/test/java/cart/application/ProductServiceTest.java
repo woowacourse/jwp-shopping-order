@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -65,7 +66,7 @@ class ProductServiceTest {
     @Test
     void 상품을_생성할_수_있다() {
         // given
-        when(productRepository.insert(any())).thenReturn(3L);
+        when(productRepository.insert(any())).thenReturn(new Product(3L, "오이", 2000, "https://oi.com", 0.0, false));
         ProductRequest request = new ProductRequest("오이", 2000, "https://oi.com", 0.0, false);
 
         // when

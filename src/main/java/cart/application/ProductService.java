@@ -33,7 +33,8 @@ public class ProductService {
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(null, productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl(), productRequest.getPointRatio(), productRequest.getPointAvailable());
-        return productRepository.insert(product);
+        Product inserted = productRepository.insert(product);
+        return inserted.getId();
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {

@@ -4,11 +4,12 @@ import cart.application.domain.Product;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository {
 
-    Long insert(Product product);
+    Product insert(Product product);
 
     Product findById(Long productId);
 

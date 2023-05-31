@@ -38,7 +38,7 @@ class MemberServiceTest {
     @Test
     void 해당_정보의_멤버가_없다면_예외를_던진다() {
         // given
-        when(memberRepository.findByEmail(any())).thenReturn(Optional.of(member));
+        when(memberRepository.findByEmail(any())).thenReturn(member);
 
         // when, then
         assertThatThrownBy(() -> memberService.validateMemberProfile("teo", "1233"))
@@ -48,7 +48,7 @@ class MemberServiceTest {
     @Test
     void 해당_정보의_멤버가_있다면_예외를_던지지_않는다() {
         // given
-        when(memberRepository.findByEmail(any())).thenReturn(Optional.of(member));
+        when(memberRepository.findByEmail(any())).thenReturn(member);
 
         // when, then
         assertThatCode(() -> memberService.validateMemberProfile("teo", "1234"))
