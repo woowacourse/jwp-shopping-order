@@ -33,6 +33,7 @@ public class OrderService {
         final List<OrderItem> orderItems = createOrderItems(orderId, member, orderRequest);
 
         orderDao.saveOrderItems(orderItems);
+        cartItemDao.deleteByIds(orderRequest.getCartItemIds());
         return orderId;
     }
 
