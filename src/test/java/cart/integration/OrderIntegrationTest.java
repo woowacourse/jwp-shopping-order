@@ -2,8 +2,8 @@ package cart.integration;
 
 import cart.controller.dto.request.OrderRequest;
 import cart.controller.dto.request.ProductRequest;
-import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     private Member member;
     private Long productId1;
@@ -32,7 +32,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() {
-        member = memberDao.getMemberById(1L);
+        member = memberRepository.findById(1L);
         productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
     }

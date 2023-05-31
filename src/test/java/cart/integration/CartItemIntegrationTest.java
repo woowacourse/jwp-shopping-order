@@ -1,11 +1,11 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
 import cart.controller.dto.request.CartItemQuantityUpdateRequest;
 import cart.controller.dto.request.CartItemRequest;
-import cart.controller.dto.response.CartItemResponse;
 import cart.controller.dto.request.ProductRequest;
+import cart.controller.dto.response.CartItemResponse;
+import cart.domain.Member;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     private Long productId;
     private Long productId2;
@@ -42,8 +42,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.findById(1L);
+        member2 = memberRepository.findById(2L);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
