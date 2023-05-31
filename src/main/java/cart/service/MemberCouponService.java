@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.domain.MemberCoupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.dto.MemberCouponDto;
 import cart.repository.MemberCouponRepository;
 import java.util.List;

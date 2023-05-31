@@ -11,10 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
+import cart.domain.coupon.MemberCoupon;
 import cart.dto.OrderSaveRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
@@ -139,7 +139,6 @@ class OrderControllerTest {
         cartItemRepository.save(new CartItem(member, product2));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
-        final List<CartItem> result = cartItemRepository.findAllByMemberId(member.getId());
         final Order order1 = new Order(MemberCoupon.makeNonMemberCoupon(), member, List.of(
                 new OrderItem(product1.getName(), product1.getPrice(), product1.getImageUrl(), 2))
         );

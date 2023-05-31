@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import java.math.BigDecimal;
 import java.util.List;
 

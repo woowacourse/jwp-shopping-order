@@ -2,9 +2,9 @@ package cart.service;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.domain.coupon.MemberCoupon;
 import cart.dto.OrderSaveRequest;
 import cart.dto.OrdersDto;
 import cart.exception.MemberNotFoundException;
