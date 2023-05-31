@@ -12,8 +12,8 @@ public class ProductEntity {
     private final String imageUrl;
     private final int stock;
 
-    public ProductEntity(final Long id, final ProductEntity productEntity) {
-        this(id, productEntity.name, productEntity.price, productEntity.imageUrl, productEntity.stock);
+    public ProductEntity(final Long id, final ProductEntity other) {
+        this(id, other.name, other.price, other.imageUrl, other.stock);
     }
 
     public ProductEntity(final String name, final int price, final String imageUrl, final int stock) {
