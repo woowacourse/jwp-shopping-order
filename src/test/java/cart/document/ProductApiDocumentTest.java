@@ -3,8 +3,8 @@ package cart.document;
 import cart.WebMvcConfig;
 import cart.application.CartItemService;
 import cart.application.ProductService;
-import cart.domain.ProductCartItem;
-import cart.domain.product.Product;
+import cart.domain.Product;
+import cart.dto.ProductCartItemDto;
 import cart.ui.ProductApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -31,7 +31,6 @@ import static cart.fixtures.ProductFixtures.PANCAKE;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static cart.fixtures.ProductFixtures.SALAD;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -101,9 +100,9 @@ public class ProductApiDocumentTest {
     void 특정_상품_목록_페이징_문서화() throws Exception {
         // given
         final List<Product> products = List.of(SALAD.ENTITY, CHICKEN.ENTITY);
-        final List<ProductCartItem> productCartItems = List.of(
-                new ProductCartItem(SALAD.ENTITY, MemberA_CartItem2.ENTITY),
-                new ProductCartItem(CHICKEN.ENTITY, MemberA_CartItem1.ENTITY)
+        final List<ProductCartItemDto> productCartItems = List.of(
+                new ProductCartItemDto(SALAD.ENTITY, MemberA_CartItem2.ENTITY),
+                new ProductCartItemDto(CHICKEN.ENTITY, MemberA_CartItem1.ENTITY)
         );
 
         given(productService.getProductsInPaging(3L, 2))

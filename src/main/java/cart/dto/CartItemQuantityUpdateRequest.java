@@ -1,7 +1,6 @@
 package cart.dto;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 public class CartItemQuantityUpdateRequest {
@@ -10,7 +9,7 @@ public class CartItemQuantityUpdateRequest {
     @PositiveOrZero(message = "수량은 0개 이상만 가능합니다. (0개: 삭제)")
     private Integer quantity;
 
-    private CartItemQuantityUpdateRequest(){
+    private CartItemQuantityUpdateRequest() {
     }
 
     private CartItemQuantityUpdateRequest(final Integer quantity) {

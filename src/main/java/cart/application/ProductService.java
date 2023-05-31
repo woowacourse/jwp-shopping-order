@@ -2,10 +2,10 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
+import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.ProductCartItem;
-import cart.domain.cartitem.CartItem;
-import cart.domain.product.Product;
+import cart.domain.Product;
+import cart.dto.ProductCartItemDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,18 +60,18 @@ public class ProductService {
         productDao.deleteProduct(productId);
     }
 
-    public List<ProductCartItem> getProductCartItemsByProduct(final Member member, final List<Product> products) {
+    public List<ProductCartItemDto> getProductCartItemsByProduct(final Member member, final List<Product> products) {
         return products.stream()
                 .map(product -> getProductCartItemByProduct(member, product))
                 .collect(Collectors.toList());
     }
 
-    private ProductCartItem getProductCartItemByProduct(final Member member, final Product product) {
+    private ProductCartItemDto getProductCartItemByProduct(final Member member, final Product product) {
         try {
             final CartItem cartItem = cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId());
-            return new ProductCartItem(product, cartItem);
+            return new ProductCartItemDto(product, cartItem);
         } catch (final NullPointerException e) {
-            return new ProductCartItem(product, null);
+            return new ProductCartItemDto(product, null);
         }
     }
 }

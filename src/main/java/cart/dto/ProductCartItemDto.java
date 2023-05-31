@@ -1,16 +1,16 @@
-package cart.domain;
+package cart.dto;
 
-import cart.domain.cartitem.CartItem;
-import cart.domain.product.Product;
+import cart.domain.CartItem;
+import cart.domain.Product;
 
 import java.util.Objects;
 
-public class ProductCartItem {
+public class ProductCartItemDto {
 
     private Product product;
     private CartItem cartItem;
 
-    public ProductCartItem(final Product product, final CartItem cartItem) {
+    public ProductCartItemDto(final Product product, final CartItem cartItem) {
         this.product = product;
         this.cartItem = cartItem;
     }
@@ -19,7 +19,7 @@ public class ProductCartItem {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final ProductCartItem that = (ProductCartItem) o;
+        final ProductCartItemDto that = (ProductCartItemDto) o;
         return Objects.equals(product, that.product) && Objects.equals(cartItem, that.cartItem);
     }
 

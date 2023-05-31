@@ -1,8 +1,7 @@
 package cart.dto;
 
-import cart.domain.ProductCartItem;
-import cart.domain.cartitem.CartItem;
-import cart.domain.product.Product;
+import cart.domain.CartItem;
+import cart.domain.Product;
 
 import java.util.Optional;
 
@@ -16,7 +15,7 @@ public class ProductCartItemResponse {
         this.cartItem = cartItem;
     }
 
-    public static ProductCartItemResponse from(final ProductCartItem productCartItem) {
+    public static ProductCartItemResponse from(final ProductCartItemDto productCartItem) {
         final Product product = productCartItem.getProduct();
         final CartItem cartItem = productCartItem.getCartItem();
 

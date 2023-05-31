@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.product.Product;
+import cart.domain.Product;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotBlank;

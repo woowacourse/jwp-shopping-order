@@ -2,9 +2,9 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.application.ProductService;
-import cart.domain.cartitem.CartItem;
+import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.product.Product;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;

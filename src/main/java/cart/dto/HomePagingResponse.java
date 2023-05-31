@@ -1,7 +1,5 @@
 package cart.dto;
 
-import cart.domain.product.Product;
-
 import java.util.List;
 
 public class HomePagingResponse {

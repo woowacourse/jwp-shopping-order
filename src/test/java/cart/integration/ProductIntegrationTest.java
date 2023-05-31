@@ -3,7 +3,6 @@ package cart.integration;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.ProductRequest;
-import cart.fixtures.MemberFixtures;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

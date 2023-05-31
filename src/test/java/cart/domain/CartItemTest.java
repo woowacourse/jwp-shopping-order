@@ -1,4 +1,4 @@
-package cart.domain.cartitem;
+package cart.domain;
 
 import cart.exception.CartItemException;
 import org.junit.jupiter.api.DisplayNameGeneration;

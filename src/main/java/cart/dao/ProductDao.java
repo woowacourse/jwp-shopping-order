@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.product.Product;
+import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

@@ -4,7 +4,7 @@ import cart.WebMvcConfig;
 import cart.application.CartItemService;
 import cart.application.ProductService;
 import cart.dao.MemberDao;
-import cart.domain.cartitem.CartItem;
+import cart.domain.CartItem;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.fixtures.ProductFixtures;

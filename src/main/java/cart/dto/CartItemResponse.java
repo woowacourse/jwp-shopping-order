@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.cartitem.CartItem;
+import cart.domain.CartItem;
 
 public class CartItemResponse {
     private Long id;

@@ -26,7 +26,7 @@ public class MemberApiController {
 
     @PostMapping("/cash")
     public ResponseEntity<DepositResponse> postDepositCash(final Member member,
-                                                            @Valid @RequestBody final DepositRequest request) {
+                                                           @Valid @RequestBody final DepositRequest request) {
         final Long cash = request.getCashToCharge();
         final Long totalCash = memberService.depositCash(member, cash);
 

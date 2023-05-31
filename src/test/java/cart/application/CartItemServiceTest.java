@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
-import cart.domain.cartitem.CartItem;
+import cart.domain.CartItem;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
 import static cart.fixtures.MemberFixtures.MemberA;

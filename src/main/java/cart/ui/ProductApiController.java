@@ -2,10 +2,10 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.application.ProductService;
+import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.ProductCartItem;
-import cart.domain.cartitem.CartItem;
-import cart.domain.product.Product;
+import cart.domain.Product;
+import cart.dto.ProductCartItemDto;
 import cart.dto.HomePagingResponse;
 import cart.dto.ProductCartItemResponse;
 import cart.dto.ProductRequest;
@@ -57,7 +57,7 @@ public class ProductApiController {
                                                                    @RequestParam final int pageItemCount) {
         final List<Product> products = productService.getProductsInPaging(lastId, pageItemCount);
 
-        final List<ProductCartItem> productCartItems = productService.getProductCartItemsByProduct(member, products);
+        final List<ProductCartItemDto> productCartItems = productService.getProductCartItemsByProduct(member, products);
         final boolean isLast = productService.hasLastProduct(lastId, pageItemCount);
 
         final List<ProductCartItemResponse> responses = productCartItems.stream()
