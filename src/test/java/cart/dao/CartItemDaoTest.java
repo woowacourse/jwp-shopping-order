@@ -1,7 +1,7 @@
 package cart.dao;
 
-import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
-import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
+import static cart.fixtures.CartItemFixtures.*;
+import static cart.fixtures.MemberFixtures.Ber;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -14,10 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 @JdbcTest
-@ActiveProfiles("test")
 class CartItemDaoTest {
 
     @Autowired
@@ -110,5 +108,19 @@ class CartItemDaoTest {
 
         // when, then
         assertThat(cartItemDao.isNotExistById(notExistId)).isFalse();
+    }
+
+    @Test
+    @DisplayName("멤버 ID에 해당하는 행을 내림차순으로 조회한다.")
+    void findDescByMemberId() {
+        // given
+        Long memberId = Ber.ID;
+
+        // when
+        List<CartItem> cartItems = cartItemDao.findDescByMemberId(memberId);
+
+        // then
+        assertThat(cartItems).usingRecursiveFieldByFieldElementComparator()
+                .containsExactly(Ber_CartItem2.ENTITY, Ber_CartItem1.ENTITY);
     }
 }

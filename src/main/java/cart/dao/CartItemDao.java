@@ -44,12 +44,8 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.password, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
+    public List<CartItem> findDescByMemberId(Long memberId) {
+        String sql = JOIN_SQL + "WHERE cart_item.member_id = ? ORDER BY id DESC";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
