@@ -1,9 +1,5 @@
 package cart.exception;
 
-import cart.domain.CartItem;
-
-import static cart.domain.CartItem.MINIMUM_QUANTITY;
-
 public class CartItemException extends RuntimeException {
 
     public CartItemException(String message) {
@@ -41,8 +37,8 @@ public class CartItemException extends RuntimeException {
 
     public static class InvalidQuantity extends CartItemException {
 
-        public InvalidQuantity(CartItem cartItem) {
-            super("장바구니에 담긴 상품의 개수는 최소 " + MINIMUM_QUANTITY + " 이상이어야 합니다.; cartItemId=" + cartItem.getId() + "cartItemQuantity=" + cartItem.getQuantity());
+        public InvalidQuantity(int quantity) {
+            super("장바구니에 담긴 상품의 개수는 최소 " + quantity + " 이상이어야 합니다.");
         }
     }
 
@@ -50,6 +46,13 @@ public class CartItemException extends RuntimeException {
 
         public InvalidProduct() {
             super("장바구니에 담으려는 상품이 존재하지 않습니다.");
+        }
+    }
+
+    public static class MergeCartItem extends CartItemException {
+
+        public MergeCartItem() {
+            super("장바구니에 있는 다른 상품끼리 병합할 수 없습니다.");
         }
     }
 }

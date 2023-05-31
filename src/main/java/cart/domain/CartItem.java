@@ -1,59 +1,65 @@
 package cart.domain;
 
+import cart.domain.vo.Money;
+import cart.domain.vo.Quantity;
 import cart.exception.CartItemException;
 
 import java.util.Objects;
 
 public class CartItem {
 
-    public static final int MINIMUM_QUANTITY = 1;
+    private static final int MINIMUM_QUANTITY = 0;
 
-    private Long id;
-    private int quantity;
+    private final Long id;
     private final Product product;
     private final Member member;
+    private Quantity quantity;
 
-    public CartItem(Member member, Product product) {
-        this(0L, MINIMUM_QUANTITY, product, member);
+    public CartItem(Product product, Member member) {
+        this(null, product, member, MINIMUM_QUANTITY);
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
-        validate(id, quantity, member, product);
+    public CartItem(Product product, Member member, int quantity) {
+        this(null, product, member, quantity);
+    }
+
+    public CartItem(Long id, Product product, Member member, int quantity) {
+        validate(quantity, product);
         this.id = id;
-        this.quantity = quantity;
+        this.quantity = Quantity.from(quantity);
         this.product = product;
         this.member = member;
     }
 
-    private void validate(Long id, int quantity, Member member, Product product) {
-        validateId(id);
-        validateQuantity(quantity);
-        validateMember(member);
-        validateProduct(product);
-    }
-
-    private void validateId(Long id) {
-        if (Objects.isNull(id)) {
-            throw new CartItemException.InvalidIdByNull();
-        }
-    }
-
-    private void validateQuantity(int quantity) {
+    private void validate(int quantity, Product product) {
         if (quantity < MINIMUM_QUANTITY) {
-            throw new CartItemException.InvalidQuantity(this);
+            throw new CartItemException.InvalidQuantity(MINIMUM_QUANTITY);
         }
-    }
-
-    private void validateProduct(Product product) {
         if (Objects.isNull(product)) {
             throw new CartItemException.InvalidProduct();
         }
     }
 
-    private void validateMember(Member member) {
-        if (Objects.isNull(member)) {
-            throw new CartItemException.InvalidMember();
+    public boolean isSameProduct(CartItem other) {
+        return product.equals(other.product);
+    }
+
+    public CartItem mergePlus(CartItem other) {
+        if (!isSameProduct(other)) {
+            throw new CartItemException.MergeCartItem();
         }
+        return new CartItem(product, member, quantity.increase(other.quantity).getValue());
+    }
+
+    public CartItem mergeMinus(CartItem other) {
+        if (!isSameProduct(other)) {
+            throw new CartItemException.MergeCartItem();
+        }
+        return new CartItem(product, member, quantity.decrease(other.quantity).getValue());
+    }
+
+    public Money totalPrice() {
+        return product.getPrice().times(quantity);
     }
 
     public void checkOwner(Member member) {
@@ -62,8 +68,12 @@ public class CartItem {
         }
     }
 
-    public void changeQuantity(int quantity) {
+    public void changeQuantity(Quantity quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean isQuantityZero() {
+        return quantity.isZero();
     }
 
     public Long getId() {
@@ -78,7 +88,30 @@ public class CartItem {
         return product;
     }
 
-    public int getQuantity() {
+    public Quantity getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(product, cartItem.product) && Objects.equals(member, cartItem.member) && Objects.equals(quantity, cartItem.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, member, quantity);
+    }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", product=" + product +
+                ", member=" + member +
+                ", quantity=" + quantity +
+                '}';
     }
 }

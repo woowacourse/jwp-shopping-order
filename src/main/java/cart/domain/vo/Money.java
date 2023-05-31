@@ -1,5 +1,7 @@
 package cart.domain.vo;
 
+import cart.exception.MoneyException;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -8,7 +10,14 @@ public class Money {
     private final BigDecimal value;
 
     private Money(BigDecimal value) {
+        validate(value);
         this.value = value;
+    }
+
+    private void validate(BigDecimal value) {
+        if (value.compareTo(BigDecimal.ZERO) < 0) {
+            throw new MoneyException.NotNegative();
+        }
     }
 
     public static Money from(String value) {
@@ -55,5 +64,12 @@ public class Money {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    @Override
+    public String toString() {
+        return "Money{" +
+                "value=" + value +
+                '}';
     }
 }
