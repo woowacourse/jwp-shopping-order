@@ -8,7 +8,7 @@ public class AuthenticationException extends RuntimeException {
 
     public static class InvalidMember extends AuthenticationException {
         public InvalidMember() {
-            super("존재하지 않는 사용자입니다.");
+            super("존재하지 않는 회원입니다");
         }
     }
 }
