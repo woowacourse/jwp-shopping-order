@@ -41,7 +41,7 @@ class MemberServiceTest {
         MemberCashChargeResponse memberCashChargeResponse = memberService.chargeCash(authMember, request);
 
         // then
-        assertThat(memberCashChargeResponse.getChargedCash()).isEqualTo(15000);
+        assertThat(memberCashChargeResponse.getTotalCash()).isEqualTo(15000);
     }
 
     @Test
@@ -55,6 +55,6 @@ class MemberServiceTest {
         MemberShowCurrentCashResponse response = memberService.findMemberCurrentCharge(authMember);
 
         // then
-        assertThat(response.getCurrentCash()).isEqualTo(5000);
+        assertThat(response.getTotalCash()).isEqualTo(5000);
     }
 }

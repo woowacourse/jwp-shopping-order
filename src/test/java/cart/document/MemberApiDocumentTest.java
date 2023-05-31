@@ -103,7 +103,7 @@ public class MemberApiDocumentTest {
                                         fieldWithPath("cashToCharge").type(JsonFieldType.NUMBER).description("충전할 금액")
                                 ),
                                 responseFields(
-                                        fieldWithPath("chargedCash").type(JsonFieldType.NUMBER).description("충전된 금액")
+                                        fieldWithPath("totalCash").type(JsonFieldType.NUMBER).description("충전된 금액")
                                 )
                         )
                 );
@@ -130,7 +130,7 @@ public class MemberApiDocumentTest {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("사용자 인증 정보 (Basic Auth)")
                         ),
                         responseFields(
-                                fieldWithPath("currentCash").type(JsonFieldType.NUMBER).description("사용자의 현재 금액")
+                                fieldWithPath("totalCash").type(JsonFieldType.NUMBER).description("사용자의 현재 금액")
                         )
                 ));
     }

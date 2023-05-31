@@ -2,16 +2,16 @@ package cart.dto;
 
 public class MemberCashChargeResponse {
 
-    private int chargedCash;
+    private int totalCash;
 
     private MemberCashChargeResponse() {
     }
 
-    public MemberCashChargeResponse(int chargedCash) {
-        this.chargedCash = chargedCash;
+    public MemberCashChargeResponse(int totalCash) {
+        this.totalCash = totalCash;
     }
 
-    public int getChargedCash() {
-        return chargedCash;
+    public int getTotalCash() {
+        return totalCash;
     }
 }

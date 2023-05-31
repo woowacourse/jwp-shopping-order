@@ -197,7 +197,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
             // then
             assertAll(
                     () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
-                    () -> assertThat(jsonPath.getInt("currentCash")).isEqualTo(5000)
+                    () -> assertThat(jsonPath.getInt("totalCash")).isEqualTo(5000)
             );
         }
     }
