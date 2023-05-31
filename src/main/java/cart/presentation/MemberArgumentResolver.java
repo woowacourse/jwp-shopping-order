@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.presentation;
 
 import cart.exception.AuthenticationException;
 import cart.dao.MemberDao;
@@ -24,7 +24,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
             return null;
@@ -43,7 +43,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
+        Member member = memberDao.findByEmail(email);
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }
