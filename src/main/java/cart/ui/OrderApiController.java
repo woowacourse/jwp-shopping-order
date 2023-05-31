@@ -1,8 +1,12 @@
 package cart.ui;
 
 import cart.application.OrderService;
-import cart.dto.OrderItemsRequest;
+import cart.domain.Member;
+import cart.domain.OrderHistory;
+import cart.dto.order.OrderProductsRequest;
+import cart.dto.order.OrderHistoriesResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -21,9 +26,20 @@ public class OrderApiController {
         this.orderService = orderService;
     }
 
+    @GetMapping
+    public ResponseEntity<OrderHistoriesResponse> getOrderProducts(Member member) {
+        List<OrderHistory> orderHistories = orderService.getOrderItems(member);
+        return ResponseEntity.ok(toOrderHistoryResponse(orderHistories));
+    }
+
+    private OrderHistoriesResponse toOrderHistoryResponse(List<OrderHistory> orderHistories) {
+        System.out.println("\n!!!! MemberArgumentResolver.toOrderHistoryResponse 반환값 변경 필요\n");
+        return null;
+    }
+
     @PostMapping
-    public ResponseEntity<Void> orderProducts(@RequestBody @NotNull OrderItemsRequest orderItemsRequest) {
-        long orderId = orderService.orderProducts(orderItemsRequest);
+    public ResponseEntity<Void> orderProducts(@RequestBody @NotNull OrderProductsRequest orderProductsRequest) {
+        long orderId = orderService.orderProducts(orderProductsRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 }
