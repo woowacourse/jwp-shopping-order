@@ -1,19 +1,18 @@
 package cart.step2.coupontype.persist;
 
-import cart.step2.coupontype.domain.CouponType;
 import cart.step2.coupontype.domain.CouponTypeEntity;
-import org.junit.jupiter.api.Assertions;
+import cart.step2.coupontype.domain.CouponType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doReturn;
 
@@ -26,7 +25,41 @@ class CouponTypeRepositoryMapperTest {
     @Mock
     private CouponTypeDao couponTypeDao;
 
-    @DisplayName("모든 CouponTypeEntity을 조회해서 CouponType으로 변환해서 반환한다.")
+    @DisplayName("Optional<CouponTypeEntity>를 단건 조회해서 CouponType으로 변환해서 반환한다.")
+    @Test
+    void findById() {
+        // given
+        Optional<CouponTypeEntity> couponTypeEntityOptional = Optional.of(new CouponTypeEntity(1L, "할인쿠폰1", "1000원 할인 쿠폰", 1000));
+        doReturn(couponTypeEntityOptional).when(couponTypeDao).findById(1L);
+
+        // when
+        CouponType couponType = couponTypeRepositoryMapper.findById(1L);
+
+        // then
+        assertAll(
+                () -> assertThat(couponType.getClass()).isEqualTo(CouponType.class),
+                () -> assertThat(couponType.getId()).isEqualTo(1),
+                () -> assertThat(couponType.getDiscountAmount()).isEqualTo(1000),
+                () -> assertThat(couponType.getName()).isEqualTo("할인쿠폰1"),
+                () -> assertThat(couponType.getDescription()).isEqualTo("1000원 할인 쿠폰")
+        );
+    }
+
+    @DisplayName("Optional<CouponTypeEntity>를 단건 조회할 때 Optional이 Null이다.")
+    @Test
+    void findByIdFailed() {
+        // given
+        Optional<CouponTypeEntity> couponTypeEntityOptional = Optional.empty();
+        doReturn(couponTypeEntityOptional).when(couponTypeDao).findById(1L);
+
+        // when
+        CouponType couponType = couponTypeRepositoryMapper.findById(1L);
+
+        // then
+
+    }
+
+    @DisplayName("모든 CouponTypeEntity을 조회해서 List<CouponType>으로 변환해서 반환한다.")
     @Test
     void findAll() {
         // given

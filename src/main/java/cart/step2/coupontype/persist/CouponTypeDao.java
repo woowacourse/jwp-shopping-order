@@ -1,6 +1,5 @@
 package cart.step2.coupontype.persist;
 
-import cart.step2.coupontype.domain.CouponType;
 import cart.step2.coupontype.domain.CouponTypeEntity;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

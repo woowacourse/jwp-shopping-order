@@ -3,8 +3,8 @@ package cart.step2.coupon.service;
 import cart.step2.coupon.domain.Coupon;
 import cart.step2.coupon.domain.repository.CouponRepository;
 import cart.step2.coupon.presentation.dto.CouponResponse;
-import cart.step2.coupontype.domain.repository.CouponTypeRepository;
 import cart.step2.coupontype.domain.CouponType;
+import cart.step2.coupontype.domain.repository.CouponTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

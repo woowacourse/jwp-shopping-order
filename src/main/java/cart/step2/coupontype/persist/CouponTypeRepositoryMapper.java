@@ -1,7 +1,7 @@
 package cart.step2.coupontype.persist;
 
-import cart.step2.coupontype.domain.CouponType;
 import cart.step2.coupontype.domain.CouponTypeEntity;
+import cart.step2.coupontype.domain.CouponType;
 import cart.step2.coupontype.domain.repository.CouponTypeRepository;
 import cart.step2.coupontype.exception.CouponTypeNotFoundException;
 import org.springframework.stereotype.Repository;
