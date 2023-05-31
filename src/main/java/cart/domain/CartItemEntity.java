@@ -9,11 +9,11 @@ import java.util.Objects;
 public class CartItemEntity {
 
     private final Long id;
-    private final Long productId;
     private final Long memberId;
+    private final Long productId;
     private final int quantity;
 
-    public CartItemEntity(final Long product, final Long member, final int quantity) {
+    public CartItemEntity(final Long member, final Long product, final int quantity) {
         this(null, product, member, quantity);
     }
 
