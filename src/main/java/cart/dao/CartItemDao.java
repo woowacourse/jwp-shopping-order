@@ -19,7 +19,7 @@ public class CartItemDao {
     private static final RowMapper<CartItem> CART_ITEM_ROW_MAPPER = (rs, rowNum) -> {
         Member member = new Member(rs.getLong("member_id"), rs.getString("email"), null);
         Product product = new Product(
-                rs.getLong("id"),
+                rs.getLong("product_id"),
                 rs.getString("name"),
                 new Money(rs.getInt("price")),
                 rs.getString("image_url"));
@@ -46,7 +46,8 @@ public class CartItemDao {
     public List<CartItem> findByMemberId(final Long memberId) {
         final String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, " +
-                        "product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                        "product.id as product_id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -67,7 +68,8 @@ public class CartItemDao {
     public CartItem findById(final Long id) {
         final String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, " +
-                        "product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                        "product.id as product_id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -82,7 +84,8 @@ public class CartItemDao {
     public List<CartItem> findByIds(final List<Long> ids) {
         final String sql =
                 "SELECT cart_item.id, cart_item.member_id, member.email, " +
-                        "product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                        "product.id as product_id, product.name, product.price, product.image_url, cart_item.quantity "
+                        +
                         "FROM cart_item " +
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
