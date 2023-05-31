@@ -48,13 +48,10 @@ public class MemberDao {
     }
 
     public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
-    }
-
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        String memberSql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
+        jdbcTemplate.update(memberSql, member.getEmail(), member.getPassword(), member.getId());
+        String pointSql = "UPDATE member_point SET point = ? where member_id = ?";
+        jdbcTemplate.update(pointSql, member.getPoint().getAmount(), member.getId());
     }
 
     public List<Member> findAll() {
