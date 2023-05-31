@@ -32,9 +32,9 @@ VALUES ('샐러드', 20000,
         'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
 
 INSERT INTO member (email, password, point)
-VALUES ('kangsj9665@gmail.com', '1234', 0);
+VALUES ('kangsj9665@gmail.com', '1234', 3000);
 INSERT INTO member (email, password, point)
-VALUES ('yis092521@gmail.com', '1234', 0);
+VALUES ('yis092521@gmail.com', '1234', 3000);
 
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (1, 1, 2);
