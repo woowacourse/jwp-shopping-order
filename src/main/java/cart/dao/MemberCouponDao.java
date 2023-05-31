@@ -35,11 +35,11 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, getCouponRowMapper(), id);
     }
 
-    public Long create(Long memberId, Long couponId) {
+    public void create(Long memberId, Long couponId) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", memberId)
                 .addValue("coupon_id", couponId);
 
-        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        simpleJdbcInsert.execute(params);
     }
 }

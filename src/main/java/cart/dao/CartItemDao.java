@@ -4,21 +4,26 @@ import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
+    public CartItemDao(JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedJdbcTemplate = namedJdbcTemplate;
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
@@ -91,6 +96,14 @@ public class CartItemDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void delete(Long memberId, List<Long> productIds) {
+        final String sql = "DELETE FROM cart_item WHERE member_id = :memberId AND product_id IN (:productIds)";
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("memberId", memberId);
+        parameters.put("productIds", productIds);
+        namedJdbcTemplate.update(sql, parameters);
     }
 
     public void updateQuantity(CartItem cartItem) {

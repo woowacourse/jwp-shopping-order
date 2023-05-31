@@ -33,7 +33,7 @@ public class CouponController {
         return ResponseEntity.ok(couponResponses);
     }
 
-    @PostMapping("/coupons")
+    @PostMapping("/coupon")
     public ResponseEntity<Void> addCoupon(@RequestBody Long couponId, Member member) {
         memberCouponDao.create(couponId, member.getId());
         return ResponseEntity.noContent().build();

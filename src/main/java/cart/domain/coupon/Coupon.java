@@ -1,5 +1,7 @@
 package cart.domain.coupon;
 
+import java.util.Objects;
+
 public class Coupon {
 
     private final Long id;
@@ -26,5 +28,18 @@ public class Coupon {
 
     public Discount getDiscount() {
         return discount;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coupon coupon = (Coupon) o;
+        return Objects.equals(id, coupon.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
