@@ -1,5 +1,6 @@
 package com.woowahan.techcourse.coupon.application;
 
+import com.woowahan.techcourse.coupon.application.dto.CouponExpireRequestDto;
 import com.woowahan.techcourse.coupon.db.dao.CouponDao;
 import com.woowahan.techcourse.coupon.db.dao.CouponMemberDao;
 import com.woowahan.techcourse.coupon.exception.CouponException;
@@ -26,5 +27,13 @@ public class CouponCommandService {
             throw new CouponException("멤버가 이미 쿠폰을 가지고 있습니다");
         }
         couponMemberDao.insert(couponId, memberId);
+    }
+
+    public void expireCoupon(CouponExpireRequestDto requestDto) {
+        int count = couponMemberDao.countByMemberIdAndCouponIds(requestDto.getMemberId(), requestDto.getCouponIds());
+        if (count != requestDto.getCouponIds().size()) {
+            throw new CouponException("존재하지 않는 쿠폰이 있습니다.");
+        }
+        couponMemberDao.deleteByMemberId(requestDto.getMemberId(), requestDto.getCouponIds());
     }
 }
