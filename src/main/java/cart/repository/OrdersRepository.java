@@ -1,6 +1,9 @@
 package cart.repository;
 
+import cart.dao.MemberCouponDao;
+import cart.dao.MemberDao;
 import cart.dao.OrdersDao;
+import cart.dao.entity.OrdersEntity;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Orders;
@@ -14,11 +17,13 @@ public class OrdersRepository {
     private final OrdersDao ordersDao;
     private final CartItemRepository cartItemRepository;
     private final RelativeRepository relativeRepository;
+    private final MemberDao memberDao;
 
-    public OrdersRepository(OrdersDao ordersDao, CartItemRepository cartItemRepository, RelativeRepository relativeRepository) {
+    public OrdersRepository(OrdersDao ordersDao, CartItemRepository cartItemRepository, RelativeRepository relativeRepository, MemberDao memberDao) {
         this.ordersDao = ordersDao;
         this.cartItemRepository = cartItemRepository;
         this.relativeRepository = relativeRepository;
+        this.memberDao = memberDao;
     }
 
     public long takeOrders(
@@ -43,9 +48,9 @@ public class OrdersRepository {
         return relativeRepository.makeOrders(ordersDao.findById(id), member);
     }
 
-    public Coupon confirmOrdersCreateCoupon(final long id) {
+    public Orders  confirmOrdersCreateCoupon(Member member,final long id) {
         ordersDao.updateConfirmById(id);
-        return null;
+        return findOrdersById(member,id);
     }
 
     public void deleteOrders(final long id) {

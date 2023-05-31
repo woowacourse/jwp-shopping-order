@@ -31,7 +31,9 @@ public class CouponRepository {
         }
         memberCouponDao.create(memberId, couponId);
     }
-
+    public Coupon findById(final long id){
+        return couponDao.findWithId(id);
+    }
     public Map<Coupon, Boolean> findAllCoupons(final long id) {
         List<Long> memberCouponIds = memberCouponDao.findByMemberId(id);
         List<CouponEntity> couponEntities = couponDao.findAll();

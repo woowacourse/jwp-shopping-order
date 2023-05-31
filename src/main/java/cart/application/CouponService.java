@@ -27,7 +27,6 @@ public class CouponService {
         return couponRepository.findAllCoupons(member.getId()).entrySet().stream()
                 .map(entry -> CouponResponse.issuableOf(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
-
     }
 
     public List<CouponResponse> showMembersCoupons(Member member) {

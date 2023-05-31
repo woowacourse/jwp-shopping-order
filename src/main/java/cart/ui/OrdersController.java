@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.OrdersService;
 import cart.domain.Member;
+import cart.dto.CouponResponse;
 import cart.dto.OrdersRequest;
 import cart.dto.OrdersResponse;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class OrdersController {
     }
 
     @PatchMapping("/{id}/confirm")
-    public ResponseEntity<OrdersResponse> confirmOrders(Member member, @PathVariable long id) {
+    public ResponseEntity<CouponResponse> confirmOrders(Member member, @PathVariable long id) {
         return ResponseEntity.ok().body(ordersService.confirmOrders(member, id));
     }
 

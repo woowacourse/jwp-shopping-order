@@ -20,6 +20,14 @@ public class Orders {
         this.coupons = coupons;
         this.confirmState = confirmState;
     }
+    private Orders(Member member,  Integer originalPrice, Integer discountPrice){
+        this.member = member;
+        this.originalPrice = new Price(originalPrice);
+        this.discountPrice = new Price(discountPrice);
+    }
+    public static Orders forIssuer(Member member,  Integer originalPrice, Integer discountPrice){
+        return new Orders(member,originalPrice,discountPrice);
+    }
 
     public Long getId() {
         return id;
@@ -27,6 +35,9 @@ public class Orders {
 
     public Member getMember() {
         return member;
+    }
+    public Long getMemberId(){
+        return member.getId();
     }
 
     public List<CartItem> getCartItems() {
