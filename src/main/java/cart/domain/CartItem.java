@@ -2,12 +2,12 @@ package cart.domain;
 
 public class CartItem {
 
-    private final long id;
+    private final Long id;
     private final Member member;
     private final Product product;
     private final Quantity quantity;
 
-    public CartItem(final long id, final Member member, final Product product, final Quantity quantity) {
+    public CartItem(final Long id, final Member member, final Product product, final Quantity quantity) {
         this.id = id;
         this.member = member;
         this.product = product;
