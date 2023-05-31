@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS cart_item;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS coupon;
 
 CREATE TABLE product
 (
@@ -48,4 +49,15 @@ CREATE TABLE order_item
     image_url     VARCHAR(255) NOT NULL,
     order_id      BIGINT       NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id)
+);
+
+CREATE TABLE coupon
+(
+    id                BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name              VARCHAR(255) NOT NULL,
+    discount_type     VARCHAR(30)  NOT NULL,
+    target_type       VARCHAR(30)  NOT NULL,
+    target_product_id BIGINT,
+    coupon_value             INT          NOT NULL,
+    member_id         BIGINT       NOT NULL
 );
