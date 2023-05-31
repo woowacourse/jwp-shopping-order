@@ -1,4 +1,4 @@
-package cart.application;
+package cart.service;
 
 import static java.math.BigDecimal.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;

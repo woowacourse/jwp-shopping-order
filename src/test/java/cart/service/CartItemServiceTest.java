@@ -1,4 +1,4 @@
-package cart.application;
+package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
