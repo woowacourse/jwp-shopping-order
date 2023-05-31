@@ -4,11 +4,16 @@ import cart.domain.Member;
 import cart.domain.Rank;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class MemberDao {
@@ -31,9 +36,24 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password, rank, total_purchase_amount) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), "NORMAL", 0);
+    public Long addMember(Member member) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO member (email, password, rank, total_purchase_amount) VALUES (?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            ps.setString(1, member.getEmail());
+            ps.setString(2, member.getPassword());
+            ps.setString(3, "NORMAL");
+            ps.setInt(4, 0);
+
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public void updateMember(Member member) {
