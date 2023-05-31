@@ -1,0 +1,22 @@
+### 상품목록 page로 가져오기
+GET http://localhost:8080/products?limit=20&scroll-count=0
+Accept: application/json
+
+### response
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "id": 1,
+    "name": "치킨",
+    "price": 10000,
+    "imageUrl": "http://example.com/chicken.jpg"
+  },
+  {
+    "id": 2,
+    "name": "피자",
+    "price": 20000,
+    "imageUrl": "http://example.com/pizza.jpg"
+  }
+]
