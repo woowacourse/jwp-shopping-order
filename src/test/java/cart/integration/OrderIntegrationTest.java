@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.dto.request.CartItemRequest;
 import cart.dto.request.OrderItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductRequest;
@@ -44,11 +45,11 @@ public class OrderIntegrationTest extends IntegrationTest {
         member1 = memberDao.getMemberById(1L);
 
         orderRequest1 = new OrderRequest(
-            List.of(new OrderItemRequest(productId, 3), new OrderItemRequest(productId2, 3)),
+            List.of(new OrderItemRequest(productId, 1), new OrderItemRequest(productId2, 1)),
             LocalDateTime.of(2023, 4, 4, 4, 4)
         );
         orderRequest2 = new OrderRequest(
-            List.of(new OrderItemRequest(productId2, 1), new OrderItemRequest(productId3, 5)),
+            List.of(new OrderItemRequest(productId2, 1), new OrderItemRequest(productId3, 1)),
             LocalDateTime.of(2023, 4, 4, 4, 4)
         );
     }
@@ -57,6 +58,9 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     public void saveOrder() {
         //given
+        createCartItem(member1, new CartItemRequest(productId));
+        createCartItem(member1, new CartItemRequest(productId2));
+
         //when
         final ExtractableResponse<Response> response = given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -74,10 +78,10 @@ public class OrderIntegrationTest extends IntegrationTest {
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
             () -> assertThat(response.header("Location")).isNotNull(),
             () -> assertThat(orderResponse.getItems()).hasSize(2),
-            () -> assertThat(orderResponse.getProductPrice()).isEqualTo(75_000),
-            () -> assertThat(orderResponse.getDiscountPrice()).isEqualTo(5000),
+            () -> assertThat(orderResponse.getProductPrice()).isEqualTo(25_000),
+            () -> assertThat(orderResponse.getDiscountPrice()).isEqualTo(0),
             () -> assertThat(orderResponse.getDeliveryFee()).isEqualTo(3000),
-            () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(73000)
+            () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(28_000)
         );
     }
 
@@ -85,7 +89,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     public void findOrderById() {
         //given
-        final Long orderId = createOrder(orderRequest1);
+        final Long orderId = createOrder(member1, orderRequest1);
 
         //when
         final ExtractableResponse<Response> response = given().log().all()
@@ -102,10 +106,10 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertAll(
             () -> assertThat(orderResponse.getOrderId()).isEqualTo(orderId),
             () -> assertThat(orderResponse.getItems()).hasSize(2),
-            () -> assertThat(orderResponse.getProductPrice()).isEqualTo(75_000),
-            () -> assertThat(orderResponse.getDiscountPrice()).isEqualTo(5000),
+            () -> assertThat(orderResponse.getProductPrice()).isEqualTo(25_000),
+            () -> assertThat(orderResponse.getDiscountPrice()).isEqualTo(0),
             () -> assertThat(orderResponse.getDeliveryFee()).isEqualTo(3000),
-            () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(73000)
+            () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(28_000)
         );
     }
 
@@ -113,8 +117,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     public void findOrders() {
         //given
-        createOrder(orderRequest1);
-        createOrder(orderRequest2);
+        createOrder(member1, orderRequest1);
+        createOrder(member1, orderRequest2);
 
         //when
         final ExtractableResponse<Response> response = given().log().all()
@@ -132,16 +136,16 @@ public class OrderIntegrationTest extends IntegrationTest {
             () -> assertThat(ordersResponse.getOrders()).hasSize(2),
 
             () -> assertThat(ordersResponse.getOrders().get(0).getItems()).hasSize(2),
-            () -> assertThat(ordersResponse.getOrders().get(0).getProductPrice()).isEqualTo(75_000),
-            () -> assertThat(ordersResponse.getOrders().get(0).getDiscountPrice()).isEqualTo(5000),
+            () -> assertThat(ordersResponse.getOrders().get(0).getProductPrice()).isEqualTo(25_000),
+            () -> assertThat(ordersResponse.getOrders().get(0).getDiscountPrice()).isEqualTo(0),
             () -> assertThat(ordersResponse.getOrders().get(0).getDeliveryFee()).isEqualTo(3000),
-            () -> assertThat(ordersResponse.getOrders().get(0).getTotalPrice()).isEqualTo(73000),
+            () -> assertThat(ordersResponse.getOrders().get(0).getTotalPrice()).isEqualTo(28_000),
 
             () -> assertThat(ordersResponse.getOrders().get(1).getItems()).hasSize(2),
-            () -> assertThat(ordersResponse.getOrders().get(1).getProductPrice()).isEqualTo(115_000),
-            () -> assertThat(ordersResponse.getOrders().get(1).getDiscountPrice()).isEqualTo(5000),
+            () -> assertThat(ordersResponse.getOrders().get(1).getProductPrice()).isEqualTo(35_000),
+            () -> assertThat(ordersResponse.getOrders().get(1).getDiscountPrice()).isEqualTo(3000),
             () -> assertThat(ordersResponse.getOrders().get(1).getDeliveryFee()).isEqualTo(3000),
-            () -> assertThat(ordersResponse.getOrders().get(1).getTotalPrice()).isEqualTo(113_000)
+            () -> assertThat(ordersResponse.getOrders().get(1).getTotalPrice()).isEqualTo(35_000)
         );
     }
 
@@ -158,14 +162,33 @@ public class OrderIntegrationTest extends IntegrationTest {
         return getIdFromCreatedResponse(response);
     }
 
+    private Long createCartItem(Member member, CartItemRequest cartItemRequest) {
+        ExtractableResponse<Response> response = given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .body(cartItemRequest)
+            .when()
+            .post("/cart-items")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract();
+
+        return getIdFromCreatedResponse(response);
+    }
+
     private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
-    public Long createOrder(OrderRequest orderRequest) {
+    public Long createOrder(Member member, OrderRequest orderRequest) {
+        orderRequest.getOrderItems()
+            .stream()
+            .map(OrderItemRequest::getId)
+            .forEach((productId) -> createCartItem(member, new CartItemRequest(productId)));
+
         final ExtractableResponse<Response> response = given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
             .body(orderRequest)
             .when()
             .post("/orders")

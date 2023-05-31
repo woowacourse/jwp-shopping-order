@@ -5,6 +5,7 @@ import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.delivery.DeliveryPolicy;
@@ -17,6 +18,7 @@ import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderItemResponse;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.OrdersResponse;
+import cart.exception.CartItemException.CartItemNotExisctException;
 import cart.exception.MemberNotExistException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,16 +54,30 @@ public class OrderService {
 
     public OrderResponse createOrder(final Long memberId, final OrderRequest orderRequest) {
         final Member member = findExistMemberById(memberId);
-        final Order order = Order.beforePersisted(member, generateOrderItems(orderRequest),
-            orderRequest.getOrderTime());
+        final OrderItems orderItems = generateOrderItems(orderRequest);
+        final CartItems cartItems = new CartItems(cartItemDao.findByMemberId(memberId));
+
+        checkOrderItemInCart(cartItems, orderItems.getItems());
+
+        final Order order = Order.beforePersisted(member, orderItems, orderRequest.getOrderTime());
         final Long productPrice = order.getProductPrice();
-        final Order persistOrder = orderDao.insert(order, discountPolicy.calculate(productPrice),
-            deliveryPolicy.getDeliveryFee(productPrice));
+        final Long discountPrice = discountPolicy.calculate(productPrice);
+        final Long deliveryFee = deliveryPolicy.getDeliveryFee(productPrice);
+
+        final Order persistOrder = orderDao.insert(order, discountPrice,
+            deliveryFee, calculateTotalPrice(productPrice, discountPrice, deliveryFee));
 
         saveOrderItems(persistOrder);
         deleteCartItems(persistOrder);
 
         return generateOrderResponseAfterCreate(persistOrder);
+    }
+
+    private void checkOrderItemInCart(final CartItems cartItems, final List<OrderItem> orderItems) {
+        orderItems.forEach(
+            orderItem -> cartItems.get(orderItem.getProduct().getId(), orderItem.getQuantity())
+                .orElseThrow(() -> new CartItemNotExisctException("해당 상품이 장바구니에 없습니다."))
+        );
     }
 
     private void saveOrderItems(final Order order) {
@@ -148,7 +164,7 @@ public class OrderService {
         final List<OrderResponse> orderResponses = memberOrderDtos.values().stream()
             .map(orderDtos -> {
                 final Order order = makeOrder(member, orderDtos);
-                return generateOrderResponseAfterCreate(order);
+                return generateOrderResponseAfterFind(order, orderDtos.get(0));
             })
             .collect(Collectors.toList());
 

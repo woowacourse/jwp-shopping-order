@@ -37,7 +37,7 @@ public class OrderDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Order insert(final Order order, final Long discountPrice, final Long deliveryFee) {
+    public Order insert(final Order order, final Long discountPrice, final Long deliveryFee, final Long totalPrice) {
         final Long productPrice = order.getProductPrice();
 
         final MapSqlParameterSource params = new MapSqlParameterSource();
@@ -45,7 +45,7 @@ public class OrderDao {
         params.addValue("product_price", productPrice);
         params.addValue("discount_price", discountPrice);
         params.addValue("delivery_fee", deliveryFee);
-        params.addValue("total_price", productPrice - discountPrice + deliveryFee);
+        params.addValue("total_price", totalPrice);
         params.addValue("created_at", order.getOrderTime());
 
         final long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();

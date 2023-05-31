@@ -52,7 +52,3 @@ public class Order {
         return orderTime;
     }
 }
-
-//TODO : 카트가 주문이 되면 ORDER 를 반환한다.
-//TODO : cart.order() -> Order order
-//TODO : 주문 이벤트 카트에 있는 모든 상품을 삭제, 주문 상품으로 생성

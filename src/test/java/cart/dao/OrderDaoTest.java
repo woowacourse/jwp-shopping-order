@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.order.Order;
@@ -25,6 +26,7 @@ class OrderDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private MemberDao memberDao;
+    private CartItemDao cartItemDao;
     private OrderDao orderDao;
     private ProductDao productDao;
     private OrderItemDao orderItemDao;
@@ -37,6 +39,7 @@ class OrderDaoTest {
         this.orderDao = new OrderDao(jdbcTemplate);
         this.productDao = new ProductDao(jdbcTemplate);
         this.orderItemDao = new OrderItemDao(jdbcTemplate);
+        this.cartItemDao = new CartItemDao(jdbcTemplate);
 
         this.member = findMemberById(1L);
         this.product1 = createProduct("치킨", 10_000, "http://example.com/chicken.jpg");
@@ -47,10 +50,11 @@ class OrderDaoTest {
     @Test
     void insert() {
         //given
-        final Order order = createOrder(member, List.of(OrderItem.notPersisted(product1, 5)));
+        createCartItem(new CartItem(member, product1));
+        final Order order = createOrder(member, List.of(OrderItem.notPersisted(product1, 1)));
 
         //when
-        final Order persistedOrder = orderDao.insert(order, 1000L, 2000L);
+        final Order persistedOrder = orderDao.insert(order, 1000L, 2000L, order.getProductPrice() - 1000L + 2000L);
 
         //then
         Assertions.assertThat(persistedOrder.getOrderTime()).isEqualTo(order.getOrderTime());
@@ -62,8 +66,10 @@ class OrderDaoTest {
     @Test
     void findAllByMemberId() {
         //given
-        final Order order1 = createOrder(member, List.of(OrderItem.notPersisted(product1, 5)));
-        final Order order2 = createOrder(member, List.of(OrderItem.notPersisted(product1, 4)));
+        createCartItem(new CartItem(member, product1));
+        final Order order1 = createOrder(member, List.of(OrderItem.notPersisted(product1, 1)));
+        createCartItem(new CartItem(member, product1));
+        final Order order2 = createOrder(member, List.of(OrderItem.notPersisted(product1, 1)));
 
         //when
         final List<OrderDto> orderDtos = orderDao.findAllByMemberId(member.getId());
@@ -87,9 +93,13 @@ class OrderDaoTest {
     }
 
     private Order createOrder(final Member member, final List<OrderItem> orderItems) {
-        final Order order = orderDao.insert(
-            Order.beforePersisted(member, new OrderItems(orderItems), LocalDateTime.now()), 3000L, 2000L);
-        order.getOrderItems().forEach((orderItem -> orderItemDao.insert(order.getId(), orderItem)));
-        return order;
+        final Order order = Order.beforePersisted(member, new OrderItems(orderItems), LocalDateTime.now());
+        final Order persistedOrder = orderDao.insert(order, 3000L, 2000L, order.getProductPrice() - 3000L + 2000L);
+        order.getOrderItems().forEach((orderItem -> orderItemDao.insert(persistedOrder.getId(), orderItem)));
+        return persistedOrder;
+    }
+
+    private void createCartItem(CartItem cartItem) {
+        cartItemDao.save(cartItem);
     }
 }
