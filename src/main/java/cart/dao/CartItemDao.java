@@ -2,7 +2,9 @@ package cart.dao;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Money;
 import cart.domain.Product;
+import cart.domain.Quantity;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,11 +23,11 @@ public class CartItemDao {
         Product product = new Product(
             rs.getLong("product.id"),
             rs.getString("name"),
-            rs.getInt("price"),
+            Money.from(rs.getInt("price")),
             rs.getString("image_url"));
         return new CartItem(
             rs.getLong("cart_item.id"),
-            rs.getInt("cart_item.quantity"),
+            Quantity.from(rs.getInt("cart_item.quantity")),
             product, member);
     };
 
@@ -54,7 +56,7 @@ public class CartItemDao {
         Number generatedKey = insertAction.executeAndReturnKey(
             Map.of("member_id", cartItem.getMember().getId(),
                 "product_id", cartItem.getProduct().getId(),
-                "quantity", cartItem.getQuantity()));
+                "quantity", cartItem.getQuantityCount()));
 
         return Objects.requireNonNull(generatedKey).longValue();
     }
@@ -84,7 +86,7 @@ public class CartItemDao {
 
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+        jdbcTemplate.update(sql, cartItem.getQuantityCount(), cartItem.getId());
     }
 }
 
