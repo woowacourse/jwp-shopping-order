@@ -53,4 +53,15 @@ class CartItemTest {
         // then
         assertThat(cartItem.getQuantity()).isEqualTo(100);
     }
+
+    @Test
+    void 장바구니에_담긴_상품들의_가격을_계산한다() {
+        Member member = new Member("email@email.com", "password");
+        Product product = new Product("지구", 10000, "http://image.com");
+        CartItem cartItem = new CartItem(1L, 10, product, member);
+
+        Money cartPrice = cartItem.calculateCartPrice();
+
+        assertThat(cartPrice).isEqualTo(new Money(100000));
+    }
 }

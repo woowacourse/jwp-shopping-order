@@ -46,4 +46,8 @@ public class CartItem {
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public Money calculateCartPrice() {
+        return product.getPrice().multiply(quantity);
+    }
 }

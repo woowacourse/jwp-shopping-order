@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class Product {
     private final Long id;
     private String name;
-    private BigDecimal price;
+    private Money price;
     private String imageUrl;
 
     public Product(String name, int price, String imageUrl) {
@@ -17,6 +17,10 @@ public class Product {
     }
 
     public Product(Long id, String name, BigDecimal price, String imageUrl) {
+        this(id, name, new Money(price), imageUrl);
+    }
+
+    public Product(Long id, String name, Money price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -31,7 +35,7 @@ public class Product {
         return name;
     }
 
-    public BigDecimal getPrice() {
+    public Money getPrice() {
         return price;
     }
 
@@ -41,7 +45,7 @@ public class Product {
 
     public void update(String name, BigDecimal price, String imageUrl) {
         this.name = name;
-        this.price = price;
+        this.price = new Money(price);
         this.imageUrl = imageUrl;
     }
 }
