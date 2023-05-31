@@ -16,7 +16,7 @@ public class CouponResponse {
     private final String type;
 
     @Schema(description = "할인 값", example = "3000")
-    private final long discountValue;
+    private final long value;
 
     @Schema(description = "최소 금액 할인 조건", example = "30000")
     private final long minimumPrice;
@@ -24,12 +24,12 @@ public class CouponResponse {
     public CouponResponse(final Long id,
                           final String name,
                           final String type,
-                          final long discountValue,
+                          final long value,
                           final long minimumPrice) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.discountValue = discountValue;
+        this.value = value;
         this.minimumPrice = minimumPrice;
     }
 
@@ -55,8 +55,8 @@ public class CouponResponse {
         return type;
     }
 
-    public long getDiscountValue() {
-        return discountValue;
+    public long getValue() {
+        return value;
     }
 
     public long getMinimumPrice() {
