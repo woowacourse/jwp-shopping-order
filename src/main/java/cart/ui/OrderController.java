@@ -3,8 +3,11 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
+import cart.dto.OrderDetailResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +30,10 @@ public class OrderController {
     ) {
         Long orderId = orderService.createOrder(member, orderCreateRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDetailResponse> findOrderDetailById(@PathVariable Long id) {
+        return ResponseEntity.ok().build();
     }
 }

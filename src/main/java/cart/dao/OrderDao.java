@@ -18,7 +18,7 @@ public class OrderDao {
         this.jdbcTemplate = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("shopping_order")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id", "used_point");
+                .usingColumns("member_id", "used_point", "saved_point");
     }
 
     public Long create(OrderEntity orderEntity) {
@@ -29,11 +29,7 @@ public class OrderDao {
         final String sql = "SELECT * FROM shopping_order WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.getJdbcTemplate()
-                    .queryForObject(
-                            sql,
-                            orderEntityMapper(),
-                            id
-                    ));
+                    .queryForObject(sql, orderEntityMapper(), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -44,7 +40,8 @@ public class OrderDao {
                 rs.getLong("id"),
                 rs.getLong("member_id"),
                 rs.getTimestamp("ordered_at").toLocalDateTime(),
-                rs.getInt("used_point")
+                rs.getInt("used_point"),
+                rs.getInt("saved_point")
         );
     }
 }

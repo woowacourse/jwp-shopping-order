@@ -26,10 +26,11 @@ CREATE TABLE IF NOT EXISTS cart_item
 
 CREATE TABLE IF NOT EXISTS shopping_order
 (
-    id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT    NOT NULL,
-    ordered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    used_point BIGINT    NOT NULL,
+    id          BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id   BIGINT    NOT NULL,
+    ordered_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    used_point  BIGINT    NOT NULL,
+    saved_point BIGINT    NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 

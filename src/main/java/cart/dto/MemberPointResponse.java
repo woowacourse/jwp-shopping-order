@@ -8,7 +8,7 @@ public class MemberPointResponse {
         this.point = point;
     }
 
-    public int getPoints() {
+    public int getPoint() {
         return point;
     }
 }

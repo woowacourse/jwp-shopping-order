@@ -32,7 +32,7 @@ class OrderDaoTest {
     void create() {
         //given
         final Member member = memberDao.findByEmail("kangsj9665@gmail.com");
-        final OrderEntity orderEntity = OrderEntity.toCreate(member.getId(), 300);
+        final OrderEntity orderEntity = OrderEntity.toCreate(member.getId(), 300, 400);
 
         //when
         final Long id = orderDao.create(orderEntity);
@@ -41,7 +41,8 @@ class OrderDaoTest {
         final OrderEntity savedOrder = orderDao.findById(id).get();
         assertAll(
                 () -> assertThat(savedOrder.getMemberId()).isEqualTo(member.getId()),
-                () -> assertThat(savedOrder.getUsedPoint()).isEqualTo(300)
+                () -> assertThat(savedOrder.getUsedPoint()).isEqualTo(300),
+                () -> assertThat(savedOrder.getSavedPoint()).isEqualTo(400)
         );
     }
 }

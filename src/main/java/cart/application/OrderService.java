@@ -50,10 +50,11 @@ public class OrderService {
         member.usePoint(usingPoint);
         final int totalPrice = calculateTotalPrice(cartItemsToOrder);
         creditCard.payWithPoint(totalPrice, usingPoint);
-        member.addPoint(Point.fromPayment(totalPrice));
+        final Point savingPoint = Point.fromPayment(totalPrice);
+        member.addPoint(savingPoint);
         memberDao.update(member);
 
-        final Long orderId = orderDao.create(OrderEntity.toCreate(member.getId(), usingPoint));
+        final Long orderId = orderDao.create(OrderEntity.toCreate(member.getId(), usingPoint, savingPoint.getValue()));
         createOrderItems(cartItemsToOrder, orderId);
         cartItemIds.forEach(cartItemDao::deleteById);
 
@@ -69,7 +70,7 @@ public class OrderService {
 
     private int calculateTotalPrice(final List<CartItem> cartItemsToOrder) {
         return cartItemsToOrder.stream()
-                .mapToInt(e -> e.getProduct().getPrice())
+                .mapToInt(e -> e.getProduct().getPrice() * e.getQuantity())
                 .sum();
     }
 
