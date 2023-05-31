@@ -24,13 +24,17 @@ public class CartItemRepository {
         return cartItem.getId();
     }
 
+    public CartItem findById(final Long id) {
+        return cartItemDao.findById(id)
+                .orElseThrow(() -> new CartItemNotFoundException(id));
+    }
+
     public List<CartItem> findAllByMemberId(final Long id) {
         return cartItemDao.findAllByMemberId(id);
     }
 
-    public CartItem findById(final Long id) {
-        return cartItemDao.findById(id)
-                .orElseThrow(() -> new CartItemNotFoundException(id));
+    public List<CartItem> findAllByIds(final List<Long> ids) {
+        return cartItemDao.findAllByIds(ids);
     }
 
     public void delete(final CartItem cartItem) {

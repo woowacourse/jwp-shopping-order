@@ -1,7 +1,5 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
@@ -10,8 +8,9 @@ import cart.domain.orderproduct.OrderProduct;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderProductDto;
 import cart.dto.OrderRequest;
-import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.point.InvalidPointUseException;
+import cart.repository.CartItemRepository;
+import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,43 +24,43 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final MemberDao memberDao;
-    private final CartItemDao cartItemDao;
+    private final MemberRepository memberRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public OrderService(final MemberDao memberDao, final CartItemDao cartItemDao, final OrderRepository orderRepository) {
-        this.memberDao = memberDao;
-        this.cartItemDao = cartItemDao;
+    public OrderService(final OrderRepository orderRepository,
+                        final MemberRepository memberRepository, final CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
+        this.memberRepository = memberRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
 
     @Transactional
     public Long order(final Member member, final OrderRequest request) {
-        final Member findMember = memberDao.findByEmail(member.getEmailValue())
-                .orElseThrow(() -> new MemberNotFoundException(member.getEmailValue()));
-        final CartItems cartItems = new CartItems(cartItemDao.findAllByIds(request.getCartItemIds()));
+        final Member findMember = memberRepository.findByEmail(member.getEmailValue());
+        final CartItems cartItems = new CartItems(cartItemRepository.findAllByIds(request.getCartItemIds()));
         final int totalPrice = cartItems.getTotalPrice();
         if (totalPrice < request.getPoint()) {
             throw new InvalidPointUseException(totalPrice, request.getPoint());
         }
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
-        memberDao.update(updatedMember);
+        memberRepository.save(updatedMember);
 
-        return orderRepository.order(cartItems, updatedMember, new MemberPoint(request.getPoint()));
+        return orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
     }
 
     public OrderDetailResponse getOrderDetail(final Long orderId) {
-        final Order order = orderRepository.findOrderById(orderId);
-        final List<OrderProduct> orderProducts = orderRepository.findAllOrderProductsByOrderId(orderId);
+        final Order order = orderRepository.findById(orderId);
+        final List<OrderProduct> orderProducts = orderRepository.findAllByOrderId(orderId);
 
         return getOrderDetailResponse(order, orderProducts);
     }
 
     public List<OrderDetailResponse> getAllOrderDetails(final Member member) {
-        final List<Order> orders = orderRepository.findOrdersByMemberId(member.getId());
+        final List<Order> orders = orderRepository.findAllByMemberId(member.getId());
         final List<OrderDetailResponse> result = new ArrayList<>();
         for (Order order : orders) {
-            final List<OrderProduct> orderProducts = orderRepository.findAllOrderProductsByOrderId(order.getId());
+            final List<OrderProduct> orderProducts = orderRepository.findAllByOrderId(order.getId());
             final OrderDetailResponse orderDetailResponse = getOrderDetailResponse(order, orderProducts);
             result.add(orderDetailResponse);
         }

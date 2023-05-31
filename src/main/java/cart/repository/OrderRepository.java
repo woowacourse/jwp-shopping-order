@@ -32,7 +32,7 @@ public class OrderRepository {
         this.cartItemDao = cartItemDao;
     }
 
-    public Long order(final CartItems cartItems, final Member member, final MemberPoint usedPoint) {
+    public Long save(final CartItems cartItems, final Member member, final MemberPoint usedPoint) {
         final Long orderId = orderDao.insert(new Order(member, usedPoint, new DeliveryFee(cartItems.getDeliveryFee())));
         final Order findOrder = orderDao.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
@@ -44,16 +44,16 @@ public class OrderRepository {
         return orderId;
     }
 
-    public Order findOrderById(final Long orderId) {
+    public Order findById(final Long orderId) {
         return orderDao.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
-    public List<OrderProduct> findAllOrderProductsByOrderId(final Long orderId) {
+    public List<OrderProduct> findAllByOrderId(final Long orderId) {
         return orderProductDao.findAllByOrderId(orderId);
     }
 
-    public List<Order> findOrdersByMemberId(final Long memberId) {
+    public List<Order> findAllByMemberId(final Long memberId) {
         return orderDao.findAllByMemberId(memberId);
     }
 }
