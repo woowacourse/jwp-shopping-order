@@ -1,19 +1,26 @@
 package cart.domain.order;
 
 import cart.domain.product.Price;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Order {
 
     private final Long id;
+    private final Timestamp orderTime;
     private final List<OrderItem> orderItems;
 
     public Order(final List<OrderItem> orderItemList) {
-        this(null, orderItemList);
+        this(null, null, orderItemList);
     }
 
-    public Order(final Long id, final List<OrderItem> orderItemList) {
+    public Order(
+            final Long id,
+            final Timestamp orderTime,
+            final List<OrderItem> orderItemList
+    ) {
         this.id = id;
+        this.orderTime = orderTime;
         this.orderItems = orderItemList;
     }
 
@@ -25,6 +32,10 @@ public class Order {
 
     public Long getId() {
         return id;
+    }
+
+    public Timestamp getOrderTime() {
+        return orderTime;
     }
 
     public List<OrderItem> getOrderItems() {

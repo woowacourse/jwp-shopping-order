@@ -7,6 +7,7 @@ import cart.domain.product.ImageUrl;
 import cart.domain.product.Name;
 import cart.domain.product.Price;
 import cart.domain.product.Product;
+import java.sql.Timestamp;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -27,7 +28,10 @@ class OrderTest {
         final OrderItem orderItem1 = new OrderItem(1L, 1L, quantity1, product1);
         final OrderItem orderItem2 = new OrderItem(2L, 1L, quantity2, product2);
 
-        final Order order = new Order(1L, List.of(orderItem1, orderItem2));
+        final Order order = new Order(
+                1L,
+                new Timestamp(System.currentTimeMillis()),
+                List.of(orderItem1, orderItem2));
 
         // when
         final Price totalPrice = order.getTotalPrice();
