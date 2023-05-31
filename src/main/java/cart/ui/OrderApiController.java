@@ -3,6 +3,7 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderAddRequest;
+import cart.dto.OrderResponse;
 import cart.dto.OrdersResponse;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
@@ -37,9 +38,9 @@ public class OrderApiController {
     }
     
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrdersResponse> findOrder(Member member, @PathVariable Long orderId) {
-        OrdersResponse ordersResponse= OrdersResponse.of(orderService.findOrdersByMember(member));
-        return ResponseEntity.status(HttpStatus.OK).body(ordersResponse);
+    public ResponseEntity<OrderResponse> findOrder(Member member, @PathVariable Long orderId) {
+        OrderResponse orderResponse= OrderResponse.of(orderService.findOrderById(member,orderId));
+        return ResponseEntity.status(HttpStatus.OK).body(orderResponse);
     }
     
 }
