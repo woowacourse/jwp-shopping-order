@@ -3,18 +3,31 @@ package cart.ui.controller.dto.response;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Schema(description = "주문 응답")
 public class OrderResponse {
 
+    @Schema(description = "주문 ID", example = "1")
     private Long orderId;
+
+    @Schema(description = "주문 상품 목록 정보")
     private List<OrderProductResponse> products;
+
+    @Schema(description = "상품 전체 금액", example = "55000")
     private int totalPrice;
+
+    @Schema(description = "사용한 포인트", example = "1000")
     private int usedPoint;
+
+    @Schema(description = "배송비", example = "3000")
     private int deliveryFee;
+
+    @Schema(description = "주문 날짜", example = "2023/05/31 20:02:15")
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime orderedAt;
 

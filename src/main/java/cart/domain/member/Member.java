@@ -1,5 +1,8 @@
 package cart.domain.member;
 
+import io.swagger.v3.oas.annotations.Hidden;
+
+@Hidden
 public class Member {
 
     private Long id;
