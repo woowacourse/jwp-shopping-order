@@ -96,7 +96,7 @@ public class OrderDao {
             Long orderItemId = rs.getLong("order_items.id");
             String productName = rs.getString("product_name");
             Integer productPrice = rs.getInt("product_price");
-            String productImageUrl = rs.getString("product_price");
+            String productImageUrl = rs.getString("product_image_url");
             Integer productQuantity = rs.getInt("product_quantity");
     
             OrderItem orderItem = new OrderItem(orderItemId, new Product(productName, productPrice, productImageUrl), productQuantity);
