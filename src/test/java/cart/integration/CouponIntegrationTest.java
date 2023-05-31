@@ -1,14 +1,17 @@
 package cart.integration;
 
 
+import static cart.fixture.CouponFixture.십프로_할인_쿠폰;
+import static cart.fixture.CouponFixture.천원_할인_쿠폰;
+import static cart.fixture.JdbcTemplateFixture.insertCoupon;
+import static cart.fixture.JdbcTemplateFixture.insertMember;
+import static cart.fixture.JdbcTemplateFixture.insertMemberCoupon;
 import static cart.fixture.MemberFixture.MEMBER;
-import static cart.integration.MemberUtils.회원_추가;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Coupon;
-import cart.domain.CouponType;
 import cart.domain.Member;
 import cart.dto.response.CouponResponse;
 import io.restassured.response.ExtractableResponse;
@@ -29,8 +32,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class CouponIntegrationTest extends IntegrationTest {
 
     private static final String API_URL = "/coupons";
-    private static final Coupon 천원_할인_쿠폰 = new Coupon(1L, "1000원 할인 쿠폰", CouponType.FIXED, 1000);
-    private static final Coupon 십프로_할인_쿠폰 = new Coupon(2L, "10% 할인 쿠폰", CouponType.RATE, 10);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -38,11 +39,11 @@ public class CouponIntegrationTest extends IntegrationTest {
     @Test
     void 특정한_회원의_모든_쿠폰을_조회한다() {
         // given
-        회원_추가(MEMBER, jdbcTemplate);
-        쿠폰_추가(천원_할인_쿠폰);
-        쿠폰_추가(십프로_할인_쿠폰);
-        회원에게_쿠폰_발급(MEMBER, 천원_할인_쿠폰);
-        회원에게_쿠폰_발급(MEMBER, 십프로_할인_쿠폰);
+        insertMember(MEMBER, jdbcTemplate);
+        insertCoupon(천원_할인_쿠폰, jdbcTemplate);
+        insertCoupon(십프로_할인_쿠폰, jdbcTemplate);
+        insertMemberCoupon(MEMBER, 천원_할인_쿠폰, jdbcTemplate);
+        insertMemberCoupon(MEMBER, 십프로_할인_쿠폰, jdbcTemplate);
 
         // when
         ExtractableResponse<Response> response = 회원의_쿠폰을_조회한다(MEMBER);
@@ -75,13 +76,5 @@ public class CouponIntegrationTest extends IntegrationTest {
         );
     }
 
-    private void 쿠폰_추가(Coupon coupon) {
-        String sql = "INSERT INTO coupon (id, name, type, discount_amount) VALUES (?,?,?,?)";
-        jdbcTemplate.update(sql, coupon.getId(), coupon.getName(), coupon.getType().name(), coupon.getDiscountAmount());
-    }
 
-    private void 회원에게_쿠폰_발급(Member member, Coupon coupon) {
-        String sql = "INSERT INTO member_coupon(member_id, coupon_id) VALUES (?,?)";
-        jdbcTemplate.update(sql, member.getId(), coupon.getId());
-    }
 }

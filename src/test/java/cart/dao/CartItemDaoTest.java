@@ -1,5 +1,7 @@
 package cart.dao;
 
+import static cart.fixture.JdbcTemplateFixture.insertMember;
+import static cart.fixture.JdbcTemplateFixture.insertProduct;
 import static cart.fixture.MemberFixture.MEMBER;
 import static cart.fixture.ProductFixture.CHICKEN;
 import static cart.fixture.ProductFixture.PIZZA;
@@ -7,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +38,8 @@ class CartItemDaoTest {
     @Test
     void 장바구니에_아이템을_추가한다() {
         // given
-        insertMember(MEMBER);
-        insertProduct(CHICKEN);
+        insertMember(MEMBER, jdbcTemplate);
+        insertProduct(CHICKEN, jdbcTemplate);
         CartItem cartItem = new CartItem(CHICKEN, MEMBER.getId());
 
         // when
@@ -51,8 +52,8 @@ class CartItemDaoTest {
     @Test
     void 아이디를_통해_아이템을_조회한다() {
         // given
-        insertMember(MEMBER);
-        insertProduct(CHICKEN);
+        insertMember(MEMBER, jdbcTemplate);
+        insertProduct(CHICKEN, jdbcTemplate);
         CartItem expected = new CartItem(CHICKEN, MEMBER.getId());
         Long cartItemId = cartItemDao.save(expected);
 
@@ -77,13 +78,13 @@ class CartItemDaoTest {
     @Test
     void 멤버_아이디를_통해_모든_아이템을_조회한다() {
         // given
-        insertMember(MEMBER);
-        insertProduct(CHICKEN);
-        insertProduct(PIZZA);
+        insertMember(MEMBER, jdbcTemplate);
+        insertProduct(CHICKEN, jdbcTemplate);
+        insertProduct(PIZZA, jdbcTemplate);
         cartItemDao.save(new CartItem(CHICKEN, MEMBER.getId()));
         cartItemDao.save(new CartItem(PIZZA, MEMBER.getId()));
 
-        insertMember(new Member(2L, "bbb@kakao.naver.com", "password"));
+        insertMember(new Member(2L, "bbb@kakao.naver.com", "password"), jdbcTemplate);
         cartItemDao.save(new CartItem(CHICKEN, 2L));
 
         // when
@@ -96,8 +97,8 @@ class CartItemDaoTest {
     @Test
     void id를_통해_아이템을_삭제한다() {
         // given
-        insertMember(MEMBER);
-        insertProduct(CHICKEN);
+        insertMember(MEMBER, jdbcTemplate);
+        insertProduct(CHICKEN, jdbcTemplate);
         Long cartItemId = cartItemDao.save(new CartItem(CHICKEN, MEMBER.getId()));
 
         // when
@@ -110,8 +111,8 @@ class CartItemDaoTest {
     @Test
     void 아이템_수량을_변경한다() {
         // given
-        insertMember(MEMBER);
-        insertProduct(CHICKEN);
+        insertMember(MEMBER, jdbcTemplate);
+        insertProduct(CHICKEN, jdbcTemplate);
         Long cartItemId = cartItemDao.save(new CartItem(CHICKEN, MEMBER.getId()));
         CartItem expected = new CartItem(cartItemId, 10, CHICKEN, MEMBER.getId());
 
@@ -121,15 +122,5 @@ class CartItemDaoTest {
         // then
         CartItem actual = cartItemDao.findById(cartItemId).get();
         assertThat(actual.getQuantity()).isEqualTo(10);
-    }
-
-    private void insertMember(Member member) {
-        String memberSql = "INSERT INTO member (id, email, password) VALUES (?, ?,?)";
-        jdbcTemplate.update(memberSql, member.getId(), member.getEmail(), member.getPassword());
-    }
-
-    private void insertProduct(Product product) {
-        String productSql = "INSERT INTO Product (id, name, price, image_url) VALUES (?, ?,?,?)";
-        jdbcTemplate.update(productSql, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 }
