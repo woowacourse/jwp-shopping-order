@@ -42,22 +42,26 @@ public class OrderService {
     }
 
     public Long createOrder(final OrderCreateRequest orderCreateRequest, final Member member) {
-        final List<CartItem> cartItems = cartItemDao.findByMemberIdAndChecked(member.getId());
+        final List<Long> cartItemIds = orderCreateRequest.getCartItems().stream()
+                .map(CartItemRequest::getId)
+                .collect(Collectors.toList());
+        final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
         final List<CartItemRequest> requests = orderCreateRequest.getCartItems();
 
         validateLegalOrder(cartItems, requests);
 
         final List<CartItem> cartItemsByRequest = toCartItems(member, requests);
-
-        final List<Long> cartItemIds = cartItemsByRequest.stream()
-                .map(CartItem::getId)
-                .collect(Collectors.toList());
         cartItemDao.deleteAll(cartItemIds);
 
         final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsByRequest);
         order.validatePoints(member.getPoints());
 
-        final Long id = orderDao.createOrder(orderCreateRequest.getUsedPoints(), cartItemsByRequest, PointPolicy.getSavingRate(), member);
+        final Long id = orderDao.createOrder(
+                orderCreateRequest.getUsedPoints(),
+                cartItemsByRequest,
+                PointPolicy.getSavingRate(),
+                member
+        );
 
         updateMember(member, order);
 

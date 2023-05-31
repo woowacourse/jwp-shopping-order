@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -73,6 +74,35 @@ public class CartItemDao {
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member, checked);
         }, memberId);
+    }
+
+    public List<CartItem> findByIds(final List<Long> cartItemIds) {
+        final String inSql = String.join(",", Collections.nCopies(cartItemIds.size(), "?"));
+
+        String sql = String.format("SELECT cart_item.id, cart_item.member_id, cart_item.checked, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.id IN (%s)", inSql);
+
+        List<CartItem> cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long cartItemId = rs.getLong("cart_item.id");
+            Long memberId = rs.getLong("member_id");
+            int quantity = rs.getInt("cart_item.quantity");
+            boolean checked = rs.getBoolean("cart_item.checked");
+
+            String email = rs.getString("email");
+
+            Long productId = rs.getLong("product.id");
+            String name = rs.getString("product.name");
+            int price = rs.getInt("product.price");
+            String imageUrl = rs.getString("product.image_url");
+
+            Member member = new Member(memberId, email, null);
+            Product product = new Product(productId, name, price, imageUrl);
+            return new CartItem(cartItemId, quantity, product, member, checked);
+        }, cartItemIds.toArray());
+        return cartItems;
     }
 
     public Long save(CartItem cartItem) {
