@@ -88,7 +88,7 @@ class OrderControllerTest {
 
         // then
         List<CartItem> findCartItems = cartItemRepository.findAllByMemberId(member.getId());
-        assertThat(findCartItems).hasSize(2);
+        assertThat(findCartItems).isEmpty();
 
         Order findOrder = orderRepository.findByOrderIdAndMemberId(Long.valueOf(orderId), member.getId());
         assertThat(findOrder.getOrderItems()).hasSize(2);

@@ -10,7 +10,7 @@ public class CartItemSaveRequest {
     @NotNull(message = "상품 Id를 입력해야 합니다")
     private Long productId;
 
-    public CartItemSaveRequest() {
+    private CartItemSaveRequest() {
     }
 
     public CartItemSaveRequest(final Long productId) {

@@ -1,16 +1,27 @@
 package cart.dto;
 
 import cart.domain.Order;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Schema(description = "주문")
 public class OrdersDto {
 
+    @Schema(description = "주문 Id", example = "1")
     private final Long id;
+
+    @Schema(description = "총 주문 가격", example = "10000")
     private final BigInteger totalItemsPrice;
+
+    @Schema(description = "주문 할인 가격", example = "3000")
     private final BigInteger discountPrice;
+
+    @Schema(description = "배달료", example = "3000")
     private final Long deliveryFee;
+
+    @Schema(description = "주문 상품들")
     private final List<OrderItemDto> orderItems;
 
     public OrdersDto(final Order order) {
