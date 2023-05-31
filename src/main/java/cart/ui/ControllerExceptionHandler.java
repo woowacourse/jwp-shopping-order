@@ -3,7 +3,7 @@ package cart.ui;
 import static java.util.stream.Collectors.joining;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
-import cart.dto.ErrorResponse;
+import cart.dto.response.ErrorResponse;
 import cart.exception.ApplicationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;

@@ -3,7 +3,7 @@ package cart.application;
 import static java.util.stream.Collectors.toList;
 
 import cart.dao.CouponDao;
-import cart.dto.CouponResponse;
+import cart.dto.response.CouponResponse;
 import java.util.List;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.request;
 
 import cart.domain.Coupon;
 import cart.domain.CouponType;

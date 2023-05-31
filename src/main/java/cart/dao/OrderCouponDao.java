@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import static java.util.stream.Collectors.toList;
 

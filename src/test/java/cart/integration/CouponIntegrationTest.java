@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.Coupon;
 import cart.domain.CouponType;
 import cart.domain.Member;
-import cart.dto.CouponResponse;
+import cart.dto.response.CouponResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;

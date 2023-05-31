@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.response;
 
 import cart.exception.ApplicationException;
 import java.time.LocalDateTime;

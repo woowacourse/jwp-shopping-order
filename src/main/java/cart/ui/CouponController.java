@@ -3,7 +3,7 @@ package cart.ui;
 
 import cart.application.CouponService;
 import cart.domain.Member;
-import cart.dto.CouponResponse;
+import cart.dto.response.CouponResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

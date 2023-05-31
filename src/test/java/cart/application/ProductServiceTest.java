@@ -10,8 +10,8 @@ import static org.mockito.Mockito.mock;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.exception.ProductNotFound;
 import java.util.List;
 import java.util.Optional;

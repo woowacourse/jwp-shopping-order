@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
+import cart.dao.OrderCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.Order;
@@ -23,7 +24,6 @@ public class OrderRepository {
     private final OrderCouponDao orderCouponDao;
     private final CouponDao couponDao;
     private final CartItemDao cartItemDao;
-
 
     public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao, OrderCouponDao orderCouponDao,
                            CouponDao couponDao,

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import cart.dao.CouponDao;
 import cart.domain.Coupon;
 import cart.domain.CouponType;
-import cart.dto.CouponResponse;
+import cart.dto.response.CouponResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
