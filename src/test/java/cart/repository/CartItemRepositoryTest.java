@@ -52,43 +52,6 @@ class CartItemRepositoryTest {
         cartItem.assignId(cartItemId);
     }
 
-    @Nested
-    @DisplayName("findAllInIds 메서드는 ")
-    class FindAllInIds {
-
-        @Test
-        @DisplayName("중복되는 ID가 존재하면 예외를 던진다.")
-        void duplicateId() {
-            assertThatThrownBy(() -> cartItemRepository.findAllInIds(List.of(cartItem.getId(), cartItem.getId())))
-                    .isInstanceOf(CartItemException.class)
-                    .hasMessage("중복된 장바구니 상품 ID가 존재합니다.");
-        }
-
-        @Test
-        @DisplayName("장바구니 상품에 존재하지 않는 ID가 있으면 예외를 던진다.")
-        void notExistId() {
-            assertThatThrownBy(() -> cartItemRepository.findAllInIds(List.of(cartItem.getId(), -1L)))
-                    .isInstanceOf(CartItemException.class)
-                    .hasMessage("해당 장바구니 상품이 존재하지 않습니다.");
-        }
-
-        @Test
-        @DisplayName("ID 목록에 해당하는 모든 장바구니 상품을 조회한다.")
-        void findAll() {
-            CartItem newCartItem = new CartItem(member, product);
-            Long newCartItemId = cartItemRepository.save(newCartItem);
-            newCartItem.assignId(newCartItemId);
-
-            List<CartItem> result = cartItemRepository.findAllInIds(List.of(cartItem.getId(), newCartItemId));
-
-            assertAll(
-                    () -> assertThat(result).hasSize(2),
-                    () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(cartItem),
-                    () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(newCartItem)
-            );
-        }
-    }
-
     @Test
     @DisplayName("findByMemberId 메서드는 멤버의 장바구니 상품 목록을 조회한다.")
     void findByMemberId() {
@@ -182,6 +145,43 @@ class CartItemRepositoryTest {
 
         List<CartItem> result = cartItemRepository.findByMemberId(member.getId());
         assertThat(result).isEmpty();
+    }
+
+    @Nested
+    @DisplayName("findAllInIds 메서드는 ")
+    class FindAllInIds {
+
+        @Test
+        @DisplayName("중복되는 ID가 존재하면 예외를 던진다.")
+        void duplicateId() {
+            assertThatThrownBy(() -> cartItemRepository.findAllInIds(List.of(cartItem.getId(), cartItem.getId())))
+                    .isInstanceOf(CartItemException.class)
+                    .hasMessage("중복된 장바구니 상품 ID가 존재합니다.");
+        }
+
+        @Test
+        @DisplayName("장바구니 상품에 존재하지 않는 ID가 있으면 예외를 던진다.")
+        void notExistId() {
+            assertThatThrownBy(() -> cartItemRepository.findAllInIds(List.of(cartItem.getId(), -1L)))
+                    .isInstanceOf(CartItemException.class)
+                    .hasMessage("해당 장바구니 상품이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("ID 목록에 해당하는 모든 장바구니 상품을 조회한다.")
+        void findAll() {
+            CartItem newCartItem = new CartItem(member, product);
+            Long newCartItemId = cartItemRepository.save(newCartItem);
+            newCartItem.assignId(newCartItemId);
+
+            List<CartItem> result = cartItemRepository.findAllInIds(List.of(cartItem.getId(), newCartItemId));
+
+            assertAll(
+                    () -> assertThat(result).hasSize(2),
+                    () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(cartItem),
+                    () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(newCartItem)
+            );
+        }
     }
 
     @Nested

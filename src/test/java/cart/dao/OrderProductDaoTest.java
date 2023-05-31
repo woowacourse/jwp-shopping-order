@@ -61,6 +61,19 @@ class OrderProductDaoTest {
         orderProductB = orderProductB.assignId(orderProductIdB);
     }
 
+    @Test
+    @DisplayName("saveAll 메서드는 모든 주문 상품을 저장한다.")
+    void saveAll() {
+        OrderProductEntity orderProductC =
+                new OrderProductEntity(order.getId(), product, "치킨", 13000, "http://chicken.com", 10);
+        OrderProductEntity orderProductD =
+                new OrderProductEntity(order.getId(), product, "치킨", 13000, "http://chicken.com", 10);
+
+        int result = orderProductDao.saveAll(List.of(orderProductC, orderProductD));
+
+        assertThat(result).isEqualTo(2);
+    }
+
     @Nested
     @DisplayName("findAllByOrderId 메서드는 ")
     class FindAllByOrderId {
@@ -96,18 +109,5 @@ class OrderProductDaoTest {
                             .isEqualTo(orderProductB)
             );
         }
-    }
-
-    @Test
-    @DisplayName("saveAll 메서드는 모든 주문 상품을 저장한다.")
-    void saveAll() {
-        OrderProductEntity orderProductC =
-                new OrderProductEntity(order.getId(), product, "치킨", 13000, "http://chicken.com", 10);
-        OrderProductEntity orderProductD =
-                new OrderProductEntity(order.getId(), product, "치킨", 13000, "http://chicken.com", 10);
-
-        int result = orderProductDao.saveAll(List.of(orderProductC, orderProductD));
-
-        assertThat(result).isEqualTo(2);
     }
 }

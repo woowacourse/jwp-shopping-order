@@ -49,6 +49,19 @@ class MemberRepositoryTest {
         );
     }
 
+    @Test
+    @DisplayName("update 메서드는 멤버 정보를 수정한다.")
+    void update() {
+        MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
+        Long savedMemberId = memberDao.addMember(memberEntity);
+        MemberEntity newMemberEntity = new MemberEntity(savedMemberId, "b@b.com", "password2", 10);
+
+        memberRepository.update(MemberMapper.toDomain(newMemberEntity));
+
+        Member result = memberRepository.getMemberById(savedMemberId);
+        assertThat(result).usingRecursiveComparison().isEqualTo(MemberMapper.toDomain(newMemberEntity));
+    }
+
     @Nested
     @DisplayName("getMemberById 메서드는 ")
     class GetMemberById {
@@ -103,18 +116,5 @@ class MemberRepositoryTest {
                     .isInstanceOf(MemberException.class)
                     .hasMessage("해당 멤버가 존재하지 않습니다.");
         }
-    }
-
-    @Test
-    @DisplayName("update 메서드는 멤버 정보를 수정한다.")
-    void update() {
-        MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
-        Long savedMemberId = memberDao.addMember(memberEntity);
-        MemberEntity newMemberEntity = new MemberEntity(savedMemberId, "b@b.com", "password2", 10);
-
-        memberRepository.update(MemberMapper.toDomain(newMemberEntity));
-
-        Member result = memberRepository.getMemberById(savedMemberId);
-        assertThat(result).usingRecursiveComparison().isEqualTo(MemberMapper.toDomain(newMemberEntity));
     }
 }

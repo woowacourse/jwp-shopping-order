@@ -16,6 +16,20 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class OrderTest {
 
+    @Test
+    @DisplayName("calculateTotalPrice 메서드는 주문 상품의 전체 가격을 계산한다.")
+    void calculateTotalPrice() {
+        Product productA = new Product("치킨", 10000, "http://chicken.com");
+        Product productB = new Product("피자", 13000, "http://pizza.com");
+        OrderProduct orderProductA = new OrderProduct(productA, 2);
+        OrderProduct orderProductB = new OrderProduct(productB, 3);
+        Order order = new Order(null, List.of(orderProductA, orderProductB), 0);
+
+        int result = order.calculateTotalPrice();
+
+        assertThat(result).isEqualTo(59000);
+    }
+
     @Nested
     @DisplayName("주문 생성 시 ")
     class Create {
@@ -84,19 +98,5 @@ class OrderTest {
                     .isInstanceOf(OrderException.class)
                     .hasMessage("해당 주문을 관리할 수 있는 멤버가 아닙니다.");
         }
-    }
-
-    @Test
-    @DisplayName("calculateTotalPrice 메서드는 주문 상품의 전체 가격을 계산한다.")
-    void calculateTotalPrice() {
-        Product productA = new Product("치킨", 10000, "http://chicken.com");
-        Product productB = new Product("피자", 13000, "http://pizza.com");
-        OrderProduct orderProductA = new OrderProduct(productA, 2);
-        OrderProduct orderProductB = new OrderProduct(productB, 3);
-        Order order = new Order(null, List.of(orderProductA, orderProductB), 0);
-
-        int result = order.calculateTotalPrice();
-
-        assertThat(result).isEqualTo(59000);
     }
 }

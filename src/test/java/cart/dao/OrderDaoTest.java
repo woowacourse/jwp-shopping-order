@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.OrderEntity;
 import cart.test.RepositoryTest;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
