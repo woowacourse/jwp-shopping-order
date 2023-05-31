@@ -30,4 +30,12 @@ public class ProductRepository {
     public Product getProductById(final Long id) {
         return productDao.getProductById(id).toProduct();
     }
+
+    public void updateProduct(final Long id, final Product product) {
+        productDao.updateProduct(id, product);
+    }
+
+    public void deleteProduct(final Long id) {
+        productDao.deleteProduct(id);
+    }
 }

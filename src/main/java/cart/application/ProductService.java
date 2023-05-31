@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
@@ -13,11 +12,9 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
     private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao, final ProductRepository productRepository) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -33,15 +30,15 @@ public class ProductService {
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productRepository.createProduct(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        productRepository.updateProduct(productId, product);
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productRepository.deleteProduct(productId);
     }
 }
