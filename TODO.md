@@ -7,3 +7,4 @@
 - [ ] Unhappy case에 대한 인수 테스트 작성 (실패하는 것부터 먼저 작성하는게 호흡이 짧아 좋다.)
 - [ ] `http-request.http`에서 Authentication header를 보내도록 작성
 - [ ] Order 인수 테스트 작성
+- [ ] 초기 가입 포인트 입력을 파라미터로 빼기
