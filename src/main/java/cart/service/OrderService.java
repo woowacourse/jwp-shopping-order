@@ -2,16 +2,18 @@ package cart.service;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import cart.domain.OrderItem;
 import cart.domain.Orders;
-import cart.dto.OrderItemIdDto;
 import cart.dto.OrderSaveRequest;
 import cart.dto.OrdersDto;
 import cart.exception.MemberNotFoundException;
 import cart.repository.CartItemRepository;
+import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,30 +25,37 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
     public OrderService(final CartItemRepository cartItemRepository, final OrderRepository orderRepository,
-                        final MemberRepository memberRepository) {
+                        final MemberRepository memberRepository, final MemberCouponRepository memberCouponRepository) {
         this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
+        this.memberCouponRepository = memberCouponRepository;
     }
 
     public Long order(final Long memberId, final OrderSaveRequest request) {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
+
+        MemberCoupon memberCoupon = getMemberCoupon(member, request);
         final List<CartItem> findCartItems = getCartItems(memberId, request);
-        for (CartItem findCartItem : findCartItems) {
-            findCartItem.checkOwner(member);
-        }
         final List<OrderItem> orderItems = getOrderItems(findCartItems);
 
-        final Orders newOrders = new Orders(null, member, orderItems);
+        final Orders newOrders = new Orders(memberCoupon, member, orderItems);
 
         final Long savedOrderId = orderRepository.save(newOrders).getId();
-        for (CartItem findCartItem : findCartItems) {
-            cartItemRepository.deleteById(findCartItem.getId(), memberId);
-        }
+
+        memberCouponRepository.useMemberCoupon(memberId, memberCoupon.getId());
         return savedOrderId;
+    }
+
+    private MemberCoupon getMemberCoupon(final Member member, final OrderSaveRequest request) {
+        if (Objects.isNull(request.getCouponId())) {
+            return MemberCoupon.makeNonMemberCoupon();
+        }
+        return memberCouponRepository.findByIdAndMemberId(request.getCouponId(), member.getId());
     }
 
     private List<OrderItem> getOrderItems(final List<CartItem> findCartItems) {
@@ -63,10 +72,7 @@ public class OrderService {
     }
 
     private List<CartItem> getCartItems(final Long memberId, final OrderSaveRequest request) {
-        final List<Long> orderItemIds = request.getOrderItems().stream()
-                .map(OrderItemIdDto::getId)
-                .collect(Collectors.toList());
-        return cartItemRepository.findAllByCartItemIds(memberId, orderItemIds);
+        return cartItemRepository.findAllByCartItemIds(memberId, request.getOrderItems());
     }
 
     public OrdersDto findByOrderId(final Long memberId, final Long orderId) {

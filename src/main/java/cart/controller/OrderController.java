@@ -27,19 +27,19 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> order(@Auth final Credential credential, @RequestBody final OrderSaveRequest request) {
-        Long orderId = orderService.order(credential.getMemberId(), request);
+        final Long orderId = orderService.order(credential.getMemberId(), request);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @GetMapping
     public ResponseEntity<List<OrdersDto>> findAllOrderByMemberId(@Auth final Credential credential) {
-        List<OrdersDto> findAllOrders = orderService.findAllBy(credential.getMemberId());
+        final List<OrdersDto> findAllOrders = orderService.findAllBy(credential.getMemberId());
         return ResponseEntity.ok(findAllOrders);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrdersDto> findOrderByMemberId(@Auth Credential credential, @PathVariable Long orderId) {
-        OrdersDto orderDto = orderService.findByOrderId(credential.getMemberId(), orderId);
+    public ResponseEntity<OrdersDto> findOrderByMemberId(@Auth final Credential credential, @PathVariable final Long orderId) {
+        final OrdersDto orderDto = orderService.findByOrderId(credential.getMemberId(), orderId);
         return ResponseEntity.ok(orderDto);
     }
 }

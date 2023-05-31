@@ -7,10 +7,11 @@ import cart.domain.Member;
 import cart.domain.OrderItem;
 import cart.domain.Orders;
 import cart.domain.Product;
-import cart.dto.OrderItemIdDto;
+import cart.domain.coupon.Coupon;
 import cart.dto.OrderSaveRequest;
 import cart.dto.OrdersDto;
 import cart.repository.CartItemRepository;
+import cart.repository.CouponRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import cart.repository.ProductRepository;
@@ -43,26 +44,27 @@ class OrderServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CouponRepository couponRepository;
+
     @Test
     void 해당멤버의_장바구니에_담긴_상품들을_주문한다() {
         // given
         final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 9000L));
         final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 9000L));
 
-
-
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
         final CartItem savedCartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final CartItem savedCartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final OrderSaveRequest request = new OrderSaveRequest(
-                List.of(new OrderItemIdDto(savedCartItem1.getId()), new OrderItemIdDto(savedCartItem2.getId())), null);
+                List.of(savedCartItem1.getId(), savedCartItem2.getId()), null);
         // when
         Long savedOrderId = orderService.order(member.getId(), request);
 
         // then
         Orders result = orderRepository.findByOrderIdAndMemberId(savedOrderId, member.getId());
-        assertThat(result.getTotalItemPrice()).isEqualTo(18000L);
-        assertThat(result.getCoupon()).isNull();
+        assertThat(result.getCalculateDiscountPrice().intValue()).isEqualTo(18000L);
+        assertThat(result.getCoupon()).isEqualTo(Coupon.makeNonDiscountPolicyCoupon());
         assertThat(result.getDeliveryFee()).isEqualTo(3000L);
         assertThat(result.getOrderItems()).hasSize(2);
         assertThat(result.getOrderItems())
@@ -82,10 +84,8 @@ class OrderServiceTest {
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
         final CartItem savedCartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final CartItem savedCartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final OrderSaveRequest request1 = new OrderSaveRequest(
-                List.of(new OrderItemIdDto(savedCartItem1.getId())), null);
-        final OrderSaveRequest request2 = new OrderSaveRequest(
-                List.of(new OrderItemIdDto(savedCartItem2.getId())), null);
+        final OrderSaveRequest request1 = new OrderSaveRequest(List.of(savedCartItem1.getId()), null);
+        final OrderSaveRequest request2 = new OrderSaveRequest(List.of(savedCartItem2.getId()), null);
 
         Long savedOrderId1 = orderService.order(member.getId(), request1);
         Long savedOrderId2 = orderService.order(member.getId(), request2);
@@ -107,20 +107,18 @@ class OrderServiceTest {
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
         final CartItem savedCartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final CartItem savedCartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final OrderSaveRequest request1 = new OrderSaveRequest(
-                List.of(new OrderItemIdDto(savedCartItem1.getId())), null);
-        final OrderSaveRequest request2 = new OrderSaveRequest(
-                List.of(new OrderItemIdDto(savedCartItem2.getId())), null);
+        final OrderSaveRequest request1 = new OrderSaveRequest(List.of(savedCartItem1.getId()), null);
+        final OrderSaveRequest request2 = new OrderSaveRequest(List.of(savedCartItem2.getId()), null);
 
-        Long savedOrderId1 = orderService.order(member.getId(), request1);
+        Long savedOrderId = orderService.order(member.getId(), request1);
         orderService.order(member.getId(), request2);
 
         // when
-        OrdersDto result = orderService.findByOrderId(member.getId(), savedOrderId1);
+        OrdersDto result = orderService.findByOrderId(member.getId(), savedOrderId);
 
         // then
-        assertThat(result.getId()).isEqualTo(savedOrderId1);
-        assertThat(result.getTotalItemsPrice()).isEqualTo(10000L);
+        assertThat(result.getId()).isEqualTo(savedOrderId);
+        assertThat(result.getTotalItemsPrice()).isEqualTo(product1.getPrice());
         assertThat(result.getOrderItems()).hasSize(1);
     }
 }

@@ -1,36 +1,51 @@
 package cart.repository;
 
+import cart.dao.CouponDao;
+import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderItemDao;
 import cart.dao.OrdersDao;
 import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import cart.domain.OrderItem;
 import cart.domain.Orders;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.policy.DiscountPolicy;
+import cart.domain.coupon.policy.DiscountPolicyType;
+import cart.entity.CouponEntity;
+import cart.entity.MemberCouponEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.OrdersEntity;
+import cart.exception.CouponNotFoundException;
 import cart.exception.MemberNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderRepository {
-    
+
     private final OrdersDao ordersDao;
     private final OrderItemDao orderItemDao;
     private final MemberDao memberDao;
+    private final CouponDao couponDao;
+    private final MemberCouponDao memberCouponDao;
 
-    public OrderRepository(final OrdersDao ordersDao, final OrderItemDao orderItemDao, final MemberDao memberDao) {
+    public OrderRepository(final OrdersDao ordersDao, final OrderItemDao orderItemDao, final MemberDao memberDao,
+                           final CouponDao couponDao, final MemberCouponDao memberCouponDao) {
         this.ordersDao = ordersDao;
         this.orderItemDao = orderItemDao;
         this.memberDao = memberDao;
+        this.couponDao = couponDao;
+        this.memberCouponDao = memberCouponDao;
     }
 
     public Orders save(final Orders orders) {
         final OrdersEntity ordersEntity = new OrdersEntity(
                 orders.getDeliveryFee(),
-                null,
+                orders.getMemberCoupon().getId(),
                 orders.getMember().getId());
 
         final OrdersEntity savedOrders = ordersDao.insert(ordersEntity);
@@ -57,27 +72,37 @@ public class OrderRepository {
         return new Orders(
                 savedOrderId,
                 3000L,
-                null,
+                orders.getMemberCoupon(),
                 orders.getMember(),
                 savedOrderItems
         );
     }
 
     public Orders findByOrderIdAndMemberId(final Long orderId, final Long memberId) {
-        OrdersEntity ordersEntity = ordersDao.findByOrderIdAndMemberId(orderId, memberId);
+        final OrdersEntity ordersEntity = ordersDao.findByOrderIdAndMemberId(orderId, memberId);
 
-        List<OrderItem> orderItems = makeOrderItems(orderItemDao.findAllByOrderId(orderId));
-        Member member = getMember(memberId);
-        // 쿠폰은 아직 null
-        // ordersEntity.getCouponId();
+        final List<OrderItem> orderItems = makeOrderItems(orderItemDao.findAllByOrderId(orderId));
+        final Member member = getMember(memberId);
+        final MemberCoupon memberCoupon = getMemberCoupon(member, ordersEntity.getMemberCouponId());
 
         return new Orders(
                 orderId,
                 ordersEntity.getDeliveryFee(),
-                null,
+                memberCoupon,
                 member,
                 orderItems
         );
+    }
+
+    private MemberCoupon getMemberCoupon(final Member member, final Long memberCouponId) {
+        Optional<MemberCouponEntity> findMemberCoupon = memberCouponDao.findNotUsedCouponByMemberIdAndCouponId(
+                member.getId(), memberCouponId);
+
+        if (findMemberCoupon.isEmpty()) {
+            return MemberCoupon.makeNonMemberCoupon();
+        }
+        Coupon coupon = getCoupon(findMemberCoupon.get().getCouponId());
+        return new MemberCoupon(findMemberCoupon.get().getId(), member, coupon, findMemberCoupon.get().getUsed());
     }
 
     private List<OrderItem> makeOrderItems(final List<OrderItemEntity> orderItemEntities) {
@@ -86,26 +111,38 @@ public class OrderRepository {
                 .collect(Collectors.toList());
     }
 
+    public List<Orders> findAllByMemberId(final Long memberId) {
+        List<OrdersEntity> findOrderEntities = ordersDao.findByMemberId(memberId);
+        return findOrderEntities.stream()
+                .map(this::makeOrder)
+                .collect(Collectors.toList());
+    }
+
+    private Orders makeOrder(final OrdersEntity ordersEntity) {
+        final Long orderEntityId = ordersEntity.getId();
+        final Member member = getMember(ordersEntity.getMemberId());
+
+        final MemberCoupon memberCoupon = getMemberCoupon(member, ordersEntity.getMemberCouponId());
+        return new Orders(
+                orderEntityId,
+                ordersEntity.getDeliveryFee(),
+                memberCoupon,
+                member,
+                makeOrderItems(orderItemDao.findAllByOrderId(orderEntityId))
+        );
+    }
+
     private Member getMember(final Long memberId) {
         return memberDao.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new)
                 .toDomain();
     }
 
-    public List<Orders> findAllByMemberId(final Long memberId) {
-        List<Orders> orders = new ArrayList<>();
-        List<OrdersEntity> findOrderEntities = ordersDao.findByMemberId(memberId);
-        Member member = getMember(memberId);
-        for (OrdersEntity findOrderEntity : findOrderEntities) {
-            Long orderEntityId = findOrderEntity.getId();
-            orders.add(new Orders(
-                    orderEntityId,
-                    findOrderEntity.getDeliveryFee(),
-                    null,
-                    member,
-                    makeOrderItems(orderItemDao.findAllByOrderId(orderEntityId))
-            ));
-        }
-        return orders;
+    private Coupon getCoupon(final Long couponId) {
+        CouponEntity couponEntity = couponDao.findByCouponId(couponId).orElseThrow(CouponNotFoundException::new);
+        DiscountPolicy discountPolicy = DiscountPolicyType.findDiscountPolicy(couponEntity.getPolicyType(),
+                couponEntity.getDiscountValue());
+
+        return new Coupon(couponEntity.getId(), couponEntity.getName(), discountPolicy, couponEntity.getMinimumPrice());
     }
 }

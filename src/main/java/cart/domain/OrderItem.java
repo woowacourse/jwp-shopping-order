@@ -39,4 +39,8 @@ public class OrderItem {
     public Integer getQuantity() {
         return quantity;
     }
+
+    public long getCalculatePrice() {
+        return price * quantity;
+    }
 }

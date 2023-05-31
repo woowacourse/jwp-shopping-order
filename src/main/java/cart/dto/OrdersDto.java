@@ -1,21 +1,22 @@
 package cart.dto;
 
 import cart.domain.Orders;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrdersDto {
 
     private final Long id;
-    private final Long totalItemsPrice;
-    private final Long discountPrice;
+    private final BigInteger totalItemsPrice;
+    private final BigInteger discountPrice;
     private final Long deliveryFee;
     private final List<OrderItemDto> orderItems;
 
     public OrdersDto(final Orders orders) {
         this.id = orders.getId();
-        this.totalItemsPrice = orders.getTotalItemPrice();
-        this.discountPrice = 0L;
+        this.totalItemsPrice = orders.getCalculateDiscountPrice().toBigInteger();
+        this.discountPrice = orders.getDiscountPrice().toBigInteger();
         this.deliveryFee = orders.getDeliveryFee();
         this.orderItems = orders.getOrderItems().stream()
                 .map(it -> new OrderItemDto(it.getId(), it.getName(), it.getPrice(), it.getImageUrl(),
@@ -27,11 +28,11 @@ public class OrdersDto {
         return id;
     }
 
-    public Long getTotalItemsPrice() {
+    public BigInteger getTotalItemsPrice() {
         return totalItemsPrice;
     }
 
-    public Long getDiscountPrice() {
+    public BigInteger getDiscountPrice() {
         return discountPrice;
     }
 

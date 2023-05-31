@@ -20,7 +20,7 @@ public class OrdersDao {
     private final RowMapper<OrdersEntity> rowMapper = (rs, rowNum) -> {
         final Long id = rs.getLong("id");
         final Long deliveryFee = rs.getLong("delivery_fee");
-        final Long couponId = rs.getLong("coupon_id");
+        final Long couponId = rs.getLong("member_coupon_id");
         final Long memberId = rs.getLong("member_id");
 
         return new OrdersEntity(id, deliveryFee, couponId, memberId);
@@ -31,7 +31,7 @@ public class OrdersDao {
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
-                .usingColumns("delivery_fee", "coupon_id", "member_id")
+                .usingColumns("delivery_fee", "member_coupon_id", "member_id")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -41,7 +41,7 @@ public class OrdersDao {
         return new OrdersEntity(
                 id,
                 ordersEntity.getDeliveryFee(),
-                ordersEntity.getCouponId(),
+                ordersEntity.getMemberCouponId(),
                 ordersEntity.getMemberId()
         );
     }
