@@ -1,7 +1,5 @@
 package cart.domain.coupon;
 
-import cart.domain.Order;
-
 public class DeductionCoupon extends Coupon {
     public DeductionCoupon(Long id, String name, Integer discountAmount) {
         super(id, name, DiscountType.DEDUCTION, 0.0, discountAmount);
@@ -12,7 +10,7 @@ public class DeductionCoupon extends Coupon {
     }
 
     @Override
-    public int discount(Order order) {
-        return order.getOriginalPrice() - getDiscountAmount();
+    public int discount(int money) {
+        return money - getDiscountAmount();
     }
 }

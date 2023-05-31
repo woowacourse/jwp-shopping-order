@@ -1,7 +1,5 @@
 package cart.domain.coupon;
 
-import cart.domain.Order;
-
 public class PercentCoupon extends Coupon {
 
     public PercentCoupon(Long id, String name, Double discountPercent) {
@@ -13,8 +11,7 @@ public class PercentCoupon extends Coupon {
     }
 
     @Override
-    public int discount(Order order) {
-        int price = order.getOriginalPrice();
-        return price - (int) (price * getDiscountPercent());
+    public int discount(int money) {
+        return money - (int) (money * getDiscountPercent());
     }
 }
