@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(CartItemApiController.class)
-public class CartItemApiControllerTest {
+class CartItemApiControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -48,7 +48,7 @@ public class CartItemApiControllerTest {
         Member member = new Member(1L, "a@a.com", "password1");
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member);
         when(cartItemService.findByMember(any()))
-                .thenReturn(List.of(CartItemResponse.of(new CartItem(1L, 2, new Product(1L, "치킨", 10000, "imageUrl", 10L, true), member))));
+                .thenReturn(List.of(CartItemResponse.of(new CartItem(1L, 2, new Product(1L, "치킨", 10000, "imageUrl", 10.0, true), member))));
 
         this.mockMvc.perform(get("/cart-items")
                         .contentType(MediaType.APPLICATION_JSON)

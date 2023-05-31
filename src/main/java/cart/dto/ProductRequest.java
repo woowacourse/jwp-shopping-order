@@ -4,10 +4,10 @@ public class ProductRequest {
     private final String name;
     private final int price;
     private final String imageUrl;
-    private final Long pointRatio;
+    private final Double pointRatio;
     private final boolean pointAvailable;
 
-    public ProductRequest(String name, int price, String imageUrl, Long pointRatio, boolean pointAvailable) {
+    public ProductRequest(String name, int price, String imageUrl, Double pointRatio, boolean pointAvailable) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -27,7 +27,7 @@ public class ProductRequest {
         return imageUrl;
     }
 
-    public Long getPointRatio() {
+    public Double getPointRatio() {
         return pointRatio;
     }
 

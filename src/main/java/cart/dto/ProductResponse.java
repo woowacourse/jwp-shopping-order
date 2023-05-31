@@ -7,10 +7,10 @@ public class ProductResponse {
     private final String name;
     private final int price;
     private final String imageUrl;
-    private final Long pointRatio;
+    private final Double pointRatio;
     private final boolean pointAvailable;
 
-    private ProductResponse(Long id, String name, int price, String imageUrl, Long pointRatio, boolean pointAvailable) {
+    private ProductResponse(Long id, String name, int price, String imageUrl, Double pointRatio, boolean pointAvailable) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -39,7 +39,7 @@ public class ProductResponse {
         return imageUrl;
     }
 
-    public Long getPointRatio() {
+    public Double getPointRatio() {
         return pointRatio;
     }
 

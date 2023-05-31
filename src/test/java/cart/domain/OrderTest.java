@@ -1,0 +1,27 @@
+package cart.domain;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static cart.ShoppingOrderFixture.*;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
+class OrderTest {
+
+    // originalPrice = 79000, pointToAdd = 6900
+    private static final List<CartItem> cartItems = List.of(
+            new CartItem(1L, 2, chicken, member1),
+            new CartItem(2L, 1, salad, member1),
+            new CartItem(3L, 3, pizza, member1));
+
+    @DisplayName("올바른 주문이 요청되면 order 도메인은 프론트에서 보낸 originalPrice와 동일한 값을 가진다")
+    @Test
+    void validateOriginalPrice() {
+        Order order = new Order(member1, cartItems, 79000L, 0L, 6900L);
+
+        assertThat(order.getOriginalPrice()).isEqualTo(79000);
+    }
+
+}

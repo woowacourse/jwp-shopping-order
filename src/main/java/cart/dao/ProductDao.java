@@ -27,7 +27,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            Long pointRatio = rs.getLong("point_ratio");
+            Double pointRatio = rs.getDouble("point_ratio");
             boolean pointAvailable = rs.getBoolean("point_available");
             return new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
         });
@@ -39,7 +39,7 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            Long pointRatio = rs.getLong("point_ratio");
+            Double pointRatio = rs.getDouble("point_ratio");
             boolean pointAvailable = rs.getBoolean("point_available");
             return new Product(productId, name, price, imageUrl, pointRatio, pointAvailable);
         });
@@ -57,7 +57,7 @@ public class ProductDao {
             ps.setString(1, product.getName());
             ps.setInt(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
-            ps.setLong(4, product.getPointRatio());
+            ps.setDouble(4, product.getPointRatio());
             ps.setBoolean(5, product.getPointAvailable());
 
             return ps;
