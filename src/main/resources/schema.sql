@@ -47,8 +47,8 @@ create table if not exists coupon
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    discount_rate DECIMAL(10, 3) NOT NULL,
-    discount_type INT NOT NULL
+    discount_rate DOUBLE NOT NULL,
+    discount_charge INT NOT NULL
 );
 
 create table if not exists member_coupon

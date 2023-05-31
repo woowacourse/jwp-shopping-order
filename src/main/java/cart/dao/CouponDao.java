@@ -4,7 +4,9 @@ import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -35,6 +37,16 @@ public class CouponDao {
         params.put("discount_rate", couponDto.getDiscountRate());
         params.put("discount_charge", couponDto.getDiscountCharge());
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public Optional<CouponDto> findById(Long id) {
+        String sql = "SELECT * FROM coupon WHERE id = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, couponDtoRowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
 }

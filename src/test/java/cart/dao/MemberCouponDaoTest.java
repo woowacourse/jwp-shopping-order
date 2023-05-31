@@ -32,6 +32,8 @@ class MemberCouponDaoTest {
         jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
     }
 
+
+
     @Test
     @DisplayName("Member Coupon 저장을 확인한다.")
     void createMemberCoupon_success() {
@@ -54,7 +56,6 @@ class MemberCouponDaoTest {
     @Test
     @DisplayName("Member Coupon Dto 를 조회하는 기능 테스트")
     void findByIdTest() {
-        MemberCouponDto memberCouponDto = new MemberCouponDto(1L, 2L, 3L);
         String sql = "INSERT INTO member_coupon(id, member_id, coupon_id) VALUES(?, ?, ?)";
         jdbcTemplate.update(sql, 1L, 2L, 3L);
         MemberCouponDto queryResult = memberCouponDao.findById(1L).orElseThrow(IllegalArgumentException::new);

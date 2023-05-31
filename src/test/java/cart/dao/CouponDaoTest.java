@@ -1,10 +1,8 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import cart.dto.CouponDto;
-import cart.dto.MemberCouponDto;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,6 +51,18 @@ class CouponDaoTest {
                 CouponDto::getDiscountRate,
                 CouponDto::getDiscountCharge
         ).contains(1L, "홍실 할인", 2d, 0);
+    }
+
+    @Test
+    @DisplayName("Coupon Dto 를 조회하는 기능 테스트")
+    void findByIdTest() {
+        String sql = "INSERT INTO coupon(id, name, discount_rate, discount_charge) VALUES(?, ?, ?, ?)";
+        jdbcTemplate.update(sql, 1L, "홍실 할인", 2d, 0);
+        CouponDto queryResult = couponDao.findById(1L).orElseThrow(IllegalArgumentException::new);
+        assertThat(queryResult.getId()).isEqualTo(1L);
+        assertThat(queryResult.getName()).isEqualTo("홍실 할인");
+        assertThat(queryResult.getDiscountRate()).isEqualTo(2d);
+        assertThat(queryResult.getDiscountCharge()).isZero();
     }
 
 }
