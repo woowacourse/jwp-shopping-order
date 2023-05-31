@@ -35,7 +35,7 @@
 
 
 ## 멤버 등급 조회하기
-- [] GET 요청, URI = "/member"인 API 작성
+- [x] GET 요청, URI = "/member"인 API 작성
 - [] service에서 domain 객체 생성(Member)
   - [] rank와 discountRate를 가지고 있다
 - [] domain에서 dao로 영속화 작업 수행
