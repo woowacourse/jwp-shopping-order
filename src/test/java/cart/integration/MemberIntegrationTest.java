@@ -61,7 +61,9 @@ public class MemberIntegrationTest extends IntegrationTest {
 
         //then
         String encryptedPassword = Encryptor.encrypt(password);
-        String token = Base64Utils.encodeToUrlSafeString(encryptedPassword.getBytes());
+        String encodedName = Base64Utils.encodeToUrlSafeString(name.getBytes());
+        String encodedPassword = Base64Utils.encodeToUrlSafeString(encryptedPassword.getBytes());
+        String token = encodedName + ":" + encodedPassword;
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getString("token")).isEqualTo(token);

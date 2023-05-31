@@ -34,7 +34,10 @@ public class MemberRestController {
     public ResponseEntity<MemberLoginResponse> loginMember(@RequestBody MemberLoginRequest request) {
         MemberDto memberDto = new MemberDto(request.getName(), request.getPassword());
         String encryptedPassword = memberService.login(memberDto);
-        String token = Base64Utils.encodeToUrlSafeString(encryptedPassword.getBytes());
+
+        String name = Base64Utils.encodeToUrlSafeString(request.getName().getBytes());
+        String password = Base64Utils.encodeToUrlSafeString(encryptedPassword.getBytes());
+        String token = name + ":" + password;
 
         return ResponseEntity.ok(new MemberLoginResponse(token));
     }
