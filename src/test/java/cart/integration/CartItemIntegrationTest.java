@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
+import cart.dto.CartItemIdsRequest;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -159,6 +160,21 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
+    }
+
+    @DisplayName("장바구니에 담긴 다수의 아이템들을 삭제한다.")
+    @Test
+    void removeCartItems() {
+        final CartItemIdsRequest cartItemIdsRequest = new CartItemIdsRequest(List.of(1L, 2L));
+
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
+                .body(cartItemIdsRequest)
+                .when()
+                .delete("/cart-items")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private Long createProduct(ProductRequest productRequest) {

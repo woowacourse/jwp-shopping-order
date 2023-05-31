@@ -1,5 +1,6 @@
 package cart.domain.cartitem;
 
+import cart.domain.member.Member;
 import cart.domain.orderproduct.Order;
 import cart.domain.orderproduct.OrderProduct;
 import cart.domain.product.Product;
@@ -18,10 +19,15 @@ public class CartItems {
     private final int totalPrice;
     private final int deliveryFee;
 
-    public CartItems(final List<CartItem> cartItems) {
+    public CartItems(final Member member, final List<CartItem> cartItems) {
+        validateOwner(member, cartItems);
         this.cartItems = cartItems;
         this.totalPrice = calculateTotalPrice(cartItems);
         this.deliveryFee = calculateDeliveryFee(totalPrice);
+    }
+
+    private void validateOwner(final Member member, final List<CartItem> cartItems) {
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
 
     private int calculateTotalPrice(final List<CartItem> cartItems) {

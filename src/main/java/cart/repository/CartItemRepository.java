@@ -6,6 +6,7 @@ import cart.exception.notfound.CartItemNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class CartItemRepository {
@@ -39,5 +40,12 @@ public class CartItemRepository {
 
     public void delete(final CartItem cartItem) {
         cartItemDao.delete(cartItem.getId());
+    }
+
+    public void deleteAll(final List<CartItem> cartItems) {
+        final List<Long> ids = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+        cartItemDao.deleteByIds(ids);
     }
 }

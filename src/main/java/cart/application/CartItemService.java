@@ -4,6 +4,7 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.dto.CartItemIdsRequest;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.repository.CartItemRepository;
@@ -30,10 +31,11 @@ public class CartItemService {
         return cartItemRepository.findAllByMemberId(member.getId());
     }
 
+    // TODO : 전체적으로 소유권은 체크해줬고, 해당 카트 아이템이 실제로 존재하는지 체크는 하지 않음
     @Transactional
     public Long addCartItem(final Member member, final CartItemRequest request) {
         final Product product = productRepository.findById(request.getProductId());
-        final CartItems cartItems = new CartItems(cartItemRepository.findAllByMemberId(member.getId()));
+        final CartItems cartItems = new CartItems(member, cartItemRepository.findAllByMemberId(member.getId()));
         final Optional<CartItem> cartItemOptional = cartItems.findProduct(product);
         if (cartItemOptional.isEmpty()) {
             return cartItemRepository.save(new CartItem(member, product));
@@ -59,9 +61,16 @@ public class CartItemService {
     }
 
     @Transactional
-    public void remove(final Member member, final Long cartItemId) {
+    public void removeCartItem(final Member member, final Long cartItemId) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId);
         cartItem.checkOwner(member);
         cartItemRepository.delete(cartItem);
+    }
+
+    @Transactional
+    public void removeCartItems(final Member member, final CartItemIdsRequest request) {
+        final List<CartItem> cartItems = cartItemRepository.findAllByIds(request.getCartItemIds());
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+        cartItemRepository.deleteAll(cartItems);
     }
 }

@@ -38,14 +38,14 @@ public class OrderService {
     @Transactional
     public Long order(final Member member, final OrderRequest request) {
         final Member findMember = memberRepository.findByEmail(member.getEmailValue());
-        final CartItems cartItems = new CartItems(cartItemRepository.findAllByIds(request.getCartItemIds()));
+        final CartItems cartItems = new CartItems(member, cartItemRepository.findAllByIds(request.getCartItemIds()));
         final int totalPrice = cartItems.getTotalPrice();
         if (totalPrice < request.getPoint()) {
             throw new InvalidPointUseException(totalPrice, request.getPoint());
         }
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
         memberRepository.save(updatedMember);
-        //TODO : 소유권 확인, 없는 cartItem에 대한 주문 요청
+        // TODO : 소유권 확인, 없는 cartItem에 대한 주문 요청
 
         return orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
     }
