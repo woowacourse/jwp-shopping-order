@@ -1,10 +1,8 @@
 package cart.ui;
 
 import cart.application.MemberService;
-import cart.domain.Member;
 import cart.dto.request.MemberCreateRequest;
 import cart.dto.response.MemberCreateResponse;
-import cart.dto.response.MemberPointQueryResponse;
 import cart.dto.response.MemberQueryResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +37,5 @@ public class MemberApiController {
     @GetMapping("/{id}")
     public ResponseEntity<MemberQueryResponse> findMemberById(@PathVariable Long id) {
         return ResponseEntity.ok().body(memberService.findMemberById(id));
-    }
-
-    @GetMapping("/points")
-    public ResponseEntity<MemberPointQueryResponse> getPoints(final Member member) {
-        return ResponseEntity.ok().body(memberService.findPointsOf(member));
     }
 }
