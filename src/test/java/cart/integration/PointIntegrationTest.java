@@ -3,6 +3,7 @@ package cart.integration;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.PointResponse;
+import cart.dto.SavingPointResponse;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,9 @@ public class PointIntegrationTest extends IntegrationTest {
     @DisplayName("적립되는 포인트를 조회한다")
     @Test
     void getSavingPoints() {
+        SavingPointResponse savingPoint = requestSavingPoints(50000L);
 
+        assertThat(savingPoint.getSavingPoint()).isEqualTo(500L);
     }
 
     private PointResponse requestGetPoints(Member member) {
@@ -50,5 +53,17 @@ public class PointIntegrationTest extends IntegrationTest {
                 .log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .extract().as(PointResponse.class);
+    }
+
+    private SavingPointResponse requestSavingPoints(Long price) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/saving-point?totalPrice={totalPrice}", price)
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.SC_OK)
+                .extract().as(SavingPointResponse.class);
     }
 }
