@@ -3,6 +3,7 @@ package cart.acceptence;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.response.CartItemResponse;
+import cart.dto.response.exception.ExceptionResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,8 +73,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
             // then
             assertThat(장바구니_아이템_추가_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-            assertThat(장바구니_아이템_추가_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("이미 장바구니에 담긴 상품입니다.");
+            assertThat(장바구니_아이템_추가_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("이미 장바구니에 담긴 상품입니다."));
         }
 
         @Test
@@ -86,8 +88,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             ExtractableResponse<Response> 장바구니_아이템_추가_결과 = 장바구니_아이템_추가_요청(잘못된_사용자, 피자_아이디);
 
             assertThat(장바구니_아이템_추가_결과.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-            assertThat(장바구니_아이템_추가_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("존재하지 않는 사용자입니다.");
+            assertThat(장바구니_아이템_추가_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("존재하지 않는 사용자입니다."));
         }
 
     }
@@ -170,8 +173,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
             // then
             assertThat(장바구니_아이템_수정_결과.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-            assertThat(장바구니_아이템_수정_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("잘못된 접근입니다.");
+            assertThat(장바구니_아이템_수정_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("잘못된 접근입니다."));
         }
 
     }
@@ -205,8 +209,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
             // then
             assertThat(장바구니_아이템_삭제_결과.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-            assertThat(장바구니_아이템_삭제_결과.jsonPath().getObject("message", String.class))
-                    .isEqualTo("잘못된 접근입니다.");
+            assertThat(장바구니_아이템_삭제_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("잘못된 접근입니다."));
         }
     }
 }

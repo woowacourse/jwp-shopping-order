@@ -1,16 +1,17 @@
 package cart.dto.response.exception;
 
-import cart.dto.response.exception.IdsExceptionResponse;
-
 public class Payload {
 
-    private final IdsExceptionResponse payload;
+    private ExceptionResponse payload;
 
-    public Payload(final IdsExceptionResponse payload) {
+    private Payload(){
+    }
+
+    public Payload(final ExceptionResponse payload) {
         this.payload = payload;
     }
 
-    public IdsExceptionResponse getPayload() {
+    public ExceptionResponse getPayload() {
         return payload;
     }
 }

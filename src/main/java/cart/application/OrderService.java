@@ -5,14 +5,13 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.domain.Product;
 import cart.dto.request.OrderItemDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailsDto;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.OrdersResponse;
 import cart.dto.response.ProductResponse;
-import cart.exception.CartItemException.QuantityNotSame;
+import cart.exception.CartItemException.IllegalMember;
 import cart.exception.CartItemException.UnknownCartItem;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -34,35 +33,14 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    // todo: 전체적으로 사용자 검증 필요
-
     public long saveOrder(final Member member, final OrderRequest orderRequest) {
-        List<CartItem> cartItems = new ArrayList<>();
-        List<Long> unknownItemIds = new ArrayList<>();
-        List<Long> strangeItemIds = new ArrayList<>();
-        for (OrderItemDto orderItemDto : orderRequest.getOrder()) {
-            CartItem cartItem = cartItemDao.findById(orderItemDto.getCartItemId());
-            //todo: 등록되지 않은 상품인가? 아니면 장바구니에 없는 상품인가? 구분 가능? 언제 반영?
-            // 지금은 innerJoin이라 빼고 가져오는 듯?
-            if (cartItem == null) {
-                unknownItemIds.add(orderItemDto.getCartItemId());
-                continue;
-            }
-            cartItems.add(cartItem);
-            if (orderItemDto.getQuantity() != cartItem.getQuantity()) {
-                strangeItemIds.add(orderItemDto.getCartItemId());
-            }
-        }
-        if (strangeItemIds.size() != 0) {
-            throw new QuantityNotSame(strangeItemIds);
-        }
-        if (unknownItemIds.size() != 0) {
-            throw new UnknownCartItem(unknownItemIds);
-        }
+        List<CartItem> cartItems = findCartItems(orderRequest);
+
+        checkIllegalMember(member, cartItems);
+        checkUnknownCartItemIds(extractOrderCartItemIds(orderRequest), cartItems);
 
         Order order = Order.of(member, 3000, OrderItem.of(cartItems), 30000);
         order.checkPrice(orderRequest.getTotalPrice());
-        // order.checkMember(member); // 멤버가 아닌데 주문을 등록하는 경우
 
         long orderId = orderRepository.save(order);
         for (CartItem cartItem : cartItems) {
@@ -70,6 +48,45 @@ public class OrderService {
         }
         return orderId;
     }
+
+    private void checkIllegalMember(final Member member, final List<CartItem> cartItems) {
+        boolean isIllegalMember = List.copyOf(cartItems).stream().anyMatch(item -> !item.checkMember(member));
+        if(isIllegalMember){
+            throw new IllegalMember();
+        }
+    }
+
+    private List<CartItem> findCartItems(final OrderRequest orderRequest) {
+        List<CartItem> cartItems = new ArrayList<>();
+        for (OrderItemDto orderItemDto : orderRequest.getOrder()) {
+            CartItem cartItem = cartItemDao.findById(orderItemDto.getCartItemId());
+            if (cartItem == null) {
+                continue;
+            }
+            cartItems.add(cartItem);
+        }
+        return cartItems;
+    }
+
+    private static List<Long> extractOrderCartItemIds(final OrderRequest orderRequest) {
+        return orderRequest.getOrder()
+                .stream()
+                .map(OrderItemDto::getCartItemId).collect(Collectors.toList());
+    }
+
+    private void checkUnknownCartItemIds(final List<Long> orderCartItemIds, final List<CartItem> cartItems) {
+        List<Long> cartItemIds = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+        List<Long> unknownCartItemIds = orderCartItemIds.stream()
+                .filter(id -> !cartItemIds.contains(id))
+                .collect(Collectors.toList());
+        if (unknownCartItemIds.size() != 0) {
+            throw new UnknownCartItem(unknownCartItemIds);
+        }
+    }
+
+    // todo: 전체적으로 사용자 검증 필요
 
     public OrderResponse getOrderByOrderId(final long orderId) {
         Order order = orderRepository.findByOrderId(orderId);
@@ -92,4 +109,6 @@ public class OrderService {
         }
         return new OrdersResponse(orderResponses);
     }
+
+
 }

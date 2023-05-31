@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class Member {
     private Long id;
     private String email;
@@ -25,5 +27,22 @@ public class Member {
 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public boolean checkSameMember(final Member member) {
+        return email.equals(member.email) && password.equals(member.password);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

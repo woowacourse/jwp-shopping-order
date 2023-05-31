@@ -1,9 +1,13 @@
 package cart.domain;
 
 import cart.entity.OrderEntity;
+import cart.exception.CartItemException;
+import cart.exception.CartItemException.IllegalMember;
 import cart.exception.CartItemException.TotalPriceNotSame;
+import cart.exception.CartItemException.UnknownCartItem;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Order {
 

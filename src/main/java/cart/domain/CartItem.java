@@ -48,4 +48,8 @@ public class CartItem {
     public void changeQuantity(Long quantity) {
         this.quantity = quantity;
     }
+
+    public boolean checkMember(final Member member) {
+        return this.member.equals(member);
+    }
 }
