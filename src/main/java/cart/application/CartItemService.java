@@ -4,11 +4,13 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
 import cart.exception.CartItemException.DuplicatedCartItem;
 import cart.exception.CartItemException.InvalidCartItem;
+import cart.exception.ProductException.InvalidProduct;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -34,10 +36,12 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
+        Product product = productDao.getProductById(cartItemRequest.getProductId())
+                .orElseThrow(InvalidProduct::new);
         if (cartItemDao.countByMemberIdAndProductId(member.getId(), cartItemRequest.getProductId()) != 0) {
             throw new DuplicatedCartItem();
         }
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
