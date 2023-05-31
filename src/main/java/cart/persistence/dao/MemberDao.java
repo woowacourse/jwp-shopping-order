@@ -5,10 +5,12 @@ import cart.persistence.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -30,10 +32,12 @@ public class MemberDao {
     );
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")
                 .usingGeneratedKeyColumns("id");
@@ -74,5 +78,15 @@ public class MemberDao {
     public void updatePoint(final MemberEntity memberEntity) {
         final String sql = "UPDATE member SET point = ? WHERE id = ?";
         jdbcTemplate.update(sql, memberEntity.getPoint(), memberEntity.getId());
+    }
+
+    public List<MemberEntity> getMembersByIds(final List<Long> memberIds) {
+        if (memberIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        final String sql = "SELECT id, email, password, point FROM member WHERE id IN (:id)";
+        final MapSqlParameterSource source = new MapSqlParameterSource("id", memberIds);
+        return namedJdbcTemplate.query(sql, source, MEMBER_ENTITY_MAPPER);
     }
 }

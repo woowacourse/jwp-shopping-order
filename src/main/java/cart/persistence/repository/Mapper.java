@@ -1,7 +1,9 @@
 package cart.persistence.repository;
 
+import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.persistence.entity.CartItemEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
 
@@ -41,6 +43,25 @@ class Mapper {
                 member.getEmail(),
                 member.getPassword(),
                 member.getPoint(),
+                null
+        );
+    }
+
+    public static CartItem cartItemMapper(final CartItemEntity cartItemEntity, final MemberEntity memberEntity, final ProductEntity productEntity) {
+        return new CartItem(
+                cartItemEntity.getId(),
+                memberEntityToMember(memberEntity),
+                productEntityToProductMapper(productEntity),
+                cartItemEntity.getQuantity()
+        );
+    }
+
+    public static CartItemEntity cartItemEntityMapper(final CartItem cartItem) {
+        return new CartItemEntity(
+                cartItem.getId(),
+                cartItem.getMember().getId(),
+                cartItem.getProduct().getId(),
+                cartItem.getQuantity(),
                 null
         );
     }

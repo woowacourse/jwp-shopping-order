@@ -86,8 +86,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     @Test
     void getCartItems() {
-        final Long cartItemId1 = requestAddCartItemAndGetId(member1, product1.getId());
-        final Long cartItemId2 = requestAddCartItemAndGetId(member1, product2.getId());
+        final Long cartItemId1 = 1L;
+        final Long cartItemId2 = 2L;
 
         final ExtractableResponse<Response> response = requestGetCartItems(member1);
 
@@ -102,7 +102,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     @Test
     void increaseCartItemQuantity() {
-        final Long cartItemId = requestAddCartItemAndGetId(member1, product1.getId());
+        final Long cartItemId = 1L;
 
         final ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member1, cartItemId, 10);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());

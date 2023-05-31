@@ -9,7 +9,6 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProducts;
 import cart.domain.product.Product;
-import cart.persistence.dao.CartItemDao;
 import cart.persistence.dao.OrderHistoryDao;
 import cart.persistence.dao.OrderProductDao;
 import cart.persistence.repository.CartItemRepository;
@@ -23,20 +22,18 @@ import java.util.stream.Collectors;
 public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
-    private final CartItemDao cartItemDao;
     private final OrderHistoryDao orderHistoryDao;
     private final OrderProductDao orderProductDao;
 
-    public CartItemService(final CartItemRepository cartItemRepository, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao) {
+    public CartItemService(final CartItemRepository cartItemRepository, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao) {
         this.cartItemRepository = cartItemRepository;
-        this.cartItemDao = cartItemDao;
         this.orderHistoryDao = orderHistoryDao;
         this.orderProductDao = orderProductDao;
     }
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(final Member member) {
-        return cartItemDao.findByMemberId(member.getId()).stream()
+        return cartItemRepository.findCartItemsByMemberId(member.getId()).stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
     }
@@ -45,29 +42,29 @@ public class CartItemService {
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         final Product product = cartItemRepository.getProductById(cartItemRequest.getProductId());
         final CartItem cartItem = new CartItem(member, product);
-        return cartItemDao.save(cartItem);
+        return cartItemRepository.saveCartItem(cartItem);
     }
 
     @Transactional(readOnly = true)
     public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
-        final CartItem cartItem = cartItemDao.findById(id);
+        final CartItem cartItem = cartItemRepository.findCartItemById(id);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+            cartItemRepository.deleteCartItemById(id);
             return;
         }
 
         cartItem.updateQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemRepository.updateCartItemQuantity(cartItem);
     }
 
     @Transactional(readOnly = true)
     public void remove(final Member member, final Long id) {
-        final CartItem cartItem = cartItemDao.findById(id);
+        final CartItem cartItem = cartItemRepository.findCartItemById(id);
         cartItem.checkOwner(member);
 
-        cartItemDao.deleteById(id);
+        cartItemRepository.deleteCartItemById(id);
     }
 
     @Transactional
@@ -91,7 +88,7 @@ public class CartItemService {
     }
 
     private List<CartItem> getCartItems(final Member member, final List<Long> cartIds) {
-        final List<CartItem> cartItems = cartItemDao.findByIds(cartIds);
+        final List<CartItem> cartItems = cartItemRepository.getCartItemsByIds(cartIds);
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
         return cartItems;
     }
