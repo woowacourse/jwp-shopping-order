@@ -23,7 +23,14 @@ public class Coupon {
         if (money.isMoreThan(minimumPrice)) {
             return discountPolicy.discount(money, value);
         }
-        return money;
+        return new Money(0);
+    }
+
+    public Money discountDeliveryFee(final Money orderPrice, final Money deliveryFee) {
+        if (orderPrice.isMoreThan(minimumPrice)) {
+            return deliveryFee;
+        }
+        return new Money(0);
     }
 
     public Long getId() {

@@ -33,6 +33,10 @@ public class MemberCoupon {
         return coupon.discount(money);
     }
 
+    public Money discountDeliveryFee(final Money orderPrice, final Money deliveryFee) {
+        return coupon.discountDeliveryFee(orderPrice, deliveryFee);
+    }
+
     public Long getId() {
         return id;
     }
@@ -56,6 +60,11 @@ public class MemberCoupon {
 
         @Override
         public Money discount(final Money money) {
+            return new Money(0);
+        }
+
+        @Override
+        public Money discountDeliveryFee(final Money orderPrice, final Money deliveryFee) {
             return new Money(0);
         }
 

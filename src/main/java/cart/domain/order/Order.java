@@ -52,7 +52,7 @@ public class Order {
     }
 
     public Money discountDeliveryFee() {
-        return memberCoupon.discount(deliveryFee);
+        return memberCoupon.discountDeliveryFee(orderItems.sumPrice(), deliveryFee);
     }
 
     public Money getOrderPrice() {

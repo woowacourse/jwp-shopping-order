@@ -23,7 +23,7 @@ public class OrderItems {
 
     public Money sumPrice() {
         return orderItems.stream()
-                .map(OrderItem::getPrice)
+                .map(OrderItem::priceWithQuantity)
                 .reduce(new Money(0), Money::sum);
     }
 

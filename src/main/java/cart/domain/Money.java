@@ -23,8 +23,12 @@ public class Money {
         return new Money(value + other.getValue());
     }
 
+    public Money mul(final int value) {
+        return new Money(this.value * value);
+    }
+
     public Money percent(final long percent) {
-        return new Money(this.value * 100 / percent);
+        return new Money(this.value * percent / 100);
     }
 
     public boolean isMoreThan(final Money other) {

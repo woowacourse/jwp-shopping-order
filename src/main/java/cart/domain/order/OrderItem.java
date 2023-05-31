@@ -23,6 +23,10 @@ public class OrderItem {
         return new OrderItem(null, cartItem.getProduct().getName(), cartItem.getProduct().getImageUrl(), cartItem.getProduct().getPrice(), cartItem.getQuantity());
     }
 
+    public Money priceWithQuantity() {
+        return price.mul(quantity);
+    }
+
     public Long getId() {
         return id;
     }
