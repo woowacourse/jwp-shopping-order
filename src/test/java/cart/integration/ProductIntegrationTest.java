@@ -61,6 +61,8 @@ public class ProductIntegrationTest extends IntegrationTest {
     void 상품_목록을_원하는_구간만큼_조회하다() {
         final HomePagingRequest request = HomePagingRequest.of(4L, 2);
         final ExtractableResponse<Response> response = given()
+                .param("lastId", 3)
+                .param("pageItemCount", 2)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()

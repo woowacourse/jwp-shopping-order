@@ -44,6 +44,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -127,15 +128,15 @@ public class ProductApiDocumentTest {
         // when, then
         mockMvc.perform(get("/products/cart-items")
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                        .param("lastId", "3")
+                        .param("pageItemCount", "2"))
                 .andExpect(status().isOk())
                 .andDo(document("products/getHomePagingProduct",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("lastId").type(JsonFieldType.NUMBER).description("현재 페이지의 마지막 상품 아이디"),
-                                fieldWithPath("pageItemCount").type(JsonFieldType.NUMBER).description("페이지에 가져올 상품의 개수")
+                        requestParameters(
+                                parameterWithName("lastId").description("현재 페이지의 마지막 상품 아이디"),
+                                parameterWithName("pageItemCount").description("한 페이지에 있는 상품 개수")
                         ),
                         responseFields(
                                 fieldWithPath("products").type(JsonFieldType.ARRAY).description("상품 목록"),

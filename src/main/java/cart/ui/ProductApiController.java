@@ -5,7 +5,6 @@ import cart.application.ProductService;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.HomePagingRequest;
 import cart.dto.HomePagingResponse;
 import cart.dto.ProductCartItemResponse;
 import cart.dto.ProductRequest;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -57,12 +57,10 @@ public class ProductApiController {
     }
 
     @GetMapping("/cart-items")
-    public ResponseEntity<HomePagingResponse> getHomePagingProduct(@Valid @RequestBody final HomePagingRequest homePagingRequest) {
-        final Long lastIdInPrevPage = homePagingRequest.getLastId();
-        final int pageItemCount = homePagingRequest.getPageItemCount();
-
-        final List<Product> products = productService.getProductsInPaging(lastIdInPrevPage, pageItemCount);
-        final boolean isLast = productService.hasLastProduct(lastIdInPrevPage, pageItemCount);
+    public ResponseEntity<HomePagingResponse> getHomePagingProduct(@RequestParam final Long lastId,
+                                                                   @RequestParam final int pageItemCount) {
+        final List<Product> products = productService.getProductsInPaging(lastId, pageItemCount);
+        final boolean isLast = productService.hasLastProduct(lastId, pageItemCount);
 
         return ResponseEntity.ok(HomePagingResponse.of(products, isLast));
     }
