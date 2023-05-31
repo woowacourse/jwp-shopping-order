@@ -101,6 +101,37 @@ class OrderDaoTest {
         assertThat(extractOrderItemsWithoutId(orderItems)).containsExactlyInAnyOrderElementsOf(orderItemsToSave);
     }
 
+    @DisplayName("특정 주문 정보를 DB에서 삭제한다.")
+    @Test
+    void deleteById() {
+        // given
+        final Money deliveryFee = new Money(3000);
+        final Long createdId = orderDao.save(1L, deliveryFee);
+
+        // when
+        orderDao.deleteById(createdId);
+
+        // then
+        assertThat(orderDao.findDetailById(1L, createdId).isEmpty()).isTrue();
+    }
+
+    @DisplayName("특정 주문의 상품 목록을 DB에서 삭제한다.")
+    @Test
+    void deleteOrderItemsById() {
+        // given
+        final Long createdId = orderDao.save(1L, new Money(3000));
+        final Long createdId2 = orderDao.save(1L, new Money(3000));
+        orderDao.saveOrderItems(List.of(new OrderItem(1L, createdId, "doy", new Money(1000), "image.png", 1)));
+        orderDao.saveOrderItems(List.of(new OrderItem(1L, createdId2, "junpak", new Money(1000), "image.png", 1)));
+
+        // when
+        orderDao.deleteOrderItemsByIds(List.of(1L));
+
+        // then
+        assertThat(orderDao.findOrderItemsById(1L, createdId)).isEmpty();
+        assertThat(orderDao.findOrderItemsById(1L, createdId2)).hasSize(1);
+    }
+
     private List<OrderItem> extractOrderItemsWithoutId(final List<OrderItem> orderItems) {
         return orderItems.stream()
                 .map(item -> new OrderItem(item.getOrderId(),

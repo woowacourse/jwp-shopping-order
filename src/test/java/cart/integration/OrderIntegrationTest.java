@@ -34,7 +34,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         member2 = memberDao.getMemberById(2L).get();
     }
 
-    @DisplayName("주문 정보를 추가한다.")
+    @DisplayName("주문을 추가한다.")
     @Test
     void createOrder() {
         // given, when
@@ -152,6 +152,55 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    @DisplayName("주문을 취소한다.")
+    @Test
+    void deleteOrder() {
+        // given
+        주문_정보_추가(member, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L));
+
+        // when
+        final ExtractableResponse<Response> response = 주문_취소(member, 1L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("잘못된 주문 정보로 취소를 요청하면 실패한다.")
+    @Test
+    void deleteOrderByIllegalId() {
+        // given
+        주문_정보_추가(member, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L));
+
+        // when
+        final ExtractableResponse<Response> response = 주문_취소(member, 2L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    // TODO cartItem에서는 id 유효성 vs 사용자 권한을 다른 예외로 처리하는데, 여기서는 잘못된 id라는 하나의 예외로 처리한다. 통일하자
+    @DisplayName("잘못된 사용자가 주문 취소를 요청하면 실패한다.")
+    @Test
+    void deleteOrderByIllegalMemberId() {
+        // given
+        주문_정보_추가(member, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L));
+
+        // when
+        final ExtractableResponse<Response> response = 주문_취소(member2, 1L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     private ExtractableResponse<Response> 주문_정보_추가(final Member member, final OrderRequest orderRequest) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -181,6 +230,17 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .get("/orders/{orderId}", orderId)
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 주문_취소(final Member member, final Long orderId) {
+        return given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .delete("/orders/{orderId}", orderId)
                 .then()
                 .log().all()
                 .extract();

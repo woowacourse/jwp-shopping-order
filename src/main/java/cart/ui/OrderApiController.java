@@ -8,6 +8,7 @@ import cart.dto.OrderResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,5 +42,11 @@ public class OrderApiController {
     public ResponseEntity<OrderDetailResponse> showOrderDetail(final Member member, @PathVariable final Long orderId) {
         final OrderDetailResponse order = orderService.findOrderDetailById(member, orderId);
         return ResponseEntity.ok().body(order);
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> deleteOrder(final Member member, @PathVariable final Long orderId) {
+        orderService.remove(member, orderId);
+        return ResponseEntity.noContent().build();
     }
 }

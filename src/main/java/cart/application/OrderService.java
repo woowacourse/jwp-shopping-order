@@ -15,6 +15,7 @@ import cart.exception.OrderException;
 import cart.exception.OrderException.OutOfDatedProductPrice;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,5 +81,18 @@ public class OrderService {
                 .orElseThrow(() -> new OrderException.IllegalId(orderId));
         final List<OrderItem> orderItems = orderDao.findOrderItemsById(member.getId(), orderId);
         return OrderDetailResponse.from(new Order(order.getId(), orderItems, order.getDeliveryFee()));
+    }
+
+    public void remove(final Member member, final Long orderId) {
+        final Long memberId = member.getId();
+        // TODO isExist 사용?
+        final Order order = orderDao.findDetailById(memberId, orderId)
+                .orElseThrow(() -> new OrderException.IllegalId(orderId));
+        final List<Long> orderItemsId = orderDao.findOrderItemsById(memberId, orderId)
+                .stream()
+                .map(OrderItem::getId)
+                .collect(Collectors.toList());
+        orderDao.deleteById(orderId);
+        orderDao.deleteOrderItemsByIds(orderItemsId);
     }
 }
