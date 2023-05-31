@@ -1,0 +1,11 @@
+### product를 quantity만큼 cart에 담는 기능 추가
+POST http://localhost:8080/cart-items
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+### response
+HTTP/1.1 201 OK
