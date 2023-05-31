@@ -24,6 +24,10 @@ public class Point {
         }
     }
 
+    public Point add(final Point point) {
+        return new Point(value + point.value);
+    }
+
     public Point use(final Point point) {
         return new Point(value - point.value);
     }

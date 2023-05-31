@@ -21,6 +21,10 @@ public class Member {
         return this.password.equals(password);
     }
 
+    public void addPoint(final Point point) {
+        this.point = this.point.add(point);
+    }
+
     public void usePoint(int point) {
         usePoint(new Point(point));
     }

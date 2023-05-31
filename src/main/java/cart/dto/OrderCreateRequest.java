@@ -4,7 +4,7 @@ import java.util.List;
 
 public class OrderCreateRequest {
 
-    private List<Integer> cartItemIds;
+    private List<Long> cartItemIds;
     private String cardNumber;
     private int cvc;
     private int point;
@@ -12,7 +12,7 @@ public class OrderCreateRequest {
     public OrderCreateRequest() {
     }
 
-    public OrderCreateRequest(final List<Integer> cartItemIds, final String cardNumber, final int cvc,
+    public OrderCreateRequest(final List<Long> cartItemIds, final String cardNumber, final int cvc,
                               final int point) {
         this.cartItemIds = cartItemIds;
         this.cardNumber = cardNumber;
@@ -20,7 +20,7 @@ public class OrderCreateRequest {
         this.point = point;
     }
 
-    public List<Integer> getCartItemIds() {
+    public List<Long> getCartItemIds() {
         return cartItemIds;
     }
 
