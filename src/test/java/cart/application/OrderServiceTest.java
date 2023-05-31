@@ -77,7 +77,29 @@ class OrderServiceTest {
     
     @Test
     void findOrderByOrderId() {
+        //given
+        Member member = new Member(1L, "abc@gmail.com", "12345");
+        LocalDateTime createdAt = LocalDateTime.of(23, 05, 30, 13, 11, 30);
+        OrderAddRequest firstRequest = new OrderAddRequest(
+                createdAt,
+                List.of(new OrderItemRequest(1L, 2),
+                        new OrderItemRequest(2L, 5)));
+        OrderAddRequest secondRequest = new OrderAddRequest(
+                createdAt,
+                List.of(new OrderItemRequest(3L, 3)));
+        orderService.addOrder(member, firstRequest);
+        orderService.addOrder(member, secondRequest);
     
+        Order secondOrder = new Order(2L,
+                member.getId(),
+                List.of(new OrderItem(3L, new Product(3l, "3번 상품", 1000, "3번 상품url"), 3)),
+                3000,
+                0,
+                createdAt
+        );
+    
+        assertThat(orderService.findOrderById(member, 2L))
+                .isEqualTo(secondOrder);
     }
     
     @Test
