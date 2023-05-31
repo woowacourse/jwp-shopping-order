@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.domain.member.Member;
 import cart.persistence.dao.MemberDao;
+import cart.persistence.entity.MemberEntity;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,13 @@ public class MemberIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.member = memberDao.getMemberById(1L);
+        final MemberEntity memberEntity = memberDao.getMemberById(1L);
+        this.member = new Member(
+                memberEntity.getId(),
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                memberEntity.getPoint()
+        );
         super.setUp();
     }
 

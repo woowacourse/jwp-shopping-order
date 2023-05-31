@@ -26,6 +26,15 @@ class Mapper {
         );
     }
 
+    public static Member memberEntityToMember(final MemberEntity memberEntity) {
+        return new Member(
+                memberEntity.getId(),
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                memberEntity.getPoint()
+        );
+    }
+
     public static MemberEntity memberToMemberEntityMapper(final Member member) {
         return new MemberEntity(
                 member.getId(),

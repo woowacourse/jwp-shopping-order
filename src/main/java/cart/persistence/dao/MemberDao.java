@@ -21,6 +21,14 @@ public class MemberDao {
             rs.getInt("point")
     );
 
+    private static final RowMapper<MemberEntity> MEMBER_ENTITY_MAPPER = (rs, rowNum) -> new MemberEntity(
+            rs.getLong("id"),
+            rs.getString("email"),
+            rs.getString("password"),
+            rs.getInt("point"),
+            null
+    );
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -31,9 +39,9 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Member getMemberById(final Long id) {
+    public MemberEntity getMemberById(final Long id) {
         final String sql = "SELECT id, email, password, point FROM member WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, MEMBER_MAPPER, id);
+        return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_MAPPER, id);
     }
 
     public Member getMemberByEmail(final String email) {
@@ -58,9 +66,9 @@ public class MemberDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
+    public List<MemberEntity> getAllMembers() {
         final String sql = "SELECT id, email, password, point from member";
-        return jdbcTemplate.query(sql, MEMBER_MAPPER);
+        return jdbcTemplate.query(sql, MEMBER_ENTITY_MAPPER);
     }
 
     public void updatePoint(final MemberEntity memberEntity) {

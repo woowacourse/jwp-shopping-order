@@ -3,7 +3,7 @@ package cart.application;
 import cart.application.dto.response.MemberResponse;
 import cart.application.dto.response.PointResponse;
 import cart.domain.member.Member;
-import cart.persistence.dao.MemberDao;
+import cart.persistence.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberService(final MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberService(final MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Transactional(readOnly = true)
     public List<MemberResponse> getAllMembers() {
-        return memberDao.getAllMembers().stream()
+        return memberRepository.getAllMembers().stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
     }
@@ -29,7 +29,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public PointResponse checkPoint(final Member member) {
         return new PointResponse(
-                memberDao.getMemberById(member.getId()).getPoint()
+                memberRepository.getMemberById(member.getId()).getPoint()
         );
     }
 }

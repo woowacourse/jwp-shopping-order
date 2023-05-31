@@ -48,8 +48,20 @@ public class CartItemIntegrationTest extends IntegrationTest {
         product1 = new Product(1L, "치킨", 10000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80");
         product2 = new Product(2L, "샐러드", 20000, "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80");
 
-        member1 = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        final MemberEntity memberEntity1 = memberDao.getMemberById(1L);
+        final MemberEntity memberEntity2 = memberDao.getMemberById(2L);
+        this.member1 = new Member(
+                memberEntity1.getId(),
+                memberEntity1.getEmail(),
+                memberEntity1.getPassword(),
+                memberEntity1.getPoint()
+        );
+        member2 = new Member(
+                memberEntity2.getId(),
+                memberEntity2.getEmail(),
+                memberEntity2.getPassword(),
+                memberEntity2.getPoint()
+        );
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
