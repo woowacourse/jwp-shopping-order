@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -71,6 +72,29 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                     () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
             );
         }
+
+        @Test
+        @DisplayName("Authorization 헤더의 값이 Basic으로 시작하지 않으면 예외가 발생한다.")
+        void throws_when_authorization_not_start_basic() {
+            // given
+            CartItemRequest request = new CartItemRequest(CHICKEN.ID, 2);
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, "NO BASIC")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(request)
+                    .post("/cart-items")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("BASIC 인증 정보가 존재하지 않습니다. PREFIX로 BASIC을 넣어주세요.")
+            );
+        }
+
 
         @Test
         @DisplayName("인증된 사용자가 아니면 예외가 발생한다.")
@@ -193,6 +217,29 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             assertAll(
                     () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                     () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("Authorization 헤더의 값이 Basic으로 시작하지 않으면 예외가 발생한다.")
+        void throws_when_authorization_not_start_basic() {
+            // given
+            Long cartItemId = Dooly_CartItem1.ID;
+            CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(2);
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, "NO BASIC")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(request)
+                    .patch("/cart-items/{id}", cartItemId)
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("BASIC 인증 정보가 존재하지 않습니다. PREFIX로 BASIC을 넣어주세요.")
             );
         }
 
@@ -376,6 +423,29 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
+        @DisplayName("Authorization 헤더의 값이 Basic으로 시작하지 않으면 예외가 발생한다.")
+        void throws_when_authorization_not_start_basic() {
+            // given
+            Long cartItemId = Dooly_CartItem1.ID;
+            CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(2);
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, "NO BASIC")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(request)
+                    .delete("/cart-items/{id}", cartItemId)
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("BASIC 인증 정보가 존재하지 않습니다. PREFIX로 BASIC을 넣어주세요.")
+            );
+        }
+
+        @Test
         @DisplayName("인증된 사용자가 아니면 예외가 발생한다.")
         void throws_when_not_authentication_user() {
             // given
@@ -490,6 +560,23 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             assertAll(
                     () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                     () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("Authorization 헤더의 값이 Basic으로 시작하지 않으면 예외가 발생한다.")
+        void throws_when_authorization_not_start_basic() {
+            // when
+            Response response = RestAssured.given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, "NO BASIC")
+                    .get("/cart-items")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("BASIC 인증 정보가 존재하지 않습니다. PREFIX로 BASIC을 넣어주세요.")
             );
         }
 
