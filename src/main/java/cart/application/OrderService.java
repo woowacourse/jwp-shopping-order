@@ -10,6 +10,7 @@ import cart.domain.order.OrderItems;
 import cart.domain.order.Price;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderSelectResponse;
+import cart.dto.OrdersSelectResponse;
 import cart.repository.OrderRepository;
 import cart.repository.dao.CartItemDao;
 import java.util.List;
@@ -54,5 +55,11 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("주문 내역을 찾을 수 없습니다"));
 
         return OrderSelectResponse.from(order);
+    }
+
+    public OrdersSelectResponse getAllOrders(final Member member) {
+        List<Order> orders = orderRepository.findAll(member);
+
+        return OrdersSelectResponse.from(orders);
     }
 }
