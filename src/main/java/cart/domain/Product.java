@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 public class Product {
     private final Long id;
-    private final String name;
-    private final BigDecimal price;
-    private final String imageUrl;
+    private String name;
+    private BigDecimal price;
+    private String imageUrl;
 
     public Product(String name, int price, String imageUrl) {
         this(name, BigDecimal.valueOf(price), imageUrl);
@@ -37,5 +37,11 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void update(String name, BigDecimal price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 }

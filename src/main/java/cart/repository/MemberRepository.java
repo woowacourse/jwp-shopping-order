@@ -15,13 +15,18 @@ public class MemberRepository {
         this.memberDao = memberDao;
     }
 
-    public Optional<Member> getMemberByEmail(String email) {
-        return memberDao.getMemberByEmail(email)
+    public Optional<Member> findByEmail(String email) {
+        return memberDao.findByEmail(email)
                 .map(MemberEntity::toDomain);
     }
 
-    public Optional<Member> getMemberById(long id) {
+    public Optional<Member> findById(long id) {
         return memberDao.findById(id)
                 .map(MemberEntity::toDomain);
+    }
+
+    public Member save(Member member) {
+        Long id = memberDao.save(new MemberEntity(member.getEmail(), member.getPassword()));
+        return new Member(id, member.getEmail(), member.getPassword());
     }
 }

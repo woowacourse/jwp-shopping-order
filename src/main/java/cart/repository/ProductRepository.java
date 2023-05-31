@@ -18,30 +18,31 @@ public class ProductRepository {
         this.productDao = productDao;
     }
 
-    public List<Product> getAllProducts() {
-        List<ProductEntity> productEntities = productDao.getAllProducts();
+    public List<Product> findAll() {
+        List<ProductEntity> productEntities = productDao.findAll();
         return productEntities.stream()
                 .map(ProductEntity::toDomain)
                 .collect(toList());
     }
 
-    public Optional<Product> getProductById(Long productId) {
+    public Optional<Product> findById(Long productId) {
         return productDao.findById(productId)
                 .map(ProductEntity::toDomain);
     }
 
-    public Long createProduct(Product product) {
-        ProductEntity productEntity = toEntity(product);
-        return productDao.save(productEntity);
+    public Product save(Product product) {
+        Long id = productDao.save(toEntity(product));
+        return new Product(id, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void updateProduct(Product product) {
         ProductEntity productEntity = toEntity(product);
-        productDao.updateProduct(productId, productEntity);
+        productDao.updateProduct(productEntity);
     }
 
     private ProductEntity toEntity(Product product) {
         return new ProductEntity(
+                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl()
@@ -51,4 +52,5 @@ public class ProductRepository {
     public void deleteProduct(Long productId) {
         productDao.deleteProduct(productId);
     }
+
 }

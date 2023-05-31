@@ -29,8 +29,8 @@ public class CartItemRepository {
                 .collect(toList());
     }
 
-    public Long save(CartItem cartItem) {
-        return cartItemDao.save(
+    public CartItem save(CartItem cartItem) {
+        Long id = cartItemDao.save(
                 new CartItemEntity(
                         cartItem.getId(),
                         toEntity(cartItem.getProduct()),
@@ -38,6 +38,7 @@ public class CartItemRepository {
                         cartItem.getQuantity()
                 )
         );
+        return new CartItem(id, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
     }
 
     private MemberEntity toEntity(Member member) {
