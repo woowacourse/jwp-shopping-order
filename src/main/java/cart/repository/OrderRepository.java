@@ -8,7 +8,6 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.product.Product;
 import cart.entity.OrderItemEntity;
-import cart.entity.ProductEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -48,8 +47,8 @@ public class OrderRepository {
             List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderId(orderId);
             List<OrderItem> orderItems = new ArrayList<>();
             for (OrderItemEntity orderItem : orderItemEntities) {
-                List<Coupon> coupons = orderCouponDao.findCouponIdsByOrderItemId(orderItem.getId());
-                ProductEntity product = orderItem.getProductEntity();
+                List<Coupon> coupons = orderCouponDao.findCouponsByOrderItemId(orderItem.getId());
+                Product product = orderItem.getProduct();
                 orderItems.add(new OrderItem(
                         orderItem.getId(),
                         new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()),

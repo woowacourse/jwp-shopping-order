@@ -7,20 +7,19 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.util.List;
 
-@Repository
+@Component
 public class OrderCouponDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public OrderCouponDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+    public OrderCouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("order_coupon");
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("order_coupon");
     }
 
     private static RowMapper<Coupon> rowMapper() {
@@ -39,13 +38,7 @@ public class OrderCouponDao {
         simpleJdbcInsert.execute(params);
     }
 
-//    public List<Long> findCouponIdsByOrderItemId(Long orderItemId) {
-//        String sql = "select * from order_coupon where order_item_id = ?";
-//
-//        return jdbcTemplate.query(sql, rowMapper(), orderItemId);
-//    }
-
-    public List<Coupon> findCouponIdsByOrderItemId(Long orderItemId) {
+    public List<Coupon> findCouponsByOrderItemId(Long orderItemId) {
         String sql = "select coupon.* from order_coupon, coupon where order_coupon.coupon_id = coupon.id and order_item_id = ?";
 
         return jdbcTemplate.query(sql, rowMapper(), orderItemId);

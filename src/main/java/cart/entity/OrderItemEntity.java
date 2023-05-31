@@ -1,13 +1,15 @@
 package cart.entity;
 
+import cart.domain.product.Product;
+
 public class OrderItemEntity {
 
     private final Long id;
     private final Long orderId;
-    private final ProductEntity productEntity;
+    private final Product productEntity;
     private final int quantity;
 
-    public OrderItemEntity(final Long id, final Long orderId, final ProductEntity productEntity, final int quantity) {
+    public OrderItemEntity(final Long id, final Long orderId, final Product productEntity, final int quantity) {
         this.id = id;
         this.orderId = orderId;
         this.productEntity = productEntity;
@@ -22,7 +24,7 @@ public class OrderItemEntity {
         return orderId;
     }
 
-    public ProductEntity getProductEntity() {
+    public Product getProduct() {
         return productEntity;
     }
 

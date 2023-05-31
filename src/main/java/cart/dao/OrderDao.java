@@ -5,20 +5,19 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.util.List;
 
-@Repository
+@Component
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public OrderDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+    public OrderDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("cart_order")
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("cart_order")
                 .usingGeneratedKeyColumns("id");
     }
 

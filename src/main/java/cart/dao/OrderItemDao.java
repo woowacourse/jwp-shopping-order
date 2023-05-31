@@ -2,18 +2,17 @@ package cart.dao;
 
 import cart.domain.product.Product;
 import cart.entity.OrderItemEntity;
-import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.List;
 
-@Repository
+@Component
 public class OrderItemDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -29,7 +28,7 @@ public class OrderItemDao {
         return (rs, rowNum) -> new OrderItemEntity(
                 rs.getLong("id"),
                 rs.getLong("order_id"),
-                new ProductEntity(
+                new Product(
                         rs.getLong("product_id"),
                         rs.getString("name"),
                         rs.getInt("price"),

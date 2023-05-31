@@ -9,6 +9,7 @@ import cart.dto.order.OrderProductRequest;
 import cart.dto.order.OrderRequest;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class OrderService {
         this.couponDao = couponDao;
     }
 
+    @Transactional
     public Long createOrder(List<OrderRequest> orderRequests, Long memberId) {
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderRequest orderRequest : orderRequests) {

@@ -32,7 +32,6 @@ public class MemberRepository {
         return member.setCoupons(coupons);
     }
 
-
     public List<Member> getAllMember() {
         List<Member> members = memberDao.getAllMembers();
         return members.stream()
