@@ -20,7 +20,7 @@ public class CartItemEntity {
     }
 
     public CartItem toCartItem(final Map<Long, ProductEntity> allProductsById, final Member member) {
-        if (Objects.equals(memberId, member.getId())) {
+        if (!Objects.equals(memberId, member.getId())) {
             throw new UnsupportedOperationException("장바구니 정보와 회원 정보가 일치하지 않습니다.");
         }
         return new CartItem(

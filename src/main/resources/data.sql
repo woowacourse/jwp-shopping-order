@@ -18,8 +18,8 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 
-INSERT INTO coupon (name, min_price, max_price, type, discount_amount, discount_percentage) VALUES ('테스트쿠폰1', 10000, 3000, 'percentage', null, 0.3);
-INSERT INTO coupon (name, min_price, max_price, type, discount_amount, discount_percentage) VALUES ('테스트쿠폰2', 15000, 2000, 'percentage', 2000, null);
+INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage) VALUES ('테스트쿠폰1', 10000, 3000, '퍼센트', null, 0.3);
+INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage) VALUES ('테스트쿠폰2', 15000, 2000, '금액', 2000, null);
 
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1, 1, '2023-06-30');
 INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1, 2, '2023-06-30');

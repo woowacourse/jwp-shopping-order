@@ -3,10 +3,12 @@ package cart.dao;
 import cart.dao.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class MemberDao2 {
     private final JdbcTemplate jdbcTemplate;
 
