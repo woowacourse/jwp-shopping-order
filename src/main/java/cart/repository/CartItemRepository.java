@@ -64,6 +64,6 @@ public class CartItemRepository {
     }
 
     public void updateQuantity(final CartItem cartItem) {
-        cartItemDao.updateQuantity(cartItem);
+        cartItemDao.updateQuantity(CartItemEntity.from(cartItem));
     }
 }
