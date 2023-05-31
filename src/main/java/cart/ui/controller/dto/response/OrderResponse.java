@@ -2,7 +2,6 @@ package cart.ui.controller.dto.response;
 
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
-import cart.domain.product.Product;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,17 +13,25 @@ public class OrderResponse {
     private List<OrderProductResponse> products;
     private int totalPrice;
     private int usedPoint;
+    private int deliveryFee;
     private LocalDateTime orderedAt;
 
     private OrderResponse() {
     }
 
-    public OrderResponse(Long orderId, List<OrderProductResponse> products, int totalPrice, int usedPoint,
-            LocalDateTime orderedAt) {
+    public OrderResponse(
+            Long orderId,
+            List<OrderProductResponse> products,
+            int totalPrice,
+            int usedPoint,
+            int deliveryFee,
+            LocalDateTime orderedAt
+    ) {
         this.orderId = orderId;
         this.products = products;
         this.totalPrice = totalPrice;
         this.usedPoint = usedPoint;
+        this.deliveryFee = deliveryFee;
         this.orderedAt = orderedAt;
     }
 
@@ -32,8 +39,9 @@ public class OrderResponse {
         return new OrderResponse(
                 order.getId(),
                 generateOrderProducts(order.getOrderProducts()),
-                calculateTotalPrice(order.getOrderProducts()),
+                order.calculateTotalPrice(),
                 order.getUsedPoint(),
+                order.getDeliveryFee(),
                 order.getOrderedAt()
         );
     }
@@ -42,13 +50,6 @@ public class OrderResponse {
         return products.stream()
                 .map(OrderProductResponse::from)
                 .collect(Collectors.toList());
-    }
-
-    private static int calculateTotalPrice(List<OrderProduct> products) {
-        return products.stream()
-                .map(OrderProduct::getProduct)
-                .mapToInt(Product::getPrice)
-                .sum();
     }
 
     public Long getOrderId() {
@@ -65,6 +66,10 @@ public class OrderResponse {
 
     public int getUsedPoint() {
         return usedPoint;
+    }
+
+    public int getDeliveryFee() {
+        return deliveryFee;
     }
 
     public String getOrderedAt() {

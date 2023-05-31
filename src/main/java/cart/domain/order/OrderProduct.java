@@ -6,19 +6,27 @@ public class OrderProduct {
 
     private Long id;
     private Product product;
-    private int quantity;
+    private Quantity quantity;
 
     private OrderProduct() {
+    }
+
+    public OrderProduct(Product product, int quantity) {
+        this(null, product, quantity);
     }
 
     public OrderProduct(Long id, Product product, int quantity) {
         this.id = id;
         this.product = product;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 
     public void assignId(Long id) {
         this.id = id;
+    }
+
+    public int calculateTotalPrice() {
+        return product.getPrice() * quantity.getValue();
     }
 
     public Long getId() {
@@ -34,6 +42,6 @@ public class OrderProduct {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 }

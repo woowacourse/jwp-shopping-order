@@ -96,8 +96,10 @@ class OrderServiceTest {
                     () -> assertThat(response.getProducts().get(0).getPrice()).isEqualTo(productEntity.getPrice()),
                     () -> assertThat(response.getProducts().get(0).getImageUrl()).isEqualTo(productEntity.getImageUrl()),
                     () -> assertThat(response.getProducts().get(0).getQuantity()).isEqualTo(orderProductEntity.getQuantity()),
-                    () -> assertThat(response.getTotalPrice()).isEqualTo(productEntity.getPrice()),
+                    () -> assertThat(response.getTotalPrice())
+                            .isEqualTo(productEntity.getPrice() * orderProductEntity.getQuantity()),
                     () -> assertThat(response.getUsedPoint()).isEqualTo(orderEntity.getUsedPoint()),
+                    () -> assertThat(response.getDeliveryFee()).isEqualTo(orderEntity.getDeliveryFee()),
                     () -> assertThat(response.getOrderedAt()).isNotNull()
             );
         }

@@ -90,8 +90,9 @@ class OrderApiControllerTest extends ControllerTest {
                     .andExpect(jsonPath("$.products[1].price").value(10000))
                     .andExpect(jsonPath("$.products[1].imageUrl").value("http://pizza.com"))
                     .andExpect(jsonPath("$.products[1].quantity").value(10))
-                    .andExpect(jsonPath("$.totalPrice").value(20000))
+                    .andExpect(jsonPath("$.totalPrice").value(150000))
                     .andExpect(jsonPath("$.usedPoint").value(0))
+                    .andExpect(jsonPath("$.deliveryFee").value(0))
                     .andExpect(jsonPath("$.orderedAt").value(now.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"))));
         }
     }

@@ -12,11 +12,15 @@ public class Order {
     private Long id;
     private Member member;
     private List<OrderProduct> orderProducts;
-    private int usedPoint;
-    private int deliveryFee;
+    private Point usedPoint;
+    private Fee deliveryFee;
     private LocalDateTime orderedAt;
 
     private Order() {
+    }
+
+    public Order(Member member, List<OrderProduct> orderProducts, int usedPoint, int deliveryFee, LocalDateTime orderedAt) {
+        this(null, member, orderProducts, usedPoint, deliveryFee, orderedAt);
     }
 
     public Order(
@@ -30,8 +34,8 @@ public class Order {
         this.id = id;
         this.member = member;
         this.orderProducts = orderProducts;
-        this.usedPoint = usedPoint;
-        this.deliveryFee = deliveryFee;
+        this.usedPoint = new Point(usedPoint);
+        this.deliveryFee = new Fee(deliveryFee);
         this.orderedAt = orderedAt;
     }
 
@@ -43,6 +47,12 @@ public class Order {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new IllegalMember();
         }
+    }
+
+    public int calculateTotalPrice() {
+        return orderProducts.stream()
+                .mapToInt(OrderProduct::calculateTotalPrice)
+                .sum();
     }
 
     public Long getId() {
@@ -58,11 +68,11 @@ public class Order {
     }
 
     public int getUsedPoint() {
-        return usedPoint;
+        return usedPoint.getValue();
     }
 
     public int getDeliveryFee() {
-        return deliveryFee;
+        return deliveryFee.getValue();
     }
 
     public LocalDateTime getOrderedAt() {
