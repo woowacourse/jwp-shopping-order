@@ -20,7 +20,7 @@ public class MemberService {
     }
 
     public MemberCreateResponse join(final MemberCreateRequest request) {
-        final Member member = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
+        final Member member = memberRepository.addMember(new Member(request.getEmail(), request.getPassword()));
         return MemberCreateResponse.from(member);
     }
 

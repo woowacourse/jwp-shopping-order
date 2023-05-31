@@ -1,8 +1,8 @@
 package cart.acceptance;
 
 import cart.application.MemberService;
-import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class MemberAcceptanceTest extends AcceptanceTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Autowired
     private MemberService memberService;
@@ -25,7 +25,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void 멤버의_포인트를_조회할_수_있다() {
         memberService.join(CREATE_REQUEST_GITCHAN);
-        final Member gitchan = memberDao.getMemberByEmail(MEMBER_GITCHAN.getEmail());
+        final Member gitchan = memberRepository.getMemberByEmail(MEMBER_GITCHAN.getEmail());
 
         final ExtractableResponse<Response> response = 멤버의_포인트_조회_요청(gitchan);
 

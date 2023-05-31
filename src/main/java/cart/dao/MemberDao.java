@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -24,30 +24,30 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Member getMemberById(Long id) {
+    public MemberEntity getMemberById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
+        List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public Member getMemberByEmail(String email) {
+    public MemberEntity getMemberByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
+        List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public Member addMember(Member member) {
+    public MemberEntity addMember(MemberEntity memberEntity) {
         final Map<String, String> parameters = Map.of(
-                "email", member.getEmail(),
-                "password", member.getPassword());
+                "email", memberEntity.getEmail(),
+                "password", memberEntity.getPassword());
 
         final long id = insertMember.executeAndReturnKey(parameters).longValue();
-        return new Member(id, member.getEmail(), member.getPassword());
+        return new MemberEntity(id, memberEntity.getEmail(), memberEntity.getPassword());
     }
 
-    public void updateMember(Member member) {
+    public void updateMember(MemberEntity memberEntity) {
         String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+        jdbcTemplate.update(sql, memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getId());
     }
 
     public void deleteMember(Long id) {
@@ -55,15 +55,15 @@ public class MemberDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
+    public List<MemberEntity> getAllMembers() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
-    private static class MemberRowMapper implements RowMapper<Member> {
+    private static class MemberRowMapper implements RowMapper<MemberEntity> {
         @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+        public MemberEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new MemberEntity(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
         }
     }
 }

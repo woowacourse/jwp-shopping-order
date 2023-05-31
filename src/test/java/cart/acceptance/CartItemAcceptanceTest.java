@@ -1,8 +1,8 @@
 package cart.acceptance;
 
-import cart.dao.MemberDao;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -19,11 +19,11 @@ import static org.springframework.http.HttpStatus.*;
 public class CartItemAcceptanceTest extends AcceptanceTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Test
     void 카트에_아이템을_추가한다() {
-        memberDao.addMember(MEMBER_GITCHAN);
+        memberRepository.addMember(MEMBER_GITCHAN);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
 
         final ExtractableResponse<Response> response = 카트에_아이템_추가_요청(MEMBER_GITCHAN, new CartItemRequest(productId));
@@ -37,7 +37,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 카트에_저장된_아이템의_개수를_변경한다() {
-        memberDao.addMember(MEMBER_GITCHAN);
+        memberRepository.addMember(MEMBER_GITCHAN);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
         final Long cartItemId = 카트에_아이템_추가하고_아이디_반환(MEMBER_GITCHAN, new CartItemRequest(productId));
 
@@ -51,7 +51,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 카트에_저장된_아이템을_삭제한다() {
-        memberDao.addMember(MEMBER_GITCHAN);
+        memberRepository.addMember(MEMBER_GITCHAN);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
         final Long cartItemId = 카트에_아이템_추가하고_아이디_반환(MEMBER_GITCHAN, new CartItemRequest(productId));
 

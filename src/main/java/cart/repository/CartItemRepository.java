@@ -35,8 +35,8 @@ public class CartItemRepository {
                         it.getId(),
                         it.getQuantity(),
                         productDao.getProductById(it.getProductId()).toProduct(),
-                        memberDao.getMemberById(it.getMemberId())
-                ))
+                        memberDao.getMemberById(it.getMemberId()).toMember()
+                        ))
                 .collect(Collectors.toList());
     }
 

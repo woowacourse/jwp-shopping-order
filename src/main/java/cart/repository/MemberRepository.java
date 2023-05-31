@@ -3,10 +3,12 @@ package cart.repository;
 import cart.dao.MemberDao;
 import cart.dao.PointDao;
 import cart.domain.Member;
+import cart.entity.MemberEntity;
 import cart.entity.PointEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class MemberRepository {
@@ -20,14 +22,18 @@ public class MemberRepository {
         this.pointDao = pointDao;
     }
 
-    public Member save(final Member member) {
-        final Member savedMember = memberDao.addMember(member);
+    public Member addMember(final Member member) {
+        final MemberEntity savedMember = memberDao.addMember(MemberEntity.from(member));
         pointDao.insert(new PointEntity(savedMember.getId(), JOIN_EVENT_POINT));
-        return savedMember;
+        return savedMember.toMember();
     }
 
     public int findPointOf(final Member member) {
         return pointDao.findByMemberId(member.getId());
+    }
+
+    public Member getMemberByEmail(final String email) {
+        return memberDao.getMemberByEmail(email).toMember();
     }
 
     public void addPoint(final Member member, final int addedPoint) {
@@ -41,10 +47,12 @@ public class MemberRepository {
     }
 
     public List<Member> findAllMembers() {
-        return memberDao.getAllMembers();
+        return memberDao.getAllMembers().stream()
+                .map(MemberEntity::toMember)
+                .collect(Collectors.toList());
     }
 
     public Member findMemberById(final Long id) {
-        return memberDao.getMemberById(id);
+        return memberDao.getMemberById(id).toMember();
     }
 }
