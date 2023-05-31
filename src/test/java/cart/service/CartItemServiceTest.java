@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import cart.domain.CartItem;
@@ -130,7 +131,7 @@ class CartItemServiceTest {
 
         // then
         verify(cartItemRepository, never()).deleteById(1L);
-        verify(cartItemRepository).updateQuantity(any());
+        verify(cartItemRepository, times(1)).updateQuantity(any());
 
         assertThat(cartItem.getQuantity()).isEqualTo(10);
     }
@@ -164,7 +165,7 @@ class CartItemServiceTest {
         cartItemService.updateQuantity(member, 1L, new CartItemQuantityUpdateRequest(0));
 
         // then
-        verify(cartItemRepository).deleteById(1L);
+        verify(cartItemRepository, times(1)).deleteById(1L);
         verify(cartItemRepository, never()).updateQuantity(any());
     }
 
@@ -204,7 +205,7 @@ class CartItemServiceTest {
         cartItemService.remove(member, 1L);
 
         // then
-        verify(cartItemRepository).deleteById(1L);
+        verify(cartItemRepository, times(1)).deleteById(1L);
     }
 
     @Test

@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import cart.domain.Product;
@@ -114,7 +115,7 @@ class ProductServiceTest {
         productService.updateProduct(1L, new ProductRequest("박스터", valueOf(10), "http://boxster.com"));
 
         // then
-        verify(productRepository).updateProduct(any());
+        verify(productRepository, times(1)).updateProduct(any());
         assertAll(
                 () -> assertThat(product.getPrice().getValue()).isEqualTo(valueOf(10)),
                 () -> assertThat(product.getName()).isEqualTo("박스터"),
@@ -131,6 +132,6 @@ class ProductServiceTest {
         productService.deleteProduct(product.getId());
 
         // then
-        verify(productRepository).deleteProduct(product.getId());
+        verify(productRepository, times(1)).deleteProduct(product.getId());
     }
 }

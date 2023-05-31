@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
+import static org.mockito.Mockito.times;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
@@ -86,7 +87,7 @@ class ProductRepositoryTest {
         productRepository.updateProduct(updateProduct);
 
         // then
-        verify(productDao).updateProduct(any());
+        verify(productDao, times(1)).updateProduct(any());
     }
 
     @Test
@@ -98,6 +99,6 @@ class ProductRepositoryTest {
         productRepository.deleteProduct(product.getId());
 
         // then
-        verify(productDao).deleteProduct(eq(product.getId()));
+        verify(productDao, times(1)).deleteProduct(eq(product.getId()));
     }
 }
