@@ -1,5 +1,6 @@
 package cart.repository.dto;
 
+import cart.domain.Order;
 import java.time.LocalDateTime;
 
 public class OrderEntity {
@@ -14,6 +15,11 @@ public class OrderEntity {
         this.memberId = memberId;
         this.createdAt = createdAt;
         this.spendPoint = spendPoint;
+    }
+
+    public static OrderEntity from(Order order) {
+        return new OrderEntity(order.getId(), order.getMember().getId(),
+                order.getCreatedAt(), order.getSpendPoint().getAmount());
     }
 
     public Long getId() {
