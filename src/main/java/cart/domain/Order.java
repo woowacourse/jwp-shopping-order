@@ -29,11 +29,10 @@ public class Order {
     }
 
     public BigDecimal getCalculateDiscountPrice() {
-        long totalPrice = getTotalPrice();
-        return memberCoupon.discountPrice(totalPrice);
+        return memberCoupon.discountPrice(getTotalPrice());
     }
 
-    private long getTotalPrice() {
+    public Long getTotalPrice() {
         return orderItems.stream()
                 .mapToLong(OrderItem::getCalculatePrice)
                 .sum();

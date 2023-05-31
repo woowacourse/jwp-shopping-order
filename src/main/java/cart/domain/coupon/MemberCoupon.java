@@ -53,7 +53,7 @@ public class MemberCoupon {
         return used;
     }
 
-    public BigDecimal discountPrice(final long totalPrice) {
+    public BigDecimal discountPrice(final Long totalPrice) {
         return coupon.apply(totalPrice);
     }
 

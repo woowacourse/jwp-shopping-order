@@ -13,7 +13,7 @@ public class OrdersDto {
     private final Long id;
 
     @Schema(description = "총 주문 가격", example = "10000")
-    private final BigInteger totalItemsPrice;
+    private final Long totalItemsPrice;
 
     @Schema(description = "주문 할인 가격", example = "3000")
     private final BigInteger discountPrice;
@@ -26,7 +26,7 @@ public class OrdersDto {
 
     public OrdersDto(final Order order) {
         this.id = order.getId();
-        this.totalItemsPrice = order.getCalculateDiscountPrice().toBigInteger();
+        this.totalItemsPrice = order.getTotalPrice();
         this.discountPrice = order.getDiscountPrice().toBigInteger();
         this.deliveryFee = order.getDeliveryFee();
         this.orderItems = order.getOrderItems().stream()
@@ -39,7 +39,7 @@ public class OrdersDto {
         return id;
     }
 
-    public BigInteger getTotalItemsPrice() {
+    public Long getTotalItemsPrice() {
         return totalItemsPrice;
     }
 
