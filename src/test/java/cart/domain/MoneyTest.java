@@ -28,4 +28,31 @@ class MoneyTest {
         //then
         assertThat(result).isTrue();
     }
+
+    @Test
+    @DisplayName("다른 Money 객체를 더하면 값이 더해진 Money 객체를 반환하다.")
+    void add() {
+        //given
+        Money base = new Money(3000);
+        Money additive = new Money(1500);
+        Money expected = new Money(4500);
+
+        //when
+        Money actual = base.add(additive);
+
+        //then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("곱하기를 하면 원래 값에 비율을 곱한 Money 객체를 반환한다.")
+    void multiply() {
+        //given
+        Money base = new Money(10_000);
+        Money expected = new Money(1_000);
+        //when
+        Money actual = base.multiply(0.1);
+        //then
+        assertThat(actual).isEqualTo(expected);
+    }
 }

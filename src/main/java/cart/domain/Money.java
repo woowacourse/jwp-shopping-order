@@ -16,6 +16,10 @@ public class Money {
         }
     }
 
+    public Money add(Money money) {
+        return new Money(this.value + money.value);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -35,5 +39,9 @@ public class Money {
 
     public int getValue() {
         return value;
+    }
+
+    public Money multiply(double rate) {
+        return new Money((int) (this.value * rate));
     }
 }
