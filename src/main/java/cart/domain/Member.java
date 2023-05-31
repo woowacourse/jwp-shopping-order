@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.vo.Money;
 import cart.exception.MemberException;
 
 import java.util.Objects;
@@ -7,35 +8,35 @@ import java.util.regex.Pattern;
 
 public class Member {
 
-    public static final int MINIMUM_PASSWORD_LENGTH = 1;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
 
     private final Long id;
     private final String email;
     private final String password;
+    private Money money;
+    private Money point;
 
-    public Member(Long id, String email, String password) {
-        validate(id, email);
+    public Member(String email, String password, Money money, Money point) {
+        this(null, email, password, money, point);
+    }
+
+    public Member(Long id, String email, String password, Money money, Money point) {
+        validate(email);
         this.id = id;
         this.email = email;
         this.password = password;
+        this.money = money;
+        this.point = point;
     }
 
-    private void validate(Long id, String email) {
-        validateId(id);
-        validateEmail(email);
-    }
-
-    private void validateId(Long id) {
-        if (Objects.isNull(id)) {
-            throw new MemberException.InvalidIdByNull();
-        }
-    }
-
-    private void validateEmail(String email) {
+    private void validate(String email) {
         if (Objects.isNull(email) || !EMAIL_PATTERN.matcher(email).matches()) {
             throw new MemberException.InvalidEmail();
         }
+    }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
     }
 
     public Long getId() {
@@ -50,7 +51,35 @@ public class Member {
         return password;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public Money getMoney() {
+        return money;
+    }
+
+    public Money getPoint() {
+        return point;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(email, member.email) && Objects.equals(password, member.password) && Objects.equals(money, member.money) && Objects.equals(point, member.point);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password, money, point);
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", money=" + money +
+                ", point=" + point +
+                '}';
     }
 }

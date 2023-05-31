@@ -6,6 +6,13 @@ public class MemberException extends RuntimeException {
         super(message);
     }
 
+    public static class NotExist extends MemberException {
+
+        public NotExist() {
+            super("존재하지 않는 회원입니다.");
+        }
+    }
+
     public static class InvalidPassword extends MemberException {
 
         public InvalidPassword() {
