@@ -18,6 +18,7 @@ public class OrderHistoryDao {
     private static final RowMapper<OrderHistoryEntity> ORDER_HISTORY_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new OrderHistoryEntity(
             resultSet.getLong("id"),
             resultSet.getLong("member_id"),
+            resultSet.getInt("total_price"),
             resultSet.getInt("used_point"),
             resultSet.getInt("order_price")
     );
@@ -34,7 +35,13 @@ public class OrderHistoryDao {
     public OrderHistoryEntity insert(final OrderHistoryEntity entity) {
         final SqlParameterSource parameters = new BeanPropertySqlParameterSource(entity);
         final long id = insertOrderHistory.executeAndReturnKey(parameters).longValue();
-        return new OrderHistoryEntity(id, entity.getMemberId(), entity.getOrderPrice(), entity.getOrderPrice());
+        return new OrderHistoryEntity(
+                id,
+                entity.getMemberId(),
+                entity.getTotalPrice(),
+                entity.getUsedPoint(),
+                entity.getOrderPrice()
+        );
     }
 
     public List<OrderHistoryEntity> findByMemberId(final Long memberId) {

@@ -23,8 +23,8 @@ public class OrderRepository {
         this.orderProductDao = orderProductDao;
     }
 
-    public long createOrderHistory(final Member member, final int usedPoint, final int orderPrice) {
-        final OrderHistoryEntity entity = new OrderHistoryEntity(member.getId(), usedPoint, orderPrice);
+    public long createOrderHistory(final Member member, final int totalPrice, final int usedPoint, final int orderPrice) {
+        final OrderHistoryEntity entity = new OrderHistoryEntity(member.getId(), totalPrice, usedPoint, orderPrice);
         final OrderHistoryEntity savedEntity = orderHistoryDao.insert(entity);
         return savedEntity.getId();
     }

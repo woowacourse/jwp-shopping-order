@@ -55,7 +55,7 @@ public class OrderService {
         final int updatedPoint = order.calculatedUpdatedPoint();
 
         memberRepository.updatePoint(member, updatedPoint);
-        final long orderHistoryId = orderRepository.createOrderHistory(member, usedPoint, orderPrice);
+        final long orderHistoryId = orderRepository.createOrderHistory(member, totalPrice, usedPoint, orderPrice);
 
         products.keySet()
                 .forEach(product -> orderRepository.addOrderProductTo(
