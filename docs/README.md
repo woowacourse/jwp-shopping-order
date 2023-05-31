@@ -302,13 +302,13 @@ Content-Type: application/json
         "id": 1,
         "name": "신규 가입 쿠폰",
         "discountRate": 20,
-        "expirationPeriod": "2023-05-30T15:30:44"
+        "expiredAt": "2023-05-30T15:30:44"
     },
     {
     	"id": 2,
         "name": "첫 주문 감사 쿠폰",
         "discountRate": 15,
-        "expirationPeriod": "2023-05-30T15:30:44"
+        "expiredAt": "2023-05-30T15:30:44"
     }
 ]
 ```
@@ -424,6 +424,10 @@ HTTP/1.1 200 OK
 
 {
     "orderId": 1,
+    "coupon": {
+        "name": "쿠폰 이름임",
+        "discountRate": 10
+    },
     "items": [
         {
             "proudct": {
@@ -443,6 +447,11 @@ HTTP/1.1 200 OK
             },
             "qunatity": 20
         }
-    ]
+    ],
+    "totalPrice": 40000,
+    "discountedTotalPrice": 36000,
+    "couponDiscountPrice": 4000,
+    "deliveryPrice": 3000,
+    "orderedAt": "2023-05-30T15:30:44"
 }
 ```

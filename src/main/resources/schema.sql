@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS member_coupon
     issued_at  DATETIME     NOT NULL, # LocalDateTime.NOW()
     expired_at DATETIME     NOT NULL, # issued_date + period (coupon), 쿠폰의 expired_date보다 작거나 같은 값
     is_used    TINYINT(1)   NOT NULL,
-    UNIQUE(member_id, coupon_id),
+    UNIQUE (member_id, coupon_id),
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (coupon_id) REFERENCES coupon (id)
@@ -61,15 +61,15 @@ CREATE TABLE IF NOT EXISTS member_coupon
 # 주문 - 주문할 때 총 상품 개수는 최대 1000개
 CREATE TABLE IF NOT EXISTS `order`
 (
-    id                  INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    member_id           INT UNSIGNED NOT NULL,
-    total_product_price INT UNSIGNED NOT NULL,
-    delivery_price      INT UNSIGNED NOT NULL,
-    ordered_at          DATETIME     NOT NULL,
+    id                     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    member_id              INT UNSIGNED NOT NULL,
+    total_price            INT UNSIGNED NOT NULL,
+    discounted_total_price INT UNSIGNED NOT NULL,
+    delivery_price         INT UNSIGNED NOT NULL,
+    order_at               DATETIME     NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
-
 # 주문 상품
 CREATE TABLE IF NOT EXISTS order_product
 (

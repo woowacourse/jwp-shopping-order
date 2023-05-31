@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.application.dto.MemberDto;
+import cart.domain.coupon.CouponType;
 import cart.domain.member.Member;
 import cart.domain.repository.MemberRepository;
 import cart.exception.AuthenticationException;
@@ -9,27 +9,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final CouponService couponService;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, CouponService couponService) {
         this.memberRepository = memberRepository;
+        this.couponService = couponService;
     }
 
     @Transactional
-    public void join(MemberDto memberDto) {
-        Member member = new Member(memberDto.getName(), memberDto.getPassword());
-
-        memberRepository.save(member);
+    public void join(Member member) {
+        Long memberId = memberRepository.save(member);
+        couponService.issueCoupon(memberId, CouponType.WELCOME_JOIN);
     }
 
-    public String login(MemberDto memberDto) {
-        Member findMember = memberRepository.findByName(memberDto.getName());
-        String encryptedPassword = Encryptor.encrypt(memberDto.getPassword());
+    public String login(Member member) {
+        Member findMember = memberRepository.findByName(member.getName());
+        String encryptedPassword = Encryptor.encrypt(member.getPassword());
 
         if (!findMember.checkPassword(encryptedPassword)) {
             throw new AuthenticationException("Name 및 Password에 일치하는 회원이 없습니다.");
@@ -38,13 +38,8 @@ public class MemberService {
         return findMember.getPassword();
     }
 
-    public List<MemberDto> getAllMembers() {
-        List<Member> members = memberRepository.findAll();
-
-        return members.stream()
-                .map(MemberDto::new)
-                .collect(Collectors.toList());
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
     }
-
 
 }
