@@ -55,17 +55,13 @@ CREATE TABLE orders
 
 CREATE TABLE order_item
 (
-    id             BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    orders_id      BIGINT    NOT NULL,
-    product_id     BIGINT    NOT NULL,
-    quantity       INT       NOT NULL,
-    original_name  INT       NOT NULL,
-    original_price INT       NOT NULL,
-    created_at     TIMESTAMP NOT NULL
-        DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMP NOT NULL
-        DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
+    id                 BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    orders_id          BIGINT       NOT NULL,
+    product_id         BIGINT       NOT NULL,
+    quantity           INT          NOT NULL,
+    original_name      INT          NOT NULL,
+    original_price     INT          NOT NULL,
+    original_image_url VARCHAR(255) NOT NULL,
     FOREIGN KEY (orders_id) REFERENCES orders (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
