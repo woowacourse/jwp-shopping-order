@@ -4,6 +4,7 @@ import cart.application.ProductService;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.List;
 
+@Tag(name = "상품 관련 api")
 @RestController
 @RequestMapping("/products")
 public class ProductApiController {
