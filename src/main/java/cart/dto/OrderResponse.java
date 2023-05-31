@@ -4,14 +4,14 @@ import java.util.List;
 
 public class OrderResponse {
     private final Long orderId;
-    private final List<OrderInfo> orderInfo;
+    private final List<OrderInfoResponse> orderInfoResponse;
     private final int originalPrice;
     private final int usedPoint;
     private final int pointToAdd;
 
-    public OrderResponse(Long orderId, List<OrderInfo> orderInfo, int originalPrice, int usedPoint, int pointToAdd) {
+    public OrderResponse(Long orderId, List<OrderInfoResponse> orderInfoResponse, int originalPrice, int usedPoint, int pointToAdd) {
         this.orderId = orderId;
-        this.orderInfo = orderInfo;
+        this.orderInfoResponse = orderInfoResponse;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
@@ -21,8 +21,8 @@ public class OrderResponse {
         return orderId;
     }
 
-    public List<OrderInfo> getOrderInfo() {
-        return orderInfo;
+    public List<OrderInfoResponse> getOrderInfo() {
+        return orderInfoResponse;
     }
 
     public int getOriginalPrice() {

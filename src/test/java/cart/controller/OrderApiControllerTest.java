@@ -2,8 +2,7 @@ package cart.controller;
 
 import cart.application.OrderService;
 import cart.dao.MemberDao;
-import cart.domain.Member;
-import cart.dto.OrderInfo;
+import cart.dto.OrderInfoResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.ui.OrdersApiController;
@@ -67,7 +66,7 @@ class OrderApiControllerTest {
     void getOrders() throws Exception {
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(orderService.findOrdersByMember(member1))
-                .thenReturn(List.of(new OrderResponse(1L, List.of(new OrderInfo(1L, 10000, "치킨", "imageUrl", 1)), 10000, 5000, 1000)));
+                .thenReturn(List.of(new OrderResponse(1L, List.of(new OrderInfoResponse(1L, 10000, "치킨", "imageUrl", 1)), 10000, 5000, 1000)));
 
         this.mockMvc.perform(get("/orders")
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
@@ -85,7 +84,7 @@ class OrderApiControllerTest {
     void getOrderDetail() throws Exception {
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(orderService.findOrderDetail(1L))
-                .thenReturn(new OrderResponse(1L, List.of(new OrderInfo(1L, 10000, "치킨", "imageUrl", 1)), 10000, 5000, 1000));
+                .thenReturn(new OrderResponse(1L, List.of(new OrderInfoResponse(1L, 10000, "치킨", "imageUrl", 1)), 10000, 5000, 1000));
 
 
         this.mockMvc.perform(get("/orders/{orderId}", 1)
