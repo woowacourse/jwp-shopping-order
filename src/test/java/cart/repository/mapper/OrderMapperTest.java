@@ -54,7 +54,7 @@ class OrderMapperTest {
         Product productB = new Product(2L, "피자", 20000, "http://pizza.com");
         OrderProduct orderProductA = new OrderProduct(1L, productA, 10);
         OrderProduct orderProductB = new OrderProduct(2L, productB, 10);
-        Order order = new Order(1L, member, List.of(orderProductA, orderProductB), 10, 0, LocalDateTime.now());
+        Order order = new Order(1L, member, List.of(orderProductA, orderProductB), 10, LocalDateTime.now());
 
         OrderEntity result = OrderMapper.toEntity(order);
 

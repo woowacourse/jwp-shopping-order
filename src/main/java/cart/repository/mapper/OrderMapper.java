@@ -15,7 +15,6 @@ public class OrderMapper {
                 MemberMapper.toDomain(orderEntity.getMemberEntity()),
                 generateOrderProducts(orderProductEntities),
                 orderEntity.getUsedPoint(),
-                orderEntity.getDeliveryFee(),
                 orderEntity.getCreatedAt()
         );
     }

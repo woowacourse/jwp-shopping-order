@@ -7,6 +7,7 @@ import cart.dao.entity.OrderProductEntity;
 import cart.domain.order.Order;
 import cart.exception.OrderException.NotFound;
 import cart.repository.mapper.OrderMapper;
+import cart.repository.mapper.OrderProductMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -36,5 +37,19 @@ public class OrderRepository {
         OrderEntity orderEntity = orderDao.findById(id).orElseThrow(NotFound::new);
         List<OrderProductEntity> orderProductEntities = orderProductDao.findAllByOrderId(id);
         return OrderMapper.toDomain(orderEntity, orderProductEntities);
+    }
+
+    public Long save(Order order) {
+        Long orderId = orderDao.save(OrderMapper.toEntity(order));
+        order.assignId(orderId);
+        orderProductDao.saveAll(extractOrderProductEntities(order));
+        return orderId;
+    }
+
+    private List<OrderProductEntity> extractOrderProductEntities(Order order) {
+        return order.getOrderProducts()
+                .stream()
+                .map(orderProduct -> OrderProductMapper.toEntity(order, orderProduct))
+                .collect(Collectors.toList());
     }
 }

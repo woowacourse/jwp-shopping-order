@@ -36,4 +36,8 @@ public class MemberRepository {
                 .map(MemberMapper::toDomain)
                 .orElseThrow(NotFound::new);
     }
+
+    public void update(Member member) {
+        memberDao.update(MemberMapper.toEntity(member));
+    }
 }

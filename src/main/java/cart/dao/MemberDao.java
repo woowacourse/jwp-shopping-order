@@ -61,4 +61,12 @@ public class MemberDao {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(memberEntity);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
+
+    public void update(MemberEntity memberEntity) {
+        String sql = "UPDATE member set email = ?, password = ?, point = ? WHERE id = ?";
+        jdbcTemplate.update(
+                sql,
+                memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getPoint(), memberEntity.getId()
+        );
+    }
 }

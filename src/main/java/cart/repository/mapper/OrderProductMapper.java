@@ -29,7 +29,7 @@ public class OrderProductMapper {
         return new OrderProductEntity(
                 orderProduct.getId(),
                 order.getId(),
-                null,
+                new ProductEntity(orderProduct.getProductId(), null, null, null),
                 orderProduct.getProduct().getName(),
                 orderProduct.getProduct().getPrice(),
                 orderProduct.getProduct().getImageUrl(),

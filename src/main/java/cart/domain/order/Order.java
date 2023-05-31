@@ -11,7 +11,7 @@ public class Order {
 
     private Long id;
     private Member member;
-    private List<OrderProduct> orderProducts;
+    private OrderProducts orderProducts;
     private Point usedPoint;
     private Fee deliveryFee;
     private LocalDateTime orderedAt;
@@ -19,23 +19,16 @@ public class Order {
     private Order() {
     }
 
-    public Order(Member member, List<OrderProduct> orderProducts, int usedPoint, int deliveryFee, LocalDateTime orderedAt) {
-        this(null, member, orderProducts, usedPoint, deliveryFee, orderedAt);
+    public Order(Member member, List<OrderProduct> orderProducts, int usedPoint) {
+        this(null, member, orderProducts, usedPoint, null);
     }
 
-    public Order(
-            Long id,
-            Member member,
-            List<OrderProduct> orderProducts,
-            int usedPoint,
-            int deliveryFee,
-            LocalDateTime orderedAt
-    ) {
+    public Order(Long id, Member member, List<OrderProduct> orderProducts, int usedPoint, LocalDateTime orderedAt) {
         this.id = id;
         this.member = member;
-        this.orderProducts = orderProducts;
+        this.orderProducts = new OrderProducts(orderProducts);
         this.usedPoint = new Point(usedPoint);
-        this.deliveryFee = new Fee(deliveryFee);
+        this.deliveryFee = Fee.from(this.orderProducts.calculateTotalPrice());
         this.orderedAt = orderedAt;
     }
 
@@ -50,9 +43,7 @@ public class Order {
     }
 
     public int calculateTotalPrice() {
-        return orderProducts.stream()
-                .mapToInt(OrderProduct::calculateTotalPrice)
-                .sum();
+        return orderProducts.calculateTotalPrice();
     }
 
     public Long getId() {
@@ -64,7 +55,7 @@ public class Order {
     }
 
     public List<OrderProduct> getOrderProducts() {
-        return orderProducts;
+        return orderProducts.getValue();
     }
 
     public int getUsedPoint() {

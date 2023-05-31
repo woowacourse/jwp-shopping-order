@@ -2,9 +2,12 @@ package cart.dao;
 
 import cart.dao.entity.OrderProductEntity;
 import cart.dao.entity.ProductEntity;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -39,10 +42,6 @@ public class OrderProductDao {
     }
 
     private static ProductEntity extractProduct(ResultSet rs) throws SQLException {
-        Long productId = rs.getLong("product.id");
-        if (productId == 0) {
-            return null;
-        }
         return new ProductEntity(
                 rs.getLong("product.id"),
                 rs.getString("product.name"),
@@ -61,6 +60,27 @@ public class OrderProductDao {
                 + " LEFT JOIN product ON order_product.product_id = product.id"
                 + " WHERE order_id = ?";
         return jdbcTemplate.query(sql, ROW_MAPPER, orderId);
+    }
+
+    public int saveAll(List<OrderProductEntity> orderProductEntities) {
+        String sql = "INSERT INTO order_product(order_id, product_id, product_name, product_price, product_image_url, quantity) VALUES(?, ?, ?, ?, ?, ?)";
+        int[] rowsAffected = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, orderProductEntities.get(i).getOrderId());
+                ps.setLong(2, orderProductEntities.get(i).getProductId());
+                ps.setString(3, orderProductEntities.get(i).getProductName());
+                ps.setInt(4, orderProductEntities.get(i).getProductPrice());
+                ps.setString(5, orderProductEntities.get(i).getProductImageUrl());
+                ps.setInt(6, orderProductEntities.get(i).getQuantity());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return orderProductEntities.size();
+            }
+        });
+        return Arrays.stream(rowsAffected).sum();
     }
 
     public Long save(OrderProductEntity orderProductEntity) {

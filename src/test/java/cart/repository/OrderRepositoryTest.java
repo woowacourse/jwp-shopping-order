@@ -12,9 +12,12 @@ import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderProductEntity;
 import cart.dao.entity.ProductEntity;
 import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
+import cart.repository.mapper.MemberMapper;
 import cart.repository.mapper.OrderMapper;
+import cart.repository.mapper.OrderProductMapper;
+import cart.repository.mapper.ProductMapper;
 import cart.test.RepositoryTest;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,12 +74,8 @@ class OrderRepositoryTest {
         );
         assertAll(
                 () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0)).usingRecursiveComparison()
-                        .ignoringFieldsOfTypes(LocalDateTime.class)
-                        .isEqualTo(orderA),
-                () -> assertThat(result.get(1)).usingRecursiveComparison()
-                        .ignoringFieldsOfTypes(LocalDateTime.class)
-                        .isEqualTo(orderB)
+                () -> assertThat(result.get(0)).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(orderA),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(orderB)
         );
     }
 
@@ -102,8 +101,32 @@ class OrderRepositoryTest {
                 orderEntity.assignId(orderId),
                 List.of(orderProductEntity.assignId(orderProductId))
         );
-        assertThat(result).usingRecursiveComparison()
-                .ignoringFieldsOfTypes(LocalDateTime.class)
-                .isEqualTo(expected);
+        assertThat(result).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("save 메서드는 주문을 저장한다.")
+    void save() {
+        MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
+        Long memberId = memberDao.addMember(memberEntity);
+
+        ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
+        Long productId = productDao.createProduct(productEntity);
+
+        OrderProduct orderProduct = new OrderProduct(ProductMapper.toDomain(productEntity.assignId(productId)), 10);
+        Order order = new Order(MemberMapper.toDomain(memberEntity.assignId(memberId)), List.of(orderProduct), 1000);
+
+        Long orderId = orderRepository.save(order);
+
+        order.assignId(orderId);
+        Order savedOrder = orderRepository.findById(orderId);
+        List<OrderProductEntity> result = orderProductDao.findAllByOrderId(orderId);
+        assertAll(
+                () -> assertThat(savedOrder).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(order),
+                () -> assertThat(result).hasSize(1),
+                () -> assertThat(OrderProductMapper.toDomain(result.get(0))).usingRecursiveComparison()
+                        .ignoringExpectedNullFields()
+                        .isEqualTo(orderProduct)
+        );
     }
 }

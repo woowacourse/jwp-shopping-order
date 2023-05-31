@@ -7,7 +7,6 @@ import cart.dao.entity.CartItemEntity;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.ProductEntity;
 import cart.test.RepositoryTest;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +47,23 @@ class CartItemDaoTest {
     }
 
     @Test
+    @DisplayName("findAllInIds 메서드는 ID 목록의 모든 장바구니 상품을 조회한다.")
+    void findAllInIds() {
+        CartItemEntity newCartItem = new CartItemEntity(member, product, 5);
+        Long newCartItemId = cartItemDao.save(newCartItem);
+
+        List<CartItemEntity> result = cartItemDao.findAllInIds(List.of(cartItem.getId(), newCartItemId));
+
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result.get(0)).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(cartItem),
+                () -> assertThat(result.get(1)).usingRecursiveComparison()
+                        .ignoringExpectedNullFields()
+                        .isEqualTo(newCartItem.assignId(newCartItemId))
+        );
+    }
+
+    @Test
     @DisplayName("findByMemberId 메서드는 해당 멤버의 모든 장바구니 상품을 조회한다.")
     void findByMemberId() {
         MemberEntity otherMember = new MemberEntity("b@b.com", "password2", 20);
@@ -63,13 +79,11 @@ class CartItemDaoTest {
 
         assertAll(
                 () -> assertThat(result).hasSize(2),
-                () -> assertThat(result.get(0)).usingRecursiveComparison()
-                        .ignoringFieldsOfTypes(LocalDateTime.class)
-                        .isEqualTo(cartItem),
+                () -> assertThat(result.get(0)).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(cartItem),
                 () -> assertThat(result.get(0).getCreatedAt()).isNotNull(),
                 () -> assertThat(result.get(0).getUpdatedAt()).isNotNull(),
                 () -> assertThat(result.get(1)).usingRecursiveComparison()
-                        .ignoringFieldsOfTypes(LocalDateTime.class)
+                        .ignoringExpectedNullFields()
                         .isEqualTo(myCartItem.assignId(myCartItemId)),
                 () -> assertThat(result.get(1).getCreatedAt()).isNotNull(),
                 () -> assertThat(result.get(1).getUpdatedAt()).isNotNull()
@@ -91,11 +105,14 @@ class CartItemDaoTest {
     }
 
     @Test
-    @DisplayName("deleteById 메서드는 장바구니 상품을 삭제한다.")
-    void deleteById() {
-        cartItemDao.deleteById(cartItem.getId());
+    @DisplayName("deleteAllInIds 메서드는 ID 목록의 모든 장바구니 상품을 삭제한다.")
+    void deleteAllInIds() {
+        CartItemEntity newCartItem = new CartItemEntity(member, product, 5);
+        Long newCartItemId = cartItemDao.save(newCartItem);
 
-        Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
+        cartItemDao.deleteAllInIds(List.of(cartItem.getId(), newCartItemId));
+
+        List<CartItemEntity> result = cartItemDao.findByMemberId(member.getId());
         assertThat(result).isEmpty();
     }
 
@@ -116,6 +133,15 @@ class CartItemDaoTest {
                 () -> assertThat(cartItemA).isEmpty(),
                 () -> assertThat(cartItemB).isEmpty()
         );
+    }
+
+    @Test
+    @DisplayName("deleteById 메서드는 장바구니 상품을 삭제한다.")
+    void deleteById() {
+        cartItemDao.deleteById(cartItem.getId());
+
+        Optional<CartItemEntity> result = cartItemDao.findById(cartItem.getId());
+        assertThat(result).isEmpty();
     }
 
     @Nested
@@ -153,9 +179,7 @@ class CartItemDaoTest {
 
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
-                    () -> assertThat(result.get()).usingRecursiveComparison()
-                            .ignoringFieldsOfTypes(LocalDateTime.class)
-                            .isEqualTo(cartItem),
+                    () -> assertThat(result.get()).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(cartItem),
                     () -> assertThat(result.get().getCreatedAt()).isNotNull(),
                     () -> assertThat(result.get().getUpdatedAt()).isNotNull()
             );
@@ -181,9 +205,7 @@ class CartItemDaoTest {
 
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
-                    () -> assertThat(result.get()).usingRecursiveComparison()
-                            .ignoringFieldsOfTypes(LocalDateTime.class)
-                            .isEqualTo(cartItem),
+                    () -> assertThat(result.get()).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(cartItem),
                     () -> assertThat(result.get().getCreatedAt()).isNotNull(),
                     () -> assertThat(result.get().getUpdatedAt()).isNotNull()
             );

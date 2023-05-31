@@ -4,20 +4,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.ProductDao;
+import cart.dao.entity.CartItemEntity;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderProductEntity;
 import cart.dao.entity.ProductEntity;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
+import cart.exception.CartItemException;
 import cart.exception.OrderException;
 import cart.repository.mapper.MemberMapper;
 import cart.repository.mapper.OrderMapper;
 import cart.test.ServiceTest;
+import cart.ui.controller.dto.request.OrderRequest;
 import cart.ui.controller.dto.response.OrderResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +48,9 @@ class OrderServiceTest {
     private ProductDao productDao;
 
     @Autowired
+    private CartItemDao cartItemDao;
+
+    @Autowired
     private OrderDao orderDao;
 
     @Autowired
@@ -51,7 +58,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        memberEntity = new MemberEntity("a@a.com", "password1", 0);
+        memberEntity = new MemberEntity("a@a.com", "password1", 1000);
         Long memberId = memberDao.addMember(memberEntity);
         memberEntity = memberEntity.assignId(memberId);
 
@@ -120,6 +127,59 @@ class OrderServiceTest {
             Order order = OrderMapper.toDomain(orderEntity, List.of(orderProductEntity));
             OrderResponse expected = OrderResponse.from(order);
             assertThat(response).usingRecursiveComparison().isEqualTo(expected);
+        }
+    }
+
+    @Nested
+    @DisplayName("processOrder 메서드는 ")
+    class ProcessOrder {
+
+        @Test
+        @DisplayName("멤버 장바구니 상품이 아니라면 예외를 던진다.")
+        void notOwner() {
+            Member otherMember = new Member(-1L, "b@b.com", "1234", 0);
+            CartItemEntity cartItemEntity = new CartItemEntity(memberEntity, productEntity, 5);
+            Long cartItemId = cartItemDao.save(cartItemEntity);
+            OrderRequest request = new OrderRequest(List.of(cartItemId), 0);
+
+            assertThatThrownBy(() -> orderService.processOrder(otherMember, request))
+                    .isInstanceOf(CartItemException.class)
+                    .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
+        }
+
+        @Test
+        @DisplayName("장바구니 목록을 주문하고 멤버 포인트는 감소하고 남은 장바구니 목록을 응답한다.")
+        void processOrder() {
+            MemberEntity otherMember = new MemberEntity("b@b.com", "1234", 1000);
+            Long otherMemberId = memberDao.addMember(otherMember);
+            MemberEntity savedMember = otherMember.assignId(otherMemberId);
+            CartItemEntity cartItemEntityA = new CartItemEntity(savedMember, productEntity, 5);
+            Long cartItemA = cartItemDao.save(cartItemEntityA);
+            CartItemEntity cartItemEntityB = new CartItemEntity(savedMember, productEntity, 7);
+            Long cartItemB = cartItemDao.save(cartItemEntityB);
+            CartItemEntity cartItemEntityC = new CartItemEntity(savedMember, productEntity, 10);
+            cartItemDao.save(cartItemEntityC);
+            OrderRequest request = new OrderRequest(List.of(cartItemA, cartItemB), 500);
+
+            orderService.processOrder(MemberMapper.toDomain(savedMember), request);
+
+            List<OrderEntity> orders = orderDao.findAllByMemberId(savedMember.getId());
+            List<OrderProductEntity> orderProducts = orderProductDao.findAllByOrderId(orders.get(0).getId());
+            List<CartItemEntity> cartItems = cartItemDao.findByMemberId(savedMember.getId());
+            MemberEntity member = memberDao.getMemberById(savedMember.getId()).get();
+            assertAll(
+                    () -> assertThat(orders).hasSize(1),
+                    () -> assertThat(orderProducts).hasSize(2),
+                    () -> assertThat(cartItems).hasSize(1),
+                    () -> assertThat(member).usingRecursiveComparison()
+                            .ignoringExpectedNullFields()
+                            .isEqualTo(new MemberEntity(
+                                    savedMember.getId(),
+                                    savedMember.getEmail(),
+                                    savedMember.getPassword(),
+                                    500)
+                            )
+            );
         }
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -29,6 +31,7 @@ public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,6 +39,7 @@ public class CartItemDao {
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("member_id", "product_id", "quantity");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     private static MemberEntity extractMember(ResultSet rs) throws SQLException {
@@ -58,6 +62,19 @@ public class CartItemDao {
                 rs.getTimestamp("product.created_at").toLocalDateTime(),
                 rs.getTimestamp("product.updated_at").toLocalDateTime()
         );
+    }
+
+    public List<CartItemEntity> findAllInIds(List<Long> ids) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ids", ids);
+        String sql = "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, cart_item.created_at, cart_item.updated_at,"
+                + " member.id, member.email, member.password, member.point, member.created_at, member.updated_at,"
+                + " product.id, product.name, product.price, product.image_url, product.created_at, product.updated_at"
+                + " FROM cart_item"
+                + " INNER JOIN member ON cart_item.member_id = member.id"
+                + " INNER JOIN product ON cart_item.product_id = product.id"
+                + " WHERE cart_item.id IN (:ids)";
+        return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
     public List<CartItemEntity> findByMemberId(Long memberId) {
@@ -112,14 +129,21 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public void deleteAllInIds(List<Long> ids) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ids", ids);
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     public void deleteAllByProductId(Long productId) {
         String sql = "DELETE FROM cart_item WHERE product_id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
 

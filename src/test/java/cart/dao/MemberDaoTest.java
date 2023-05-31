@@ -97,4 +97,23 @@ class MemberDaoTest {
             assertThat(result).isEmpty();
         }
     }
+
+    @Test
+    @DisplayName("update 메서드는 멤버 정보를 수정한다.")
+    void update() {
+        MemberEntity member = new MemberEntity("a@a.com", "password1", 0);
+        Long memberId = memberDao.addMember(member);
+        MemberEntity newMemberEntity = new MemberEntity(memberId, "b@b.com", "password2", 10);
+
+        memberDao.update(newMemberEntity);
+
+        Optional<MemberEntity> result = memberDao.getMemberById(memberId);
+        assertAll(
+                () -> assertThat(result).isNotEmpty(),
+                () -> assertThat(result.get().getId()).isEqualTo(memberId),
+                () -> assertThat(result.get().getEmail()).isEqualTo(newMemberEntity.getEmail()),
+                () -> assertThat(result.get().getPassword()).isEqualTo(newMemberEntity.getPassword()),
+                () -> assertThat(result.get().getPoint()).isEqualTo(newMemberEntity.getPoint())
+        );
+    }
 }

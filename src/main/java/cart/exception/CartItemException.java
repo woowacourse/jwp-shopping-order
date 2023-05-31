@@ -26,4 +26,11 @@ public class CartItemException extends ShoppingException {
             super("해당 장바구니 상품이 존재하지 않습니다.");
         }
     }
+
+    public static class DuplicateIds extends CartItemException {
+
+        public DuplicateIds() {
+            super("중복된 장바구니 상품 ID가 존재합니다.");
+        }
+    }
 }

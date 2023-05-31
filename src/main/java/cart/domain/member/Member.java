@@ -28,6 +28,10 @@ public class Member {
         this.id = id;
     }
 
+    public void usePoint(int point) {
+        this.point = this.point.decrease(point);
+    }
+
     public Long getId() {
         return id;
     }

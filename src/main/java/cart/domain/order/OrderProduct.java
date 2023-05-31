@@ -1,5 +1,6 @@
 package cart.domain.order;
 
+import cart.domain.cartitem.CartItem;
 import cart.domain.product.Product;
 
 public class OrderProduct {
@@ -21,6 +22,10 @@ public class OrderProduct {
         this.quantity = new Quantity(quantity);
     }
 
+    public static OrderProduct from(CartItem cartItem) {
+        return new OrderProduct(cartItem.getProduct(), cartItem.getQuantity());
+    }
+
     public void assignId(Long id) {
         this.id = id;
     }
@@ -38,7 +43,7 @@ public class OrderProduct {
     }
 
     public Long getProductId() {
-        return product != null ? product.getId() : null;
+        return product.getId();
     }
 
     public int getQuantity() {

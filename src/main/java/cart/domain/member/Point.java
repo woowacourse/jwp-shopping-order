@@ -19,6 +19,13 @@ class Point {
         }
     }
 
+    public Point decrease(int point) {
+        if (point < MINIMUM_VALUE) {
+            throw new NegativePoint();
+        }
+        return new Point(value - point);
+    }
+
     public int getValue() {
         return value;
     }

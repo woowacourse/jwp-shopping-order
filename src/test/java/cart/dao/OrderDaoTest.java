@@ -39,10 +39,10 @@ class OrderDaoTest {
         assertAll(
                 () -> assertThat(result).hasSize(2),
                 () -> assertThat(result.get(0)).usingRecursiveComparison()
-                        .ignoringFieldsOfTypes(LocalDateTime.class)
+                        .ignoringExpectedNullFields()
                         .isEqualTo(orderEntityA.assignId(orderIdA)),
                 () -> assertThat(result.get(1)).usingRecursiveComparison()
-                        .ignoringFieldsOfTypes(LocalDateTime.class)
+                        .ignoringExpectedNullFields()
                         .isEqualTo(orderEntityB.assignId(orderIdB))
         );
     }
@@ -72,7 +72,7 @@ class OrderDaoTest {
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
                     () -> assertThat(result.get()).usingRecursiveComparison()
-                            .ignoringFieldsOfTypes(LocalDateTime.class)
+                            .ignoringExpectedNullFields()
                             .isEqualTo(orderEntity.assignId(orderId))
             );
         }

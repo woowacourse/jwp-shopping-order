@@ -8,7 +8,6 @@ import cart.dao.entity.CartItemEntity;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.ProductEntity;
 import cart.test.RepositoryTest;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -57,9 +56,7 @@ class ProductDaoTest {
 
         ProductEntity result = productDao.getProductById(savedProductId).get();
         assertAll(
-                () -> assertThat(result).usingRecursiveComparison()
-                        .ignoringFieldsOfTypes(LocalDateTime.class)
-                        .isEqualTo(updateProductEntity),
+                () -> assertThat(result).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(updateProductEntity),
                 () -> assertThat(result.getCreatedAt()).isEqualTo(findProductEntity.getCreatedAt()),
                 () -> assertThat(result.getUpdatedAt()).isNotNull()
         );
@@ -112,7 +109,7 @@ class ProductDaoTest {
             assertAll(
                     () -> assertThat(result).isNotEmpty(),
                     () -> assertThat(result.get()).usingRecursiveComparison()
-                            .ignoringFieldsOfTypes(LocalDateTime.class)
+                            .ignoringExpectedNullFields()
                             .isEqualTo(productEntity.assignId(savedProductId)),
                     () -> assertThat(result.get().getCreatedAt()).isNotNull(),
                     () -> assertThat(result.get().getUpdatedAt()).isNotNull()
