@@ -47,4 +47,14 @@ public class CartItemRepository {
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }
+
+    public void update(final CartItem cartItem) {
+        CartItemEntity cartItemEntity = new CartItemEntity(cartItem.getId(), cartItem.getMember().getId(), cartItem.getProduct().getId(), cartItem.getQuantity());
+
+        cartItemDao.update(cartItemEntity);
+    }
+
+    public void deleteById(final Long cartItemId) {
+        cartItemDao.deleteById(cartItemId);
+    }
 }

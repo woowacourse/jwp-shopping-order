@@ -84,4 +84,34 @@ class CartItemRepositoryTest {
         // then
         assertThat(result).hasSize(1);
     }
+
+    @Test
+    void 새로운_객체로_수정한다() {
+        // given
+        long id = 1L;
+        int quantity = 10;
+        CartItem cartItem = new CartItem(id, dummyMember, dummyProduct, quantity);
+        CartItemEntity cartItemEntity = new CartItemEntity(id, dummyMember.getId(), dummyProduct.getId(), quantity);
+
+        // when
+        repository.update(cartItem);
+
+        // then
+        verify(cartItemDao).update(cartItemEntity);
+    }
+
+    @Test
+    void ID로_저장된_객체를_삭제한다() {
+        // given
+        long id = 1L;
+        int quantity = 10;
+        new CartItem(id, dummyMember, dummyProduct, quantity);
+        new CartItemEntity(id, dummyMember.getId(), dummyProduct.getId(), quantity);
+
+        // when
+        repository.deleteById(id);
+
+        // then
+        verify(cartItemDao).deleteById(id);
+    }
 }
