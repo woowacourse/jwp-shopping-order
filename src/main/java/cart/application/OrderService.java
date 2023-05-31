@@ -7,9 +7,11 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.CartItemException.IllegalId;
+import cart.exception.OrderException;
 import cart.exception.OrderException.OutOfDatedProductPrice;
 import java.util.List;
 import java.util.Objects;
@@ -71,5 +73,12 @@ public class OrderService {
     public List<OrderResponse> findOrdersByMember(final Member member) {
         final List<Order> orders = orderDao.findByMemberId(member.getId());
         return OrderResponse.from(orders);
+    }
+
+    public OrderDetailResponse findOrderDetailById(final Member member, final Long orderId) {
+        final Order order = orderDao.findDetailById(member.getId(), orderId)
+                .orElseThrow(() -> new OrderException.IllegalId(orderId));
+        final List<OrderItem> orderItems = orderDao.findOrderItemsById(member.getId(), orderId);
+        return OrderDetailResponse.from(new Order(order.getId(), orderItems, order.getDeliveryFee()));
     }
 }

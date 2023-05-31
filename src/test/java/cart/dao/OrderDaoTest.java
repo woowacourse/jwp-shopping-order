@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class OrderDaoTest {
 
-    private OrderDao orderDao;
+    private final OrderDao orderDao;
 
     @Autowired
     public OrderDaoTest(final JdbcTemplate jdbcTemplate) {
@@ -64,6 +64,41 @@ class OrderDaoTest {
         // then
         assertThat(extractOrderItemsWithoutId(found.get(0).getOrderItems()))
                 .containsExactly(orderItem, orderItem2, orderItem3);
+    }
+
+    @DisplayName("특정 주문 상세 정보(상품 목록 제외)를 DB에서 조회한다.")
+    @Test
+    void findDetailById() {
+        // given
+        final Money deliveryFee = new Money(3000);
+        final Long createdId = orderDao.save(1L, deliveryFee);
+
+        // when
+        final Order order = orderDao.findDetailById(1L, createdId).get();
+
+        // then
+        assertThat(order.getId()).isEqualTo(createdId);
+        assertThat(order.getDeliveryFee()).isEqualTo(deliveryFee);
+    }
+
+    @DisplayName("특정 주문의 상품 목록을 DB에서 조회한다.")
+    @Test
+    void findOrderItemsById() {
+        // given
+        final Money deliveryFee = new Money(3000);
+        final Long createdId = orderDao.save(1L, deliveryFee);
+        final List<OrderItem> orderItemsToSave = List.of(
+                new OrderItem(createdId, "doy", new Money(1000), "image.png", 1),
+                new OrderItem(createdId, "junpak", new Money(1000), "image2.png", 3),
+                new OrderItem(createdId, "urr", new Money(1000), "image3.png", 5)
+        );
+        orderDao.saveOrderItems(orderItemsToSave);
+
+        // when
+        final List<OrderItem> orderItems = orderDao.findOrderItemsById(1L, createdId);
+
+        // then
+        assertThat(extractOrderItemsWithoutId(orderItems)).containsExactlyInAnyOrderElementsOf(orderItemsToSave);
     }
 
     private List<OrderItem> extractOrderItemsWithoutId(final List<OrderItem> orderItems) {

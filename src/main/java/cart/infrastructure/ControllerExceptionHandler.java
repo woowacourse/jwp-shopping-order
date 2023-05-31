@@ -5,6 +5,9 @@ import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.MoneyException;
 import cart.exception.OrderException;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,9 +16,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class.getName());
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(final Exception exception) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(exception.getMessage()));
+        logger.error(exception.getMessage());
+        logger.error(Arrays.toString(exception.getStackTrace()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("Internal Server Error"));
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -46,5 +53,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(OrderException.OutOfDatedProductPrice.class)
     public ResponseEntity<ErrorResponse> handleOrderException(final OrderException.OutOfDatedProductPrice exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(OrderException.IllegalId.class)
+    public ResponseEntity<ErrorResponse> handleOrderException(final OrderException.IllegalId exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }
 }
