@@ -25,11 +25,12 @@ CREATE TABLE cart_item
 
 CREATE TABLE purchase_order
 (
-    id                BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id         BIGINT    NOT NULL,
-    order_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    payment           INT       NOT NULL,
-    used_point        INT       NOT NULL,
+    id         BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT      NOT NULL,
+    order_at   TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    payment    INT         NOT NULL,
+    used_point INT         NOT NULL,
+    status     VARCHAR(50) NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
@@ -48,11 +49,12 @@ CREATE TABLE purchase_order_item
 
 CREATE TABLE member_point
 (
-    id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT    NOT NULL,
-    point      INT       NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expired_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id         BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT      NOT NULL,
+    point      INT         NOT NULL,
+    created_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expired_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status     VARCHAR(50) NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
