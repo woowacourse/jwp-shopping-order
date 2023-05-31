@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.PointInconsistencyException;
+import cart.exception.PointException;
 import cart.exception.PriceInconsistencyException;
 
 import java.util.List;
@@ -16,6 +16,7 @@ public class Order {
 
     public Order(Member member, List<CartItem> cartItems, Long originalPrice, Long usedPoint, Long pointToAdd) {
         validateOriginalPrice(cartItems, originalPrice);
+        validateUsedPoint(member, cartItems, usedPoint);
         validatePointToAdd(cartItems, pointToAdd);
 
         this.member = member;
@@ -45,14 +46,31 @@ public class Order {
         }
     }
 
+    private void validateUsedPoint(Member member, List<CartItem> cartItems, Long usedPoint) {
+        if (member.getPoint() < usedPoint) {
+            throw new PointException.InvalidPointException("보유한 포인트보다 많은 포인트를 사용할 수 없습니다");
+        }
+
+        int price = 0;
+        for (CartItem item : cartItems) {
+            if (item.getProduct().getPointAvailable()) {
+                price += item.getProduct().getPrice();
+            }
+        }
+
+        if (price < usedPoint) {
+            throw new PointException.InvalidPointException("사용 가능한 포인트보다 많은 포인트를 사용할 수 없습니다");
+        }
+    }
+
     private void validatePointToAdd(List<CartItem> cartItems, Long pointToAdd) {
-        Double point = 0.0;
+        double point = 0.0;
         for (CartItem item : cartItems) {
              point += item.getProduct().getPrice() * item.getQuantity() * item.getProduct().getPointRatio() / 100;
         }
 
         if (pointToAdd != Math.round(point)) {
-            throw new PointInconsistencyException("적립될 포인트에 문제가 있습니다");
+            throw new PointException.PointInconsistencyException("적립될 포인트에 문제가 있습니다");
         }
     }
 

@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.PointInconsistencyException;
+import cart.exception.PointException;
 import cart.exception.PriceInconsistencyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +38,20 @@ class OrderTest {
     @Test
     void throwExceptionWithWrongPointToAdd() {
         assertThatThrownBy(() -> new Order(member1, cartItems, 79000L, 0L, 6500L))
-                .isInstanceOf(PointInconsistencyException.class);
+                .isInstanceOf(PointException.PointInconsistencyException.class);
+    }
+
+    @DisplayName("요청된 주문의 usedPoint가 실제 member가 가진 포인트보다 크면 예외를 반환한다")
+    @Test
+    void throwExceptionWhenUsedPointBiggerThanMemberPoint() {
+        assertThatThrownBy(() -> new Order(member1, cartItems, 79000L, 12000L, 6900L))
+                .isInstanceOf(PointException.InvalidPointException.class);
+    }
+
+    @DisplayName("요청된 주문의 usedPoint가 실제 주문 품목에 사용 가능한 포인트보다 크면 예외를 반환한다")
+    @Test
+    void throwExceptionWhenUsedPointBiggerThanCanUsePoint() {
+        assertThatThrownBy(() -> new Order(member2, cartItems, 79000L, 60000L, 6900L))
+                .isInstanceOf(PointException.InvalidPointException.class);
     }
 }

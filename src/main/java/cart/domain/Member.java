@@ -4,13 +4,13 @@ public class Member {
     private Long id;
     private String email;
     private String password;
-    private Double point;
+    private Long point;
 
     public Member(Long id, String email, String password) {
-        this(id, email, password, 0.0);
+        this(id, email, password, 0L);
     }
 
-    public Member(Long id, String email, String password, Double point) {
+    public Member(Long id, String email, String password, Long point) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -29,7 +29,7 @@ public class Member {
         return password;
     }
 
-    public Double getPoint() {
+    public Long getPoint() {
         return point;
     }
 
