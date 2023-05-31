@@ -1,14 +1,21 @@
 package cart.domain;
 
 public class Member {
-    private Long id;
-    private String email;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String password;
+    private final int points;
 
-    public Member(Long id, String email, String password) {
+    public Member(final Long id, final String email, final String password) {
+        this(id, email, password, 0);
+    }
+
+
+    public Member(final Long id, final String email, final String password, final int points) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.points = points;
     }
 
     public Long getId() {
@@ -23,7 +30,11 @@ public class Member {
         return password;
     }
 
-    public boolean checkPassword(String password) {
+    public int getPoints() {
+        return points;
+    }
+
+    public boolean checkPassword(final String password) {
         return this.password.equals(password);
     }
 }

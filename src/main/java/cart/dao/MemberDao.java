@@ -15,46 +15,50 @@ public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MemberDao(JdbcTemplate jdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Member> getMemberById(Long id) {
-        String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
+    public Optional<Member> getMemberById(final Long id) {
+        final String sql = "SELECT * FROM member WHERE id = ?";
+        final List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
         return Optional.of(members.get(0));
     }
 
-    public Optional<Member> getMemberByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
+    public Optional<Member> getMemberByEmail(final String email) {
+        final String sql = "SELECT * FROM member WHERE email = ?";
+        final List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
         return Optional.of(members.get(0));
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+    public void addMember(final Member member) {
+        final String sql = "INSERT INTO member (email, password, points) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoints());
     }
 
-    public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
+    public void updateMember(final Member member) {
+        final String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
     }
 
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
+    public void deleteMember(final Long id) {
+        final String sql = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public List<Member> getAllMembers() {
-        String sql = "SELECT * from member";
+        final String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+        public Member mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+            return new Member(rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getInt("points")
+            );
         }
     }
 }
