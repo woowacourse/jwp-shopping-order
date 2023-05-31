@@ -95,7 +95,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isTrue();
+        assertThat(selectedCartItemResponse).isPresent();
         assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
     }
 

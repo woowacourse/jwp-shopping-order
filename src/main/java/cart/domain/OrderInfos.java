@@ -14,4 +14,10 @@ public class OrderInfos {
                 .mapToLong(OrderInfo::calculateProductPriceWithQuantiry)
                 .sum();
     }
+    
+    public Long calculatePointToAdd() {
+        return orderInfos.stream()
+                .mapToLong(OrderInfo::calculatePointToAdd)
+                .sum();
+    }
 }

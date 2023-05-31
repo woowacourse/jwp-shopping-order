@@ -12,7 +12,7 @@ class ProductTest {
         final Product product = new Product("사과", 10000, "aa", 10.0, true);
         
         // when
-        final int actualPointToAdd = product.calculatePointToAdd();
+        final long actualPointToAdd = product.calculatePointToAdd();
         
         // then
         assertThat(actualPointToAdd).isEqualTo(1000);

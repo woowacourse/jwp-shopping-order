@@ -3,7 +3,7 @@
 ## step2
 
 ### Domain
-- [ ] Order
+- [x] Order
   - [x] 필드  
     - [x] id
     - [x] Member (회원 객체)
@@ -14,9 +14,9 @@
   - [x] 모든 물품의 가격과 수량에 따른 originalPrice를 구한다.
     - [x] 각 물품의 가격과 수량에 따른 가격들을 더한다.
     - [x] 사용할 적립금만큼 가격을 뺀다.
-  - [ ] 예외 처리
+  - [x] 예외 처리
     - [x] [제한 사항] 구한 originalPrice와 프론트에서 보낸 originalPrice가 같아야 한다.
-    - [ ] [제한 사항] 구한 pointToAdd와 프론트에서 보낸 pointToAdd가 같아야 한다.
+    - [x] [제한 사항] 구한 pointToAdd와 프론트에서 보낸 pointToAdd가 같아야 한다.
 
 - [ ] Member
   - [ ] Point 필드(적립금 객체)

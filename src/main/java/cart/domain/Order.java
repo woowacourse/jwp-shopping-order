@@ -18,15 +18,6 @@ public class Order {
             final long pointToAdd
     ) {
         this(null, member, orderInfos, originalPrice, usedPoint, pointToAdd);
-        validateOriginalPrice(originalPrice);
-    }
-    
-    private void validateOriginalPrice(final long originalPrice) {
-        final Long calculatedPrice = this.orderInfos.calculateAllProductPriceWithQuantity();
-        if (calculatedPrice != originalPrice) {
-            final String errorMessage = String.format("클라이언트와 서버의 originalPrice가 다릅니다. Client : %d, Server : %d", originalPrice, calculatedPrice);
-            throw new IllegalArgumentException(errorMessage);
-        }
     }
     
     public Order(
@@ -43,6 +34,24 @@ public class Order {
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
+        validateOriginalPrice(originalPrice);
+        validateOriginalPointToAdd(pointToAdd);
+    }
+    
+    private void validateOriginalPrice(final long originalPrice) {
+        final Long calculatedOriginalPrice = this.orderInfos.calculateAllProductPriceWithQuantity();
+        if (calculatedOriginalPrice != originalPrice) {
+            final String errorMessage = String.format("클라이언트와 서버의 originalPrice가 다릅니다. Client : %d, Server : %d", originalPrice, calculatedOriginalPrice);
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+    
+    private void validateOriginalPointToAdd(final long pointToAdd) {
+        final Long calculatedPointToAdd = this.orderInfos.calculatePointToAdd();
+        if (calculatedPointToAdd != pointToAdd) {
+            final String errorMessage = String.format("클라이언트와 서버의 pointToAdd가 다릅니다. Client : %d, Server : %d", pointToAdd, calculatedPointToAdd);
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
     
     public Long calculatePayment() {

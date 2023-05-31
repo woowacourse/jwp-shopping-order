@@ -25,6 +25,10 @@ public class Product {
         this.pointAvailable = pointAvailable;
     }
     
+    public Long calculatePointToAdd() {
+        return Math.round(price * (pointRatio / 100.0));
+    }
+    
     public Long getId() {
         return id;
     }
@@ -47,9 +51,5 @@ public class Product {
     
     public Boolean getPointAvailable() {
         return pointAvailable;
-    }
-    
-    public int calculatePointToAdd() {
-        return (int) Math.round(price * (pointRatio / 100.0));
     }
 }

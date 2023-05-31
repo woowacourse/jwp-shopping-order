@@ -38,6 +38,10 @@ public class OrderInfo {
         return (long) productPrice * quantity;
     }
     
+    public Long calculatePointToAdd() {
+        return product.calculatePointToAdd() * quantity;
+    }
+    
     public Long getId() {
         return id;
     }
