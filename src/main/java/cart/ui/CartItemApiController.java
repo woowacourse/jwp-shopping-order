@@ -3,13 +3,11 @@ package cart.ui;
 import cart.application.CartItemService;
 import cart.application.dto.request.CartItemQuantityUpdateRequest;
 import cart.application.dto.request.CartItemRequest;
-import cart.application.dto.request.PaymentRequest;
 import cart.application.dto.response.CartItemResponse;
 import cart.domain.member.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -47,12 +45,5 @@ public class CartItemApiController {
         cartItemService.remove(member, id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/payment")
-    public ResponseEntity<String> paymentCartItems(final Member member, @Valid @RequestBody final PaymentRequest request) {
-        final Long historyId = cartItemService.payment(member, request);
-
-        return ResponseEntity.created(URI.create("redirect:/orders/histories/" + historyId)).build();
     }
 }

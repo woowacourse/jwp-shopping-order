@@ -1,7 +1,6 @@
 package cart.persistence.repository;
 
 import cart.domain.cart.CartItem;
-import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dao.MemberDao;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static cart.persistence.repository.Mapper.*;
@@ -35,11 +32,6 @@ public class CartItemRepository {
     public Product getProductById(final Long productId) {
         final ProductEntity productEntity = productDao.getProductById(productId);
         return productEntityToProductMapper(productEntity);
-    }
-
-    public void updatePoint(final Member member) {
-        final MemberEntity memberEntity = memberToMemberEntityMapper(member);
-        memberDao.updatePoint(memberEntity);
     }
 
     public List<CartItem> findCartItemsByMemberId(final Long memberId) {
@@ -82,25 +74,5 @@ public class CartItemRepository {
     public void updateCartItemQuantity(final CartItem cartItem) {
         final CartItemEntity cartItemEntity = cartItemEntityMapper(cartItem);
         cartItemDao.updateQuantity(cartItemEntity);
-    }
-
-    public List<CartItem> getCartItemsByIds(final List<Long> ids) {
-        final List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(ids);
-        final List<Long> memberIds = cartItemEntities.stream()
-                .map(CartItemEntity::getMemberId)
-                .collect(Collectors.toList());
-        final List<MemberEntity> memberEntities = memberDao.getMembersByIds(memberIds);
-        final Map<Long, MemberEntity> memberEntityMap = memberEntities.stream()
-                .collect(Collectors.toMap(MemberEntity::getId, Function.identity()));
-        final List<ProductEntity> productEntities = getProductEntitiesFromCartItemEntities(cartItemEntities);
-
-        final List<CartItem> cartItems = new ArrayList<>();
-        for (int i = 0; i < cartItemEntities.size(); i++) {
-            final CartItemEntity cartItemEntity = cartItemEntities.get(i);
-            final MemberEntity memberEntity = memberEntityMap.get(cartItemEntity.getMemberId());
-            final ProductEntity productEntity = productEntities.get(i);
-            cartItems.add(Mapper.cartItemMapper(cartItemEntity, memberEntity, productEntity));
-        }
-        return cartItems;
     }
 }
