@@ -37,6 +37,10 @@ public class Money {
         return this.value.compareTo(other.value) < 0;
     }
 
+    public Money multiply(int value) {
+        return new Money(this.value.multiply(BigDecimal.valueOf(value)));
+    }
+
     public Money multiplyRateAndRound(double rate) {
         return new Money(multiplyRate(rate).setScale(0, RoundingMode.HALF_UP));
     }

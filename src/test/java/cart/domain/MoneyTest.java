@@ -70,10 +70,24 @@ class MoneyTest {
             .isInstanceOf(IllegalMoneyException.class);
     }
 
+    @Test
+    @DisplayName("원액에 정수값을 곱한 금액을 계산할 수 있다.")
+    void multiplyValue() {
+        // given
+        Money money = new Money(BigDecimal.valueOf(50));
+
+        // when
+        Money result = money.multiply(10);
+
+        // then
+        assertThat(result).isEqualTo(new Money(BigDecimal.valueOf(500)));
+    }
+
     @ParameterizedTest
     @CsvSource(value = {"230:6", "0:0"}, delimiter = ':')
     @DisplayName("원액에 비율을 곱해서 반올림 된 금액을 계산할 수 있다.")
     void multiplyRateAndRound(int standardValue, int resultValue) {
+        // given
         Money money = new Money(BigDecimal.valueOf(standardValue));
         double rate = 2.5 / 100;
 
