@@ -123,3 +123,8 @@ input[type="submit"] {
 .condition {
     display: inline-block;
 }
+
+.myRadio {
+    display: flex;
+    align-items: center;
+}

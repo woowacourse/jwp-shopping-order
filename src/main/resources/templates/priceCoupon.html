@@ -30,10 +30,14 @@
             <label for="discountPrice">할인 가격</label><br>
             <input type="number" id="discountPrice" name="discountPrice" required><br>
 
-            <div>
+            <label for="myRadio">금액 조건</label>
+            <div id="myRadio" class="myRadio">
                 <input type="radio" id="minimum-price-condition" name="conditionType" value="minimumPrice" checked>
+                &nbsp;
                 <label for="minimum-price-condition">최소 금액 조건</label>
+                &nbsp;
                 <input type="radio" id="none-condition" name="conditionType" value="none">
+                &nbsp;
                 <label for="none-condition">조건 없음</label>
             </div>
             <label for="minimumPrice">최소 금액</label><br>
