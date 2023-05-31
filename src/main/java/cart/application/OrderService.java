@@ -29,15 +29,15 @@ public class OrderService {
     private OrderedItemDao orderedItemDao;
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
-        //totalItemPrice = 상품의 원가(할인 적용 전) + 배송비
+        //totalItemPrice = 상품의 원가(할인 적용 전)
         int totalItemPrice = findTotalItemPrice(orderCreateRequest);
-        //shippingFee 구하기 -> totalPrice로 구함
+        //shippingFee = 배송비
         int shippingFee = Order.calculateShippingFee(totalItemPrice);
-        //discountedTotalPrice 구하기 -> 상품 할인 체크 -> 상품 할인이 있다면 상품 할인 적용, 아니라면 member의 등급 확인해서 구함
-        int discountedTotalPrice = findDiscountedTotalItemPrice(member, orderCreateRequest, totalItemPrice);
+        //discountedItemTotalPrice = 할인이 적용된 상품들의 가격
+        int discountedItemTotalPrice = findDiscountedTotalItemPrice(member, orderCreateRequest, totalItemPrice);
         int totalPurchaseAmount = totalItemPrice + shippingFee;
 
-        Order order = new Order(member.getId(), totalPurchaseAmount, totalItemPrice, null, shippingFee, discountedTotalPrice);
+        Order order = new Order(member.getId(), totalPurchaseAmount, totalItemPrice, null, shippingFee, discountedItemTotalPrice);
         member.order(totalPurchaseAmount);
         Long orderId = orderDao.createOrder(member.getId(), order);
 
