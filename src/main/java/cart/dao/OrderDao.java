@@ -26,7 +26,7 @@ public class OrderDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO orders (total_item_price, discounted_total_item_price, delivery_fee, ordered_at, member_id) " +
+                    "INSERT INTO orders (total_item_price, discounted_total_item_price, shipping_fee, ordered_at, member_id) " +
                             "VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );

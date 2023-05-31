@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS orders
     id                          BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
     total_item_price            INT   NOT NULL,
     discounted_total_item_price INT   NOT NULL,
-    delivery_fee                INT      NOT NULL,
+    shipping_fee                INT      NOT NULL,
     ordered_at                  DATETIME NOT NULL,
     member_id                   BIGINT   NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)

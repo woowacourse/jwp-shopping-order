@@ -37,9 +37,7 @@ class OrderDaoTest {
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
         Order order = new Order(member, orderItems);
-        order.calculateTotalPrinciplePrice();
-        int discountedPrice = order.calculateTotalDiscountedPrice();
-        order.determineShippingFee(discountedPrice);
+        order.calculatePrice();
 
         // when
         Long result = orderDao.insertOrder(order);

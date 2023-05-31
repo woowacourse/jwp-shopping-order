@@ -13,7 +13,7 @@ public class Order {
 
     private final Long id;
     private final Member member;
-    private final List<OrderItem> orderItems;
+    private final OrderItems orderItems;
     private final LocalDateTime generateTime;
     private Money shippingFee;
     private Money purchaseItemPrice;
@@ -22,7 +22,7 @@ public class Order {
     public Order(
             final Long id,
             final Member member,
-            final List<OrderItem> orderItems,
+            final OrderItems orderItems,
             final Money shippingFee,
             final Money purchaseItemPrice,
             final Money discountPurchaseItemPrice
@@ -37,21 +37,15 @@ public class Order {
     }
 
     public Order(final Member member, final List<OrderItem> orderItems) {
-        this(null, member, orderItems, null, null, null);
+        this(null, member, new OrderItems(orderItems), new Money(0), new Money(0), new Money(0));
     }
 
-    public void calculateTotalPrinciplePrice() {
-        int totalPrinciplePrice = orderItems.stream()
-                .mapToInt(OrderItem::getPrinciplePrice)
-                .sum();
-        this.purchaseItemPrice = new Money(totalPrinciplePrice);
+    public void calculatePrice() {
+        purchaseItemPrice = new Money(orderItems.getTotalPrinciplePrice());
+        discountPurchaseItemPrice = new Money(orderItems.getTotalDiscountedPrice(member));
+        determineShippingFee(discountPurchaseItemPrice.getMoney());
     }
 
-    public int calculateTotalDiscountedPrice() {
-        int discountedPrice = calculateItemDiscount() + calculateMemberDiscount();
-        this.discountPurchaseItemPrice = new Money(discountedPrice);
-        return discountedPrice;
-    }
 
     public void determineShippingFee(final int purchasePrice) {
         if (purchasePrice >= MINIMUM_FREE_SHIPPING_STANDARD) {
@@ -59,37 +53,6 @@ public class Order {
             return;
         }
         this.shippingFee = new Money(BASE_SHIPPING_FEE);
-    }
-
-    public int getItemBenefit() {
-        int discountedItemPrinciplePrice = orderItems.stream()
-                .filter(OrderItem::isDiscount)
-                .mapToInt(OrderItem::getPrinciplePrice)
-                .sum();
-        return discountedItemPrinciplePrice - calculateItemDiscount();
-    }
-
-    public int getMemberBenefit() {
-        int discountedItemPrinciplePrice = orderItems.stream()
-                .filter(OrderItem::isNotDiscount)
-                .mapToInt(OrderItem::getPrinciplePrice)
-                .sum();
-
-        return discountedItemPrinciplePrice - calculateMemberDiscount();
-    }
-
-    private int calculateItemDiscount() {
-        return orderItems.stream()
-                .filter(OrderItem::isDiscount)
-                .mapToInt(OrderItem::getItemDiscountedPrice)
-                .sum();
-    }
-
-    private int calculateMemberDiscount() {
-        return orderItems.stream()
-                .filter(OrderItem::isNotDiscount)
-                .mapToInt(orderitem -> orderitem.getMemberDiscountedPrice(member))
-                .sum();
     }
 
     public Long getId() {
@@ -101,7 +64,7 @@ public class Order {
     }
 
     public List<OrderItem> getOrderItems() {
-        return orderItems;
+        return orderItems.getOrderItems();
     }
 
     public LocalDateTime getGenerateTime() {
