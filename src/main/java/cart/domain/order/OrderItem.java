@@ -1,5 +1,6 @@
 package cart.domain.order;
 
+import cart.dao.entity.OrderItemEntity;
 import cart.domain.Product;
 
 

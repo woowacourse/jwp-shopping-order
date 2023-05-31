@@ -101,10 +101,22 @@ public class OrderRepository {
     }
 
     public Long saveOrder(final Member member, final Order order) {
+        final List<OrderItem> orderItemList = order.getOrderItems();
+        final List<OrderItemEntity> orderItemEntityList = orderItemList.stream()
+                .map(orderItem -> OrderItemEntity.toEntity(orderItem, order.getId()))
+                .collect(toList());
+        saveOrderItems(orderItemEntityList);
+
         final OrderEntity orderEntity = new OrderEntity(
                 member.getId(),
                 order.getShippingFee(),
                 order.getTotalPrice());
         return orderDao.createOrder(orderEntity);
+    }
+
+    private void saveOrderItems(List<OrderItemEntity> orderItemEntityList) {
+        for (OrderItemEntity orderItemEntity : orderItemEntityList) {
+            orderItemDao.createOrderItem(orderItemEntity);
+        }
     }
 }

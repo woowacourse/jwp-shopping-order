@@ -3,12 +3,14 @@ package cart.dao;
 import cart.dao.entity.OrderItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,12 +30,17 @@ public class OrderItemDao {
             resultSet.getLong("orders_id")
     );
 
-    public OrderItemDao(JdbcTemplate jdbcTemplate) {
+    public OrderItemDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_item")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public void createOrderItem(OrderItemEntity orderItemEntity) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(orderItemEntity);
+        simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public List<OrderItemEntity> findAllByOrderId(final Long orderId) {

@@ -37,8 +37,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg"));
+        productId2 = createProduct(new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg"));
 
         member = memberDao.getMemberById(1L);
         member2 = memberDao.getMemberById(2L);
@@ -84,7 +84,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void increaseCartItemQuantity() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10);
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10L);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
@@ -104,7 +104,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void decreaseCartItemQuantityToZero() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0);
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0L);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
@@ -123,7 +123,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void updateOtherMembersCartItem() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
@@ -193,7 +193,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
+    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, Long quantity) {
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

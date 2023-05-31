@@ -41,7 +41,7 @@ public class OrderService {
                 shippingFee.getFee(),
                 orderItemList,
                 shippingDiscountPolicy.getThreshold());
-        return orderRepository.saveOrder(newOrder);
+        return orderRepository.saveOrder(member, newOrder);
     }
 
     public List<OrdersResponse> findAllOrdersByMember(Member member) {

@@ -29,7 +29,7 @@ public class OrderDao {
 
     public OrderDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("orders")
                 .usingGeneratedKeyColumns("id");
     }

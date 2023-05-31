@@ -1,6 +1,7 @@
 package cart.dao.entity;
 
 import cart.domain.Product;
+import cart.domain.order.OrderItem;
 
 public class OrderItemEntity {
     private final Long id;
@@ -23,6 +24,16 @@ public class OrderItemEntity {
         this.quantity = quantity;
         this.productId = productId;
         this.orderId = orderId;
+    }
+
+    public static OrderItemEntity toEntity(OrderItem orderItem, Long orderId) {
+        return new OrderItemEntity(
+                orderItem.getProduct().getName(),
+                orderItem.getProduct().getPrice(),
+                orderItem.getProduct().getImageUrl(),
+                orderItem.getQuantity(),
+                orderItem.getProduct().getId(),
+                orderId);
     }
 
     public Product toProduct() {
