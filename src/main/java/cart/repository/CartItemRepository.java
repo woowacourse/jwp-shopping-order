@@ -7,7 +7,6 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.cart.CartItem;
-import cart.domain.cart.Item;
 import cart.domain.cart.Product;
 import cart.domain.member.Member;
 import cart.entity.CartItemEntity;
@@ -34,7 +33,7 @@ public class CartItemRepository {
         this.productDao = productDao;
     }
 
-    public Item save(final Item cartItem) {
+    public CartItem save(final CartItem cartItem) {
         final CartItemEntity cartItemEntity = new CartItemEntity(
                 cartItem.getId(),
                 cartItem.getMember().getId(),
@@ -49,12 +48,12 @@ public class CartItemRepository {
         return cartItem;
     }
 
-    public List<Item> findAllByMemberId(final Long memberId) {
+    public List<CartItem> findAllByMemberId(final Long memberId) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberId(memberId);
         return getItems(memberId, cartItemEntities);
     }
 
-    private List<Item> getItems(final Long memberId, final List<CartItemEntity> cartItemEntities) {
+    private List<CartItem> getItems(final Long memberId, final List<CartItemEntity> cartItemEntities) {
         final Member member = memberDao.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new)
                 .toDomain();
@@ -69,7 +68,7 @@ public class CartItemRepository {
                 .collect(toList());
     }
 
-    public Optional<Item> findById(Long id) {
+    public Optional<CartItem> findById(Long id) {
         final Optional<CartItemEntity> mayBeCartItemEntity = cartItemDao.findById(id);
         if (mayBeCartItemEntity.isEmpty()) {
             return Optional.empty();
@@ -84,7 +83,7 @@ public class CartItemRepository {
         return Optional.of(new CartItem(cartItemEntity.getId(), cartItemEntity.getQuantity(), member, product));
     }
 
-    public List<Item> findAllByIdsAndMemberId(final List<Long> ids, final Long memberId) {
+    public List<CartItem> findAllByIdsAndMemberId(final List<Long> ids, final Long memberId) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByIdsAndMemberId(ids, memberId);
         return getItems(memberId, cartItemEntities);
     }

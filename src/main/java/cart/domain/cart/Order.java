@@ -13,9 +13,9 @@ public class Order {
     private final MemberCoupon memberCoupon;
     private final Long memberId;
     private final Money deliveryFee;
-    private final List<Item> items;
+    private final List<CartItem> items;
 
-    public Order(final MemberCoupon memberCoupon, final Long memberId, final List<Item> items) {
+    public Order(final MemberCoupon memberCoupon, final Long memberId, final List<CartItem> items) {
         this(null, memberCoupon, memberId, DEFAULT_DELIVERY_FEE, items);
     }
 
@@ -24,7 +24,7 @@ public class Order {
             final MemberCoupon memberCoupon,
             final Long memberId,
             final Money deliveryFee,
-            final List<Item> items
+            final List<CartItem> items
     ) {
         this.id = id;
         this.memberCoupon = memberCoupon;
@@ -38,7 +38,7 @@ public class Order {
             final MemberCoupon memberCoupon,
             final Long memberId,
             final Money deliveryFee,
-            final List<Item> items
+            final List<CartItem> items
     ) {
         if (Objects.isNull(memberCoupon)) {
             return new Order(id, MemberCoupon.empty(memberId), memberId, deliveryFee, items);
@@ -47,7 +47,7 @@ public class Order {
         return new Order(id, memberCoupon, memberId, deliveryFee, items);
     }
 
-    public static Order of(final MemberCoupon memberCoupon, final Long memberId, final List<Item> items) {
+    public static Order of(final MemberCoupon memberCoupon, final Long memberId, final List<CartItem> items) {
         if (Objects.isNull(memberCoupon)) {
             return new Order(MemberCoupon.empty(memberId), memberId, items);
         }
@@ -55,9 +55,9 @@ public class Order {
         return new Order(memberCoupon, memberId, items);
     }
 
-    private static void validate(final MemberCoupon memberCoupon, final List<Item> items) {
+    private static void validate(final MemberCoupon memberCoupon, final List<CartItem> items) {
         final Money totalPrice = items.stream()
-                .map(Item::calculateTotalPrice)
+                .map(CartItem::calculateTotalPrice)
                 .reduce(Money.ZERO, Money::plus);
         if (memberCoupon.isInvalidCoupon(totalPrice)) {
             throw new InvalidOrderException("쿠폰을 적용할 수 없는 주문입니다.");
@@ -82,7 +82,7 @@ public class Order {
 
     public Money calculateTotalPrice() {
         return items.stream()
-                .map(Item::calculateTotalPrice)
+                .map(CartItem::calculateTotalPrice)
                 .reduce(Money.ZERO, Money::plus);
     }
 
@@ -123,7 +123,7 @@ public class Order {
         return deliveryFee;
     }
 
-    public List<Item> getItems() {
+    public List<CartItem> getItems() {
         return items;
     }
 }

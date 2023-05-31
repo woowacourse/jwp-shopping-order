@@ -10,7 +10,7 @@ import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.VO.Money;
-import cart.domain.cart.Item;
+import cart.domain.cart.CartItem;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
 import cart.domain.coupon.Coupon;
@@ -84,7 +84,7 @@ public class OrderRepository {
 
     private void deleteCartItems(final Order order) {
         final List<Long> cartItemIds = order.getItems().stream()
-                .map(Item::getId)
+                .map(CartItem::getId)
                 .collect(toList());
         cartItemDao.deleteByIds(cartItemIds, order.getMemberId());
     }

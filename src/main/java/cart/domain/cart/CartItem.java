@@ -5,7 +5,7 @@ import cart.domain.member.Member;
 import cart.exception.cart.InvalidCartItemOwnerException;
 import java.util.Objects;
 
-public class CartItem implements Item {
+public class CartItem {
 
     private final Long id;
     private final Member member;

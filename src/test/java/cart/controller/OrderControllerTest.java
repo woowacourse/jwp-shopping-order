@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.cart.CartItem;
-import cart.domain.cart.Item;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
 import cart.domain.cart.Product;
@@ -77,8 +76,8 @@ class OrderControllerTest {
         final Product product1 = productRepository.save(상품_8900원);
         final Product product2 = productRepository.save(상품_28900원);
         final Member member = memberRepository.save(사용자1);
-        final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
         memberCouponRepository.saveAll(List.of(new MemberCoupon(member.getId(), coupon)));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
@@ -108,9 +107,9 @@ class OrderControllerTest {
         final Product product2 = productRepository.save(상품_18900원);
         final Product product3 = productRepository.save(상품_28900원);
         final Member member = memberRepository.save(사용자1);
-        final Item cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final Item cartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final Item cartItem3 = cartItemRepository.save(new CartItem(member, product3));
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final CartItem cartItem3 = cartItemRepository.save(new CartItem(member, product3));
         final Order order1 = orderRepository.save(
                 new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem1, cartItem2)));
         final Order order2 = orderRepository.save(
@@ -139,7 +138,7 @@ class OrderControllerTest {
         // given
         final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        final Item cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
         final Order order = orderRepository.save(
                 new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem)));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));

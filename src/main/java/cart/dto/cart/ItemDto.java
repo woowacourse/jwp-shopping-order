@@ -1,6 +1,6 @@
 package cart.dto.cart;
 
-import cart.domain.cart.Item;
+import cart.domain.cart.CartItem;
 import cart.domain.cart.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -36,7 +36,7 @@ public class ItemDto {
         this.quantity = quantity;
     }
 
-    public static ItemDto from(final Item item) {
+    public static ItemDto from(final CartItem item) {
         final Product product = item.getProduct();
         return new ItemDto(
                 item.getId(),

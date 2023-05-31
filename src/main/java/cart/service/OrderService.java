@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.domain.cart.Item;
+import cart.domain.cart.CartItem;
 import cart.domain.cart.MemberCoupon;
 import cart.domain.cart.Order;
 import cart.dto.cart.OrderResponse;
@@ -32,7 +32,7 @@ public class OrderService {
     }
 
     public Long save(final OrderSaveRequest request, final Long memberId) {
-        final List<Item> items = cartItemRepository.findAllByIdsAndMemberId(request.getOrderItemIds(), memberId);
+        final List<CartItem> items = cartItemRepository.findAllByIdsAndMemberId(request.getOrderItemIds(), memberId);
 
         if (Objects.nonNull(request.getCouponId())) {
             final MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
