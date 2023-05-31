@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.NonExistProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,5 +25,10 @@ public class ControllerExceptionHandler {
     public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
         log.warn("다른 사용자의 카트에 접근할 수 없습니다. [이유 : {}]", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Void> handleException(NonExistProductException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

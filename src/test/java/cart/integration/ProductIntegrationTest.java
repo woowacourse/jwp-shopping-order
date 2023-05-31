@@ -1,71 +1,114 @@
 package cart.integration;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
+import static cart.integration.IntegrationTestFixture.아이디를_반환한다;
+import static cart.integration.IntegrationTestFixture.응답_코드_검증;
+import static cart.integration.ProductIntegrationTestFixture.상품_등록_요청;
+import static cart.integration.ProductIntegrationTestFixture.상품_삭제_요청;
+import static cart.integration.ProductIntegrationTestFixture.상품_수정_요청;
+import static cart.integration.ProductIntegrationTestFixture.상품_응답;
+import static cart.integration.ProductIntegrationTestFixture.상품_전체_조회_요청;
+import static cart.integration.ProductIntegrationTestFixture.상품_전체_조회_응답_검증;
+import static cart.integration.ProductIntegrationTestFixture.상품_조회_요청;
+import static cart.integration.ProductIntegrationTestFixture.조회_응답_검증;
 
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import java.math.BigDecimal;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class ProductIntegrationTest extends IntegrationTest {
 
-    @Test
-    public void getProducts() {
-        var result = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/products")
-                .then()
-                .extract();
 
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    @Nested
+    class 상품을_등록할_때 {
+
+
+        @Test
+        void 정상_등록한다() {
+            var 응답 = 상품_등록_요청("치킨", 10000, "http://chicken.com");
+
+            응답_코드_검증(응답, HttpStatus.CREATED);
+        }
+
     }
 
-    @Test
-    public void createProduct() {
-        var product = new ProductRequest("치킨", BigDecimal.valueOf(10_000), "http://example.com/chicken.jpg");
+    @Nested
+    class 상품을_조회할_때 {
 
-        var response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(product)
-                .when()
-                .post("/products")
-                .then()
-                .extract();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        @Test
+        void 정상_조회한다() {
+            Long 상품_ID = 아이디를_반환한다(상품_등록_요청("치킨", 10000, "http://chicken.com"));
+
+            var 응답 = 상품_조회_요청(상품_ID);
+
+            응답_코드_검증(응답, HttpStatus.OK);
+            조회_응답_검증(응답, 상품_응답(상품_ID, "치킨", 10000, "http://chicken.com"));
+        }
+
+        @Test
+        void 존재하지_않는_상품_조회_요청시_실패한다() {
+            var 응답 = 상품_조회_요청(Long.MAX_VALUE);
+
+            응답_코드_검증(응답, HttpStatus.NOT_FOUND);
+        }
+
     }
 
-    @Test
-    public void getCreatedProduct() {
-        var product = new ProductRequest("피자", BigDecimal.valueOf(15_000), "http://example.com/pizza.jpg");
+    @Nested
+    class 상품_전체_조회할_때 {
 
-        // create product
-        var location =
-                given()
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(product)
-                        .when()
-                        .post("/products")
-                        .then()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract().header("Location");
 
-        // get product
-        var responseProduct = given().log().all()
-                .when()
-                .get(location)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .jsonPath()
-                .getObject(".", ProductResponse.class);
+        @Test
+        void 정상_전체_조회한다() {
+            Long 상품_치킨_ID = 아이디를_반환한다(상품_등록_요청("치킨", 10000, "http://chicken.com"));
+            Long 상품_피자_ID = 아이디를_반환한다(상품_등록_요청("피자", 20000, "http://pizza.com"));
 
-        assertThat(responseProduct.getId()).isNotNull();
-        assertThat(responseProduct.getName()).isEqualTo("피자");
-        assertThat(responseProduct.getPrice()).isEqualTo(BigDecimal.valueOf(15_000));
+            var 응답 = 상품_전체_조회_요청();
+
+            응답_코드_검증(응답, HttpStatus.OK);
+            상품_전체_조회_응답_검증(
+                    응답,
+                    상품_응답(상품_치킨_ID, "치킨", 10000, "http://chicken.com"),
+                    상품_응답(상품_피자_ID, "피자", 20000, "http://pizza.com")
+            );
+        }
+
+    }
+
+    @Nested
+    class 상품을_수정할_때 {
+
+
+        @Test
+        void 정상_수정한다() {
+            Long 상품_치킨_ID = 아이디를_반환한다(상품_등록_요청("치킨", 10000, "http://chicken.com"));
+
+            var 응답 = 상품_수정_요청(상품_치킨_ID, "양념치킨", 20000, "http://spicy-chicken.com");
+
+            응답_코드_검증(응답, HttpStatus.OK);
+            조회_응답_검증(상품_조회_요청(상품_치킨_ID), 상품_응답(상품_치킨_ID, "양념치킨", 20000, "http://spicy-chicken.com"));
+        }
+
+        @Test
+        void 존재하지_않는_상품_수정_요청시_실패한다() {
+            var 응답 = 상품_수정_요청(Long.MAX_VALUE, "양념치킨", 20000, "http://spicy-chicken.com");
+
+            응답_코드_검증(응답, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Nested
+    class 상품을_삭제할_때 {
+
+        @Test
+        void 정상_삭제한다() {
+            Long 상품_치킨_ID = 아이디를_반환한다(상품_등록_요청("치킨", 10000, "http://chicken.com"));
+
+            var 응답 = 상품_삭제_요청(상품_치킨_ID);
+
+            응답_코드_검증(응답, HttpStatus.NO_CONTENT);
+            상품_전체_조회_응답_검증(상품_전체_조회_요청());
+        }
     }
 }
