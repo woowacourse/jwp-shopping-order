@@ -58,6 +58,14 @@ public class Order {
         this.shippingFee = new Money(BASE_SHIPPING_FEE);
     }
 
+    public int getItemBenefit() {
+        int discountedItemPrinciplePrice = orderItems.stream()
+                .filter(OrderItem::isDiscount)
+                .mapToInt(OrderItem::getPrinciplePrice)
+                .sum();
+        return discountedItemPrinciplePrice - calculateItemDiscount();
+    }
+
     private int calculateItemDiscount() {
         return orderItems.stream()
                 .filter(OrderItem::isDiscount)
