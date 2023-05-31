@@ -5,11 +5,11 @@ import java.util.List;
 public class OrderRequest {
 
     private final List<Long> order;
-    private final Integer originalPrice;
-    private final Integer usedPoint;
-    private final Integer pointToAdd;
+    private final Long originalPrice;
+    private final Long usedPoint;
+    private final Long pointToAdd;
 
-    public OrderRequest(List<Long> order, Integer originalPrice, Integer usedPoint, Integer pointToAdd) {
+    public OrderRequest(List<Long> order, Long originalPrice, Long usedPoint, Long pointToAdd) {
         this.order = order;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
@@ -20,15 +20,15 @@ public class OrderRequest {
         return order;
     }
 
-    public Integer getOriginalPrice() {
+    public Long getOriginalPrice() {
         return originalPrice;
     }
 
-    public Integer getUsedPoint() {
+    public Long getUsedPoint() {
         return usedPoint;
     }
 
-    public Integer getPointToAdd() {
+    public Long getPointToAdd() {
         return pointToAdd;
     }
 }

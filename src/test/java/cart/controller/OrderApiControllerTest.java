@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cart.ShoppingOrderFixture.member1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -44,15 +45,13 @@ class OrderApiControllerTest {
     @MockBean
     private OrderService orderService;
 
-    private static final Member member = new Member(1L, "a@a.com", "password1");
-
     @DisplayName("장바구니에 담긴 상품을 주문한다")
     @Test
     void order() throws Exception {
         String body = objectMapper.writeValueAsString(
-                new OrderRequest(new ArrayList<Long>(List.of(1L, 2L)), 23000, 5000, 2300));
+                new OrderRequest(new ArrayList<Long>(List.of(1L, 2L)), 23000L, 5000L, 2300L));
 
-        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member);
+        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(orderService.orderItems(anyLong(), any())).thenReturn(1L);
 
         this.mockMvc.perform(post("/orders")
@@ -66,8 +65,8 @@ class OrderApiControllerTest {
     @DisplayName("사용자별로 주문 목록을 확인한다")
     @Test
     void getOrders() throws Exception {
-        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member);
-        when(orderService.findOrdersByMember(member))
+        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
+        when(orderService.findOrdersByMember(member1))
                 .thenReturn(List.of(new OrderResponse(1L, List.of(new OrderInfo(1L, 10000, "치킨", "imageUrl", 1)), 10000, 5000, 1000)));
 
         this.mockMvc.perform(get("/orders")
@@ -84,7 +83,7 @@ class OrderApiControllerTest {
     @DisplayName("특정 주문의 상세 정보를 확인한다")
     @Test
     void getOrderDetail() throws Exception {
-        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member);
+        when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(orderService.findOrderDetail(1L))
                 .thenReturn(new OrderResponse(1L, List.of(new OrderInfo(1L, 10000, "치킨", "imageUrl", 1)), 10000, 5000, 1000));
 
