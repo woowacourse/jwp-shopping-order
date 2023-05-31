@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import cart.cart_item.application.dto.RemoveCartItemRequest;
 import cart.cart_item.domain.CartItem;
 import cart.cart_item.exception.CanNotRemoveCartItemsMoreThanSavedCartItems;
-import cart.cart_item.exception.CanNotRemoveNotMyCartItemException;
+import cart.cart_item.exception.NotExistCartItemInCart;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import java.util.List;
@@ -17,8 +17,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @SpringBootTest
+@Sql(scripts = "/schema.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class CartItemServiceTest {
 
   @Autowired
@@ -68,8 +72,8 @@ class CartItemServiceTest {
   }
 
   @Test
-  @DisplayName("removeBatch() : 다른 사람의 카트 물품을 삭제하려고 하면 CanNotDeleteNotMyCartItemException가 발생한다.")
-  void test_removeBatch_CanNotDeleteNotMyCartItemException() throws Exception {
+  @DisplayName("removeBatch() : 삭제할 카트 품목이 카트에 존재하지 않는다면 NotExistCartItemInCart 발생한다.")
+  void test_removeBatch_NotExistCartItemInCart() throws Exception {
     //given
     //member 1이 가지고 있는 cartItem [1, 2, 3, 4, 5, 6]
     //member 2가 가지고 있는 cartItem [1, 2, 7]
@@ -82,6 +86,6 @@ class CartItemServiceTest {
 
     //when & then
     assertThatThrownBy(() -> cartItemService.removeBatch(member, removeCartItemRequest))
-        .isInstanceOf(CanNotRemoveNotMyCartItemException.class);
+        .isInstanceOf(NotExistCartItemInCart.class);
   }
 }

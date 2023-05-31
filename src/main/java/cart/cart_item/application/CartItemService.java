@@ -7,7 +7,7 @@ import cart.cart_item.application.dto.RemoveCartItemRequest;
 import cart.cart_item.dao.CartItemDao;
 import cart.cart_item.domain.CartItem;
 import cart.cart_item.exception.CanNotRemoveCartItemsMoreThanSavedCartItems;
-import cart.cart_item.exception.CanNotRemoveNotMyCartItemException;
+import cart.cart_item.exception.NotExistCartItemInCart;
 import cart.member.domain.Member;
 import cart.product.dao.ProductDao;
 import java.util.List;
@@ -70,18 +70,9 @@ public class CartItemService {
     final List<Long> deleteCartItemIds = removeCartItemRequest.getCartItemIds();
 
     validateSizeSavedAndDeleteCartItem(savedCartItemIds, deleteCartItemIds);
-    validateSavedCartItemContainsDeleteCartItem(savedCartItemIds, deleteCartItemIds);
+    validateCartItemExistInCart(savedCartItemIds, deleteCartItemIds);
 
     cartItemDao.batchDeleteByIdsIn(removeCartItemRequest.getCartItemIds(), member.getId());
-  }
-
-  private void validateSavedCartItemContainsDeleteCartItem(
-      final Set<Long> savedCartItemIds,
-      final List<Long> deleteCartItemIds
-  ) {
-    if (!savedCartItemIds.containsAll(deleteCartItemIds)) {
-      throw new CanNotRemoveNotMyCartItemException("자기 자신의 카트에 들어있는 물품만 삭제 가능합니다.");
-    }
   }
 
   private void validateSizeSavedAndDeleteCartItem(
@@ -91,6 +82,15 @@ public class CartItemService {
     if (deleteCartItemIds.size() > savedCartItemIds.size()) {
       throw new CanNotRemoveCartItemsMoreThanSavedCartItems
           ("삭제할 카트 물품의 개수가 현재 저장된 카트 물품의 개수보다 많을 수는 없습니다.");
+    }
+  }
+
+  private void validateCartItemExistInCart(
+      final Set<Long> savedCartItemIds,
+      final List<Long> deleteCartItemIds
+  ) {
+    if (!savedCartItemIds.containsAll(deleteCartItemIds)) {
+      throw new NotExistCartItemInCart("삭제하려 하는 물품이 카트 물품 목록에 존재하지 않습니다.");
     }
   }
 }
