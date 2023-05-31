@@ -85,7 +85,7 @@ public class CartItemRepository {
     }
 
     public List<Item> findAllByIds(final List<Long> ids, final Long memberId) {
-        final List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(ids, memberId);
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(ids);
         return getItems(memberId, cartItemEntities);
     }
 
