@@ -12,9 +12,13 @@ import java.util.Objects;
 public class CartItem {
 
     private final Long id;
-    private final Product product;
     private final Member member;
+    private final Product product;
     private final int quantity;
+
+    public CartItem(final Member member, final Product product, final int quantity) {
+        this(null, member, product, quantity);
+    }
 
     public void validateOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
@@ -23,6 +27,6 @@ public class CartItem {
     }
 
     public CartItem changeQuantity(final int quantity) {
-        return new CartItem(id, product, member, quantity);
+        return new CartItem(id, member, product, quantity);
     }
 }
