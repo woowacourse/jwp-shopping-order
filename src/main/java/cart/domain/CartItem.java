@@ -22,30 +22,30 @@ public class CartItem {
         this.product = product;
         this.member = member;
     }
-
+    
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new CartItemException.IllegalMember(this, member);
+        }
+    }
+    
+    public void changeQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+    
     public Long getId() {
         return id;
     }
-
+    
     public Member getMember() {
         return member;
     }
-
+    
     public Product getProduct() {
         return product;
     }
 
     public Long getQuantity() {
         return quantity;
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
-    }
-
-    public void changeQuantity(Long quantity) {
-        this.quantity = quantity;
     }
 }

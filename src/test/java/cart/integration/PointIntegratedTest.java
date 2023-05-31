@@ -9,23 +9,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 
 @SuppressWarnings("NonAsciiCharacters")
-class PointIntegratedControllerTest extends IntegrationTest {
+class PointIntegratedTest extends IntegrationTest {
     @Autowired
     private MemberDao memberDao;
     
     private Member member;
-    private Member member2;
     
     @BeforeEach
     void setUp() {
         super.setUp();
         
         member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
     }
     
     @Test
