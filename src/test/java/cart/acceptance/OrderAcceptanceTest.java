@@ -1,9 +1,9 @@
 package cart.acceptance;
 
-import cart.dto.CartItemRequest;
-import cart.dto.CartPointsResponse;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderResponse;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartPointsResponse;
+import cart.dto.request.OrderCreateRequest;
+import cart.dto.response.OrderResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

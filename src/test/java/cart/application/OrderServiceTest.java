@@ -8,11 +8,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import cart.domain.Member;
-import cart.dto.CartItemRequest;
-import cart.dto.CartPointsResponse;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderItemResponse;
-import cart.dto.OrderResponse;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartPointsResponse;
+import cart.dto.request.OrderCreateRequest;
+import cart.dto.response.OrderItemResponse;
+import cart.dto.response.OrderResponse;
 import cart.exception.IllegalPointUsageException;
 import cart.exception.InvalidOrderProductException;
 import cart.exception.InvalidOrderQuantityException;

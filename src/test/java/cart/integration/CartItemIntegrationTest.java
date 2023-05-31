@@ -19,10 +19,10 @@ import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.CartItemAddRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.CartItemUpdateRequest;
-import cart.dto.CartItemUpdateResponse;
+import cart.dto.request.CartItemAddRequest;
+import cart.dto.response.CartItemResponse;
+import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.response.CartItemUpdateResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 

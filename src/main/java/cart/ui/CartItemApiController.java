@@ -2,10 +2,10 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
-import cart.dto.CartItemAddRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.CartItemUpdateRequest;
-import cart.dto.CartItemUpdateResponse;
+import cart.dto.request.CartItemAddRequest;
+import cart.dto.response.CartItemResponse;
+import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.response.CartItemUpdateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.http.ResponseEntity;

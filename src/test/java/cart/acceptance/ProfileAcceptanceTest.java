@@ -1,6 +1,6 @@
 package cart.acceptance;
 
-import cart.dto.ProfileResponse;
+import cart.dto.response.ProfileResponse;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.Test;
 

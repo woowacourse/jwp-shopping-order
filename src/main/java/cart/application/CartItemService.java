@@ -5,10 +5,10 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.CartItemAddRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.CartItemUpdateRequest;
-import cart.dto.CartItemUpdateResponse;
+import cart.dto.request.CartItemAddRequest;
+import cart.dto.response.CartItemResponse;
+import cart.dto.request.CartItemUpdateRequest;
+import cart.dto.response.CartItemUpdateResponse;
 import cart.entity.ProductEntity;
 
 import org.springframework.stereotype.Service;

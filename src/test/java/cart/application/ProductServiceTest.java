@@ -5,7 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 
 class ProductServiceTest extends ServiceTest {
 	@Test

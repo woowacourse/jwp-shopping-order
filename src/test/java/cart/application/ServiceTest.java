@@ -9,8 +9,8 @@ import org.springframework.test.context.jdbc.Sql;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.dto.CartItemRequest;
-import cart.dto.OrderCreateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.request.OrderCreateRequest;
 
 @Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql({"/schema.sql", "/data.sql"})

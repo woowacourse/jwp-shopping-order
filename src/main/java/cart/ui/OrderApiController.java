@@ -2,9 +2,9 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.CartPointsResponse;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderResponse;
+import cart.dto.response.CartPointsResponse;
+import cart.dto.request.OrderCreateRequest;
+import cart.dto.response.OrderResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.http.ResponseEntity;
