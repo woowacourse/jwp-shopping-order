@@ -78,10 +78,12 @@ public class OrderService {
         return cartItemRepository.findAllByCartItemIds(memberId, request.getOrderItems());
     }
 
+    @Transactional(readOnly = true)
     public OrdersDto findByOrderId(final Long memberId, final Long orderId) {
         return new OrdersDto(orderRepository.findByOrderIdAndMemberId(orderId, memberId));
     }
 
+    @Transactional(readOnly = true)
     public List<OrdersDto> findAllBy(final Long memberId) {
         return orderRepository.findAllByMemberId(memberId).stream()
                 .map(OrdersDto::new)
