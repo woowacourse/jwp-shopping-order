@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -27,9 +28,14 @@ public class CartItemDao2 {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
-    public List<CartItemEntity> findByIds(final List<Long> cartItemsIds) {
-        final String sql = "SELECT * FROM cart_item WHERE id IN (?) ";
-        // TODO: 5/31/23 대체 있나 생각해보기
-        return jdbcTemplate.query(sql, cartItemsIds.toArray(), rowMapper);
+    public List<CartItemEntity> findByIds(final List<Long> ids) {
+        final String sql = "SELECT * FROM cart_item WHERE id IN (%s) ";
+
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        return jdbcTemplate.query(
+                String.format(sql, inSql),
+                ids.toArray(),
+                rowMapper
+        );
     }
 }

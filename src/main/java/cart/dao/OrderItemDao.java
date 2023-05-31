@@ -21,7 +21,7 @@ public class OrderItemDao {
     }
 
     public void saveAll(final List<OrderItemEntity> orderItemEntities) {
-        final String sql = "INSERT ('order_id', 'product_id', 'name', 'price', 'image_url', 'quantity') VALUES (?,?,?,?,?,?) ";
+        final String sql = "INSERT INTO order_item (order_id, product_id, name, price, image_url, quantity) VALUES (?,?,?,?,?,?) ";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(final PreparedStatement ps, final int i) throws SQLException {

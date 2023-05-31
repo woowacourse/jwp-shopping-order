@@ -22,6 +22,7 @@ public class OrderRepository {
 
     public Long save(final Order order) {
         OrderEntity orderEntity = OrderEntity.from(order);
+        System.out.println(orderEntity);
         Long savedOrderId = orderDao.save(orderEntity);
 
         List<OrderItemEntity> orderItemEntities = order.getOrderItems()

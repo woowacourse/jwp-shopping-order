@@ -30,7 +30,7 @@ public class Order {
         Integer price = orderItems.stream()
                 .mapToInt(OrderItem::calculatePrice)
                 .sum();
-        if (coupon.isAvailable(price)) {
+        if (!coupon.isAvailable(price)) {
             throw new IllegalArgumentException("사용할 수 없는 쿠폰입니다");
         }
         return price - coupon.calculateDiscount(price) + shippingFee.getCharge();
