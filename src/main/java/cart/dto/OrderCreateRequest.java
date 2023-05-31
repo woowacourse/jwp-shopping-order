@@ -12,8 +12,6 @@ public class OrderCreateRequest {
     int shippingFee;
     int totalPrice;
 
-    //private List<OrderItemRequest> orderItemRequests;
-
     public OrderCreateRequest() {
     }
 
@@ -26,15 +24,6 @@ public class OrderCreateRequest {
         this.shippingFee = shippingFee;
         this.totalPrice = totalPrice;
     }
-
-    //    public OrderCreateRequest(List<OrderItemRequest> orderItemRequests) {
-//        this.orderItemRequests = orderItemRequests;
-//    }
-//
-//    public List<OrderItemRequest> getOrderItemRequests() {
-//        return orderItemRequests;
-//    }
-
 
     public List<Long> getCartItemIds() {
         return cartItemIds;

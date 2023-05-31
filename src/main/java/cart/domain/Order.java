@@ -7,29 +7,35 @@ public class Order {
 
     private Long id;
     private Long memberId;
-    private int totalPurchaseAmount;
-    private int totalItemPrice;
     private LocalDateTime orderedAt;
+    private int totalItemDiscountAmount;
+    private int totalMemberDiscountAmount;
+    private int totalItemPrice;
+    private int discountedTotalItemPrice;
     private int shippingFee;
-    private int discountedTotalPrice;
+    private int totalPrice;
 
-    public Order(Long id, Long memberId, int totalPurchaseAmount, int totalItemPrice, LocalDateTime orderedAt, int shippingFee, int discountedTotalPrice) {
+    public Order(Long id, Long memberId, LocalDateTime orderedAt, int totalItemDiscountAmount, int totalMemberDiscountAmount, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, int totalPrice) {
         this.id = id;
         this.memberId = memberId;
-        this.totalPurchaseAmount = totalPurchaseAmount;
-        this.totalItemPrice = totalItemPrice;
         this.orderedAt = orderedAt;
+        this.totalItemDiscountAmount = totalItemDiscountAmount;
+        this.totalMemberDiscountAmount = totalMemberDiscountAmount;
+        this.totalItemPrice = totalItemPrice;
+        this.discountedTotalItemPrice = discountedTotalItemPrice;
         this.shippingFee = shippingFee;
-        this.discountedTotalPrice = discountedTotalPrice;
+        this.totalPrice = totalPrice;
     }
 
-    public Order(Long memberId, int totalPurchaseAmount, int totalItemPrice, LocalDateTime orderedAt, int shippingFee, int discountedTotalPrice) {
+    public Order(Long memberId, LocalDateTime orderedAt, int totalItemDiscountAmount, int totalMemberDiscountAmount, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, int totalPrice) {
         this.memberId = memberId;
-        this.totalPurchaseAmount = totalPurchaseAmount;
-        this.totalItemPrice = totalItemPrice;
         this.orderedAt = orderedAt;
+        this.totalItemDiscountAmount = totalItemDiscountAmount;
+        this.totalMemberDiscountAmount = totalMemberDiscountAmount;
+        this.totalItemPrice = totalItemPrice;
+        this.discountedTotalItemPrice = discountedTotalItemPrice;
         this.shippingFee = shippingFee;
-        this.discountedTotalPrice = discountedTotalPrice;
+        this.totalPrice = totalPrice;
     }
 
     public static int calculatePriceSum(List<Integer> prices){
@@ -53,23 +59,31 @@ public class Order {
         return memberId;
     }
 
-    public int getTotalPurchaseAmount() {
-        return totalPurchaseAmount;
-    }
-
     public LocalDateTime getOrderedAt() {
         return orderedAt;
+    }
+
+    public int getTotalItemDiscountAmount() {
+        return totalItemDiscountAmount;
+    }
+
+    public int getTotalMemberDiscountAmount() {
+        return totalMemberDiscountAmount;
     }
 
     public int getTotalItemPrice() {
         return totalItemPrice;
     }
 
+    public int getDiscountedTotalItemPrice() {
+        return discountedTotalItemPrice;
+    }
+
     public int getShippingFee() {
         return shippingFee;
     }
 
-    public int getDiscountedTotalPrice() {
-        return discountedTotalPrice;
+    public int getTotalPrice() {
+        return totalPrice;
     }
 }

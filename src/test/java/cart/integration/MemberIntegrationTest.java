@@ -102,7 +102,7 @@ public class MemberIntegrationTest extends IntegrationTest {
 
     private Long requestOrder(Member member, Long cartItemId, Long cartItemId2) {
         List<Long> cartItemIds = List.of(cartItemId, cartItemId2);
-        int totalItemDiscountAmount = 6_000;
+        int totalItemDiscountAmount = 5_000;
         int totalMemberDiscountAmount = 1_000;
 
         int totalItemPrice = 20_000;
@@ -138,7 +138,6 @@ public class MemberIntegrationTest extends IntegrationTest {
     }
 
     private OrderResponse getOrderResponse(Member member, Long orderId) {
-
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())

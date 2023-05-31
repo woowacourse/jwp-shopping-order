@@ -27,11 +27,13 @@ CREATE TABLE cart_item (
 CREATE TABLE orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    total_purchase_amount INT NOT NULL,
-    total_item_price INT NOT NULL,
     ordered_at DATETIME NOT NULL default current_timestamp,
+    total_item_discount_amount INT NOT NULL,
+    total_member_discount_amount INT NOT NULL,
+    total_item_price INT NOT NULL,
+    discounted_total_item_price INT NOT NULL,
     shipping_fee INT NOT NULL,
-    discounted_total_price INT NOT NULL,
+    total_price INT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 

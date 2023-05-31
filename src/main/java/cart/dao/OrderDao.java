@@ -19,16 +19,18 @@ public class OrderDao {
     }
 
     public Long createOrder(Long memberId, Order order) {
-        String sql = "INSERT INTO orders (member_id, total_purchase_amount, total_item_price, shipping_fee, discounted_total_price) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO orders (member_id, total_item_discount_amount, total_member_discount_amount, total_item_price, discounted_total_item_price, shipping_fee, total_price) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, memberId);
-            ps.setInt(2, order.getTotalPurchaseAmount());
-            ps.setInt(3, order.getTotalItemPrice());
-            ps.setInt(4, order.getShippingFee());
-            ps.setInt(5, order.getDiscountedTotalPrice());
+            ps.setInt(2, order.getTotalItemDiscountAmount());
+            ps.setInt(3, order.getTotalMemberDiscountAmount());
+            ps.setInt(4, order.getTotalItemPrice());
+            ps.setInt(5, order.getDiscountedTotalItemPrice());
+            ps.setInt(6, order.getShippingFee());
+            ps.setInt(7, order.getTotalPrice());
             return ps;
         }, keyHolder);
 
@@ -38,12 +40,14 @@ public class OrderDao {
     public Order findByIds(Long memberId, Long orderId) {
         String sql = "SELECT * FROM orders WHERE id = ? AND member_id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{orderId, memberId}, (rs, rowNum) -> {
-            int totalPurchaseAmount = rs.getInt("total_purchase_amount");
+            int totalItemDiscountAmount = rs.getInt("total_item_discount_amount");
+            int totalMemberDiscountAmount = rs.getInt("total_member_discount_amount");
             int totalItemPrice = rs.getInt(("total_item_price"));
-            int shippingFee = rs.getInt(("shipping_fee"));
-            int discountedTotalPrice = rs.getInt("discounted_total_price");
+            int discountedTotalItemPrice = rs.getInt("discounted_total_item_price");
+            int shippingFee = rs.getInt("shipping_fee");
+            int totalPrice = rs.getInt("total_price");
 
-            return new Order(orderId, memberId, totalPurchaseAmount, totalItemPrice,null, shippingFee, discountedTotalPrice);
+            return new Order(orderId, memberId, null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
         });
     }
 
@@ -51,12 +55,14 @@ public class OrderDao {
         String sql = "SELECT * FROM orders WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
-            int totalPurchaseAmount = rs.getInt("total_purchase_amount");
+            int totalItemDiscountAmount = rs.getInt("total_item_discount_amount");
+            int totalMemberDiscountAmount = rs.getInt("total_member_discount_amount");
             int totalItemPrice = rs.getInt(("total_item_price"));
-            int shippingFee = rs.getInt(("shipping_fee"));
-            int discountedTotalPrice = rs.getInt("discounted_total_price");
+            int discountedTotalItemPrice = rs.getInt("discounted_total_item_price");
+            int shippingFee = rs.getInt("shipping_fee");
+            int totalPrice = rs.getInt("total_price");
 
-            return new Order(id, memberId, totalPurchaseAmount, totalItemPrice,null, shippingFee, discountedTotalPrice);
+            return new Order(id, memberId, null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
         });
     }
 }

@@ -30,17 +30,21 @@ public class OrderService {
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
         int totalItemPrice = findTotalItemPrice(orderCreateRequest);
+        System.out.println("totalItemPrice: " + totalItemPrice);
         int discountedTotalItemPrice = findDiscountedTotalItemPrice(member, orderCreateRequest);
+        System.out.println("discountedTotalItemPrice: " + discountedTotalItemPrice);
         int shippingFee = findShippingFee(orderCreateRequest, totalItemPrice);
+        System.out.println("shippingFee: " + shippingFee);
         int totalPrice = discountedTotalItemPrice + shippingFee;
+        System.out.println("totalPrice: " + totalPrice);
         int totalItemDiscountAmount = findTotalItemDiscountAmount(orderCreateRequest);
+        System.out.println("totalItemDiscountAmount: " + totalItemDiscountAmount);
         int totalMemberDiscountAmount = findTotalMemberDiscountAmount(member, orderCreateRequest);
+        System.out.println("totalMemberDiscountAmount: " + totalMemberDiscountAmount);
 
-
-        Order order = new Order(member.getId(), totalPrice, totalItemPrice, null, shippingFee, discountedTotalItemPrice);
+        Order order = new Order(member.getId(), null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
         member.order(totalPrice);
         Long orderId = orderDao.createOrder(member.getId(), order);
-
 
         //주문한 상품들은 ordered_item에 추가
         List<CartItem> cartItems = findCartItems(orderCreateRequest);
@@ -171,8 +175,8 @@ public class OrderService {
         Order order = orderDao.findByIds(memberId, orderId);
         List<OrderedItem> orderedItems = orderedItemDao.findByOrderId(order.getId());
         return new OrderResponse(order.getId(), convertToResponse(orderedItems), null, order.getTotalItemPrice(),
-                order.getDiscountedTotalPrice(), order.getShippingFee(),
-                order.getDiscountedTotalPrice() + order.getShippingFee());
+                order.getDiscountedTotalItemPrice(), order.getShippingFee(),
+                order.getDiscountedTotalItemPrice() + order.getShippingFee());
     }
 
     public List<OrderedItemResponse> convertToResponse(List<OrderedItem> orderedItems){
@@ -190,7 +194,7 @@ public class OrderService {
         Order order = orderDao.findById(id);
         List<OrderedItem> orderedItems = orderedItemDao.findByOrderId(order.getId());
         return new OrderResponse(order.getId(), convertToResponse(orderedItems), null, order.getTotalItemPrice(),
-                order.getDiscountedTotalPrice(), order.getShippingFee(),
-                order.getDiscountedTotalPrice() + order.getShippingFee());
+                order.getDiscountedTotalItemPrice(), order.getShippingFee(),
+                order.getDiscountedTotalItemPrice() + order.getShippingFee());
     }
 }
