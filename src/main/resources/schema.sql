@@ -9,8 +9,7 @@ CREATE TABLE IF NOT EXISTS member (
      id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
      `name` VARCHAR(255) NOT NULL UNIQUE,
      email VARCHAR(255) NOT NULL UNIQUE,
-     password VARCHAR(255) NOT NULL,
-     point INT UNSIGNED DEFAULT 0
+     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS cart_item (
@@ -20,10 +19,11 @@ CREATE TABLE IF NOT EXISTS cart_item (
     quantity INT UNSIGNED NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS orders (
+CREATE TABLE IF NOT EXISTS `order` (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    total_price INT UNSIGNED NOT NULL,
     member_id BIGINT UNSIGNED NOT NULL,
+    total_price INT UNSIGNED NOT NULL,
+    payment_price INT UNSIGNED NOT NULL,
     point INT UNSIGNED DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -41,7 +41,9 @@ CREATE TABLE IF NOT EXISTS coupon (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     min_amount INT UNSIGNED DEFAULT 0,
-    discount_percent DECIMAL(3, 0) CHECK (discount_percent >= 1 AND discount_percent <= 100)
+    discount_percent DECIMAL(3, 0) CHECK (discount_percent >= 0 AND discount_percent <= 100) DEFAULT 0,
+    discount_amount INT UNSIGNED NOT NULL CHECK (discount_amount >= min_amount) DEFAULT 0,
+    CONSTRAINT chk_coupon CHECK (discount_percent = 0 XOR discount_amount = 0)
 );
 
 CREATE TABLE IF NOT EXISTS member_coupon (
@@ -49,6 +51,14 @@ CREATE TABLE IF NOT EXISTS member_coupon (
     member_id BIGINT UNSIGNED NOT NULL,
     coupon_id BIGINT UNSIGNED NOT NULL,
     status    TINYINT DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS point_history (
+    id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT UNSIGNED NOT NULL,
+    order_id  BIGINT UNSIGNED NOT NULL,
+    used_point INT UNSIGNED DEFAULT 0,
+    earned_point INT UNSIGNED DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS ordered_coupon (
