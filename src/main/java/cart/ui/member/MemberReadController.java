@@ -1,7 +1,7 @@
 package cart.ui.member;
 
 import cart.application.service.member.MemberReadService;
-import cart.application.service.member.dto.MemberDto;
+import cart.application.service.member.dto.MemberResultDto;
 import cart.ui.member.dto.MemberResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +23,8 @@ public class MemberReadController {
 
     @GetMapping
     public ResponseEntity<List<MemberResponse>> getAllMembers() {
-        final List<MemberDto> memberDtos = memberReadService.findAllMembers();
-        final List<MemberResponse> responses = memberDtos.stream()
+        final List<MemberResultDto> memberResultDtos = memberReadService.findAllMembers();
+        final List<MemberResponse> responses = memberResultDtos.stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
 

@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.service.member.MemberReadService;
+import cart.application.service.member.dto.MemberResultDto;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -48,13 +49,14 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String[] credentials = decodedString.split(":");
         String email = credentials[0];
         String password = credentials[1];
-
+        final MemberResultDto memberResultDto = memberReadService.findMemberByEmail(email);
         // 본인 여부 확인
-        if (!memberReadService.isMemberExist(email, password)) {
+        if (!memberResultDto.getPassword().equals(password)) {
             logger.warn("Invalid Password, Input Email: {}", email);
             throw new AuthenticationException();
         }
-        return new MemberAuth(email, password);
+
+        return new MemberAuth(memberResultDto.getId(), memberResultDto.getName(), email, password);
     }
 
 }

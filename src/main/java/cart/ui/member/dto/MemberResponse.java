@@ -1,6 +1,6 @@
 package cart.ui.member.dto;
 
-import cart.application.service.member.dto.MemberDto;
+import cart.application.service.member.dto.MemberResultDto;
 
 public class MemberResponse {
 
@@ -17,8 +17,8 @@ public class MemberResponse {
         this.password = password;
     }
 
-    public static MemberResponse from(MemberDto memberDto) {
-        return new MemberResponse(memberDto.getId(), memberDto.getName(), memberDto.getEmail(), memberDto.getPassword());
+    public static MemberResponse from(MemberResultDto memberResultDto) {
+        return new MemberResponse(memberResultDto.getId(), memberResultDto.getName(), memberResultDto.getEmail(), memberResultDto.getPassword());
     }
 
     public Long getId() {
