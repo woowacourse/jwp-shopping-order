@@ -1,12 +1,12 @@
-package cart.controller;
+package cart.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import cart.controller.request.OrderRequestDto;
-import cart.controller.response.OrderProductResponseDto;
-import cart.controller.response.OrderResponseDto;
+import cart.integration.request.OrderRequestDto;
+import cart.integration.response.OrderProductResponseDto;
+import cart.integration.response.OrderResponseDto;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemRequest;
