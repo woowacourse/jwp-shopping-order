@@ -34,7 +34,7 @@ public class CartItemService {
     public Long addCartItem(final Member member, final CartItemRequest request) {
         final Product product = productRepository.findById(request.getProductId());
         final CartItems cartItems = new CartItems(cartItemRepository.findAllByMemberId(member.getId()));
-        final Optional<CartItem> cartItemOptional = cartItems.find(product);
+        final Optional<CartItem> cartItemOptional = cartItems.findProduct(product);
         if (cartItemOptional.isEmpty()) {
             return cartItemRepository.save(new CartItem(member, product));
         }

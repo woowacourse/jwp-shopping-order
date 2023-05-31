@@ -61,7 +61,7 @@ public class CartItems {
                 .collect(Collectors.toList());
     }
 
-    public Optional<CartItem> find(final Product product) {
+    public Optional<CartItem> findProduct(final Product product) {
         return cartItems.stream()
                 .filter(m -> m.getProduct().equals(product))
                 .findFirst();

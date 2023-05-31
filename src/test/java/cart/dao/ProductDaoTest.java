@@ -79,7 +79,7 @@ public class ProductDaoTest {
         final Product updateProduct = new Product(findProduct.getId(), "초콜릿아님", findProduct.getPriceValue(), findProduct.getImageUrlValue());
 
         // when
-        productDao.update(productId, updateProduct);
+        productDao.update(updateProduct);
         final Product updatedProduct = productDao.findById(productId).orElseThrow(ProductNotFoundException::new);
 
         // then
@@ -93,7 +93,7 @@ public class ProductDaoTest {
         final Long productId = productDao.insert(product);
 
         // when
-        productDao.delete(productId);
+        productDao.deleteById(productId);
 
         // then
         assertThat(productDao.findById(productId)).isEmpty();

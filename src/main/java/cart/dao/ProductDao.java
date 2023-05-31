@@ -75,13 +75,13 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(sql, parameters, productRowMapper);
     }
 
-    public void update(final Long id, final Product product) {
+    public void update(Product product) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, product.getNameValue(), product.getPriceValue(), product.getImageUrlValue(), id);
+        jdbcTemplate.update(sql, product.getNameValue(), product.getPriceValue(), product.getImageUrlValue(), product.getId());
     }
 
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
 
         jdbcTemplate.update(sql, id);

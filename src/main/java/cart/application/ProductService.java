@@ -1,9 +1,8 @@
 package cart.application;
 
-import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.dto.ProductRequest;
-import cart.exception.notfound.ProductNotFoundException;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,38 +12,38 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(final ProductDao productDao) {
-        this.productDao = productDao;
-    }
-
-    public List<Product> getAllProducts() {
-        return productDao.findAll();
-    }
-
-    public Product getProductById(final Long productId) {
-        return productDao.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException(productId));
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @Transactional
     public Long createProduct(final ProductRequest request) {
         final Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl());
-        return productDao.insert(product);
+        return productRepository.save(product);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    public Product getProductById(final Long productId) {
+        return productRepository.findById(productId);
     }
 
     @Transactional
     public void updateProduct(final Long productId, final ProductRequest request) {
         final Product product = new Product(
+                productId,
                 request.getName(),
                 request.getPrice(),
                 request.getImageUrl());
-        productDao.update(productId, product);
+        productRepository.save(product);
     }
 
     @Transactional
     public void deleteProduct(final Long productId) {
-        productDao.delete(productId);
+        productRepository.deleteById(productId);
     }
 }

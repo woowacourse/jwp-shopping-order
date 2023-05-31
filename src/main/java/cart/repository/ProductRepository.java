@@ -6,6 +6,8 @@ import cart.domain.product.Product;
 import cart.exception.notfound.ProductNotFoundException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ProductRepository {
 
@@ -17,13 +19,29 @@ public class ProductRepository {
         this.cartItemDao = cartItemDao;
     }
 
-    public void deleteProduct(final Product product) {
-        cartItemDao.deleteByProductId(product.getId());
-        productDao.delete(product.getId());
+    public Long save(final Product product) {
+        if (product.getId() == null || productDao.findById(product.getId()).isEmpty()) {
+            return productDao.insert(product);
+        }
+        productDao.update(product);
+        return product.getId();
     }
 
     public Product findById(final Long id) {
         return productDao.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    public List<Product> findAll() {
+        return productDao.findAll();
+    }
+
+    public void deleteProduct(final Product product) {
+        cartItemDao.deleteByProductId(product.getId());
+        productDao.deleteById(product.getId());
+    }
+
+    public void deleteById(final Long id) {
+        productDao.deleteById(id);
     }
 }
