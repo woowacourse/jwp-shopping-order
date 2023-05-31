@@ -1,20 +1,18 @@
-package cart.ui;
+package cart.presentation;
 
-import cart.application.ProductService;
+import cart.service.ProductService;
 import cart.dao.MemberDao;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@AllArgsConstructor
 public class PageController {
+
     private final ProductService productService;
     private final MemberDao memberDao;
-
-    public PageController(ProductService productService, MemberDao memberDao) {
-        this.productService = productService;
-        this.memberDao = memberDao;
-    }
 
     @GetMapping("/admin")
     public String admin(Model model) {
