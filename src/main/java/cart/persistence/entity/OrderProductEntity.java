@@ -6,17 +6,20 @@ public class OrderProductEntity {
     private final Long orderId;
     private final Long productId;
     private final Integer orderProductPrice;
+    private final Integer orderQuantity;
 
-    public OrderProductEntity(final Long orderId, final Long productId, final Integer orderProductPrice) {
-        this(null, orderId, productId, orderProductPrice);
+    public OrderProductEntity(final Long orderId, final Long productId,
+                              final Integer orderProductPrice, final Integer orderQuantity) {
+        this(null, orderId, productId, orderProductPrice, orderQuantity);
     }
 
     public OrderProductEntity(final Long id, final Long orderId, final Long productId,
-                              final Integer orderProductPrice) {
+                              final Integer orderProductPrice, final Integer orderQuantity) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
         this.orderProductPrice = orderProductPrice;
+        this.orderQuantity = orderQuantity;
     }
 
     public Long getId() {
@@ -33,5 +36,9 @@ public class OrderProductEntity {
 
     public Integer getOrderProductPrice() {
         return orderProductPrice;
+    }
+
+    public Integer getOrderQuantity() {
+        return orderQuantity;
     }
 }

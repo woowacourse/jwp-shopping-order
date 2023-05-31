@@ -15,6 +15,7 @@ import cart.domain.member.MemberRepository;
 import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
 import cart.domain.product.dto.ProductWithId;
+import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import cart.exception.ForbiddenException;
 import cart.exception.NotFoundException;
@@ -54,6 +55,7 @@ public class CartService {
     public long addCart(final String memberName, final CartRequest cartRequest) {
         final Long productId = cartRequest.getProductId();
         validateProduct(productId);
+        validateAlreadyAdd(memberName, productId);
         final CartItemSaveReq cartItemSaveReq = new CartItemSaveReq(productId, INIT_CART_ITEM_QUANTITY);
         return cartRepository.save(memberName, cartItemSaveReq);
     }
@@ -97,10 +99,16 @@ public class CartService {
         }
     }
 
+    private void validateAlreadyAdd(final String memberName, final Long productId) {
+        if (cartRepository.existByMemberNameAndProductId(memberName, productId)) {
+            throw new BadRequestException(ErrorCode.CART_ALREADY_ADD);
+        }
+    }
+
     private CartResponse convertCartItemResponse(final CartItemWithId cartItemWithId) {
         final ProductWithId productWithId = cartItemWithId.getProduct();
         final Product product = productWithId.getProduct();
-        return new CartResponse(cartItemWithId.getId(), cartItemWithId.getQuantity(),
+        return new CartResponse(cartItemWithId.getCartId(), cartItemWithId.getQuantity(),
             new ProductResponse(productWithId.getProductId(), product.getName(), product.getPrice(),
                 product.getImageUrl()));
     }

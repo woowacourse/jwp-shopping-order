@@ -13,7 +13,7 @@ public class OrderMapper {
 
     public static OrderEntity convertOrderEntity(final Order order, final MemberWithId member) {
         return new OrderEntity(member.getMemberId(), order.getTotalPrice(), order.getDiscountedTotalPrice(),
-            order.getDeliveryPrice(), order.getOrderDate());
+            order.getDeliveryPrice(), order.getOrderedAt());
     }
 
     public static List<OrderProductEntity> convertOrderProductEntities(final List<CartItemWithId> cartItems,
@@ -22,7 +22,7 @@ public class OrderMapper {
             .map(cartItemWithId -> {
                 final ProductWithId productWithId = cartItemWithId.getProduct();
                 return new OrderProductEntity(orderId, productWithId.getProductId(),
-                    productWithId.getProduct().getPrice());
+                    productWithId.getProduct().getPrice(), cartItemWithId.getQuantity());
             }).collect(Collectors.toUnmodifiableList());
     }
 }

@@ -121,5 +121,13 @@ public class CartItemDao {
         mapSqlParameterSource.addValue("memberId", memberId);
         return namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
+
+    public boolean existByMemberNameAndProductId(final String memberName, final Long productId) {
+        final String sql = "SELECT COUNT(*) FROM cart_item ci " +
+            "INNER JOIN member m ON ci.member_id = m.id " +
+            "WHERE m.name = ? and ci.product_id = ?";
+        final long count = jdbcTemplate.queryForObject(sql, Long.class, memberName, productId);
+        return count > 0;
+    }
 }
 

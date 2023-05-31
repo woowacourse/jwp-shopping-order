@@ -1,5 +1,6 @@
 package cart.integration;
 
+import static cart.exception.ErrorCode.CART_ALREADY_ADD;
 import static cart.exception.ErrorCode.PRODUCT_NOT_FOUND;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -62,6 +63,29 @@ public class CartIntegrationTest extends IntegrationTest {
             .body("errorMessage", equalTo("상품이 존재하지 않습니다."));
     }
 
+    @Test
+    @DisplayName("이미 추가된 상품을 장바구니에 추가하려고 하면 예외가 발생한다.")
+    void addCartItem_already_add() {
+        // given
+        사용자를_저장한다();
+
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
+        장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
+
+        // expected
+        final CartRequest 이미_존재하는_상품_장바구니_저장_요청 = new CartRequest(1L);
+        given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .body(이미_존재하는_상품_장바구니_저장_요청)
+            .when()
+            .post("/cart-items")
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errorCode", equalTo(CART_ALREADY_ADD.name()))
+            .body("errorMessage", equalTo("장바구니에 해당 상품이 이미 등록되어 있습니다."));
+    }
 
     @Test
     @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")

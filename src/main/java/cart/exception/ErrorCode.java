@@ -34,10 +34,12 @@ public enum ErrorCode {
      * CART
      */
     CART_NOT_FOUND("장바구니 정보를 찾을 수 없습니다."),
+    CART_ALREADY_ADD("장바구니에 해당 상품이 이미 등록되어 있습니다."),
 
     /**
      * ORDER
      */
+    ORDER_NOT_FOUND("존재하지 않는 주문 정보입니다."),
     ORDER_INVALID_PRODUCTS("장바구니에 담기지 않은 상품은 주문할 수 없습니다."),
     NATUAL_ORDER_HAS_COUPON("쿠폰이 적용되지 않은 주문입니다."),
     ORDER_QUANTITY_EXCEED("상품은 최대 1000개까지 주문할 수 있습니다."),

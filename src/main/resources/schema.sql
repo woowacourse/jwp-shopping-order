@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS member_coupon
     expired_at DATETIME NOT NULL,
     is_used TINYINT(1) NOT NULL,
     PRIMARY KEY(id),
+    UNIQUE(member_id, coupon_id),
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
@@ -65,6 +66,7 @@ CREATE TABLE IF NOT EXISTS order_product
     order_id INT UNSIGNED NOT NULL,
     product_id INT UNSIGNED NOT NULL,
     ordered_product_price BIGINT UNSIGNED NOT NULL,
+    quantity INT NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (order_id) REFERENCES `order`(id),
     FOREIGN KEY (product_id) REFERENCES product(id)

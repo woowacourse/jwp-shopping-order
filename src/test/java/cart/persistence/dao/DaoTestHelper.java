@@ -1,5 +1,6 @@
 package cart.persistence.dao;
 
+import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberCouponEntity;
 import cart.persistence.entity.MemberEntity;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
-@Import({OrderDao.class, MemberDao.class, CouponDao.class, MemberCouponDao.class, ProductDao.class})
+@Import({OrderDao.class, MemberDao.class, CouponDao.class, MemberCouponDao.class, ProductDao.class, CartItemDao.class})
 public class DaoTestHelper extends DaoTest {
 
     @Autowired
@@ -22,6 +23,8 @@ public class DaoTestHelper extends DaoTest {
     MemberCouponDao memberCouponDao;
     @Autowired
     ProductDao productDao;
+    @Autowired
+    CartItemDao cartItemDao;
 
     Long 치킨_저장() {
         final ProductEntity 치킨 = new ProductEntity("치킨", "chicken_image_url", 20000);
@@ -37,6 +40,18 @@ public class DaoTestHelper extends DaoTest {
     Long 져니_저장() {
         final MemberEntity 져니 = new MemberEntity("journey", "password");
         return memberDao.insert(져니);
+    }
+
+    Long 장바구니_치킨_저장(final Long 저장된_져니_아이디, final Long 저장된_치킨_아이디) {
+        final CartEntity 장바구니_치킨 = new CartEntity(저장된_져니_아이디, 저장된_치킨_아이디, 1);
+        final Long 저장된_장바구니_치킨_아이디 = cartItemDao.insert(장바구니_치킨);
+        return 저장된_장바구니_치킨_아이디;
+    }
+
+    Long 장바구니_피자_저장(final Long 저장된_져니_아이디, final Long 저장된_피자_아이디) {
+        final CartEntity 장바구니_피자 = new CartEntity(저장된_져니_아이디, 저장된_피자_아이디, 10);
+        final Long 저장된_장바구니_피자_아이디 = cartItemDao.insert(장바구니_피자);
+        return 저장된_장바구니_피자_아이디;
     }
 
     Long 신규_가입_쿠폰_저장() {

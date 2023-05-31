@@ -32,8 +32,8 @@ class OrderProductDaoTest extends DaoTestHelper {
         final Long 저장된_주문_아이디 = 주문_저장(저장된_져니_아이디);
 
         final List<OrderProductEntity> 주문_상품_엔티티들 = List.of(
-            new OrderProductEntity(저장된_주문_아이디, 저장된_치킨_아이디, 20000),
-            new OrderProductEntity(저장된_주문_아이디, 저장된_피자_아이디, 30000));
+            new OrderProductEntity(저장된_주문_아이디, 저장된_치킨_아이디, 20000, 10),
+            new OrderProductEntity(저장된_주문_아이디, 저장된_피자_아이디, 30000, 5));
 
         // when
         orderProductDao.saveAll(주문_상품_엔티티들);
@@ -42,17 +42,19 @@ class OrderProductDaoTest extends DaoTestHelper {
         final List<OrderProductEntity> 저장된_주문_상품_엔티티들 = 주문_상품_엔티티_조회(저장된_주문_아이디);
         assertThat(저장된_주문_상품_엔티티들)
             .extracting(OrderProductEntity::getOrderId, OrderProductEntity::getProductId,
-                OrderProductEntity::getOrderProductPrice)
+                OrderProductEntity::getOrderProductPrice, OrderProductEntity::getOrderQuantity)
             .containsExactly(
-                tuple(저장된_주문_아이디, 저장된_치킨_아이디, 20000),
-                tuple(저장된_주문_아이디, 저장된_피자_아이디, 30000));
+                tuple(저장된_주문_아이디, 저장된_치킨_아이디, 20000, 10),
+                tuple(저장된_주문_아이디, 저장된_피자_아이디, 30000, 5));
     }
 
     private List<OrderProductEntity> 주문_상품_엔티티_조회(final Long 저장된_주문_아이디) {
-        final String sql = "SELECT order_id, product_id, ordered_product_price FROM order_product WHERE order_id = ?";
+        final String sql = "SELECT order_id, product_id, ordered_product_price, quantity "
+            + "FROM order_product WHERE order_id = ?";
         return jdbcTemplate.query(sql, (rs, count) -> new OrderProductEntity(
             rs.getLong("order_id"),
             rs.getLong("product_id"),
-            rs.getInt("ordered_product_price")), 저장된_주문_아이디);
+            rs.getInt("ordered_product_price"),
+            rs.getInt("quantity")), 저장된_주문_아이디);
     }
 }

@@ -4,12 +4,16 @@ import cart.domain.product.dto.ProductWithId;
 
 public class CartItemWithId {
 
-    private final Long id;
+    private final Long cartId;
     private int quantity;
     private final ProductWithId product;
 
-    public CartItemWithId(final Long id, final int quantity, final ProductWithId product) {
-        this.id = id;
+    public CartItemWithId(final int quantity, final ProductWithId product) {
+        this(null, quantity, product);
+    }
+
+    public CartItemWithId(final Long cartId, final int quantity, final ProductWithId product) {
+        this.cartId = cartId;
         this.quantity = quantity;
         this.product = product;
     }
@@ -18,8 +22,8 @@ public class CartItemWithId {
         this.quantity = quantity;
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartId() {
+        return cartId;
     }
 
     public int getQuantity() {

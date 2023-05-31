@@ -7,6 +7,7 @@ import cart.domain.member.Member;
 import cart.domain.member.dto.MemberWithId;
 import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.dao.dto.MemberCouponDto;
+import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.MemberEntity;
 import java.util.List;
 
@@ -18,6 +19,11 @@ public class MemberMapper {
 
     public static MemberWithId convertMemberWithId(final MemberEntity memberEntity) {
         return new MemberWithId(memberEntity.getId(), convertMember(memberEntity));
+    }
+
+    public static MemberWithId convertMemberWithId(final OrderDto orderDto) {
+        return new MemberWithId(orderDto.getMemberId(), Member.create(orderDto.getMemberName(),
+            EncryptedPassword.create(orderDto.getMemberPassword())));
     }
 
     public static Member convertMember(final CartItemDto cartItemDto) {
