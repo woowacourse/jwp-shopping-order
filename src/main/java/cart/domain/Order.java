@@ -13,11 +13,24 @@ public class Order {
     private LocalDateTime createdAt;
 
     public Order(Long id, Member member, List<OrderItem> orderItems, long spendPoint, LocalDateTime createdAt) {
+        validateOverPrice(orderItems, spendPoint);
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
         this.spendPoint = new Point(spendPoint);
         this.createdAt = createdAt;
+    }
+
+    private void validateOverPrice(List<OrderItem> orderItems, long spendPoint) {
+        if (hasOverPrice(orderItems, spendPoint)) {
+            throw new IllegalArgumentException(); // TODO
+        }
+    }
+
+    private boolean hasOverPrice(List<OrderItem> orderItems, long spendPoint) {
+        return orderItems.stream()
+                .map(OrderItem::getPrice)
+                .reduce(Price.ZERO, Price::plus).getAmount() < spendPoint;
     }
 
     public String getThumbnailUrl() {
@@ -31,8 +44,7 @@ public class Order {
     public Price calculateTotalPrice() {
         return orderItems.stream()
                 .map(OrderItem::getPrice)
-                .reduce(Price::plus)
-                .orElseThrow(IllegalArgumentException::new); // TODO
+                .reduce(Price.ZERO, Price::plus);
     }
 
     public Price calculateSpendPrice() {

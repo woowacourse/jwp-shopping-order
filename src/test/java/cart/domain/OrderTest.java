@@ -1,6 +1,7 @@
 package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDateTime;
@@ -77,5 +78,11 @@ class OrderTest {
 
         assertThat(rewardPoint.getAmount())
                 .isZero();
+    }
+
+    @Test
+    void 포인트가_전체_금액보다_크면_예외가_발생한다() {
+        assertThatThrownBy(() -> new Order(1L, member, List.of(orderItemA, orderItemB), 10001, LocalDateTime.now()))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

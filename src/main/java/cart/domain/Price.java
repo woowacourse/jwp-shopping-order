@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Price {
+    public static final Price ZERO = Price.from(0);
+
     private final BigDecimal amount;
 
     private Price(BigDecimal amount) {
