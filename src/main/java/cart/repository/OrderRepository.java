@@ -44,9 +44,9 @@ public class OrderRepository {
         return orderId;
     }
 
-    public Order findById(final Long orderId) {
-        return orderDao.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
+    public Order findById(final Long id) {
+        return orderDao.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
     }
 
     public List<OrderProduct> findAllByOrderId(final Long orderId) {
