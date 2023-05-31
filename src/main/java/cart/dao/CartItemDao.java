@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -22,23 +23,27 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        try {
+            String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                    "FROM cart_item " +
+                    "INNER JOIN member ON cart_item.member_id = member.id " +
+                    "INNER JOIN product ON cart_item.product_id = product.id " +
+                    "WHERE cart_item.member_id = ?";
+            return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
+                String email = rs.getString("email");
+                Long productId = rs.getLong("product.id");
+                String name = rs.getString("name");
+                int price = rs.getInt("price");
+                String imageUrl = rs.getString("image_url");
+                Long cartItemId = rs.getLong("cart_item.id");
+                int quantity = rs.getInt("cart_item.quantity");
+                Member member = new Member(memberId, email, null);
+                Product product = new Product(productId, name, price, imageUrl);
+                return new CartItem(cartItemId, quantity, product, member);
+            });
+        }catch (DataAccessException e){
+            throw new IllegalArgumentException("장바구니에 물품이 없습니다");
+        }
     }
 
     public Long save(CartItem cartItem) {
@@ -96,6 +101,11 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public void deleteByMemberId(final Long memberId) {
+        String sql = "DELETE FROM cart_item WHERE member_id = ?";
+        jdbcTemplate.update(sql, memberId);
     }
 }
 
