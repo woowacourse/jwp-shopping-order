@@ -53,7 +53,6 @@ CREATE TABLE point (
     comment VARCHAR(255) NOT NULL,
     create_at DATE NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     expired_at DATE NOT NULL,
-    status TINYINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (orders_id) REFERENCES orders(id)
 );
