@@ -37,7 +37,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
     private MemberDao memberDao;
 
     private Product product1;
-    private Product product2;
     private Member member1;
     private Member member2;
 
@@ -46,7 +45,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
         super.setUp();
 
         product1 = new Product(1L, "치킨", 10000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80");
-        product2 = new Product(2L, "샐러드", 20000, "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80");
 
         final MemberEntity memberEntity1 = memberDao.getMemberById(1L);
         final MemberEntity memberEntity2 = memberDao.getMemberById(2L);

@@ -1,7 +1,9 @@
 package cart.application.dto.request;
 
 public class CartItemRequest {
+
     private static final int DEFAULT_QUANTITY = 1;
+
     private Long productId;
     private Integer quantity;
 

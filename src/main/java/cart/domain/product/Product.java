@@ -1,7 +1,7 @@
 package cart.domain.product;
 
 public class Product {
-    
+
     private final Long id;
     private final String name;
     private final Price price;

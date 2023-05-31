@@ -5,6 +5,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 public class PaymentRequest {
+
     @NotEmpty(message = "장바구니가 비어있습니다.")
     private final List<CartItemRequest> cartItemRequests;
 
