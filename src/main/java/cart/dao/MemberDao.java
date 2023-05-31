@@ -30,7 +30,9 @@ public class MemberDao {
     public Long insertMember(MemberEntity memberEntity) {
         return simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource()
                         .addValue("email", memberEntity.getEmail())
-                        .addValue("password", memberEntity.getPassword()))
+                        .addValue("password", memberEntity.getPassword())
+                        .addValue("money", memberEntity.getMoney())
+                        .addValue("point", memberEntity.getPoint()))
                 .longValue();
     }
 

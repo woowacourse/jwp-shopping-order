@@ -1,16 +1,16 @@
-package cart.dto;
+package cart.application.request;
 
 import javax.validation.constraints.PositiveOrZero;
 
-public class CartItemQuantityUpdateRequest {
+public class UpdateCartItemQuantityRequest {
 
     @PositiveOrZero(message = "수량은 음수가 될 수 없습니다. 입력값: ${validatedValue}")
     private int quantity;
 
-    public CartItemQuantityUpdateRequest() {
+    public UpdateCartItemQuantityRequest() {
     }
 
-    public CartItemQuantityUpdateRequest(int quantity) {
+    public UpdateCartItemQuantityRequest(int quantity) {
         this.quantity = quantity;
     }
 

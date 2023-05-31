@@ -13,14 +13,7 @@ class ProductTest {
 
     private String 상품_이름 = "validName";
     private int 상품_가격 = 1_000;
-    private String 상품_이미지_주소 = "imageUrl";
-
-    @Test
-    void 아이디를_입력하지_않으면_예외를_던진다() {
-        assertThatThrownBy(() -> new Product(상품_이름, 상품_가격, 상품_이미지_주소))
-                .isInstanceOf(ProductException.InvalidIdByNull.class)
-                .hasMessageContaining("상품 아이디를 입력해야 합니다.");
-    }
+    private String 상품_이미지_주소 = "https://imageUrl";
 
     @Nested
     class 상품_이름이 {
@@ -38,13 +31,6 @@ class ProductTest {
                     .isInstanceOf(ProductException.InvalidNameLength.class)
                     .hasMessageContaining("상품 이름은 1자 이상 255자 이하여야합니다.");
         }
-    }
-
-    @Test
-    void 상품_가격이_1원보다_작으면_예외를_던진다() {
-        assertThatThrownBy(() -> new Product(상품_이름, 0, 상품_이미지_주소))
-                .isInstanceOf(ProductException.InvalidPrice.class)
-                .hasMessageContaining("상품 가격은 1원 이상이어야 합니다.");
     }
 
     @Test

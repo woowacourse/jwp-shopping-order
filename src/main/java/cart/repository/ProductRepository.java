@@ -4,6 +4,7 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.domain.vo.Quantity;
 import cart.entity.ProductEntity;
+import cart.exception.ProductException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,7 +31,9 @@ public class ProductRepository {
     }
 
     public Product findByProductId(Long productId) {
-        return productDao.getByProductId(productId).toDomain();
+        return productDao.getByProductId(productId)
+                .orElseThrow(ProductException.NotFound::new)
+                .toDomain();
     }
 
     public void updateProduct(Long productId, ProductEntity productEntity) {
@@ -42,6 +45,6 @@ public class ProductRepository {
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productDao.deleteByProductId(productId);
     }
 }

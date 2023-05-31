@@ -3,12 +3,14 @@ package cart.dao;
 import cart.dao.rowmapper.ProductRowMapper;
 import cart.domain.vo.Quantity;
 import cart.entity.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static cart.dao.support.SqlHelper.sqlHelper;
 
@@ -42,14 +44,19 @@ public class ProductDao {
         return jdbcTemplate.query(sql, ProductRowMapper.product);
     }
 
-    public ProductEntity getByProductId(Long productId) {
+    public Optional<ProductEntity> getByProductId(Long productId) {
         String sql = sqlHelper()
                 .select().columns("*")
                 .from().table("product")
                 .where().condition("id = ?")
                 .toString();
 
-        return jdbcTemplate.queryForObject(sql, ProductRowMapper.product, productId);
+        try {
+            ProductEntity productEntity = jdbcTemplate.queryForObject(sql, ProductRowMapper.product, productId);
+            return Optional.ofNullable(productEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void updateProduct(Long productId, ProductEntity productEntity) {
@@ -76,7 +83,7 @@ public class ProductDao {
         jdbcTemplate.update(sql, quantity.getValue(), productId);
     }
 
-    public void deleteProduct(Long productId) {
+    public void deleteByProductId(Long productId) {
         String sql = sqlHelper()
                 .delete()
                 .from().table("product")
