@@ -2,7 +2,7 @@ CREATE TABLE if not exists product
 (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    price INT NOT NULL,
+    price BIGINT NOT NULL,
     image_url VARCHAR(255) NOT NULL,
     point_ratio DOUBLE NOT NULL,
     point_available BOOLEAN
@@ -21,7 +21,7 @@ CREATE TABLE if not exists cart_item
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity INT NOT NULL
+    quantity BIGINT NOT NULL
 );
 
 CREATE TABLE if not exists orders

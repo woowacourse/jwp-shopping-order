@@ -48,7 +48,7 @@ class CartItemApiControllerTest {
     void showCartItems() throws Exception {
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(cartItemService.findByMember(any()))
-                .thenReturn(List.of(CartItemResponse.of(new CartItem(1L, 2, new Product(1L, "치킨", 10000, "imageUrl", 10.0, true), member1))));
+                .thenReturn(List.of(CartItemResponse.of(new CartItem(1L, 2L, new Product(1L, "치킨", 10000, "imageUrl", 10.0, true), member1))));
 
         this.mockMvc.perform(get("/cart-items")
                         .contentType(MediaType.APPLICATION_JSON)

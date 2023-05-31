@@ -15,9 +15,9 @@ class OrderTest {
 
     // originalPrice = 79000, pointToAdd = 6900
     private static final List<CartItem> cartItems = List.of(
-            new CartItem(1L, 2, chicken, member1),
-            new CartItem(2L, 1, salad, member1),
-            new CartItem(3L, 3, pizza, member1));
+            new CartItem(1L, 2L, chicken, member1),
+            new CartItem(2L, 1L, salad, member1),
+            new CartItem(3L, 3L, pizza, member1));
 
     @DisplayName("올바른 주문이 요청되면 order 도메인은 프론트에서 보낸 originalPrice와 동일한 값을 가진다")
     @Test
