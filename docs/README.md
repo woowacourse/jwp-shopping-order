@@ -150,7 +150,7 @@ HTTP/1.1 204 No Content
 ### Request
 
 ``` 
-GET /cart-items HTTP/1.1
+GET /shop-items HTTP/1.1
 Authorization: Basic ${credentials}
 ```
 
@@ -190,7 +190,7 @@ Content-Type: application/json
 ### Request
 
 ```
-POST /cart-items HTTP/1.1
+POST /shop-items HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
 
@@ -203,7 +203,7 @@ Content-Type: application/json
 
 ```
 HTTP/1.1 201 Created
-Location: /cart-items/{cartItemId}
+Location: /shop-items/{cartItemId}
 ```
 ---
 - [X] 장바구니 아이템 수량 변경
@@ -211,7 +211,7 @@ Location: /cart-items/{cartItemId}
 ### Request
 
 ``` json
-PATCH /cart-items/{cartItemId} HTTP/1.1
+PATCH /shop-items/{cartItemId} HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
 
@@ -231,7 +231,7 @@ HTTP/1.1 200 OK
 ### Request
 
 ```
-DELETE /cart-items/{cartItemId}
+DELETE /shop-items/{cartItemId}
 Authorization: Basic ${credentials}
 ```
 
