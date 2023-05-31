@@ -44,7 +44,7 @@ public class OrderSteps {
                 .when()
                 .get("/orders")
 
-                .then().log().all()
+                .then()
                 .extract();
     }
 
@@ -57,7 +57,7 @@ public class OrderSteps {
                 .when()
                 .get("/orders/" + orderId)
 
-                .then().log().all()
+                .then()
                 .extract();
     }
 }
