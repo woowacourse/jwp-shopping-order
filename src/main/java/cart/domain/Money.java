@@ -8,15 +8,23 @@ import java.util.Objects;
 public class Money {
 
     private static final BigDecimal MIN_VALUE = BigDecimal.ZERO;
-    public static final Money MIN = new Money(MIN_VALUE);
+    public static final Money MIN = Money.from(MIN_VALUE);
     private final BigDecimal value;
 
     public Money(BigDecimal value) {
-        validate(value);
         this.value = value;
     }
 
-    private void validate(BigDecimal value) {
+    public static Money from(BigDecimal value) {
+        validate(value);
+        return new Money(value);
+    }
+
+    public static Money from(int value) {
+        return Money.from(BigDecimal.valueOf(value));
+    }
+
+    private static void validate(BigDecimal value) {
         if (value.compareTo(MIN_VALUE) < 0) {
             throw new IllegalMoneyException("금액은 음수일 수 없습니다.");
         }
@@ -30,7 +38,7 @@ public class Money {
         if (this.isLessThan(other)) {
             throw new IllegalMoneyException("원액보다 큰 금액을 차감할 수 없습니다.");
         }
-        return new Money(this.value.subtract(other.value));
+        return Money.from(this.value.subtract(other.value));
     }
 
     private boolean isLessThan(Money other) {

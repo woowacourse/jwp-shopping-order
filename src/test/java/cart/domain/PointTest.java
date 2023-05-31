@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.exception.IllegalPointException;
-import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +23,7 @@ class PointTest {
     @DisplayName("금액을 포인트 적립 방식에 맞춰 포인트로 변환할 수 있다.")
     void fromMoney() {
         // given
-        Money money = new Money(BigDecimal.valueOf(1000));
+        Money money = Money.from(1000);
 
         // when
         Point point = Point.fromMoney(money);
@@ -44,7 +43,7 @@ class PointTest {
         Money money = point.toMoney();
 
         // then
-        assertThat(money).isEqualTo(new Money(BigDecimal.valueOf(500)));
+        assertThat(money).isEqualTo(Money.from(500));
     }
 
     @ParameterizedTest

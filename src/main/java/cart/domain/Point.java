@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.exception.IllegalPointException;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Point {
@@ -26,7 +25,7 @@ public class Point {
     }
 
     public Money toMoney() {
-        return new Money(BigDecimal.valueOf(value));
+        return Money.from(value);
     }
 
     public boolean isLessOrEqualThan(Point other) {

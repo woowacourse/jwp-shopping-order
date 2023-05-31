@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.Money;
 import cart.domain.Product;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class ProductDao {
     private static final RowMapper<Product> ROW_MAPPER = (rs, rowNum) ->
         new Product(rs.getLong("id"),
             rs.getString("name"),
-            rs.getInt("price"),
+            Money.from(rs.getInt("price")),
             rs.getString("image_url"));
 
     private final JdbcTemplate jdbcTemplate;
@@ -41,7 +42,7 @@ public class ProductDao {
     public Long createProduct(Product product) {
         Number generatedKey = insertAction.executeAndReturnKey(Map.of(
             "name", product.getName(),
-            "price", product.getPrice(),
+            "price", product.getPriceIntValue(),
             "image_url", product.getImageUrl()
         ));
 
@@ -50,7 +51,7 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(),
+        jdbcTemplate.update(sql, product.getName(), product.getPriceIntValue(), product.getImageUrl(),
             productId);
     }
 

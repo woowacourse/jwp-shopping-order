@@ -18,7 +18,7 @@ class MoneyTest {
     @DisplayName("금액은 음수일 수 없다.")
     void createMoney_negative_fail() {
         // when, then
-        assertThatThrownBy(() -> new Money(BigDecimal.valueOf(-1)))
+        assertThatThrownBy(() -> Money.from(-1))
             .isInstanceOf(IllegalMoneyException.class);
     }
 
@@ -27,43 +27,43 @@ class MoneyTest {
     @DisplayName("0보다 큰 금액을 생성할 수 있다.")
     void createMoney_success(int value) {
         // when, then
-        assertDoesNotThrow(() -> new Money(BigDecimal.valueOf(value)));
+        assertDoesNotThrow(() -> Money.from(BigDecimal.valueOf(value)));
     }
 
     @Test
     @DisplayName("금액을 더할 수 있다.")
     void add_success() {
         // given
-        Money standard = new Money(BigDecimal.valueOf(1000));
-        Money other = new Money(BigDecimal.valueOf(500));
+        Money standard = Money.from(1000);
+        Money other = Money.from(500);
 
         // when
         Money result = standard.add(other);
 
         // then
-        assertThat(result).isEqualTo(new Money(BigDecimal.valueOf(1500)));
+        assertThat(result).isEqualTo(Money.from(1500));
     }
 
     @Test
     @DisplayName("금액을 차감할 수 있다.")
     void subtract_success() {
         // given
-        Money standard = new Money(BigDecimal.valueOf(1000));
-        Money other = new Money(BigDecimal.valueOf(500));
+        Money standard = Money.from(1000);
+        Money other = Money.from(500);
 
         // when
         Money result = standard.subtract(other);
 
         // then
-        assertThat(result).isEqualTo(new Money(BigDecimal.valueOf(500)));
+        assertThat(result).isEqualTo(Money.from(500));
     }
 
     @Test
     @DisplayName("원액보다 큰 금액을 차감할 수 없다.")
     void subtract_moreThanStandard_fail() {
         // given
-        Money standard = new Money(BigDecimal.valueOf(500));
-        Money other = new Money(BigDecimal.valueOf(550));
+        Money standard = Money.from(500);
+        Money other = Money.from(550);
 
         // when, then
         assertThatThrownBy(() -> standard.subtract(other))
@@ -74,13 +74,13 @@ class MoneyTest {
     @DisplayName("원액에 정수값을 곱한 금액을 계산할 수 있다.")
     void multiplyValue() {
         // given
-        Money money = new Money(BigDecimal.valueOf(50));
+        Money money = Money.from(50);
 
         // when
         Money result = money.multiply(10);
 
         // then
-        assertThat(result).isEqualTo(new Money(BigDecimal.valueOf(500)));
+        assertThat(result).isEqualTo(Money.from(500));
     }
 
     @ParameterizedTest
@@ -88,14 +88,14 @@ class MoneyTest {
     @DisplayName("원액에 비율을 곱해서 반올림 된 금액을 계산할 수 있다.")
     void multiplyRateAndRound(int standardValue, int resultValue) {
         // given
-        Money money = new Money(BigDecimal.valueOf(standardValue));
+        Money money = Money.from(standardValue);
         double rate = 2.5 / 100;
 
         // when
         Money result = money.multiplyRateAndRound(rate);
 
         // then
-        Money expected = new Money(BigDecimal.valueOf(resultValue));
+        Money expected = Money.from(BigDecimal.valueOf(resultValue));
         assertThat(result).isEqualTo(expected);
     }
 }
