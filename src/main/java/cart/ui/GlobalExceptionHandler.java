@@ -9,15 +9,31 @@ import cart.exception.OrderException;
 import cart.exception.ProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Payload> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
+        log.error(exception.getMessage());
+        String errorMessage = exception.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(System.lineSeparator()));
+        ExceptionResponse response = new ExceptionResponse(errorMessage);
+        return ResponseEntity.badRequest().body(new Payload(response));
+    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Payload> handlerAuthenticationException(AuthenticationException e) {

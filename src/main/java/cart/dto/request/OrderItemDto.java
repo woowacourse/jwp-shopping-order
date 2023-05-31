@@ -1,9 +1,14 @@
 package cart.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class OrderItemDto {
 
+    @NotNull
     private Long cartItemId;
-    private long quantity;
+
+    @NotNull
+    private Long quantity;
 
     public OrderItemDto() {
     }

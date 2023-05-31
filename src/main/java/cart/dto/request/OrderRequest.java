@@ -1,9 +1,11 @@
 package cart.dto.request;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class OrderRequest {
 
+    @NotNull
     private Long totalPrice;
     private List<OrderItemDto> order;
 
