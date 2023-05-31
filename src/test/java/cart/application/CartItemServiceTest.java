@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
-import cart.domain.CartItem;
+import cart.domain.cartitem.CartItem;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

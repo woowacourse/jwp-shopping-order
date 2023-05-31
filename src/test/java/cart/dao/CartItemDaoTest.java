@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartItem;
+import cart.domain.cartitem.CartItem;
 import cart.fixtures.CartItemFixtures;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package cart.fixtures;
 
-import cart.domain.CartItem;
+import cart.domain.cartitem.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemResponse;

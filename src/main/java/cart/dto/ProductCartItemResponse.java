@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.CartItem;
+import cart.domain.cartitem.CartItem;
 import cart.domain.Product;
 
 import java.util.Optional;
