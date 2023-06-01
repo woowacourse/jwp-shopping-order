@@ -2,6 +2,7 @@ package cart.presentation;
 
 import cart.exception.AuthenticationException;
 import cart.exception.IllegalAccessCartException;
+import cart.exception.MemberNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(IllegalAccessCartException.class)
     public ResponseEntity<String> handleIllegalAccessCartException(final IllegalAccessCartException e) {
         return createResponseEntity(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<String> handleMemberNotFoundException(final MemberNotFoundException e) {
+        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
