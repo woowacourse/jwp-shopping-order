@@ -5,8 +5,10 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.exception.IncorrectPriceException;
 import cart.exception.NonExistCartItemException;
+import cart.exception.NonExistOrderException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
@@ -52,5 +54,12 @@ public class OrderService {
     private CartItem getCartItem(Long cartItemId) {
         return cartItemRepository.findById(cartItemId)
                 .orElseThrow(NonExistCartItemException::new);
+    }
+
+    public OrderResponse findById(Long id, Member member) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(NonExistOrderException::new);
+        order.checkOwner(member);
+        return OrderResponse.from(order);
     }
 }

@@ -2,6 +2,7 @@ package cart.domain;
 
 import static java.util.stream.Collectors.toList;
 
+import cart.exception.IllegalMemberException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -53,6 +54,12 @@ public class Order {
                 .map(Item::calculateItemPrice)
                 .reduce(new Money(0), Money::add);
         return totalCartsPrice.add(deliveryFee);
+    }
+
+    public void checkOwner(Member member) {
+        if (!this.member.equals(member)) {
+            throw new IllegalMemberException();
+        }
     }
 
     public Long getId() {

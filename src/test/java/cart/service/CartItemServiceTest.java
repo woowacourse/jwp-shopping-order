@@ -14,7 +14,7 @@ import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import cart.exception.CartItemException;
+import cart.exception.IllegalMemberException;
 import cart.exception.NonExistCartItemException;
 import cart.exception.NonExistProductException;
 import cart.repository.CartItemRepository;
@@ -185,7 +185,7 @@ class CartItemServiceTest {
         // expect
         Member otherMember = new Member(2L, "email2@email.com", "password");
         assertThatThrownBy(() -> cartItemService.updateQuantity(otherMember, 1L, new CartItemQuantityUpdateRequest(10)))
-                .isInstanceOf(CartItemException.IllegalMember.class);
+                .isInstanceOf(IllegalMemberException.class);
     }
 
     @Test
@@ -238,7 +238,7 @@ class CartItemServiceTest {
         // expect
         Member otherMember = new Member(2L, "email2@email.com", "password");
         assertThatThrownBy(() -> cartItemService.remove(otherMember, 1L))
-                .isInstanceOf(CartItemException.IllegalMember.class);
+                .isInstanceOf(IllegalMemberException.class);
 
         verify(cartItemRepository, never()).deleteById(1L);
     }

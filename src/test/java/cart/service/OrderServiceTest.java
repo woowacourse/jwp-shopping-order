@@ -1,6 +1,7 @@
 package cart.service;
 
 import static cart.fixture.TestFixture.밀리;
+import static cart.fixture.TestFixture.박스터;
 import static cart.fixture.TestFixture.장바구니_밀리_치킨_10개;
 import static cart.fixture.TestFixture.장바구니_밀리_피자_1개;
 import static cart.fixture.TestFixture.주문_밀리_치킨_피자_3000원;
@@ -16,6 +17,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
+import cart.exception.IllegalMemberException;
 import cart.exception.IncorrectPriceException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
@@ -64,5 +67,24 @@ class OrderServiceTest {
         verify(cartItemRepository, never()).deleteById(any());
         assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L, 2L), 3000, valueOf(12000)), 밀리))
                 .isInstanceOf(IncorrectPriceException.class);
+    }
+
+    @Test
+    void 주문을_상세_조회한다() {
+        given(orderRepository.findById(anyLong()))
+                .willReturn(Optional.of(주문_밀리_치킨_피자_3000원));
+
+        OrderResponse response = orderService.findById(1L, 밀리);
+
+        assertThat(response.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    void 주문을_조회할_때_다른_사용자가_조회하면_예외가_발생한다() {
+        given(orderRepository.findById(anyLong()))
+                .willReturn(Optional.of(주문_밀리_치킨_피자_3000원));
+
+        assertThatThrownBy(() -> orderService.findById(1L, 박스터))
+                .isInstanceOf(IllegalMemberException.class);
     }
 }

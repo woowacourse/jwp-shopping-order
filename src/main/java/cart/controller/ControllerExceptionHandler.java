@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
+import cart.exception.IllegalMemberException;
 import cart.exception.IncorrectPriceException;
 import cart.exception.NonExistProductException;
 import org.slf4j.Logger;
@@ -23,8 +23,8 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
-        log.warn("다른 사용자의 카트에 접근할 수 없습니다. [이유 : {}]", e.getMessage(), e);
+    public ResponseEntity<Void> handleException(IllegalMemberException e) {
+        log.warn("권한이 없습니다. [이유 : {}]", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
