@@ -51,17 +51,14 @@ public class OrderApiController {
   @ResponseStatus(HttpStatus.OK)
   public SpecificOrderResponse showOrder(
       final Member member,
-      @PathVariable("order-id") Long orderId
+      @PathVariable("order-id") final Long orderId
   ) {
     return orderQueryService.searchOrder(member, orderId);
   }
 
   @DeleteMapping("/orders/{order-id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteOrder(
-      final Member member,
-      @PathVariable("order-id") Long orderId
-  ) {
+  public void deleteOrder(final Member member, @PathVariable("order-id") final Long orderId) {
     orderCommandService.deleteOrder(member, orderId);
   }
 }

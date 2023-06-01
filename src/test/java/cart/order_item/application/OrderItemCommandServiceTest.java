@@ -1,14 +1,17 @@
 package cart.order_item.application;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.domain.Order;
+import cart.order_item.domain.OrderItem;
 import cart.order_item.exception.CanNotOrderNotInCart;
 import cart.value_object.Money;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ class OrderItemCommandServiceTest {
 
   @Autowired
   private MemberDao memberDao;
+
+  @Autowired
+  private OrderItemQueryService orderItemQueryService;
 
   @Test
   @DisplayName("registerOrderItem() : 주문된 상품을 저장할 수 있다.")
@@ -52,5 +58,21 @@ class OrderItemCommandServiceTest {
     assertThatThrownBy(
         () -> orderItemCommandService.registerOrderItem(cartIdemIds, order, member))
         .isInstanceOf(CanNotOrderNotInCart.class);
+  }
+
+  @Test
+  @DisplayName("deleteBatch() : Order가 삭제될 때 포함되어 있는 OrderItem 을 삭제할 수 있다.")
+  void test_deleteBatch() throws Exception {
+    //given
+    final Member member = memberDao.getMemberById(1L);
+    final Order order = new Order(1L, member, new Money(3000));
+
+    //when
+    orderItemCommandService.deleteBatch(order);
+
+    //then
+    final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
+
+    assertThat(orderItems).isEmpty();
   }
 }

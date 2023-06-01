@@ -22,13 +22,16 @@ public class OrderItemCommandService {
 
   private final OrderItemDao orderItemDao;
   private final CartItemService cartItemService;
+  private final OrderItemQueryService orderItemQueryService;
 
   public OrderItemCommandService(
       final OrderItemDao orderItemDao,
-      final CartItemService cartItemService
+      final CartItemService cartItemService,
+      final OrderItemQueryService orderItemQueryService
   ) {
     this.orderItemDao = orderItemDao;
     this.cartItemService = cartItemService;
+    this.orderItemQueryService = orderItemQueryService;
   }
 
   public OrderedItems registerOrderItem(
@@ -73,5 +76,14 @@ public class OrderItemCommandService {
     if (cartItemIds.size() != cartItems.size()) {
       throw new CanNotOrderNotInCart("장바구니에 담지 않은 물품은 주문할 수 없습니다.");
     }
+  }
+
+  public void deleteBatch(final Order order) {
+    final List<Long> orderItemIds = orderItemQueryService.searchOrderItemsByOrderId(order)
+        .stream()
+        .map(OrderItem::getId)
+        .collect(Collectors.toList());
+
+    orderItemDao.deleteBatch(orderItemIds);
   }
 }

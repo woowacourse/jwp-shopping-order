@@ -4,6 +4,7 @@ import cart.member.domain.Member;
 import cart.order.application.dto.OrderItemResponse;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
+import cart.order.application.mapper.OrderMapper;
 import cart.order.dao.OrderDao;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
@@ -34,10 +35,10 @@ public class OrderQueryService {
   }
 
   public List<OrderResponse> searchOrders(final Member member) {
-    final List<Order> orders = orderDao.findByMemberId(member.getId())
-        .stream()
-        .map(it -> new Order(it.getId(), member, new Money(it.getDeliveryFee())))
-        .collect(Collectors.toList());
+    final List<Order> orders = OrderMapper.mapToOrders(
+        member,
+        orderDao.findByMemberId(member.getId())
+    );
 
     return orders.stream()
         .map(order -> new OrderResponse(
@@ -61,9 +62,9 @@ public class OrderQueryService {
     final OrderEntity orderEntity = orderDao.findByOrderId(orderId)
         .orElseThrow(() -> new NotFoundOrderException("해당 주문은 존재하지 않습니다."));
 
-    final Order order = new Order(
-        orderEntity.getId(),
+    final Order order = OrderMapper.mapToOrder(
         member,
+        orderId,
         new Money(orderEntity.getDeliveryFee())
     );
 

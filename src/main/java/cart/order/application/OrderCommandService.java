@@ -1,7 +1,10 @@
 package cart.order.application;
 
+import cart.cart_item.application.CartItemService;
+import cart.cart_item.application.dto.RemoveCartItemRequest;
 import cart.member.domain.Member;
 import cart.order.application.dto.RegisterOrderRequest;
+import cart.order.application.mapper.OrderMapper;
 import cart.order.dao.OrderDao;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
@@ -20,27 +23,24 @@ public class OrderCommandService {
 
   private final OrderDao orderDao;
   private final OrderItemCommandService orderItemCommandService;
+  private final CartItemService cartItemService;
 
   public OrderCommandService(
       final OrderDao orderDao,
-      final OrderItemCommandService orderItemCommandService
+      final OrderItemCommandService orderItemCommandService,
+      final CartItemService cartItemService
   ) {
     this.orderDao = orderDao;
     this.orderItemCommandService = orderItemCommandService;
+    this.cartItemService = cartItemService;
   }
 
   public Long registerOrder(final Member member, final RegisterOrderRequest registerOrderRequest) {
 
-    final OrderEntity orderEntity = new OrderEntity(member.getId(),
-        registerOrderRequest.getDeliveryFee());
-
+    final OrderEntity orderEntity = OrderMapper.mapToOrderEntity(member, registerOrderRequest);
     final Long savedOrderId = orderDao.save(orderEntity);
 
-    final Order order = new Order(
-        savedOrderId,
-        member,
-        new Money(registerOrderRequest.getDeliveryFee())
-    );
+    final Order order = OrderMapper.mapToOrder(member, savedOrderId, registerOrderRequest);
 
     final OrderedItems orderedItems = orderItemCommandService.registerOrderItem(
         registerOrderRequest.getCartItemIds(),
@@ -49,6 +49,9 @@ public class OrderCommandService {
     );
 
     validateSameTotalPrice(orderedItems.calculateAllItemPrice(), registerOrderRequest);
+
+    cartItemService.removeBatch(member,
+        new RemoveCartItemRequest(registerOrderRequest.getCartItemIds()));
 
     return savedOrderId;
   }
@@ -68,15 +71,16 @@ public class OrderCommandService {
     final OrderEntity orderEntity = orderDao.findByOrderId(orderId)
         .orElseThrow(() -> new NotFoundOrderException("해당 주문은 존재하지 않습니다."));
 
-    final Order order = new Order(
-        orderEntity.getId(),
+    final Order order = OrderMapper.mapToOrder(
         member,
+        orderId,
         new Money(orderEntity.getDeliveryFee())
     );
 
     validateOrderOwner(order, orderEntity.getMemberId());
 
     orderDao.deleteByOrderId(orderId);
+    orderItemCommandService.deleteBatch(order);
   }
 
   private void validateOrderOwner(final Order order, final Long memberId) {
