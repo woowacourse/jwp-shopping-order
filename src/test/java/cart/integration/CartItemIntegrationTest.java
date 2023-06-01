@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemResponse;
+import cart.dto.request.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;
@@ -36,8 +36,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        productId = createProduct(new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg"));
+        productId2 = createProduct(new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg"));
 
         member = memberDao.findById(1L).get();
         member2 = memberDao.findById(2L).get();

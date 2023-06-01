@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.exception.IllegalOrderException;
+import cart.exception.NumberRangeException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -31,6 +34,20 @@ class OrderTest {
                 () -> assertThat(order.getMember()).isEqualTo(member),
                 () -> assertThat(order.getOrderItems()).hasSize(2)
         );
+    }
+
+    @Test
+    void 주문시_주문_상품이_없으면_예외가_발생한다() {
+        assertThatThrownBy(
+                () -> new Order(null, member, Collections.emptyList(), 0, LocalDateTime.now()))
+                .isInstanceOf(IllegalOrderException.class)
+                .hasMessage("주문할 상품이 존재하지 않습니다.");
+    }
+
+    @Test
+    void 포인트가_전체_금액보다_크면_예외가_발생한다() {
+        assertThatThrownBy(() -> new Order(1L, member, List.of(orderItemA, orderItemB), 10001, LocalDateTime.now()))
+                .isInstanceOf(NumberRangeException.class);
     }
 
     @Test
@@ -78,11 +95,5 @@ class OrderTest {
 
         assertThat(rewardPoint.getAmount())
                 .isZero();
-    }
-
-    @Test
-    void 포인트가_전체_금액보다_크면_예외가_발생한다() {
-        assertThatThrownBy(() -> new Order(1L, member, List.of(orderItemA, orderItemB), 10001, LocalDateTime.now()))
-                .isInstanceOf(IllegalArgumentException.class);
     }
 }

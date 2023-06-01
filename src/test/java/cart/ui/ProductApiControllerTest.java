@@ -18,11 +18,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.application.ProductService;
 import cart.dao.MemberDao;
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -33,6 +34,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ProductApiController.class)
 @AutoConfigureRestDocs
+@DisplayNameGeneration(ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class ProductApiControllerTest {
 
     @Autowired
@@ -48,8 +51,7 @@ class ProductApiControllerTest {
     MemberDao memberDao;
 
     @Test
-    @DisplayName("모든 상품을 조회한다.")
-    void getAllProducts() throws Exception {
+    void 모든_상품을_조회한다() throws Exception {
         // given
         given(productService.getAllProducts())
                 .willReturn(List.of(
@@ -76,8 +78,7 @@ class ProductApiControllerTest {
     }
 
     @Test
-    @DisplayName("상품을 상세 조회한다.")
-    void getProductById() throws Exception {
+    void 상품을_상세_조회한다() throws Exception {
         // given
         given(productService.getProductById(anyLong()))
                 .willReturn(ProductResponse.of(
@@ -102,12 +103,11 @@ class ProductApiControllerTest {
     }
 
     @Test
-    @DisplayName("상품을 생성한다.")
-    void createProduct() throws Exception {
+    void 상품을_생성한다() throws Exception {
         // given
         given(productService.createProduct(any(ProductRequest.class)))
                 .willReturn(1L);
-        ProductRequest request = new ProductRequest("치킨", 10000, "http://image.com/image.png");
+        ProductRequest request = new ProductRequest("치킨", 10_000L, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -124,10 +124,9 @@ class ProductApiControllerTest {
     }
 
     @Test
-    @DisplayName("상품을 수정한다.")
-    void updateProduct() throws Exception {
+    void 상품을_수정한다() throws Exception {
         // given
-        ProductRequest request = new ProductRequest("치킨", 10000, "http://image.com/image.png");
+        ProductRequest request = new ProductRequest("치킨", 10_000L, "http://image.com/image.png");
 
         // expect
         mockMvc.perform(put("/products/{id}", 1L)
@@ -142,8 +141,7 @@ class ProductApiControllerTest {
     }
 
     @Test
-    @DisplayName("상품을 삭제한다.")
-    void deleteProduct() throws Exception {
+    void 상품을_삭제한다() throws Exception {
         // expect
         mockMvc.perform(delete("/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))

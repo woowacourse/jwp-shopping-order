@@ -8,9 +8,11 @@ import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.OrderDetailResponse;
-import cart.dto.OrderItemRequest;
-import cart.dto.OrderRequest;
+import cart.dto.response.OrderDetailResponse;
+import cart.dto.request.OrderItemRequest;
+import cart.dto.request.OrderRequest;
+import cart.exception.NumberRangeException;
+import cart.exception.PointNotEnoughException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -80,7 +82,8 @@ class OrderServiceTest {
         ), 1001L);
 
         assertThatThrownBy(() -> orderService.createOrder(orderRequest, member))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(PointNotEnoughException.class)
+                .hasMessage("포인트가 부족합니다.");
     }
 
     @Test
@@ -92,6 +95,6 @@ class OrderServiceTest {
         ), 101L);
 
         assertThatThrownBy(() -> orderService.createOrder(orderRequest, member))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NumberRangeException.class);
     }
 }

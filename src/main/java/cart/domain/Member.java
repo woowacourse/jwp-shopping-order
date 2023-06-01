@@ -31,22 +31,6 @@ public class Member {
         return this.password.equals(password);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Point getPoint() {
-        return point;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -62,5 +46,21 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Point getPoint() {
+        return point;
     }
 }

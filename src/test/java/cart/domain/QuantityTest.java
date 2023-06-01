@@ -3,6 +3,7 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.exception.NumberRangeException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ class QuantityTest {
     @ValueSource(ints = {-1, 0})
     void 수량에_1보다_작은_수가_할당되면_예외가_발생한다(int amount) {
         assertThatThrownBy(() -> new Quantity(amount))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NumberRangeException.class)
                 .hasMessage("수량은 최소 1개 이상 부터 가능합니다.");
     }
 }

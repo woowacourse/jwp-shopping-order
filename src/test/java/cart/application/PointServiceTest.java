@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.domain.Point;
+import cart.exception.PointNotEnoughException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -56,6 +57,7 @@ class PointServiceTest {
         Member member = new Member(null, "gray@google.com", "1234", 1000);
 
         assertThatThrownBy(() -> pointService.decreasePoint(member, point))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(PointNotEnoughException.class)
+                .hasMessage("포인트가 부족합니다.");
     }
 }

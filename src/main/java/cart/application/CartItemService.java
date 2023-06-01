@@ -5,9 +5,11 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.CartItemResponse;
+import cart.exception.CartItemNotFoundException;
+import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productDao.findById(cartItemRequest.getProductId())
-                .orElseThrow(IllegalArgumentException::new);// TODO
+                .orElseThrow(() -> new ProductNotFoundException("해당 상품을 찾을 수 없습니다."));
         CartItem cartItem = CartItem.builder()
                 .member(member)
                 .product(product)
@@ -41,7 +43,7 @@ public class CartItemService {
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id)
-                .orElseThrow(IllegalArgumentException::new); // TODO
+                .orElseThrow(() -> new CartItemNotFoundException("해당 장바구니를 찾을 수 없습니다."));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -55,7 +57,7 @@ public class CartItemService {
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemDao.findById(id)
-                .orElseThrow(IllegalArgumentException::new); // TODO
+                .orElseThrow(() -> new CartItemNotFoundException("해당 장바구니를 찾을 수 없습니다."));
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);

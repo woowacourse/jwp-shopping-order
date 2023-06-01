@@ -15,22 +15,6 @@ public class OrderItem {
         this.price = Price.from(price);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public Quantity getQuantity() {
-        return quantity;
-    }
-
-    public Price getPrice() {
-        return price;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -46,5 +30,21 @@ public class OrderItem {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Quantity getQuantity() {
+        return quantity;
+    }
+
+    public Price getPrice() {
+        return price;
     }
 }

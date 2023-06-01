@@ -14,16 +14,17 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.application.OrderService;
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.OrderDetailResponse;
-import cart.dto.OrderItemRequest;
-import cart.dto.OrderItemResponse;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.dto.request.OrderItemRequest;
+import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderDetailResponse;
+import cart.dto.response.OrderItemResponse;
+import cart.dto.response.OrderResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,6 +46,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 class OrderControllerTest {
+    private final Member member = new Member(1L, "aa@aaa.com", "1234", 1000);
 
     @Autowired
     MockMvc mockMvc;
@@ -58,7 +62,6 @@ class OrderControllerTest {
 
     @Test
     void 주문_요청을_정상적으로_처리한다() throws Exception {
-        Member member = new Member(1L, "aa@aaa.com", "1234", 1000);
         OrderItemRequest orderItemRequest = new OrderItemRequest(1L, 10);
         OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest), 1000L);
         given(orderService.createOrder(any(OrderRequest.class), any(Member.class)))
@@ -89,9 +92,89 @@ class OrderControllerTest {
     }
 
     @Test
+    void 주문을_요청할때_품목의_ID가_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        OrderItemRequest orderItemRequest = new OrderItemRequest(null, 10);
+        OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest), 1000L);
+
+        mockMvc.perform(post("/orders")
+                        .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result['orderItems[0].productId']").value("상품 ID는 반드시 포함되어야 합니다."));
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {-1, 0})
+    void 주문을_요청할때_품목의_ID가_0_또는_음수이면_400_상태코드가_반환된다(Long productId) throws Exception {
+        OrderItemRequest orderItemRequest = new OrderItemRequest(productId, 10);
+        OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest), 1000L);
+
+        mockMvc.perform(post("/orders")
+                        .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result['orderItems[0].productId']").value("상품 ID는 0 또는 음수가 될 수 없습니다."));
+    }
+
+
+    @Test
+    void 주문을_요청할때_품목의_수량이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        OrderItemRequest orderItemRequest = new OrderItemRequest(1L, null);
+        OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest), 1000L);
+
+        mockMvc.perform(post("/orders")
+                        .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result['orderItems[0].quantity']").value("수량은 반드시 포함되어야 합니다."));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 0})
+    void 주문을_요청할때_품목의_수량이_0_또는_음수이면_400_상태코드가_반환된다(Integer quantity) throws Exception {
+        OrderItemRequest orderItemRequest = new OrderItemRequest(1L, quantity);
+        OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest), 1000L);
+
+        mockMvc.perform(post("/orders")
+                        .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result['orderItems[0].quantity']").value("수량은 0 또는 음수가 될 수 없습니다."));
+    }
+
+    @Test
+    void 주문을_요청할때_사용할_포인트가_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        OrderItemRequest orderItemRequest = new OrderItemRequest(1L, 3);
+        OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest), null);
+
+        mockMvc.perform(post("/orders")
+                        .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.spendPoint").value("사용할 포인트는 반드시 포함되어야 합니다."));
+    }
+
+    @Test
+    void 주문을_요청할때_사용할_포인트가_음수이면_400_상태코드가_반환된다() throws Exception {
+        OrderItemRequest orderItemRequest = new OrderItemRequest(1L, 3);
+        OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest), -1L);
+
+        mockMvc.perform(post("/orders")
+                        .header("Authorization", "basic " + "YUBhLmNvbToxMjM0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.spendPoint").value("사용할 포인트는 음수가 될 수 없습니다."));
+    }
+
+    @Test
     void 회원의_모든_주문을_조회_요청을_정상적으로_처리한다() throws Exception {
-        Member member = new Member(1L, "aa@aaa.com", "1234", 1000);
-        OrderResponse orderResponse = new OrderResponse(1L, "http://image.com/image.png", 10000L, LocalDateTime.now());
+        OrderResponse orderResponse = new OrderResponse(1L, "http://image.com/image.png","감자",2, 10000L, LocalDateTime.now());
         given(orderService.findAllOrders(any(Member.class)))
                 .willReturn(List.of(orderResponse));
         given(memberDao.findByEmail(any())).willReturn(Optional.of(member));
@@ -107,6 +190,8 @@ class OrderControllerTest {
                         relaxedResponseFields(
                                 fieldWithPath("result[].orderId").description("주문 ID"),
                                 fieldWithPath("result[].thumbnail").description("주문 상품 대표 썸네일 URL"),
+                                fieldWithPath("result[].firstProductName").description("대표 상품 이름"),
+                                fieldWithPath("result[].totalCount").description("주문 상품 수량"),
                                 fieldWithPath("result[].spendPrice").description("주문 총 금액"),
                                 fieldWithPath("result[].createdAt").description("주문 생성 시간")
                         )
@@ -115,7 +200,6 @@ class OrderControllerTest {
 
     @Test
     void 회원의_특정_주문_조회_요청을_정상적으로_처리한다() throws Exception {
-        Member member = new Member(1L, "aa@aaa.com", "1234", 1000);
         OrderItemResponse orderItemResponse = new OrderItemResponse(1L, "사과", "http:image.com", 1000L, 10);
         OrderDetailResponse orderDetailResponse = new OrderDetailResponse(1L, 1000L, 500L, 500L, LocalDateTime.now(),
                 List.of(orderItemResponse));

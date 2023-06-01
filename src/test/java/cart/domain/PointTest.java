@@ -3,6 +3,7 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.exception.NumberRangeException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class PointTest {
         long amount = -1;
 
         assertThatThrownBy(() -> new Point(amount))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NumberRangeException.class)
                 .hasMessage("포인트는 음수가 될 수 없습니다.");
     }
 }

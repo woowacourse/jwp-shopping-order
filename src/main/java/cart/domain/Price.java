@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.NumberRangeException;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class Price {
 
     private static void validate(long amount) {
         if (amount < 0) {
-            throw new IllegalArgumentException("금액은 음수가 될 수 없습니다.");
+            throw new NumberRangeException("price", "금액은 음수가 될 수 없습니다.");
         }
     }
 
@@ -33,10 +34,6 @@ public class Price {
 
     public Price multiply(int factor) {
         return new Price(this.amount.multiply(BigDecimal.valueOf(factor)));
-    }
-
-    public long getAmount() {
-        return amount.longValue();
     }
 
     @Override
@@ -54,5 +51,9 @@ public class Price {
     @Override
     public int hashCode() {
         return Objects.hash(amount);
+    }
+
+    public long getAmount() {
+        return amount.longValue();
     }
 }

@@ -2,9 +2,9 @@ package cart.ui;
 
 import cart.domain.Member;
 import cart.domain.Point;
-import cart.dto.PointResponse;
-import cart.dto.Response;
-import cart.dto.ResultResponse;
+import cart.dto.response.PointResponse;
+import cart.dto.response.Response;
+import cart.dto.response.ResultResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

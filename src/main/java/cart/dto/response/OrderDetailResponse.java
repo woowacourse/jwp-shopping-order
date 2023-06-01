@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

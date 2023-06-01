@@ -19,22 +19,6 @@ public class Product {
         return new Builder();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public long getPrice() {
-        return price.getAmount();
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -52,14 +36,27 @@ public class Product {
         return Objects.hash(getId());
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getPrice() {
+        return price.getAmount();
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public static final class Builder {
         private Long id;
         private String name;
         private long price;
         private String imageUrl;
-
-        public Builder() {
-        }
 
         public Builder id(Long id) {
             this.id = id;

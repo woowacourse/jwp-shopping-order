@@ -6,6 +6,8 @@ import cart.dao.OrderItemDao;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.exception.MemberNotFoundException;
+import cart.exception.OrderNotFoundException;
 import cart.repository.dto.OrderEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +38,10 @@ public class OrderRepository {
 
     public Order findById(Long orderId) {
         OrderEntity orderEntity = orderDao.findById(orderId)
-                .orElseThrow(IllegalArgumentException::new);// TODO
+                .orElseThrow(() -> new OrderNotFoundException("해당 주문을 찾을 수 없습니다."));
         List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
         Member member = memberDao.findById(orderEntity.getMemberId())
-                .orElseThrow(IllegalArgumentException::new);// TODO
+                .orElseThrow(() -> new MemberNotFoundException("해당 회원을 찾을 수 없습니다."));
         return new Order(orderId, member, orderItems, orderEntity.getSpendPoint(), orderEntity.getCreatedAt());
     }
 

@@ -3,6 +3,7 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.exception.NumberRangeException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class PriceTest {
         long amount = -1;
 
         assertThatThrownBy(() -> Price.from(amount))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NumberRangeException.class)
                 .hasMessage("금액은 음수가 될 수 없습니다.");
     }
 
@@ -36,15 +37,6 @@ class PriceTest {
         Price addPrice = price.plus(Price.from(200));
 
         assertThat(addPrice.getAmount()).isEqualTo(300);
-    }
-
-    @Test
-    void 금액을_더할때_음수이면_예외가_발생한다() {
-        Price price = Price.from(100);
-
-        assertThatThrownBy(() -> price.plus(Price.from(-200)))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("금액은 음수가 될 수 없습니다.");
     }
 
     @Test
@@ -61,7 +53,7 @@ class PriceTest {
         Price price = Price.from(100);
 
         assertThatThrownBy(() -> price.minus(Price.from(200)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NumberRangeException.class)
                 .hasMessage("금액은 음수가 될 수 없습니다.");
     }
 
@@ -79,7 +71,7 @@ class PriceTest {
         Price price = Price.from(100);
 
         assertThatThrownBy(() -> price.multiply(-2))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NumberRangeException.class)
                 .hasMessage("금액은 음수가 될 수 없습니다.");
     }
 }

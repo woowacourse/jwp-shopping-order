@@ -3,6 +3,7 @@ package cart.application;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.domain.Point;
+import cart.exception.PointNotEnoughException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class PointService {
 
     private void validatePoint(Member member, Point point) {
         if (member.hasNotEnoughPoint(point)) {
-            throw new IllegalArgumentException(); // TODO
+            throw new PointNotEnoughException("포인트가 부족합니다.");
         }
     }
 

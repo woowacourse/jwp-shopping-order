@@ -2,11 +2,12 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.Response;
-import cart.dto.ResultResponse;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.response.Response;
+import cart.dto.response.ResultResponse;
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,7 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<Response> addCartItems(Member member, @RequestBody @Valid CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId))
@@ -42,7 +43,7 @@ public class CartItemApiController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Response> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Response> updateCartItemQuantity(Member member, @PathVariable Long id, @RequestBody @Valid CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok()
