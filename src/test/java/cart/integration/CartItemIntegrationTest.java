@@ -6,6 +6,7 @@ import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +64,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
+    @DisplayName("사용자가 담은 장바구니 아이템을 전체 조회한다.")
     @Test
     void getCartItems() {
         Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
@@ -77,6 +78,19 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .map(CartItemResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
+    }
+
+    @DisplayName("사용자가 담은 장바구니 아이템을 단건 조회한다.")
+    @Test
+    void getCartItemById() {
+        Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
+        requestAddCartItemAndGetId(member, productId2);
+
+        ExtractableResponse<Response> response = requestGetCartItemById(member, cartItemId1);
+        final CartItemResponse cartItemResponse = response.as(CartItemResponse.class);
+
+        assertThat(cartItemResponse.getId()).isEqualTo(cartItemId1);
+        assertThat(cartItemResponse.getProduct().getId()).isEqualTo(productId);
     }
 
     @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
@@ -146,6 +160,15 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
+    }
+
+    private ExtractableResponse<Response> requestGetCartItemById(final Member member, final Long id) {
+        return RestAssured.given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/cart-items/{cartItemId}", id)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
     }
 
     private Long createProduct(ProductRequest productRequest) {
