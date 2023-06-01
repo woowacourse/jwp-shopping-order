@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static cart.fixture.MemberFixture.ako;
-import static cart.fixture.MemberFixture.generate;
+import static cart.fixture.MemberFixture.generateAko;
 import static cart.fixture.ProductFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -50,7 +50,7 @@ class CartItemDaoTest {
 
         Product savedChicken = generateChicken(chickenId);
         Product savedFork = generateFork(forkId);
-        Member savedAko = generate(akoId);
+        Member savedAko = generateAko(akoId);
 
         CartItem akoChicken = new CartItem(savedAko, savedChicken);
         CartItem akoFork = new CartItem(savedAko, savedFork);
@@ -76,7 +76,7 @@ class CartItemDaoTest {
 
         Product savedChicken = generateChicken(chickenId);
         Product savedFork = generateFork(forkId);
-        Member savedAko = generate(akoId);
+        Member savedAko = generateAko(akoId);
 
         CartItem akoChicken = new CartItem(savedAko, savedChicken);
         CartItem akoFork = new CartItem(savedAko, savedFork);

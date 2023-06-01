@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static cart.fixture.MemberFixture.ako;
+import static cart.fixture.MemberFixture.ddoring;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,8 +45,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", true, 10));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", false, 0));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        Long akoId = memberDao.addMember(ako);
+        Long ddoringId = memberDao.addMember(ddoring);
+        member = memberDao.getMemberById(akoId);
+        member2 = memberDao.getMemberById(ddoringId);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

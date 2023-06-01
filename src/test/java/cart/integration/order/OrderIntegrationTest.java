@@ -82,4 +82,32 @@ public class OrderIntegrationTest extends IntegrationTest {
         String location = result.header("Location");
         assertThat(location).isNotBlank();
     }
+
+    @Test
+    @DisplayName("주문 전체 조회를 한다.")
+    void find_order_by_member() {
+        // given
+        OrderRequest orderRequest = new OrderRequest(
+                cartItemIds,
+                500,
+                1500,
+                25000,
+                23000,
+                3000,
+                26000);
+
+        given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then();
+
+        // when
+        given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders")
+                .then().log().all();
+    }
 }
