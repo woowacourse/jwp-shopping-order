@@ -32,23 +32,23 @@ public class OrderApiController {
                                 1L,
                                 "2023-05-26",
                                 List.of(
-                                        new OrderItemResponse(10L, "새우깡", 3L, 1500L, "http://example.com/dfdf"),
-                                        new OrderItemResponse(22L, "감자깡", 1L, 1200L, "http://example.com/abcd")
+                                        new OrderItemResponse(10L, "새우깡", 3, 1500, "http://example.com/dfdf"),
+                                        new OrderItemResponse(22L, "감자깡", 1, 1200, "http://example.com/abcd")
                                 ),
-                                15000L,
-                                1700L,
-                                300L
+                                15000,
+                                1700,
+                                300
                         ),
                         new OrderResponse(
                                 3L,
                                 "2023-05-25",
                                 List.of(
-                                        new OrderItemResponse(10L, "새우깡", 3L, 1500L, "http://example.com/dfdf"),
-                                        new OrderItemResponse(22L, "감자깡", 1L, 1200L, "http://example.com/abcd")
+                                        new OrderItemResponse(10L, "새우깡", 3, 1500, "http://example.com/dfdf"),
+                                        new OrderItemResponse(22L, "감자깡", 1, 1200, "http://example.com/abcd")
                                 ),
-                                15000L,
-                                1700L,
-                                200L
+                                15000,
+                                1700,
+                                200
                         )
                 )
         );
@@ -60,12 +60,12 @@ public class OrderApiController {
                 1L,
                 "2023-05-26",
                 List.of(
-                        new OrderItemResponse(10L, "새우깡", 3L, 1500L, "http://example.com/dfdf"),
-                        new OrderItemResponse(22L, "감자깡", 1L, 1200L, "http://example.com/abcd")
+                        new OrderItemResponse(10L, "새우깡", 3, 1500, "http://example.com/dfdf"),
+                        new OrderItemResponse(22L, "감자깡", 1, 1200, "http://example.com/abcd")
                 ),
-                15000L,
-                1700L,
-                300L
+                15000,
+                1700,
+                300
         ));
     }
 }
