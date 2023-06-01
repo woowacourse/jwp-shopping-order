@@ -21,8 +21,14 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-//    @ExceptionHandler(Exception.class) // TODO 서버 에러 클라이언트에게 숨기기
-//    public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
-//        return ResponseEntity.internalServerError().body(new ErrorResponse(e.getMessage()));
-//    }
+    @ExceptionHandler(IllegalArgumentException.class) // TODO DB NoSuch 에러 분리
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
+        ErrorResponse errorResponse = new ErrorResponse("서버에서 예기치 못한 에러가 발생했습니다.");
+        return ResponseEntity.internalServerError().body(errorResponse);
+    }
 }
