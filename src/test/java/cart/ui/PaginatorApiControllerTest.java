@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cart.WebMvcConfig;
-import cart.application.OrderService;
+import cart.application.FindOrderService;
 import cart.application.dto.GetOrdersRequest;
 import cart.application.dto.PostOrderRequest;
 import cart.application.dto.SingleKindProductRequest;
@@ -47,7 +47,7 @@ class PaginatorApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private OrderService orderService;
+    private FindOrderService findOrderService;
 
     @Nested
     class 주문_목록_조회_테스트 {
@@ -55,7 +55,7 @@ class PaginatorApiControllerTest {
         @Test
         void 페이지를_지정하지_않은_경우_BAD_REQUEST_가_반환된다() throws Exception {
             // given
-            given(orderService.getOrdersWithPagination(any(Member.class), any(GetOrdersRequest.class))).willReturn(
+            given(findOrderService.getOrdersWithPagination(any(Member.class), any(GetOrdersRequest.class))).willReturn(
                 ordersResponse1);
 
             // when & then
@@ -67,7 +67,7 @@ class PaginatorApiControllerTest {
         @Test
         void 페이지를_지정하면_특정_페이지에_대한_주문_목록을_조회한다() throws Exception {
             // given
-            given(orderService.getOrdersWithPagination(any(Member.class), any(GetOrdersRequest.class))).willReturn(
+            given(findOrderService.getOrdersWithPagination(any(Member.class), any(GetOrdersRequest.class))).willReturn(
                 ordersResponse1);
             long page = 1L;
 
@@ -81,7 +81,7 @@ class PaginatorApiControllerTest {
         @Test
         void orderId를_통해_주문을_상세_조회한다() throws Exception {
             // given
-            given(orderService.getOrder(any(Member.class), anyLong())).willReturn(detailedOrderResponse1);
+            given(findOrderService.getOrder(any(Member.class), anyLong())).willReturn(detailedOrderResponse1);
 
             // when & then
             mockMvc.perform(get("/orders/" + 1L)

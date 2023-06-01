@@ -7,6 +7,9 @@ import cart.domain.Member;
 import cart.application.dto.CartItemQuantityUpdateRequest;
 import cart.application.dto.CartItemRequest;
 import cart.application.dto.CartItemResponse;
+import cart.domain.Product;
+import cart.domain.QuantityAndProduct;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,5 +52,12 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    public void removeAllWithOutCheckingOwner(long memberId, List<QuantityAndProduct> quantityAndProducts) {
+        for (QuantityAndProduct quantityAndProduct : quantityAndProducts) {
+            Product product = quantityAndProduct.getProduct();
+            cartItemDao.delete(memberId, product.getId());
+        }
     }
 }

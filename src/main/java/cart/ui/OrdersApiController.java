@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.application.OrderService;
+import cart.application.AddOrderService;
+import cart.application.FindOrderService;
 import cart.application.dto.GetDetailedOrderResponse;
 import cart.application.dto.GetOrdersRequest;
 import cart.application.dto.GetOrdersResponse;
@@ -23,32 +24,34 @@ import cart.domain.Member;
 @RestController
 public class OrdersApiController {
 
-    private final OrderService orderService;
+    private final FindOrderService findOrderService;
+    private final AddOrderService addOrderService;
 
-    public OrdersApiController(OrderService orderService) {
-        this.orderService = orderService;
+    public OrdersApiController(FindOrderService findOrderService, AddOrderService addOrderService) {
+        this.findOrderService = findOrderService;
+        this.addOrderService = addOrderService;
     }
 
     @GetMapping("/orders")
     public ResponseEntity<GetOrdersResponse> getOrdersWithPagination(Member member,
         @ModelAttribute @Valid GetOrdersRequest request) {
-        return ResponseEntity.ok(orderService.getOrdersWithPagination(member, request));
+        return ResponseEntity.ok(findOrderService.getOrdersWithPagination(member, request));
     }
 
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<GetDetailedOrderResponse> getDetailedOrder(Member member, @PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.getOrder(member, orderId));
+        return ResponseEntity.ok(findOrderService.getOrder(member, orderId));
     }
 
     @PostMapping("/orders")
     public ResponseEntity<Void> addOrder(Member member, @RequestBody @Valid PostOrderRequest request) {
-        Long orderId = orderService.addOrder(member, request);
+        Long orderId = addOrderService.addOrder(member, request);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<Void> cancel(Member member, @PathVariable Long orderId) {
-        orderService.cancelOrder(member, orderId);
+        findOrderService.cancelOrder(member, orderId);
         return ResponseEntity.ok().build();
     }
 }
