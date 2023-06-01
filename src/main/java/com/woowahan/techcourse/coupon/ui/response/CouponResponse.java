@@ -4,15 +4,15 @@ import com.woowahan.techcourse.coupon.domain.Coupon;
 
 public class CouponResponse {
 
-    private Long id;
+    private long id;
     private String type;
-    private Integer amount;
+    private int amount;
     private String name;
 
     private CouponResponse() {
     }
 
-    public CouponResponse(Long id, String type, Integer amount, String name) {
+    public CouponResponse(long id, String type, int amount, String name) {
         this.id = id;
         this.type = type;
         this.amount = amount;
@@ -24,7 +24,7 @@ public class CouponResponse {
                 coupon.getName().getValue());
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -32,7 +32,7 @@ public class CouponResponse {
         return type;
     }
 
-    public Integer getAmount() {
+    public int getAmount() {
         return amount;
     }
 

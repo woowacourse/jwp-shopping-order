@@ -2,13 +2,13 @@ package com.woowahan.techcourse.order.ui.dto.response;
 
 public class OrderIdResponse {
 
-    private final Long orderId;
+    private final long orderId;
 
-    public OrderIdResponse(Long orderId) {
+    public OrderIdResponse(long orderId) {
         this.orderId = orderId;
     }
 
-    public Long getOrderId() {
+    public long getOrderId() {
         return orderId;
     }
 }

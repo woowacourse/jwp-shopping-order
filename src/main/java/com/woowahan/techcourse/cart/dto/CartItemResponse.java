@@ -5,11 +5,11 @@ import com.woowahan.techcourse.product.ui.dto.ProductResponse;
 
 public class CartItemResponse {
 
-    private Long id;
+    private long id;
     private int quantity;
     private ProductResponse product;
 
-    private CartItemResponse(Long id, int quantity, ProductResponse product) {
+    private CartItemResponse(long id, int quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -23,7 +23,7 @@ public class CartItemResponse {
         );
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
