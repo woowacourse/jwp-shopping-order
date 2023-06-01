@@ -16,9 +16,6 @@ public class MemberCoupons {
     }
 
     public boolean isNotContains(MemberCoupons memberCoupons) {
-        if (memberCoupons.isEmpty()){
-            return false;
-        }
         return !this.coupons.containsAll(memberCoupons.coupons);
     }
 

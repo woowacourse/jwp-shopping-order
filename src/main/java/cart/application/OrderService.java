@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,8 +56,10 @@ public class OrderService {
         MemberCoupons requestCoupons = memberCouponRepository.findByIds(orderRequest.getMemberCouponIds());
         MemberCoupons memberCoupons = memberCouponRepository.findByMemberId(member.getId()).getUnUsedCoupons();
 
-        System.out.println(requestCoupons);
-        System.out.println(memberCoupons);
+        if (memberCoupons.isEmpty()){
+            System.out.println("empty");
+            return new MemberCoupons(Collections.emptyList());
+        }
 
         if (memberCoupons.isNotContains(requestCoupons)) {
             throw new MemberCouponNotFoundException();
@@ -89,5 +92,9 @@ public class OrderService {
 
     public List<Order> findAll(Long memberId) {
         return orderRepository.findAllByMemberId(memberId);
+    }
+
+    public Order findById(Long id) {
+        return orderRepository.findById(id);
     }
 }
