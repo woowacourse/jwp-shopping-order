@@ -6,6 +6,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderRepository;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -45,5 +46,22 @@ class OrderServiceTest {
 
         // when & then
         assertThat(orderService.add(Fixture.memberA, orderRequest)).isEqualTo(1L);
+        verify(orderRepository, times(1)).saveOrder(any(Order.class));
+        verify(cartItemService, times(orderRequest.getCartItemIds().size())).remove(any(Member.class), anyLong());
+        verify(memberDao, times(1)).updateMemberPoint(any(Member.class));
+    }
+
+    @DisplayName("ID로 주문을 조회한다")
+    @Test
+    void findById() {
+        // given
+        given(orderRepository.findById(1L)).willReturn(Fixture.order1);
+
+        // when
+        final OrderResponse actual = orderService.findById(Fixture.memberA, 1L);
+
+        // then
+        assertThat(actual.getId()).isEqualTo(Fixture.order1.getId());
+        verify(orderRepository, times(1)).findById(anyLong());
     }
 }

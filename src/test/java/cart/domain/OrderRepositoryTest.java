@@ -3,12 +3,15 @@ package cart.domain;
 import cart.Fixture;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
+import cart.entity.OrderEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,5 +41,20 @@ class OrderRepositoryTest {
         assertThat(orderRepository.saveOrder(Fixture.order1)).isEqualTo(1L);
         verify(orderDao, times(1)).insert(any(Order.class));
         verify(orderItemDao, times(Fixture.order1.getOrderItems().size())).insert(anyLong(), any(OrderItem.class));
+    }
+
+    @DisplayName("주문 ID로 조회")
+    @Test
+    void findById() {
+        // given
+        final OrderEntity orderEntity = new OrderEntity(1L, 1L, 1000, 900, 100, 100, "2023-05-29 08:55:03");
+        given(orderDao.findById(1L)).willReturn(orderEntity);
+        given(orderItemDao.findByOrderId(1L)).willReturn(List.of(Fixture.orderItem1));
+
+        // when
+        final Order actual = orderRepository.findById(1L);
+
+        // then
+        assertThat(actual).usingRecursiveComparison().isEqualTo(Fixture.order1);
     }
 }
