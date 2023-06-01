@@ -3,6 +3,7 @@ package cart.domain;
 import cart.exception.IllegalPointUsageException;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
 
@@ -41,5 +42,21 @@ public class Order {
 
     public List<CartItem> getCartItems() {
         return cartItems;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order other = (Order) o;
+        if (id == null || other.id == null) {
+            return false;
+        }
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

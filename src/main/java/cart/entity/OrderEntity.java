@@ -1,5 +1,7 @@
 package cart.entity;
 
+import java.util.Objects;
+
 public class OrderEntity {
     private final Long id;
     private final Long memberId;
@@ -27,5 +29,21 @@ public class OrderEntity {
 
     public int getSavingRate() {
         return savingRate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderEntity other = (OrderEntity) o;
+        if (id == null || other.id == null) {
+            return false;
+        }
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

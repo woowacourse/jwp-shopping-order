@@ -20,6 +20,12 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public boolean hasSameValues(Product other) {
+        return name.equals(other.name)
+                && price == other.price
+                && imageUrl.equals(other.imageUrl);
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,14 +47,14 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product other = (Product) o;
-        return price == other.price
-                && Objects.equals(id, other.id)
-                && Objects.equals(name, other.name)
-                && Objects.equals(imageUrl, other.imageUrl);
+        if (id == null || other.id == null) {
+            return false;
+        }
+        return Objects.equals(id, other.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, imageUrl);
+        return Objects.hash(id);
     }
 }

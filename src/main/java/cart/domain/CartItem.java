@@ -8,17 +8,15 @@ import cart.exception.InvalidOrderQuantityException;
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
+
+    private final Long id;
     private int quantity;
     private final Product product;
     private final Member member;
     private boolean checked;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
-        this.checked = true;
+        this(null, 1, product, member, true);
     }
 
     public CartItem(Long id, int quantity, Product product, Member member, final boolean checked) {
@@ -52,14 +50,14 @@ public class CartItem {
     }
 
     public void validateSameItems(final CartItem other) {
-        validateSameProduct(other);
+        validateSameProductValues(other);
         validateSameQuantity(other);
         validateSameChecked(other);
     }
 
 
-    private void validateSameProduct(final CartItem other) {
-        if (!product.equals(other.product)) {
+    private void validateSameProductValues(final CartItem other) {
+        if (!product.equals(other.product) || !product.hasSameValues(other.product)) {
             throw new InvalidOrderProductException();
         }
     }
@@ -93,19 +91,18 @@ public class CartItem {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final CartItem cartItem = (CartItem) o;
-        return quantity == cartItem.quantity
-                && checked == cartItem.checked
-                && Objects.equals(id, cartItem.id)
-                && Objects.equals(product, cartItem.product)
-                && Objects.equals(member, cartItem.member);
+        CartItem other = (CartItem) o;
+        if (id == null || other.id == null) {
+            return false;
+        }
+        return Objects.equals(id, other.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, quantity, product, member, checked);
+        return Objects.hash(id);
     }
 }

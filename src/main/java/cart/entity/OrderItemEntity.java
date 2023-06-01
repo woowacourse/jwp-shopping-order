@@ -1,5 +1,7 @@
 package cart.entity;
 
+import java.util.Objects;
+
 public class OrderItemEntity {
     private final Long id;
     private final Long orderId;
@@ -45,5 +47,21 @@ public class OrderItemEntity {
 
     public String getProductImageUrl() {
         return productImageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItemEntity other = (OrderItemEntity) o;
+        if (id == null || other.id == null) {
+            return false;
+        }
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
