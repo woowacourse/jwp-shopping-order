@@ -20,6 +20,7 @@ public class MemberCouponDao {
                     rs.getLong("member_id"),
                     rs.getLong("coupon_id")
             );
+
     private final SimpleJdbcInsert jdbcInsert;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -45,8 +46,12 @@ public class MemberCouponDao {
         }
     }
 
-    public Long insert(final Long memberId, final Long couponId) {
-        return jdbcInsert.executeAndReturnKey(Map.of("member_id", memberId, "coupon_id", couponId, "used", false))
+    public Long insert(final MemberCouponDto memberCouponDto) {
+        return jdbcInsert.executeAndReturnKey(
+                        Map.of("member_id", memberCouponDto.getMemberId()
+                                , "coupon_id", memberCouponDto.getCouponId()
+                                , "used", false)
+                )
                 .longValue();
     }
 

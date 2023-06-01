@@ -10,6 +10,7 @@ import cart.domain.coupon.MemberCoupon;
 import cart.exception.MemberCouponNotFoundException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import org.springframework.stereotype.Repository;
 
@@ -25,8 +26,7 @@ public class MemberCouponRepository {
     }
 
     public MemberCoupon insert(final MemberCoupon memberCoupon) {
-        final Long memberCouponId = memberCouponDao.insert(memberCoupon.getMemberId(),
-                memberCoupon.getCoupon().getId());
+        final Long memberCouponId = memberCouponDao.insert(MemberCouponDto.from(memberCoupon));
         return new MemberCoupon(memberCouponId, memberCoupon.getCoupon(), memberCoupon.getMemberId());
     }
 
