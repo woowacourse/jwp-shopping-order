@@ -1,10 +1,11 @@
-package cart.domain;
+package cart.domain.cartitem;
 
+import cart.domain.member.Member;
 import cart.domain.vo.Money;
-import cart.exception.CartItemsException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CartItems {
@@ -64,13 +65,35 @@ public class CartItems {
     }
 
     public Money totalPrice() {
-        return cartItems.stream()
-                .map(CartItem::totalPrice)
-                .reduce(Money::plus)
-                .orElseThrow(CartItemsException.Price::new);
+        Money money = Money.from(0);
+        for (CartItem cartItem : cartItems) {
+            money = money.plus(cartItem.totalPrice());
+        }
+
+        return money;
     }
 
     public List<CartItem> getCartItems() {
         return cartItems;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItems cartItems1 = (CartItems) o;
+        return Objects.equals(cartItems, cartItems1.cartItems);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cartItems);
+    }
+
+    @Override
+    public String toString() {
+        return "CartItems{" +
+                "cartItems=" + cartItems +
+                '}';
     }
 }

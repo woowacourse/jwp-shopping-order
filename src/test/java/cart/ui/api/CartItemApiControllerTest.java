@@ -1,22 +1,22 @@
-package cart.ui;
+package cart.ui.api;
 
 import cart.application.request.CreateCartItemRequest;
 import cart.application.request.UpdateCartItemQuantityRequest;
 import cart.config.ControllerTestConfig;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
-import cart.entity.CartItemEntity;
-import cart.entity.MemberEntity;
-import cart.entity.ProductEntity;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
+import cart.dao.entity.CartItemEntity;
+import cart.dao.entity.MemberEntity;
+import cart.dao.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 
-import static cart.fixture.CartItemFixture.장바구니_상품;
-import static cart.fixture.ProductFixture.상품;
+import static cart.fixture.domain.CartItemFixture.장바구니_상품;
+import static cart.fixture.domain.ProductFixture.상품;
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -30,7 +30,6 @@ class CartItemApiControllerTest extends ControllerTestConfig {
 
     private static final String USERNAME = "a@a.com";
     private static final String PASSWORD = "1234";
-    private static final String DOCUMENT_IDENTIFIER = "{method-name}";
 
     Product 상품_계란_등록() {
         final ProductEntity 상품_엔티티 = new ProductEntity("계란", 1000, "https://계란_이미지_주소.png");

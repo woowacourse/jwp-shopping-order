@@ -1,22 +1,22 @@
 package cart.dao;
 
 import cart.config.DaoTestConfig;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.domain.vo.Money;
-import cart.entity.CartItemEntity;
-import cart.entity.MemberEntity;
-import cart.entity.ProductEntity;
+import cart.dao.entity.CartItemEntity;
+import cart.dao.entity.MemberEntity;
+import cart.dao.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixture.CartItemEntityFixture.장바구니_상품_엔티티;
-import static cart.fixture.MemberEntityFixture.회원_엔티티;
-import static cart.fixture.ProductEntityFixture.상품_엔티티;
+import static cart.fixture.entity.CartItemEntityFixture.장바구니_상품_엔티티;
+import static cart.fixture.entity.MemberEntityFixture.회원_엔티티;
+import static cart.fixture.entity.ProductEntityFixture.상품_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CartItemDaoTest extends DaoTestConfig {

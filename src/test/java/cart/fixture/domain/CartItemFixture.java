@@ -1,8 +1,8 @@
-package cart.fixture;
+package cart.fixture.domain;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 
 public abstract class CartItemFixture {
 

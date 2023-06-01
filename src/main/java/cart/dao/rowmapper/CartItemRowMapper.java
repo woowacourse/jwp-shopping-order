@@ -1,8 +1,8 @@
 package cart.dao.rowmapper;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.domain.vo.Money;
 import org.springframework.jdbc.core.RowMapper;
 

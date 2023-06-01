@@ -1,5 +1,7 @@
-package cart.domain;
+package cart.domain.cartitem;
 
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.domain.vo.Money;
 import cart.domain.vo.Quantity;
 import cart.exception.CartItemException;

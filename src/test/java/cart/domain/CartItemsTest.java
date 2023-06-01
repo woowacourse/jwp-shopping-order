@@ -1,5 +1,9 @@
 package cart.domain;
 
+import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
@@ -7,12 +11,12 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cart.fixture.CartItemFixture.장바구니_상품;
-import static cart.fixture.CartItemsFixture.장바구니_상품_목록;
-import static cart.fixture.MemberFixture.회원;
-import static cart.fixture.MoneyFixture.금액;
-import static cart.fixture.MoneyFixture.포인트;
-import static cart.fixture.ProductFixture.상품;
+import static cart.fixture.domain.CartItemFixture.장바구니_상품;
+import static cart.fixture.domain.CartItemsFixture.장바구니_상품_목록;
+import static cart.fixture.domain.MemberFixture.회원;
+import static cart.fixture.domain.MoneyFixture.금액;
+import static cart.fixture.domain.MoneyFixture.포인트;
+import static cart.fixture.domain.ProductFixture.상품;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 

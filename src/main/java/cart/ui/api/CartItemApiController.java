@@ -4,7 +4,7 @@ import cart.application.CartItemService;
 import cart.application.request.CreateCartItemRequest;
 import cart.application.request.UpdateCartItemQuantityRequest;
 import cart.application.response.CartItemResponse;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

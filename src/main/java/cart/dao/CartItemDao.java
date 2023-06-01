@@ -1,8 +1,8 @@
 package cart.dao;
 
 import cart.dao.rowmapper.CartItemRowMapper;
-import cart.domain.CartItem;
-import cart.entity.CartItemEntity;
+import cart.domain.cartitem.CartItem;
+import cart.dao.entity.CartItemEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

@@ -1,7 +1,7 @@
-package cart.fixture;
+package cart.fixture.domain;
 
-import cart.domain.CartItem;
-import cart.domain.CartItems;
+import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 
 import java.util.List;
 

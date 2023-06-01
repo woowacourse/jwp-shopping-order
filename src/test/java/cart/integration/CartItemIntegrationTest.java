@@ -5,8 +5,9 @@ import cart.application.request.CreateProductRequest;
 import cart.application.request.UpdateCartItemQuantityRequest;
 import cart.application.response.CartItemResponse;
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.vo.Money;
+import cart.fixture.dao.MemberDaoFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,8 +42,11 @@ class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new CreateProductRequest("치킨", 10_000, "https://example.com/chicken.jpg"));
         productId2 = createProduct(new CreateProductRequest("피자", 15_000, "https://example.com/pizza.jpg"));
 
-        member = memberDao.getByMemberId(1L).get().toDomain();
-        member2 = memberDao.getByMemberId(2L).get().toDomain();
+        member = new MemberDaoFixture(memberDao)
+                .회원을_등록한다("a@a.com", "1234", "10000", "1000");
+
+        member2 = new MemberDaoFixture(memberDao)
+                .회원을_등록한다("b@b.com", "1234", "10000", "1000");
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")
