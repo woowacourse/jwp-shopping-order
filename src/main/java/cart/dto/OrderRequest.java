@@ -8,20 +8,20 @@ import java.util.List;
 public class OrderRequest {
 
     @NonNull
-    private final List<Long> id;
+    private final List<Long> cartItemIds;
     @NonNull
     private final Integer price;
     @Nullable
     private final Long couponId;
 
-    public OrderRequest(final List<Long> id, final Integer price, final Long couponId) {
-        this.id = id;
+    public OrderRequest(final List<Long> cartItemIds, final Integer price, final Long couponId) {
+        this.cartItemIds = cartItemIds;
         this.price = price;
         this.couponId = couponId;
     }
 
-    public List<Long> getId() {
-        return id;
+    public List<Long> getCartItemIds() {
+        return cartItemIds;
     }
 
     public Integer getPrice() {

@@ -39,7 +39,7 @@ public class OrderService {
     }
 
     public Long order(final OrderRequest request) {
-        final List<Long> cartItemIds = request.getId();
+        final List<Long> cartItemIds = request.getCartItemIds();
         final CartItems cartItems = cartItemRepository.findAllByCartItemIds(cartItemIds);
         if (cartItems.isNotSameSize(cartItemIds.size())) {
             throw new NoSuchElementException("존재하지 않는 상품이 포함되어 있습니다.");

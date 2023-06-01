@@ -59,8 +59,8 @@ class OrderServiceTest {
         @Test
         void 쿠폰이_존재하면_성공_한다() {
             // given
-            given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(sizeOneCarItems);
-            willDoNothing().given(cartItemRepository).deleteAllByIds(request.getId());
+            given(cartItemRepository.findAllByCartItemIds(request.getCartItemIds())).willReturn(sizeOneCarItems);
+            willDoNothing().given(cartItemRepository).deleteAllByIds(request.getCartItemIds());
             given(orderRepository.save(any(Order.class))).willReturn(1L);
             given(couponRepository.findCouponById(anyLong())).willReturn(unusedCoupon);
 
@@ -79,8 +79,8 @@ class OrderServiceTest {
         void 쿠폰이_없어도_성공_한다() {
             // given
             request = new OrderRequest(List.of(1L, 2L), 15000, null);
-            given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(sizeOneCarItems);
-            willDoNothing().given(cartItemRepository).deleteAllByIds(request.getId());
+            given(cartItemRepository.findAllByCartItemIds(request.getCartItemIds())).willReturn(sizeOneCarItems);
+            willDoNothing().given(cartItemRepository).deleteAllByIds(request.getCartItemIds());
             given(orderRepository.save(any(Order.class))).willReturn(1L);
 
             // when
@@ -97,7 +97,7 @@ class OrderServiceTest {
         @Test
         void 사용된_쿠폰을_사용하려하면_실패_한다() {
             // given
-            given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(sizeOneCarItems);
+            given(cartItemRepository.findAllByCartItemIds(request.getCartItemIds())).willReturn(sizeOneCarItems);
             given(couponRepository.findCouponById(anyLong())).willReturn(usedCoupon);
 
             // when, then
@@ -112,7 +112,7 @@ class OrderServiceTest {
             final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
             sizeOneCarItems = new CartItems(List.of(new CartItem(1L, 1, chicken, member)));
 
-            given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(sizeOneCarItems);
+            given(cartItemRepository.findAllByCartItemIds(request.getCartItemIds())).willReturn(sizeOneCarItems);
 
             // when, then
             assertThatThrownBy(() -> orderService.order(request))
