@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -59,7 +61,7 @@ public class ProductApiController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
+	public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductRequest productRequest) {
 		final ProductDto productDto = ProductDto.of(null, productRequest);
 		Long id = productCommandService.createProduct(productDto);
 
@@ -67,7 +69,7 @@ public class ProductApiController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+	public ResponseEntity<Void> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
 		final ProductDto productDto = ProductDto.of(id, productRequest);
 		productCommandService.updateProduct(productDto);
 		return ResponseEntity.status(HttpStatus.OK).build();

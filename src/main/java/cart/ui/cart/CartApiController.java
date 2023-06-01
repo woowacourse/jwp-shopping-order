@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,7 +56,7 @@ public class CartApiController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
+	public ResponseEntity<Void> addCartItems(Member member, @Valid @RequestBody CartItemRequest cartItemRequest) {
 		final Long cartItemId = cartCommandService.add(
 			new CarItemAddDto(member.getId(), cartItemRequest.getProductId()));
 		return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();

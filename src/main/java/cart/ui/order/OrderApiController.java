@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,7 +63,7 @@ public class OrderApiController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> placeOrder(Member member, @RequestBody OrderRequest request) {
+	public ResponseEntity<Void> placeOrder(Member member, @Valid @RequestBody OrderRequest request) {
 		final Long savedId = orderCommandService.addOrder(new OrderAddDto(member.getId(), request));
 		return ResponseEntity.created(URI.create("/orders/" + savedId)).build();
 	}
