@@ -19,12 +19,12 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return null;
     }
 
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.getProductById(productId);
-        return ProductResponse.of(product);
+        return null;
     }
 
     public Long createProduct(ProductRequest productRequest) {

@@ -3,26 +3,23 @@ package cart.cart.presentation.dto;
 import cart.coupon.Coupon;
 
 public class CouponResponse {
-    private long couponId;
-    private String couponName;
+    private long id;
+    private String name;
 
-    public CouponResponse() {
-    }
-
-    private CouponResponse(long couponId, String couponName) {
-        this.couponId = couponId;
-        this.couponName = couponName;
+    public CouponResponse(long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public static CouponResponse from(Coupon coupon) {
         return new CouponResponse(coupon.getId(), coupon.getName());
     }
 
-    public long getCouponId() {
-        return couponId;
+    public long getId() {
+        return id;
     }
 
-    public String getCouponName() {
-        return couponName;
+    public String getName() {
+        return name;
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Cart {
     public static final int DEFAULT_DELIVERY_PRICE = 3000;
+    public static final int FREE_DELIVERY_PRICE_LIMIT = 30000;
     private final List<CartItem> cartItems;
     private int deliveryPrice;
     private final List<Coupon> coupons;

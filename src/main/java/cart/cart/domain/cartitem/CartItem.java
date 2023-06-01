@@ -61,6 +61,10 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public boolean isOnSale() {
+        return this.discountPrice != 0;
+    }
+
     public void setDiscountPrice(int discountPrice) {
         this.discountPrice = discountPrice;
     }

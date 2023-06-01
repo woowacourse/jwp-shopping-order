@@ -8,7 +8,7 @@ import java.util.Map;
 @Repository
 public class DiscountPolicyRepository {
     private final Map<Long, DiscountPolicy> discountPolicyMap = new HashMap<>();
-    private long id = 0L;
+    private long id = 1L;
 
     public long save(DiscountPolicy discountPolicy) {
         final var id = this.id++;

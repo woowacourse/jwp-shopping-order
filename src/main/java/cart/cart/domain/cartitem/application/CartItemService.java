@@ -3,7 +3,7 @@ package cart.cart.domain.cartitem.application;
 import cart.cart.domain.cartitem.CartItem;
 import cart.cart.domain.cartitem.presentation.dto.CartItemQuantityUpdateRequest;
 import cart.cart.domain.cartitem.presentation.dto.CartItemRequest;
-import cart.cart.domain.cartitem.presentation.dto.CartItemResponse;
+import cart.cart.presentation.dto.CartItemResponse;
 import cart.member.Member;
 import cart.product.application.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,6 @@ public class CartItemService {
     public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
-    }
-
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findAllByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {

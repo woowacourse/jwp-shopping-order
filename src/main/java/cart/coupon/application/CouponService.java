@@ -1,10 +1,15 @@
 package cart.coupon.application;
 
 import cart.cart.Cart;
+import cart.cart.presentation.dto.CouponResponse;
 import cart.coupon.Coupon;
 import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
+import cart.member.Member;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CouponService {
@@ -29,5 +34,12 @@ public class CouponService {
 
     public Coupon findById(Long couponId) {
         return couponRepository.findById(couponId);
+    }
+
+    public List<CouponResponse> findCouponsByMember(Member member) {
+        return member.getCouponIds()
+                .stream().map(couponRepository::findById)
+                .map(CouponResponse::from)
+                .collect(Collectors.toList());
     }
 }
