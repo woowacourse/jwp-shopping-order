@@ -55,7 +55,7 @@ CREATE TABLE orders
     price     INT    NOT NULL,
     coupon_id BIGINT NULL,
     member_id BIGINT NOT NULL,
-    date      DATETIME default CURRENT_TIMESTAMP,
+    date      DATETIME NOT NULL default CURRENT_TIMESTAMP,
     FOREIGN KEY (coupon_id) REFERENCES coupon (id),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
