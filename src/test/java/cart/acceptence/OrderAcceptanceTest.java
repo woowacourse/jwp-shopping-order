@@ -71,7 +71,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             // then
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
             assertThat(주문_등록_결과.header("Location")).isNotBlank();
-            assertThat(주문_등록_결과.jsonPath().getLong("newEarnedPoint")).isEqualTo((long)(2_8000 * 0.1));
+            assertThat(주문_등록_결과.jsonPath().getLong("newEarnedPoint")).isEqualTo((long) (2_8000 * 0.1));
         }
 
         @Test

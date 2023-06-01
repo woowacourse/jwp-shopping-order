@@ -14,7 +14,7 @@ public class PointService {
         this.pointDao = pointDao;
     }
 
-    public PointResponse findByMember(final Member member){
+    public PointResponse findByMember(final Member member) {
         return new PointResponse(pointDao.selectByMemberId(member.getId()));
     }
 }

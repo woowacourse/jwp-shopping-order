@@ -18,7 +18,6 @@ import cart.exception.CartItemException.IllegalMember;
 import cart.exception.CartItemException.InvalidCartItem;
 import cart.exception.CartItemException.QuantityNotSame;
 import cart.exception.CartItemException.UnknownCartItem;
-import cart.exception.OrderException;
 import cart.exception.OrderException.LackOfPoint;
 import cart.repository.OrderRepository;
 import cart.repository.ShippingPolicyRepository;
@@ -60,13 +59,13 @@ public class OrderService {
 
         ShippingPolicy shippingPolicy = shippingPolicyRepository.findShippingPolicy();
         List<OrderItem> orderItems = OrderItem.of(cartItems);
-        Order order = Order.of(member, shippingPolicy.calculateShippingFee(orderItems), orderRequest.getUsedPoint() ,orderItems);
+        Order order = Order.of(member, shippingPolicy.calculateShippingFee(orderItems), orderRequest.getUsedPoint(), orderItems);
         order.checkTotalProductsPrice(orderRequest.getTotalProductsPrice());
         order.checkShippingFee(orderRequest.getShippingFee());
 
         long totalPoint = pointDao.selectByMemberId(member.getId());
         long usedPoint = orderRequest.getUsedPoint();
-        if(totalPoint < usedPoint){
+        if (totalPoint < usedPoint) {
             throw new LackOfPoint();
         }
         long newEarnedPoint = PointPolicy.getEarnedPoint(order.getPayment());
