@@ -1,19 +1,32 @@
 package cart.domain;
 
+import cart.domain.member.Member;
+
 import java.time.LocalDateTime;
 
 public class MemberCoupon {
 
+    private Long id;
+    private Member member;
     private final Coupon coupon;
     private final boolean isUsed;
-    private final LocalDateTime issuedDate;
-    private final LocalDateTime expiredDate;
+    private final LocalDateTime issuedAt;
+    private final LocalDateTime expiredAt;
+
+    public MemberCoupon(final Long id, final Member member, final Coupon coupon, final boolean isUsed, final LocalDateTime issuedAt, final LocalDateTime expiredAt) {
+        this.id = id;
+        this.member = member;
+        this.coupon = coupon;
+        this.isUsed = isUsed;
+        this.issuedAt = issuedAt;
+        this.expiredAt = expiredAt;
+    }
 
     public MemberCoupon(final Coupon coupon) {
         this.coupon = coupon;
         this.isUsed = false;
-        this.issuedDate = LocalDateTime.now();
-        this.expiredDate = calculateExpiredDate(coupon.getExpiredDate(), issuedDate.plusDays(coupon.getPeriod()));
+        this.issuedAt = LocalDateTime.now();
+        this.expiredAt = calculateExpiredDate(coupon.getExpiredDate(), issuedAt.plusDays(coupon.getPeriod()));
     }
 
     private LocalDateTime calculateExpiredDate(final LocalDateTime couponExpiredDate, final LocalDateTime memberCouponExpiredDate) {
@@ -24,11 +37,12 @@ public class MemberCoupon {
         return memberCouponExpiredDate;
     }
 
-    public MemberCoupon(final Coupon coupon, final boolean isUsed, final LocalDateTime issuedDate, final LocalDateTime expiredDate) {
-        this.coupon = coupon;
-        this.isUsed = isUsed;
-        this.issuedDate = issuedDate;
-        this.expiredDate = expiredDate;
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public Coupon getCoupon() {
@@ -39,11 +53,11 @@ public class MemberCoupon {
         return isUsed;
     }
 
-    public LocalDateTime getIssuedDate() {
-        return issuedDate;
+    public LocalDateTime getIssuedAt() {
+        return issuedAt;
     }
 
-    public LocalDateTime getExpiredDate() {
-        return expiredDate;
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
     }
 }

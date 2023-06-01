@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Coupon;
 import cart.domain.MemberCoupon;
+import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -26,14 +27,17 @@ public class MemberCouponRepository {
                 ps -> {
                     ps.setLong(1, memberId);
                     ps.setLong(2, memberCoupon.getCoupon().getId());
-                    ps.setTimestamp(3, Timestamp.valueOf(memberCoupon.getIssuedDate()));
-                    ps.setTimestamp(4, Timestamp.valueOf(memberCoupon.getExpiredDate()));
+                    ps.setTimestamp(3, Timestamp.valueOf(memberCoupon.getIssuedAt()));
+                    ps.setTimestamp(4, Timestamp.valueOf(memberCoupon.getExpiredAt()));
                     ps.setBoolean(5, memberCoupon.isUsed());
                 });
     }
 
     public List<MemberCoupon> findAllByMemberId(final Long memberId) {
-        String sql = "SELECT * FROM member_coupon JOIN coupon ON member_coupon.coupon_id = coupon.id WHERE member_id = ?";
+        String sql = "SELECT * FROM member_coupon " +
+                "JOIN coupon ON member_coupon.coupon_id = coupon.id " +
+                "JOIN member ON member_coupon.member_id = member.id " +
+                "WHERE member_id = ?";
         return jdbcTemplate.query(sql,
                 ps -> ps.setLong(1, memberId),
                 new MemberCouponRowMapper());
@@ -43,7 +47,9 @@ public class MemberCouponRepository {
         @Override
         public MemberCoupon mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new MemberCoupon(
-                    new Coupon(rs.getLong("id"), rs.getString("name"), rs.getInt("discount_rate"), rs.getInt("period"), rs.getTimestamp("expired_at").toLocalDateTime()),
+                    rs.getLong("id"),
+                    new Member(rs.getLong("member.id"), rs.getString("member.name"), rs.getString("member.password")),
+                    new Coupon(rs.getLong("coupon_id"), rs.getString("name"), rs.getInt("discount_rate"), rs.getInt("period"), rs.getTimestamp("expired_at").toLocalDateTime()),
                     rs.getBoolean("is_used"),
                     rs.getTimestamp("issued_at").toLocalDateTime(),
                     rs.getTimestamp("expired_at").toLocalDateTime()

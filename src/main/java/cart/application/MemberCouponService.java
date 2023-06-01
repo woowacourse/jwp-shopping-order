@@ -4,9 +4,11 @@ import cart.dao.CouponRepository;
 import cart.dao.MemberCouponRepository;
 import cart.domain.Coupon;
 import cart.domain.MemberCoupon;
+import cart.dto.MemberCouponResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberCouponService {
@@ -19,12 +21,15 @@ public class MemberCouponService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
-    public List<MemberCoupon> getMemberCoupons(final Long memberId) {
-        return memberCouponRepository.findAllByMemberId(memberId);
-    }
-
     public void add(final Long memberId, final Long couponId) {
         Coupon coupon = couponRepository.findById(couponId);
         memberCouponRepository.save(memberId, new MemberCoupon(coupon));
+    }
+
+    public List<MemberCouponResponse> getMemberCoupons(final Long memberId) {
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByMemberId(memberId);
+        return memberCoupons.stream()
+                .map(MemberCouponResponse::from)
+                .collect(Collectors.toList());
     }
 }
