@@ -1,6 +1,5 @@
 package cart.dto.order;
 
-import cart.domain.coupon.Coupon;
 import cart.domain.order.OrderItem;
 import cart.dto.product.ProductResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,7 +36,7 @@ public class OrderItemResponse {
     public static OrderItemResponse from(OrderItem orderItem) {
         List<Long> couponIds = orderItem.getCoupons()
                 .stream()
-                .map(Coupon::getId)
+                .map(memberCouponEntity -> memberCouponEntity.getCoupon().getId())
                 .collect(Collectors.toList());
 
         return new OrderItemResponse(

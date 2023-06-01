@@ -1,10 +1,10 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
-import cart.dao.CouponDao;
+import cart.dao.MemberCouponDao;
 import cart.domain.cartItem.CartItem;
-import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
+import cart.domain.member.MemberCoupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.product.Product;
@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final CouponDao couponDao;
+    private final MemberCouponDao memberCouponDao;
     private final CartItemDao cartItemDao;
 
-    public OrderService(final OrderRepository orderRepository, final CouponDao couponDao, final CartItemDao cartItemDao) {
+    public OrderService(final OrderRepository orderRepository, final MemberCouponDao memberCouponDao, final CartItemDao cartItemDao) {
         this.orderRepository = orderRepository;
-        this.couponDao = couponDao;
+        this.memberCouponDao = memberCouponDao;
         this.cartItemDao = cartItemDao;
     }
 
@@ -43,8 +43,12 @@ public class OrderService {
     private List<OrderItem> requestToOrderItems(final List<OrderRequest> orderRequests, final Member member) {
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderRequest orderRequest : orderRequests) {
-            List<Coupon> coupons = couponDao.findById(orderRequest.getCouponIds());
-            clearCoupons(coupons, member);
+
+            List<MemberCoupon> coupons = memberCouponDao.findByIds(orderRequest.getMemberCouponIds());
+
+            if (!coupons.isEmpty()) {
+                clearCoupons(coupons, member);
+            }
 
             OrderProductRequest productRequest = orderRequest.getProductRequest();
             orderItems.add(new OrderItem(productRequest.toProduct(), orderRequest.getQuantity(), coupons));
@@ -52,18 +56,18 @@ public class OrderService {
         return orderItems;
     }
 
-    private void clearCoupons(final List<Coupon> coupons, final Member member) {
-        List<Coupon> memberCoupons = member.getCoupons();
+    private void clearCoupons(final List<MemberCoupon> coupons, final Member member) {
+        List<MemberCoupon> memberCoupons = member.getCoupons();
 
         if (!memberCoupons.containsAll(coupons)) {
             throw new MemberCouponNotFoundException();
         }
 
         List<Long> couponIds = coupons.stream()
-                .map(Coupon::getId)
+                .map(MemberCoupon::getId)
                 .collect(Collectors.toList());
 
-        couponDao.delete(couponIds);
+        memberCouponDao.delete(couponIds);
     }
 
     private void clearCartItems(final List<OrderRequest> orderRequests, final Long memberId) {

@@ -9,15 +9,16 @@ public class OrderRequest {
     @JsonProperty("product")
     private OrderProductRequest productRequest;
     private int quantity;
-    private List<Long> couponId;
+    @JsonProperty("couponId")
+    private List<Long> memberCouponIds;
 
     private OrderRequest() {
     }
 
-    public OrderRequest(final OrderProductRequest productRequest, final int quantity, final List<Long> couponId) {
+    public OrderRequest(final OrderProductRequest productRequest, final int quantity, final List<Long> memberCouponIds) {
         this.productRequest = productRequest;
         this.quantity = quantity;
-        this.couponId = couponId;
+        this.memberCouponIds = memberCouponIds;
     }
 
     public OrderProductRequest getProductRequest() {
@@ -28,7 +29,7 @@ public class OrderRequest {
         return quantity;
     }
 
-    public List<Long> getCouponIds() {
-        return couponId;
+    public List<Long> getMemberCouponIds() {
+        return memberCouponIds;
     }
 }

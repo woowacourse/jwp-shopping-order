@@ -33,6 +33,7 @@ CREATE TABLE if not exists coupon
 
 CREATE TABLE if not exists member_coupon
 (
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
@@ -61,10 +62,9 @@ CREATE TABLE if not exists order_item
 
 CREATE TABLE if not exists order_coupon
 (
-    order_item_id BIGINT NOT NULL,
-    coupon_id     BIGINT NOT NULL,
+    order_item_id    BIGINT NOT NULL,
+    member_coupon_id BIGINT NOT NULL,
     FOREIGN KEY (order_item_id) REFERENCES order_item (id),
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id),
-    PRIMARY KEY (order_item_id, coupon_id)
+    PRIMARY KEY (order_item_id)
 );
 

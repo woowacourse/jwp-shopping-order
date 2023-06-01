@@ -19,7 +19,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class OrderRepositoryTest extends IntegrationTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Sql({"classpath:truncate.sql","classpath:data.sql"})
+class OrderRepositoryTest {
 
     @Autowired
     private OrderRepository orderRepository;

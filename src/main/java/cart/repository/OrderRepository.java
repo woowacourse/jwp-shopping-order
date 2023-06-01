@@ -3,10 +3,10 @@ package cart.repository;
 import cart.dao.OrderCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.domain.coupon.Coupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.product.Product;
+import cart.domain.member.MemberCoupon;
 import cart.entity.OrderItemEntity;
 import org.springframework.stereotype.Repository;
 
@@ -31,7 +31,7 @@ public class OrderRepository {
 
         for (OrderItem orderItem : orderItems) {
             Long orderItemId = orderItemDao.create(orderId, orderItem.getProduct(), orderItem.getQuantity());
-            for (Coupon coupon : orderItem.getCoupons()) {
+            for (MemberCoupon coupon : orderItem.getCoupons()) {
                 orderCouponDao.create(orderItemId, coupon.getId());
             }
         }
@@ -47,7 +47,7 @@ public class OrderRepository {
             List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderId(orderId);
             List<OrderItem> orderItems = new ArrayList<>();
             for (OrderItemEntity orderItem : orderItemEntities) {
-                List<Coupon> coupons = orderCouponDao.findCouponsByOrderItemId(orderItem.getId());
+                List<MemberCoupon> coupons = orderCouponDao.findCouponsByOrderItemId(orderItem.getId());
                 Product product = orderItem.getProduct();
                 orderItems.add(new OrderItem(
                         orderItem.getId(),

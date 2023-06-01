@@ -1,9 +1,8 @@
 package cart.domain.order;
 
-import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
 import cart.domain.product.Product;
-import cart.dto.product.ProductRequest;
+import cart.domain.member.MemberCoupon;
 
 import java.util.List;
 
@@ -12,10 +11,10 @@ public class OrderItem {
     private final Long id;
     private final Product product;
     private final int quantity;
-    private final List<Coupon> coupons;
+    private final List<MemberCoupon> coupons;
     private final Integer total;
 
-    public OrderItem(final Long id, final Product product, final int quantity, final List<Coupon> coupons) {
+    public OrderItem(final Long id, final Product product, final int quantity, final List<MemberCoupon> coupons) {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
@@ -23,15 +22,14 @@ public class OrderItem {
         this.total = calculateDiscountedAmount(product, quantity, coupons);
     }
 
-    public OrderItem(final Product product, final int quantity, final List<Coupon> coupons) {
+    public OrderItem(final Product product, final int quantity, final List<MemberCoupon> coupons) {
         this(null, product, quantity, coupons);
     }
 
-    private int calculateDiscountedAmount(final Product product, final int quantity, final List<Coupon> coupons) {
+    private int calculateDiscountedAmount(final Product product, final int quantity, final List<MemberCoupon> coupons) {
         int totalPrice = product.getPrice() * quantity;
-        for (Coupon coupon : coupons) {
-            Discount discount = coupon.getDiscount();
-            System.out.println(discount.getDiscountType().calculate(totalPrice, discount.getAmount()));
+        for (MemberCoupon coupon : coupons) {
+            Discount discount = coupon.getCoupon().getDiscount();
             totalPrice -= discount.getDiscountType().calculate(totalPrice, discount.getAmount());
         }
         if (totalPrice > 0) {
@@ -52,7 +50,7 @@ public class OrderItem {
         return quantity;
     }
 
-    public List<Coupon> getCoupons() {
+    public List<MemberCoupon> getCoupons() {
         return coupons;
     }
 
