@@ -8,7 +8,7 @@ public class Price {
     private static final int MIN_TOTAL_PRICE_FOR_FREE_SHIPPING = 50000;
     private static final int SHIPPING_FEE = 3000;
 
-    public static int findTotalItemPrice(List<CartItem> cartItems) {
+    public static int calculateTotalItemPrice(List<CartItem> cartItems) {
         List<Integer> prices = new ArrayList<>();
 
         List<Product> products = getProducts(cartItems);
@@ -28,7 +28,7 @@ public class Price {
         return products;
     }
 
-    public static int findDiscountedTotalItemPrice(List<CartItem> cartItems, int memberDiscount) {
+    public static int calculateDiscountedTotalItemPrice(List<CartItem> cartItems, int memberDiscount) {
         List<Integer> discountedPrice = new ArrayList<>();
 
         List<Product> products = getProducts(cartItems);
@@ -40,14 +40,14 @@ public class Price {
         return Order.calculatePriceSum(discountedPrice);
     }
 
-    public static int findShippingFee(int totalItemPrice) {
+    public static int calculateShippingFee(int totalItemPrice) {
         if (totalItemPrice >= MIN_TOTAL_PRICE_FOR_FREE_SHIPPING) {
             return 0;
         }
         return SHIPPING_FEE;
     }
 
-    public static int findTotalItemDiscountAmount(List<CartItem> cartItems) {
+    public static int calculateTotalItemDiscountAmount(List<CartItem> cartItems) {
         List<Integer> discountedPrice = new ArrayList<>();
 
         List<Product> products = getProducts(cartItems);
@@ -59,7 +59,7 @@ public class Price {
         return Order.calculatePriceSum(discountedPrice);
     }
 
-    public static int findTotalMemberDiscountAmount(List<CartItem> cartItems, int memberDiscount) {
+    public static int calculateTotalMemberDiscountAmount(List<CartItem> cartItems, int memberDiscount) {
         List<Integer> discountedPrice = new ArrayList<>();
         List<Product> products = getProducts(cartItems);
         for (Product product : products) {

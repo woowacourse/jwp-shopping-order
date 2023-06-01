@@ -4,7 +4,6 @@ import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemRequest;
 import cart.dto.OrderCreateRequest;
-import cart.dto.OrderItemRequest;
 import cart.dto.OrderResponse;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
@@ -18,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,7 +125,6 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("상품 할인 적용")
     public void product_discount() {
         //given
-
         Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
         List<Long> cartItemIds = List.of(cartItemId4);
         int totalItemDiscountAmount = 5_000;
@@ -151,6 +150,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract().header("Location");
 
         OrderResponse orderResponse = given().log().all()
+                .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
                 .when()
                 .get(location)
                 .then()
@@ -192,6 +192,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract().header("Location");
 
         OrderResponse orderResponse = given().log().all()
+                .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
                 .when()
                 .get(location)
                 .then()
@@ -232,6 +233,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract().header("Location");
 
         OrderResponse orderResponse = given().log().all()
+                .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
                 .when()
                 .get(location)
                 .then()
@@ -245,5 +247,107 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(orderResponse.getTotalItemPrice()).isEqualTo(10_000);
         assertThat(orderResponse.getShippingFee()).isEqualTo(3_000);
         assertThat(orderResponse.getTotalPrice()).isEqualTo(8_000);
+    }
+
+    @Test
+    @DisplayName("특정 멤버의 특정 주문을 조회한다")
+    void get_order() {
+        Long cartItemId = createCartItem(member2, new CartItemRequest(productId2));
+        Long cartItemId2 = createCartItem(member2, new CartItemRequest(productId));
+        Long orderId = requestCreateOrder(member2, List.of(cartItemId, cartItemId2));
+        ExtractableResponse<Response> response = requestGetOrderById(member2, orderId);
+        OrderResponse orderResponse = getOrderResponse(member2, orderId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(orderResponse.getId()).isNotNull();
+        assertThat(orderResponse.getDiscountedTotalItemPrice()).isEqualTo(14_000);
+        assertThat(orderResponse.getTotalItemPrice()).isEqualTo(20_000);
+        assertThat(orderResponse.getShippingFee()).isEqualTo(3_000);
+        assertThat(orderResponse.getTotalPrice()).isEqualTo(17_000);
+    }
+
+    private Long requestCreateOrder(Member member, List<Long> cartItemIds) {
+        int totalItemDiscountAmount = 5_000;
+        int totalMemberDiscountAmount = 1_000;
+
+        int totalItemPrice = 20_000;
+        int discountedTotalItemPrice = 14_000;
+        int shippingFee = 3_000;
+        int totalPrice = 17_000;
+
+        ExtractableResponse<Response> response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(new OrderCreateRequest(
+                        cartItemIds, totalItemDiscountAmount, totalMemberDiscountAmount,
+                        totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice
+                ))
+                .when()
+                .post("/orders")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
+
+        return getIdFromCreatedResponse(response);
+    }
+
+    private ExtractableResponse<Response> requestGetOrderById(Member member, Long orderId) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders/" + orderId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
+
+    private OrderResponse getOrderResponse(Member member, Long orderId) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders/" + orderId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .jsonPath()
+                .getObject(".", OrderResponse.class);
+    }
+
+    @Test
+    @DisplayName("멤버의 모든 주문들을 조회한다")
+    public void getOrders() {
+        var result = requestGetAllOrders(member2);
+
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("멤버의 모든 주문을 조회했을 때 실제 주문이 존재하는지 확인한다")
+    public void getOrders_order_exist() {
+        Long cartItemId = createCartItem(member2, new CartItemRequest(productId2));
+        Long cartItemId2 = createCartItem(member2, new CartItemRequest(productId));
+        Long orderId = requestCreateOrder(member2, List.of(cartItemId, cartItemId2));
+
+        ExtractableResponse<Response> allOrdersResponse = requestGetAllOrders(member2);
+
+        Optional<OrderResponse> selectedCartItemResponse = allOrdersResponse.jsonPath()
+                .getList(".", OrderResponse.class)
+                .stream()
+                .filter(cartItemResponse -> cartItemResponse.getId().equals(orderId))
+                .findFirst();
+
+        assertThat(selectedCartItemResponse.isPresent()).isNotNull();
+    }
+
+    private ExtractableResponse<Response> requestGetAllOrders(Member member) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders")
+                .then()
+                .extract();
     }
 }

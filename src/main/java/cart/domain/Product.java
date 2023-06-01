@@ -54,11 +54,6 @@ public class Product {
         return (discountRate * price / 100 - price) * -1;
     }
 
-    public int calculateProductDiscountAmount(){
-        int discountedPrice = calculateProductDiscountedPrice();
-        return price - discountedPrice;
-    }
-
     public int calculateMemberDiscountedPrice(int memberDiscount) {
         if (!getIsDiscounted()) {
             return (memberDiscount * price / 100 - price) * -1;

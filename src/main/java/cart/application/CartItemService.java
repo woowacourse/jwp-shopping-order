@@ -5,16 +5,13 @@ import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Order;
 import cart.domain.Price;
-import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.CostResponse;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,12 +60,12 @@ public class CartItemService {
     public CostResponse getCosts(Long memberId) {
         int memberDiscount = memberDao.getMemberById(memberId).findDiscountedPercentage();
 
-        int totalItemPrice = Price.findTotalItemPrice(cartItemDao.findByMemberId(memberId));
-        int discountedTotalItemPrice = Price.findDiscountedTotalItemPrice(cartItemDao.findByMemberId(memberId), memberDiscount);
-        int shippingFee = Price.findShippingFee(totalItemPrice);
+        int totalItemPrice = Price.calculateTotalItemPrice(cartItemDao.findByMemberId(memberId));
+        int discountedTotalItemPrice = Price.calculateDiscountedTotalItemPrice(cartItemDao.findByMemberId(memberId), memberDiscount);
+        int shippingFee = Price.calculateShippingFee(totalItemPrice);
         int totalPrice = discountedTotalItemPrice + shippingFee;
-        int totalItemDiscountAmount = Price.findTotalItemDiscountAmount(cartItemDao.findByMemberId(memberId));
-        int totalMemberDiscountAmount = Price.findTotalMemberDiscountAmount(cartItemDao.findByMemberId(memberId), memberDiscount);
+        int totalItemDiscountAmount = Price.calculateTotalItemDiscountAmount(cartItemDao.findByMemberId(memberId));
+        int totalMemberDiscountAmount = Price.calculateTotalMemberDiscountAmount(cartItemDao.findByMemberId(memberId), memberDiscount);
 
         return new CostResponse(totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
     }

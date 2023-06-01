@@ -44,13 +44,6 @@ public class Order {
                 .sum();
     }
 
-    public static int calculateShippingFee(int totalPrice) {
-        if(totalPrice >= 50000){
-            return 0;
-        }
-        return 3000;
-    }
-
     public Long getId() {
         return id;
     }

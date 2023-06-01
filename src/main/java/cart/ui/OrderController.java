@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -31,8 +32,13 @@ public class OrderController {
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.getProductById(id));
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> getOrderByIds(Member member, @PathVariable Long orderId){
+        return ResponseEntity.ok(orderService.getOrderByIds(member.getId(), orderId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getAllOrders(Member member){
+        return ResponseEntity.ok(orderService.getAllOrders(member.getId()));
     }
 }

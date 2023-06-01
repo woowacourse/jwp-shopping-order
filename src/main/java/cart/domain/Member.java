@@ -27,7 +27,7 @@ public class Member {
         this.rank = rank;
     }
 
-    public void order(int totalPrice){
+    public void createOrder(int totalPrice){
         this.totalPrice += totalPrice;
         setRank();
     }
