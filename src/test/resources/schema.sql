@@ -28,8 +28,7 @@ CREATE TABLE point
     left_point   INT NOT NULL,
     member_id    BIGINT       NOT NULL,
     expired_at   DATETIME     NOT NULL,
-    created_at   DATETIME     NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    created_at   DATETIME     NOT NULL
 );
 
 CREATE TABLE cart_item
@@ -37,9 +36,7 @@ CREATE TABLE cart_item
     id         BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT       NOT NULL,
     product_id BIGINT       NOT NULL,
-    quantity   INT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    quantity   INT NOT NULL
 );
 
 CREATE TABLE orders
@@ -49,9 +46,7 @@ CREATE TABLE orders
     point_id     BIGINT       NOT NULL,
     earned_point INT NOT NULL,
     used_point   INT NOT NULL,
-    created_at   DATETIME     NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (point_id) REFERENCES point (id)
+    created_at   DATETIME     NOT NULL
 );
 
 CREATE TABLE order_detail
@@ -62,7 +57,5 @@ CREATE TABLE order_detail
     product_name      VARCHAR(255) NOT NULL,
     product_price     INT NOT NULL,
     product_image_url VARCHAR(255) NOT NULL,
-    order_quantity    INT NOT NULL,
-    FOREIGN KEY (orders_id) REFERENCES orders (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    order_quantity    INT NOT NULL
 );
