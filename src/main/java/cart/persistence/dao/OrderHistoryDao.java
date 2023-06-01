@@ -1,6 +1,6 @@
 package cart.persistence.dao;
 
-import cart.domain.order.Order;
+import cart.persistence.entity.OrderHistoryEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -18,12 +18,12 @@ public class OrderHistoryDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long createOrder(final Order order) {
+    public Long createOrder(final OrderHistoryEntity orderHistoryEntity) {
         final SqlParameterSource source = new MapSqlParameterSource()
-                .addValue("member_id", order.getMember().getId())
-                .addValue("total_amount", order.getTotalAmount())
-                .addValue("used_point", order.getUsedPoint())
-                .addValue("saved_point", order.getSavedPoint());
+                .addValue("member_id", orderHistoryEntity.getMemberId())
+                .addValue("total_amount", orderHistoryEntity.getTotalAmount())
+                .addValue("used_point", orderHistoryEntity.getUsedPoint())
+                .addValue("saved_point", orderHistoryEntity.getSavedPoint());
         return jdbcInsert.executeAndReturnKey(source).longValue();
     }
 }

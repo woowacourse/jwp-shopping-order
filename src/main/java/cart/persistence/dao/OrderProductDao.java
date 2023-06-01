@@ -1,11 +1,13 @@
 package cart.persistence.dao;
 
-import cart.domain.order.OrderProducts;
+import cart.persistence.entity.OrderProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class OrderProductDao {
@@ -18,13 +20,13 @@ public class OrderProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void createProducts(final Long orderId, final OrderProducts products) {
-        final SqlParameterSource[] sources = products.getProducts().stream()
-                .map(product -> new MapSqlParameterSource()
-                        .addValue("order_id", orderId)
-                        .addValue("product_id", product.getProduct().getId())
-                        .addValue("purchased_price", product.getProduct().getPrice())
-                        .addValue("quantity", product.getQuantity())
+    public void createProducts(final List<OrderProductEntity> orderProductEntities) {
+        final SqlParameterSource[] sources = orderProductEntities.stream()
+                .map(orderProductEntity -> new MapSqlParameterSource()
+                        .addValue("order_id", orderProductEntity.getOrderId())
+                        .addValue("product_id", orderProductEntity.getProductId())
+                        .addValue("purchased_price", orderProductEntity.getPurchasedPrice())
+                        .addValue("quantity", orderProductEntity.getQuantity())
                 ).toArray(SqlParameterSource[]::new);
         jdbcInsert.executeBatch(sources);
     }

@@ -14,7 +14,7 @@ class OrderProductTest {
     @CsvSource(value = {"1_000:2:2_000", "500:5:2_500", "10_000:3:30_000"}, delimiter = ':')
     void getAmountTest(final int price, final int quantity, final int expectAmount) {
         final Product product = new Product("name", price, "imageUrl");
-        final OrderProduct orderProduct = new OrderProduct(product, product.getPrice(), quantity);
+        final OrderProduct orderProduct = new OrderProduct(null, product, product.getPrice(), quantity);
         assertThat(orderProduct.getAmount()).isEqualTo(expectAmount);
     }
 }

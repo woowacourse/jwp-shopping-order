@@ -2,12 +2,9 @@ package cart.persistence.repository;
 
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
-import cart.persistence.dao.CartItemDao;
-import cart.persistence.dao.MemberDao;
-import cart.persistence.dao.ProductDao;
-import cart.persistence.entity.CartItemEntity;
-import cart.persistence.entity.MemberEntity;
-import cart.persistence.entity.ProductEntity;
+import cart.domain.order.Order;
+import cart.persistence.dao.*;
+import cart.persistence.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static cart.persistence.repository.Mapper.memberEntityMapper;
+import static cart.persistence.repository.Mapper.orderHistoryEntityMapper;
 
 @Component
 public class PayRepository {
@@ -24,16 +22,15 @@ public class PayRepository {
     private final MemberDao memberDao;
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
+    private final OrderHistoryDao orderHistoryDao;
+    private final OrderProductDao orderProductDao;
 
-    public PayRepository(final MemberDao memberDao, final ProductDao productDao, final CartItemDao cartItemDao) {
+    public PayRepository(final MemberDao memberDao, final ProductDao productDao, final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao) {
         this.memberDao = memberDao;
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
-    }
-
-    public void updatePoint(final Member member) {
-        final MemberEntity memberEntity = memberEntityMapper(member);
-        memberDao.updatePoint(memberEntity);
+        this.orderHistoryDao = orderHistoryDao;
+        this.orderProductDao = orderProductDao;
     }
 
     public List<CartItem> getCartItemsByIds(final List<Long> ids) {
@@ -61,5 +58,23 @@ public class PayRepository {
                 .map(CartItemEntity::getProductId)
                 .collect(Collectors.toList());
         return productDao.getProductsByIds(productIds);
+    }
+
+    public Long createOrder(final Order order) {
+        final Member member = order.getMember();
+        final OrderHistoryEntity orderHistoryEntity = orderHistoryEntityMapper(order);
+        final Long orderId = orderHistoryDao.createOrder(orderHistoryEntity);
+        member.savePoint(order.getSavedPoint());
+        final List<OrderProductEntity> orderProductEntities = order.getOrderProducts().getProducts().stream()
+                .map(orderProduct -> Mapper.orderProductEntityMapper(orderProduct, orderId))
+                .collect(Collectors.toList());
+        orderProductDao.createProducts(orderProductEntities);
+        updatePoint(member);
+        return orderId;
+    }
+
+    private void updatePoint(final Member member) {
+        final MemberEntity memberEntity = memberEntityMapper(member);
+        memberDao.updatePoint(memberEntity);
     }
 }

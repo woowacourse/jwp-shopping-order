@@ -14,6 +14,7 @@ public class OrderProducts {
     public OrderProducts(final List<CartItem> cartItems) {
         products = cartItems.stream()
                 .map(cartItem -> new OrderProduct(
+                                null,
                                 cartItem.getProduct(),
                                 cartItem.getProduct().getPrice(),
                                 cartItem.getQuantity()

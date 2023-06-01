@@ -2,10 +2,10 @@ package cart.persistence.repository;
 
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
 import cart.domain.product.Product;
-import cart.persistence.entity.CartItemEntity;
-import cart.persistence.entity.MemberEntity;
-import cart.persistence.entity.ProductEntity;
+import cart.persistence.entity.*;
 
 class Mapper {
 
@@ -62,6 +62,28 @@ class Mapper {
                 cartItem.getMember().getId(),
                 cartItem.getProduct().getId(),
                 cartItem.getQuantity(),
+                null
+        );
+    }
+
+    public static OrderHistoryEntity orderHistoryEntityMapper(final Order order) {
+        return new OrderHistoryEntity(
+                order.getId(),
+                order.getMember().getId(),
+                order.getTotalAmount(),
+                order.getUsedPoint(),
+                order.getSavedPoint(),
+                null
+        );
+    }
+
+    public static OrderProductEntity orderProductEntityMapper(final OrderProduct orderProduct, final Long orderId) {
+        return new OrderProductEntity(
+                orderProduct.getId(),
+                orderId,
+                orderProduct.getProduct().getId(),
+                orderProduct.getPurchasedPrice(),
+                orderProduct.getQuantity(),
                 null
         );
     }
