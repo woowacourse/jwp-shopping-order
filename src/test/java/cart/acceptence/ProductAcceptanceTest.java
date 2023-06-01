@@ -39,6 +39,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             // then
             assertThat(상품_생성_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
             assertThat(상품_생성_결과.header("Location")).isNotBlank();
+            assertThat(상품_생성_결과.jsonPath().getLong("productId")).isNotNull();
         }
 
         @Test
@@ -58,21 +59,37 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     }
 
-    @Test
-    void 추가한_상품을_조회한다() {
-        // given
-        long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+    @Nested
+    class 상품을_조회할_때 {
+        @Test
+        void 추가한_상품을_조회할_수_있다() {
+            // given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
 
-        // when
-        ExtractableResponse<Response> 상품_조회_결과 = 단일_상품_조회_요청(피자_아이디);
-        ProductResponse 조회된_상품 = 상품_조회_결과.jsonPath().getObject(".", ProductResponse.class);
+            // when
+            ExtractableResponse<Response> 상품_조회_결과 = 단일_상품_조회_요청(피자_아이디);
+            ProductResponse 조회된_상품 = 상품_조회_결과.jsonPath().getObject(".", ProductResponse.class);
 
-        // then
-        assertThat(상품_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(조회된_상품.getId()).isEqualTo(피자_아이디);
-        assertThat(조회된_상품.getName()).isEqualTo(피자_15000원.getName());
-        assertThat(조회된_상품.getPrice()).isEqualTo(피자_15000원.getPrice());
+            // then
+            assertThat(상품_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertThat(조회된_상품.getId()).isEqualTo(피자_아이디);
+            assertThat(조회된_상품.getName()).isEqualTo(피자_15000원.getName());
+            assertThat(조회된_상품.getPrice()).isEqualTo(피자_15000원.getPrice());
+        }
+
+        @Test
+        void 없는_상품을_조회할_수_없다() {
+            // when
+            ExtractableResponse<Response> 상품_조회_결과 = 단일_상품_조회_요청(존재하지_않는_상품_아이디);
+
+            // then
+            assertThat(상품_조회_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(상품_조회_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("존재하지 않는 상품입니다"));
+        }
     }
+
 
     @Test
     void 전체_상품_목록을_조회한다() {
@@ -120,6 +137,18 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             assertThat(상품_수정_결과.jsonPath().getObject("payload", ExceptionResponse.class))
                     .usingRecursiveComparison()
                     .isEqualTo(new ExceptionResponse("이미 존재하는 상품입니다"));
+        }
+
+        @Test
+        void 존재하지_않는_상품을_수정할_수_없다() {
+            // when
+            ExtractableResponse<Response> 상품_수정_결과 = 상품_수정_요청(존재하지_않는_상품_아이디, 치킨_10000원);
+
+            // then
+            assertThat(상품_수정_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(상품_수정_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("존재하지 않는 상품입니다"));
         }
     }
 

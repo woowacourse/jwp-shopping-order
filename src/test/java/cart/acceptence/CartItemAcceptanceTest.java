@@ -60,6 +60,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             // then
             assertThat(장바구니_아이템_추가_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
             assertThat(장바구니_아이템_추가_결과.header("Location")).isNotBlank();
+            assertThat(장바구니_아이템_추가_결과.jsonPath().getLong("cartItemId")).isNotNull();
         }
 
         @Test
@@ -95,25 +96,44 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     }
 
-    @Test
-    void 장바구니를_조회한다() {
-        // given
-        long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
-        long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
-        long 장바구니_피자_아이디 = 장바구니_아이템_추가하고_아이디_반환(등록된_사용자1, 피자_아이디);
-        long 장바구니_치킨_아이디 = 장바구니_아이템_추가하고_아이디_반환(등록된_사용자1, 치킨_아이디);
+    @Nested
+    class 장바구니를_조회할_때 {
+        @Test
+        void 장바구니에_담은_상품들을_조회한다() {
+            // given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
+            long 장바구니_피자_아이디 = 장바구니_아이템_추가하고_아이디_반환(등록된_사용자1, 피자_아이디);
+            long 장바구니_치킨_아이디 = 장바구니_아이템_추가하고_아이디_반환(등록된_사용자1, 치킨_아이디);
 
-        // when
-        ExtractableResponse<Response> 장바구니_조회_결과 = 장바구니_조회_요청(등록된_사용자1);
-        List<Long> 장바구니에_있는_아이템_아이디 = 장바구니_조회_결과.jsonPath()
-                .getList(".", CartItemResponse.class)
-                .stream()
-                .map(CartItemResponse::getId)
-                .collect(Collectors.toList());
+            // when
+            ExtractableResponse<Response> 장바구니_조회_결과 = 장바구니_조회_요청(등록된_사용자1);
+            List<Long> 장바구니에_있는_아이템_아이디 = 장바구니_조회_결과.jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(CartItemResponse::getId)
+                    .collect(Collectors.toList());
 
-        // then
-        assertThat(장바구니_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(장바구니에_있는_아이템_아이디).containsAll(Arrays.asList(장바구니_피자_아이디, 장바구니_치킨_아이디));
+            // then
+            assertThat(장바구니_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertThat(장바구니에_있는_아이템_아이디).containsAll(Arrays.asList(장바구니_피자_아이디, 장바구니_치킨_아이디));
+        }
+
+        @Test
+        void 존재하지_않는_회원의_장바구니는_조회할_수_없다() {
+            // given
+            Member 잘못된_사용자 = new Member(등록된_사용자1.getId(), 등록된_사용자1.getEmail(), 등록된_사용자1.getPassword() + "illegal");
+
+            // when
+            ExtractableResponse<Response> 장바구니_조회_결과 = 장바구니_조회_요청(잘못된_사용자);
+
+            // then
+            assertThat(장바구니_조회_결과.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+            assertThat(장바구니_조회_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("존재하지 않는 회원입니다"));
+        }
+
     }
 
     @Nested
@@ -159,6 +179,66 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
+        void 수량은_음수일_수_없다() {
+            // given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 장바구니_피자_아이디 = 장바구니_아이템_추가하고_아이디_반환(등록된_사용자1, 피자_아이디);
+
+            // when
+            ExtractableResponse<Response> 장바구니_아이템_수정_결과 = 장바구니_아이템_수정_요청(
+                    등록된_사용자1,
+                    장바구니_피자_아이디,
+                    -1
+            );
+
+            // then
+            assertThat(장바구니_아이템_수정_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(장바구니_아이템_수정_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("잘못된 요청입니다"));
+        }
+
+        @Test
+        void 수량은_99_초과일_수_없다() {
+            // given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 장바구니_피자_아이디 = 장바구니_아이템_추가하고_아이디_반환(등록된_사용자1, 피자_아이디);
+
+            // when
+            ExtractableResponse<Response> 장바구니_아이템_수정_결과 = 장바구니_아이템_수정_요청(
+                    등록된_사용자1,
+                    장바구니_피자_아이디,
+                    100
+            );
+
+            // then
+            assertThat(장바구니_아이템_수정_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(장바구니_아이템_수정_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("잘못된 요청입니다"));
+        }
+
+        @Test
+        void 존재하지_않는_장바구니_아이템을_수정할_수_없다() {
+            // given
+            long 존재하지_않는_장바구니_아이템_아이디 = 5959;
+
+            // when
+            ExtractableResponse<Response> 장바구니_아이템_수정_결과 = 장바구니_아이템_수정_요청(
+                    등록된_사용자1,
+                    존재하지_않는_장바구니_아이템_아이디,
+                    5
+            );
+
+            // then
+            assertThat(장바구니_아이템_수정_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(장바구니_아이템_수정_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("더 이상 존재하지 않는 상품입니다"));
+        }
+
+
+        @Test
         void 타인의_장바구니를_수정할_수_없다() {
             // given
             long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
@@ -196,6 +276,21 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             // then
             assertThat(장바구니_아이템_삭제_결과.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
             assertThat(장바구니_피자_아이템.isPresent()).isFalse();
+        }
+
+        @Test
+        void 존재하지_않는_장바구니_아이템을_삭제할_수_없다() {
+            // given
+            long 존재하지_않는_장바구니_아이템_아이디 = 5959L;
+
+            // when
+            ExtractableResponse<Response> 장바구니_아이템_삭제_결과 = 장바구니_아이템_삭제_요청(등록된_사용자1, 존재하지_않는_장바구니_아이템_아이디);
+
+            // then
+            assertThat(장바구니_아이템_삭제_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(장바구니_아이템_삭제_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("더 이상 존재하지 않는 상품입니다"));
         }
 
         @Test

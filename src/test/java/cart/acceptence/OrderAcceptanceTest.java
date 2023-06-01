@@ -28,6 +28,7 @@ import static cart.acceptence.steps.OrderSteps.주문_등록_요청;
 import static cart.acceptence.steps.OrderSteps.주문_등록하고_아이디_반환;
 import static cart.acceptence.steps.OrderSteps.주문_목록_조회_요청;
 import static cart.acceptence.steps.OrderSteps.주문_상세_조회_요청;
+import static cart.acceptence.steps.PointSteps.포인트_조회_요청;
 import static cart.acceptence.steps.ProductSteps.상품_추가하고_아이디_반환;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -71,6 +72,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             // then
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
             assertThat(주문_등록_결과.header("Location")).isNotBlank();
+            assertThat(주문_등록_결과.jsonPath().getLong("orderId")).isNotNull();
             assertThat(주문_등록_결과.jsonPath().getLong("newEarnedPoint")).isEqualTo((long) (2_8000 * 0.1));
         }
 
@@ -127,6 +129,29 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
+        void 수량이_일치하지_않으면_주문할_수_없다() {
+            //given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
+            장바구니_아이템_추가_요청(등록된_사용자1, 피자_아이디);
+            장바구니_아이템_추가_요청(등록된_사용자1, 치킨_아이디);
+            List<OrderItemDto> 잘못된_수량_장바구니 = 장바구니_조회_요청(등록된_사용자1).jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 10))
+                    .collect(Collectors.toList());
+
+            // when
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(27_000L, 3_000L, 0L, 잘못된_수량_장바구니));
+
+            // then
+            assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(주문_등록_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("문제가 발생했습니다. 상품의 수량을 다시 한번 확인해주세요"));
+        }
+
+        @Test
         void 타인의_장바구니_정보로_주문할_수_없다() {
             //given
             long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
@@ -148,6 +173,50 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .isEqualTo(new ExceptionResponse("잘못된 요청입니다"));
         }
 
+        @Test
+        void 사용하려는_포인트는_음수일_수_없다() {
+            //given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
+            장바구니_아이템_추가_요청(등록된_사용자1, 피자_아이디);
+            장바구니_아이템_추가_요청(등록된_사용자1, 치킨_아이디);
+            List<OrderItemDto> 장바구니 = 장바구니_조회_요청(등록된_사용자1).jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
+                    .collect(Collectors.toList());
+
+            // when
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, -1L, 장바구니));
+
+            assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(주문_등록_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("잘못된 요청입니다"));
+        }
+
+        @Test
+        void 가지고있는_포인트보다_많은_포인트를_사용할_수_없다() {
+            //given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
+            장바구니_아이템_추가_요청(등록된_사용자1, 피자_아이디);
+            장바구니_아이템_추가_요청(등록된_사용자1, 치킨_아이디);
+            List<OrderItemDto> 장바구니 = 장바구니_조회_요청(등록된_사용자1).jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
+                    .collect(Collectors.toList());
+            long 가지고있는_포인트 = 포인트_조회_요청(등록된_사용자1).jsonPath().getLong("usablePoint");
+
+            // when
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 가지고있는_포인트 + 1L, 장바구니));
+
+            assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(주문_등록_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("포인트가 부족합니다"));
+        }
     }
 
     @Nested
@@ -179,6 +248,21 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             assertThat(주문_목록.get(0).getShippingFee()).isEqualTo(3_000L);
             assertThat(주문_목록.get(0).getOrderDetails().size()).isEqualTo(2);
         }
+
+        @Test
+        void 존재하지_않는_회원의_주문_목록은_조회할_수_없다() {
+            // given
+            Member 잘못된_사용자 = new Member(등록된_사용자1.getId(), 등록된_사용자1.getEmail(), 등록된_사용자1.getPassword() + "illegal");
+
+            // when
+            ExtractableResponse<Response> 주문_목록_조회_결과 = 주문_목록_조회_요청(잘못된_사용자);
+
+            // then
+            assertThat(주문_목록_조회_결과.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+            assertThat(주문_목록_조회_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("존재하지 않는 회원입니다"));
+        }
     }
 
     @Nested
@@ -197,7 +281,6 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
                     .collect(Collectors.toList());
             long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 0L, 장바구니));
-            System.out.println(주문_아이디);
 
             // when
             ExtractableResponse<Response> 주문_상세_조회_결과 = 주문_상세_조회_요청(등록된_사용자1, 주문_아이디);
@@ -208,6 +291,61 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             assertThat(주문_상세.getOrderId()).isEqualTo(주문_아이디);
             assertThat(주문_상세.getTotalProductsPrice()).isEqualTo(25_000L);
             assertThat(주문_상세.getShippingFee()).isEqualTo(3_000L);
+            assertThat(주문_상세.getUsedPoint()).isEqualTo(0L);
+        }
+
+        @Test
+        void 주문_아이디가_존재하지_않으면_조회할_수_없다() {
+            // given
+            long 존재하지_않는_주문_아이디 = 5959L;
+
+            // when
+            ExtractableResponse<Response> 주문_상세_조회_결과 = 주문_상세_조회_요청(등록된_사용자1, 존재하지_않는_주문_아이디);
+
+            // then
+            assertThat(주문_상세_조회_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(주문_상세_조회_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("존재하지 않는 주문 내역입니다"));
+        }
+
+        @Test
+        void 존재하지_않는_회원의_주문_상세_정보를_조회할_수_없다() {
+            // given
+            Member 잘못된_사용자 = new Member(등록된_사용자1.getId(), 등록된_사용자1.getEmail(), 등록된_사용자1.getPassword() + "illegal");
+
+            // when
+            ExtractableResponse<Response> 주문_상세_조회_결과 = 주문_상세_조회_요청(잘못된_사용자, 1);
+
+            // then
+            assertThat(주문_상세_조회_결과.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+            assertThat(주문_상세_조회_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("존재하지 않는 회원입니다"));
+        }
+
+        @Test
+        void 타인의_주문_상세를_조회할_수_없다() {
+            // given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
+            장바구니_아이템_추가_요청(등록된_사용자1, 피자_아이디);
+            장바구니_아이템_추가_요청(등록된_사용자1, 치킨_아이디);
+            List<OrderItemDto> 장바구니 = 장바구니_조회_요청(등록된_사용자1).jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
+                    .collect(Collectors.toList());
+            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 0L, 장바구니));
+
+            // when
+            ExtractableResponse<Response> 주문_상세_조회_결과 = 주문_상세_조회_요청(등록된_사용자2, 주문_아이디);
+
+            // then
+            assertThat(주문_상세_조회_결과.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(주문_상세_조회_결과.jsonPath().getObject("payload", ExceptionResponse.class))
+                    .usingRecursiveComparison()
+                    .isEqualTo(new ExceptionResponse("잘못된 요청입니다"));
         }
     }
 
