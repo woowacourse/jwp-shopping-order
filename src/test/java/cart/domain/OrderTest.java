@@ -20,17 +20,15 @@ class OrderTest {
     @Test
     @DisplayName("Order 생성 성공")
     void create_success() {
-        final Member member = new Member(1L, "홍홍", "honghong");
-        final Product hongProduct = new Product("홍실", 1_000_000_000, "hong.com");
-        final CartItem cartItem = new CartItem(member, hongProduct);
-        final Order order = Order.of(member, List.of(cartItem), null);
+        final CartItem cartItem = new CartItem(MEMBER_1, PRODUCT_1);
+        final Order order = Order.of(MEMBER_1, List.of(cartItem));
 
         assertThat(order.getTimeStamp()).isNotNull();
-        assertThat(order.getMemberId()).isEqualTo(member.getId());
+        assertThat(order.getMemberId()).isEqualTo(MEMBER_1.getId());
         assertThat(order.getOrderProducts()).hasSize(1)
                 .extracting(OrderProduct::getProduct)
                 .extracting(Product::getName, Product::getPrice, Product::getImageUrl)
-                .contains(tuple("홍실", 1_000_000_000, "hong.com"));
+                .contains(tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice(), PRODUCT_1.getImageUrl()));
     }
 
     @Test
