@@ -4,9 +4,12 @@ import cart.domain.*;
 import cart.domain.coupon.Coupon;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.exception.AlreadyUsedCouponException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.coupon.CouponRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,44 +37,87 @@ class OrderServiceTest {
     @Mock
     private CartItemRepository cartItemRepository;
 
-    @Test
-    void 주문_한다() {
-        // given
-        final OrderRequest request = new OrderRequest(List.of(1L, 2L), 15000, 1L);
-        final Member member = new Member(1L, "a@a.com", "1234");
-        final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
-        final Product dessert = new Product(1L, "디저트", 5000, "imgUrl");
-        final CartItems cartItems = new CartItems(List.of(new CartItem(1L, 1, chicken, member), new CartItem(2L, 1, dessert, member)));
+    @Nested
+    class 주문_할_때 {
 
-        given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(cartItems);
-        willDoNothing().given(cartItemRepository).deleteAllByIds(request.getId());
-        given(orderRepository.save(any(Order.class))).willReturn(1L);
+        private OrderRequest request;
+        private CartItems sizeOneCarItems;
+        private Coupon unusedCoupon;
+        private Coupon usedCoupon;
 
-        // when
-        orderService.order(request);
+        @BeforeEach
+        void init() {
+            request = new OrderRequest(List.of(1L, 2L), 15000, 1L);
+            final Member member = new Member(1L, "a@a.com", "1234");
+            final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
+            final Product dessert = new Product(2L, "디저트", 5000, "imgUrl");
+            sizeOneCarItems = new CartItems(List.of(new CartItem(1L, 1, chicken, member), new CartItem(2L, 1, dessert, member)));
+            unusedCoupon = new Coupon(1L, "3000원 할인", "오늘만 드리는 선물", 3000, false);
+            usedCoupon = new Coupon(1L, "3000원 할인", "오늘만 드리는 선물", 3000, true);
+        }
 
-        // then
-        assertAll(
-                () -> then(cartItemRepository).should(times(1)).findAllByCartItemIds(anyList()),
-                () -> then(cartItemRepository).should(times(1)).deleteAllByIds(anyList()),
-                () -> then(orderRepository).should(times(1)).save(any(Order.class))
-        );
-    }
+        @Test
+        void 쿠폰이_존재하면_성공_한다() {
+            // given
+            given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(sizeOneCarItems);
+            willDoNothing().given(cartItemRepository).deleteAllByIds(request.getId());
+            given(orderRepository.save(any(Order.class))).willReturn(1L);
+            given(couponRepository.findCouponById(anyLong())).willReturn(unusedCoupon);
 
-    @Test
-    void 상품_아이디가_없으면_실패한다() {
-        // given
-        final OrderRequest request = new OrderRequest(List.of(1L, 2L), 15000, 1L);
-        final Member member = new Member(1L, "a@a.com", "1234");
-        final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
-        final Product dessert = new Product(1L, "디저트", 5000, "imgUrl");
-        final CartItems cartItems = new CartItems(List.of(new CartItem(1L, 1, chicken, member)));
+            // when
+            orderService.order(request);
 
-        given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(cartItems);
+            // then
+            assertAll(
+                    () -> then(cartItemRepository).should(times(1)).findAllByCartItemIds(anyList()),
+                    () -> then(cartItemRepository).should(times(1)).deleteAllByIds(anyList()),
+                    () -> then(orderRepository).should(times(1)).save(any(Order.class))
+            );
+        }
 
-        // when, then
-        assertThatThrownBy(() -> orderService.order(request))
-                .isInstanceOf(NoSuchElementException.class);
+        @Test
+        void 쿠폰이_없어도_성공_한다() {
+            // given
+            request = new OrderRequest(List.of(1L, 2L), 15000, null);
+            given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(sizeOneCarItems);
+            willDoNothing().given(cartItemRepository).deleteAllByIds(request.getId());
+            given(orderRepository.save(any(Order.class))).willReturn(1L);
+
+            // when
+            orderService.order(request);
+
+            // then
+            assertAll(
+                    () -> then(cartItemRepository).should(times(1)).findAllByCartItemIds(anyList()),
+                    () -> then(cartItemRepository).should(times(1)).deleteAllByIds(anyList()),
+                    () -> then(orderRepository).should(times(1)).save(any(Order.class))
+            );
+        }
+
+        @Test
+        void 사용된_쿠폰을_사용하려하면_실패_한다() {
+            // given
+            given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(sizeOneCarItems);
+            given(couponRepository.findCouponById(anyLong())).willReturn(usedCoupon);
+
+            // when, then
+            assertThatThrownBy(() -> orderService.order(request))
+                    .isInstanceOf(AlreadyUsedCouponException.class);
+        }
+
+        @Test
+        void 상품_아이디가_없으면_실패한다() {
+            // given
+            final Member member = new Member(1L, "a@a.com", "1234");
+            final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
+            sizeOneCarItems = new CartItems(List.of(new CartItem(1L, 1, chicken, member)));
+
+            given(cartItemRepository.findAllByCartItemIds(request.getId())).willReturn(sizeOneCarItems);
+
+            // when, then
+            assertThatThrownBy(() -> orderService.order(request))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
     }
 
     @Test
