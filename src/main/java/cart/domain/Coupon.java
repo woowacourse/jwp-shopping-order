@@ -1,14 +1,20 @@
-package cart.ui;
+package cart.domain;
 
-public class CouponResponse {
+public class Coupon {
+    private final long id;
     private final String couponName;
-    private final Integer discountPercent;
-    private final Integer minAmount;
+    private final int discountPercent;
+    private final int minAmount;
 
-    public CouponResponse(final String couponName, final Integer discountPercent, final Integer minAmount) {
+    public Coupon(final Long id, final String couponName, final Integer discountPercent, final Integer minAmount) {
+        this.id = id;
         this.couponName = couponName;
         this.discountPercent = discountPercent;
         this.minAmount = minAmount;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getCouponName() {
