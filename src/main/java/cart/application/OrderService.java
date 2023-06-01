@@ -1,10 +1,7 @@
 package cart.application;
 
 import cart.domain.*;
-import cart.dto.CartItemOrderRequest;
-import cart.dto.OrderInfoResponse;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.dto.*;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
@@ -78,5 +75,11 @@ public class OrderService {
         return order.getOrderInfos().getOrderInfos().stream()
                 .map(OrderInfoResponse::from)
                 .collect(Collectors.toUnmodifiableList());
+    }
+    
+    @Transactional(readOnly = true)
+    public OrderDetailResponse findByMemberAndId(final Member member, final Long orderId) {
+        final Order order = orderRepository.findByMemberAndId(member, orderId);
+        return OrderDetailResponse.from(order);
     }
 }

@@ -10,6 +10,7 @@ Authorization: Basic YUBhLmNvbToxMjM0
 
 > Expected response:
 > Status: 200 Ok
+> Body:
 > [
 >   {
 >     "orderId": 1,
@@ -31,6 +32,41 @@ Authorization: Basic YUBhLmNvbToxMjM0
 >     ]
 >   }
 > ]
+
+
+###
+# @name getOrder
+# @description Retrieves a specific order by its ID for a specific member
+GET http://localhost:8080/orders/1
+Content-Type: application/json
+Authorization: Basic YUBhLmNvbToxMjM0
+
+> Expected response:
+> Status: 200 Ok
+> Body:
+> {
+>   "orderId": 1,
+>   "orderInfo": [
+>     {
+>       "productId": 3,
+>       "price": 13000,
+>       "name": "피자",
+>       "imageUrl": "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+>       "quantity": 5
+>     },
+>     {
+>       "productId": 1,
+>       "price": 10000,
+>       "name": "치킨",
+>       "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80",
+>       "quantity": 2
+>     }
+>   ],
+>   "originalPrice": 85000,
+>   "usedPoint": 5000,
+>   "pointToAdd": 8500
+> }
+
 
 
 ###

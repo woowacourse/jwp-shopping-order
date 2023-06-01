@@ -13,4 +13,11 @@ public class CartItemOrderRequest {
     public Long getCartItemId() {
         return cartItemId;
     }
+    
+    @Override
+    public String toString() {
+        return "CartItemOrderRequest{" +
+                "cartItemId=" + cartItemId +
+                '}';
+    }
 }

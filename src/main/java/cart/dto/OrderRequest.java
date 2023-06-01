@@ -33,4 +33,14 @@ public class OrderRequest {
     public Long getPointToAdd() {
         return pointToAdd;
     }
+    
+    @Override
+    public String toString() {
+        return "OrderRequest{" +
+                "cartItems=" + cartItems +
+                ", originalPrice=" + originalPrice +
+                ", usedPoint=" + usedPoint +
+                ", pointToAdd=" + pointToAdd +
+                '}';
+    }
 }

@@ -12,6 +12,7 @@ import cart.dto.OrderInfoEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -74,5 +75,30 @@ public class OrderRepository {
                 orderInfoEntity,
                 Product.from(productById)
         );
+    }
+    
+    public Order findByMemberAndId(final Member member, final Long orderId) {
+        final Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
+        return orderDao.findByMemberId(memberByEmail.getId()).stream()
+                .filter(orderEntity -> Objects.equals(orderEntity.getId(), orderId))
+                .map(orderEntity -> new Order(
+                        orderId,
+                        memberByEmail,
+                        getOrderInfos(orderId),
+                        orderEntity.getOriginalPrice(),
+                        orderEntity.getUsedPoint(),
+                        orderEntity.getPointToAdd()
+                ))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(member.getEmail() + " 회원님은 주문번호가 " + orderId + "인 주문 상세를 가지고있지 않습니다."));
+    }
+    
+    private List<OrderInfo> getOrderInfos(final Long orderId) {
+        return orderInfoDao.findByOrderId(orderId).stream()
+                .map(orderInfoEntity -> OrderInfo.of(
+                        orderInfoEntity,
+                        Product.from(productDao.getProductById(orderInfoEntity.getProductId()))
+                ))
+                .collect(Collectors.toUnmodifiableList());
     }
 }

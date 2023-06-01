@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.DiscordException;
+import cart.repository.OrderEntity;
 
 import java.util.List;
 

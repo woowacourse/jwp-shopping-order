@@ -48,8 +48,8 @@ public class CartItemDao {
         final String sql = "SELECT * FROM cart_item WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
-
-
+    
+    
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);

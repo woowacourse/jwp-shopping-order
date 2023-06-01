@@ -35,6 +35,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void 장바구니_목록을_주문한다() {
         // given
+        final Member member = memberRepository.getMemberById(1L);
         final OrderRequest orderRequest =
                 new OrderRequest(List.of(new CartItemOrderRequest(1L)), 20000L, memberRepository.getMemberById(1L).getPoint() / 2L, 2000L);
         // expect
@@ -87,6 +88,45 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .contentType(ContentType.JSON)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().get("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+    
+    @Test
+    void 특정_주문의_상세_정보를_조회한다() {
+        // given
+        final OrderRequest orderRequest1 =
+                new OrderRequest(
+                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(2L)),
+                        100000L,
+                        memberRepository.getMemberById(1L).getPoint() / 2L,
+                        10000L
+                );
+        
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest1)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+        
+        final OrderRequest orderRequest2 =
+                new OrderRequest(List.of(new CartItemOrderRequest(4L)), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
+        
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest2)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+        
+        // expect
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/orders/" + 2L)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -170,6 +210,46 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(orderRequest1)
                 .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", startsWith("[ERROR]"));
+    }
+    
+    @Test
+    void 특정_주문의_상세_정보를_조회할_시_주문_번호가_다르면_예외_처리() {
+        // given
+        final OrderRequest orderRequest1 =
+                new OrderRequest(
+                        List.of(new CartItemOrderRequest(1L), new CartItemOrderRequest(2L)),
+                        100000L,
+                        memberRepository.getMemberById(1L).getPoint() / 2L,
+                        10000L
+                );
+        
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest1)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+        
+        final OrderRequest orderRequest2 =
+                new OrderRequest(List.of(new CartItemOrderRequest(4L)), 65000L, memberRepository.getMemberById(1L).getPoint() / 2L, 6500L);
+        
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest2)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+        
+        // expect
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/orders/" + 3L)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", startsWith("[ERROR]"));

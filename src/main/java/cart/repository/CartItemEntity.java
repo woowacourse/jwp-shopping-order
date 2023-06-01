@@ -28,4 +28,14 @@ public class CartItemEntity {
     public Long getQuantity() {
         return quantity;
     }
+    
+    @Override
+    public String toString() {
+        return "CartItemEntity{" +
+                "id=" + id +
+                ", memberId=" + memberId +
+                ", productId=" + productId +
+                ", quantity=" + quantity +
+                '}';
+    }
 }
