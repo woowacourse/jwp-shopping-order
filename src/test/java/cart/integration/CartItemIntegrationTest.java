@@ -23,9 +23,6 @@ import org.springframework.http.MediaType;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
     private Long productId1;
     private Long productId2;
     private Member member1;
