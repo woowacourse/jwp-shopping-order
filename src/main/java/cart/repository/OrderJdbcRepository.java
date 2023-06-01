@@ -2,13 +2,20 @@ package cart.repository;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
+import cart.dao.OrderResultMap;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
+import cart.dao.entity.ProductEntity;
 import cart.domain.Order;
+import cart.domain.OrderItem;
+import cart.domain.Product;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 @Repository
@@ -33,5 +40,28 @@ public class OrderJdbcRepository implements OrderRepository {
 
         orderItemDao.saveAll(orderItemEntities);
         return orderId;
+    }
+
+    @Override
+    public List<Order> findOrderByMemberId(final Long memberId) {
+        final List<OrderResultMap> resultMaps = orderDao.findByMemberId(memberId);
+        final Map<Long, List<OrderResultMap>> orders = resultMaps.stream()
+                .collect(groupingBy(OrderResultMap::getOrderId));
+
+        final List<Order> orderCatalogs = new ArrayList<>();
+        for (Long orderId : orders.keySet()) {
+            final List<OrderItem> orderItems = new ArrayList<>();
+            final List<OrderResultMap> orderResultMaps = orders.get(orderId);
+            for (OrderResultMap orderResultMap : orderResultMaps) {
+                final ProductEntity productEntity = orderResultMap.getProductEntity();
+                final Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
+                final OrderItem orderItem = new OrderItem(orderId, product, orderResultMap.getQuantity());
+                orderItems.add(orderItem);
+            }
+            final Order order = new Order(orderId, orderItems, null, null, orderResultMaps.get(0).getPrice(), orderResultMaps.get(0).getDate());
+            orderCatalogs.add(order);
+        }
+
+        return orderCatalogs;
     }
 }

@@ -1,6 +1,7 @@
 package cart.acceptance;
 
 import cart.dto.OrderRequest;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
@@ -11,6 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -43,5 +45,27 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .then()
                 .log().all()
                 .extract();
+    }
+
+    /**
+     * when 주문 조회를 요청하면
+     * then 주문 목록을 반환한다.
+     */
+    @Test
+    void 주문_조회를_한다() {
+        // when
+        final ExtractableResponse<Response> response = givenBasic()
+                .when()
+                .get("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        // then
+        final JsonPath result = response.jsonPath();
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(OK.value()),
+                () -> assertThat(result.getList("id", Long.class)).hasSize(1)
+        );
     }
 }

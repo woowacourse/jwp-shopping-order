@@ -19,3 +19,10 @@ INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES (0, 1, 2);
 INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES (0, 1, 3);
 INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES (0, 2, 1);
 INSERT INTO coupon (usage_status, member_id, coupon_type_id) VALUES (1, 2, 4);
+
+INSERT INTO orders (price, coupon_id, member_id) VALUES (45000, 3, 1);
+INSERT INTO order_item (product_id, order_id, quantity) VALUES (1, 1, 2);
+
+INSERT INTO order_item (product_id, order_id, quantity) VALUES (2, 1, 4);
+
+
