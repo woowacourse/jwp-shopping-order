@@ -30,7 +30,7 @@ public class OrderEntity {
                 order.getMember().getId(),
                 order.getCoupon().getCouponInfo().getId(),
                 order.getShippingFee().getCharge(),
-                order.calculatePaymentPrice(),
+                order.calculateTotalPrice(),
                 null
         );
     }

@@ -161,7 +161,9 @@ public class OrderIntegrationTest extends IntegrationTest {
                                 4
                         )
                 ),
-                802000
+                802000,
+                3000,
+                0
         );
         String jsonResponse = given().log().all()
                 .auth().preemptive().basic("a@a.com", "1234")

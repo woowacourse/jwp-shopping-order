@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -28,19 +26,20 @@ public class Order {
         return new Order(id, shippingFee, orderItems, coupon, member);
     }
 
-    public Integer calculatePaymentPrice() {
-        Integer price = orderItems.stream()
+    public Integer calculateTotalPrice() {
+        return orderItems.stream()
                 .mapToInt(OrderItem::calculatePrice)
                 .sum();
-        if (!coupon.isAvailable(price)) {
-            throw new IllegalArgumentException("사용할 수 없는 쿠폰입니다");
-        }
-        return price;
+    }
+
+    public Integer calculateDiscountPrice() {
+        Integer totalPrice = calculateTotalPrice();
+        return coupon.calculateDiscount(totalPrice);
     }
 
     // TODO: 6/1/23 실제 주문하는 로직이 필요할것 같긴 함
     public void order() {
-        
+
     }
 
     public void checkOwner(final Member member) {

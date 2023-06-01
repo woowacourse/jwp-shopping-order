@@ -96,7 +96,6 @@ public class OrderService {
     }
 
     private OrderDetailResponse convertToOrderDetailResponse(final Order order) {
-        Integer price = order.calculatePaymentPrice();
         List<OrderItemResponse> orderItemResponses = order.getOrderItems()
                 .stream()
                 .map(this::convertToOrderItemResponse)
@@ -104,7 +103,9 @@ public class OrderService {
         return new OrderDetailResponse(
                 order.getId(),
                 orderItemResponses,
-                price
+                order.calculateTotalPrice(),
+                order.calculateDiscountPrice(),
+                order.getShippingFee().getCharge()
         );
     }
 
