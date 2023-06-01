@@ -1,5 +1,6 @@
 package cart.order.application.dto;
 
+import cart.order_item.application.dto.OrderItemResponse;
 import java.util.List;
 
 public class OrderResponse {

@@ -2,15 +2,14 @@ package cart.order_item.application;
 
 import cart.cart_item.application.CartItemService;
 import cart.cart_item.domain.CartItem;
-import cart.order_item.domain.OrderItem;
-import cart.order_item.domain.OrderedItems;
 import cart.member.domain.Member;
 import cart.order.domain.Order;
+import cart.order_item.application.mapper.OrderItemMapper;
 import cart.order_item.dao.OrderItemDao;
 import cart.order_item.dao.entity.OrderItemEntity;
+import cart.order_item.domain.OrderItem;
+import cart.order_item.domain.OrderedItems;
 import cart.order_item.exception.CanNotOrderNotInCart;
-import cart.value_object.Money;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -40,32 +39,17 @@ public class OrderItemCommandService {
       final Member member
   ) {
 
-    final List<CartItem> cartItems = cartItemService.findCartItemByCartIds(cartItemIds,
-        member);
+    final List<CartItem> cartItems = cartItemService.findCartItemByCartIds(cartItemIds, member);
 
     validateAllCartItemInOrder(cartItemIds, cartItems);
 
-    final List<OrderItemEntity> orderItemEntities = cartItems.stream()
-        .map(it -> new OrderItemEntity(
-            order.getId(),
-            it.getProduct().getName(),
-            BigDecimal.valueOf(it.getProduct().getPrice()),
-            it.getProduct().getImageUrl(),
-            it.getQuantity()
-        ))
-        .collect(Collectors.toList());
-
+    final List<OrderItemEntity> orderItemEntities = OrderItemMapper.mapToOrderItemEntities(
+        cartItems,
+        order
+    );
     orderItemDao.save(orderItemEntities);
 
-    final List<OrderItem> orderItems = cartItems.stream()
-        .map(it -> new OrderItem(
-            order,
-            it.getProduct().getName(),
-            new Money(it.getProduct().getPrice()),
-            it.getProduct().getImageUrl(),
-            it.getQuantity()))
-        .collect(Collectors.toList());
-
+    final List<OrderItem> orderItems = OrderItemMapper.mapToOrderItems(orderItemEntities, order);
     return new OrderedItems(orderItems);
   }
 

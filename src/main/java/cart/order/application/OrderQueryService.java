@@ -1,7 +1,6 @@
 package cart.order.application;
 
 import cart.member.domain.Member;
-import cart.order.application.dto.OrderItemResponse;
 import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.SpecificOrderResponse;
 import cart.order.application.mapper.OrderMapper;
@@ -11,6 +10,7 @@ import cart.order.domain.Order;
 import cart.order.exception.CanNotSearchNotMyOrderException;
 import cart.order.exception.NotFoundOrderException;
 import cart.order_item.application.OrderItemQueryService;
+import cart.order_item.application.mapper.OrderItemMapper;
 import cart.order_item.domain.OrderItem;
 import cart.order_item.domain.OrderedItems;
 import cart.value_object.Money;
@@ -43,18 +43,9 @@ public class OrderQueryService {
     return orders.stream()
         .map(order -> new OrderResponse(
             order.getId(),
-            mapToOrderItemResponseFrom(orderItemQueryService.searchOrderItemsByOrderId(order))))
-        .collect(Collectors.toList());
-  }
-
-  private List<OrderItemResponse> mapToOrderItemResponseFrom(final List<OrderItem> orderItems) {
-    return orderItems.stream()
-        .map(orderItem -> new OrderItemResponse(
-            orderItem.getId(),
-            orderItem.getName(),
-            orderItem.getImageUrl(),
-            orderItem.getQuantity(),
-            orderItem.getPrice().multiply(orderItem.getQuantity()).getValue()))
+            OrderItemMapper.mapToOrderItemResponse(
+                orderItemQueryService.searchOrderItemsByOrderId(order)
+            )))
         .collect(Collectors.toList());
   }
 
@@ -72,11 +63,10 @@ public class OrderQueryService {
 
     final List<OrderItem> orderItems = orderItemQueryService.searchOrderItemsByOrderId(order);
     final OrderedItems orderedItems = new OrderedItems(orderItems);
-    final List<OrderItemResponse> orderItemResponses = mapToOrderItemResponseFrom(orderItems);
 
     return new SpecificOrderResponse(
         orderEntity.getId(),
-        orderItemResponses,
+        OrderItemMapper.mapToOrderItemResponse(orderItems),
         orderedItems.calculateAllItemPrice().getValue(),
         orderEntity.getDeliveryFee()
     );

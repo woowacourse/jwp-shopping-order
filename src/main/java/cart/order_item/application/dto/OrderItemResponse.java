@@ -1,4 +1,4 @@
-package cart.order.application.dto;
+package cart.order_item.application.dto;
 
 import java.math.BigDecimal;
 
