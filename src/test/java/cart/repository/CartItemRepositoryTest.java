@@ -13,6 +13,7 @@ import cart.domain.CartItem;
 import cart.domain.CartItemEntity;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.Quantity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,7 @@ class CartItemRepositoryTest {
 
     private static final Member dummyMember = new Member(1L, "email1", "pw1", 1);
     private static final Product dummyProduct = new Product(1L, "name1", 1, "imageUrl1", 1);
+    private static final Quantity dummyQuantity = new Quantity(1);
 
     @Mock
     private MemberDao memberDao;
@@ -38,7 +40,7 @@ class CartItemRepositoryTest {
     @Test
     void 새로운_객체를_추가한다() {
         // given
-        CartItem cartItem = new CartItem(dummyMember, dummyProduct, 1);
+        CartItem cartItem = new CartItem(dummyMember, dummyProduct, dummyQuantity);
 
         // when
         repository.add(cartItem);
@@ -64,7 +66,7 @@ class CartItemRepositoryTest {
         CartItem cartItem = repository.findById(id);
 
         // then
-        CartItem expect = new CartItem(id, dummyMember, dummyProduct, 1);
+        CartItem expect = new CartItem(id, dummyMember, dummyProduct, dummyQuantity);
 
         assertThat(cartItem).isEqualTo(expect);
     }
@@ -90,7 +92,7 @@ class CartItemRepositoryTest {
         // given
         long id = 1L;
         int quantity = 10;
-        CartItem cartItem = new CartItem(id, dummyMember, dummyProduct, quantity);
+        CartItem cartItem = new CartItem(id, dummyMember, dummyProduct, dummyQuantity);
         CartItemEntity cartItemEntity = new CartItemEntity(id, dummyMember.getId(), dummyProduct.getId(), quantity);
 
         // when
@@ -105,7 +107,7 @@ class CartItemRepositoryTest {
         // given
         long id = 1L;
         int quantity = 10;
-        new CartItem(id, dummyMember, dummyProduct, quantity);
+        new CartItem(id, dummyMember, dummyProduct, dummyQuantity);
         new CartItemEntity(id, dummyMember.getId(), dummyProduct.getId(), quantity);
 
         // when

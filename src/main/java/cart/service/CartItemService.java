@@ -4,13 +4,13 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.Quantity;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.repository.CartItemRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +50,7 @@ public class CartItemService {
             return;
         }
 
-        CartItem changedCartItem = cartItem.changeQuantity(request.getQuantity());
+        CartItem changedCartItem = cartItem.changeQuantity(new Quantity(request.getQuantity()));
         cartItemRepository.update(changedCartItem);
     }
 

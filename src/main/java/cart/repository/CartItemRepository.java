@@ -7,6 +7,7 @@ import cart.domain.CartItem;
 import cart.domain.CartItemEntity;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.Quantity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -35,7 +36,7 @@ public class CartItemRepository {
     private CartItem toDomain(final CartItemEntity cartItemEntity) {
         Member member = memberDao.findById(cartItemEntity.getMemberId());
         Product product = productDao.findById(cartItemEntity.getProductId());
-        int quantity = cartItemEntity.getQuantity();
+        Quantity quantity = new Quantity(cartItemEntity.getQuantity());
 
         return new CartItem(cartItemEntity.getId(), member, product, quantity);
     }
