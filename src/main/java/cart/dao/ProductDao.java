@@ -1,15 +1,16 @@
 package cart.dao;
 
-import cart.domain.Product;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
+import cart.domain.Product;
 
 @Repository
 public class ProductDao {
@@ -33,7 +34,7 @@ public class ProductDao {
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(sql, new Object[] {productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
@@ -46,8 +47,8 @@ public class ProductDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
+                "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setString(1, product.getName());

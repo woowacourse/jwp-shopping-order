@@ -19,7 +19,7 @@ import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.CouponType;
 import cart.domain.Member;
-import cart.dto.OrderRequest;
+import cart.dto.request.OrderRequest;
 
 public class OrderIntegrationTest extends IntegrationTest {
 
