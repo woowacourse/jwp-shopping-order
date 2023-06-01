@@ -4,8 +4,10 @@ import cart.application.repository.MemberRepository;
 import cart.domain.Member;
 import cart.exception.auth.LoginFailException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class AuthService {
 
     private final MemberRepository memberRepository;

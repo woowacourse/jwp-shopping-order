@@ -13,8 +13,10 @@ import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CartItemService {
 
     private final ProductRepository productRepository;
@@ -26,6 +28,7 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMember(member);
         return cartItems.stream()

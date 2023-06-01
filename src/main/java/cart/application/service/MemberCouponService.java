@@ -8,6 +8,7 @@ import cart.domain.cart.CartItems;
 import cart.domain.coupon.MemberCoupon;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberCouponService {
@@ -21,6 +22,7 @@ public class MemberCouponService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    @Transactional(readOnly = true)
     public FindOrderCouponsResponse findOrderCoupons(final Member member, final List<Long> cartItemIds) {
         CartItems cartItems = cartItemRepository.findByIds(cartItemIds);
         cartItems.checkOwner(member);
