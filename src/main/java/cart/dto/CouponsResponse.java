@@ -4,7 +4,10 @@ import java.util.List;
 
 public class CouponsResponse {
 
-    private final List<CouponResponse> coupons;
+    private List<CouponResponse> coupons;
+
+    public CouponsResponse() {
+    }
 
     public CouponsResponse(List<CouponResponse> couponResponses) {
         this.coupons = couponResponses;

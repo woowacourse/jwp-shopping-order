@@ -7,10 +7,13 @@ import cart.dto.apidatamapper.DiscountTypeMapper;
 
 public class CouponResponse {
 
-    private final Long id;
-    private final String name;
-    private final String type;
-    private final Integer amount;
+    private Long id;
+    private String name;
+    private String type;
+    private Integer amount;
+
+    public CouponResponse() {
+    }
 
     public CouponResponse(Long id, String name, String type, Integer amount) {
         this.id = id;
