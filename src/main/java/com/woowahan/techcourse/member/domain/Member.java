@@ -25,6 +25,12 @@ public class Member {
     }
 
     public boolean checkPassword(String password) {
+        if (this.password == null && password == null) {
+            return true;
+        }
+        if (this.password == null || password == null) {
+            return false;
+        }
         return this.password.equals(password);
     }
 }
