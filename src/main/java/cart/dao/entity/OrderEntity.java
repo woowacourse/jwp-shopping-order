@@ -7,16 +7,18 @@ public class OrderEntity {
     private final Long id;
     private final Long memberId;
     private final int usedPoint;
+    private final int savedPoint;
     private final int deliveryFee;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public OrderEntity(final Long id, final Long memberId, final int usedPoint, final int deliveryFee,
+    public OrderEntity(final Long id, final Long memberId, final int usedPoint, final int savedPoint, final int deliveryFee,
                        final LocalDateTime createdAt,
                        final LocalDateTime updatedAt) {
         this.id = id;
         this.memberId = memberId;
         this.usedPoint = usedPoint;
+        this.savedPoint = savedPoint;
         this.deliveryFee = deliveryFee;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -36,6 +38,10 @@ public class OrderEntity {
 
     public int getUsedPoint() {
         return usedPoint;
+    }
+
+    public int getSavedPoint() {
+        return savedPoint;
     }
 
     @Override

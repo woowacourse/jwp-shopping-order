@@ -9,6 +9,7 @@ public class Order {
     private final List<OrderProduct> orderProducts;
     private final Member member;
     private final DeliveryFee deliveryFee;
+    private final Point savedPoint;
     private final Point usedPoint;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
@@ -19,7 +20,8 @@ public class Order {
         this.id = id;
         this.orderProducts = orderProducts;
         this.member = member;
-        this.deliveryFee = calculateDeliveryFee(orderProducts);
+        this.deliveryFee = deliveryFee;
+        this.savedPoint = Point.fromTotalPrice(getTotalPrice());
         this.usedPoint = usedPoint;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -68,6 +70,10 @@ public class Order {
 
     public int getDeliveryFee() {
         return deliveryFee.getValue();
+    }
+
+    public int getSavedPoint() {
+        return savedPoint.getValue();
     }
 
     public int getUsedPoint() {
