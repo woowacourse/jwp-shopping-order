@@ -3,21 +3,28 @@ package cart.dao.policy;
 import cart.entity.policy.PolicyEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Repository
 public class PolicyDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public PolicyDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("policy")
+                .usingGeneratedKeyColumns("id");
     }
 
     // 추후 사용할 예정입니다 :)
@@ -46,7 +53,7 @@ public class PolicyDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void applySalePolicy(final long policyId, final int amount) {
+    public void updateAmount(final long policyId, final int amount) {
         String sql = "UPDATE policy SET amount = ? WHERE id = ?";
         jdbcTemplate.update(sql, amount, policyId);
     }
@@ -64,5 +71,16 @@ public class PolicyDao {
             int amount = rs.getInt("amount");
             return new PolicyEntity(id, isPercentage, amount);
         });
+    }
+
+    public long createProductSalePolicy(final int amount) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put("isPercentage", true);
+        parameters.put("amount", amount);
+
+        Number generatedId = simpleJdbcInsert.executeAndReturnKey(parameters);
+
+        return generatedId.longValue();
     }
 }

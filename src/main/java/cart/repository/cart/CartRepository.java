@@ -9,7 +9,6 @@ import cart.domain.cart.CartItems;
 import cart.domain.product.Product;
 import cart.entity.cart.CartEntity;
 import cart.entity.cart.CartItemEntity;
-import cart.entity.policy.PolicyEntity;
 import cart.entity.product.ProductEntity;
 import cart.exception.CartItemNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -38,8 +37,7 @@ public class CartRepository {
                     int quantity = cartItemEntity.getQuantity();
                     Long productId = cartItemEntity.getProductId();
                     ProductEntity productEntity = productDao.getProductById(productId);
-                    PolicyEntity policyEntity = policyDao.findById(productEntity.getPolicyId());
-                    Product product = new Product(productId, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), policyEntity.isOnSale(), policyEntity.getAmount());
+                    Product product = new Product(productId, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
                     return new CartItem(cartItemEntity.getId(), product, quantity);
                 })
                 .collect(Collectors.toList());
@@ -57,9 +55,8 @@ public class CartRepository {
                 .orElseThrow(CartItemNotFoundException::new);
 
         ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
-        PolicyEntity policyEntity = policyDao.findById(productEntity.getPolicyId());
 
-        Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), policyEntity.isOnSale(), policyEntity.getAmount());
+        Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
         return new CartItem(cartItemId, product, cartItemEntity.getQuantity());
     }
 

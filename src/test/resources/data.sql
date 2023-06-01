@@ -1,4 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE product_sale;
 TRUNCATE TABLE order_item_history;
 TRUNCATE TABLE coupon_history;
 TRUNCATE TABLE order_table;

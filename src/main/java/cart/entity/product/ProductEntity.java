@@ -7,15 +7,15 @@ public class ProductEntity {
     private final int price;
     private final String imageUrl;
     private final Boolean isOnSale;
-    private final Long policyId;
+    private final int salePrice;
 
-    public ProductEntity(final Long id, final String name, final int price, final String imageUrl, final Boolean isOnSale, final Long policyId) {
+    public ProductEntity(final Long id, final String name, final int price, final String imageUrl, final Boolean isOnSale, final int salePrice) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.isOnSale = isOnSale;
-        this.policyId = policyId;
+        this.salePrice = salePrice;
     }
 
     public Long getId() {
@@ -38,7 +38,7 @@ public class ProductEntity {
         return isOnSale;
     }
 
-    public Long getPolicyId() {
-        return policyId;
+    public int getSalePrice() {
+        return salePrice;
     }
 }

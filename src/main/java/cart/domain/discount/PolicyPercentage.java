@@ -14,7 +14,8 @@ public class PolicyPercentage implements Policy {
     }
 
     @Override
-    public void updateDiscountValue(final int value) {
+    public int updateDiscountValue(final int value) {
         this.value = value;
+        return value;
     }
 }

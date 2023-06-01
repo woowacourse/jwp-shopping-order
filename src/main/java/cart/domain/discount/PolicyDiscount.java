@@ -3,7 +3,7 @@ package cart.domain.discount;
 public class PolicyDiscount implements Policy {
 
     private static final int FREE = 0;
-    
+
     private int value;
 
     public PolicyDiscount(final int value) {
@@ -20,7 +20,8 @@ public class PolicyDiscount implements Policy {
     }
 
     @Override
-    public void updateDiscountValue(final int value) {
+    public int updateDiscountValue(final int value) {
         this.value = value;
+        return value;
     }
 }

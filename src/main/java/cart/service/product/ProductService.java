@@ -52,9 +52,9 @@ public class ProductService {
     @Transactional
     public long applySale(final Long productId, final SaleProductRequest request) {
         Product product = productRepository.findProductById(productId);
-        product.applySale(request.getAmount());
+        int salePrice = product.applySale(request.getAmount());
 
-        productRepository.applySale(productId, request.getAmount());
+        productRepository.applySale(productId, salePrice, request.getAmount());
         return productId;
     }
 

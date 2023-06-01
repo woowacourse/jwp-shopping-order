@@ -4,5 +4,5 @@ public interface Policy {
 
     int calculate(final int price);
 
-    void updateDiscountValue(final int value);
+    int updateDiscountValue(final int value);
 }

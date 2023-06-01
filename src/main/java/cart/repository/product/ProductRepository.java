@@ -2,12 +2,12 @@ package cart.repository.product;
 
 import cart.dao.policy.PolicyDao;
 import cart.dao.product.ProductDao;
+import cart.dao.product.ProductSaleDao;
 import cart.domain.product.Product;
-import cart.entity.policy.PolicyEntity;
 import cart.entity.product.ProductEntity;
+import cart.entity.product.ProductSaleEntity;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,37 +16,30 @@ public class ProductRepository {
 
     private final ProductDao productDao;
     private final PolicyDao policyDao;
+    private final ProductSaleDao productSaleDao;
 
-    public ProductRepository(final ProductDao productDao, final PolicyDao policyDao) {
+    public ProductRepository(final ProductDao productDao, final PolicyDao policyDao, final ProductSaleDao productSaleDao) {
         this.productDao = productDao;
         this.policyDao = policyDao;
+        this.productSaleDao = productSaleDao;
     }
 
     public Product findProductById(final long id) {
         ProductEntity productEntity = productDao.getProductById(id);
-        PolicyEntity policyEntity = policyDao.findById(productEntity.getPolicyId());
 
-        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), policyEntity.isOnSale(), policyEntity.getAmount());
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), productEntity.getSalePrice());
     }
 
     public List<Product> findAllProducts() {
         List<ProductEntity> productEntities = productDao.getAllProducts();
-        List<PolicyEntity> policyEntities = productEntities.stream()
-                .map(productEntity -> policyDao.findById(productEntity.getPolicyId()))
+
+        return productEntities.stream()
+                .map(entity -> new Product(entity.getId(), entity.getName(), entity.getPrice(), entity.getImageUrl(), entity.isOnSale(), entity.getSalePrice()))
                 .collect(Collectors.toList());
-
-        List<Product> products = new ArrayList<>();
-
-        for (int i = 0; i < productEntities.size(); i++) {
-            products.add(new Product(productEntities.get(i).getId(), productEntities.get(i).getName(), productEntities.get(i).getPrice(), productEntities.get(i).getImageUrl(), policyEntities.get(i).isOnSale(), policyEntities.get(i).getAmount()));
-        }
-
-        return products;
     }
 
     public Long createProduct(final Product product) {
-        long salePolicyId = policyDao.createProductDefaultPolicy();
-        return productDao.createProduct(product, salePolicyId);
+        return productDao.createProduct(product);
     }
 
     public void updateProduct(final Long productId, final Product product) {
@@ -54,20 +47,28 @@ public class ProductRepository {
     }
 
     public void deleteProduct(final Long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId);
         productDao.deleteProduct(productId);
-        policyDao.deletePolicy(productEntity.getPolicyId());
     }
 
-    public void applySale(final long productId, final int amount) {
-        ProductEntity productEntity = productDao.getProductById(productId);
+    public void applySale(final long productId, final int salePrice, final int amount) {
+        if (productSaleDao.isExistByProductId(productId)) {
+            ProductSaleEntity productSaleEntity = productSaleDao.findByProductId(productId);
+            policyDao.updateAmount(productSaleEntity.getPolicyId(), amount);
+            productDao.applySalePolicy(productId, true);
+            productDao.updateSaleAmount(productId, salePrice);
+            return;
+        }
+
+        long policyId = policyDao.createProductSalePolicy(amount);
+        productSaleDao.save(productId, policyId);
         productDao.applySalePolicy(productId, true);
-        policyDao.applySalePolicy(productEntity.getPolicyId(), amount);
+        productDao.updateSaleAmount(productId, salePrice);
     }
 
     public void unapplySale(final long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId);
+        ProductSaleEntity productSaleEntity = productSaleDao.findByProductId(productId);
+
         productDao.applySalePolicy(productId, false);
-        policyDao.applySalePolicy(productEntity.getPolicyId(), 0);
+        policyDao.deletePolicy(productSaleEntity.getPolicyId());
     }
 }

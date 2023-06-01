@@ -12,8 +12,16 @@ CREATE TABLE product
     price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL,
     isOnSale  BOOLEAN      NOT NULL,
-    policy_id BIGINT       NOT NULL,
-    FOREIGN KEY (policy_id) REFERENCES policy (id)
+    salePrice int
+);
+
+CREATE TABLE product_sale
+(
+    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
+    product_id BIGINT NOT NULL,
+    policy_id  BIGINT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
+    FOREIGN KEY (policy_id) REFERENCES policy (id) ON DELETE CASCADE
 );
 
 CREATE TABLE member
@@ -28,10 +36,22 @@ CREATE TABLE coupon
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
     policy_id BIGINT       NOT NULL,
+--     member_id BIGINT       NOT NULL,
     member_id BIGINT       NOT NULL,
     FOREIGN KEY (policy_id) REFERENCES policy (id),
+--     FOREIGN KEY (member_id) REFERENCES member (id)
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
+
+-- 추가 테이블
+-- CREATE TABLE member_coupon
+-- (
+--     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+--     coupon_id BIGINT NOT NULL,
+--     member_id BIGINT NOT NULL,
+--     FOREIGN KEY (coupon_id) REFERENCES coupon (id),
+--     FOREIGN KEY (member_id) REFERENCES member (id)
+-- );
 
 CREATE TABLE cart
 (

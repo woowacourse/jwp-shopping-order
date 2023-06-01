@@ -36,13 +36,13 @@ public class Product {
         this.policy = new PolicyPercentage(amount);
     }
 
-    public void applySale(int percentage) {
+    public int applySale(int percentage) {
         if (validateRangeOfSalePercentage(percentage)) {
             throw new SalePercentageInvalidRangeException();
         }
 
-        policy.updateDiscountValue(percentage);
         this.isOnSale = true;
+        return policy.updateDiscountValue(percentage);
     }
 
     private boolean validateRangeOfSalePercentage(final int value) {

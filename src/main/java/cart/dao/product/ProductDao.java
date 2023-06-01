@@ -29,8 +29,8 @@ public class ProductDao {
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Boolean isOnSale = rs.getBoolean("isOnSale");
-            long policyId = rs.getLong("policy_id");
-            return new ProductEntity(productId, name, price, imageUrl, isOnSale, policyId);
+            int salePrice = rs.getInt("salePrice");
+            return new ProductEntity(productId, name, price, imageUrl, isOnSale, salePrice);
         });
     }
 
@@ -41,17 +41,17 @@ public class ProductDao {
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Boolean isOnSale = rs.getBoolean("isOnSale");
-            long policyId = rs.getLong("policy_id");
-            return new ProductEntity(productId, name, price, imageUrl, isOnSale, policyId);
+            int salePrice = rs.getInt("salePrice");
+            return new ProductEntity(productId, name, price, imageUrl, isOnSale, salePrice);
         });
     }
 
-    public Long createProduct(final Product product, final long salePolicyId) {
+    public Long createProduct(final Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url, isOnSale, policy_id) VALUES (?, ?, ?,?, ?)",
+                    "INSERT INTO product (name, price, image_url, isOnSale, salePrice) VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
@@ -59,7 +59,7 @@ public class ProductDao {
             ps.setInt(2, product.getPrice());
             ps.setString(3, product.getImageUrl());
             ps.setBoolean(4, false);
-            ps.setLong(5, salePolicyId);
+            ps.setInt(5, 0);
 
             return ps;
         }, keyHolder);
@@ -80,5 +80,10 @@ public class ProductDao {
     public void applySalePolicy(final long productId, final boolean isOnSale) {
         String sql = "UPDATE product SET isOnSale = ? WHERE id = ?";
         jdbcTemplate.update(sql, isOnSale, productId);
+    }
+
+    public void updateSaleAmount(final long productId, final int salePrice) {
+        String sql = "UPDATE product SET salePrice = ? WHERE id = ?";
+        jdbcTemplate.update(sql, salePrice, productId);
     }
 }
