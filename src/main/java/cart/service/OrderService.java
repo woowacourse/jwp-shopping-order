@@ -6,7 +6,6 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.dto.OrderResponses;
 import cart.exception.OrderException;
 import cart.mapper.OrderMapper;
 import cart.repository.CartItemRepository;
@@ -31,13 +30,12 @@ public class OrderService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public OrderResponses findAll(Member member) {
+    public List<OrderResponse> findAll(Member member) {
         List<Order> orders = orderRepository.findAllByMemberId(member.getId());
-        List<OrderResponse> orderResponses = orders.stream()
+
+        return orders.stream()
                 .map(OrderMapper::toResponse)
                 .collect(Collectors.toList());
-
-        return new OrderResponses(orderResponses);
     }
 
     public OrderResponse findById(Long id) {

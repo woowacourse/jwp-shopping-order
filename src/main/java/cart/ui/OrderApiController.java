@@ -3,13 +3,13 @@ package cart.ui;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.dto.OrderResponses;
 import cart.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -22,9 +22,8 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<OrderResponses> showOrders(Member member) {
-        OrderResponses response = orderService.findAll(member);
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<List<OrderResponse>> showOrders(Member member) {
+        return ResponseEntity.ok().body(orderService.findAll(member));
     }
 
     @GetMapping("/{id}")

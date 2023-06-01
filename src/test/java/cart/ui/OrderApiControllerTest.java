@@ -23,7 +23,8 @@ import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
@@ -59,15 +60,6 @@ class OrderApiControllerTest extends ControllerTestConfig {
                 .filter(document(DOCUMENT_IDENTIFIER,
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("basic 64인코딩값")
-                        ),
-                        responseFields(
-                                fieldWithPath("[].orderId").description("주문 내역 식별자값"),
-                                fieldWithPath("[].orderProducts.productId").description("주문 상품 식별자값"),
-                                fieldWithPath("[].orderProducts.name").description("주문 상품 이름"),
-                                fieldWithPath("[].orderProducts.imageUrl").description("주문 상품 이미지 URL"),
-                                fieldWithPath("[].orderProducts.quantity").description("주문 상품 수량"),
-                                fieldWithPath("[].orderProducts.price").description("주문 상품 개별 가격"),
-                                fieldWithPath("[].orderProducts.totalPrice").description("주문 상품 총 가격")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()

@@ -34,7 +34,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException("basic 인증 관련 문제가 발생했습니다.");
+            throw new AuthenticationException("basic 인증 관련 문제가 발생했습니다. Authorization : " + authorization);
         }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
@@ -42,7 +42,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         String[] credentials = decodedString.split(":");
         if (credentials.length != DEFAULT_TOKEN_LENGTH) {
-            throw new AuthenticationException("basic 인증 관련 문제가 발생했습니다.");
+            throw new AuthenticationException("basic 인증 관련 문제가 발생했습니다. A");
         }
 
         String email = credentials[0];
