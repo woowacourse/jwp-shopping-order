@@ -2,9 +2,12 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.NoSuchCartItemException;
+import cart.exception.NoSuchProductException;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dao.ProductDao;
 import org.springframework.stereotype.Service;
@@ -31,11 +34,12 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Product product = productDao.getProductById(cartItemRequest.getProductId()).orElseThrow(() -> new NoSuchProductException());
+        return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id).orElseThrow(() -> new NoSuchCartItemException());
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -48,7 +52,7 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id).orElseThrow(() -> new NoSuchCartItemException());
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);

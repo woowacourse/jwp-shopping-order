@@ -3,6 +3,7 @@ package cart.application;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.NoSuchProductException;
 import cart.persistence.dao.ProductDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.getProductById(productId).orElseThrow(() -> new NoSuchProductException());
         return ProductResponse.of(product);
     }
 
