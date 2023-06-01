@@ -55,6 +55,30 @@ public class Order {
         this.shippingFee = new Money(BASE_SHIPPING_FEE);
     }
 
+    public void validateBill(final int totalItemPrice,
+                             final int discountedTotalItemPrice,
+                             final int totalItemDiscountAmount,
+                             final int totalMemberDiscountAmount,
+                             final int shippingFee
+    ) {
+        if (!checkBill(totalItemPrice, discountedTotalItemPrice, totalItemDiscountAmount, totalMemberDiscountAmount, shippingFee)) {
+            throw new IllegalArgumentException("주문 요청정보가 잘못되었습니다. 다시 요청보내주세요");
+        }
+    }
+
+    private boolean checkBill(final int totalItemPrice,
+                             final int discountedTotalItemPrice,
+                             final int totalItemDiscountAmount,
+                             final int totalMemberDiscountAmount,
+                             final int shippingFee
+    ) {
+        return purchaseItemPrice.isSame(totalItemPrice)
+                && discountPurchaseItemPrice.isSame(discountedTotalItemPrice)
+                && this.shippingFee.isSame(shippingFee)
+                && orderItems.getItemBenefit() == totalItemDiscountAmount
+                && orderItems.getMemberBenefit(member) == totalMemberDiscountAmount;
+    }
+
     public Long getId() {
         return id;
     }
