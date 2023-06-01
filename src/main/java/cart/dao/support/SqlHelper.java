@@ -73,7 +73,7 @@ public class SqlHelper {
     }
 
     public SqlHelper innerJoin(final String table) {
-        sql.append("INNER JOIN ").append(table).append(" ");
+        sql.append(" INNER JOIN ").append(table).append(" ");
         return this;
     }
 

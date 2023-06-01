@@ -1,8 +1,8 @@
-package cart.ui;
+package cart.ui.api;
 
 import cart.application.request.CreateProductRequest;
 import cart.config.ControllerTestConfig;
-import cart.entity.ProductEntity;
+import cart.dao.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 

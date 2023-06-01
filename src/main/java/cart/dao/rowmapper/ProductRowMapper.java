@@ -1,6 +1,6 @@
 package cart.dao.rowmapper;
 
-import cart.entity.ProductEntity;
+import cart.dao.entity.ProductEntity;
 import org.springframework.jdbc.core.RowMapper;
 
 public final class ProductRowMapper {

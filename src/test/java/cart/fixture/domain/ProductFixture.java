@@ -1,6 +1,6 @@
-package cart.fixture;
+package cart.fixture.domain;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.domain.vo.Money;
 import cart.domain.vo.Name;
 

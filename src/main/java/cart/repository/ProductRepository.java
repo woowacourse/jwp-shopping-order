@@ -1,9 +1,9 @@
 package cart.repository;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.domain.vo.Quantity;
-import cart.entity.ProductEntity;
+import cart.dao.entity.ProductEntity;
 import cart.exception.ProductException;
 import org.springframework.stereotype.Repository;
 

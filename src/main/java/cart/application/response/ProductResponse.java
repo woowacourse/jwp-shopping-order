@@ -1,12 +1,16 @@
 package cart.application.response;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductResponse {
+
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
+
+    public ProductResponse() {
+    }
 
     private ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;

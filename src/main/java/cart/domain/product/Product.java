@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import cart.domain.vo.Money;
 import cart.domain.vo.Name;

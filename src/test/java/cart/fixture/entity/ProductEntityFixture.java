@@ -1,6 +1,6 @@
-package cart.fixture;
+package cart.fixture.entity;
 
-import cart.entity.ProductEntity;
+import cart.dao.entity.ProductEntity;
 
 public abstract class ProductEntityFixture {
 
