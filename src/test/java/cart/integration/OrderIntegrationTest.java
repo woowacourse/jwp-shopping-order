@@ -35,7 +35,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     private Member member;
     private CartItem cartItem1;
     private CartItem cartItem2;
-    private List<String> orderItems;
+    private List<Long> orderItems;
 
     @BeforeEach
     void setUp() {
@@ -46,9 +46,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         cartItem1 = cartItemDao.findById(1L);
         cartItem2 = cartItemDao.findById(2L);
 
-        orderItems = List.of(cartItem1.getProduct().getName(), cartItem2.getProduct().getName());
+        orderItems = List.of(cartItem1.getProduct().getId(), cartItem2.getProduct().getId());
     }
-
 
     @Test
     void 사용자는_장바구니에_담긴_상품을_주문할_수_있다() {
@@ -69,7 +68,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     void 장바구니에_없는_상품에_대한_주문_요청시_실패한다() {
-        List<String> illegalOrderItems = List.of(cartItem1.getProduct().getName() + "asdf", cartItem2.getProduct().getName() + "asdf");
+        List<Long> illegalOrderItems = List.of(cartItem1.getProduct().getId() + 10L, cartItem2.getProduct().getId() + 10L);
 
         ExtractableResponse<Response> response = requestOrderProducts(member, illegalOrderItems, USED_POINT);
 
@@ -177,7 +176,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     }
 
-    private ExtractableResponse<Response> requestOrderProducts(Member member, List<String> orderItems, int usedPoints) {
+    private ExtractableResponse<Response> requestOrderProducts(Member member, List<Long> orderItems, int usedPoints) {
         OrderProductsRequest orderProductsRequest = new OrderProductsRequest(orderItems, usedPoints);
         return given().log().all()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
