@@ -11,7 +11,6 @@ import cart.domain.product.Product;
 import cart.domain.vo.Quantity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
 import java.util.List;
 
 public class TestDataFixture {
@@ -25,10 +24,10 @@ public class TestDataFixture {
             "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80");
 
     //Member
-    public static final Member MEMBER_1 = new Member(1L, "a@a.com", "1234", Collections.emptyList());
-    public static final Member MEMBER_2 = new Member(2L, "b@b.com", "1234", Collections.emptyList());
-    public static final Member MEMBER_3 = new Member(3L, "sangun", "1234", Collections.emptyList());
-    public static final Member MEMBER_4 = new Member(3L, "lopi", "1234", Collections.emptyList());
+    public static final Member MEMBER_1 = new Member(1L, "a@a.com", "1234");
+    public static final Member MEMBER_2 = new Member(2L, "b@b.com", "1234");
+    public static final Member MEMBER_3 = new Member(3L, "sangun", "1234");
+    public static final Member MEMBER_4 = new Member(4L, "lopi", "1234");
 
     //Cart-item
     public static final CartItem CART_ITEM_1 = new CartItem(1L, new Quantity(2), PRODUCT_1, MEMBER_1.getId());

@@ -4,15 +4,14 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
+import cart.repository.MemberRepository;
 import cart.service.request.CartItemQuantityUpdateRequest;
 import cart.service.request.CartItemRequest;
-import cart.service.response.CartItemResponse;
 import cart.service.request.ProductRequest;
-import cart.repository.MemberRepository;
+import cart.service.response.CartItemResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,8 +55,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        final Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf",
-                Collections.emptyList());
+        final Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
