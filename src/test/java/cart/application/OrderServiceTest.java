@@ -1,6 +1,7 @@
 package cart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.domain.Member;
 import cart.domain.Order;
@@ -28,12 +29,21 @@ class OrderServiceTest {
     @Test
     void addOrder() {
         Member member = new Member(1L, "abc@gmail.com", "12345");
+        LocalDateTime createdAt = LocalDateTime.of(23, 05, 30, 13, 11, 30);
         OrderAddRequest request = new OrderAddRequest(
-                LocalDateTime.of(23, 05, 30, 13, 11, 30),
+                createdAt,
                 List.of(new OrderItemRequest(1L, 2),
                         new OrderItemRequest(2L, 5)));
+        Order expected = new Order(1L,
+                member.getId(),
+                List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
+                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5)),
+                3000,
+                0,
+                createdAt
+        );
         
-        assertThat(orderService.addOrder(member, request)).isEqualTo(1L);
+        assertThat(orderService.addOrder(member, request)).isEqualTo(expected);
     }
     
     
@@ -104,6 +114,32 @@ class OrderServiceTest {
     
     @Test
     void deleteOrderById() {
+        //given
+        Member member = new Member(1L, "abc@gmail.com", "12345");
+        LocalDateTime createdAt = LocalDateTime.of(23, 05, 30, 13, 11, 30);
+        OrderAddRequest firstRequest = new OrderAddRequest(
+                createdAt,
+                List.of(new OrderItemRequest(1L, 2),
+                        new OrderItemRequest(2L, 5)));
+        OrderAddRequest secondRequest = new OrderAddRequest(
+                createdAt,
+                List.of(new OrderItemRequest(3L, 3)));
+        orderService.addOrder(member, firstRequest);
+        orderService.addOrder(member, secondRequest);
     
+        //expected
+        Order removedOrder = new Order(1L,
+                member.getId(),
+                List.of(new OrderItem(1L, new Product(1l, "1번 상품", 1000, "1번 상품url"), 2),
+                        new OrderItem(2l, new Product(2l, "2번 상품", 2000, "2번 상품url"), 5)),
+                3000,
+                0,
+                createdAt
+        );
+        assertThat(orderService.findOrdersByMember(member)).contains(removedOrder);
+        
+        //then
+        assertDoesNotThrow(()->orderService.deleteOrder(1L));
+        assertThat(orderService.findOrdersByMember(member)).doesNotContain(removedOrder);
     }
 }
