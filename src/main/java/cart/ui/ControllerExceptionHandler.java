@@ -45,7 +45,9 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(DuplicatedProductCartItemException.class)
-    public ResponseEntity<ErrorResponse> DuplicatedProductCartItemException(DuplicatedProductCartItemException exception) {
+    public ResponseEntity<ErrorResponse> DuplicatedProductCartItemException(
+            DuplicatedProductCartItemException exception
+    ) {
         final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
