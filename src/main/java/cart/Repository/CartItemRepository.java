@@ -31,17 +31,33 @@ public class CartItemRepository {
 
     public List<CartItem> findByMemberId(Long memberId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
+
+        Map<Long, ProductEntity> productsInCart = getProductInCarts(cartItemEntities);
+
+        MemberEntity memberEntity = memberDao.getMemberById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
+
+        return cartItemMapper.toCartItems(cartItemEntities, productsInCart, memberEntity);
+    }
+
+    private Map<Long, ProductEntity> getProductInCarts(List<CartItemEntity> cartItemEntities) {
         List<Long> cartItemIds = cartItemEntities.stream().map(CartItemEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
 
         Map<Long, ProductEntity> productsInCart = productDao.getProductByIds(cartItemIds)
                 .stream()
                 .collect(toMap(ProductEntity::getId, productEntity -> productEntity));
+        return productsInCart;
+    }
 
-        MemberEntity memberEntity = memberDao.getMemberById(memberId)
+    public List<CartItem> findByIds(List<Long> cartItemIds) {
+        List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(cartItemIds);
+        Map<Long, ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
+
+        MemberEntity memberEntity = memberDao.getMemberById(cartItemEntities.get(0).getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
 
-        return cartItemMapper.toCartItems(cartItemEntities, productsInCart, memberEntity);
+        return cartItemMapper.toCartItems(cartItemEntities, productsInCarts, memberEntity);
     }
 
     public Long save(CartItem cartItem) {
@@ -69,5 +85,9 @@ public class CartItemRepository {
 
     public void deleteById(Long id) {
         cartItemDao.deleteById(id);
+    }
+
+    public void deleteByIds(List<Long> cartItemIds) {
+        cartItemDao.deleteByIds(cartItemIds);
     }
 }

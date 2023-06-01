@@ -19,3 +19,20 @@ CREATE TABLE if not exists cart_item (
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+
+CREATE TABLE if not exists orders (
+      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      member_id BIGINT NOT NULL,
+      order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE
+);
+
+CREATE TABLE if not exists order_item (
+      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      order_id BIGINT NOT NULL,
+      product_id BIGINT NOT NULL,
+      quantity INT NOT NULL,
+      price INT NOT NULL,
+      FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+);

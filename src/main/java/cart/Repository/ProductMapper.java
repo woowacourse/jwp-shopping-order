@@ -5,7 +5,10 @@ import cart.entity.ProductEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 @Component
 public class ProductMapper {
@@ -32,5 +35,11 @@ public class ProductMapper {
                 product.getPrice().price(),
                 product.getImageUrl().imageUrl()
         );
+    }
+
+    public Map<Long, Product> productMappingById(List<ProductEntity> productEntities) {
+        return productEntities.stream()
+                .map(this::toProduct)
+                .collect(toMap(Product::getId, product -> product));
     }
 }
