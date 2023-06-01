@@ -10,13 +10,6 @@ public abstract class AuthenticationException extends RuntimeException {
         super(message, cause);
     }
 
-    public static class LoginFailed extends AuthenticationException {
-
-        public LoginFailed() {
-            super("로그인에 실패했습니다.");
-        }
-    }
-
     public static class InvalidTokenFormat extends AuthenticationException {
 
         public InvalidTokenFormat(String message) {
