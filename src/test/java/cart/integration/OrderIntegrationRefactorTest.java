@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 import cart.dto.ProductResponse;
 import cart.service.response.OrderProductResponseDto;
 import cart.service.response.OrderResponseDto;
@@ -63,7 +63,7 @@ class OrderIntegrationRefactorTest extends IntegrationRefactorTest {
 
         assertThat(response.getOrderProducts())
                 .extracting(OrderProductResponseDto::getQuantity)
-                .containsExactly(CART_ITEM_1.getQuantity());
+                .containsExactly(CART_ITEM_1.getQuantity().getValue());
 
         assertThat(response.getOrderProducts())
                 .extracting(OrderProductResponseDto::getProductResponse)

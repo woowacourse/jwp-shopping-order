@@ -1,26 +1,32 @@
 package cart.dao.dto;
 
-import cart.domain.Order;
+import cart.domain.coupon.Coupon;
+import cart.domain.order.Order;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class OrderDto {
 
     private final Long id;
     private final Long memberId;
+    private final Long couponId;
     private final LocalDateTime timeStamp;
 
-    public OrderDto(final Long id, final Long memberId, final LocalDateTime timeStamp) {
+    public OrderDto(final Long id, final Long memberId, final Long couponId, final LocalDateTime timeStamp) {
         this.id = id;
         this.memberId = memberId;
+        this.couponId = couponId;
         this.timeStamp = timeStamp;
     }
 
-    public OrderDto(final Long memberId, final LocalDateTime timeStamp) {
-        this(null, memberId, timeStamp);
+    public OrderDto(final Long memberId, final Long couponId, final LocalDateTime timeStamp) {
+        this(null, memberId, couponId, timeStamp);
     }
 
     public static OrderDto from(final Order order) {
-        return new OrderDto(order.getMember().getId(), order.getTimeStamp());
+        final Optional<Coupon> coupon = order.getCoupon();
+        return coupon.map(value -> new OrderDto(order.getMember().getId(), value.getId(), order.getTimeStamp()))
+                .orElseGet(() -> new OrderDto(order.getMember().getId(), null, order.getTimeStamp()));
     }
 
     public Long getId() {
@@ -31,8 +37,11 @@ public class OrderDto {
         return memberId;
     }
 
+    public Long getCouponId() {
+        return couponId;
+    }
+
     public LocalDateTime getTimeStamp() {
         return timeStamp;
     }
-
 }

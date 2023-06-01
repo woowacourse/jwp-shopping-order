@@ -16,6 +16,7 @@ public class OrderDao {
     private static final RowMapper<OrderDto> orderDtoRowMapper = (rs, rn) -> new OrderDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
+            rs.getLong("coupon_id"),
             rs.getTimestamp("time_stamp").toLocalDateTime()
     );
 
@@ -29,9 +30,10 @@ public class OrderDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long insert(OrderDto orderDto) {
+    public Long insert(final OrderDto orderDto) {
         Map<String, Object> params = Map.of(
                 "time_stamp", orderDto.getTimeStamp(),
+                "coupon_id", orderDto.getCouponId(),
                 "member_id", orderDto.getMemberId()
         );
 
@@ -39,7 +41,7 @@ public class OrderDao {
     }
 
     public Optional<OrderDto> findById(final Long orderId) {
-        String sql = "SELECT * FROM orders WHERE id = ?";
+        final String sql = "SELECT * FROM orders WHERE id = ?";
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId));
@@ -47,6 +49,4 @@ public class OrderDao {
             return Optional.empty();
         }
     }
-
-    // findById
 }

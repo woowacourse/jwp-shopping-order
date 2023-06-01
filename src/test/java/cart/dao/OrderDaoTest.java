@@ -19,6 +19,7 @@ class OrderDaoTest {
     private static final RowMapper<OrderDto> orderDtoRowMapper = (rs, rn) -> new OrderDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
+            rs.getLong("coupon_id"),
             rs.getTimestamp("time_stamp").toLocalDateTime()
     );
 
@@ -37,30 +38,35 @@ class OrderDaoTest {
     @Test
     @DisplayName("orderDto를 저장하는 기능 테스트")
     void insertTest() {
-        LocalDateTime dateTime = LocalDateTime.now().withNano(0);
-        OrderDto orderDto = new OrderDto(2L, dateTime);
+        final LocalDateTime dateTime = LocalDateTime.now().withNano(0);
+        final OrderDto orderDto = new OrderDto(1L, 2L, dateTime);
 
-        Long orderId = orderDao.insert(orderDto);
+        final Long orderId = orderDao.insert(orderDto);
 
-        String sql = "SELECT * FROM orders WHERE id = ?";
-        OrderDto queryResultOrder = jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId);
-        assertThat(orderDto.getMemberId()).isEqualTo(queryResultOrder.getMemberId());
-        assertThat(orderDto.getTimeStamp()).isEqualTo(queryResultOrder.getTimeStamp());
+        final String sql = "SELECT * FROM orders WHERE id = ?";
+        final OrderDto queryResultOrder = jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId);
+
+        assertThat(queryResultOrder)
+                .extracting(OrderDto::getId, OrderDto::getMemberId, OrderDto::getCouponId, OrderDto::getTimeStamp)
+                .containsExactly(orderId, orderDto.getMemberId(), orderDto.getCouponId(),
+                        orderDto.getTimeStamp());
     }
 
     @Test
     @DisplayName("orderDto를 조회하는 기능 테스트")
     void findByIdTest() {
-        LocalDateTime dateTime = LocalDateTime.now().withNano(0);
-        OrderDto orderDto = new OrderDto(1L, 2L, dateTime);
-        String sql = "INSERT INTO orders (id, member_id, time_stamp) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, orderDto.getId(), orderDto.getMemberId(), orderDto.getTimeStamp());
+        final LocalDateTime dateTime = LocalDateTime.now().withNano(0);
+        final OrderDto orderDto = new OrderDto(1L, 1L, 2L, dateTime);
+        final String sql = "INSERT INTO orders (id, member_id, coupon_id, time_stamp) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, orderDto.getId(), orderDto.getMemberId(), orderDto.getCouponId(),
+                orderDto.getTimeStamp());
 
-        OrderDto queryResultOrder = orderDao.findById(orderDto.getId())
+        final OrderDto queryResultOrder = orderDao.findById(orderDto.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        assertThat(orderDto.getMemberId()).isEqualTo(queryResultOrder.getMemberId());
-        assertThat(orderDto.getTimeStamp()).isEqualTo(queryResultOrder.getTimeStamp());
+        assertThat(queryResultOrder)
+                .extracting(OrderDto::getId, OrderDto::getMemberId, OrderDto::getCouponId, OrderDto::getTimeStamp)
+                .containsExactly(orderDto.getId(), orderDto.getMemberId(), orderDto.getCouponId(),
+                        orderDto.getTimeStamp());
     }
-
 }

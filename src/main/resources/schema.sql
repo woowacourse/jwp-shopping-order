@@ -1,9 +1,17 @@
 CREATE TABLE product
 (
-    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id        BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
     price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE coupon
+(
+    id          BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    val         BIGINT       NOT NULL,
+    coupon_type VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE member
@@ -28,7 +36,9 @@ CREATE TABLE orders
     id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT    NOT NULL,
     time_stamp TIMESTAMP NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    coupon_id  BIGINT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
 );
 
 CREATE TABLE orders_product
@@ -39,14 +49,6 @@ CREATE TABLE orders_product
     quantity   INT    NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
-);
-
-CREATE TABLE coupon
-(
-    id          BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(255) NOT NULL,
-    value       BIGINT       NOT NULL,
-    coupon_type VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE member_coupon
