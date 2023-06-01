@@ -12,6 +12,10 @@ public class Order {
         this.orderItems = orderItems;
     }
 
+    public Order(final Member member, final OrderItems orderItems) {
+        this(null, member, orderItems);
+    }
+
     public int getOriginalPrice() {
         return orderItems.calculateOriginalPrice().getAmount();
     }

@@ -1,7 +1,14 @@
 package cart.service;
 
 import cart.controller.dto.request.OrderRequest;
+import cart.domain.DiscountPriceCalculator;
 import cart.domain.Member;
+import cart.domain.Order;
+import cart.domain.OrderItem;
+import cart.domain.OrderItems;
+import cart.domain.Price;
+import cart.domain.Product;
+import cart.domain.Quantity;
 import cart.exception.NotOwnerException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
@@ -10,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -26,7 +34,9 @@ public class OrderService {
     public long save(final Member member, final OrderRequest request) {
         final List<CartItemWithProductDto> cartItemWithProductDtos = cartItemRepository.findByIds(request.getCartItems());
         checkOwner(member, cartItemWithProductDtos);
-        return 1;
+        cartItemRepository.deleteAll(request.getCartItems());
+        final Order order = createOrder(member, cartItemWithProductDtos);
+        return orderRepository.save(order);
     }
 
     private void checkOwner(final Member member, final List<CartItemWithProductDto> dtos) {
@@ -37,5 +47,22 @@ public class OrderService {
             return;
         }
         throw new NotOwnerException();
+    }
+
+    private Order createOrder(final Member member, final List<CartItemWithProductDto> dtos) {
+        return new Order(member,
+                new OrderItems(dtos.stream()
+                        .map(this::createOrderItem)
+                        .collect(Collectors.toUnmodifiableList()),
+                        new DiscountPriceCalculator()
+                )
+        );
+    }
+
+    private OrderItem createOrderItem(final CartItemWithProductDto dto) {
+        return new OrderItem(
+                new Product(dto.getProductId(), dto.getProductName(), new Price(dto.getProductPrice()), dto.getProductImageUrl()),
+                new Quantity(dto.getQuantity())
+        );
     }
 }
