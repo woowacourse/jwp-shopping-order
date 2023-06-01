@@ -30,4 +30,11 @@ public class ProductImageUrl {
     public int hashCode() {
         return Objects.hash(imageUrl);
     }
+
+    @Override
+    public String toString() {
+        return "ProductImageUrl{" +
+                "imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

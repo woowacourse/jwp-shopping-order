@@ -30,4 +30,11 @@ public class MemberEmail {
     public int hashCode() {
         return Objects.hash(email);
     }
+
+    @Override
+    public String toString() {
+        return "MemberEmail{" +
+                "email='" + email + '\'' +
+                '}';
+    }
 }

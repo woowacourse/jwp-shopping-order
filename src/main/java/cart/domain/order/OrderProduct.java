@@ -22,7 +22,7 @@ public class OrderProduct {
         this(null, order, productId, productName, productPrice, productImageUrl, quantity);
     }
 
-    public OrderProduct(final Long id, final Order order,final Long productId, final ProductName productName,
+    public OrderProduct(final Long id, final Order order, final Long productId, final ProductName productName,
                         final ProductPrice productPrice, final ProductImageUrl productImageUrl, final Quantity quantity) {
         this.id = id;
         this.order = order;

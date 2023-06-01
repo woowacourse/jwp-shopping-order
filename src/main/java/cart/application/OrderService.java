@@ -8,7 +8,7 @@ import cart.domain.order.OrderProduct;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderProductDto;
 import cart.dto.OrderRequest;
-import cart.exception.point.InvalidPointUseException;
+import cart.exception.global.point.InvalidPointUseException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;

@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.global.cartitem;
+
+import cart.exception.global.GlobalException;
 
 import java.util.List;
 

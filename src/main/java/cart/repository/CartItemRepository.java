@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.dao.CartItemDao;
 import cart.domain.cartitem.CartItem;
-import cart.exception.InvalidCartItemsException;
+import cart.exception.global.cartitem.InvalidCartItemsException;
 import cart.exception.notfound.CartItemNotFoundException;
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,9 @@
 package cart.ui.common;
 
 import cart.dto.ErrorResponse;
-import cart.exception.GlobalException;
 import cart.exception.authentication.AuthenticationException;
 import cart.exception.authorization.AuthorizationException;
+import cart.exception.global.GlobalException;
 import cart.exception.notfound.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

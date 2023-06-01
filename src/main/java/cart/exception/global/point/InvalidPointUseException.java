@@ -1,6 +1,6 @@
-package cart.exception.point;
+package cart.exception.global.point;
 
-import cart.exception.GlobalException;
+import cart.exception.global.GlobalException;
 
 public class InvalidPointUseException extends GlobalException {
 

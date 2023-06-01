@@ -72,7 +72,7 @@ public class CartItemApiController {
 
     @GetMapping("/price")
     public ResponseEntity<PaymentInfoResponse> getPaymentInfo(Member member,
-                                         @RequestParam List<Long> item) {
+                                                              @RequestParam List<Long> item) {
         final PaymentInfoResponse response = cartItemService.getPaymentInfo(member, item);
         return ResponseEntity.ok(response);
     }
