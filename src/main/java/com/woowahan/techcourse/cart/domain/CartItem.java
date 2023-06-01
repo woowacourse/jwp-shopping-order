@@ -1,6 +1,6 @@
 package com.woowahan.techcourse.cart.domain;
 
-import com.woowahan.techcourse.cart.exception.IllegalMember;
+import com.woowahan.techcourse.cart.exception.IllegalMemberException;
 import com.woowahan.techcourse.member.domain.Member;
 import com.woowahan.techcourse.product.domain.Product;
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalMember(this, member);
+            throw new IllegalMemberException(this, member);
         }
     }
 

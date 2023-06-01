@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.cart.ui;
 
 import com.woowahan.techcourse.cart.exception.AuthenticationException;
-import com.woowahan.techcourse.cart.exception.IllegalMember;
+import com.woowahan.techcourse.cart.exception.IllegalMemberException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ExceptionHandler(IllegalMember.class)
-    public ResponseEntity<Void> handleException(IllegalMember e) {
+    @ExceptionHandler(IllegalMemberException.class)
+    public ResponseEntity<Void> handleException(IllegalMemberException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 }
