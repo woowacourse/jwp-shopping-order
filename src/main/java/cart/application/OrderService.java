@@ -14,10 +14,12 @@ import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.persistence.dao.CartItemDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
@@ -78,11 +80,12 @@ public class OrderService {
 
     public int calculateTotalPriceOfProducts(List<OrderProduct> orderProducts) {
         return orderProducts.stream()
-                .map(OrderProduct::getPrice)
+                .map(orderProduct -> orderProduct.getPrice() * orderProduct.getQuantity())
                 .reduce(Integer::sum)
                 .get();
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findOrdersByMember(Member member) {
         List<Order> orders = orderRepository.findOrderByMemberId(member.getId());
 
@@ -104,6 +107,7 @@ public class OrderService {
                 }).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public OrderDetailResponse findOrderById(Long id) {
         Order order = orderRepository.findOrderById(id);
         List<OrderProductResponse> orderProductResponses = order.getOrderProducts().stream()

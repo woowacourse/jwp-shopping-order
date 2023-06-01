@@ -8,10 +8,12 @@ import cart.domain.memberCoupon.MemberCouponRepository;
 import cart.dto.MemberCouponRequest;
 import cart.dto.MemberCouponResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class MemberCouponService {
     private final MemberCouponRepository memberCouponRepository;
@@ -27,6 +29,7 @@ public class MemberCouponService {
         return memberCouponRepository.add(new MemberCoupon(member, coupon));
     }
 
+    @Transactional(readOnly = true)
     public MemberCouponResponse findById(Long id) { // TODO model to dto 개선 필요
         MemberCoupon memberCoupon = memberCouponRepository.findById(id);
         return new MemberCouponResponse(
@@ -39,6 +42,7 @@ public class MemberCouponService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<MemberCouponResponse> findMemberCouponsByMemberId(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findMemberCouponsByMemberId(memberId);
         return memberCoupons.stream()
@@ -54,6 +58,7 @@ public class MemberCouponService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<MemberCouponResponse> findAll() {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
         return memberCoupons.stream()

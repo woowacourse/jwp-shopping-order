@@ -7,10 +7,12 @@ import cart.domain.memberCoupon.MemberCoupon;
 import cart.domain.memberCoupon.MemberCouponRepository;
 import cart.dto.IssuableSearchCouponResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class IssuableSearchCouponService {
     private final CouponRepository couponRepository;
@@ -21,6 +23,7 @@ public class IssuableSearchCouponService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<IssuableSearchCouponResponse> findAll(Member member) {
         List<Coupon> coupons = couponRepository.findAll();
         List<Coupon> couponsOfMember = memberCouponRepository.findAll().stream()
