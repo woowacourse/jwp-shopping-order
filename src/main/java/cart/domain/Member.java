@@ -44,6 +44,25 @@ public class Member {
         return this.password.equals(password);
     }
 
+    public void addTotalPurchaseAmount(final int value) {
+        this.totalPurchaseAmount = new Money(this.totalPurchaseAmount.getValue() + value);
+    }
+
+    public void upgradeRank() {
+        if (totalPurchaseAmount.getValue() >= 100_000) {
+            rank = Rank.SILVER;
+        }
+        if (totalPurchaseAmount.getValue() >= 200_000) {
+            rank = Rank.GOLD;
+        }
+        if (totalPurchaseAmount.getValue() >= 300_000) {
+            rank = Rank.PLATINUM;
+        }
+        if (totalPurchaseAmount.getValue() >= 500_000) {
+            rank = Rank.DIAMOND;
+        }
+    }
+
     public Long getId() {
         return id;
     }

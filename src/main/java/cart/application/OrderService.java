@@ -6,6 +6,7 @@ import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
 import cart.repository.CartItemRepository;
+import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import cart.repository.ProductRepository;
 import cart.ui.dto.CartItemDto;
@@ -20,27 +21,29 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
+    private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
-    public OrderService(
-            final OrderRepository orderRepository,
-            final CartItemRepository cartItemRepository,
-            final ProductRepository productRepository
+    public OrderService(final OrderRepository orderRepository,
+                        final CartItemRepository cartItemRepository,
+                        final MemberRepository memberRepository,
+                        final ProductRepository productRepository
     ) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
+        this.memberRepository = memberRepository;
         this.productRepository = productRepository;
     }
 
     @Transactional
     public Long createOrder(final Member member, final OrderCreateRequest request) {
-        List<OrderItem> orderItems = new ArrayList<>();
+        final List<OrderItem> orderItems = new ArrayList<>();
 
-        List<CartItemDto> cartItemDtos = request.getCartItems();
+        final List<CartItemDto> cartItemDtos = request.getCartItems();
         for (final CartItemDto cartItemDto : cartItemDtos) {
-            CartItem cartItem = cartItemRepository.findById(cartItemDto.getCartItemId());
-            Product product = cartItem.getProduct();
-            OrderItem orderItem = new OrderItem(
+            final CartItem cartItem = cartItemRepository.findById(cartItemDto.getCartItemId());
+            final Product product = cartItem.getProduct();
+            final OrderItem orderItem = new OrderItem(
                     product.getName(),
                     product.getPrice(),
                     product.getImageUrl(),
@@ -52,9 +55,12 @@ public class OrderService {
             cartItemRepository.deleteById(cartItemDto.getCartItemId());
         }
 
-        Order order = new Order(orderItems, member);
+        final Order order = new Order(orderItems, member);
+        final Long savedId = orderRepository.save(order).getId();
 
-        Long savedId = orderRepository.save(order).getId();
+        member.addTotalPurchaseAmount(order.calculateTotalPrice());
+        member.upgradeRank();
+        memberRepository.update(member);
         return savedId;
     }
 }
