@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.math.BigDecimal;
+
 public class OrderItem {
 
     private Long id;
@@ -28,11 +30,19 @@ public class OrderItem {
         return product;
     }
 
-    public Quantity getQuantity() {
-        return quantity;
-    }
-
     public int getQuantityCount() {
         return quantity.getCount();
+    }
+
+    public BigDecimal getProductPrice() {
+        return product.getPrice().getValue();
+    }
+
+    public String getProductName() {
+        return product.getName();
+    }
+
+    public String getProductImage() {
+        return product.getImageUrl();
     }
 }

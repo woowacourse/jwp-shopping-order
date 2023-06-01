@@ -77,4 +77,8 @@ public class Money {
     public int getIntValue() {
         return value.intValue();
     }
+
+    public BigDecimal getValue() {
+        return value;
+    }
 }
