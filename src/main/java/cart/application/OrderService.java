@@ -39,7 +39,8 @@ public class OrderService {
         Order order = Order.of(null, orderItems, member, coupon);
 
         Long savedId = orderRepository.save(order);
-        couponRepository.delete(coupon);
+        couponRepository.update(coupon);
+        cartItemRepository.deleteAll(currentCartItems);
 
         return savedId;
     }

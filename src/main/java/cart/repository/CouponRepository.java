@@ -41,7 +41,7 @@ public class CouponRepository {
     }
 
     // TODO: 5/31/23 예외 컨트롤
-    public void delete(final Coupon coupon) {
+    public void update(final Coupon coupon) {
         memberCouponDao.updateUsedById(coupon.getCouponInfo().getId());
     }
 }

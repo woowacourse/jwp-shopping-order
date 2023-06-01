@@ -51,4 +51,11 @@ public class CartItemRepository {
                 })
                 .collect(Collectors.toList());
     }
+
+    public void deleteAll(final List<CartItem> cartItems) {
+        List<Long> ids = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+        cartItemDao.deleteAllByIds(ids);
+    }
 }

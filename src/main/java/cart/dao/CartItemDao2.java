@@ -1,10 +1,14 @@
 package cart.dao;
 
 import cart.dao.entity.CartItemEntity;
+import cart.dao.entity.OrderItemEntity;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,5 +41,19 @@ public class CartItemDao2 {
                 ids.toArray(),
                 rowMapper
         );
+    }
+
+    public void deleteAllByIds(final List<Long> ids) {
+        final String sql = "DELETE FROM cart_item WHERE id = ? ";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                ps.setLong(1, ids.get(i));
+            }
+            @Override
+            public int getBatchSize() {
+                return ids.size();
+            }
+        });
     }
 }
