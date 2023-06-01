@@ -73,7 +73,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                                 List.of(
                                         new OrderItemResponse(
                                                 1L,
-                                                "지구별",
+                                                "지구",
                                                 1000,
                                                 "https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg",
                                                 2
@@ -110,7 +110,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 List.of(
                         new OrderItemResponse(
                                 1L,
-                                "지구별",
+                                "지구",
                                 1000,
                                 "https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg",
                                 2
@@ -123,7 +123,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                                 4
                         )
                 ),
-                804000
+                802000
         );
         String jsonResponse = given().log().all()
                 .auth().preemptive().basic("a@a.com", "1234")

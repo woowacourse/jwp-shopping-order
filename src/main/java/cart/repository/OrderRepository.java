@@ -51,6 +51,7 @@ public class OrderRepository {
     // TODO: 5/31/23 주문 가져오는데 진짜 큰일을 함 / 지연로딩이 필요한가?
     public List<Order> findAllByMember(final Member member) {
         List<OrderEntity> allOrderEntities = orderDao.findByMemberId(member.getId());
+        System.out.println(allOrderEntities);
 
         List<Long> orderIds = allOrderEntities.stream()
                 .map(OrderEntity::getId)
@@ -78,7 +79,7 @@ public class OrderRepository {
                 .stream()
                 .map(OrderItemEntity::toOrderItem)
                 .collect(Collectors.toList());
-        return Order.of(orderItems, member, coupon);
+        return Order.of(orderEntity.getId(), orderItems, member, coupon);
     }
 
     private Map<Long, Coupon> getCouponByOrders(final List<OrderEntity> allOrderEntities) {

@@ -1,9 +1,6 @@
 package cart.dao.entity;
 
-import cart.domain.Coupon;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,11 +36,13 @@ public class OrderEntity {
     }
 
     public Order toOrder(final Member member, final Map<Long, List<OrderItem>> orderItemByOrderId, final Map<Long, Coupon> couponById) {
-
-        return Order.of(
+        // TODO: 6/1/23 배송비 수정 무조건 필요
+        return new Order(
+                id,
+                shippingFee == 0 ? ShippingFee.NONE : ShippingFee.BASIC,
                 orderItemByOrderId.get(id),
-                member,
-                couponById.getOrDefault(couponId, Coupon.EMPTY_COUPON)
+                couponById.getOrDefault(couponId, Coupon.EMPTY_COUPON),
+                member
         );
     }
 

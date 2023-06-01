@@ -26,14 +26,14 @@ public class OrderDao2 {
     private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) -> new OrderEntity(
             rs.getLong("id"),
             rs.getLong("member_id"),
-            rs.getLong("coupon_id"),
+            rs.getLong("member_coupon_id"),
             rs.getInt("shipping_fee"),
             rs.getInt("total_price"),
             new Date(rs.getDate("created_at").getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
     );
 
     public Long save(final OrderEntity orderEntity) {
-        final String sql = "INSERT INTO `order` (member_id, coupon_id, shipping_fee, total_price) VALUES(?,?,?,?)";
+        final String sql = "INSERT INTO `order` (member_id, member_coupon_id, shipping_fee, total_price) VALUES(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(

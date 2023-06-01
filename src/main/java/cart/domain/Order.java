@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.CartItemException;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -18,12 +20,12 @@ public class Order {
         this.member = member;
     }
 
-    public static Order of(final List<OrderItem> orderItems, final Member member, final Coupon coupon) {
+    public static Order of(final Long id, final List<OrderItem> orderItems, final Member member, final Coupon coupon) {
         Integer price = orderItems.stream()
                 .mapToInt(OrderItem::calculatePrice)
                 .sum();
         ShippingFee shippingFee = ShippingFee.from(price);
-        return new Order(null, shippingFee, orderItems, coupon, member);
+        return new Order(id, shippingFee, orderItems, coupon, member);
     }
 
     public Integer calculatePaymentPrice() {
@@ -33,7 +35,18 @@ public class Order {
         if (!coupon.isAvailable(price)) {
             throw new IllegalArgumentException("사용할 수 없는 쿠폰입니다");
         }
-        return price - coupon.calculateDiscount(price) + shippingFee.getCharge();
+        return price;
+    }
+
+    // TODO: 6/1/23 실제 주문하는 로직이 필요할것 같긴 함
+    public void order() {
+        
+    }
+
+    public void checkOwner(final Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new IllegalArgumentException("다른 회원의 주문입니다.");
+        }
     }
 
     public Long getId() {
