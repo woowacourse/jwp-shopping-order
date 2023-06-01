@@ -8,11 +8,13 @@ import cart.domain.Product;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
-import cart.repository.ProductRepository;
 import cart.ui.dto.CartItemDto;
 import cart.ui.dto.OrderCreateRequest;
+import cart.ui.dto.OrderItemDto;
+import cart.ui.dto.OrderShowResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,17 +24,14 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
-    private final ProductRepository productRepository;
 
     public OrderService(final OrderRepository orderRepository,
                         final CartItemRepository cartItemRepository,
-                        final MemberRepository memberRepository,
-                        final ProductRepository productRepository
+                        final MemberRepository memberRepository
     ) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
         this.memberRepository = memberRepository;
-        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -56,11 +55,37 @@ public class OrderService {
         }
 
         final Order order = new Order(orderItems, member);
-        final Long savedId = orderRepository.save(order).getId();
+        final Long savedId = orderRepository.saveOrder(order).getId();
 
         member.addTotalPurchaseAmount(order.calculateTotalPrice());
         member.upgradeRank();
         memberRepository.update(member);
         return savedId;
+    }
+
+    public OrderShowResponse showOrder(final Member member, final Long orderId) {
+        final List<OrderItem> orderItems = orderRepository.findAllOrderItemsByIdAndMemberId(orderId, member.getId());
+        final List<OrderItemDto> orderItemDtos = orderItems.stream()
+                .map(orderItem -> new OrderItemDto(
+                                orderItem.getId(),
+                                orderItem.getName(),
+                                orderItem.getPrice(),
+                                orderItem.getImageUrl(),
+                                orderItem.getQuantity(),
+                                orderItem.getDiscountRate(),
+                                orderItem.calculateDiscountedPrice()
+                        )
+                ).collect(Collectors.toList());
+        final Order order = orderRepository.findOrderById(member, orderId, orderItems);
+        return new OrderShowResponse(
+                orderItemDtos,
+                order.getOrderedAt(),
+                order.calculateTotalItemDiscountAmount(orderItems),
+                order.calculateTotalMemberDiscountAmount(orderItems),
+                order.calculateTotalItemPrice(),
+                order.calculateDiscountedTotalItemPrice(),
+                order.getShippingFee(),
+                order.calculateTotalPrice()
+        );
     }
 }

@@ -26,19 +26,35 @@ public class Order {
     public Order(
             final Long id,
             final List<OrderItem> orderItems,
-            final Money shippingFee,
+            final int shippingFee,
             final LocalDateTime orderedAt,
             final Member member
     ) {
         this.id = id;
         this.orderItems = orderItems;
-        this.shippingFee = shippingFee;
+        this.shippingFee = new Money(shippingFee);
         this.orderedAt = orderedAt;
         this.member = member;
     }
 
     public int calculateTotalPrice() {
         return calculateDiscountedTotalItemPrice() + calculateShippingFee();
+    }
+
+    public int calculateTotalItemDiscountAmount(final List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .mapToInt(OrderItem::calculateDiscountAmount)
+                .sum();
+    }
+
+    public int calculateTotalMemberDiscountAmount(final List<OrderItem> orderItems) {
+        if (calculateTotalItemDiscountAmount(orderItems) != 0) {
+            return 0;
+        }
+        return orderItems.stream()
+                .mapToInt(orderItem ->
+                        orderItem.calculateMemberDiscountAmount(member.getRank().getDiscountRate()))
+                .sum();
     }
 
     public int calculateDiscountedTotalItemPrice() {

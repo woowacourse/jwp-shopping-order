@@ -54,12 +54,20 @@ public class OrderItem {
         return discountRate.getValue() != 0;
     }
 
+    public int calculateDiscountAmount() {
+        return (int) (price.getValue() * (discountRate.getValue() / 100.0) * quantity.getValue());
+    }
+
+    public int calculateMemberDiscountAmount(final double discountedRateByRank) {
+        return (int) (price.getValue() * discountedRateByRank * quantity.getValue());
+    }
+
     public int calculateDiscountedPriceBy(final double discountRate) {
-        return (int) (price.getValue() * (1 - (discountRate / 100.0)));
+        return (int) (price.getValue() * (1 - (discountRate / 100.0)) * quantity.getValue());
     }
 
     public int calculateDiscountedPrice() {
-        return (int) (price.getValue() * (1 - (discountRate.getValue() / 100.0)));
+        return (int) (price.getValue() * (1 - (discountRate.getValue() / 100.0)) * quantity.getValue());
     }
 
     public Long getId() {
