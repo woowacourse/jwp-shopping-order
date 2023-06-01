@@ -36,7 +36,6 @@ public class OrderRepository {
         return orderId;
     }
 
-    // todo: Member가 삭제된 경우?
     public Order findByOrderId(final long orderId) {
         OrderEntity orderEntity = orderDao.findById(orderId)
                 .orElseThrow(InvalidOrder::new);
