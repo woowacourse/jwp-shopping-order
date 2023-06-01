@@ -1,5 +1,6 @@
 package cart.application;
 
+import static cart.fixture.DomainFixture.CHICKEN;
 import static cart.fixture.DomainFixture.MEMBER_A;
 import static cart.fixture.DomainFixture.MEMBER_B;
 import static cart.fixture.DomainFixture.PIZZA;
@@ -100,15 +101,20 @@ class OrderServiceTest {
 
         @BeforeEach
         void setUp() {
-            firstOrderId = orderService.order(MEMBER_A, List.of(cartItem.getId()), 0);
-            secondOrderId = orderService.order(MEMBER_A, List.of(cartItem.getId()), 0);
-            thirdOrderId = orderService.order(MEMBER_A, List.of(cartItem.getId()), 0);
+            Long cartItemId;
+
+            cartItemId = cartItemRepository.save(MEMBER_B, new CartItem(MEMBER_B, CHICKEN));
+            firstOrderId = orderService.order(MEMBER_B, List.of(cartItemId), 0);
+            cartItemId = cartItemRepository.save(MEMBER_B, new CartItem(MEMBER_B, CHICKEN));
+            secondOrderId = orderService.order(MEMBER_B, List.of(cartItemId), 0);
+            cartItemId = cartItemRepository.save(MEMBER_B, new CartItem(MEMBER_B, CHICKEN));
+            thirdOrderId = orderService.order(MEMBER_B, List.of(cartItemId), 0);
         }
 
         @Test
         @DisplayName("findByMemberAndOrderId는 회원과 주문 ID를 전달하면 그에 맞는 주문 내역을 반환한다.")
         void findByMemberAndOrderIdSuccessTest() {
-            OrderResponse actual = orderService.findByMemberAndOrderId(MEMBER_A, firstOrderId);
+            OrderResponse actual = orderService.findByMemberAndOrderId(MEMBER_B, firstOrderId);
 
             assertThat(actual.getId()).isEqualTo(firstOrderId);
         }
@@ -116,7 +122,7 @@ class OrderServiceTest {
         @Test
         @DisplayName("findByMemberAndOrderId는 주문 ID를 주문하지 않은 회원을 전달하면 예외가 발생한다.")
         void findByMemberAndOrderIdFailTest() {
-            assertThatThrownBy(() -> orderService.findByMemberAndOrderId(MEMBER_B, firstOrderId))
+            assertThatThrownBy(() -> orderService.findByMemberAndOrderId(MEMBER_A, firstOrderId))
                     .isInstanceOf(OrderException.IllegalMember.class)
                     .hasMessage("해당 사용자의 주문 내역이 아닙니다.");
         }
@@ -124,7 +130,7 @@ class OrderServiceTest {
         @Test
         @DisplayName("findByMemberAndOrderId는 회원과 마지막 조회 주문 ID, 페이지 크기를 보여주면 최신 순으로 주문 목록을 반환한다.")
         void findByMemberAndLastOrderIdSuccessTest() {
-            SortedOrdersResponse actual = orderService.findByMemberAndLastOrderId(MEMBER_A, LAST_ID_OF_FIRST_PAGE,
+            SortedOrdersResponse actual = orderService.findByMemberAndLastOrderId(MEMBER_B, LAST_ID_OF_FIRST_PAGE,
                     DEFAULT_SIZE);
 
             assertAll(

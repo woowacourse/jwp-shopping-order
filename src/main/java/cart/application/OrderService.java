@@ -54,6 +54,8 @@ public class OrderService {
         Member earnedPointsMember = usedPointsMember.earnPoints(order.getEarnedPoints());
         memberRepository.update(earnedPointsMember);
 
+        cartItemRepository.deleteByOrderCartItemIds(orderCartItemIds);
+
         return persistOrder.getId();
     }
 
