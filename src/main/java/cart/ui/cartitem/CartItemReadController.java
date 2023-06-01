@@ -1,15 +1,16 @@
 package cart.ui.cartitem;
 
 import cart.application.service.cartitem.CartItemReadService;
-import cart.application.service.cartitem.dto.CartItemResultDto;
+import cart.application.service.cartitem.dto.CartResultDto;
 import cart.ui.MemberAuth;
-import cart.ui.cartitem.dto.CartItemResponse;
+import cart.ui.cartitem.dto.CartResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+@RestController
+@RequestMapping("/cart-items")
 public class CartItemReadController {
 
     private final CartItemReadService cartItemReadService;
@@ -19,12 +20,9 @@ public class CartItemReadController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(MemberAuth memberAuth) {
-        final List<CartItemResultDto> cartItemDtos = cartItemReadService.findByMember(memberAuth);
-        final List<CartItemResponse> cartItemResponses = cartItemDtos.stream()
-                .map(CartItemResponse::of)
-                .collect(Collectors.toUnmodifiableList());
-        return ResponseEntity.ok(cartItemResponses);
+    public ResponseEntity<CartResponse> showCartItems(MemberAuth memberAuth) {
+        CartResultDto cartResult = cartItemReadService.findByMember(memberAuth);
+        return ResponseEntity.ok(CartResponse.from(cartResult));
     }
 
 }

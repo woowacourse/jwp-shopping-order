@@ -1,14 +1,14 @@
 package cart.application.repository;
 
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CartItemRepository {
     Long createCartItem(CartItem cartItem);
 
-    List<CartItem> findAllCartItemsByMemberId(Long memberId);
+    CartItems findAllCartItemsByMemberId(Long memberId);
 
     Optional<CartItem> findById(Long id);
 

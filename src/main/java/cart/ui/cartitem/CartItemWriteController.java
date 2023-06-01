@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+@RestController
+@RequestMapping("/cart-items")
 public class CartItemWriteController {
 
     private final CartItemWriteService cartItemWriteService;

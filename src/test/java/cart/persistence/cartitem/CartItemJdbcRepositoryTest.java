@@ -6,6 +6,7 @@ import cart.application.repository.ProductRepository;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import cart.persistence.member.MemberJdbcRepository;
 import cart.persistence.product.ProductJdbcRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,9 +82,9 @@ class CartItemJdbcRepositoryTest {
     @DisplayName("사용자의 장바구니 정보를 전체 조회한다.")
     void findAllCartItemsByMemberIdTest() {
         // when
-        List<CartItem> cartItems = cartItemRepository.findAllCartItemsByMemberId(memberId);
+        CartItems cartItems = cartItemRepository.findAllCartItemsByMemberId(memberId);
 
-        assertThat(cartItems).usingRecursiveComparison().ignoringFields("id").isEqualTo(List.of(padCartItem, bbqCartItem));
+        assertThat(cartItems.getCartItems()).usingRecursiveComparison().ignoringFields("id").isEqualTo(List.of(padCartItem, bbqCartItem));
     }
 
     @Test

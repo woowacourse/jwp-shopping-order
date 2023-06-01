@@ -4,6 +4,7 @@ import cart.application.repository.CartItemRepository;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -76,16 +77,16 @@ public class CartItemJdbcRepository implements CartItemRepository {
         }
     }
 
-
-
     @Override
-    public List<CartItem> findAllCartItemsByMemberId(final Long memberId) {
+    public CartItems findAllCartItemsByMemberId(final Long memberId) {
         final String sql = "SELECT cart_item.id, cart_item.member_id, member.id,  member.name, member.email, member.password,product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, cartItemRowMapper, memberId);
+
+        List<CartItem> cartItems = jdbcTemplate.query(sql, cartItemRowMapper, memberId);
+        return new CartItems(cartItems);
     }
 
 
