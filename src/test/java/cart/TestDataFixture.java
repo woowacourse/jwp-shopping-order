@@ -45,7 +45,7 @@ public class TestDataFixture {
     public static final Coupon DISCOUNT_50_PERCENT
             = new Coupon(null, "50% 할인 쿠폰", 50, CouponType.RATE_DISCOUNT);
     public static final Coupon DISCOUNT_5000_CONSTANT
-            = new Coupon(null, "5000원 할인 쿠폰", 50, CouponType.CONSTANT_DISCOUNT);
+            = new Coupon(null, "5000원 할인 쿠폰", 5000, CouponType.CONSTANT_DISCOUNT);
 
     //AuthHeader
     public static final String MEMBER_1_AUTH_HEADER =
