@@ -2,6 +2,7 @@ package com.woowahan.techcourse.cart.ui;
 
 import com.woowahan.techcourse.cart.application.CartCommandService;
 import com.woowahan.techcourse.cart.application.CartQueryService;
+import com.woowahan.techcourse.cart.dto.CartItemIdResponse;
 import com.woowahan.techcourse.cart.dto.CartItemQuantityUpdateRequest;
 import com.woowahan.techcourse.cart.dto.CartItemRequest;
 import com.woowahan.techcourse.cart.dto.CartItemResponse;
@@ -36,10 +37,12 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<CartItemIdResponse> addCartItems(Member member,
+            @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartCommandService.add(member, cartItemRequest);
 
-        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId))
+                .body(new CartItemIdResponse(cartItemId));
     }
 
     @PatchMapping("/{id}")

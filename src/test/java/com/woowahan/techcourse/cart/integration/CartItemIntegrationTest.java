@@ -3,6 +3,7 @@ package com.woowahan.techcourse.cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowahan.techcourse.cart.dto.CartItemIdResponse;
 import com.woowahan.techcourse.cart.dto.CartItemQuantityUpdateRequest;
 import com.woowahan.techcourse.cart.dto.CartItemRequest;
 import com.woowahan.techcourse.cart.dto.CartItemResponse;
@@ -55,6 +56,7 @@ class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.as(CartItemIdResponse.class).getCartItemId()).isPositive();
     }
 
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
