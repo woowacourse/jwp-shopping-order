@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    active: local
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3307/shopping?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
