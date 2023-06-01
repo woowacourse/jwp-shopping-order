@@ -1,7 +1,8 @@
 package cart.application;
 
 import cart.Fixture;
-import cart.dao.CartItemDao;
+import cart.dao.MemberDao;
+import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderRepository;
 import cart.dto.OrderRequest;
@@ -28,16 +29,19 @@ class OrderServiceTest {
     @Mock
     private OrderRepository orderRepository;
     @Mock
-    private CartItemDao cartItemDao;
+    private CartItemService cartItemService;
+    @Mock
+    private MemberDao memberDao;
 
     @DisplayName("주문을 처리하고 저장한다")
     @Test
     void add() {
         // given
         final OrderRequest orderRequest = new OrderRequest(0, List.of(1L));
-        given(cartItemDao.findByMemberId(anyLong())).willReturn(List.of(Fixture.cartItem1));
+        given(cartItemService.findSelectedCartItems(any(Member.class), any())).willReturn(List.of(Fixture.cartItem1));
         given(orderRepository.saveOrder(any(Order.class))).willReturn(1L);
-        doNothing().when(cartItemDao).deleteById(anyLong());
+        doNothing().when(cartItemService).remove(any(Member.class), anyLong());
+        doNothing().when(memberDao).updateMemberPoint(any(Member.class));
 
         // when & then
         assertThat(orderService.add(Fixture.memberA, orderRequest)).isEqualTo(1L);

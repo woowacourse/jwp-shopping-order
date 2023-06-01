@@ -1,6 +1,6 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
+import cart.dao.MemberDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -8,40 +8,39 @@ import cart.domain.OrderRepository;
 import cart.dto.OrderListResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.exception.CartItemException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
 
-    private final CartItemDao cartItemDao;
+    private final CartItemService cartItemService;
     private final OrderRepository orderRepository;
+    private final MemberDao memberDao;
 
-    public OrderService(final CartItemDao cartItemDao, final OrderRepository orderRepository) {
-        this.cartItemDao = cartItemDao;
+    public OrderService(final CartItemService cartItemService, final OrderRepository orderRepository, final MemberDao memberDao) {
+        this.cartItemService = cartItemService;
         this.orderRepository = orderRepository;
+        this.memberDao = memberDao;
     }
 
     public Long add(final Member member, final OrderRequest orderRequest) {
         final int usedPoints = orderRequest.getUsedPoints();
-        final List<Long> selectedCartItemIds = orderRequest.getCartItemIds();
-
-        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        final List<CartItem> orderedCartItems = selectedCartItemIds.stream()
-                .map(id -> cartItems.stream()
-                        .filter(cartItem -> cartItem.getId().equals(id))
-                        .findAny()
-                        .orElseThrow(() -> new CartItemException.NotFound(id))).collect(Collectors.toList());
+        final List<CartItem> orderedCartItems = cartItemService.findSelectedCartItems(member, orderRequest.getCartItemIds());
 
         final Order order = Order.generate(member, usedPoints, orderedCartItems);
 
         final Long orderId = orderRepository.saveOrder(order);
-        orderedCartItems.forEach(item -> cartItemDao.deleteById(item.getId()));
+        orderedCartItems.forEach(item -> cartItemService.remove(member, item.getId()));
+        memberDao.updateMemberPoint(calculatePoints(member, order));
 
         return orderId;
+    }
+
+    private Member calculatePoints(final Member member, final Order order) {
+        return member.spendPoint(order.getUsedPoints())
+                .chargePoint(order.getEarnedPoints());
     }
 
     public OrderResponse findById(final Member member, final Long id) {

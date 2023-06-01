@@ -65,15 +65,18 @@ public class CartItemService {
     }
 
     public CheckoutResponse makeCheckout(final Member member, final List<Long> ids) {
-        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-
-        final List<CartItem> checkedCartItems = ids.stream().map(id -> cartItems.stream()
-                .filter(cartItem -> cartItem.getId().equals(id))
-                .findAny()
-                .orElseThrow(() -> new CartItemException.NotFound(id))).collect(Collectors.toList());
+        final List<CartItem> checkedCartItems = findSelectedCartItems(member, ids);
 
         final OrderCheckout orderCheckout = OrderCheckout.generate(member.getPoints(), checkedCartItems);
 
         return CheckoutResponse.of(orderCheckout);
+    }
+
+    public List<CartItem> findSelectedCartItems(final Member member, final List<Long> ids) {
+        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        return ids.stream().map(id -> cartItems.stream()
+                .filter(cartItem -> cartItem.getId().equals(id))
+                .findAny()
+                .orElseThrow(() -> new CartItemException.NotFound(id))).collect(Collectors.toList());
     }
 }
