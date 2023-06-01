@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Coupon;
+import cart.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,5 +63,26 @@ class CouponDaoTest {
                 new Coupon(1L, 1000, "1000"),
                 new Coupon(2L, 2000, "2000")
         );
+    }
+
+    @DisplayName("1L의 아이디를 가진 유저에게 1L id coupon 을 준 후에 삭제한다.")
+    @Test
+    void deleteUserCoupon() throws SQLException {
+        //given
+        dataSource.getConnection()
+                .prepareStatement("insert into coupon values (1, 1000, '1000')").executeUpdate();
+
+        dataSource.getConnection()
+                .prepareStatement("insert into user_coupon values (1, 1, 1)").executeUpdate();
+
+        final Coupon deletingCoupon = new Coupon(1L, 100, null);
+        final List<Coupon> userCoupons = couponDao.findCouponById(1L);
+        assertThat(userCoupons).contains(deletingCoupon);
+
+        //when
+        couponDao.deleteUserCoupon(new Member(1L, "email", "password"), 1L);
+
+        //then
+        assertThat(userCoupons).isNotIn(deletingCoupon);
     }
 }

@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Coupon;
+import cart.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -33,5 +34,11 @@ public class CouponDao {
     private List<Coupon> allCoupon() {
         final String allCouponSql = "select * from coupon";
         return jdbcTemplate.query(allCouponSql, couponRowMapper);
+    }
+
+
+    public void deleteUserCoupon(final Member member, final Long couponId) {
+        final String sql = "delete from user_coupon where coupon_id = ?";
+        jdbcTemplate.update(sql, couponId);
     }
 }

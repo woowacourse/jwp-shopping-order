@@ -69,6 +69,7 @@ public class OrderService {
             return;
         }
         order.applyCoupon(findCoupon(member, orderRequestDto));
+        couponDao.deleteUserCoupon(member, orderRequestDto.getCouponId());
     }
 
     private Coupon findCoupon(final Member member, final OrderRequestDto orderRequestDto) {
