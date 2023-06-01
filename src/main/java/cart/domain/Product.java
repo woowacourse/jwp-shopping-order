@@ -1,12 +1,14 @@
 package cart.domain;
 
+import cart.repository.ProductEntity;
+
 public class Product {
     private Long id;
     private String name;
     private Long price;
     private String imageUrl;
     private Double pointRatio;
-    private Boolean pointAvailable;
+    private boolean pointAvailable;
     
     public Product(final String name, final Long price, final String imageUrl, final Double pointRatio, final Boolean pointAvailable) {
         this.name = name;
@@ -23,6 +25,17 @@ public class Product {
         this.imageUrl = imageUrl;
         this.pointRatio = pointRatio;
         this.pointAvailable = pointAvailable;
+    }
+    
+    public static Product from(final ProductEntity productEntity) {
+        return new Product(
+                productEntity.getId(),
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl(),
+                productEntity.getPointRatio(),
+                productEntity.isPointAvailable()
+        );
     }
     
     public Long calculatePointToAdd() {
@@ -57,7 +70,7 @@ public class Product {
         return pointRatio;
     }
     
-    public Boolean getPointAvailable() {
+    public boolean getPointAvailable() {
         return pointAvailable;
     }
     

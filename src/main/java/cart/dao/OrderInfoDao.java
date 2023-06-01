@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dto.OrderInfoEntity;
-import cart.repository.OrderEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;

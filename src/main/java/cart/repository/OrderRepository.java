@@ -7,6 +7,7 @@ import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderInfo;
+import cart.domain.Product;
 import cart.dto.OrderInfoEntity;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +28,7 @@ public class OrderRepository {
         this.productDao = productDao;
     }
     
-    public Long insertOrder(final Member member, final Order order) {
+    public Long save(final Member member, final Order order) {
         memberDao.updateMember(member);
         final Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
         final Long memberId = memberByEmail.getId();
@@ -68,9 +69,10 @@ public class OrderRepository {
     }
     
     private OrderInfo toOrderInfo(final OrderInfoEntity orderInfoEntity) {
+        final ProductEntity productById = productDao.getProductById(orderInfoEntity.getProductId());
         return OrderInfo.of(
                 orderInfoEntity,
-                productDao.getProductById(orderInfoEntity.getProductId())
+                Product.from(productById)
         );
     }
 }

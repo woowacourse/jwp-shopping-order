@@ -1,0 +1,15 @@
+# 1번째 계정 : Basic YUBhLmNvbToxMjM0
+# 2번째 계정 : Basic YkBiLmNvbToxMjM0
+
+###
+# @name getCurrentPoint
+# @description Retrieves the current points for a specific member
+GET http://localhost:8080/point
+Content-Type: application/json
+Authorization: Basic YUBhLmNvbToxMjM0
+
+> Expected response:
+> Status: 200 Ok
+> {
+>   "point": 33500
+> }

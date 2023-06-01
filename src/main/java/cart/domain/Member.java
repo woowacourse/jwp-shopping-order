@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.repository.MemberEntity;
+
 import java.util.Objects;
 
 public class Member {
@@ -13,6 +15,15 @@ public class Member {
         this.email = email;
         this.password = password;
         this.point = point;
+    }
+    
+    public static Member from(final MemberEntity memberEntity) {
+        return new Member(
+                memberEntity.getId(),
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                memberEntity.getPoint()
+        );
     }
     
     public Long getId() {

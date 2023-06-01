@@ -1,0 +1,93 @@
+# 1번째 계정 : Basic YUBhLmNvbToxMjM0
+# 2번째 계정 : Basic YkBiLmNvbToxMjM0
+
+###
+# @name showCartItems
+# @description Retrieves a list of cart items for a specific member
+GET http://localhost:8080/cart-items
+Content-Type: application/json
+Authorization: Basic YUBhLmNvbToxMjM0 # 1번째 계정
+
+> Expected response:
+> Status: 200 OK
+> Body:
+> [
+>   {
+>     "id": 1,
+>     "quantity": 2,
+>     "product": {
+>       "id": 1,
+>       "name": "치킨",
+>       "price": 10000,
+>       "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80",
+>       "pointRatio": 10.0,
+>       "pointAvailable": true
+>     }
+>   },
+>   {
+>     "id": 2,
+>     "quantity": 4,
+>     "product": {
+>       "id": 2,
+>       "name": "샐러드",
+>       "price": 20000,
+>       "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80",
+>       "pointRatio": 10.0,
+>       "pointAvailable": false
+>     }
+>   },
+>   {
+>     "id": 4,
+>     "quantity": 5,
+>     "product": {
+>       "id": 3,
+>       "name": "피자",
+>       "price": 13000,
+>       "imageUrl": "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+>       "pointRatio": 10.0,
+>       "pointAvailable": true
+>     }
+>   }
+> ]
+
+
+###
+# @name addCartItems
+# @description Adds an item to a member's cart
+POST http://localhost:8080/cart-items
+Content-Type: application/json
+Authorization: Basic YkBiLmNvbToxMjM0 # 2번째 계정
+
+{
+  "productId": 1
+}
+
+> Expected response:
+> Status: 201 Created
+> Headers: Location: http://localhost:8080/cart-items/{cartItemId}
+
+
+###
+# @name updateCartItemQuantity
+# @description Updates the quantity of a cart item for a member
+PATCH http://localhost:8080/cart-items/1
+Content-Type: application/json
+Authorization: Basic YUBhLmNvbToxMjM0 # 1번째 계정
+
+{
+  "quantity": 120
+}
+
+> Expected response:
+> Status: 200 Ok
+
+
+###
+# @name removeCartItems
+# @description Removes an item from a member's cart
+DELETE http://localhost:8080/cart-items/4
+Content-Type: application/json
+Authorization: Basic YUBhLmNvbToxMjM0
+
+> Expected response:
+> Status: 204 No Content

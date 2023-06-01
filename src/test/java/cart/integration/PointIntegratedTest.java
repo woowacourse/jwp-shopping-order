@@ -1,8 +1,7 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
-import org.hamcrest.Matchers;
+import cart.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.greaterThan;
 
 @SuppressWarnings("NonAsciiCharacters")
 class PointIntegratedTest extends IntegrationTest {
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
     
     private Member member;
     
@@ -24,7 +22,7 @@ class PointIntegratedTest extends IntegrationTest {
     void setUp() {
         super.setUp();
         
-        member = memberDao.getMemberById(1L);
+        member = memberRepository.getMemberById(1L);
     }
     
     @Test
