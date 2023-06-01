@@ -1,24 +1,44 @@
 package cart.integration;
 
+import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.fixture.ProductFixture;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
+import static cart.fixture.ProductFixture.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql(scripts = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class ProductIntegrationTest extends IntegrationTest {
+
+    @Autowired
+    private ProductDao productDao;
+
+    @BeforeEach
+    void setUp() {
+        super.setUp();
+        productDao.createProduct(chicken);
+        productDao.createProduct(fork);
+    }
+
+
 
     @Test
     public void getProducts() {
-        var result = given()
+        var result = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/products")
-                .then()
+                .then().log().all()
                 .extract();
+
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }

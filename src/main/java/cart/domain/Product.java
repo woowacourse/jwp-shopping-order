@@ -63,6 +63,10 @@ public class Product {
         );
     }
 
+    public int getDiscountedPrice() {
+        return (int) (getPrice() * (1 - (double) getDiscountRate()/100));
+    }
+
     public Long getId() {
         return id;
     }
