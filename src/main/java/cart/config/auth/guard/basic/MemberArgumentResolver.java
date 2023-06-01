@@ -15,6 +15,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private static final String BASIC_HEADER = "basic";
+    private static final String AUTHORIZATION_SEPARATOR = " ";
+    private static final String CREDENTIAL_SEPARATOR = ":";
+
     private final MemberRepository memberRepository;
 
     public MemberArgumentResolver(final MemberRepository memberRepository) {
@@ -29,31 +33,39 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            return null;
-        }
+        validateNullAuthorization(authorization);
 
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
-        }
+        String[] authHeader = authorization.split(AUTHORIZATION_SEPARATOR);
+
+        validateHeader(authHeader);
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
         String decodedString = new String(decodedBytes);
 
-        String[] credentials = decodedString.split(":");
+        String[] credentials = decodedString.split(CREDENTIAL_SEPARATOR);
         String email = credentials[0];
         String password = credentials[1];
-
-        // 본인 여부 확인
         Member member = memberRepository.findByEmail(email);
-        if (!member.checkPassword(password)) {
-            System.out.println("member : " + member.getEmail() + " " + member.getPassword());
-            System.out.println("password: " + password);
-            System.out.println("go " + member.checkPassword(password));
-            System.out.println("에러!!");
+
+        validateMember(password, member);
+        return member;
+    }
+
+    private void validateNullAuthorization(final String authorization) {
+        if (authorization == null) {
             throw new AuthenticationException();
         }
-        return member;
+    }
+
+    private void validateHeader(final String[] authHeader) {
+        if (!authHeader[0].equalsIgnoreCase(BASIC_HEADER)) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private void validateMember(final String password, final Member member) {
+        if (!member.checkPassword(password)) {
+            throw new AuthenticationException();
+        }
     }
 }

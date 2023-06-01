@@ -11,6 +11,8 @@ import cart.exception.MemberNotOwnerException;
 import cart.exception.PasswordInvalidException;
 import cart.exception.QuantityExceedsCartException;
 import cart.exception.SalePercentageInvalidRangeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -92,5 +94,14 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<String> responseConflict(final String message) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> internalServerErrorHandler(final Exception exception) {
+        Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+        logger.error("Server error : " + exception.getMessage());
+
+        String internalServerErrorMessage = "내부 서버의 문제입니다. 관리자에게 문의해주세요.";
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(internalServerErrorMessage);
     }
 }

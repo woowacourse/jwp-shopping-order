@@ -17,6 +17,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class MemberOrderArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private static final String BASIC_HEADER = "basic";
+    private static final String AUTHORIZATION_SEPARATOR = " ";
+    private static final String CREDENTIAL_SEPARATOR = ":";
+
     private final MemberRepository memberRepository;
     private final CouponRepository couponRepository;
 
@@ -33,32 +37,43 @@ public class MemberOrderArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        validateNullAuthorization(authorization);
 
-        if (authorization == null) {
-            return null;
-        }
+        String[] authHeader = authorization.split(AUTHORIZATION_SEPARATOR);
 
-        String[] authHeader = authorization.split(" ");
-
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
-        }
+        validateHeader(authHeader);
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
         String decodedString = new String(decodedBytes);
 
-        String[] credentials = decodedString.split(":");
+        String[] credentials = decodedString.split(CREDENTIAL_SEPARATOR);
         String email = credentials[0];
         String password = credentials[1];
-
         Member member = memberRepository.findByEmail(email);
-        if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
-        }
+
+        validateMember(password, member);
 
         Coupons coupons = couponRepository.findAllByMemberId(member.getId());
         member.initCoupons(coupons);
 
         return member;
+    }
+
+    private void validateNullAuthorization(final String authorization) {
+        if (authorization == null) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private void validateHeader(final String[] authHeader) {
+        if (!authHeader[0].equalsIgnoreCase(BASIC_HEADER)) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private void validateMember(final String password, final Member member) {
+        if (!member.checkPassword(password)) {
+            throw new AuthenticationException();
+        }
     }
 }
