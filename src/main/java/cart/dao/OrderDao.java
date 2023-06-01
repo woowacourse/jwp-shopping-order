@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.domain.Order;
-import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -68,7 +67,7 @@ public class OrderDao {
         });
     }
 
-    public List<Order> findByMemberId(Long memberId) {
+    public List<Order> findAllByMemberId(Long memberId) {
         String sql = "SELECT * FROM orders WHERE member_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long id = rs.getLong("id");

@@ -47,9 +47,9 @@
 - [x] GET 요청, URI = "/costs"인 API 작성
 - [x] service에서 dao로 요청 전송
 - [] domain으로 dao에 요청 전송
-- [] dao에서 영속화 작업 수행
-  - [] 특정 주문의 비용들을 조회하는 쿼리문 작성
-- [] CostResponse 생성
+- [x] dao에서 영속화 작업 수행
+  - [x] 특정 주문의 비용들을 조회하는 쿼리문 작성
+- [x] CostResponse 생성
 
 ## 주디가 했던 고민들
 1. 현재는 Domain과 Entity가 분리 되어있지 않은 상황같습니다. 개인적으로는 Domain과 Entity를 분리하여 DB에 data를 넣고 뺄 때는 entity를 사용하고 그렇지 않을 때는 domain을 사용했었는데, 리뷰어님은 어떻게 domain과 entity의 역할을 구분지으셨나요?

@@ -63,7 +63,7 @@ public class Product {
         if (!getIsDiscounted()) {
             return (memberDiscount * price / 100 - price) * -1;
         }
-        throw new IllegalArgumentException("해당 상품은 멤버 할인 상품이 아닙니다");
+        return price;
     }
 
     public int calculateDiscountedPrice() {

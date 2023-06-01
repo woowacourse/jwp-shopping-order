@@ -30,17 +30,11 @@ public class OrderService {
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
         int totalItemPrice = findTotalItemPrice(orderCreateRequest);
-        System.out.println("totalItemPrice: " + totalItemPrice);
         int discountedTotalItemPrice = findDiscountedTotalItemPrice(member, orderCreateRequest);
-        System.out.println("discountedTotalItemPrice: " + discountedTotalItemPrice);
         int shippingFee = findShippingFee(orderCreateRequest, totalItemPrice);
-        System.out.println("shippingFee: " + shippingFee);
         int totalPrice = discountedTotalItemPrice + shippingFee;
-        System.out.println("totalPrice: " + totalPrice);
         int totalItemDiscountAmount = findTotalItemDiscountAmount(orderCreateRequest);
-        System.out.println("totalItemDiscountAmount: " + totalItemDiscountAmount);
         int totalMemberDiscountAmount = findTotalMemberDiscountAmount(member, orderCreateRequest);
-        System.out.println("totalMemberDiscountAmount: " + totalMemberDiscountAmount);
 
         Order order = new Order(member.getId(), null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
         member.order(totalPrice);
@@ -199,7 +193,7 @@ public class OrderService {
     }
 
     public List<OrderResponse> getAllOrders(Long memberId) {
-        List<Order> orders = orderDao.findByMemberId(memberId);
+        List<Order> orders = orderDao.findAllByMemberId(memberId);
 
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Order order : orders) {
