@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS orders (
     member_id BIGINT NOT NULL,
     original_price INT NOT NULL,
     discount_price INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
