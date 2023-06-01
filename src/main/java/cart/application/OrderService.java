@@ -53,9 +53,20 @@ public class OrderService {
 
         // TODO order가 MemberCoupon을 가지게 변경
         Order order = new Order(totalPrice, discountPrice, orderProducts, usedCoupon, member);
+
+        validateUsableCoupon(usedCoupon, order);
+
         orderRequest.getSelectCartIds().stream()
                 .forEach(cartItemDao::deleteById);
         return orderRepository.add(order);
+    }
+
+    private void validateUsableCoupon(Coupon usedCoupon, Order order) {
+        if (usedCoupon != null) {
+            if (!usedCoupon.isUsable(order)) {
+                throw new IllegalArgumentException("해당 쿠폰은 사용할 수 없습니다.");
+            }
+        }
     }
 
     public List<OrderProduct> getOrderProducts(List<Long> cartItemIds) {
