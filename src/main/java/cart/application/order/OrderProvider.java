@@ -2,6 +2,7 @@ package cart.application.order;
 
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderItem;
 import cart.dto.OrderItemResponse;
 import cart.dto.OrderResponse;
 import cart.dto.ProductResponse;
@@ -29,16 +30,24 @@ public class OrderProvider {
     public List<OrderResponse> findOrderByMember(final Member member) {
         final List<Order> orders = orderRepository.findOrderByMemberId(member.getId());
         return orders.stream()
-                .map(order -> new OrderResponse(
-                        order.getId(),
-                        order.getOrderItems().stream()
-                                .map(orderItem -> new OrderItemResponse(
-                                        orderItem.getId(),
-                                        orderItem.getQuantity(),
-                                        ProductResponse.from(orderItem)))
-                                .collect(toList()),
-                        Date.from(order.getDate().atZone(ZoneId.systemDefault()).toInstant()),
-                        order.getPrice())
-                ).collect(toList());
+                .map(OrderProvider::createOrderResponse)
+                .collect(toList());
+    }
+
+    private static OrderResponse createOrderResponse(final Order order) {
+        final List<OrderItemResponse> orderItemResponses = order.getOrderItems().stream()
+                .map(OrderProvider::createOrderItem)
+                .collect(toList());
+
+        return new OrderResponse(
+                order.getId(),
+                orderItemResponses,
+                Date.from(order.getDate().atZone(ZoneId.systemDefault()).toInstant()),
+                order.getPrice()
+        );
+    }
+
+    private static OrderItemResponse createOrderItem(final OrderItem orderItem) {
+        return new OrderItemResponse(orderItem.getId(), orderItem.getQuantity(), ProductResponse.from(orderItem));
     }
 }

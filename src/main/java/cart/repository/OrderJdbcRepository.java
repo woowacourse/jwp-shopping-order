@@ -12,7 +12,6 @@ import cart.domain.Product;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +31,7 @@ public class OrderJdbcRepository implements OrderRepository {
 
     @Override
     public Long save(final Order order) {
-        OrderEntity orderEntity = null;
-        if (ObjectUtils.isEmpty(order.getCoupon())) {
-            orderEntity = new OrderEntity(order.getPrice(), null, order.getMember().getId());
-        } else {
-            orderEntity = new OrderEntity(order.getPrice(), order.getCoupon().getId(), order.getMember().getId());
-        }
+        OrderEntity orderEntity = mapToOrderEntity(order);
 
         final Long orderId = orderDao.save(orderEntity);
 
@@ -49,26 +43,42 @@ public class OrderJdbcRepository implements OrderRepository {
         return orderId;
     }
 
-    @Override
-    public List<Order> findOrderByMemberId(final Long memberId) {
-        final List<OrderResultMap> resultMaps = orderDao.findByMemberId(memberId);
-        final Map<Long, List<OrderResultMap>> orders = resultMaps.stream()
-                .collect(groupingBy(OrderResultMap::getOrderId));
-
-        final List<Order> orderCatalogs = new ArrayList<>();
-        for (Long orderId : orders.keySet()) {
-            final List<OrderItem> orderItems = new ArrayList<>();
-            final List<OrderResultMap> orderResultMaps = orders.get(orderId);
-            for (OrderResultMap orderResultMap : orderResultMaps) {
-                final ProductEntity productEntity = orderResultMap.getProductEntity();
-                final Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
-                final OrderItem orderItem = new OrderItem(orderResultMap.getOrderItemId(), product, orderResultMap.getQuantity());
-                orderItems.add(orderItem);
-            }
-            final Order order = new Order(orderId, orderItems, null, null, orderResultMaps.get(0).getPrice(), orderResultMaps.get(0).getDate());
-            orderCatalogs.add(order);
+    private static OrderEntity mapToOrderEntity(final Order order) {
+        if (ObjectUtils.isEmpty(order.getCoupon())) {
+            return new OrderEntity(order.getPrice(), null, order.getMember().getId());
         }
 
-        return orderCatalogs;
+        return new OrderEntity(order.getPrice(), order.getCoupon().getId(), order.getMember().getId());
+    }
+
+    @Override
+    public List<Order> findOrderByMemberId(final Long memberId) {
+        final List<OrderResultMap> orderResultMaps = orderDao.findByMemberId(memberId);
+
+        final Map<Long, List<OrderResultMap>> orderResultMapGroups = orderResultMaps.stream()
+                .collect(groupingBy(OrderResultMap::getOrderId));
+
+        return mapToOrders(orderResultMapGroups);
+    }
+
+    private List<Order> mapToOrders(final Map<Long, List<OrderResultMap>> orders) {
+        return orders.keySet().stream()
+                .map(it -> mapToOrder(orders, it))
+                .collect(toList());
+    }
+
+    private Order mapToOrder(final Map<Long, List<OrderResultMap>> orders, final Long orderId) {
+        final List<OrderResultMap> orderResultMaps = orders.get(orderId);
+        final List<OrderItem> orderItems = orderResultMaps.stream()
+                .map(this::createOrderItem)
+                .collect(toList());
+
+        return new Order(orderId, orderItems, null, null, orderResultMaps.get(0).getPrice(), orderResultMaps.get(0).getDate());
+    }
+
+    private OrderItem createOrderItem(final OrderResultMap orderResultMap) {
+        final ProductEntity productEntity = orderResultMap.getProductEntity();
+        final Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
+        return new OrderItem(orderResultMap.getOrderItemId(), product, orderResultMap.getQuantity());
     }
 }
