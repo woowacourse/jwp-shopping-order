@@ -26,7 +26,7 @@ public class CartItemService {
 
         CartItem cartItem = new CartItem(member, product);
 
-        return cartItemRepository.add(cartItem);
+        return cartItemRepository.save(cartItem);
     }
 
     public List<CartItemResponse> findByMember(final Member member) {
