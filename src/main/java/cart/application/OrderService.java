@@ -9,6 +9,7 @@ import cart.dto.OrderItemResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.ProductResponse;
+import cart.exception.AlreadyUsedCouponException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.coupon.CouponRepository;
@@ -71,6 +72,10 @@ public class OrderService {
 
     private Coupon findCouponAndUse(final Long couponId, final Long memberId) {
         final Coupon coupon = couponRepository.findCouponById(couponId);
+
+        if (coupon.isUsed()) {
+            throw new AlreadyUsedCouponException();
+        }
 
         couponRepository.changeStatus(couponId, memberId);
 

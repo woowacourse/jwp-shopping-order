@@ -35,6 +35,10 @@ public class Coupon {
         return EMPTY_COUPON;
     }
 
+    public boolean isUsed() {
+        return usageStatus.getUsageStatus();
+    }
+
     public boolean isNotUsed() {
         return usageStatus.isNotUsed();
     }
