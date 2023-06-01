@@ -10,7 +10,7 @@ public class MemberCouponResponse {
     private final Long id;
     @Schema(description = "이름", example = "생일 쿠폰")
     private final String name;
-    @Schema(description = "쿠폰 종류", example = "PRICE")
+    @Schema(description = "쿠폰 종류", example = "price")
     private final String type;
     @Schema(description = "할인 가격", example = "3000")
     private final long value;
@@ -29,7 +29,7 @@ public class MemberCouponResponse {
         return new MemberCouponResponse(
                 memberCoupon.getId(),
                 memberCoupon.getCoupon().getName(),
-                memberCoupon.getCoupon().getDiscountPolicy().getName(),
+                memberCoupon.getCoupon().getDiscountPolicy().getName().toLowerCase(),
                 memberCoupon.getCoupon().getValue(),
                 memberCoupon.getCoupon().getMinimumPrice().getValue()
         );

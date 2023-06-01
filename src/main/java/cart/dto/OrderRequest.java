@@ -6,7 +6,7 @@ import java.util.List;
 
 @Schema(description = "주문 Request")
 public class OrderRequest {
-    @Schema(description = "주문 상품")
+    @Schema(description = "주문 상품", example = "[1, 2]")
     private final List<Long> orderItemIds;
     //TODO: memberCouponId로 명세 변경
     @Schema(description = "쿠폰 Id", example = "1")

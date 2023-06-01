@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class OrderItemDto {
 
     @Schema(description = "주문 상품 id", example = "1")
-    private final Long orderItemsId;
+    private final Long orderItemId;
     @Schema(description = "이름", example = "치즈피자")
     private final String name;
     @Schema(description = "가격", example = "8900")
@@ -18,7 +18,7 @@ public class OrderItemDto {
     private final long quantity;
 
     public OrderItemDto(final Long orderItemsId, final String name, final long price, final String imageUrl, final long quantity) {
-        this.orderItemsId = orderItemsId;
+        this.orderItemId = orderItemsId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -35,8 +35,8 @@ public class OrderItemDto {
         );
     }
 
-    public Long getOrderItemsId() {
-        return orderItemsId;
+    public Long getOrderItemId() {
+        return orderItemId;
     }
 
     public String getName() {
