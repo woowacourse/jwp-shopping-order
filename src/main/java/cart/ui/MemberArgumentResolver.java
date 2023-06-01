@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -45,7 +45,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         // 본인 여부 확인
         Member member = memberDao.getMemberByName(email);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("사용자 인증에 실패하였습니다.");
         }
         return member;
     }

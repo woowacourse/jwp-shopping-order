@@ -21,13 +21,14 @@ public class MemberCouponRepository {
     }
 
     public void save(final Long memberId, final MemberCoupon memberCoupon) {
-        String sql = "INSERT INTO member_coupon (member_id, coupon_id, issued_at, expired_at) VALUES (?, ?, ?, ?) ";
+        String sql = "INSERT INTO member_coupon (member_id, coupon_id, issued_at, expired_at, is_used) VALUES (?, ?, ?, ?, ?) ";
         jdbcTemplate.update(sql,
                 ps -> {
                     ps.setLong(1, memberId);
                     ps.setLong(2, memberCoupon.getCoupon().getId());
                     ps.setTimestamp(3, Timestamp.valueOf(memberCoupon.getIssuedDate()));
                     ps.setTimestamp(4, Timestamp.valueOf(memberCoupon.getExpiredDate()));
+                    ps.setBoolean(5, memberCoupon.isUsed());
                 });
     }
 

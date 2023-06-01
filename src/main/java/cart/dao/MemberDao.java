@@ -1,21 +1,29 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Member getMemberById(Long id) {
@@ -30,9 +38,11 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (name, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getName(), member.getPassword());
+    public Long addMember(Member member) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", member.getName());
+        params.put("password", member.getPassword());
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public void updateMember(Member member) {
@@ -51,7 +61,6 @@ public class MemberDao {
     }
 
     public Boolean existsByMember(final Member member) {
-//        String sql = "SELECT * FROM member WHERE name = ?, password = ?";
         String sql = "SELECT EXISTS(SELECT * FROM member WHERE name = ? AND password = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, member.getName(), member.getPassword());
     }

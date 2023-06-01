@@ -27,7 +27,6 @@ public class MemberApiController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody final MemberRequest memberRequest) {
-        String basicAuth = memberService.generateMemberToken(memberRequest);
-        return ResponseEntity.ok().body(new TokenResponse(basicAuth));
+        return ResponseEntity.ok().body(memberService.generateMemberToken(memberRequest));
     }
 }

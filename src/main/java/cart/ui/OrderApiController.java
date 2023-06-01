@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.OrderService;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.http.ResponseEntity;
