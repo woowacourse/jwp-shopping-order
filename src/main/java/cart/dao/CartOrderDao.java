@@ -3,14 +3,17 @@ package cart.dao;
 import cart.domain.CartOrder;
 import cart.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,9 +21,13 @@ import java.util.Objects;
 public class CartOrderDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertAction;
 
-    public CartOrderDao(final JdbcTemplate jdbcTemplate) {
+    public CartOrderDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertAction = new SimpleJdbcInsert(dataSource)
+                .withTableName("cart_order")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<CartOrder> findByMemberId(final Long memberId) {
@@ -57,20 +64,11 @@ public class CartOrderDao {
     }
 
     public Long save(final CartOrder cartOrder) {
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        final MapSqlParameterSource insertParameters = new MapSqlParameterSource()
+                .addValue("member_id", cartOrder.getMember().getId())
+                .addValue("total_price", cartOrder.getTotalPrice())
+                .addValue("created_at", Timestamp.valueOf(LocalDateTime.now()));;
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO cart_order (member_id, total_price) VALUES (?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setLong(1, cartOrder.getMember().getId());
-            ps.setLong(2, cartOrder.getTotalPrice());
-
-            return ps;
-        }, keyHolder);
-
-        return (Long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
+        return insertAction.executeAndReturnKey(insertParameters).longValue();
     }
 }
