@@ -1,6 +1,5 @@
 package cart.step2.order.persist;
 
-import cart.step2.order.domain.OrderEntity;
 import cart.step2.order.domain.OrderItem;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
