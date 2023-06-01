@@ -7,6 +7,7 @@ import cart.domain.product.Product;
 import cart.dto.CartItemIdsRequest;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
+import cart.dto.PaymentInfoResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -71,5 +72,12 @@ public class CartItemService {
         final List<CartItem> cartItems = cartItemRepository.findAllByIds(request.getCartItemIds());
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
         cartItemRepository.deleteAll(cartItems);
+    }
+
+    public PaymentInfoResponse getPaymentInfo(final Member member, final List<Long> cartItemIds) {
+        final CartItems cartItems = new CartItems(cartItemRepository.findAllByIds(cartItemIds));
+        cartItems.checkOwner(member);
+
+        return new PaymentInfoResponse(cartItems.getTotalPrice(), cartItems.getDeliveryFee());
     }
 }
