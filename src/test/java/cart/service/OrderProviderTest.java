@@ -7,10 +7,11 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderRepository;
+import cart.service.order.OrderMapper;
 import cart.service.order.OrderProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,10 +26,14 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class OrderProviderTest {
 
-    @InjectMocks
     private OrderProvider orderProvider;
     @Mock
     private OrderRepository orderRepository;
+
+    @BeforeEach
+    void init() {
+        orderProvider = new OrderProvider(orderRepository, new OrderMapper());
+    }
 
     @Test
     void 상품을_조회한다() {
