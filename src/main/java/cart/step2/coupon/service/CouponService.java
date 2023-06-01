@@ -55,4 +55,9 @@ public class CouponService {
         }
     }
 
+    @Transactional
+    public void changeUsageStatus(final Long memberId, final Long couponId) {
+        couponRepository.updateUsageStatus(memberId, couponId);
+    }
+
 }

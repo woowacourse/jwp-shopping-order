@@ -3,13 +3,17 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.step2.order.domain.OrderItem;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -98,6 +102,23 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public void batchDelete(final Long memberId, final List<CartItem> removalCartItems) {
+        String sql = "DELETE FROM cart_item WHERE member_id = ? AND id = ?";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                CartItem cartItem = removalCartItems.get(i);
+                ps.setLong(1, memberId);
+                ps.setLong(2, cartItem.getId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return removalCartItems.size();
+            }
+        });
     }
 }
 
