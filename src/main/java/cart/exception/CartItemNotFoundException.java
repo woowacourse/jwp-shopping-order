@@ -7,4 +7,8 @@ public class CartItemNotFoundException extends IllegalArgumentException {
     public CartItemNotFoundException() {
         super(MESSAGE);
     }
+
+    public CartItemNotFoundException(final String message) {
+        super(message);
+    }
 }

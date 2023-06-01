@@ -43,7 +43,15 @@ public class CartItemDao {
                 "WHERE cart_item.id IN (:ids)";
         final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("ids", ids);
-        return namedParameterJdbcTemplate.query(sql, params, cartItemWithProductEntityRowMapper);
+        final List<CartItemWithProductEntity> results = namedParameterJdbcTemplate.query(sql, params, cartItemWithProductEntityRowMapper);
+        validateResultSize(ids.size(), results.size());
+        return results;
+    }
+
+    private void validateResultSize(final int sourceSize, final int resultSize) {
+        if (sourceSize != resultSize) {
+            throw new CartItemNotFoundException("존재하지 않는 cart item 이 있습니다.");
+        }
     }
 
     public List<CartItemWithMemberAndProductEntity> findAllDetailByMemberId(final long memberId) {
