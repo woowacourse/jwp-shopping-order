@@ -50,7 +50,7 @@ public class CartItemDao {
 
     private void validateResultSize(final int sourceSize, final int resultSize) {
         if (sourceSize != resultSize) {
-            throw new CartItemNotFoundException("존재하지 않는 cart item 이 있습니다.");
+            throw new CartItemNotFoundException();
         }
     }
 
@@ -72,17 +72,25 @@ public class CartItemDao {
     public void updateQuantity(final long id, final int quantity) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         final int affectedRowNumber = jdbcTemplate.update(sql, quantity, id);
-        validateSingleAffectedRow(affectedRowNumber);
+        validateAffectedRowNumber(affectedRowNumber, SINGLE_AFFECTED_ROW_NUMBER);
     }
 
     public void deleteById(final long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         final int affectedRowNumber = jdbcTemplate.update(sql, id);
-        validateSingleAffectedRow(affectedRowNumber);
+        validateAffectedRowNumber(affectedRowNumber, SINGLE_AFFECTED_ROW_NUMBER);
     }
 
-    private void validateSingleAffectedRow(final int affectedRowNumber) {
-        if (affectedRowNumber != SINGLE_AFFECTED_ROW_NUMBER) {
+    public void deleteAllByIds(final List<Long> ids) {
+        final String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ids", ids);
+        final int affectedRowNumber = namedParameterJdbcTemplate.update(sql, params);
+        validateAffectedRowNumber(affectedRowNumber, ids.size());
+    }
+
+    private void validateAffectedRowNumber(final int affectedRowNumber, final int expectedNumber) {
+        if (affectedRowNumber != expectedNumber) {
             throw new CartItemNotFoundException();
         }
     }
