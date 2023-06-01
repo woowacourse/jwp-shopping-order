@@ -18,9 +18,7 @@ create table if not exists cart_item
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    quantity   INT    NOT NULL
 );
 
 create table if not exists orders
@@ -28,9 +26,7 @@ create table if not exists orders
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
     time_stamp VARCHAR(255) NOT NULL,
-    discount_price BIGINT NOT NULL,
-    coupon_name VARCHAR(255) NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    coupon_id  BIGINT NOT NULL
 );
 
 create table if not exists orders_product
@@ -38,9 +34,7 @@ create table if not exists orders_product
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id   BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    quantity   INT    NOT NULL
 );
 
 create table if not exists coupon
@@ -48,15 +42,12 @@ create table if not exists coupon
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     discount_rate DOUBLE NOT NULL,
-    discount_charge INT NOT NULL
+    discount_price INT NOT NULL
 );
 
 create table if not exists member_coupon
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    coupon_id BIGINT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
+    coupon_id BIGINT NOT NULL
 );
-
