@@ -1,5 +1,7 @@
 package cart.domain.cartitem;
 
+import cart.ui.order.CreateOrderItemDto;
+
 import java.util.List;
 
 public class CartItems {
@@ -15,6 +17,18 @@ public class CartItems {
                 .mapToInt(CartItem::calculatePriceOfQuantity)
                 .sum();
     }
+
+    public void validate(final List<CreateOrderItemDto> createOrderItemDtos, final Long memberId) {
+        for (CreateOrderItemDto createOrderItemDto : createOrderItemDtos) {
+            cartItems.forEach(cartItem ->
+                    cartItem.validate(
+                            createOrderItemDto.getProductId(),
+                            memberId,
+                            createOrderItemDto.getQuantity())
+            );
+        }
+    }
+
 
     public List<CartItem> getCartItems() {
         return cartItems;

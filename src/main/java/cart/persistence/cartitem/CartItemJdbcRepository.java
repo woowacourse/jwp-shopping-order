@@ -89,7 +89,6 @@ public class CartItemJdbcRepository implements CartItemRepository {
         return new CartItems(cartItems);
     }
 
-
     @Override
     public void updateQuantity(final CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";

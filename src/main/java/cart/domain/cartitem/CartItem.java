@@ -28,6 +28,22 @@ public class CartItem {
         this.member = member;
     }
 
+    public boolean isCorrectQuantity(final Long productId, final Integer quantity) {
+        if (this.quantity == quantity && product.isEqualId(productId)) {
+            return true;
+        }
+        throw new IllegalArgumentException("상품의 수량이 일치하지 않습니다.");
+    }
+
+    public void validate(final Long productId, final Long memberId, final Integer quantity) {
+        if (!(product.isEqualId(productId) && member.isEqualId(memberId))) {
+            throw new IllegalArgumentException("장바구니 정보가 일치하지 않습니다.");
+        }
+        if (this.quantity != quantity) {
+            throw new IllegalArgumentException("상품의 수량이 일치하지 않습니다.");
+        }
+    }
+
     public Long getId() {
         return id;
     }
