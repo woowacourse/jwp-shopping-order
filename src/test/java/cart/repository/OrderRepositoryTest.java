@@ -79,4 +79,39 @@ class OrderRepositoryTest {
         assertThat(savedOrder).isPresent();
         assertThat(savedOrder.get().getId()).isEqualTo(1L);
     }
+
+    @Test
+    void 사용자의_전체_주문을_조회한다() {
+        given(orderDao.findAllByMemberId(밀리.getId()))
+                .willReturn(
+                        List.of(
+                                new OrderEntity(1L, 1L, "20230616052900331", 3000,
+                                        LocalDateTime.of(2023, 6, 16, 5, 29, 0, 33)),
+                                new OrderEntity(2L, 1L, "20230617052900331", 3000,
+                                        LocalDateTime.of(2023, 6, 17, 5, 29, 0, 33))
+                        )
+                );
+        given(orderProductDao.findByOrderId(anyLong()))
+                .willReturn(
+                        List.of(
+                                new OrderProductEntity(1L, 1L, 1L, 2, "피자", BigDecimal.valueOf(20000),
+                                        "http://pizza.com"),
+                                new OrderProductEntity(2L, 1L, 2L, 3, "치킨", BigDecimal.valueOf(10000),
+                                        "http://chicken.com")
+                        ),
+                        List.of(
+                                new OrderProductEntity(3L, 2L, 1L, 20, "피자", BigDecimal.valueOf(20000),
+                                        "http://pizza.com"),
+                                new OrderProductEntity(4L, 2L, 2L, 30, "치킨", BigDecimal.valueOf(10000),
+                                        "http://chicken.com")
+                        )
+                );
+
+        List<Order> orders = orderRepository.findAllByMember(밀리);
+
+        assertThat(orders).hasSize(2);
+        assertThat(orders).map(Order::getId)
+                .containsExactly(1L, 2L);
+
+    }
 }

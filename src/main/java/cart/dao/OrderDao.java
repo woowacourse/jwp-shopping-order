@@ -4,6 +4,7 @@ import cart.entity.OrderEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -62,5 +63,11 @@ public class OrderDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<OrderEntity> findAllByMemberId(Long memberId) {
+        String sql = "SELECT * FROM orders WHERE member_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

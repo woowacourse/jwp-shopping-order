@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -43,5 +45,36 @@ class OrderDaoTest {
 
         // then
         assertThat(savedId).isPositive();
+    }
+
+    @Test
+    void 주문을_사용자_id로_조회한다() {
+        // given
+        OrderEntity orderEntity = new OrderEntity(memberId, 3000, "2020060102301", LocalDateTime.now());
+        orderDao.save(orderEntity);
+
+        // when
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
+
+        // then
+        assertThat(orderEntities).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(List.of(orderEntity));
+    }
+
+    @Test
+    void 주문을_id로_조회한다() {
+        // given
+        OrderEntity orderEntity = new OrderEntity(memberId, 3000, "2020060102301", LocalDateTime.now());
+        Long id = orderDao.save(orderEntity);
+
+        // when
+        Optional<OrderEntity> findOrderEntity = orderDao.findById(id);
+
+        // then
+        assertThat(findOrderEntity).isPresent();
+        assertThat(findOrderEntity.get()).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(orderEntity);
     }
 }

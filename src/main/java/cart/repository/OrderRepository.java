@@ -72,11 +72,23 @@ public class OrderRepository {
             return Optional.empty();
         }
         OrderEntity orderEntity = savedOrderEntity.get();
-        List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(id);
-        List<Item> items = toItems(orderProductEntities);
         Member member = getMember(orderEntity);
+        Order order = toOrder(orderEntity, member);
+        return Optional.of(order);
+    }
 
-        Order order = new Order(
+    public List<Order> findAllByMember(Member member) {
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
+        return orderEntities.stream()
+                .map(orderEntity -> toOrder(orderEntity, member))
+                .collect(Collectors.toList());
+    }
+
+    private Order toOrder(OrderEntity orderEntity, Member member) {
+        List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(orderEntity.getId());
+        List<Item> items = toItems(orderProductEntities);
+
+        return new Order(
                 orderEntity.getId(),
                 member,
                 items,
@@ -84,7 +96,6 @@ public class OrderRepository {
                 orderEntity.getCreatedAt(),
                 orderEntity.getOrderNumber()
         );
-        return Optional.of(order);
     }
 
     private Member getMember(OrderEntity order) {
