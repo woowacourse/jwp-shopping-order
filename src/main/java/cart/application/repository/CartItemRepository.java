@@ -17,7 +17,10 @@ public interface CartItemRepository {
 
     CartItems findByIds(List<Long> ids);
 
+    void updateQuantity(CartItem cartItem);
+
+    // TODO: CartItem 객체 받도록 수정
     void deleteById(long id);
 
-    void updateQuantity(CartItem cartItem);
+    void deleteAll(CartItems cartItems);
 }

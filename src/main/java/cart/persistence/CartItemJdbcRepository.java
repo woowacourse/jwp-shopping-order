@@ -54,12 +54,27 @@ public class CartItemJdbcRepository implements CartItemRepository {
     }
 
     @Override
+    public void updateQuantity(final CartItem cartItem) {
+        cartItemDao.updateQuantity(CartItemEntity.from(cartItem));
+    }
+
+    @Override
     public void deleteById(final long id) {
         cartItemDao.deleteById(id);
     }
 
     @Override
-    public void updateQuantity(final CartItem cartItem) {
-        cartItemDao.updateQuantity(CartItemEntity.from(cartItem));
+    public void deleteAll(final CartItems cartItems) {
+        List<Long> cartItemIds = cartItems.getCartItems().stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+
+        cartItemIds.forEach(id -> {
+            if (id == null) {
+                throw new IllegalArgumentException("카트 아이템의 id가 없습니다.");
+            }
+        });
+
+        cartItemDao.deleteByIds(cartItemIds);
     }
 }

@@ -77,15 +77,22 @@ public class CartItemDao {
         SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
         return namedParameterJdbcTemplate.query(sql, parameters, RowMapperHelper.cartDetailRowMapper());
     }
-    
+
+    public void updateQuantity(final CartItemEntity cartItem) {
+        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
     public void deleteById(final long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    public void updateQuantity(final CartItemEntity cartItem) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    public void deleteByIds(final List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
+
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 }
 
