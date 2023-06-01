@@ -10,6 +10,7 @@ import cart.repository.coupon.CouponRepository;
 import cart.repository.coupon.MemberCouponRepository;
 import cart.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,25 +28,30 @@ public class CouponService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CouponResponse> findAllCoupons() {
         return couponRepository.findAll().getCoupons().stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CouponResponse findById(final Long couponId) {
         return CouponResponse.from(couponRepository.findById(couponId));
     }
 
+    @Transactional
     public long createCoupon(final CouponCreateRequest request) {
-        Coupon coupon = Coupon.create(request.getName(), request.getIsPercentage(), request.getAmount());
+        Coupon.create(request.getName(), request.getIsPercentage(), request.getAmount());
         return couponRepository.save(request.getName(), request.getIsPercentage(), request.getAmount());
     }
 
+    @Transactional
     public void deleteCoupon(final Long couponId) {
         couponRepository.deleteById(couponId);
     }
 
+    @Transactional
     public void giveCouponToMember(final Long couponId, final Long memberId) {
         validateRequest(couponId, memberId);
 
