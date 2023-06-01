@@ -24,6 +24,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.authentication.AuthenticationInterceptor;
+import cart.authentication.AuthenticationMemberConverter;
+import cart.authentication.BasicAuthorizationExtractor;
+import cart.authentication.MemberStore;
 import cart.configuration.resolver.MemberArgumentResolver;
 import cart.domain.Member;
 import cart.domain.Money;
@@ -50,10 +54,14 @@ class OrderApiControllerTest extends DocsTest {
 
     @BeforeEach
     void setUp() {
-        MemberArgumentResolver memberArgumentResolver = new MemberArgumentResolver(memberDao);
+        MemberStore memberStore = new MemberStore();
+        AuthenticationInterceptor authInterceptor = new AuthenticationInterceptor(new BasicAuthorizationExtractor(),
+                new AuthenticationMemberConverter(memberRepository), memberStore);
+        MemberArgumentResolver memberArgumentResolver = new MemberArgumentResolver(memberStore);
 
         mockMvc = MockMvcBuilders.standaloneSetup(orderApiController)
                 .setControllerAdvice(new ControllerExceptionHandler())
+                .addInterceptors(authInterceptor)
                 .setCustomArgumentResolvers(memberArgumentResolver)
                 .addFilters(new CharacterEncodingFilter(CharEncoding.UTF_8, true))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
@@ -65,7 +73,7 @@ class OrderApiControllerTest extends DocsTest {
     @Test
     void order() throws Exception {
         OrderRequest request = new OrderRequest(1_000, List.of(1L, 2L));
-        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(orderService.order(any(Member.class), anyList(), anyInt())).willReturn(1L);
 
         mockMvc.perform(post("/orders")
@@ -95,7 +103,7 @@ class OrderApiControllerTest extends DocsTest {
         Money earnedPoints = new Money(3_000);
         Money usedPoints = new Money(3_000);
         Order order = Order.of(1L, List.of(orderItem), MEMBER_A.getId(), usedPoints, earnedPoints, LocalDateTime.now());
-        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(orderService.findByMemberAndOrderId(any(Member.class), anyLong())).willReturn(OrderResponse.from(order));
 
         mockMvc.perform(get("/orders/{id}", 1L)
@@ -136,7 +144,7 @@ class OrderApiControllerTest extends DocsTest {
         Order thirdOrder = Order.of(3L, List.of(orderItem), MEMBER_A.getId(), usedPoints, earnedPoints, LocalDateTime.now());
         SortedOrdersResponse response = SortedOrdersResponse.from(List.of(thirdOrder, secondOrder, firstOrder));
 
-        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(orderService.findByMemberAndLastOrderId(any(Member.class), anyLong(), anyInt())).willReturn(response);
 
         mockMvc.perform(get("/orders")

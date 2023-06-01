@@ -1,6 +1,7 @@
 package cart.ui.api;
 
 import cart.application.CartItemService;
+import cart.configuration.resolver.AuthMember;
 import cart.configuration.resolver.Checkout;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
@@ -32,35 +33,35 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
+    public ResponseEntity<List<CartItemResponse>> showCartItems(@AuthMember Member member) {
         return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member, @RequestBody @Valid CartItemRequest cartItemRequest) {
+    public ResponseEntity<Void> addCartItems(@AuthMember Member member, @RequestBody @Valid CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(Member member,
-                                                       @PathVariable Long id,
-                                                       @RequestBody @Valid CartItemQuantityUpdateRequest request) {
+    public ResponseEntity<Void> updateCartItemQuantity(@AuthMember Member member, @PathVariable Long id,
+            @RequestBody @Valid CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
+    public ResponseEntity<Void> removeCartItems(@AuthMember Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/checkout")
-    public ResponseEntity<CheckoutResponse> checkoutCartItems(Member member, @Checkout CheckoutRequestParameter parameter) {
+    public ResponseEntity<CheckoutResponse> checkoutCartItems(@AuthMember Member member,
+            @Checkout CheckoutRequestParameter parameter) {
         CheckoutResponse response = cartItemService.checkout(member, parameter.getCheckoutIds());
 
         return ResponseEntity.ok(response);

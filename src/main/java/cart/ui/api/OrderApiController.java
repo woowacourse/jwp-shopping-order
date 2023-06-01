@@ -1,6 +1,7 @@
 package cart.ui.api;
 
 import cart.application.OrderService;
+import cart.configuration.resolver.AuthMember;
 import cart.domain.Member;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderResponse;
@@ -27,14 +28,14 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(Member member, @RequestBody @Valid OrderRequest orderRequest) {
+    public ResponseEntity<Void> order(@AuthMember Member member, @RequestBody @Valid OrderRequest orderRequest) {
         Long persistOrderId = orderService.order(member, orderRequest.getCartItemIds(), orderRequest.getUsedPoints());
 
         return ResponseEntity.created(URI.create("/orders/" + persistOrderId)).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> findByOrderId(Member member, @PathVariable Long id) {
+    public ResponseEntity<OrderResponse> findByOrderId(@AuthMember Member member, @PathVariable Long id) {
         OrderResponse response = orderService.findByMemberAndOrderId(member, id);
 
         return ResponseEntity.ok(response);
@@ -42,7 +43,7 @@ public class OrderApiController {
 
     @GetMapping
     public ResponseEntity<SortedOrdersResponse> findByLastIdAndSize(
-            Member member, @RequestParam(defaultValue = "2147483647") Long lastId,
+            @AuthMember Member member, @RequestParam(defaultValue = "2147483647") Long lastId,
             @RequestParam(defaultValue = "20") int size) {
         SortedOrdersResponse response = orderService.findByMemberAndLastOrderId(member, lastId, size);
 

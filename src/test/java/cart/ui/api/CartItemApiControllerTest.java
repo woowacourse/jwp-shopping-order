@@ -28,6 +28,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.authentication.AuthenticationInterceptor;
+import cart.authentication.AuthenticationMemberConverter;
+import cart.authentication.BasicAuthorizationExtractor;
+import cart.authentication.MemberStore;
 import cart.configuration.resolver.CheckoutArgumentResolver;
 import cart.configuration.resolver.MemberArgumentResolver;
 import cart.domain.Member;
@@ -54,12 +58,16 @@ class CartItemApiControllerTest extends DocsTest {
 
     @BeforeEach
     void setUp() {
-        MemberArgumentResolver memberArgumentResolver = new MemberArgumentResolver(memberDao);
+        MemberStore memberStore = new MemberStore();
+        AuthenticationInterceptor authInterceptor = new AuthenticationInterceptor(new BasicAuthorizationExtractor(),
+                new AuthenticationMemberConverter(memberRepository), memberStore);
+        MemberArgumentResolver memberArgumentResolver = new MemberArgumentResolver(memberStore);
         CheckoutArgumentResolver checkoutArgumentResolver = new CheckoutArgumentResolver();
 
         mockMvc = MockMvcBuilders.standaloneSetup(cartItemApiController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .setCustomArgumentResolvers(memberArgumentResolver, checkoutArgumentResolver)
+                .addInterceptors(authInterceptor)
                 .addFilters(new CharacterEncodingFilter(CharEncoding.UTF_8, true))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
                 .alwaysDo(print())
@@ -70,7 +78,7 @@ class CartItemApiControllerTest extends DocsTest {
     @Test
     void showCartItems() throws Exception {
         CartItemResponse response = CartItemResponse.of(TWO_CHICKEN);
-        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(cartItemService.findByMember(any(Member.class))).willReturn(List.of(response));
 
         mockMvc.perform(get("/cart-items")
@@ -96,7 +104,7 @@ class CartItemApiControllerTest extends DocsTest {
     @Test
     void addCartItems() throws Exception {
         CartItemRequest request = new CartItemRequest(1L);
-        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(cartItemService.add(any(Member.class), any(CartItemRequest.class))).willReturn(1L);
 
         mockMvc.perform(post("/cart-items")
@@ -123,7 +131,7 @@ class CartItemApiControllerTest extends DocsTest {
     @Test
     void updateCartItemQuantity() throws Exception {
         CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(3);
-        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         willDoNothing().given(cartItemService).updateQuantity(any(Member.class), anyLong(), any(CartItemQuantityUpdateRequest.class));
 
         mockMvc.perform(patch("/cart-items/{id}", 1L)
@@ -148,7 +156,7 @@ class CartItemApiControllerTest extends DocsTest {
 
     @Test
     void removeCartItems() throws Exception {
-        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         willDoNothing().given(cartItemService).remove(any(Member.class), anyLong());
 
         mockMvc.perform(delete("/cart-items/{id}", 1L)
@@ -170,7 +178,7 @@ class CartItemApiControllerTest extends DocsTest {
     void checkout() throws Exception {
         CheckoutResponse checkoutResponse = CheckoutResponse.of(List.of(TWO_CHICKEN, FOUR_SALAD), MEMBER_A,
                 PointDiscountPolicy.DEFAULT, PointEarnPolicy.DEFAULT);
-        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(cartItemService.checkout(any(Member.class), anyList())).willReturn(checkoutResponse);
 
         mockMvc.perform(
