@@ -32,7 +32,7 @@ class CartItemDaoTest {
     @DisplayName("해당하는 장바구니 상품의 수량을 변경한다")
     void updateQuantity() {
         // given
-        CartItem currentCartItem = Dooly_CartItem1.ENTITY;
+        CartItem currentCartItem = Dooly_CartItem1.ENTITY();
         int currentQuantity = currentCartItem.getQuantity();
         int quantityToAdd = 5;
         currentCartItem.addQuantity(quantityToAdd);
@@ -72,7 +72,7 @@ class CartItemDaoTest {
         Optional<CartItem> cartItem = cartItemDao.selectByMemberIdAndProductId(memberId, productId);
 
         // then
-        assertThat(cartItem.get()).usingRecursiveComparison().isEqualTo(Dooly_CartItem2.ENTITY);
+        assertThat(cartItem.get()).usingRecursiveComparison().isEqualTo(Dooly_CartItem2.ENTITY());
     }
 
     @Test
@@ -87,7 +87,7 @@ class CartItemDaoTest {
         // then
         assertThat(cartItems)
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
-                .containsAnyOf(Dooly_CartItem1.ENTITY, Dooly_CartItem2.ENTITY);
+                .containsAnyOf(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY());
     }
 
     @Test
@@ -121,6 +121,6 @@ class CartItemDaoTest {
 
         // then
         assertThat(cartItems).usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(Ber_CartItem2.ENTITY, Ber_CartItem1.ENTITY);
+                .containsExactly(Ber_CartItem2.ENTITY(), Ber_CartItem1.ENTITY());
     }
 }

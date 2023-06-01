@@ -79,7 +79,7 @@ public class MemberApiDocumentTest {
     @Test
     void 사용자_금액_충전_문서화() throws Exception {
         // given
-        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY());
         MemberCashChargeRequest request = new MemberCashChargeRequest(10000);
         MemberCashChargeResponse response = new MemberCashChargeResponse(15000);
         given(memberService.chargeCash(any(AuthMember.class), any(MemberCashChargeRequest.class)))
@@ -112,7 +112,7 @@ public class MemberApiDocumentTest {
     @Test
     void 사용자_현재_금액_조회_문서화() throws Exception {
         // given
-        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY());
         MemberShowCurrentCashResponse response = new MemberShowCurrentCashResponse(5000);
         given(memberService.findMemberCurrentCharge(any(AuthMember.class)))
                 .willReturn(response);

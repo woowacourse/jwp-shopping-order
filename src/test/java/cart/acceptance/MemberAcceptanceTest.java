@@ -117,6 +117,29 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                         () -> assertThat(response.getBody().asString()).isEqualTo("충전할 금액은 1원 이상이어야합니다.")
                 );
             }
+
+            @Test
+            @DisplayName("충전한 금액을 더한 사용자의 금액을 반환한다.")
+            void success() {
+                int cashToCharge = 10000;
+                MemberCashChargeRequest request = new MemberCashChargeRequest(cashToCharge);
+                int expectedTotalCash = Dooly.CASH + cashToCharge;
+
+                // when
+                Response response = RestAssured.given().log().all()
+                        .auth().preemptive().basic(Dooly.EMAIL, Dooly.PASSWORD)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(request)
+                        .post("/members/cash")
+                        .then().log().all()
+                        .extract().response();
+
+                // then
+                assertAll(
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                        () -> assertThat(response.jsonPath().getInt("totalCash")).isEqualTo(expectedTotalCash)
+                );
+            }
         }
     }
 

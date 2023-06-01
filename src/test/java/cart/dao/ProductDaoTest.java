@@ -32,7 +32,7 @@ class ProductDaoTest {
     @DisplayName("받은 상품을 삽입한다.")
     void insertProduct() {
         // given
-        Product product = CHICKEN.DOMAIN;
+        Product product = CHICKEN.DOMAIN();
 
         // when, then
         assertThat(productDao.insertProduct(product)).isNotNull();
@@ -90,7 +90,7 @@ class ProductDaoTest {
         Product product = productDao.selectLastProduct();
 
         // then
-        assertThat(product).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY);
+        assertThat(product).usingRecursiveComparison().isEqualTo(CHICKEN.ENTITY());
     }
 
     @Test

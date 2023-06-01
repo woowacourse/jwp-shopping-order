@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@Sql({"/truncate.sql", "/data.sql"})
 public class AcceptanceTest {
 
     @LocalServerPort
@@ -20,7 +21,6 @@ public class AcceptanceTest {
     JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    @Sql({"/truncate.sql", "/data.sql"})
     void setUp() {
         RestAssured.port = port;
     }

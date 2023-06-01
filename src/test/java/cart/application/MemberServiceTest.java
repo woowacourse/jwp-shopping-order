@@ -32,7 +32,7 @@ class MemberServiceTest {
     @DisplayName("인증된 사용자와 충전할 금액을 받아서 충전된 사용자의 금액을 반환한다.")
     void chargeCash() {
         // given
-        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY());
         willDoNothing().given(memberDao).updateMemberCash(any(Member.class));
         AuthMember authMember = new AuthMember(Dooly.EMAIL, Dooly.PASSWORD);
         MemberCashChargeRequest request = new MemberCashChargeRequest(10000);
@@ -48,7 +48,7 @@ class MemberServiceTest {
     @DisplayName("인증된 사용자의 현재 금액을 반환한다.")
     void findMemberCurrentCharge() {
         // given
-        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY);
+        given(memberDao.selectMemberByEmail(Dooly.EMAIL)).willReturn(Dooly.ENTITY());
         AuthMember authMember = new AuthMember(Dooly.EMAIL, Dooly.PASSWORD);
 
         // when

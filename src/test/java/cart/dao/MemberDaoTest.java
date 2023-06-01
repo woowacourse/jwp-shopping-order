@@ -72,7 +72,7 @@ class MemberDaoTest {
             Member findMember = memberDao.selectMemberByEmail(email);
 
             // then
-            assertThat(findMember).usingRecursiveComparison().isEqualTo(Dooly.ENTITY);
+            assertThat(findMember).usingRecursiveComparison().isEqualTo(Dooly.ENTITY());
         }
 
         @Test
@@ -102,7 +102,7 @@ class MemberDaoTest {
             Member findMember = memberDao.selectMemberById(existId);
 
             // then
-            assertThat(findMember).usingRecursiveComparison().isEqualTo(Dooly.ENTITY);
+            assertThat(findMember).usingRecursiveComparison().isEqualTo(Dooly.ENTITY());
         }
 
         @Test

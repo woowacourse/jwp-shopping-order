@@ -17,8 +17,8 @@ class ProductsTest {
     @DisplayName("장바구니 상품을 받아서 상품 조회 목록을 반환한다.")
     void getProductCartItems() {
         // given
-        CartItems cartItems = new CartItems(List.of(CartItemFixtures.Dooly_CartItem2.ENTITY));
-        Products products = new Products(List.of(PANCAKE.ENTITY, PIZZA.ENTITY, SALAD.ENTITY));
+        CartItems cartItems = new CartItems(List.of(CartItemFixtures.Dooly_CartItem2.ENTITY()));
+        Products products = new Products(List.of(PANCAKE.ENTITY(), PIZZA.ENTITY(), SALAD.ENTITY()));
 
         // when
         List<ProductCartItemResponse> productCartItems = products.getProductCartItems(cartItems);

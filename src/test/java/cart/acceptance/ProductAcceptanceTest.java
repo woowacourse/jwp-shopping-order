@@ -461,9 +461,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                     "lastId", 0,
                     "pageItemCount", 3
             );
-            Product product1 = PANCAKE.ENTITY;
-            Product product2 = PIZZA.ENTITY;
-            Product product3 = SALAD.ENTITY;
+            Product product1 = PANCAKE.ENTITY();
+            Product product2 = PIZZA.ENTITY();
+            Product product3 = SALAD.ENTITY();
 
             // when
             Response response = RestAssured.given().log().all()
@@ -508,7 +508,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                     "lastId", 2,
                     "pageItemCount", 3
             );
-            Product product1 = CHICKEN.ENTITY;
+            Product product1 = CHICKEN.ENTITY();
 
             // when
             Response response = RestAssured.given().log().all()
@@ -656,7 +656,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             @DisplayName("상품이 해당 유저의 장바구니에 담겨 있지 않으면 상품 정보만 조회된다.")
             void getCartProduct_not_contains() {
                 // when
-                Product product = PANCAKE.ENTITY;
+                Product product = PANCAKE.ENTITY();
                 Response response = RestAssured.given().log().all()
                         .auth().preemptive().basic(Dooly.EMAIL, Dooly.PASSWORD)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
