@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class Member {
 
     private Long id;
@@ -19,7 +21,7 @@ public class Member {
     }
 
     public boolean checkPassword(String password) {
-        return this.password.equals(password);
+        return Objects.equals(this.password, password);
     }
 
     public Long getId() {
