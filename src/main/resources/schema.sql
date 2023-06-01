@@ -13,6 +13,13 @@ create table if not exists member
     password VARCHAR(255) NOT NULL
 );
 
+create table if not exists point
+(
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    point BIGINT NOT NULL DEFAULT 0
+);
+
 create table if not exists cart_item
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
