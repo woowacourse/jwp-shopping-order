@@ -1,5 +1,6 @@
 package cart.repository;
 
+import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.domain.Item;
@@ -9,7 +10,9 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
+import cart.exception.NonExistMemberException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -18,10 +21,12 @@ public class OrderRepository {
 
     private final OrderDao orderDao;
     private final OrderProductDao orderProductDao;
+    private final MemberDao memberDao;
 
-    public OrderRepository(OrderDao orderDao, OrderProductDao orderProductDao) {
+    public OrderRepository(OrderDao orderDao, OrderProductDao orderProductDao, MemberDao memberDao) {
         this.orderDao = orderDao;
         this.orderProductDao = orderProductDao;
+        this.memberDao = memberDao;
     }
 
     public Order save(Order order) {
@@ -59,5 +64,43 @@ public class OrderRepository {
                 product.getPrice().getValue(),
                 product.getImageUrl()
         );
+    }
+
+    public Optional<Order> findById(Long id) {
+        Optional<OrderEntity> savedOrderEntity = orderDao.findById(id);
+        if (savedOrderEntity.isEmpty()) {
+            return Optional.empty();
+        }
+        OrderEntity orderEntity = savedOrderEntity.get();
+        List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(id);
+        List<Item> items = toItems(orderProductEntities);
+        Member member = getMember(orderEntity);
+
+        Order order = new Order(
+                orderEntity.getId(),
+                member,
+                items,
+                new Money(orderEntity.getDeliveryFee()),
+                orderEntity.getCreatedAt(),
+                orderEntity.getOrderNumber()
+        );
+        return Optional.of(order);
+    }
+
+    private Member getMember(OrderEntity order) {
+        return memberDao.findById(order.getMemberId())
+                .orElseThrow(NonExistMemberException::new)
+                .toDomain();
+    }
+
+    private List<Item> toItems(List<OrderProductEntity> orderProductEntities) {
+        return orderProductEntities.stream()
+                .map(this::toItem)
+                .collect(Collectors.toList());
+    }
+
+    private Item toItem(OrderProductEntity it) {
+        return new Item(
+                new Product(it.getId(), it.getProductName(), it.getProductPrice(), it.getProductImageUrl()));
     }
 }

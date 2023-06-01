@@ -45,4 +45,9 @@ public class OrderProductDao {
         String sql = "select * from orders_product";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public List<OrderProductEntity> findByOrderId(Long orderId) {
+        String sql = "SELECT * FROM orders_product WHERE orders_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, orderId);
+    }
 }

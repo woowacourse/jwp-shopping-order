@@ -14,6 +14,7 @@ import java.util.List;
 public class TestFixture {
 
     public static final Member 밀리 = new Member(1L, "millie@email.com", "millie");
+    public static final Member 박스터 = new Member(2L, "boxster@email.com", "boxster");
 
     public static final Product 치킨_10000원 = new Product(1L, "치킨", BigDecimal.valueOf(10000), "http://chicken.com");
     public static final Product 피자_20000원 = new Product(2L, "피자", BigDecimal.valueOf(20000), "http://pizza.com");
