@@ -57,14 +57,14 @@ public class OrderApiController {
     }
 
     @GetMapping("/coupons")
-    public ResponseEntity<List<OrderCouponResponse>> findCoupons(
+    public ResponseEntity<AllOrderCouponResponse> findCoupons(
             @RequestParam final List<Long> cartItemId,
             Member member
     ) {
-        List<OrderCouponResponse> orderCouponResponses = couponService.calculateCouponForCarts(member, cartItemId);
+        AllOrderCouponResponse allOrderCouponResponse = couponService.calculateCouponForCarts(member, cartItemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(orderCouponResponses);
+                .body(allOrderCouponResponse);
     }
 }

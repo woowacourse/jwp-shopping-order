@@ -6,6 +6,7 @@ import cart.domain.CouponInfo;
 import cart.domain.PercentageCoupon;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
@@ -13,9 +14,9 @@ public class MemberCouponEntity {
     private final Long id;
     private final Long memberId;
     private final Long couponId;
-    private final Date expiredAt;
+    private final LocalDateTime expiredAt;
 
-    public MemberCouponEntity(final Long id, final Long memberId, final Long couponId, final Date expiredAt) {
+    public MemberCouponEntity(final Long id, final Long memberId, final Long couponId, final LocalDateTime expiredAt) {
         this.id = id;
         this.memberId = memberId;
         this.couponId = couponId;
@@ -79,7 +80,7 @@ public class MemberCouponEntity {
         return couponId;
     }
 
-    public Date getExpiredAt() {
+    public LocalDateTime getExpiredAt() {
         return expiredAt;
     }
 

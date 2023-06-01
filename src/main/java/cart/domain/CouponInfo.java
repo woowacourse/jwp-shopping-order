@@ -1,6 +1,6 @@
 package cart.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class CouponInfo {
@@ -8,9 +8,9 @@ public class CouponInfo {
     private final String name;
     private final Integer minPrice;
     private final Integer maxPrice;
-    private final Date expiredAt;
+    private final LocalDateTime expiredAt;
 
-    public CouponInfo(final Long id, final String name, final Integer minPrice, final Integer maxPrice, final Date expiredAt) {
+    public CouponInfo(final Long id, final String name, final Integer minPrice, final Integer maxPrice, final LocalDateTime expiredAt) {
         this.id = id;
         this.name = name;
         this.minPrice = minPrice;
@@ -34,7 +34,7 @@ public class CouponInfo {
         return maxPrice;
     }
 
-    public Date getExpiredAt() {
+    public LocalDateTime getExpiredAt() {
         return expiredAt;
     }
 

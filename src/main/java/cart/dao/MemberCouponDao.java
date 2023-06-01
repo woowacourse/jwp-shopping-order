@@ -6,7 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +24,7 @@ public class MemberCouponDao {
             rs.getLong("id"),
             rs.getLong("member_id"),
             rs.getLong("coupon_id"),
-            rs.getDate("expired_at")
+            new Date(rs.getDate("expired_at").getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
     );
 
     public List<MemberCouponEntity> findUsableByMemberId(final Long memberId) {

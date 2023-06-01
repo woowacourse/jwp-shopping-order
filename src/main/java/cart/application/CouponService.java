@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.domain.*;
+import cart.dto.AllOrderCouponResponse;
 import cart.dto.OrderCouponResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
@@ -20,7 +21,7 @@ public class CouponService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public List<OrderCouponResponse> calculateCouponForCarts(final Member member, final List<Long> selectedCartItemIds) {
+    public AllOrderCouponResponse calculateCouponForCarts(final Member member, final List<Long> selectedCartItemIds) {
         List<CartItem> cartItems = cartItemRepository.findByMember(member);
         // TODO: 5/30/23 이거 도메인 로직으로 빼기
         List<CartItem> selectedCartItems = cartItems.stream()
@@ -31,9 +32,10 @@ public class CouponService {
                 .mapToInt(cartItem -> cartItem.getProduct().getPrice() * cartItem.getQuantity())
                 .sum();
         List<Coupon> coupons = couponRepository.findCouponByMember(member);
-        return coupons.stream()
+        List<OrderCouponResponse> orderCouponResponses = coupons.stream()
                 .map(coupon -> convertToOrderResponse(coupon, totalPrice))
                 .collect(Collectors.toList());
+        return new AllOrderCouponResponse(orderCouponResponses);
     }
 
     private OrderCouponResponse convertToOrderResponse(final Coupon coupon, final int totalPrice) {
@@ -43,15 +45,20 @@ public class CouponService {
                     couponInfo.getId(),
                     couponInfo.getName(),
                     couponInfo.getMinPrice(),
+                    couponInfo.getMaxPrice(),
                     true,
-                    coupon.calculateDiscount(totalPrice));
+                    coupon.calculateDiscount(totalPrice),
+                    couponInfo.getExpiredAt()
+            );
         }
         return new OrderCouponResponse(
                 couponInfo.getId(),
                 couponInfo.getName(),
                 couponInfo.getMinPrice(),
+                couponInfo.getMaxPrice(),
                 false,
-                null
+                null,
+                couponInfo.getExpiredAt()
         );
     }
 }

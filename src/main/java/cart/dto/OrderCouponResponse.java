@@ -1,24 +1,28 @@
 package cart.dto;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class OrderCouponResponse {
-
     private Long id;
     private String name;
-    private Integer minPrice;
+    private Integer minOrderPrice;
+    private Integer maxDiscountPrice;
     private Boolean isAvailable;
     private Integer discountPrice;
+    private LocalDateTime expiredAt;
 
     public OrderCouponResponse() {
     }
 
-    public OrderCouponResponse(final Long id, final String name, final Integer minPrice, final Boolean isAvailable, final Integer discountPrice) {
+    public OrderCouponResponse(final Long id, final String name, final Integer minOrderPrice, final Integer maxDiscountPrice, final Boolean isAvailable, final Integer discountPrice, final LocalDateTime expiredAt) {
         this.id = id;
         this.name = name;
-        this.minPrice = minPrice;
+        this.minOrderPrice = minOrderPrice;
+        this.maxDiscountPrice = maxDiscountPrice;
         this.isAvailable = isAvailable;
         this.discountPrice = discountPrice;
+        this.expiredAt = expiredAt;
     }
 
     public Long getId() {
@@ -29,8 +33,12 @@ public class OrderCouponResponse {
         return name;
     }
 
-    public Integer getMinPrice() {
-        return minPrice;
+    public Integer getMinOrderPrice() {
+        return minOrderPrice;
+    }
+
+    public Integer getMaxDiscountPrice() {
+        return maxDiscountPrice;
     }
 
     public Boolean getIsAvailable() {
@@ -41,6 +49,10 @@ public class OrderCouponResponse {
         return discountPrice;
     }
 
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -48,14 +60,16 @@ public class OrderCouponResponse {
         final OrderCouponResponse that = (OrderCouponResponse) o;
         return Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
-                && Objects.equals(minPrice, that.minPrice)
+                && Objects.equals(minOrderPrice, that.minOrderPrice)
+                && Objects.equals(maxDiscountPrice, that.maxDiscountPrice)
                 && Objects.equals(isAvailable, that.isAvailable)
-                && Objects.equals(discountPrice, that.discountPrice);
+                && Objects.equals(discountPrice, that.discountPrice)
+                && Objects.equals(expiredAt, that.expiredAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, minPrice, isAvailable, discountPrice);
+        return Objects.hash(id, name, minOrderPrice, maxDiscountPrice, isAvailable, discountPrice, expiredAt);
     }
 
     @Override
@@ -63,9 +77,11 @@ public class OrderCouponResponse {
         return "OrderCouponResponse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", minPrice=" + minPrice +
+                ", minOrderPrice=" + minOrderPrice +
+                ", maxDiscountPrice=" + maxDiscountPrice +
                 ", isAvailable=" + isAvailable +
                 ", discountPrice=" + discountPrice +
+                ", expiredAt=" + expiredAt +
                 '}';
     }
 }
