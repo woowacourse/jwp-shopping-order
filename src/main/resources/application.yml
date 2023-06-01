@@ -1,6 +1,6 @@
 spring:
   thymeleaf:
-    cache: false침
+    cache: false
 
 ---
 
