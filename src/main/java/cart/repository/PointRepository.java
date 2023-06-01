@@ -1,10 +1,14 @@
 package cart.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import cart.dao.PointDao;
 import cart.domain.Member;
+import cart.domain.OrderPoint;
 import cart.domain.Point;
+import cart.domain.PointManager;
+import cart.domain.Price;
 import cart.entity.PointEntity;
 import cart.exception.NotEnoughPointException;
 import org.springframework.stereotype.Repository;
@@ -13,16 +17,23 @@ import org.springframework.stereotype.Repository;
 public class PointRepository {
 
     private final PointDao pointDao;
+    private final PointManager pointManager;
 
-    public PointRepository(final PointDao pointDao) {
+    public PointRepository(final PointDao pointDao, final PointManager pointManager) {
         this.pointDao = pointDao;
+        this.pointManager = pointManager;
     }
 
-    public void reduceMemberPoint(final Member member, final Point usedPoint) {
+    public OrderPoint updatePoint(final Member member, final Point usedPoint, final Price totalPrice, final Timestamp createdAt) {
+        reduceMemberPoint(member, usedPoint);
+        final PointEntity pointEntity = addPoint(member, totalPrice, createdAt);
+        return new OrderPoint(pointEntity.getId(), usedPoint, Point.valueOf(pointEntity.getEarnedPoint()));
+    }
+
+    private void reduceMemberPoint(final Member member, final Point usedPoint) {
         final List<PointEntity> pointEntities = pointDao.findRemainingPointsByMemberId(member.getId());
         final Point totalLeftPoint = getTotalLeftPoint(pointEntities);
         validatePoint(totalLeftPoint, usedPoint);
-
         deleteLeftPointByUsedPoint(pointEntities, usedPoint, 0);
     }
 
@@ -50,5 +61,11 @@ public class PointRepository {
         }
         pointDao.updateLeftPoint(pointEntity.getId(), Point.ZERO);
         deleteLeftPointByUsedPoint(pointEntities, usedPoint.subtract(leftPoint), index + 1);
+    }
+
+    private PointEntity addPoint(final Member member, final Price totalPrice, final Timestamp createdAt) {
+        final Point earnedPoint = pointManager.getPoint(totalPrice);
+        final Timestamp expiredAt = pointManager.getExpiredAt(createdAt);
+        return pointDao.insert(new PointEntity(earnedPoint.getValue(), earnedPoint.getValue(), member.getId(), expiredAt, createdAt));
     }
 }
