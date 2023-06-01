@@ -18,4 +18,8 @@ public class MemberRepository {
     public List<Member> findAll() {
         return memberDao.findAll();
     }
+
+    public Member findByEmail(String email) {
+        return memberDao.findByEmail(email);
+    }
 }
