@@ -6,10 +6,11 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
 import cart.domain.member.Member;
+import cart.service.coupon.CouponMapper;
 import cart.service.coupon.CouponProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,10 +26,14 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class CouponProviderTest {
 
-    @InjectMocks
     private CouponProvider couponProvider;
     @Mock
     private CouponRepository couponRepository;
+
+    @BeforeEach
+    void init() {
+        couponProvider = new CouponProvider(couponRepository, new CouponMapper());
+    }
 
     @Test
     void 회원이_소유한_쿠폰을_조회한다() {
