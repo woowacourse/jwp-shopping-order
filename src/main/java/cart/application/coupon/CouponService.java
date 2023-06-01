@@ -35,7 +35,7 @@ public class CouponService {
             throw new CannotChangeCouponStatusException();
         }
 
-        couponRepository.changeStatus(couponId, member.getId());
+        couponRepository.changeStatusTo(couponId, member.getId(), Boolean.FALSE);
     }
 
     public void deleteCoupon(final Long couponId, final Long memberId) {

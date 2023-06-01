@@ -77,7 +77,7 @@ class CouponServiceTest {
             couponService.reissueCoupon(couponId, request);
 
             // then
-            then(couponRepository).should(only()).changeStatus(any(), any());
+            then(couponRepository).should(only()).changeStatusTo(any(), any(), any());
         }
 
         @Test

@@ -68,11 +68,12 @@ public class CouponDao {
         return jdbcTemplate.query(sql, params, couponTypeCouponEntityRowMapper);
     }
 
-    public void changeStatus(final Long couponId, final Long memberId) {
-        final String sql = "UPDATE coupon SET usage_status = true " +
+    public void changeStatus(final Long couponId, final Long memberId, final Boolean toChange) {
+        final String sql = "UPDATE coupon SET usage_status = :toChange " +
                 "AND id = :couponId AND member_id = :memberId";
 
         final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("toChange", toChange)
                 .addValue("couponId", couponId)
                 .addValue("memberId", memberId);
 

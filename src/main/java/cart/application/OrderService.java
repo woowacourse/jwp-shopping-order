@@ -77,7 +77,7 @@ public class OrderService {
             throw new AlreadyUsedCouponException();
         }
 
-        couponRepository.changeStatus(couponId, memberId);
+        couponRepository.changeStatusTo(couponId, memberId, Boolean.TRUE);
 
         return coupon;
     }

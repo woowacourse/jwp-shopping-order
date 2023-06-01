@@ -57,13 +57,13 @@ class CouponDaoTest {
     @Test
     void 쿠폰의_상태를_변경한다() {
         // when
-        couponDao.changeStatus(1L, 1L);
+        couponDao.changeStatus(1L, 1L, true);
 
         // then
         final List<CouponTypeCouponEntity> results = couponDao.findByMemberId(1L);
         assertAll(
                 () -> assertThat(results).hasSize(3),
-                () -> assertThat(results.get(1).getUsageStatus()).isFalse()
+                () -> assertThat(results.get(0).getUsageStatus()).isTrue()
         );
     }
 

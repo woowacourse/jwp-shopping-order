@@ -14,9 +14,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -42,7 +40,7 @@ class CouponJdbcRepositoryTest {
     @Test
     void 쿠폰_상태를_변경한다 () {
         // when, then
-        assertThatCode(() -> couponJdbcRepository.changeStatus(1L, 1L))
+        assertThatCode(() -> couponJdbcRepository.changeStatusTo(1L, 1L, false))
                 .doesNotThrowAnyException();
     }
 

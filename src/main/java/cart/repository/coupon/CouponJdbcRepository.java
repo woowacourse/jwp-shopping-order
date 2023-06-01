@@ -34,8 +34,8 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
-    public void changeStatus(final Long couponId, final Long memberId) {
-        couponDao.changeStatus(couponId, memberId);
+    public void changeStatusTo(final Long couponId, final Long memberId, final Boolean toChange) {
+        couponDao.changeStatus(couponId, memberId, toChange);
     }
 
     @Override
