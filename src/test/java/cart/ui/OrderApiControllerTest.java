@@ -5,15 +5,19 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.fixture.ProductFixture.피자;
+import cart.dto.OrderRequest;
+import cart.fixture.ProductFixture;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
 import static cart.fixture.MemberFixture.다니;
+import static cart.fixture.ProductFixture.치킨;
+import static cart.fixture.ProductFixture.피자;
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -25,7 +29,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-class CartItemApiControllerTest extends ControllerTestConfig {
+class OrderApiControllerTest extends ControllerTestConfig {
 
     private static final String DOCUMENT_IDENTIFIER = "{method-name}";
 
@@ -45,10 +49,10 @@ class CartItemApiControllerTest extends ControllerTestConfig {
     }
 
     @Test
-    void showCartItems() {
-        final Product 상품 = 상품_등록(피자.PRODUCT);
+    void showOrderedItems() {
+        final Product 피자 = 상품_등록(ProductFixture.피자.PRODUCT);
         final Member 회원 = 회원_등록();
-        final CartItem 장바구니_상품 = 장바구니_등록(상품, 회원);
+        final CartItem 장바구니_상품 = 장바구니_등록(피자, 회원);
 
         given(spec)
                 .log().all()
@@ -57,27 +61,33 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("basic 64인코딩값")
                         ),
                         responseFields(
-                                fieldWithPath("[].id").description("장바구니 상품 식별자값"),
-                                fieldWithPath("[].quantity").description("장바구니 상품 수량"),
-                                fieldWithPath("[].product.id").description("상품 식별자값"),
-                                fieldWithPath("[].product.name").description("상품명"),
-                                fieldWithPath("[].product.price").description("상품 가격"),
-                                fieldWithPath("[].product.imageUrl").description("상품 이미지 주소")
+                                fieldWithPath("[].orderId").description("주문 내역 식별자값"),
+                                fieldWithPath("[].orderProducts.productId").description("주문 상품 식별자값"),
+                                fieldWithPath("[].orderProducts.name").description("주문 상품 이름"),
+                                fieldWithPath("[].orderProducts.imageUrl").description("주문 상품 이미지 URL"),
+                                fieldWithPath("[].orderProducts.quantity").description("주문 상품 수량"),
+                                fieldWithPath("[].orderProducts.price").description("주문 상품 개별 가격"),
+                                fieldWithPath("[].orderProducts.totalPrice").description("주문 상품 총 가격")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
                 .log().all()
                 .auth().preemptive().basic(회원.getEmail(), 회원.getPassword())
-                .get("/cart-items")
+                .get("/orders")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    void addCartItems() {
+    void addOrder() {
         final Product 상품 = 상품_등록(피자.PRODUCT);
+        final Product 상품2 = 상품_등록(치킨.PRODUCT);
         final Member 회원 = 회원_등록();
+        final CartItem 장바구니_상품 = 장바구니_등록(상품, 회원);
+        final CartItem 장바구니_상품2 = 장바구니_등록(상품2, 회원);
+
+        List<Long> 주문할_상품들_id = List.of(장바구니_상품.getId(), 장바구니_상품2.getId());
 
         given(spec)
                 .log().all()
@@ -86,14 +96,15 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                                 headerWithName("Authorization").description("basic 64인코딩값")
                         ),
                         requestFields(
-                                fieldWithPath("productId").description("상품 식별자값")
+                                fieldWithPath("cartIds").description("상품 식별자값들"),
+                                fieldWithPath("point").description("사용할 포인트")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
                 .log().all()
                 .auth().preemptive().basic(회원.getEmail(), 회원.getPassword())
-                .body(new CartItemRequest(상품.getId()))
-                .post("/cart-items")
+                .body(new OrderRequest(주문할_상품들_id, 0))
+                .post("/orders")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
