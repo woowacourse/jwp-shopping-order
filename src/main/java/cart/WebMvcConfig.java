@@ -28,6 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedOrigins("http://localhost:3000")
                 .allowCredentials(true)
-                .allowedHeaders("Content-Type", "Authorization");
+                .allowedHeaders("Content-Type", "Authorization")
+                .exposedHeaders("Location");
     }
 }
