@@ -1,10 +1,10 @@
 package cart.domain.order;
 
-import static cart.TestDataFixture.CART_ITEM_1;
-import static cart.TestDataFixture.CART_ITEM_2;
 import static cart.TestDataFixture.DISCOUNT_50_PERCENT;
 import static cart.TestDataFixture.MEMBER_1;
-import static cart.TestDataFixture.ORDER_NO_USE_COUPON;
+import static cart.domain.DomainTestDataFixture.CART_ITEM_1;
+import static cart.domain.DomainTestDataFixture.CART_ITEM_2;
+import static cart.domain.DomainTestDataFixture.ORDER_NO_USE_COUPON;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.coupon.MemberCoupon;
