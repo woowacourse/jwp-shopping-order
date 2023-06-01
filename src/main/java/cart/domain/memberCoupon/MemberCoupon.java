@@ -2,10 +2,11 @@ package cart.domain.memberCoupon;
 
 import cart.domain.Member;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.DiscountAction;
 
 import java.util.Objects;
 
-public class MemberCoupon {
+public class MemberCoupon implements DiscountAction {
     private final Long id;
     private final Member member;
     private final Coupon coupon;
@@ -43,5 +44,10 @@ public class MemberCoupon {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public int discount(int money) {
+        return coupon.discount(money);
     }
 }

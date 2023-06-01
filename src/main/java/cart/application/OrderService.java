@@ -43,24 +43,17 @@ public class OrderService {
         // 총가격, 할인가 계산
         int totalPrice = calculateTotalPriceOfProducts(orderProducts);
         int discountPrice = totalPrice;
-        Coupon usedCoupon = null;
+        MemberCoupon usedMemberCoupon = null;
         if (orderRequest.getCouponId() != null) {
-            usedCoupon = couponRepository.findById(orderRequest.getCouponId()); // memberCoupon ID를 보내주는 게 더 낫지않을까?
-            discountPrice = usedCoupon.discount(totalPrice);
-
-            // TODO 유저가 가지고 있는 쿠폰인지 검증
-            memberCouponRepository.findByCouponId(orderRequest.getCouponId());
-
-            // TODO 사용한 쿠폰 삭제 필요
-//            memberCouponRepository.delete(usedCoupon.getId());
+            usedMemberCoupon = memberCouponRepository.findById(orderRequest.getCouponId());
+            discountPrice = usedMemberCoupon.discount(totalPrice);
+            memberCouponRepository.delete(usedMemberCoupon.getId());
         }
 
-        Order order = new Order(totalPrice, discountPrice, orderProducts, usedCoupon, member);
-
-        // 주문한 상품을 장바구니에서 제거
+        // TODO order가 MemberCoupon을 가지게 변경
+        Order order = new Order(totalPrice, discountPrice, orderProducts, usedMemberCoupon.getCoupon(), member);
         orderRequest.getSelectCartIds().stream()
                 .forEach(cartItemDao::deleteById);
-
         return orderRepository.add(order);
     }
 
