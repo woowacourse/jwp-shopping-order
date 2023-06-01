@@ -67,8 +67,8 @@ class FindOrderServiceTest {
         void 사용자의_특정_주문을_상세_조회한다() {
             // given
             given(orderDao.findById(orderByMember1.getId())).willReturn(orderByMember1);
-            given(pointService.getIncreasedPointAmount(member1.getId())).willReturn(0);
-            given(pointService.getUsedPointAmount(member1.getId())).willReturn(0);
+            given(pointService.getIncreasedPointAmountByMemberId(member1.getId())).willReturn(0);
+            given(pointService.getUsedPointAmountByMemberId(member1.getId())).willReturn(0);
 
             // when & then
             assertDoesNotThrow(() -> findOrderService.getOrder(member1, orderByMember1.getId()));
