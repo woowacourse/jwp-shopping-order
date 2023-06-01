@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.coupon.Coupon;
 import cart.domain.policy.NoDiscountPolicy;
 import cart.domain.policy.DiscountPolicy;
 import cart.domain.policy.PriceDiscountPolicy;

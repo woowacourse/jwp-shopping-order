@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.config.auth.Auth;
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;

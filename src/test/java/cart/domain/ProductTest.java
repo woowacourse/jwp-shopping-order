@@ -32,7 +32,7 @@ class ProductTest {
     @Test
     @DisplayName("상품에 쿠폰을 적용 할 수 있다.")
     void applyCoupon() {
-        Price price = PRODUCT_1000.applyCoupon(COUPON1_Percent_10);
+        Price price = PRODUCT_1000.applyCoupon(PRODUCT_COUPON1_Percent_10);
 
         assertThat(price).isEqualTo(new Price(900));
     }
@@ -40,7 +40,7 @@ class ProductTest {
     @Test
     @DisplayName("할인된 상품에 쿠폰을 적용 할 수 있다.")
     void applyCoupon1() {
-        Price price = PRODUCT_1000_500.applyCoupon(COUPON1_Percent_10);
+        Price price = PRODUCT_1000_500.applyCoupon(PRODUCT_COUPON1_Percent_10);
 
         assertThat(price).isEqualTo(new Price(450));
     }

@@ -1,6 +1,7 @@
 package cart.dao;
 
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.ProductCoupon;
 import cart.domain.policy.DiscountPolicy;
 import cart.domain.policy.DiscountPolicyResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,7 +29,7 @@ public class CouponDao {
         String discount_policy_name = rs.getString("discount_policy_name");
         int discountValue = rs.getInt("discount_value");
         DiscountPolicy discountPolicy = DiscountPolicyResolver.of(discount_policy_name, discountValue);
-        return new Coupon(id, name, discountPolicy);
+        return new ProductCoupon(id, name, discountPolicy);
     };
 
     public Coupon getCouponById(Long id) {

@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.coupon.Coupon;
 import cart.exception.CartItemException;
 
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.CouponDao;
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import cart.domain.Member;
 import cart.dto.CouponResponse;
 import org.springframework.stereotype.Service;

@@ -4,6 +4,8 @@ import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Coupons;
 import cart.dto.CartItemPriceResponse;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;

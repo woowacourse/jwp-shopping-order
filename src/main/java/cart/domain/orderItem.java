@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.domain.coupon.Coupon;
+
 public class orderItem {
     private final CartItem cartItem;
     private final Coupon coupon;

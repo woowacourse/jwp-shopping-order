@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static cart.fixture.CouponFixture.COUPON1_Percent_10;
-import static cart.fixture.CouponFixture.COUPON2_Price_1000;
+import static cart.fixture.CouponFixture.PRODUCT_COUPON1_Percent_10;
+import static cart.fixture.CouponFixture.PRODUCT_COUPON2_Price_1000;
 import static org.assertj.core.api.Assertions.*;
 
 @JdbcTest
@@ -31,7 +31,7 @@ class CouponDaoTest {
     @Test
     @DisplayName("쿠폰을 생성한다.")
     void createCoupon() {
-        Long id = couponDao.createCoupon(COUPON1_Percent_10);
+        Long id = couponDao.createCoupon(PRODUCT_COUPON1_Percent_10);
 
         assertThat(id).isNotNull();
     }
@@ -39,7 +39,7 @@ class CouponDaoTest {
     @Test
     @DisplayName("쿠폰을 삭제한다.")
     void deleteCoupon() {
-        Long id = couponDao.createCoupon(COUPON1_Percent_10);
+        Long id = couponDao.createCoupon(PRODUCT_COUPON1_Percent_10);
 
         couponDao.deleteCoupon(id);
 
@@ -51,8 +51,8 @@ class CouponDaoTest {
     @Test
     @DisplayName("멤버가 가진 쿠폰목록을 조회한다.")
     void findCouponsByMember() {
-        Long id1 = couponDao.createCoupon(COUPON1_Percent_10);
-        Long id2 = couponDao.createCoupon(COUPON2_Price_1000);
+        Long id1 = couponDao.createCoupon(PRODUCT_COUPON1_Percent_10);
+        Long id2 = couponDao.createCoupon(PRODUCT_COUPON2_Price_1000);
         Member member = new Member("email", "password");
         Long memberId = memberDao.addMember(member);
         String sql = "INSERT INTO coupon_box (id, member_id, coupon_id) values (?, ? ,?)";
