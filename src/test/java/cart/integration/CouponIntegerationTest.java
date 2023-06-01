@@ -3,6 +3,9 @@ package cart.integration;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.request.CouponCreateRequest;
+import cart.dto.response.CouponIssuableResponse;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,8 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.util.Base64;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CouponIntegerationTest extends IntegrationTest {
 
@@ -62,5 +68,25 @@ class CouponIntegerationTest extends IntegrationTest {
                 .when().get("/users/coupons")
                 .then()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("쿠폰을 조회한다.")
+    void getCoupons() {
+        String encoded = new String(Base64.getEncoder().encode("a@a:123".getBytes()));
+
+        ExtractableResponse<Response> response = given().log().uri()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + encoded)
+                .when().get("/coupons")
+                .then()
+                .statusCode(HttpStatus.OK.value()).extract();
+
+        List<CouponIssuableResponse> couponResponses = response.jsonPath().getList(".", CouponIssuableResponse.class);
+
+        assertAll(
+                () -> assertThat(couponResponses.get(0).getName()).isEqualTo("5000원 할인 쿠폰"),
+                () -> assertThat(couponResponses.get(0).getDiscountType()).isEqualTo("reduction")
+        );
     }
 }

@@ -84,11 +84,11 @@ public class Coupon {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coupon coupon = (Coupon) o;
-        return Objects.equals(id, coupon.id) && Objects.equals(name, coupon.name) && Objects.equals(couponTypes, coupon.couponTypes);
+        return minimumPrice == coupon.minimumPrice && discountPrice == coupon.discountPrice && Double.compare(coupon.discountRate, discountRate) == 0 && Objects.equals(name, coupon.name) && Objects.equals(couponTypes, coupon.couponTypes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, couponTypes);
+        return Objects.hash(name, couponTypes, minimumPrice, discountPrice, discountRate);
     }
 }

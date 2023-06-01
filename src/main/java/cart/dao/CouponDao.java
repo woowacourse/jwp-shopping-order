@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class CouponDao {
     private final JdbcTemplate jdbcTemplate;
@@ -37,5 +39,11 @@ public class CouponDao {
         String sql = "select exists(select * from coupon where id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
+    }
+
+    public List<CouponEntity> findAllCoupons() {
+        String sql = "select * from coupon";
+
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

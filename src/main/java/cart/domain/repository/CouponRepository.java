@@ -12,4 +12,6 @@ public interface CouponRepository {
     Long publishUserCoupon(Member member, Long couponId);
 
     List<Coupon> getUserCoupon(Member member);
+
+    List<Coupon> findAllCoupons();
 }

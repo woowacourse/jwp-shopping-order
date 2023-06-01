@@ -9,6 +9,9 @@ import cart.domain.repository.MemberCouponRepository;
 import cart.entity.CouponEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     private final MemberCouponDao memberCouponDao;
@@ -25,6 +28,13 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     @Override
     public void changeUserUsedCouponAvailability(Coupon coupon) {
         memberCouponDao.changeUserUsedCouponAvailability(coupon.getId());
+    }
+
+    @Override
+    public List<Coupon> findMemberCoupons(Member member) {
+        return memberCouponDao.findCouponByMemberId(member.getId()).stream()
+                .map(this::toDomain)
+                .collect(Collectors.toList());
     }
 
     private Coupon toDomain(CouponEntity entity) {

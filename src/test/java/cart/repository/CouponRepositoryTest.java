@@ -40,4 +40,10 @@ class CouponRepositoryTest {
         List<Coupon> memberCoupons = couponRepository.getUserCoupon(member);
         assertThat(memberCoupons.get(0).getName()).isEqualTo("5000원 할인 쿠폰");
     }
+
+    @Test
+    @DisplayName("쿠폰을 조회한다")
+    void getCoupons() {
+        assertThat(couponRepository.findAllCoupons().size()).isEqualTo(5);
+    }
 }

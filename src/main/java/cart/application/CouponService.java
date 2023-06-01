@@ -1,8 +1,11 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.domain.coupon.Coupon;
 import cart.domain.repository.CouponRepository;
+import cart.domain.repository.MemberCouponRepository;
 import cart.dto.request.CouponCreateRequest;
+import cart.dto.response.CouponIssuableResponse;
 import cart.dto.response.CouponResponse;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class CouponService {
     private final CouponRepository couponRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
-    public CouponService(CouponRepository couponRepository) {
+    public CouponService(CouponRepository couponRepository, MemberCouponRepository memberCouponRepository) {
         this.couponRepository = couponRepository;
+        this.memberCouponRepository = memberCouponRepository;
     }
 
     public Long publishUserCoupon(Member member, CouponCreateRequest request) {
@@ -27,6 +32,17 @@ public class CouponService {
                         it.getCouponTypes().getCouponTypeName(),
                         it.getMinimumPrice(), it.getDiscountRate(),it.getDiscountPrice()
                 ))
+                .collect(Collectors.toList());
+    }
+
+    public List<CouponIssuableResponse> getCoupons(Member member) {
+        List<Coupon> coupons = couponRepository.findAllCoupons();
+        List<Coupon> memberCoupons = memberCouponRepository.findMemberCoupons(member);
+
+        return coupons.stream().map(it -> new CouponIssuableResponse(it.getId(), it.getName(),
+                        it.getCouponTypes().getCouponTypeName(),
+                        it.getMinimumPrice(), it.getDiscountRate(), it.getDiscountPrice(),
+                        !memberCoupons.contains(it)))
                 .collect(Collectors.toList());
     }
 }

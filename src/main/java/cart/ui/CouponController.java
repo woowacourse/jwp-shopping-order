@@ -3,6 +3,7 @@ package cart.ui;
 import cart.application.CouponService;
 import cart.domain.Member;
 import cart.dto.request.CouponCreateRequest;
+import cart.dto.response.CouponIssuableResponse;
 import cart.dto.response.CouponResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,12 @@ public class CouponController {
     @GetMapping("/users/coupons")
     public ResponseEntity<List<CouponResponse>> getUserCoupons(Member member) {
         List<CouponResponse> coupons = couponService.getUserCoupon(member);
+        return ResponseEntity.ok(coupons);
+    }
+
+    @GetMapping("/coupons")
+    public ResponseEntity<List<CouponIssuableResponse>> getCoupons(Member member) {
+        List<CouponIssuableResponse> coupons = couponService.getCoupons(member);
         return ResponseEntity.ok(coupons);
     }
 }
