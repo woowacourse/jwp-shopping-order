@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 class ProductDaoTest {
@@ -75,5 +76,20 @@ class ProductDaoTest {
         // then
         assertThat(findProducts).map(Product::getId)
                 .isEqualTo(ids);
+    }
+
+    @Sql("/productBatchInsert.sql")
+    @Test
+    void getPagedProductsDescending() {
+        // given
+        int unitSize = 7;
+        int page = 2;
+
+        // when
+        final List<Product> pagedProducts = productDao.getPagedProductsDescending(unitSize, page);
+
+        // then
+        assertThat(pagedProducts).map(Product::getId)
+                .containsExactly(13L, 12L, 11L, 10L, 9L, 8L, 7L);
     }
 }
