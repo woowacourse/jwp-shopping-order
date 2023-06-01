@@ -1,8 +1,8 @@
 package cart.config;
 
-import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
+import cart.repository.CartItemRepository;
+import cart.repository.MemberRepository;
+import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
@@ -26,23 +26,22 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public abstract class ControllerTestConfig {
 
+    @Autowired
+    protected MemberRepository memberRepository;
+    @Autowired
+    protected ProductRepository productRepository;
+    @Autowired
+    protected CartItemRepository cartItemRepository;
+    protected RequestSpecification spec;
+
     @LocalServerPort
     int port;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    protected MemberDao memberDao;
-    protected ProductDao productDao;
-    protected CartItemDao cartItemDao;
-    protected RequestSpecification spec;
-
     @BeforeEach
     void controller(RestDocumentationContextProvider rest) {
-        memberDao = new MemberDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
-        cartItemDao = new CartItemDao(jdbcTemplate);
-
         RestAssured.port = port;
 
         this.spec = new RequestSpecBuilder()

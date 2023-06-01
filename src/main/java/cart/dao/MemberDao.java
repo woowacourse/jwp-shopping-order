@@ -1,59 +1,82 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public Member getMemberById(Long id) {
+    public Optional<MemberEntity> getById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        try {
+            MemberEntity member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), id);
+            return Optional.ofNullable(member);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Member getMemberByEmail(String email) {
+    public Optional<MemberEntity> getByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        try {
+            MemberEntity member = jdbcTemplate.queryForObject(sql, new MemberRowMapper(), email);
+            return Optional.ofNullable(member);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+    public Long insert(MemberEntity entity) {
+        SqlParameterSource source = new BeanPropertySqlParameterSource(entity);
+        return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
-    public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+    public void update(MemberEntity entity) {
+        String sql = "UPDATE member SET email = ?, password = ?, money = ?, point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, entity.getEmail(), entity.getPassword(), entity.getMoney(), entity.getPoint(), entity.getId());
     }
 
-    public void deleteMember(Long id) {
+    public void deleteById(Long id) {
         String sql = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
+    public List<MemberEntity> getAll() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
-    private static class MemberRowMapper implements RowMapper<Member> {
+    private static class MemberRowMapper implements RowMapper<MemberEntity> {
         @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+        public MemberEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new MemberEntity(
+                    rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getInt("money"),
+                    rs.getInt("point")
+            );
         }
     }
 }

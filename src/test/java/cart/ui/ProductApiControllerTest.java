@@ -1,11 +1,11 @@
 package cart.ui;
 
 import cart.config.ControllerTestConfig;
-import cart.domain.Product;
 import cart.dto.ProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import static cart.fixture.ProductFixture.피자;
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -13,13 +13,13 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
 class ProductApiControllerTest extends ControllerTestConfig {
 
-    Long 상품_계란_등록() {
-        return productDao.createProduct(new Product("계란", 1000, "https://계란_이미지_주소.png"));
+    Long 상품_피자_등록() {
+        return productRepository.create(피자.PRODUCT);
     }
 
     @Test
     void getAllProducts() {
-        상품_계란_등록();
+        상품_피자_등록();
 
         given(spec)
                 .log().all()
@@ -31,15 +31,15 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("[].imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-        .when()
+                .when()
                 .get("/products")
-        .then()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
     @Test
     void getProductById() {
-        상품_계란_등록();
+        상품_피자_등록();
 
         given(spec)
                 .log().all()
@@ -51,10 +51,10 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-        .when()
+                .when()
                 .pathParam("id", 1L)
                 .get("/products/{id}")
-        .then()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -69,16 +69,16 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-        .when()
+                .when()
                 .body(new ProductRequest("계란", 1000, "https://계란_이미지_주소.png"))
                 .post("/products")
-        .then()
+                .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
     void updateProduct() {
-        final Long 상품_계란_식별자값 = 상품_계란_등록();
+        final Long 피자_ID = 상품_피자_등록();
 
         given(spec)
                 .log().all()
@@ -89,11 +89,11 @@ class ProductApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-        .when()
+                .when()
                 .body(new ProductRequest("수정된 계란", 1000, "https://계란_이미지_주소.png"))
-                .pathParam("id", 상품_계란_식별자값)
+                .pathParam("id", 피자_ID)
                 .put("/products/{id}")
-        .then()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 }

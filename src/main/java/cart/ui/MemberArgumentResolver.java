@@ -1,8 +1,9 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
+import cart.exception.MemberException;
+import cart.repository.MemberRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -11,11 +12,14 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberDao memberDao;
+import java.util.Objects;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
+    private static final int DEFAULT_TOKEN_LENGTH = 2;
+    private final MemberRepository memberRepository;
+
+    public MemberArgumentResolver(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -39,12 +43,17 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String decodedString = new String(decodedBytes);
 
         String[] credentials = decodedString.split(":");
+        if (credentials.length != DEFAULT_TOKEN_LENGTH) {
+            throw new AuthenticationException("basic 인증 관련 문제가 발생했습니다.");
+        }
+
         String email = credentials[0];
         String password = credentials[1];
 
-        // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberException.InvalidEmail::new);
+
+        if (!Objects.equals(member.getPassword(), password)) {
             throw new AuthenticationException();
         }
         return member;

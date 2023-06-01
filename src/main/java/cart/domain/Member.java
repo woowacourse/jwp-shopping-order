@@ -13,12 +13,20 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
+    private final Integer money;
+    private final Integer point;
 
-    public Member(Long id, String email, String password) {
-        validate(id, email);
+    public Member(Long id, String email, String password, Integer money, Integer point) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.money = money;
+        this.point = point;
+    }
+
+    public Member(Long id, String email, String password) {
+        this(id, email, password, 0, 0);
+        validate(id, email);
     }
 
     private void validate(Long id, String email) {
@@ -48,6 +56,14 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public Integer getMoney() {
+        return money;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 
     public boolean checkPassword(String password) {

@@ -1,10 +1,10 @@
 package cart.ui;
 
-import cart.application.CartItemService;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.service.CartItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +45,6 @@ public class CartItemApiController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItems(Member member, @PathVariable @NotNull Long id) {
         cartItemService.remove(member, id);
-
         return ResponseEntity.noContent().build();
     }
 }

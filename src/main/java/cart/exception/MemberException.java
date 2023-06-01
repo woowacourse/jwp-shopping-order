@@ -33,4 +33,11 @@ public class MemberException extends RuntimeException {
             super("멤버 아이디를 입력해야 합니다.");
         }
     }
+
+    public static class NotFound extends MemberException {
+        
+        public NotFound() {
+            super("해당 멤버를 찾을 수 없습니다.");
+        }
+    }
 }

@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.application.ProductService;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @GetMapping("/{id}")
@@ -49,5 +49,4 @@ public class ProductApiController {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }
