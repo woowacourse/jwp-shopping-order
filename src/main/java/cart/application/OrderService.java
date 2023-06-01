@@ -39,8 +39,7 @@ public class OrderService {
         order.applyDeliveryFee(new DeliveryFee(3000));
         applyCoupon(member, orderRequestDto, order);
         validateExpectPrice(order, orderRequestDto);
-
-        return new OrderResponseDto(1L);
+        return new OrderResponseDto(completeOrder(member, orderRequestDto));
     }
 
     private List<CartItem> findCartItem(final Member member, final OrderRequestDto orderRequestDto) {
@@ -85,5 +84,10 @@ public class OrderService {
         if (order.price() != orderRequestDto.getTotalPrice()) {
             throw new CartItemCalculateException("구매자가 예쌍한 금액과 실 계산 금액이 다릅니다.");
         }
+    }
+
+    private long completeOrder(final Member member, final OrderRequestDto orderRequestDto) {
+        cartItemDao.deleteByIds(orderRequestDto.getCartItems());
+        return 1;
     }
 }
