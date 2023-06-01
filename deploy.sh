@@ -15,7 +15,7 @@ git checkout ${BRANCH_NAME}
 cd ./build/libs
 
 # 실행 중인 Spring Boot 애플리케이션 확인
-PID = $(lsof -t -i:8080)
+PID=$(lsof -t -i:8080)
 
 # -z: 문자열이 비어있으면 참
 if [ -z "$PID" ]
