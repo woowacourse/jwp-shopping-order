@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -79,12 +80,14 @@ public class ProductDao {
         jdbcTemplate.update(sql, productId);
     }
 
-    public List<ProductEntity> getProductByIds(final List<Long> ids) {
+    public Map<Long, ProductEntity> getProductGroupById(final List<Long> ids) {
         String sql = "SELECT * FROM product WHERE id IN (:ids)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("ids", ids);
 
-        return namedParameterJdbcTemplate.query(sql, params, rowMapper);
+        final List<ProductEntity> query = namedParameterJdbcTemplate.query(sql, params, rowMapper);
+
+        return query.stream().collect(Collectors.toMap(ProductEntity::getId, e -> e));
     }
 }

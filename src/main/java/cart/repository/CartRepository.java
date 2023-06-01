@@ -1,7 +1,5 @@
 package cart.repository;
 
-import static java.util.stream.Collectors.toMap;
-
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
@@ -43,8 +41,7 @@ public class CartRepository {
                 .map(CartItemEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
 
-        Map<Long, ProductEntity> productInCart = productDao.getProductByIds(productIds).stream()
-                .collect(toMap(ProductEntity::getId, ProductEntity -> ProductEntity));
+        Map<Long, ProductEntity> productInCart = productDao.getProductGroupById(productIds);
 
         return CartItemMapper.toCart(cartItems, productInCart, memberEntity);
     }
