@@ -1,4 +1,4 @@
-package cart.application;
+package cart.dto;
 
 public class MemberResponse {
 

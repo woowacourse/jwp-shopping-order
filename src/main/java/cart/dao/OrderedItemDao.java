@@ -1,4 +1,4 @@
-package cart.application;
+package cart.dao;
 
 import cart.domain.OrderedItem;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,14 +25,14 @@ public class OrderedItemDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO ordered_item (orders_id, product_name, product_price, product_image, product_quantity, product_is_discounted, product_discount_rate) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO ordered_item (orders_id, product_name, product_price, product_image_url, product_quantity, product_is_discounted, product_discount_rate) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setLong(1, orderId);
             ps.setString(2, orderedItem.getProductName());
             ps.setInt(3, orderedItem.getProductPrice());
-            ps.setString(4, orderedItem.getProductImage());
+            ps.setString(4, orderedItem.getProductImageUrl());
             ps.setInt(5, orderedItem.getProductQuantity());
             ps.setInt(6, orderedItem.getIsDiscounted() ? 1 : 0);
             ps.setInt(7, orderedItem.getDiscountedRate());
@@ -50,12 +50,12 @@ public class OrderedItemDao {
             Long ordersId = rs.getLong("orders_id");
             String productName = rs.getString("product_name");
             int productPrice = rs.getInt("product_price");
-            String productImage = rs.getString("product_image");
+            String productImageUrl = rs.getString("product_image_url");
             int productQuantity = rs.getInt("product_quantity");
             boolean isDiscounted = (rs.getInt("product_is_discounted") == 1) ? true : false;
             int discountRate = rs.getInt("product_discount_rate");
 
-            return new OrderedItem(id, ordersId, productName, productPrice, productImage, productQuantity, isDiscounted, discountRate);
+            return new OrderedItem(id, ordersId, productName, productPrice, productImageUrl, productQuantity, isDiscounted, discountRate);
         }, id);
     }
 }

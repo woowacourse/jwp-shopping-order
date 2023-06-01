@@ -4,22 +4,22 @@ public class Product {
     private Long id;
     private String name;
     private int price;
-    private String image;
+    private String imageUrl;
     private boolean isDiscounted;
     private int discountRate;
     private int discountedPrice;
 
-    public Product(String name, int price, String image) {
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
-        this.image = image;
+        this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, int price, String image, boolean isDiscounted, int discountRate) {
+    public Product(Long id, String name, int price, String imageUrl, boolean isDiscounted, int discountRate) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
         initDiscountedPrice(price, discountRate);
@@ -33,10 +33,10 @@ public class Product {
         }
     }
 
-    public Product(String name, int price, String image, boolean isDiscounted, int discountRate) {
+    public Product(String name, int price, String imageUrl, boolean isDiscounted, int discountRate) {
         this.name = name;
         this.price = price;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
         initDiscountedPrice(price, discountRate);
@@ -80,8 +80,8 @@ public class Product {
         return price;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public boolean getIsDiscounted() {

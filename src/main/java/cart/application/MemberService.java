@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.dto.MemberResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

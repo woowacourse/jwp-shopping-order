@@ -36,7 +36,7 @@ public class ProductResponse {
 
     public static ProductResponse of(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-                product.getImage(), product.getIsDiscounted(), product.getDiscountRate(), product.getDiscountedPrice());
+                product.getImageUrl(), product.getIsDiscounted(), product.getDiscountRate(), product.getDiscountedPrice());
     }
 
     public Long getId() {

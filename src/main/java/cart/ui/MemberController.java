@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.application.MemberResponse;
+import cart.dto.MemberResponse;
 import cart.application.MemberService;
 import cart.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;

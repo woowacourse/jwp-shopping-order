@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
+import cart.dao.OrderedItemDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -64,7 +65,7 @@ public class OrderService {
         List<CartItem> cartItems = getCartItems(orderCreateRequest);
         cartItems.forEach(cartItem -> {
             Product product = cartItem.getProduct();
-            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImage(), cartItem.getQuantity(), product.getIsDiscounted(), product.getDiscountRate());
+            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity(), product.getIsDiscounted(), product.getDiscountRate());
             orderedItemDao.createOrderedItems(orderId, orderedItem);
         });
         return cartItems;
@@ -160,7 +161,7 @@ public class OrderService {
 
     private OrderedItemResponse createOrderedItemResponse(OrderedItem orderedItem) {
         return new OrderedItemResponse(orderedItem.getProductQuantity(),
-                new ProductResponse(orderedItem.getProductName(), orderedItem.getProductPrice(), orderedItem.getProductImage(),
+                new ProductResponse(orderedItem.getProductName(), orderedItem.getProductPrice(), orderedItem.getProductImageUrl(),
                         orderedItem.getIsDiscounted(), orderedItem.getDiscountedRate(), orderedItem.calculateDiscountedPrice()));
     }
 

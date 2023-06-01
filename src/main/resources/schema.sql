@@ -2,7 +2,7 @@ CREATE TABLE product (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
-    image VARCHAR(255) NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
     is_discounted TINYINT NOT NULL,
     discount_rate INT
 );
@@ -42,7 +42,7 @@ CREATE TABLE ordered_item (
     orders_id BIGINT NOT NULL,
     product_name VARCHAR(255) NOT NULL,
     product_price INT NOT NULL,
-    product_image VARCHAR(255) NOT NULL,
+    product_image_url VARCHAR(255) NOT NULL,
     product_quantity INT NOT NULL,
     product_is_discounted TINYINT NOT NULL,
     product_discount_rate INT,
