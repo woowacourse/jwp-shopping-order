@@ -1,13 +1,13 @@
-CREATE TABLE product
+CREATE TABLE if not exists product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
-    price     INT NOT NULL,
+    price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL,
-    stock     INT NOT NULL
+    stock     INT          NOT NULL
 );
 
-CREATE TABLE member
+CREATE TABLE if not exists member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR(255) NOT NULL UNIQUE,
@@ -15,48 +15,41 @@ CREATE TABLE member
     /*적립률은 클래스(코드) 상에서 관리*/
 );
 
-CREATE TABLE point
+CREATE TABLE if not exists point
 (
-    id           BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    earned_point INT NOT NULL,
-    left_point   INT NOT NULL,
-    member_id    BIGINT       NOT NULL,
-    expired_at   DATETIME         NOT NULL,
-    created_at   DATETIME         NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    id           BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    earned_point INT      NOT NULL,
+    left_point   INT      NOT NULL,
+    member_id    BIGINT   NOT NULL,
+    expired_at   DATETIME NOT NULL,
+    created_at   DATETIME NOT NULL
 );
 
-CREATE TABLE cart_item
+CREATE TABLE if not exists cart_item
 (
-    id         BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT       NOT NULL,
-    product_id BIGINT       NOT NULL,
-    quantity   INT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity   INT    NOT NULL
 );
 
-CREATE TABLE orders
+CREATE TABLE if not exists orders
 (
-    id           BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id    BIGINT       NOT NULL,
-    point_id     BIGINT       NOT NULL,
-    earned_point INT NOT NULL,
-    used_point   INT NOT NULL,
-    created_at   DATETIME         NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (point_id) REFERENCES point (id)
+    id           BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT   NOT NULL,
+    point_id     BIGINT   NOT NULL,
+    earned_point INT      NOT NULL,
+    used_point   INT      NOT NULL,
+    created_at   DATETIME NOT NULL
 );
 
-CREATE TABLE order_detail
+CREATE TABLE if not exists order_detail
 (
     id                BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id         BIGINT       NOT NULL,
     product_id        BIGINT       NOT NULL,
     product_name      VARCHAR(255) NOT NULL,
-    product_price     INT NOT NULL,
+    product_price     INT          NOT NULL,
     product_image_url VARCHAR(255) NOT NULL,
-    order_quantity    INT NOT NULL,
-    FOREIGN KEY (orders_id) REFERENCES orders (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    order_quantity    INT          NOT NULL
 );
