@@ -1,4 +1,10 @@
 spring:
+  thymeleaf:
+    cache: false
+
+---
+
+spring:
   config:
     activate:
       on-profile: default
