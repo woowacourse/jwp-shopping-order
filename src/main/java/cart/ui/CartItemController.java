@@ -1,7 +1,6 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -14,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cart-items")
-public class CartItemApiController {
+public class CartItemController {
 
     private final CartItemService cartItemService;
 
-    public CartItemApiController(CartItemService cartItemService) {
+    public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 
