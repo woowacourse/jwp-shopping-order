@@ -5,6 +5,7 @@ import cart.exception.CartItemException;
 import java.util.Objects;
 
 public class CartItem {
+
     private Long id;
     private int quantity;
     private final Product product;
@@ -16,11 +17,34 @@ public class CartItem {
         this.product = product;
     }
 
+    public CartItem(int quantity, Member member, Product product) {
+        this.quantity = quantity;
+        this.member = member;
+        this.product = product;
+    }
+
     public CartItem(Long id, int quantity, Product product, Member member) {
+        checkPositive(quantity);
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+    private void checkPositive(int quantity) {
+        if (quantity < 1) {
+            throw new CartItemException.InvalidQuantity("1개부터 주문이 가능합니다");
+        }
+    }
+
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new CartItemException.IllegalMember(this, member);
+        }
+    }
+
+    public long getPrice() {
+        return (long) quantity * product.getPrice();
     }
 
     public Long getId() {
@@ -37,12 +61,6 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
     }
 
     public void changeQuantity(int quantity) {

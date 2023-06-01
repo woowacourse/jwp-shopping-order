@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,21 +23,21 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
+        String sql = "SELECT c.id, c.member_id, m.email, p.id, p.name, p.price, p.image_url, c.quantity " +
+                "FROM cart_items AS c " +
+                "INNER JOIN members AS m ON c.member_id = m.id " +
+                "INNER JOIN products AS p ON c.product_id = p.id " +
+                "WHERE c.member_id = ?";
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             String email = rs.getString("email");
-            Long productId = rs.getLong("product.id");
+            Member member = new Member(memberId, email, null);
+            Long productId = rs.getLong("products.id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
+            Long cartItemId = rs.getLong("cart_items.id");
+            int quantity = rs.getInt("cart_items.quantity");
             return new CartItem(cartItemId, quantity, product, member);
         });
     }
@@ -46,7 +47,7 @@ public class CartItemDao {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
+                    "INSERT INTO cart_items (member_id, product_id, quantity) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
@@ -61,40 +62,62 @@ public class CartItemDao {
     }
 
     public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id = ?";
+        String sql = "SELECT c.id, c.member_id, m.email, p.id, p.name, p.price, p.image_url, c.quantity " +
+                "FROM cart_items AS c " +
+                "INNER JOIN members AS m ON c.member_id = m.id " +
+                "INNER JOIN products AS p ON c.product_id = p.id " +
+                "WHERE c.id = ?";
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
-            Long productId = rs.getLong("id");
+            Member member = new Member(memberId, email, null);
+            Long productId = rs.getLong("products.id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
+            Long cartItemId = rs.getLong("cart_items.id");
+            int quantity = rs.getInt("cart_items.quantity");
             return new CartItem(cartItemId, quantity, product, member);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
+    public List<CartItem> findByIds(List<Long> ids) {
+        String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
+
+        String sql = "SELECT c.id, c.member_id, m.email, p.id, p.name, p.price, p.image_url, c.quantity " +
+                "FROM cart_items AS c " +
+                "INNER JOIN members AS m ON c.member_id = m.id " +
+                "INNER JOIN products AS p ON c.product_id = p.id " +
+                "WHERE c.id IN (" + placeholders + ")";
+        return jdbcTemplate.query(sql, ids.toArray(), (rs, rowNum) -> {
+            Long memberId = rs.getLong("member_id");
+            String email = rs.getString("email");
+            Member member = new Member(memberId, email, null);
+            Long productId = rs.getLong("products.id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            Product product = new Product(productId, name, price, imageUrl);
+            Long cartItemId = rs.getLong("cart_items.id");
+            int quantity = rs.getInt("cart_items.quantity");
+            return new CartItem(cartItemId, quantity, product, member);
+        });
+    }
 
     public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
+        String sql = "DELETE FROM cart_items WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
+        String sql = "DELETE FROM cart_items WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public void updateQuantity(CartItem cartItem) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        String sql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }

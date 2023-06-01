@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,15 @@ public class CartItemService {
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+    }
+
+    public List<CartItem> findByIds(List<Long> ids) {
+        final List<CartItem> cartItems = cartItemDao.findByIds(ids);
+        if (cartItems.size() != ids.size()) {
+            throw new CartItemException.NoSuchIds(ids);
+        }
+
+        return cartItems;
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {

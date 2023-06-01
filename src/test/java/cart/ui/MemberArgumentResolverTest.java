@@ -25,6 +25,9 @@ class MemberArgumentResolverTest {
     ProductApiController productApiController;
 
     @MockBean
+    OrderApiController orderApiController;
+
+    @MockBean
     PageController pageController;
 
     @MockBean
