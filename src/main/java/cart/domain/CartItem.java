@@ -34,7 +34,7 @@ public class CartItem {
         return new CartItem(id, member, product, quantity);
     }
 
-    public int getQuantity() {
+    public int getQuantityValue() {
         return quantity.getValue();
     }
 }
