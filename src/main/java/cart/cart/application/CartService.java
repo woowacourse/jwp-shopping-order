@@ -43,7 +43,8 @@ public class CartService {
         for (Long couponId : couponIds) {
             couponService.applyCoupon(couponId, cart);
         }
-        return DiscountResponse.from(cart);
+        final var discountPriceFromTotalPrice = couponService.findAllDiscountPriceFromTotalPrice(couponIds, cart);
+        return DiscountResponse.from(cart, discountPriceFromTotalPrice);
     }
 
     public DeliveryResponse findDeliveryPrice(Member member) {

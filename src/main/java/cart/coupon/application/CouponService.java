@@ -42,4 +42,14 @@ public class CouponService {
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
     }
+
+    public int findAllDiscountPriceFromTotalPrice(List<Long> couponIds, Cart cart) {
+        final var coupons = couponIds.stream()
+                .map(couponRepository::findById)
+                .collect(Collectors.toList());
+        coupons.stream()
+                .map(Coupon::getDiscountConditionId)
+                .map(discountPolicyId -> discountPolicyService.findDiscountPriceFromTotalPrice(discountPolicyId, cart));
+        return 5000;
+    }
 }

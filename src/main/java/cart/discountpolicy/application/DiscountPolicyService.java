@@ -1,6 +1,7 @@
 package cart.discountpolicy.application;
 
 import cart.cart.Cart;
+import cart.discountpolicy.DiscountPolicy;
 import cart.discountpolicy.application.builder.DiscountPolicyBuilder;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,9 @@ public class DiscountPolicyService {
     public void applyPolicy(Long discountConditionId, Cart cart) {
         final var discountPolicy = this.discountPolicyRepository.findById(discountConditionId);
         discountPolicy.discount(cart);
+    }
+
+    public int findDiscountPriceFromTotalPrice(Long discountPolicyId, Cart cart) {
+        return 5000;
     }
 }

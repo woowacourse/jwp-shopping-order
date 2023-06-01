@@ -3,15 +3,15 @@ package cart.cart.presentation.dto;
 import cart.cart.domain.cartitem.CartItem;
 
 public class CartItemDiscountResponse {
-    private long productId;
+    private long cartItemId;
     private long originalPrice;
     private long discountPrice;
 
     public CartItemDiscountResponse() {
     }
 
-    public CartItemDiscountResponse(long productId, long originalPrice, long discountPrice) {
-        this.productId = productId;
+    public CartItemDiscountResponse(long cartItemId, long originalPrice, long discountPrice) {
+        this.cartItemId = cartItemId;
         this.originalPrice = originalPrice;
         this.discountPrice = discountPrice;
     }
@@ -20,8 +20,8 @@ public class CartItemDiscountResponse {
         return new CartItemDiscountResponse(cartItem.getId(), cartItem.getProduct().getPrice(), cartItem.getDiscountPrice());
     }
 
-    public long getProductId() {
-        return productId;
+    public long getCartItemId() {
+        return cartItemId;
     }
 
     public long getOriginalPrice() {

@@ -1,7 +1,6 @@
 package cart.cart.presentation;
 
 import cart.cart.application.CartService;
-import cart.cart.domain.cartitem.application.CartItemService;
 import cart.cart.presentation.dto.*;
 import cart.common.auth.Auth;
 import cart.coupon.application.CouponService;
@@ -35,6 +34,11 @@ public class CartController {
     @GetMapping("/coupons")
     public ResponseEntity<List<CouponResponse>> showCoupons(@Auth Member member) {
         return ResponseEntity.ok(couponService.findCouponsByMember(member));
+    }
+
+    @GetMapping("/cart-items/coupon")
+    public ResponseEntity<DiscountResponse> applyCoupon(@Auth Member member, @RequestParam(required = false) List<Long> id) {
+        return ResponseEntity.ok(cartService.discountWithCoupons(member, id));
     }
 
     @PostMapping("/coupons")

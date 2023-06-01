@@ -4,32 +4,31 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderRequest {
-    private List<OrderProductsRequest> products;
-    private List<OrderCouponRequest> coupons;
+    private List<Long> cartItemIds;
+    private boolean isDeliveryFree;
+    private int totalPaymentPrice;
+    private List<Long> couponIds;
 
     public OrderRequest() {
     }
 
-    public int findQuantityByCartItemId(Long productId) {
-        return products.stream()
-                .filter(productRequest -> productRequest.getId().equals(productId))
-                .findAny()
-                .orElseThrow(IllegalStateException::new)
-                .getQuantity();
+    public List<Long> getCartItemIds() {
+        return cartItemIds;
     }
 
-    public boolean isCartItemOrdered(Long cartItemId) {
-        return products.stream()
-                .map(OrderProductsRequest::getId)
-                .collect(Collectors.toList())
-                .contains(cartItemId);
+    public boolean isDeliveryFree() {
+        return isDeliveryFree;
     }
 
-    public List<OrderCouponRequest> getCoupons() {
-        return coupons;
+    public int getTotalPaymentPrice() {
+        return totalPaymentPrice;
     }
 
-    public List<OrderProductsRequest> getProducts() {
-        return products;
+    public List<Long> getCouponIds() {
+        return couponIds;
+    }
+
+    public boolean isCartItemOrdered(Long id) {
+        return this.cartItemIds.contains(id);
     }
 }

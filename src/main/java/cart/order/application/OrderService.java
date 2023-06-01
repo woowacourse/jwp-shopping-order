@@ -42,10 +42,7 @@ public class OrderService {
         saleService.applySale(cart);
 
         // 3. cart에 Coupon 적용하기
-        final var couponIds = orderRequest.getCoupons()
-                .stream().map(OrderCouponRequest::getId)
-                .collect(Collectors.toList());
-        for (Long couponId : couponIds) {
+        for (Long couponId : orderRequest.getCouponIds()) {
             couponService.applyCoupon(couponId, cart);
         }
 
@@ -59,7 +56,7 @@ public class OrderService {
         }
 
         // 5. 쿠폰 정보를 OrderCoupons로 변환하기
-        final var orderCoupons = convertCouponsToOrderCoupons(couponIds);
+        final var orderCoupons = convertCouponsToOrderCoupons(orderRequest.getCouponIds());
 
         // 6. Order로 만들어 저장하기
         final var order = new Order(
@@ -87,7 +84,7 @@ public class OrderService {
     }
 
     private OrderItem convertCartItemToOrderItem(CartItem cartItem, OrderRequest orderRequest) {
-        final var quantity = orderRequest.findQuantityByCartItemId(cartItem.getId());
+        final var quantity = cartItem.getQuantity();
         return new OrderItem(
                 cartItem.getProduct().getId(),
                 cartItem.getProduct().getName(),
