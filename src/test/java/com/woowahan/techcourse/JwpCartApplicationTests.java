@@ -1,4 +1,4 @@
-package com.woowahan.techcourse.cart;
+package com.woowahan.techcourse;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,3 +11,4 @@ class JwpCartApplicationTests {
     }
 
 }
+    
