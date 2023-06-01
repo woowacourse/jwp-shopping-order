@@ -19,7 +19,7 @@ public class CartItemReadController {
 
     @GetMapping
     public ResponseEntity<CartResponse> showCartItems(MemberAuth memberAuth) {
-        CartResultDto cartResult = cartItemReadService.findByMember(memberAuth);
+        final CartResultDto cartResult = cartItemReadService.findByMember(memberAuth);
         return ResponseEntity.ok(CartResponse.from(cartResult));
     }
 
