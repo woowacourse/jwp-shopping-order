@@ -16,7 +16,7 @@ public class CartItem {
         this.product = product;
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, int quantity, Member member, Product product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
