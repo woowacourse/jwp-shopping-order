@@ -22,11 +22,6 @@ public class CouponService {
         return coupons;
     }
 
-    public Coupon findById(Long id) {
-        Coupon coupon = couponDao.findById(id);
-        return coupon;
-    }
-
     public Long create(CouponRequest request) {
         Coupon coupon = new Coupon(request.getName(), new Discount(request.getType(), request.getAmount()));
         return couponDao.create(coupon);

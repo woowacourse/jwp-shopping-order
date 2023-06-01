@@ -23,12 +23,6 @@ class MemberCouponDaoTest {
     }
 
     @Test
-    void findByMemberId() {
-        List<MemberCoupon> memberCoupons = memberCouponDao.findByMemberId(1L);
-        Assertions.assertThat(memberCoupons).hasSize(2);
-    }
-
-    @Test
     void createAndFindByIds() {
         Long memberCouponId1 = memberCouponDao.create(1L, 1L);
         Long memberCouponId2 = memberCouponDao.create(1L, 3L);

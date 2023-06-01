@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
 import cart.domain.member.MemberCoupon;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -41,8 +43,12 @@ public class OrderCouponDao {
     }
 
     public List<MemberCoupon> findCouponsByOrderItemId(Long orderItemId) {
-        String sql = "select * from order_coupon, member_coupon, coupon where order_coupon.member_coupon_id = member_coupon.coupon_id and member_coupon.coupon_id = coupon.id and order_item_id = ?";
+        try{
+            String sql = "select * from order_coupon, member_coupon, coupon where order_coupon.member_coupon_id = member_coupon.coupon_id and member_coupon.coupon_id = coupon.id and order_item_id = ?";
 
-        return jdbcTemplate.query(sql, rowMapper(), orderItemId);
+            return jdbcTemplate.query(sql, rowMapper(), orderItemId);
+        }catch (final EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
     }
 }

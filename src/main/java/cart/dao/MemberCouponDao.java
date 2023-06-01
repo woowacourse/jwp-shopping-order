@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
 import cart.domain.member.MemberCoupon;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -39,8 +40,12 @@ public class MemberCouponDao {
     }
 
     public List<MemberCoupon> findByMemberId(Long memberId) {
-        String sql = "SELECT * FROM coupon INNER JOIN member_coupon ON coupon.id = member_coupon.coupon_id WHERE member_coupon.member_id = ?";
-        return jdbcTemplate.query(sql, getCouponRowMapper(), memberId);
+        try {
+            String sql = "SELECT * FROM coupon INNER JOIN member_coupon ON coupon.id = member_coupon.coupon_id WHERE member_coupon.member_id = ?";
+            return jdbcTemplate.query(sql, getCouponRowMapper(), memberId);
+        } catch (final EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
     }
 
     public List<MemberCoupon> findByIds(List<Long> ids) {
@@ -48,10 +53,14 @@ public class MemberCouponDao {
             return Collections.emptyList();
         }
 
-        String sql = "SELECT * FROM coupon INNER JOIN member_coupon ON coupon.id = member_coupon.coupon_id WHERE member_coupon.id IN (:ids)";
+        try {
+            String sql = "SELECT * FROM coupon INNER JOIN member_coupon ON coupon.id = member_coupon.coupon_id WHERE member_coupon.id IN (:ids)";
 
-        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
-        return namedJdbcTemplate.query(sql, parameters, getCouponRowMapper());
+            SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+            return namedJdbcTemplate.query(sql, parameters, getCouponRowMapper());
+        } catch (final EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
     }
 
     public Long create(Long memberId, Long couponId) {

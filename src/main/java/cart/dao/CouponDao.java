@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,7 +11,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CouponDao {
@@ -27,28 +30,21 @@ public class CouponDao {
         );
     }
 
-    public CouponDao(final JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedJdbcTemplate) {
+    public CouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("coupon")
                 .usingGeneratedKeyColumns("id");
-        this.namedJdbcTemplate = namedJdbcTemplate;
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<Coupon> findAll() {
-        String sql = "select * from coupon";
-        return jdbcTemplate.query(sql, rowMapper());
-    }
-
-    public Coupon findById(Long id) {
-        String sql = "select * from coupon where id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper(), id);
-    }
-
-    public List<Coupon> findById(List<Long> ids) {
-        final String sql = "SELECT * FROM coupon WHERE id IN (:ids)";
-        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
-        return namedJdbcTemplate.query(sql, parameters, rowMapper());
+        try {
+            String sql = "select * from coupon";
+            return jdbcTemplate.query(sql, rowMapper());
+        } catch (final EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
     }
 
     public Long create(Coupon coupon) {
