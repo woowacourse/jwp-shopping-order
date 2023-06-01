@@ -20,12 +20,12 @@ public class MemberDao {
 
     public MemberDto getMemberById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, MemberDto.class, id);
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
     }
 
     public MemberDto getMemberByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, MemberDto.class, email);
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, email);
     }
 
     public List<MemberDto> getAllMembers() {
