@@ -47,8 +47,8 @@ class OrderDaoTest {
         final OrderDto queryResultOrder = jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId);
 
         assertThat(queryResultOrder)
-                .extracting(OrderDto::getId, OrderDto::getMemberId, OrderDto::getCouponId, OrderDto::getTimeStamp)
-                .containsExactly(orderId, orderDto.getMemberId(), orderDto.getCouponId(),
+                .extracting(OrderDto::getId, OrderDto::getMemberId, OrderDto::getMemberCouponId, OrderDto::getTimeStamp)
+                .containsExactly(orderId, orderDto.getMemberId(), orderDto.getMemberCouponId(),
                         orderDto.getTimeStamp());
     }
 
@@ -58,15 +58,15 @@ class OrderDaoTest {
         final LocalDateTime dateTime = LocalDateTime.now().withNano(0);
         final OrderDto orderDto = new OrderDto(1L, 1L, 2L, dateTime);
         final String sql = "INSERT INTO orders (id, member_id, coupon_id, time_stamp) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, orderDto.getId(), orderDto.getMemberId(), orderDto.getCouponId(),
+        jdbcTemplate.update(sql, orderDto.getId(), orderDto.getMemberId(), orderDto.getMemberCouponId(),
                 orderDto.getTimeStamp());
 
         final OrderDto queryResultOrder = orderDao.findById(orderDto.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
         assertThat(queryResultOrder)
-                .extracting(OrderDto::getId, OrderDto::getMemberId, OrderDto::getCouponId, OrderDto::getTimeStamp)
-                .containsExactly(orderDto.getId(), orderDto.getMemberId(), orderDto.getCouponId(),
+                .extracting(OrderDto::getId, OrderDto::getMemberId, OrderDto::getMemberCouponId, OrderDto::getTimeStamp)
+                .containsExactly(orderDto.getId(), orderDto.getMemberId(), orderDto.getMemberCouponId(),
                         orderDto.getTimeStamp());
     }
 }

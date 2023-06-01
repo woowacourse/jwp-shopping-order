@@ -6,7 +6,7 @@ import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.dto.OrderDto;
 import cart.dao.dto.OrderProductDto;
-import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.product.Product;
@@ -25,15 +25,15 @@ public class OrderRepository {
     private final OrderDao orderDao;
     private final OrderProductDao orderProductDao;
     private final ProductRepository productRepository;
-    private final CouponRepository couponRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
     public OrderRepository(final OrderDao orderDao, final OrderProductDao orderProductDao,
                            final ProductRepository productRepository,
-                           final CouponRepository couponRepository) {
+                           final MemberCouponRepository memberCouponRepository) {
         this.orderDao = orderDao;
         this.orderProductDao = orderProductDao;
         this.productRepository = productRepository;
-        this.couponRepository = couponRepository;
+        this.memberCouponRepository = memberCouponRepository;
     }
 
     public Order save(final Order order) {
@@ -43,7 +43,7 @@ public class OrderRepository {
         final List<OrderProduct> orderProductsAfterSave = saveOrderProducts(orderId, order.getOrderProducts());
 
         return new Order(orderId, orderProductsAfterSave, order.getTimeStamp(), order.getMemberId(),
-                order.getCoupon().orElse(null));
+                order.getMemberCoupon().orElse(null));
     }
 
     private List<OrderProduct> saveOrderProducts(final Long orderId, final List<OrderProduct> orderProducts) {
@@ -60,7 +60,7 @@ public class OrderRepository {
     public Order findById(final Long id) {
         final OrderDto orderDto = orderDao.findById(id).orElseThrow(OrderNotFoundException::new);
         final List<OrderProduct> orderProducts = findOrderProductsByOrderId(id);
-        final Coupon coupon = couponRepository.findById(orderDto.getCouponId());
+        final MemberCoupon coupon = memberCouponRepository.findById(orderDto.getMemberCouponId());
         return new Order(orderDto.getId(), orderProducts, orderDto.getTimeStamp()
                 , orderDto.getMemberId(), coupon);
     }

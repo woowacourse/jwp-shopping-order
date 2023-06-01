@@ -21,6 +21,16 @@ CREATE TABLE member
     password VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE member_coupon
+(
+    id        BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT  NOT NULL,
+    coupon_id BIGINT  NOT NULL,
+    used      BOOLEAN NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE
+);
+
 CREATE TABLE cart_item
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -33,12 +43,12 @@ CREATE TABLE cart_item
 
 CREATE TABLE orders
 (
-    id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT    NOT NULL,
-    time_stamp TIMESTAMP NOT NULL,
-    coupon_id  BIGINT    NOT NULL,
+    id               BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id        BIGINT    NOT NULL,
+    time_stamp       TIMESTAMP NOT NULL,
+    member_coupon_id BIGINT    NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
+    FOREIGN KEY (member_coupon_id) REFERENCES member_coupon (id)
 );
 
 CREATE TABLE orders_product
@@ -49,13 +59,4 @@ CREATE TABLE orders_product
     quantity   INT    NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
-);
-
-CREATE TABLE member_coupon
-(
-    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT NOT NULL,
-    coupon_id BIGINT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE
 );

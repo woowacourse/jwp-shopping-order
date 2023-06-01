@@ -33,7 +33,7 @@ public class OrderDao {
     public Long insert(final OrderDto orderDto) {
         Map<String, Object> params = Map.of(
                 "time_stamp", orderDto.getTimeStamp(),
-                "coupon_id", orderDto.getCouponId(),
+                "coupon_id", orderDto.getMemberCouponId(),
                 "member_id", orderDto.getMemberId()
         );
 

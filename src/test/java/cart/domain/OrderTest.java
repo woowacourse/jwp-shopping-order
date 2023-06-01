@@ -11,7 +11,6 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.product.CartItem;
 import cart.domain.product.Product;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ class OrderTest {
     @Test
     @DisplayName("Order 생성 성공")
     void create_success() {
-        final Member member = new Member(1L, "홍홍", "honghong", Collections.emptyList());
+        final Member member = new Member(1L, "홍홍", "honghong");
         final Product hongProduct = new Product("홍실", 1_000_000_000, "hong.com");
         final CartItem cartItem = new CartItem(member, hongProduct);
         final Order order = Order.of(member, List.of(cartItem), null);

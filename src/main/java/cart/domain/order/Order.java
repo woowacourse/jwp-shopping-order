@@ -3,7 +3,7 @@ package cart.domain.order;
 import static java.util.stream.Collectors.toList;
 
 import cart.domain.Member;
-import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.domain.product.CartItem;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,18 +15,19 @@ public class Order {
     private final List<OrderProduct> orderProducts;
     private final LocalDateTime timeStamp;
     private final Long memberId;
-    private final Coupon coupon;
+    private final MemberCoupon memberCoupon;
 
     public Order(final Long id, final List<OrderProduct> orderProducts, final LocalDateTime timeStamp,
-                 final Long memberId, final Coupon coupon) {
+                 final Long memberId,
+                 final MemberCoupon memberCoupon) {
         this.id = id;
         this.orderProducts = orderProducts;
         this.timeStamp = timeStamp;
         this.memberId = memberId;
-        this.coupon = coupon;
+        this.memberCoupon = memberCoupon;
     }
 
-    public static Order of(final Member member, final List<CartItem> cartItems, final Coupon coupon) {
+    public static Order of(final Member member, final List<CartItem> cartItems, final MemberCoupon coupon) {
         validateSameMember(member, cartItems);
         final List<OrderProduct> orderProducts = cartItems.stream()
                 .map(cartItem -> new OrderProduct(cartItem.getProduct(), cartItem.getQuantity()))
@@ -60,7 +61,7 @@ public class Order {
         return orderProducts;
     }
 
-    public Optional<Coupon> getCoupon() {
-        return Optional.ofNullable(coupon);
+    public Optional<MemberCoupon> getMemberCoupon() {
+        return Optional.ofNullable(memberCoupon);
     }
 }
