@@ -20,11 +20,3 @@ VALUES (1, 2, 4);
 
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 3, 5);
-
-INSERT INTO coupon (id, discount, name)
-VALUES (1, 2000, '2000원 할인 구폰');
-
-INSERT INTO user_coupon (id, member_id, coupon_id)
-VALUES (1, 1, 1);
-INSERT INTO user_coupon (id, member_id, coupon_id)
-VALUES (2, 2, 1);
