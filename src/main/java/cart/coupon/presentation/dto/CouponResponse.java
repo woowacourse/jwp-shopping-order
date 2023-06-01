@@ -4,15 +4,27 @@ import cart.coupon.domain.Coupon;
 import cart.coupon.domain.DiscountType;
 import cart.coupon.domain.SpecificCouponType;
 import cart.coupon.domain.TargetType;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "targetType")
+@JsonSubTypes({
+        @Type(value = GeneralCouponResponse.class, name = "ALL"),
+        @Type(value = SpecificCouponResponse.class, name = "SPECIFIC")
+})
 public abstract class CouponResponse {
 
-    private final Long id;
-    private final String name;
-    private final Long ownerMemberId;
-    private final DiscountType discountType;
-    private final TargetType targetType;
-    private final int value;
+    private Long id;
+    private String name;
+    private Long ownerMemberId;
+    private DiscountType discountType;
+    private TargetType targetType;
+    private int value;
+
+
+    public CouponResponse() {
+    }
 
     protected CouponResponse(
             Long id,
