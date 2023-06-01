@@ -116,6 +116,8 @@ docker-compose up -d
 ### 주문 API (OrderController)
 - order.http
 
-|           | HTTP method | 요청 URI  |
-|:---------:|:-----------:|:-------:|
-| **주문 추가** |    POST     | /orders |
+|               | HTTP method |  요청 URI   |
+|:-------------:|:-----------:|:---------:|
+|   **주문 추가**   |    POST     |  /orders  |
+| **주문 단일 조회 ** |     GET     | /orders/1 |
+| **주문 단일 조회 ** |     GET     |  /orders  |
