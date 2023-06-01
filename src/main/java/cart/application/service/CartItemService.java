@@ -7,7 +7,7 @@ import cart.application.repository.CartItemRepository;
 import cart.application.repository.ProductRepository;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.domain.cartitem.CartItem;
+import cart.domain.cart.CartItem;
 import cart.exception.notfound.CartItemNotFoundException;
 import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;

@@ -4,7 +4,7 @@ import cart.application.dto.order.FindOrderCouponsResponse;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberCouponRepository;
 import cart.domain.Member;
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItems;
 import cart.domain.coupon.MemberCoupon;
 import java.util.List;
 import org.springframework.stereotype.Service;

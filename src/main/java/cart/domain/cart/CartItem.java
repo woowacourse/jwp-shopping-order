@@ -1,4 +1,4 @@
-package cart.domain.cartitem;
+package cart.domain.cart;
 
 import cart.domain.Member;
 import cart.domain.Product;

@@ -2,8 +2,8 @@ package cart.persistence;
 
 import cart.application.repository.CartItemRepository;
 import cart.domain.Member;
-import cart.domain.cartitem.CartItem;
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dto.CartDetailDTO;
 import cart.persistence.entity.CartItemEntity;

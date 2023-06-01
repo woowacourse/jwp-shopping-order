@@ -3,7 +3,7 @@ package cart.domain.coupon;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItems;
 import cart.fixture.CouponFixture.금액_10000원이상_1000원할인;
 import java.time.LocalDateTime;
 import java.util.Collections;

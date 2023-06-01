@@ -1,6 +1,6 @@
 package cart.application.dto.order;
 
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItems;
 import cart.domain.coupon.MemberCoupon;
 import java.util.List;
 import java.util.stream.Collectors;

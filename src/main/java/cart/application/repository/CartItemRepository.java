@@ -1,8 +1,8 @@
 package cart.application.repository;
 
 import cart.domain.Member;
-import cart.domain.cartitem.CartItem;
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
 import java.util.List;
 import java.util.Optional;
 

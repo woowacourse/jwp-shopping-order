@@ -1,6 +1,6 @@
 package cart.application.dto.order;
 
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItems;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponInfo;
 import cart.domain.coupon.MemberCoupon;

@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItems;
 import cart.domain.coupon.policy.DiscountPolicy;
 
 public class Coupon {

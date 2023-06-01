@@ -1,6 +1,6 @@
 package cart.domain.coupon.policy;
 
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItems;
 
 public interface DiscountPolicy {
 

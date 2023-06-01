@@ -3,7 +3,7 @@ package cart.domain.coupon;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import cart.domain.cartitem.CartItems;
+import cart.domain.cart.CartItems;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
