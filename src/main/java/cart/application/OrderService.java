@@ -161,6 +161,11 @@ public class OrderService {
         Order order = orderRepository.findOrderById(orderId);
         validateOwnerOfOrder(member, order);
 
+        // 확정되지 않은 주문인지 검증
+        if (order.isConfirm()) {
+            throw new IllegalArgumentException("확정된 주문은 취소할 수 없습니다.");
+        }
+
         Coupon coupon = order.getUsedCoupon();
         orderRepository.delete(orderId);
 
@@ -176,11 +181,12 @@ public class OrderService {
         order.confirm();
         orderRepository.update(order);
 
-        // 사용 가능한 쿠폰을 유저에게 발급
-        // response null 테스트해보기
-        // 임시로 id가 1인 쿠폰 반환
-        Coupon coupon = couponRepository.findById(1L);
-        CouponResponse couponResponse = new CouponResponse(coupon.getId(), coupon.getName(), coupon.getDiscountType().getName(), coupon.getDiscountPercent(), coupon.getDiscountAmount(), coupon.getMinimumPrice());
+        // TODO 보너스 쿠폰 지급 로직 추가
+        Coupon bonusCoupon = couponRepository.findById(1L);
+        MemberCoupon bonusMemberCoupon = new MemberCoupon(member, bonusCoupon);
+        memberCouponRepository.add(bonusMemberCoupon);
+
+        CouponResponse couponResponse = new CouponResponse(bonusCoupon.getId(), bonusCoupon.getName(), bonusCoupon.getDiscountType().getName(), bonusCoupon.getDiscountPercent(), bonusCoupon.getDiscountAmount(), bonusCoupon.getMinimumPrice());
         return new OrderConfirmResponse(couponResponse);
     }
 

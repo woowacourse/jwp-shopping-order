@@ -32,6 +32,14 @@ public class Order {
         this(null, originalPrice, discountPrice, orderProducts, null, false, member);
     }
 
+    public void confirm() {
+        this.confirmState = true;
+    }
+
+    public boolean isConfirm() {
+        return confirmState;
+    }
+
     public Long getId() {
         return id;
     }
@@ -58,10 +66,6 @@ public class Order {
 
     public Member getMember() {
         return member;
-    }
-
-    public void confirm() {
-        this.confirmState = true;
     }
 
     @Override
