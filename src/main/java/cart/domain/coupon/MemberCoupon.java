@@ -13,6 +13,14 @@ public class MemberCoupon {
     private final LocalDateTime issuedAt;
     private final LocalDateTime expiredAt;
 
+    public MemberCoupon(final Member member, final Coupon coupon) {
+        this.member = member;
+        this.coupon = coupon;
+        this.isUsed = false;
+        this.issuedAt = LocalDateTime.now();
+        this.expiredAt = calculateExpiredDate(coupon);
+    }
+
     public MemberCoupon(final Long id, final Member member, final Coupon coupon, final boolean isUsed, final LocalDateTime issuedAt, final LocalDateTime expiredAt) {
         this.id = id;
         this.member = member;
@@ -22,20 +30,12 @@ public class MemberCoupon {
         this.expiredAt = expiredAt;
     }
 
-    public MemberCoupon(final Member member, final Coupon coupon) {
-        this.member = member;
-        this.coupon = coupon;
-        this.isUsed = false;
-        this.issuedAt = LocalDateTime.now();
-        this.expiredAt = calculateExpiredDate(coupon.getExpiredAt(), issuedAt.plusDays(coupon.getPeriod()));
-    }
-
-    private LocalDateTime calculateExpiredDate(final LocalDateTime couponExpiredDate, final LocalDateTime memberCouponExpiredDate) {
-        int compare = couponExpiredDate.compareTo(memberCouponExpiredDate);
-        if (compare < 0) {
-            return couponExpiredDate;
+    private LocalDateTime calculateExpiredDate(final Coupon coupon) {
+        LocalDateTime memberCouponExpiredDate = issuedAt.plusDays(coupon.getPeriod());
+        if (memberCouponExpiredDate.isBefore(coupon.getExpiredAt())) {
+            return memberCouponExpiredDate;
         }
-        return memberCouponExpiredDate;
+        return coupon.getExpiredAt();
     }
 
     public Long getId() {
