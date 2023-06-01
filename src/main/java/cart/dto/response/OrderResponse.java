@@ -1,5 +1,7 @@
 package cart.dto.response;
 
+import cart.domain.Order;
+
 import java.util.List;
 
 public class OrderResponse {
@@ -18,6 +20,17 @@ public class OrderResponse {
         this.shippingFee = shippingFee;
         this.usedPoint = usedPoint;
         this.orderDetails = orderDetails;
+    }
+
+    public static OrderResponse from(final Order order){
+        return new OrderResponse(
+                order.getId(),
+                order.getCreatedAt(),
+                order.getTotalProductsPrice(),
+                order.getShippingFee(),
+                order.getUsedPoint(),
+                OrderDetailsDto.from(order.getOrderItems())
+        );
     }
 
     public long getOrderId() {

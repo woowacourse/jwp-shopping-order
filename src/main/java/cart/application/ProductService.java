@@ -25,14 +25,14 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return products.stream().map(ProductResponse::from).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId)
                 .orElseThrow(InvalidProduct::new);
-        return ProductResponse.of(product);
+        return ProductResponse.from(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {

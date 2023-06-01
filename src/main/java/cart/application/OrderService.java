@@ -13,7 +13,6 @@ import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderAdditionResponse;
 import cart.dto.response.OrderDetailsDto;
 import cart.dto.response.OrderResponse;
-import cart.dto.response.ProductResponse;
 import cart.exception.CartItemException.IllegalMember;
 import cart.exception.CartItemException.InvalidCartItem;
 import cart.exception.CartItemException.QuantityNotSame;
@@ -92,7 +91,9 @@ public class OrderService {
     }
 
     private void checkIllegalMember(final Member member, final List<CartItem> cartItems) {
-        boolean isIllegalMember = List.copyOf(cartItems).stream().anyMatch(item -> !item.checkMember(member));
+        boolean isIllegalMember = List.copyOf(cartItems)
+                .stream()
+                .anyMatch(item -> !item.checkMember(member));
         if (isIllegalMember) {
             throw new IllegalMember();
         }
@@ -113,7 +114,8 @@ public class OrderService {
     private static List<Long> extractOrderCartItemIds(final OrderRequest orderRequest) {
         return orderRequest.getOrder()
                 .stream()
-                .map(OrderItemDto::getCartItemId).collect(Collectors.toList());
+                .map(OrderItemDto::getCartItemId)
+                .collect(Collectors.toList());
     }
 
     private void checkUnknownCartItemIds(final List<Long> orderCartItemIds, final List<CartItem> cartItems) {
@@ -132,26 +134,15 @@ public class OrderService {
     public OrderResponse getOrderByOrderId(final Member member, final long orderId) {
         Order order = orderRepository.findByOrderId(orderId);
         order.checkOwner(member);
-        List<OrderDetailsDto> orderDetails = order.getOrderItems()
-                .stream()
-                .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
-                collect(Collectors.toUnmodifiableList());
-        return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalProductsPrice(), order.getShippingFee(), order.getUsedPoint(), orderDetails);
+        return OrderResponse.from(order);
     }
 
     @Transactional(readOnly = true)
     public List<OrderResponse> getOrdersByMember(final Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
-        List<OrderResponse> orderResponses = new ArrayList<>();
-        for (Order order : orders) {
-            List<OrderDetailsDto> orderDetails = order.getOrderItems()
-                    .stream()
-                    .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
-                    collect(Collectors.toUnmodifiableList());
-            orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalProductsPrice(), order.getShippingFee(), order.getUsedPoint(), orderDetails));
-        }
-        return orderResponses;
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
-
 
 }
