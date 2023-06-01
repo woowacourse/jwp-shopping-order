@@ -1,5 +1,6 @@
 package cart.integration;
 
+import cart.TestFixture;
 import cart.application.dto.request.CartItemRequest;
 import cart.application.dto.request.PaymentRequest;
 import cart.domain.member.Member;
@@ -35,20 +36,8 @@ public class PayIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        final MemberEntity memberEntity1 = memberDao.getMemberById(1L);
-        final MemberEntity memberEntity2 = memberDao.getMemberById(2L);
-        this.member1 = new Member(
-                memberEntity1.getId(),
-                memberEntity1.getEmail(),
-                memberEntity1.getPassword(),
-                memberEntity1.getPoint()
-        );
-        member2 = new Member(
-                memberEntity2.getId(),
-                memberEntity2.getEmail(),
-                memberEntity2.getPassword(),
-                memberEntity2.getPoint()
-        );
+        this.member1 = TestFixture.getMember1();
+        this.member2 = TestFixture.getMember2();
     }
 
     @DisplayName("장바구니가 비어있을 경우 bad request를 반환한다.")

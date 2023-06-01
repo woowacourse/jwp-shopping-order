@@ -1,5 +1,6 @@
 package cart.domain.member;
 
+import cart.TestFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +17,8 @@ class MemberTest {
 
     @BeforeEach
     void setUp() {
-        member = new Member(1L, "a@a.com", "1234", 100);
+        member = TestFixture.getMember1();
+        member.savePoint(100);
     }
 
     @DisplayName("포인트를 사용한다.")

@@ -1,8 +1,7 @@
 package cart.domain.order;
 
-import cart.domain.cart.CartItem;
+import cart.TestFixture;
 import cart.domain.member.Member;
-import cart.domain.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,14 +18,13 @@ class OrderTest {
 
     @BeforeEach
     void setUp() {
-        member = new Member(1L, "a@a.com", "1234", 100);
-        final Product product1 = new Product(1L, "name1", 1_000, "imageUrl1");
-        final Product product2 = new Product(2L, "name2", 5_000, "imageUrl2");
-        final List<CartItem> cartItems = List.of(
-                new CartItem(1L, member, product1, 1),
-                new CartItem(1L, member, product2, 2)
+        member = TestFixture.getMember1();
+        orderProducts = new OrderProducts(
+                List.of(
+                        TestFixture.getCartItem1(),
+                        TestFixture.getCartItem2()
+                )
         );
-        orderProducts = new OrderProducts(cartItems);
     }
 
     @DisplayName("적립금을 사용할 경우 총 가격에서 적립금을 뺀 가격만 결제한다.")
