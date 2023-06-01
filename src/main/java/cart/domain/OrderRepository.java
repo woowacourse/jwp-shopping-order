@@ -6,6 +6,7 @@ import cart.entity.OrderEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
@@ -30,6 +31,10 @@ public class OrderRepository {
         final OrderEntity orderEntity = orderDao.findById(id);
         final List<OrderItem> orderItems = orderItemDao.findByOrderId(id);
 
+        return generateOrder(orderEntity, orderItems);
+    }
+
+    private Order generateOrder(final OrderEntity orderEntity, final List<OrderItem> orderItems) {
         return new Order(orderEntity.getId(),
                 orderEntity.getMemberId(),
                 orderItems,
@@ -38,5 +43,14 @@ public class OrderRepository {
                 orderEntity.getEarnedPoints(),
                 orderEntity.getUsedPoints(),
                 orderEntity.getOrderDate());
+    }
+
+    public List<Order> findPageByIndex(final Long memberId, final Long index) {
+        final List<OrderEntity> orderEntities = orderDao.findByIndexRange(memberId, index);
+
+        return orderEntities.stream().map(orderEntity -> {
+            final List<OrderItem> orderItems = orderItemDao.findByOrderId(orderEntity.getId());
+            return generateOrder(orderEntity, orderItems);
+        }).collect(Collectors.toList());
     }
 }

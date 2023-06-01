@@ -49,6 +49,7 @@ public class OrderService {
     }
 
     public OrderListResponse findPageByIndex(final Member member, final Long idx) {
-        return OrderListResponse.of(List.of());
+        final List<Order> orders = orderRepository.findPageByIndex(member.getId(), idx);
+        return OrderListResponse.of(orders);
     }
 }

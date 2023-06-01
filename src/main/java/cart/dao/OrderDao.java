@@ -53,8 +53,8 @@ public class OrderDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public List<OrderEntity> findByIndexRange(final Long memberId, final int index) {
-        final String sql = "select id, member_id, earned_points, used_points, total_price, pay_price, order_date from orders WHERE member_id = ? ORDER BY order_date, id DESC LIMIT ?, " + PAGE_UNIT;
+    public List<OrderEntity> findByIndexRange(final Long memberId, final Long index) {
+        final String sql = "select id, member_id, earned_points, used_points, total_price, pay_price, order_date from orders WHERE member_id = ? ORDER BY order_date DESC, id DESC LIMIT ?, " + PAGE_UNIT;
         return jdbcTemplate.query(sql, rowMapper, memberId, index);
     }
 }

@@ -59,9 +59,9 @@ class OrderDaoTest {
         }
 
         // when
-        final List<OrderEntity> orderEntitiesZero = orderDao.findByIndexRange(1L, 0);
-        final List<OrderEntity> orderEntitiesTen = orderDao.findByIndexRange(1L, 10);
-        final List<OrderEntity> orderEntitiesTwenty = orderDao.findByIndexRange(1L, 20);
+        final List<OrderEntity> orderEntitiesZero = orderDao.findByIndexRange(1L, 0L);
+        final List<OrderEntity> orderEntitiesTen = orderDao.findByIndexRange(1L, 10L);
+        final List<OrderEntity> orderEntitiesTwenty = orderDao.findByIndexRange(1L, 20L);
 
         // then
         assertAll(
