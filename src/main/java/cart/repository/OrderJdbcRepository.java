@@ -10,6 +10,7 @@ import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,13 @@ public class OrderJdbcRepository implements OrderRepository {
 
     @Override
     public Long save(final Order order) {
-        final OrderEntity orderEntity = new OrderEntity(order.getPrice(), order.getCoupon().getId(), order.getMember().getId());
+        OrderEntity orderEntity = null;
+        if (ObjectUtils.isEmpty(order.getCoupon())) {
+            orderEntity = new OrderEntity(order.getPrice(), null, order.getMember().getId());
+        } else {
+            orderEntity = new OrderEntity(order.getPrice(), order.getCoupon().getId(), order.getMember().getId());
+        }
+
         final Long orderId = orderDao.save(orderEntity);
 
         final List<OrderItemEntity> orderItemEntities = order.getOrderItems().stream()
