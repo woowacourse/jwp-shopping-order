@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class CartItem {
 
+    private static final int DEFAULT_QUANTITY = 1;
     private final Product product;
     private final Member member;
     private final Long id;
@@ -20,7 +21,7 @@ public class CartItem {
     }
 
     public CartItem(Member member, Product product) {
-        this(null, 1, product, member);
+        this(null, DEFAULT_QUANTITY, product, member);
     }
 
     public Long getId() {
