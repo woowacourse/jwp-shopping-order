@@ -10,6 +10,14 @@ public class Price {
         this.value = value;
     }
 
+    public Price sum(final Price price) {
+        return new Price(value * price.value);
+    }
+
+    public Price subtract(final Price other) {
+        return new Price(value - other.value);
+    }
+
     public Price multi(final Integer value) {
         return new Price(value * this.value);
     }
@@ -20,10 +28,6 @@ public class Price {
 
     public Integer getValue() {
         return value;
-    }
-
-    public Price subtract(final Price other) {
-        return new Price(value - other.value);
     }
 
     @Override

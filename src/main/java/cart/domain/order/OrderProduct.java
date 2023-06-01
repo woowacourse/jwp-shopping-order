@@ -1,6 +1,7 @@
 package cart.domain.order;
 
 import cart.domain.product.Product;
+import cart.domain.vo.Price;
 import cart.domain.vo.Quantity;
 
 public class OrderProduct {
@@ -17,6 +18,10 @@ public class OrderProduct {
 
     public OrderProduct(final Product product, final Quantity quantity) {
         this(null, product, quantity);
+    }
+
+    public Price getTotalPrice() {
+        return product.calculatePrice(quantity);
     }
 
     public Long getId() {
