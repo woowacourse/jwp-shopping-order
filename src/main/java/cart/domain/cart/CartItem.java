@@ -25,6 +25,16 @@ public class CartItem {
         this.member = member;
     }
 
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new ForbiddenException();
+        }
+    }
+
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public Long getId() {
         return id;
     }
@@ -43,15 +53,5 @@ public class CartItem {
 
     public int getTotalPrice() {
         return product.getPrice() * quantity;
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new ForbiddenException();
-        }
-    }
-
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
     }
 }
