@@ -15,7 +15,7 @@ public class CartItems {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
 
-    public int getTotalPrice() {
+    public int getTotalProductPrice() {
         return cartItems.stream()
                 .map(CartItem::getTotalPrice)
                 .reduce(0, Integer::sum);

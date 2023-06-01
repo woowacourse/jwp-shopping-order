@@ -54,7 +54,7 @@ class MemberCouponTest {
             MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, false, LocalDateTime.MAX,
                     LocalDateTime.now());
             CartItems cartItems = Mockito.mock(CartItems.class);
-            given(cartItems.getTotalPrice()).willReturn(2000);
+            given(cartItems.getTotalProductPrice()).willReturn(2000);
 
             // then
             boolean applicable = memberCoupon.isApplicable(cartItems);
@@ -69,7 +69,7 @@ class MemberCouponTest {
             MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, false, LocalDateTime.MAX,
                     LocalDateTime.now());
             CartItems cartItems = Mockito.mock(CartItems.class);
-            given(cartItems.getTotalPrice()).willReturn(10000);
+            given(cartItems.getTotalProductPrice()).willReturn(10000);
 
             // then
             boolean applicable = memberCoupon.isApplicable(cartItems);
