@@ -48,7 +48,9 @@ public class OrderService {
 
             // TODO 유저가 가지고 있는 쿠폰인지 검증
             memberCouponRepository.findByCouponId(orderRequest.getCouponId());
-            memberCouponRepository.delete(usedCoupon.getId());
+
+            // TODO 사용한 쿠폰 삭제 필요
+//            memberCouponRepository.delete(usedCoupon.getId());
         }
 
         Order order = new Order(totalPrice, discountPrice, orderProducts, usedCoupon, member);
