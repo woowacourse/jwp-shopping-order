@@ -27,7 +27,8 @@ public class CartRepository {
     }
 
     public Cart findCartByMemberId(final long memberId) {
-        List<CartItemEntity> cartItemEntities = cartDao.findAllCartItemEntitiesByCartId(memberId);
+        CartEntity cartEntity = cartDao.findCartEntityByMemberId(memberId);
+        List<CartItemEntity> cartItemEntities = cartDao.findAllCartItemEntitiesByCartId(cartEntity.getId());
 
         List<CartItem> cartItems = cartItemEntities.stream()
                 .map(cartItemEntity -> {
@@ -39,7 +40,6 @@ public class CartRepository {
                 })
                 .collect(Collectors.toList());
 
-        CartEntity cartEntity = cartDao.findCartEntityByMemberId(memberId);
         return new Cart(cartEntity.getId(), new CartItems(cartItems));
     }
 

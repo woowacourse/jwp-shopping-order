@@ -44,6 +44,11 @@ public class CartDao {
                     rs.getInt("quantity")
             );
 
+    public CartEntity findCartEntityByMemberId(final Long memberId) {
+        String sql = "SELECT * FROM cart WHERE member_id = ?";
+        return jdbcTemplate.queryForObject(sql, cartRowMapper, memberId);
+    }
+
     public List<CartItemEntity> findAllCartItemEntitiesByCartId(final Long cartId) {
         String sql = "SELECT * FROM cart_item WHERE cart_id = ?";
         return jdbcTemplate.query(sql, cartItemRowMapper, cartId);
