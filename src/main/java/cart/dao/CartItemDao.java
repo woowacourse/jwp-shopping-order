@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -102,5 +103,17 @@ public class CartItemDao {
         String sql = "DELETE FROM tb_cart_item WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByIds(List<Long> ids) {
+        String sql = "DELETE FROM tb_cart_item WHERE id IN (" + mapToSqlIds(ids) + ")";
+
+        jdbcTemplate.update(sql);
+    }
+
+    private String mapToSqlIds(List<Long> ids) {
+        return ids.stream()
+               .map(String::valueOf)
+               .collect(Collectors.joining(", "));
     }
 }

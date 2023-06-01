@@ -40,4 +40,8 @@ public class CartItemRepository {
     public void deleteById(Long id) {
         cartItemDao.deleteById(id);
     }
+
+    public void deleteByOrderCartItemIds(List<Long> orderCartItemIds) {
+        cartItemDao.deleteByIds(orderCartItemIds);
+    }
 }

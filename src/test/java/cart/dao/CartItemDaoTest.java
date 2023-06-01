@@ -1,6 +1,7 @@
 package cart.dao;
 
 import static cart.fixture.DomainFixture.CHICKEN;
+import static cart.fixture.DomainFixture.FOUR_SALAD;
 import static cart.fixture.DomainFixture.MEMBER_A;
 import static cart.fixture.DomainFixture.PIZZA;
 import static cart.fixture.DomainFixture.TWO_CHICKEN;
@@ -91,5 +92,19 @@ class CartItemDaoTest {
         Optional<CartItem> actual = cartItemDao.findById(TWO_CHICKEN.getId());
 
         assertThat(actual).isEmpty();
+    }
+
+    @Test
+    @DisplayName("deleteByIds는 존재하는 여러 상품 ID를 전달하면 해당 ID를 모두 삭제한다.")
+    void deleteByIdsSuccessTest() {
+        cartItemDao.deleteByIds(List.of(TWO_CHICKEN.getId(), FOUR_SALAD.getId()));
+
+        Optional<CartItem> actualChicken = cartItemDao.findById(TWO_CHICKEN.getId());
+        Optional<CartItem> actualSalad = cartItemDao.findById(FOUR_SALAD.getId());
+
+        assertAll(
+                () -> assertThat(actualChicken).isEmpty(),
+                () -> assertThat(actualSalad).isEmpty()
+        );
     }
 }
