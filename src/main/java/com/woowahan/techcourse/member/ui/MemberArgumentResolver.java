@@ -1,4 +1,4 @@
-package com.woowahan.techcourse.cart.ui;
+package com.woowahan.techcourse.member.ui;
 
 import com.woowahan.techcourse.cart.exception.AuthenticationException;
 import com.woowahan.techcourse.member.dao.MemberDao;

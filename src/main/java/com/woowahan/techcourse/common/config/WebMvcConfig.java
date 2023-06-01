@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.common.config;
 
-import com.woowahan.techcourse.cart.ui.MemberArgumentResolver;
 import com.woowahan.techcourse.member.dao.MemberDao;
+import com.woowahan.techcourse.member.ui.MemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
