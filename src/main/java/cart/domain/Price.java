@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.exception.InvalidPriceException;
-
 import java.util.Objects;
 
 public final class Price {
@@ -33,7 +31,7 @@ public final class Price {
 
     private void validateNotNegative(final int amount) {
         if (amount < BOUNDARY_AMOUNT) {
-            throw new InvalidPriceException();
+            throw new RuntimeException("금액은 음수일 수 없습니다.");
         }
     }
 

@@ -1,6 +1,5 @@
 package cart.domain;
 
-import cart.exception.InvalidPriceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ class PriceTest {
     @DisplayName("금액이 음수인 경우 예외가 발생한다.")
     void construct_fail_when_amount_is_negative() {
         assertThatThrownBy(() -> new Price(-10000))
-                .isInstanceOf(InvalidPriceException.class);
+                .isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -69,7 +68,7 @@ class PriceTest {
 
         // when, then
         assertThatThrownBy(() -> price1.subtract(price2))
-                .isInstanceOf(InvalidPriceException.class);
+                .isInstanceOf(RuntimeException.class);
     }
 
     @Test

@@ -3,7 +3,6 @@ package cart.controller;
 import cart.controller.dto.response.ExceptionResponse;
 import cart.exception.AuthorizationException;
 import cart.exception.CartItemNotFoundException;
-import cart.exception.InvalidPriceException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.NotEnoughQuantityException;
 import cart.exception.NotOwnerException;
