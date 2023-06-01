@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.config.ControllerTestConfig;
+import cart.domain.Product;
 import cart.dto.ProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -13,13 +14,13 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
 class ProductApiControllerTest extends ControllerTestConfig {
 
-    Long 상품_피자_등록() {
-        return productRepository.create(피자.PRODUCT);
+    Long 상품_등록(Product product) {
+        return productRepository.create(product);
     }
 
     @Test
     void getAllProducts() {
-        상품_피자_등록();
+        상품_등록(피자.PRODUCT);
 
         given(spec)
                 .log().all()
@@ -39,7 +40,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
 
     @Test
     void getProductById() {
-        상품_피자_등록();
+        상품_등록(피자.PRODUCT);
 
         given(spec)
                 .log().all()
@@ -70,7 +71,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
-                .body(new ProductRequest("계란", 1000, "https://계란_이미지_주소.png"))
+                .body(피자.REQUEST)
                 .post("/products")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
@@ -78,7 +79,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
 
     @Test
     void updateProduct() {
-        final Long 피자_ID = 상품_피자_등록();
+        final Long 피자_ID = 상품_등록(피자.PRODUCT);
 
         given(spec)
                 .log().all()
@@ -90,7 +91,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
-                .body(new ProductRequest("수정된 계란", 1000, "https://계란_이미지_주소.png"))
+                .body(new ProductRequest("수정된 상품명", 999, "https://수정된_상품_이미지_주소.png"))
                 .pathParam("id", 피자_ID)
                 .put("/products/{id}")
                 .then()
