@@ -1,14 +1,16 @@
 package cart.dao;
 
-import cart.domain.CartItem;
-import cart.domain.Order;
+import cart.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -52,5 +54,42 @@ public class OrderDao {
         return orderId;
     }
 
+    public Order findById(Long id) {
+        String sql = "SELECT orders.id, orders.member_id, member.email, " +
+                "orders.product_price, orders.discount_price, orders.delivery_fee, orders.total_price, orders.created_at, " +
+                "order_items.id, order_items.product_name, order_items.product_price, order_items.product_image_url, order_items.product_quantity " +
+                "FROM orders " +
+                "INNER JOIN member ON orders.member_id = member.id " +
+                "INNER JOIN order_items ON orders.id = order_items.order_id " +
+                "WHERE orders.id = ?";
 
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
+            Long orderId = rs.getLong("orders.id");
+            Long memberId = rs.getLong("orders.member_id");
+            String email = rs.getString("member.email");
+
+            Long productTotalPrice = rs.getLong("orders.product_price");
+            Long discountPrice = rs.getLong("orders.discount_price");
+            Long deliveryFee = rs.getLong("orders.delivery_fee");
+            Long totalPrice = rs.getLong("orders.total_price");
+            Date createdAt = rs.getDate("orders.created_at");
+
+            List<OrderItem> orderItem = new ArrayList<>();
+            Member member = new Member(memberId, email, null);
+            while (rs.next()) {
+                Long orderItemsId = rs.getLong("order_items.id");
+                String productName = rs.getString("order_items.product_name");
+                int productPrice = rs.getInt("order_items.product_price");
+                String productUrl = rs.getString("order_items.product_image_url");
+                int productQuantity = rs.getInt("order_items.product_quantity");
+
+
+                orderItem.add(new OrderItem(orderItemsId, new Product(productName, productPrice, productUrl), productQuantity));
+            }
+
+            OrderItems orderItems = new OrderItems(orderItem);
+
+            return new Order(orderId, member, orderItems, productTotalPrice, discountPrice, deliveryFee, totalPrice, createdAt);
+        });
+    }
 }

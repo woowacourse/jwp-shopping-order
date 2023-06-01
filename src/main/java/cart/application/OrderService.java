@@ -5,8 +5,10 @@ import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,16 @@ public class OrderService {
                     return new OrderItem(product, orderItemRequest.getQuantity());
                 })
                 .collect(Collectors.toList());
-        return orderDao.save(new Order(member, cartItems));
+
+        Long orderId = orderDao.save(new Order(member, new OrderItems(orderItems), 3000L, new Date(20220505)));
+
+        Order order = orderDao.findById(orderId);
+
+        return OrderResponse.of(order);
+    }
+
+    public OrderResponse findById(Member member, Long orderId) {
+        Order order = orderDao.findById(orderId);
+        return OrderResponse.of(order);
     }
 }

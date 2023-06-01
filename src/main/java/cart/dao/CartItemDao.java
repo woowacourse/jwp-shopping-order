@@ -82,6 +82,27 @@ public class CartItemDao {
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
+    public CartItem findByProductId(Long id) {
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+                "FROM cart_item " +
+                "INNER JOIN member ON cart_item.member_id = member.id " +
+                "INNER JOIN product ON cart_item.product_id = product.id " +
+                "WHERE cart_item.product_id = ?";
+        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
+            Long memberId = rs.getLong("member_id");
+            String email = rs.getString("email");
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            Long cartItemId = rs.getLong("cart_item.id");
+            int quantity = rs.getInt("cart_item.quantity");
+            Member member = new Member(memberId, email, null);
+            Product product = new Product(productId, name, price, imageUrl);
+            return new CartItem(cartItemId, quantity, product, member);
+        });
+        return cartItems.isEmpty() ? null : cartItems.get(0);
+    }
 
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
