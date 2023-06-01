@@ -9,18 +9,17 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.application.OrderService;
-import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.product.Product;
 import cart.test.ControllerTest;
 import cart.ui.controller.dto.request.OrderRequest;
-import cart.ui.controller.dto.response.CartItemResponse;
 import cart.ui.controller.dto.response.MemberResponse;
 import cart.ui.controller.dto.response.OrderResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -219,29 +218,18 @@ class OrderApiControllerTest extends ControllerTest {
         void processOrder() throws Exception {
             OrderRequest request = new OrderRequest(List.of(1L), 100);
             Member member = new Member(1L, "a@a.com", "password1", 0);
-            Product product = new Product(1L, "치킨", 10000, "http://chicken.com");
-            CartItemResponse cartItemResponse = CartItemResponse.from(new CartItem(member, product));
-            List<CartItemResponse> response = List.of(cartItemResponse);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
             given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
-            given(orderService.processOrder(any(Member.class), any(OrderRequest.class))).willReturn(response);
+            given(orderService.processOrder(any(Member.class), any(OrderRequest.class))).willReturn(1L);
 
-            MvcResult mvcResult = mockMvc.perform(post("/orders")
+            mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
                             .content(objectMapper.writeValueAsString(request))
                             .contentType(MediaType.APPLICATION_JSON)
                             .characterEncoding(StandardCharsets.UTF_8))
                     .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            String jsonResponse = mvcResult.getResponse().getContentAsString();
-            List<CartItemResponse> result = objectMapper.readValue(
-                    jsonResponse,
-                    new TypeReference<List<CartItemResponse>>() {
-                    }
-            );
-            assertThat(result).usingRecursiveComparison().isEqualTo(response);
+                    .andExpect(status().isCreated())
+                    .andExpect(header().string("Location", "/orders/" + 1));
         }
     }
 }

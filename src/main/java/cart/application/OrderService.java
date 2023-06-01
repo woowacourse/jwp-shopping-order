@@ -9,7 +9,6 @@ import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import cart.ui.controller.dto.request.OrderRequest;
-import cart.ui.controller.dto.response.CartItemResponse;
 import cart.ui.controller.dto.response.OrderResponse;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +47,7 @@ public class OrderService {
     }
 
     @Transactional
-    public List<CartItemResponse> processOrder(Member member, OrderRequest orderRequest) {
+    public Long processOrder(Member member, OrderRequest orderRequest) {
         List<CartItem> cartItems = cartItemRepository.findAllInIds(orderRequest.getCartItemIds());
         for (CartItem cartItem : cartItems) {
             cartItem.checkOwner(member);
@@ -61,13 +60,9 @@ public class OrderService {
         member.usePoint(orderRequest.getPoint());
         member.addPoint(order.getSavedPoint());
 
-        orderRepository.save(order);
         memberRepository.update(member);
         cartItemRepository.deleteAll(cartItems);
-        return cartItemRepository.findByMemberId(member.getId())
-                .stream()
-                .map(CartItemResponse::from)
-                .collect(Collectors.toList());
+        return orderRepository.save(order);
     }
 
     private List<OrderProduct> orderInCart(List<CartItem> cartItems) {

@@ -3,13 +3,13 @@ package cart.ui.controller;
 import cart.application.OrderService;
 import cart.domain.member.Member;
 import cart.ui.controller.dto.request.OrderRequest;
-import cart.ui.controller.dto.response.CartItemResponse;
 import cart.ui.controller.dto.response.OrderResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -59,8 +59,8 @@ public class OrderApiController {
             @ApiResponse(responseCode = "404", description = "등록되지 않은 데이터(장바구니 상품) 요청")
     })
     @PostMapping
-    public ResponseEntity<List<CartItemResponse>> processOrder(Member member, @RequestBody @Valid OrderRequest orderRequest) {
-        List<CartItemResponse> response = orderService.processOrder(member, orderRequest);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Void> processOrder(Member member, @RequestBody @Valid OrderRequest orderRequest) {
+        Long orderId = orderService.processOrder(member, orderRequest);
+        return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 }
