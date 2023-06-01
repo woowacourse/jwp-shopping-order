@@ -1,12 +1,12 @@
 package cart.repository;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.discountpolicy.DiscountPolicyProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.List;
 
@@ -14,9 +14,8 @@ import static cart.fixture.CouponFixture.AMOUNT_1000_COUPON;
 import static cart.fixture.CouponFixture.RATE_10_COUPON;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Transactional
-@AutoConfigureTestDatabase
+@JdbcTest
+@ComponentScan(basePackageClasses = {CouponRepository.class, DiscountPolicyProvider.class})
 class CouponRepositoryTest {
 
     @Autowired
