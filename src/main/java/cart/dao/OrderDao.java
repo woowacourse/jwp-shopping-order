@@ -76,4 +76,17 @@ public class OrderDao {
 
         return new OrderDto(orderId, cartItems, price);
     }
+
+    public List<OrderDto> findByMemberId(Long memberId) {
+        String sql = "SELECT id FROM orders WHERE member_id = ?";
+
+        List<Long> orderIds = jdbcTemplate.queryForList(sql, Long.class, memberId);
+
+        List<OrderDto> orderDtos = new ArrayList<>();
+        for (Long orderId : orderIds) {
+            orderDtos.add(findById(orderId));
+        }
+
+        return orderDtos;
+    }
 }

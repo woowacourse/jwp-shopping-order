@@ -3,19 +3,22 @@ package cart.dto;
 import cart.domain.CartItem;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderResponse {
 
-    private final inner order;
+    private final OrderItemDto order;
     private final int totalPrice;
 
-    public OrderResponse(Long orderId, List<CartItem> cartItems, int price) {
-        this.order = new inner(orderId, cartItems);
+    private OrderResponse(Long orderId, List<CartItem> cartItems, int price) {
+        this.order = OrderItemDto.of(orderId, cartItems);
         this.totalPrice = price;
     }
 
-    public inner getOrder() {
+    public static OrderResponse of(OrderDto orderDto) {
+        return new OrderResponse(orderDto.getId(), orderDto.getCartItems(), orderDto.getPrice());
+    }
+
+    public OrderItemDto getOrder() {
         return order;
     }
 
@@ -23,21 +26,4 @@ public class OrderResponse {
         return totalPrice;
     }
 
-    public class inner {
-        private final Long OrderId;
-        private final List<CartItemResponse> orderItems;
-
-        public inner(Long orderId, List<CartItem> orderItems) {
-            this.OrderId = orderId;
-            this.orderItems = orderItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
-        }
-
-        public Long getOrderId() {
-            return OrderId;
-        }
-
-        public List<CartItemResponse> getOrderItems() {
-            return orderItems;
-        }
-    }
 }

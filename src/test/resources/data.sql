@@ -25,3 +25,7 @@ INSERT INTO coupon (member_id, discount_price, coupon_name, image_url)
 VALUES (1, 1000, '1000원 할인쿠폰', 'https://m.cuchen.com/images/event/coupon_banner_v2.jpg');
 INSERT INTO coupon (member_id, discount_price, coupon_name, image_url)
 VALUES (1, 500, '500원 할인쿠폰', 'https://m.cuchen.com/images/event/coupon_banner_v2.jpg');
+INSERT INTO coupon (member_id, discount_price, coupon_name, image_url)
+VALUES (2, 1500, '1500원 할인쿠폰', 'https://m.cuchen.com/images/event/coupon_banner_v2.jpg');
+INSERT INTO coupon (member_id, discount_price, coupon_name, image_url)
+VALUES (2, 2500, '2500원 할인쿠폰', 'https://m.cuchen.com/images/event/coupon_banner_v2.jpg');

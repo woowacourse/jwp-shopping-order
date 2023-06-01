@@ -4,12 +4,14 @@ import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
 import cart.domain.*;
 import cart.dto.OrderDto;
+import cart.dto.OrderItemDto;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -45,6 +47,11 @@ public class OrderService {
     public OrderResponse findOrder(Member member, Long orderId) {
         OrderDto order = orderDao.findById(orderId);
         // TODO: 2023-06-02 order가 member의 것인지 검증
-        return new OrderResponse(order.getId(), order.getCartItems(), order.getPrice());
+        return OrderResponse.of(order);
+    }
+
+    public List<OrderItemDto> findOrderByMember(Member member) {
+        List<OrderDto> orders = orderDao.findByMemberId(member.getId());
+        return orders.stream().map(orderDto -> {return OrderItemDto.of(orderDto.getId(), orderDto.getCartItems());}).collect(Collectors.toList());
     }
 }
