@@ -53,13 +53,15 @@ public class ProductDao {
 
     public Optional<Product> findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        Product product = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
-        }, productId);
-        return Optional.of(product);
+        }, productId)
+                .stream()
+                .findAny();
     }
 
     public void update(Long productId, Product product) {
