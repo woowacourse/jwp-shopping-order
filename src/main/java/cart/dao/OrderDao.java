@@ -22,6 +22,10 @@ public class OrderDao {
         return null;
     }
 
+    public Long insert(Order order) {
+        return null;
+    }
+
     public void update(Order order) {
     }
 }

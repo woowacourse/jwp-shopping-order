@@ -44,9 +44,9 @@ public class TestSource {
     public static Member member1 = new Member(1L, "a@a.com", "1234");
     public static Member member2 = new Member(2L, "b@b.com", "1234");
 
-    public static Order order1 = new Order(1L, member1, LocalDateTime.now(), 10000, 5000, 500, OrderStatus.PENDING, List.of(quantityAndProduct1));
-    public static Order order2 = new Order(2L, member1, LocalDateTime.now(), 20000, 10000, 1000, OrderStatus.PENDING, List.of(quantityAndProduct2));
-    public static Order order3 = new Order(3L, member1, LocalDateTime.now(), 13000, 3000, 650, OrderStatus.PENDING, List.of(quantityAndProduct3));
+    public static Order order1 = new Order(1L, member1, LocalDateTime.now(), 10000, OrderStatus.PENDING, List.of(quantityAndProduct1));
+    public static Order order2 = new Order(2L, member1, LocalDateTime.now(), 20000, OrderStatus.PENDING, List.of(quantityAndProduct2));
+    public static Order order3 = new Order(3L, member1, LocalDateTime.now(), 13000, OrderStatus.PENDING, List.of(quantityAndProduct3));
 
-    public static Order orderByMember1 = new Order(4L, member1, LocalDateTime.now(), 13000, 3000, 650, OrderStatus.PENDING, List.of(quantityAndProduct3));
+    public static Order orderByMember1 = new Order(4L, member1, LocalDateTime.now(), 13000, OrderStatus.PENDING, List.of(quantityAndProduct3));
 }

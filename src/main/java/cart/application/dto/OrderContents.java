@@ -39,7 +39,7 @@ public class OrderContents {
                     .mapToInt(QuantityAndProduct::getQuantity)
                     .count();
                 Product representative = quantityAndProducts.get(0).getProduct();
-                return new OrderContents(order.getOrderId(), order.getPayAmount(), order.getOrderAt(),
+                return new OrderContents(order.getId(), order.getPayAmount(), order.getOrderAt(),
                     order.getOrderStatus().getDisplayName(), representative.getName(), representative.getImageUrl(), totalProductCount);
             })
             .collect(toList());

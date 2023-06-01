@@ -27,12 +27,12 @@ public class GetDetailedOrderResponse {
         this.products = products;
     }
 
-    public static GetDetailedOrderResponse of(Order order) {
+    public static GetDetailedOrderResponse from(Order order, int increasedPoint, int usedPoint) {
         List<SingleKindDetailedProductResponse> detailedProducts = order.getQuantityAndProducts().stream()
             .map(SingleKindDetailedProductResponse::of)
             .collect(Collectors.toList());
-        return new GetDetailedOrderResponse(order.getOrderId(), order.getOrderAt(),
-            order.getOrderStatus().getDisplayName(), order.getPayAmount(), order.getUsedPoint(), order.getSavedPoint(),
+        return new GetDetailedOrderResponse(order.getId(), order.getOrderAt(),
+            order.getOrderStatus().getDisplayName(), order.getPayAmount(), usedPoint, increasedPoint,
             detailedProducts);
     }
 
