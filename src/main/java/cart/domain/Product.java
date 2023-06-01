@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class Product {
     private Long id;
     private String name;
@@ -33,5 +35,9 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public boolean equalsId(final Long productId) {
+        return Objects.equals(this.id, productId);
     }
 }

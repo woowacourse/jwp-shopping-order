@@ -98,7 +98,7 @@ public class OrderService {
     }
 
     private boolean isInvalidProduct(final CartItem cartItem, final CartItemRequest request) {
-        return !cartItem.equalsId(request.getId());
+        return !cartItem.equalsProductId(request.getProductId());
     }
 
     private boolean isInvalidQuantity(final CartItem cartItem, final CartItemRequest request) {
