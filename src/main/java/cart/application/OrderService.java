@@ -49,7 +49,7 @@ public class OrderService {
                 request.getOrderTime()
                 );
         Long orderId = orderDao.save(order);
-        orderItemDao.save(orderId, order.getOrderItems());
+        orderItemDao.saveAll(orderId, order.getOrderItems());
         cartItemDao.deleteAll(member.getId(), cart.getCartItems());
         return new Order(orderId, order.getMemberId(), order.getOrderItems(), order.getDeliveryFee(), order.getDiscountPrice(),order.getCreatedAt());
     }

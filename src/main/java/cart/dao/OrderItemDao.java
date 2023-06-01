@@ -18,7 +18,7 @@ public class OrderItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
     
-    public void save(Long orderId, List<OrderItem> orderItems) {
+    public void saveAll(Long orderId, List<OrderItem> orderItems) {
         String sql = "INSERT INTO order_items (order_id, product_name, product_price, product_image_url, product_quantity) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override

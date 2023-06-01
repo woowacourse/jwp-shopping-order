@@ -43,7 +43,7 @@ public class CartItemDao {
         });
     }
 
-    public Long save(CartItem cartItem) {
+    public CartItem save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -59,7 +59,8 @@ public class CartItemDao {
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        Long cartItemId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new CartItem(cartItemId, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
     }
 
     public CartItem findById(Long id) {
