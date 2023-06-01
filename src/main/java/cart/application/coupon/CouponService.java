@@ -2,7 +2,6 @@ package cart.application.coupon;
 
 import cart.domain.Member;
 import cart.domain.coupon.Coupon;
-import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
 import cart.exception.CannotChangeCouponStatusException;
 import cart.exception.CannotDeleteCouponException;
@@ -24,8 +23,8 @@ public class CouponService {
         this.memberRepository = memberRepository;
     }
 
-    public Long issueCoupon(final Member member, final CouponIssueRequest request) {
-        return couponRepository.issue(member, request.getId());
+    public Long issueCoupon(final Member member, final Long couponId) {
+        return couponRepository.issue(member, couponId);
     }
 
     public void reissueCoupon(final Long couponId, final CouponReissueRequest request) {

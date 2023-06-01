@@ -1,7 +1,6 @@
 package cart.acceptance;
 
 import cart.dao.MemberDao;
-import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
@@ -12,9 +11,7 @@ import org.springframework.http.HttpHeaders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Import(MemberDao.class)
@@ -27,11 +24,7 @@ public class CouponAcceptanceTest extends AcceptanceTest {
      */
     @Test
     void 쿠폰을_사용자에게_발급해준다() {
-        // given
-        final CouponIssueRequest request = new CouponIssueRequest(1L);
-
-        // when
-        final ExtractableResponse<Response> 결과 = 쿠폰을_발급한다(request);
+        final ExtractableResponse<Response> 결과 = 쿠폰을_발급한다(1L);
 
         // then
         assertAll(
@@ -40,11 +33,10 @@ public class CouponAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private ExtractableResponse<Response> 쿠폰을_발급한다(CouponIssueRequest request) {
+    private ExtractableResponse<Response> 쿠폰을_발급한다(long couponId) {
         return givenBasic()
-                .body(request)
                 .when()
-                .post("/coupons")
+                .post("/coupons/{couponId}", couponId)
                 .then().log().all()
                 .extract();
     }

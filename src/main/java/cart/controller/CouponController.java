@@ -3,19 +3,11 @@ package cart.controller;
 import cart.application.coupon.CouponProvider;
 import cart.application.coupon.CouponService;
 import cart.domain.Member;
-import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
 import cart.dto.CouponResponse;
 import cart.dto.CouponTypeResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -33,12 +25,12 @@ public class CouponController {
         this.couponProvider = couponProvider;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> issueCoupon(final Member member, @RequestBody final CouponIssueRequest request) {
-        final Long couponId = couponService.issueCoupon(member, request);
+    @PostMapping("/{couponId}")
+    public ResponseEntity<Void> issueCoupon(final Member member, @PathVariable Long couponId) {
+        final Long memberCouponId = couponService.issueCoupon(member, couponId);
         final URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{couponId}")
-                .buildAndExpand(couponId)
+                .buildAndExpand(memberCouponId)
                 .toUri();
         return ResponseEntity.created(uri).build();
     }

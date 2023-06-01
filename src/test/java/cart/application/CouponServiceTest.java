@@ -4,7 +4,6 @@ import cart.application.coupon.CouponService;
 import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
-import cart.dto.CouponIssueRequest;
 import cart.dto.CouponReissueRequest;
 import cart.exception.CannotChangeCouponStatusException;
 import cart.exception.CannotDeleteCouponException;
@@ -46,11 +45,11 @@ class CouponServiceTest {
     void 쿠폰을_발급한다() {
         // given
         final Member member = new Member(1L, "a@a.com", "1234");
-        final CouponIssueRequest request = new CouponIssueRequest(1L);
+        final long couponId = 1L;
         given(couponRepository.issue(member, 1L)).willReturn(1L);
 
         // when
-        final Long saveId = couponService.issueCoupon(member, request);
+        final Long saveId = couponService.issueCoupon(member, couponId);
 
         // then
         assertThat(saveId).isEqualTo(1L);
