@@ -7,19 +7,21 @@ public class MemberEntity {
     private Long id;
     private String email;
     private String password;
+    private String nickname;
 
-    public MemberEntity(final String email, final String password) {
-        this(null, email, password);
+    public MemberEntity(final String email, final String password, final String nickname) {
+        this(null, email, password, nickname);
     }
 
-    public MemberEntity(final Long id, final String email, final String password) {
+    public MemberEntity(final Long id, final String email, final String password, final String nickname) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.nickname = nickname;
     }
 
     public Member toDomain() {
-        return new Member(id, email, password);
+        return new Member(id, email, password, nickname);
     }
 
     public Long getId() {
@@ -32,5 +34,9 @@ public class MemberEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 }
