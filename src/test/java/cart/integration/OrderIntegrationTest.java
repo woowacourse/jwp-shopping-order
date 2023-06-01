@@ -1,8 +1,12 @@
 package cart.integration;
 
+import cart.controller.dto.request.CartItemRequest;
 import cart.controller.dto.request.OrderRequest;
 import cart.controller.dto.request.ProductRequest;
 import cart.integration.common.AuthInfo;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,16 +28,18 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class OrderIntegrationTest extends IntegrationTest {
 
     private final AuthInfo member = new AuthInfo("a@a.com", "1234");
+    private final ProductRequest mainProductRequest = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
     private long cartItemId1;
     private long cartItemId2;
 
     @BeforeEach
     void setUp() {
-        final long productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
+        final long productId1 = createProduct(mainProductRequest);
         final long productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
         cartItemId1 = requestAddCartItemAndGetId(member, productId1);
         cartItemId2 = requestAddCartItemAndGetId(member, productId2);
     }
+
     @Nested
     @DisplayName("주문 요청")
     class Order {
@@ -46,13 +52,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             final OrderRequest request = new OrderRequest(List.of(cartItemId1), paymentAmount);
 
             // when
-            final ExtractableResponse<Response> response = given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                    .body(request)
-                    .when().post("/orders")
-                    .then()
-                    .extract();
+            final ExtractableResponse<Response> response = requestAddOrder(member, request);
 
             // then
             assertAll(
@@ -69,13 +69,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2), paymentAmount);
 
             // when
-            final ExtractableResponse<Response> response = given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                    .body(request)
-                    .when().post("/orders")
-                    .then()
-                    .extract();
+            final ExtractableResponse<Response> response = requestAddOrder(member, request);
 
             // then
             assertAll(
@@ -92,13 +86,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2), wrongPaymentAmount);
 
             // when
-            final ExtractableResponse<Response> response = given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                    .body(request)
-                    .when().post("/orders")
-                    .then()
-                    .extract();
+            final ExtractableResponse<Response> response = requestAddOrder(member, request);
 
             // then
             assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -133,16 +121,57 @@ public class OrderIntegrationTest extends IntegrationTest {
             final OrderRequest request = new OrderRequest(List.of(cartItemId1, wrongProductId), paymentAmount);
 
             // when
-            final ExtractableResponse<Response> response = given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                    .body(request)
-                    .when().post("/orders")
-                    .then()
-                    .extract();
+            final ExtractableResponse<Response> response = requestAddOrder(member, request);
 
             // then
             assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         }
+    }
+
+    @Nested
+    @DisplayName("주문 목록 조회")
+    class GetAll{
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            // given
+            final int paymentAmount = 25_000;
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2), paymentAmount);
+            final long id = getIdFromCreatedResponse(requestAddOrder(member, request));
+
+            // when
+            final ExtractableResponse<Response> response = given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .auth().preemptive().basic(member.getEmail(), member.getEmail())
+                    .when().get("/orders")
+                    .then()
+                    .extract();
+
+            // then
+            final Configuration conf = Configuration.defaultConfiguration();
+            final DocumentContext documentContext = JsonPath.using(conf).parse(response.asString());
+
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                    () -> assertThat(documentContext.read("$.size()", Integer.class)).isEqualTo(1),
+                    () -> assertThat(documentContext.read("$[0].mainProductName", String.class))
+                            .isEqualTo(mainProductRequest.getName()),
+                    () -> assertThat(documentContext.read("$[0].mainProductImage", String.class))
+                            .isEqualTo(mainProductRequest.getImageUrl()),
+                    () -> assertThat(documentContext.read("$[0].extraProductCount", Integer.class)).isEqualTo(1),
+                    () -> assertThat(documentContext.read("$[0].price", Integer.class)).isEqualTo(paymentAmount)
+            );
+        }
+    }
+
+    private ExtractableResponse<Response> requestAddOrder(AuthInfo member, OrderRequest orderRequest) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest)
+                .when().post("/orders")
+                .then()
+                .extract();
     }
 }

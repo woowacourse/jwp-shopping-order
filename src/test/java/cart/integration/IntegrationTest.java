@@ -25,7 +25,7 @@ public class IntegrationTest {
         RestAssured.port = port;
     }
 
-    private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
+    protected long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
         return Long.parseLong(response.header("Location").split("/")[2]);
     }
 
