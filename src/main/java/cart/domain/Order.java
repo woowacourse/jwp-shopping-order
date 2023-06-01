@@ -14,7 +14,7 @@ public class Order {
     private java.sql.Date date;
 
 
-    public Order(Member member, OrderItems orderItems, Long deliveryFee, java.sql.Date date) {
+    public Order(Member member, OrderItems orderItems, Long deliveryFee, Date date) {
         this.member = member;
         this.orderItems = orderItems;
         this.productPrice = orderItems.calculateOrderPrice();

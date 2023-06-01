@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderDao {
@@ -63,7 +65,11 @@ public class OrderDao {
                 "INNER JOIN order_items ON orders.id = order_items.order_id " +
                 "WHERE orders.id = ?";
 
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, rowMapper());
+    }
+
+    private RowMapper<Order> rowMapper() {
+        return (rs, rowNum) -> {
             Long orderId = rs.getLong("orders.id");
             Long memberId = rs.getLong("orders.member_id");
             String email = rs.getString("member.email");
@@ -76,20 +82,31 @@ public class OrderDao {
 
             List<OrderItem> orderItem = new ArrayList<>();
             Member member = new Member(memberId, email, null);
-            while (rs.next()) {
+
+            do {
                 Long orderItemsId = rs.getLong("order_items.id");
                 String productName = rs.getString("order_items.product_name");
                 int productPrice = rs.getInt("order_items.product_price");
                 String productUrl = rs.getString("order_items.product_image_url");
                 int productQuantity = rs.getInt("order_items.product_quantity");
 
-
                 orderItem.add(new OrderItem(orderItemsId, new Product(productName, productPrice, productUrl), productQuantity));
-            }
+            } while (rs.next());
 
             OrderItems orderItems = new OrderItems(orderItem);
 
             return new Order(orderId, member, orderItems, productTotalPrice, discountPrice, deliveryFee, totalPrice, createdAt);
-        });
+        };
+    }
+
+    public List<Order> findAllByMember(Long memberId) {
+        String sql = "SELECT * FROM orders WHERE member_id = ?";
+
+        List<Long> orderId = jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> rs.getLong("id"));
+        List<Order> orders = orderId.stream()
+                .map(this::findById)
+                .collect(Collectors.toList());
+
+        return orders;
     }
 }

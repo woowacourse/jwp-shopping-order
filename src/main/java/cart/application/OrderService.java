@@ -1,11 +1,11 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.dto.OrdersResponse;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -17,14 +17,10 @@ public class OrderService {
 
     private final OrderDao orderDao;
 
-    private final CartItemDao cartItemDao;
-    private final CartItemService cartItemService;
     private final ProductDao productDao;
 
-    public OrderService(OrderDao orderDao, CartItemDao cartItemDao, CartItemService cartItemService, ProductDao productDao) {
+    public OrderService(OrderDao orderDao, ProductDao productDao) {
         this.orderDao = orderDao;
-        this.cartItemDao = cartItemDao;
-        this.cartItemService = cartItemService;
         this.productDao = productDao;
     }
 
@@ -46,5 +42,10 @@ public class OrderService {
     public OrderResponse findById(Member member, Long orderId) {
         Order order = orderDao.findById(orderId);
         return OrderResponse.of(order);
+    }
+
+    public OrdersResponse findAll(Member member) {
+        List<Order> orders = orderDao.findAllByMember(member.getId());
+        return OrdersResponse.of(orders);
     }
 }
