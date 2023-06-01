@@ -1,9 +1,9 @@
-package cart.ui;
+package cart.config;
 
-import cart.exception.AuthenticationException;
-import cart.dao.JdbcTemplateMemberDao;
-import cart.domain.Member;
-import cart.exception.MemberNotFoundException;
+import cart.dao.member.MemberDao;
+import cart.domain.member.Member;
+import cart.exception.customexception.AuthenticationException;
+import cart.exception.customexception.MemberNotFoundException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -13,10 +13,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final JdbcTemplateMemberDao jdbcTemplateMemberDao;
 
-    public MemberArgumentResolver(JdbcTemplateMemberDao jdbcTemplateMemberDao) {
-        this.jdbcTemplateMemberDao = jdbcTemplateMemberDao;
+    private final MemberDao memberDao;
+
+    public MemberArgumentResolver(MemberDao memberDao) {
+        this.memberDao = memberDao;
     }
 
     @Override
@@ -30,7 +31,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         if (authorization == null) {
             return null;
         }
-
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
             return null;
@@ -44,7 +44,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = jdbcTemplateMemberDao.findMemberByEmail(email)
+        Member member = memberDao.findMemberByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();

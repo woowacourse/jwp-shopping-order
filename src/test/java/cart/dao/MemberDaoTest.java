@@ -1,6 +1,8 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.dao.member.JdbcTemplateMemberDao;
+import cart.dao.member.MemberDao;
+import cart.domain.member.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
