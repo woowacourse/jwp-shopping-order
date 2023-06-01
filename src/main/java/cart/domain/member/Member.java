@@ -12,9 +12,16 @@ public class Member {
     private final Password password;
 
     public Member(final String name, final String password) {
+        validateName(name);
         this.id = null;
         this.name = name;
         this.password = encrypt(PlainPassword.of(password));
+    }
+
+    private void validateName(final String name) {
+        if (name.length() < 4 || name.length() > 10) {
+            throw new IllegalArgumentException("아이디는 4글자 이상 10글자 이하로 입력해주세요.");
+        }
     }
 
     public Member(final Long id, final String name, final String password) {
@@ -33,6 +40,10 @@ public class Member {
         return new String(encodedBytes, StandardCharsets.UTF_8);
     }
 
+    public boolean checkPassword(final String password) {
+        return this.password.getPassword().equals(password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -43,9 +54,5 @@ public class Member {
 
     public String getPassword() {
         return password.getPassword();
-    }
-
-    public boolean checkPassword(final String password) {
-        return this.password.getPassword().equals(password);
     }
 }
