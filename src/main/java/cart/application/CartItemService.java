@@ -2,11 +2,12 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
-import cart.domain.CartItem;
+import cart.domain.Product;
+import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.cart.CartItemResponse;
 import cart.exception.CartItemException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +27,14 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        Product product = productDao.getProductById(cartItemRequest.getProductId());
+        return cartItemDao.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

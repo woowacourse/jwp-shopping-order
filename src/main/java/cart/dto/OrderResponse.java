@@ -1,6 +1,7 @@
 package cart.dto;
 
 import cart.domain.Order;
+import cart.dto.cart.CartItemResponse;
 import cart.dto.coupon.CouponResponse;
 
 import java.time.LocalDateTime;

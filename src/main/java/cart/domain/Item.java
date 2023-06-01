@@ -4,7 +4,7 @@ public class Item {
 
     private final Long id;
     private final Product product;
-    private final int quantity;
+    private int quantity;
 
     public Item(final Product product, final int quantity) {
         this.id = null;
@@ -15,6 +15,10 @@ public class Item {
     public Item(final Long id, final Product product, final int quantity) {
         this.id = id;
         this.product = product;
+        this.quantity = quantity;
+    }
+
+    public void changeQuantity(final int quantity) {
         this.quantity = quantity;
     }
 

@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,8 +55,8 @@ public class CartItemDao {
             );
 
             ps.setLong(1, cartItem.getMember().getId());
-            ps.setLong(2, cartItem.getProduct().getId());
-            ps.setInt(3, cartItem.getQuantity());
+            ps.setLong(2, cartItem.getItem().getProduct().getId());
+            ps.setInt(3, cartItem.getItem().getQuantity());
 
             return ps;
         }, keyHolder);
@@ -99,7 +99,7 @@ public class CartItemDao {
 
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+        jdbcTemplate.update(sql, cartItem.getItem().getQuantity(), cartItem.getId());
     }
 
     public void deleteByIdsAndMemberId(final Long memberId, final List<Long> ids) {
