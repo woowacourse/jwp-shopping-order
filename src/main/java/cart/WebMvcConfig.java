@@ -25,22 +25,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(new MemberArgumentResolver(memberDao));
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(final CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("*")
-                        .exposedHeaders(LOCATION)
-                        .allowedOrigins(
-                                "http://localhost:3000",
-                                "https://nlom0218.github.io",
-                                "https://tkdrb12.github.io"
-                        )
-                        .maxAge(3600);
-            }
-        };
+    @Override
+    public void addCorsMappings(final CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("*")
+                .exposedHeaders(LOCATION)
+                .allowedOrigins(
+                        "http://localhost:3000",
+                        "https://nlom0218.github.io",
+                        "https://tkdrb12.github.io"
+                )
+                .maxAge(3600);
     }
 
 }
