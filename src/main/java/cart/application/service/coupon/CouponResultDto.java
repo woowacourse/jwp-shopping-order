@@ -1,6 +1,6 @@
 package cart.application.service.coupon;
 
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 
 public class CouponResultDto {
     private final long id;

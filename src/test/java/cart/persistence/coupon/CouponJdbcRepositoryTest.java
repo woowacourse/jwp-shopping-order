@@ -1,6 +1,6 @@
 package cart.persistence.coupon;
 
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,8 +10,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 

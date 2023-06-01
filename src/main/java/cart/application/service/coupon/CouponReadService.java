@@ -1,7 +1,7 @@
 package cart.application.service.coupon;
 
 import cart.application.repository.CouponRepository;
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import cart.ui.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
