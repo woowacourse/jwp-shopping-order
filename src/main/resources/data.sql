@@ -117,3 +117,36 @@ INSERT INTO order_item (order_id, name, price, image_url, quantity)
 VALUES (4, 'PET보틀-납작(260ml)', 41000,
         'https://cdn-mart.baemin.com/sellergoods/main/d07bec18-ce84-41c2-8903-61cbd10712b6.jpg?h=300&w=300',
         3);
+
+INSERT INTO coupon (name, discount_price)
+VALUES ('3000원 할인', 3000);
+
+INSERT INTO coupon (name, discount_price)
+VALUES ('5000원 할인', 5000);
+
+INSERT INTO coupon (name, discount_price)
+VALUES ('백만원 할인', 1000000);
+
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 1);
+
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 2);
+
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (1, 3);
+
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (2, 1);
+
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (2, 2);
+
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (2, 3);
+
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (3, 1);
+
+INSERT INTO member_coupon (member_id, coupon_id)
+VALUES (3, 2);

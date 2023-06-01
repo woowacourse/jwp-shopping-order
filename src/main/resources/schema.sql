@@ -43,3 +43,19 @@ CREATE TABLE order_item
     image_url varchar(255) NOT NULL,
     quantity  INT          NOT NULL
 );
+
+CREATE TABLE coupon
+(
+    id             BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name           varchar(255) NOT NULL,
+    discount_price BIGINT       NOT NULL,
+    used_yn        varchar(1) DEFAULT 'N'
+);
+
+CREATE TABLE member_coupon
+(
+    member_id BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL,
+    primary key (member_id, coupon_id)
+);
+
