@@ -10,6 +10,7 @@ import cart.integration.IntegrationTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Sql({"classpath:truncate.sql","classpath:data.sql"})
-class OrderRepositoryTest {
+class OrderRepositoryTest extends IntegrationTest {
 
     @Autowired
     private OrderRepository orderRepository;
