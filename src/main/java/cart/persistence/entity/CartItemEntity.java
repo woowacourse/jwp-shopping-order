@@ -18,6 +18,10 @@ public class CartItemEntity {
         this.createdAt = createdAt;
     }
 
+    public CartItemEntity(final Long id, final Long memberId, final Long productId, final Integer quantity) {
+        this(id, memberId, productId, quantity, null);
+    }
+
     public Long getId() {
         return id;
     }

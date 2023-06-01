@@ -20,6 +20,10 @@ public class OrderHistoryEntity {
         this.createdAt = createdAt;
     }
 
+    public OrderHistoryEntity(final Long id, final Long memberId, final Integer totalAmount, final Integer usedPoint, final Integer savedPoint) {
+        this(id, memberId, totalAmount, usedPoint, savedPoint, null);
+    }
+
     public Long getId() {
         return id;
     }

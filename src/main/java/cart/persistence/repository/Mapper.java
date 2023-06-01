@@ -23,8 +23,7 @@ class Mapper {
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
-                product.getImageUrl(),
-                null
+                product.getImageUrl()
         );
     }
 
@@ -42,8 +41,7 @@ class Mapper {
                 member.getId(),
                 member.getEmail(),
                 member.getPassword(),
-                member.getPoint(),
-                null
+                member.getPoint()
         );
     }
 
@@ -61,8 +59,7 @@ class Mapper {
                 cartItem.getId(),
                 cartItem.getMember().getId(),
                 cartItem.getProduct().getId(),
-                cartItem.getQuantity(),
-                null
+                cartItem.getQuantity()
         );
     }
 
@@ -72,8 +69,7 @@ class Mapper {
                 order.getMember().getId(),
                 order.getTotalAmount(),
                 order.getUsedPoint(),
-                order.getSavedPoint(),
-                null
+                order.getSavedPoint()
         );
     }
 
@@ -83,8 +79,7 @@ class Mapper {
                 orderId,
                 orderProduct.getProduct().getId(),
                 orderProduct.getPurchasedPrice(),
-                orderProduct.getQuantity(),
-                null
+                orderProduct.getQuantity()
         );
     }
 }

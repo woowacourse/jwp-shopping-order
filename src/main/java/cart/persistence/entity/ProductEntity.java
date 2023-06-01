@@ -18,6 +18,10 @@ public class ProductEntity {
         this.createdAt = createdAt;
     }
 
+    public ProductEntity(final Long id, final String name, final Integer price, final String imageUrl) {
+        this(id, name, price, imageUrl, null);
+    }
+
     public Long getId() {
         return id;
     }

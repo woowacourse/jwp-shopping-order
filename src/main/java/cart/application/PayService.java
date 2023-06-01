@@ -28,7 +28,7 @@ public class PayService {
         final List<CartItem> cartItems = getCartItems(member, cartIds);
         member.usePoint(request.getPoint());
         final OrderProducts orderProducts = new OrderProducts(cartItems);
-        final Order order = new Order(null, member, request.getPoint(), orderProducts);
+        final Order order = new Order(member, request.getPoint(), orderProducts);
         return payRepository.createOrder(order);
     }
 

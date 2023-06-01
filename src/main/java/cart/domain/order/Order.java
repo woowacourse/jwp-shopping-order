@@ -17,6 +17,10 @@ public class Order {
         this.orderProducts = orderProducts;
     }
 
+    public Order(final Member member, final int usingPoint, final OrderProducts orderProducts) {
+        this(null, member, usingPoint, orderProducts);
+    }
+
     public Long getId() {
         return id;
     }

@@ -18,6 +18,10 @@ public class MemberEntity {
         this.createdAt = createdAt;
     }
 
+    public MemberEntity(final Long id, final String email, final String password, final int point) {
+        this(id, email, password, point, null);
+    }
+
     public Long getId() {
         return id;
     }

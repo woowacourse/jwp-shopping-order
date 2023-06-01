@@ -27,8 +27,7 @@ public class MemberDao {
             rs.getLong("id"),
             rs.getString("email"),
             rs.getString("password"),
-            rs.getInt("point"),
-            null
+            rs.getInt("point")
     );
 
     private final JdbcTemplate jdbcTemplate;

@@ -19,8 +19,7 @@ public class CartItemDao {
             rs.getLong("id"),
             rs.getLong("member_id"),
             rs.getLong("product_id"),
-            rs.getInt("quantity"),
-            null
+            rs.getInt("quantity")
     );
 
     private final JdbcTemplate jdbcTemplate;

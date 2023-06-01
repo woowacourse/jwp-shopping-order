@@ -18,6 +18,10 @@ public class OrderProduct {
         this.quantity = new Quantity(quantity);
     }
 
+    public OrderProduct(final Product product, final int purchasedPrice, final int quantity) {
+        this(null, product, purchasedPrice, quantity);
+    }
+
     public Long getId() {
         return id;
     }

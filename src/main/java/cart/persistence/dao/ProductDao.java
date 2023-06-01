@@ -20,8 +20,7 @@ public class ProductDao {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getInt("price"),
-            rs.getString("image_url"),
-            null
+            rs.getString("image_url")
     );
 
     private final JdbcTemplate jdbcTemplate;
