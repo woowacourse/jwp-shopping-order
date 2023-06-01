@@ -1,15 +1,15 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.dao.cartitem.CartItemDao;
+import cart.dao.product.ProductDao;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
-import cart.exception.CartItemDuplicatedException;
-import cart.exception.CartItemNotFoundException;
-import cart.exception.ProductNotFoundException;
+import cart.exception.customexception.CartItemDuplicatedException;
+import cart.exception.customexception.CartItemNotFoundException;
+import cart.exception.customexception.ProductNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -89,9 +89,6 @@ public class CartItemServiceTest {
         Long cartId = 3L;
         CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest = new CartItemQuantityUpdateRequest(2L);
 
-        when(cartItemDao.findCartItemById(anyLong()))
-                .thenReturn(Optional.empty());
-
         // when, then
         assertThatThrownBy(() -> cartItemService.updateQuantity(member, cartId, cartItemQuantityUpdateRequest))
                 .isInstanceOf(CartItemNotFoundException.class);
@@ -102,9 +99,6 @@ public class CartItemServiceTest {
         // given
         Member member = new Member(1L, 하디.getEmail(), 하디.getPassword());
         Long cartId = 3L;
-
-        when(cartItemDao.findCartItemById(anyLong()))
-                .thenReturn(Optional.empty());
 
         // when, then
         assertThatThrownBy(() -> cartItemService.remove(member, cartId))

@@ -1,16 +1,16 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.dao.cartitem.CartItemDao;
+import cart.dao.product.ProductDao;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
-import cart.exception.CartItemDuplicatedException;
-import cart.exception.CartItemNotFoundException;
-import cart.exception.ProductNotFoundException;
+import cart.exception.customexception.CartItemDuplicatedException;
+import cart.exception.customexception.CartItemNotFoundException;
+import cart.exception.customexception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,25 +49,31 @@ public class CartItemService {
 
     @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+        List<Long> findCartIds = cartItemDao.findAllCartIdsByMemberId(member.getId());
+        if (!findCartIds.contains(id)) {
+            throw new CartItemNotFoundException();
+        }
         CartItem cartItem = cartItemDao.findCartItemById(id)
-                .orElseThrow(CartItemNotFoundException::new);
+                .orElseThrow(ProductNotFoundException::new);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
             cartItemDao.deleteById(id);
             return;
         }
-
         cartItem.changeQuantity(request.getQuantity());
         cartItemDao.updateQuantity(cartItem);
     }
 
     @Transactional
     public void remove(Member member, Long id) {
+        List<Long> findCartIds = cartItemDao.findAllCartIdsByMemberId(member.getId());
+        if (!findCartIds.contains(id)) {
+            throw new CartItemNotFoundException();
+        }
         CartItem cartItem = cartItemDao.findCartItemById(id)
-                .orElseThrow(CartItemNotFoundException::new);
+                .orElseThrow(ProductNotFoundException::new);
         cartItem.checkOwner(member);
-
         cartItemDao.deleteById(id);
     }
 }
