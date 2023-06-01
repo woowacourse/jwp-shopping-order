@@ -5,13 +5,14 @@ import cart.controller.response.OrderResponseDto;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OrderService {
 
     private final OrderRepository orderRepository;

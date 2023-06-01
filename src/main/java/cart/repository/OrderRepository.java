@@ -37,7 +37,7 @@ public class OrderRepository {
                 orderId,
                 order.getTimeStamp(),
                 order.getMember(),
-                order.getCoupon(), // order 는 Coupon 이 채워져있는 상태임, 즉, 외부에서 Coupon 을 주입해줘서 만들어줘야함
+                order.getCoupon(),
                 orderProductsAfterSave
         );
     }

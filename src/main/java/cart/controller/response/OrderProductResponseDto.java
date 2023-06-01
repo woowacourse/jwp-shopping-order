@@ -1,16 +1,14 @@
 package cart.controller.response;
 
 import cart.domain.OrderProduct;
-import cart.domain.Quantity;
 import cart.dto.ProductResponseDto;
 
 public class OrderProductResponseDto {
 
-    private final ProductResponseDto productResponseDto;
-    private final Integer quantity;
+    private ProductResponseDto productResponseDto;
+    private Integer quantity;
 
     private OrderProductResponseDto() {
-        this(null, null);
     }
 
     public OrderProductResponseDto(final ProductResponseDto productResponseDto, final Integer quantity) {
@@ -25,7 +23,7 @@ public class OrderProductResponseDto {
         );
     }
 
-    public ProductResponseDto getProductResponse() {
+    public ProductResponseDto getProductResponseDto() {
         return productResponseDto;
     }
 

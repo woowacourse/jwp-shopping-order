@@ -34,6 +34,7 @@ class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
+        memberDao.addMember(new Member("a@a", "1234"));
         member = memberDao.getMemberById(1L);
     }
 
@@ -61,7 +62,7 @@ class OrderIntegrationTest extends IntegrationTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(orderRequestDto)
-                .when().post("/cart-items/order")
+                .when().post("/orders")
                 .then().extract();
 
         assertThat(response.statusCode())
@@ -73,7 +74,7 @@ class OrderIntegrationTest extends IntegrationTest {
         assertThat(result.getTotalPrice())
                 .isEqualTo(PRICE * 2);
         assertThat(result.getOrderProducts())
-                .extracting(OrderProductResponseDto::getProductResponse)
+                .extracting(OrderProductResponseDto::getProductResponseDto)
                 .extracting(ProductResponseDto::getName, ProductResponseDto::getPrice, ProductResponseDto::getImageUrl)
                 .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
 
@@ -92,7 +93,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
         assertThat(orderResponse.getTotalPrice()).isEqualTo(PRICE * 2);
         assertThat(orderResponse.getOrderProducts())
-                .extracting(OrderProductResponseDto::getProductResponse)
+                .extracting(OrderProductResponseDto::getProductResponseDto)
                 .extracting(ProductResponseDto::getName, ProductResponseDto::getPrice, ProductResponseDto::getImageUrl)
                 .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
     }

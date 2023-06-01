@@ -8,6 +8,10 @@ public class Member {
     private final String email;
     private final String password;
 
+    public Member(final String email, final String password) {
+        this(null, email, password);
+    }
+
     public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
@@ -46,4 +50,14 @@ public class Member {
     public int hashCode() {
         return Objects.hash(email);
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
 }

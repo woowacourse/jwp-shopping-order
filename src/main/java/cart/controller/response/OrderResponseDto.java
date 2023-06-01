@@ -6,13 +6,15 @@ import java.util.stream.Collectors;
 
 public class OrderResponseDto {
 
-    private final Long id;
-    private final List<OrderProductResponseDto> orderProducts;
-    private final String timestamp;
-    private final Integer originPrice;
-    private final Integer discountPrice;
-    private final Integer totalPrice;
+    private Long id;
+    private List<OrderProductResponseDto> orderProducts;
+    private String timestamp;
+    private Integer originPrice;
+    private Integer discountPrice;
+    private Integer totalPrice;
 
+    public OrderResponseDto() {
+    }
 
     public OrderResponseDto(final Long id,
                             final List<OrderProductResponseDto> orderProducts,

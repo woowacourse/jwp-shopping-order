@@ -5,15 +5,14 @@ import java.util.Optional;
 
 public class OrderRequestDto {
 
-    private final List<Long> cartItemIds;
-    private final Optional<Long> couponId;
+    private List<Long> cartItemIds;
+    private Optional<Long> couponId;
 
     private OrderRequestDto() {
-        this(null);
     }
 
     public OrderRequestDto(final List<Long> cartItemIds) {
-        this(cartItemIds, null);
+        this(cartItemIds, Optional.empty());
     }
 
     public OrderRequestDto(final List<Long> cartItemIds, final Optional<Long> couponId) {
@@ -27,6 +26,14 @@ public class OrderRequestDto {
 
     public Optional<Long> getCouponId() {
         return couponId;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderRequestDto{" +
+                "cartItemIds=" + cartItemIds +
+                ", couponId=" + couponId +
+                '}';
     }
 
 }
