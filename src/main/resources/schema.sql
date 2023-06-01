@@ -19,3 +19,14 @@ CREATE TABLE IF NOT EXISTS tb_cart_item (
     FOREIGN KEY (member_id) REFERENCES tb_member(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES tb_product(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS tb_order (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    earned_points INT NOT NULL,
+    used_points INT NOT NULL,
+    total_price INT NOT NULL,
+    pay_price INT NOT NULL,
+    order_date TIMESTAMP NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES tb_member(id) ON DELETE CASCADE
+);
