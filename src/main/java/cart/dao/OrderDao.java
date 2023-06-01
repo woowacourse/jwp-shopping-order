@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
 
+import static cart.entity.RowMapperUtil.orderEntityRowMapper;
+
 @Repository
 public class OrderDao {
 
@@ -29,6 +31,7 @@ public class OrderDao {
     }
 
     public List<OrderEntity> findByMemberId(final long memberId) {
-        return null;
+        final String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, orderEntityRowMapper, memberId);
     }
 }

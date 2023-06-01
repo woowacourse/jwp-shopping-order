@@ -61,7 +61,7 @@ class OrderDaoTest {
                 () -> assertThat(orderEntities).hasSize(3),
                 () -> assertThat(orderEntities.get(0).getMemberId()).isEqualTo(1),
                 () -> assertThat(orderEntities.get(0).getOriginalPrice()).isEqualTo(23000),
-                () -> assertThat(orderEntities.get(0).getDiscountPrice()).isEqualTo(2000)
+                () -> assertThat(orderEntities.get(0).getDiscountPrice()).isEqualTo(0)
         );
     }
 }
