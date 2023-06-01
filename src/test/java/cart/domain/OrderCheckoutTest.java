@@ -19,7 +19,7 @@ class OrderCheckoutTest {
         final List<CartItem> cartItems = List.of(Fixture.cartItem1);
 
         // when
-        final OrderCheckout actual = OrderCheckout.generate(currentPoints, cartItems);
+        final OrderCheckout actual = OrderCheckout.of(currentPoints, cartItems);
 
         // then
         assertAll(

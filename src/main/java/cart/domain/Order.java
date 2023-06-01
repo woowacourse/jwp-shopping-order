@@ -15,6 +15,10 @@ public class Order {
     private final int usedPoints;
     private final String orderDate;
 
+    private Order(final Long memberId, final List<OrderItem> orderItems, final int totalPrice, final int payPrice, final int earnedPoints, final int usedPoints) {
+        this(null, memberId, orderItems, totalPrice, payPrice, earnedPoints, usedPoints, null);
+    }
+
     public Order(final Long id, final Long memberId, final List<OrderItem> orderItems, final int totalPrice, final int payPrice, final int earnedPoints, final int usedPoints, final String orderDate) {
         this.id = id;
         this.memberId = memberId;
@@ -26,22 +30,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    private Order(final Long memberId, final List<OrderItem> orderItems, final int totalPrice, final int payPrice, final int earnedPoints, final int usedPoints) {
-        this.id = null;
-        this.memberId = memberId;
-        this.orderItems = orderItems;
-        this.totalPrice = totalPrice;
-        this.payPrice = payPrice;
-        this.earnedPoints = earnedPoints;
-        this.usedPoints = usedPoints;
-        this.orderDate = null;
-    }
-
-    public static Order generate(final Member member, final int usedPoints, final List<CartItem> cartItems) {
+    public static Order of(final Member member, final int usedPoints, final List<CartItem> cartItems) {
         validateCartItems(cartItems);
         validatePoint(member.getPoints(), usedPoints);
 
-        final List<OrderItem> orderItems = cartItems.stream().map(OrderItem::generate).collect(Collectors.toList());
+        final List<OrderItem> orderItems = cartItems.stream().map(OrderItem::of).collect(Collectors.toList());
         final int totalPrice = calculateTotalPrice(orderItems);
         final int payPrice = totalPrice - usedPoints;
         final int earnedPoints = (int) calculateEarnedPoints(totalPrice);

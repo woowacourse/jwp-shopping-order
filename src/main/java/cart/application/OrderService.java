@@ -29,7 +29,7 @@ public class OrderService {
         final int usedPoints = orderRequest.getUsedPoints();
         final List<CartItem> orderedCartItems = cartItemService.findSelectedCartItems(member, orderRequest.getCartItemIds());
 
-        final Order order = Order.generate(member, usedPoints, orderedCartItems);
+        final Order order = Order.of(member, usedPoints, orderedCartItems);
 
         final Long orderId = orderRepository.saveOrder(order);
         orderedCartItems.forEach(item -> cartItemService.remove(member, item.getId()));

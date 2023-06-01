@@ -20,7 +20,7 @@ public class OrderCheckout {
         this.availablePoints = availablePoints;
     }
 
-    public static OrderCheckout generate(final int currentPoints, final List<CartItem> cartItems) {
+    public static OrderCheckout of(final int currentPoints, final List<CartItem> cartItems) {
         final int totalPrice = calculateTotalPrice(cartItems);
         final int earnedPoints = (int) calculateEarnedPoints(totalPrice);
         final int limitPoints = (int) calculateLimitPoints(totalPrice);

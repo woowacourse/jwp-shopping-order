@@ -67,7 +67,7 @@ public class CartItemService {
     public CheckoutResponse makeCheckout(final Member member, final List<Long> ids) {
         final List<CartItem> checkedCartItems = findSelectedCartItems(member, ids);
 
-        final OrderCheckout orderCheckout = OrderCheckout.generate(member.getPoints(), checkedCartItems);
+        final OrderCheckout orderCheckout = OrderCheckout.of(member.getPoints(), checkedCartItems);
 
         return CheckoutResponse.of(orderCheckout);
     }
