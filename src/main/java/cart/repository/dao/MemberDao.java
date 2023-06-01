@@ -50,6 +50,11 @@ public class MemberDao {
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
+    public void updatePoint(long memberId, int updatePoint) {
+        String sql = "UPDATE member SET point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, updatePoint, memberId);
+    }
+
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {

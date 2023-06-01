@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class OrderIntegrationTest extends IntegrationTest {
     private MemberDao memberDao;
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private CartItemDao cartItemDao;
 
     private static final int USED_POINT = 100;
@@ -40,6 +44,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
+
+        memberDao = new MemberDao(jdbcTemplate);
 
         member = memberDao.getMemberById(1L);
 

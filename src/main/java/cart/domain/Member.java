@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.MemberException;
+import cart.exception.PointException;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -9,19 +10,20 @@ public class Member {
 
     public static final int MINIMUM_PASSWORD_LENGTH = 1;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
-    private static final int DEFAULT_POINT = 1_000;
+    private static final int INITIAL_POINT = 1_000;
+    private static final int MINIMUM_POINT = 0;
 
     private final Long id;
     private final String email;
     private final String password;
-    private final int point;
+    private int point;
 
     public Member(Long id, String email, String password) {
         validate(id, email);
         this.id = id;
         this.email = email;
         this.password = password;
-        this.point = DEFAULT_POINT;
+        this.point = INITIAL_POINT;
     }
 
     private void validate(Long id, String email) {
@@ -41,6 +43,22 @@ public class Member {
         }
     }
 
+    public void usePoint(int usedPoint) {
+        validateUsePoint(usedPoint);
+        point -= usedPoint;
+    }
+
+    private void validateUsePoint(int usePoint) {
+        if (usePoint < MINIMUM_POINT || usePoint > point) {
+            throw new PointException.InvalidUsedPoint();
+        }
+    }
+
+    public int earnPoint(Payment payment) {
+        point += Point.calculateEarningPoint(payment.getUserPayment());
+        return point;
+    }
+
     public Long getId() {
         return id;
     }
@@ -58,6 +76,6 @@ public class Member {
     }
 
     public int getPoint() {
-        return 0;
+        return point;
     }
 }

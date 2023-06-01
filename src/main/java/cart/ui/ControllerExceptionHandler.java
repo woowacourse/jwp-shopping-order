@@ -49,7 +49,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Void> handleException(AuthenticationException e) {
-        logger.warn(e.getMessage());
+        logger.warn("사용자 인증 정보 관련 오류입니다;" + e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .build();
