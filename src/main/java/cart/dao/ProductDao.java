@@ -1,18 +1,17 @@
 package cart.dao;
 
 import cart.domain.Product;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -64,13 +63,21 @@ public class ProductDao {
                 .findAny();
     }
 
+    public boolean isExistBy(Long productId) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM product WHERE id = ?)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, productId));
+    }
+
     public void update(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
     public void deleteById(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
+
         jdbcTemplate.update(sql, productId);
     }
 }
