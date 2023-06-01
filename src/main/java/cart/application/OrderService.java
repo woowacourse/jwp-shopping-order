@@ -25,19 +25,18 @@ public class OrderService {
     }
 
     public long createOrder(OrderRequest request, Member member) {
-        Cart cart = cartItemService.findAllByIds(request.getCartItemIds());
-        cart.validateOwner(member);
-        Order order = mapCartToOrderProducts(cart);
+        Cart cart = cartItemService.findAllByIds(request.getCartItemIds(), member);
+        Order order = mapCartToOrderProducts(cart, member);
         cartItemService.removeOrderedItems(cart);
-        return orderRepository.save(order, member);
+        return orderRepository.save(order);
     }
 
-    private Order mapCartToOrderProducts(Cart cart) {
+    private Order mapCartToOrderProducts(Cart cart, Member member) {
         List<OrderItem> orderItems = cart.getItems()
             .stream()
             .map(this::cartItemToOrderItem)
             .collect(Collectors.toList());
-        return new Order(orderItems);
+        return new Order(orderItems, member);
     }
 
     private OrderItem cartItemToOrderItem(CartItem cartItem) {
@@ -46,11 +45,13 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<Order> findAllByMember(Member member) {
-        return orderRepository.findAllByMemberId(member.getId());
+        return orderRepository.findAllByMember(member);
     }
 
     @Transactional(readOnly = true)
     public Order findById(long id, Member member) {
-        return orderRepository.findById(id);
+        Order order = orderRepository.findById(id);
+        order.checkOwner(member);
+        return order;
     }
 }

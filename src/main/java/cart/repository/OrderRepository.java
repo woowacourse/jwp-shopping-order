@@ -7,7 +7,7 @@ import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.exception.IllegalOrderException;
+import cart.exception.OrderNotFoundException;
 import cart.repository.mapper.OrderMapper;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +25,8 @@ public class OrderRepository {
         this.orderItemDao = orderItemDao;
     }
 
-    public long save(Order order, Member member) {
-        long orderId = orderDao.save(OrderMapper.toOrderEntity(order, member));
+    public long save(Order order) {
+        long orderId = orderDao.save(OrderMapper.toOrderEntity(order));
         List<OrderItemEntity> orderItemEntities = order.getItems()
             .stream()
             .map(item -> OrderMapper.toOrderItemEntity(item, orderId))
@@ -37,13 +37,13 @@ public class OrderRepository {
 
     public Order findById(long id) {
         OrderEntity orderEntity = orderDao.findById(id)
-            .orElseThrow(() -> new IllegalOrderException("존재하지 않는 주문 id 입니다."));
+            .orElseThrow(() -> new OrderNotFoundException(id));
         List<OrderItemProductDto> orderItemProducts = orderItemDao.findAllByOrderId(id);
         return OrderMapper.toOrder(orderEntity, orderItemProducts);
     }
 
-    public List<Order> findAllByMemberId(long memberId) {
-        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
+    public List<Order> findAllByMember(Member member) {
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
         List<OrderItemProductDto> orderItems = findAllByOrders(orderEntities);
         Map<OrderEntity, List<OrderItemProductDto>> orderItemsByOrderEntity = orderItems.stream()
             .collect(Collectors.groupingBy(orderProduct -> findMatchingOrderEntityById(orderEntities,
@@ -63,7 +63,7 @@ public class OrderRepository {
         return orderEntities.stream()
             .filter(orderEntity -> orderEntity.getId().equals(id))
             .findAny()
-            .orElseThrow(() -> new IllegalOrderException("잘못된 주문 id 요청입니다."));
+            .orElseThrow(() -> new OrderNotFoundException(id));
     }
 
 }

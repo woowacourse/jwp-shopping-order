@@ -3,9 +3,10 @@ package cart.repository;
 import cart.dao.CartItemDao;
 import cart.dao.dto.CartItemProductDto;
 import cart.dao.entity.CartItemEntity;
+import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.exception.IllegalCartException;
+import cart.exception.CartItemNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -26,16 +27,16 @@ public class CartItemRepository {
 
     public CartItem findById(long cartItemId) {
         CartItemProductDto foundCartItem = cartItemDao.findById(cartItemId)
-            .orElseThrow(() -> new IllegalCartException("존재하지 않는 장바구니 id 입니다."));
+            .orElseThrow(CartItemNotFoundException::new);
 
         return foundCartItem.toDomain();
     }
 
-    public List<CartItem> findByMember(Member member) {
-        return cartItemDao.findByMemberId(member.getId())
+    public Cart findByMember(Member member) {
+        return new Cart(cartItemDao.findByMemberId(member.getId())
             .stream()
             .map(CartItemProductDto::toDomain)
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
     }
 
     public void delete(CartItem cartItem) {
@@ -50,16 +51,23 @@ public class CartItemRepository {
 
     private void validateCartItemExistence(long cartItemId) {
         if (cartItemDao.isNonExistingId(cartItemId)) {
-            throw new IllegalCartException("존재하지 않는 장바구니 id 입니다.");
+            throw new CartItemNotFoundException();
         }
     }
 
-    public List<CartItem> findAllByIds(List<Long> ids) {
-        // TODO: 2023-06-01 조회한 결과 갯수 != ids 크기이면 존재하지 않는 CartId 요청으로 예외?
-        return cartItemDao.findAllByIds(ids)
+    public Cart findAllByIds(List<Long> ids) {
+        List<CartItem> cartItems = cartItemDao.findAllByIds(ids)
             .stream()
             .map(CartItemProductDto::toDomain)
             .collect(Collectors.toList());
+        validateAllCartItemsFound(ids, cartItems);
+        return new Cart(cartItems);
+    }
+
+    private void validateAllCartItemsFound(List<Long> ids, List<CartItem> cartItems) {
+        if (ids.size() != cartItems.size()) {
+            throw new CartItemNotFoundException();
+        }
     }
 
     public void removeAllByIds(List<Long> ids) {

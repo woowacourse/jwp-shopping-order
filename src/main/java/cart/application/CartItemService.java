@@ -27,8 +27,11 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findByMember(member);
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        Cart cart = cartItemRepository.findByMember(member);
+        return cart.getItems()
+            .stream()
+            .map(CartItemResponse::of)
+            .collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
@@ -61,7 +64,9 @@ public class CartItemService {
         cartItemRepository.removeAllByIds(cartItemIds);
     }
 
-    public Cart findAllByIds(List<Long> ids) {
-        return new Cart(cartItemRepository.findAllByIds(ids));
+    public Cart findAllByIds(List<Long> ids, Member member) {
+        Cart cart = cartItemRepository.findAllByIds(ids);
+        cart.validateOwner(member);
+        return cart;
     }
 }

@@ -2,14 +2,15 @@ package cart.ui.excpetionhandler;
 
 import cart.dto.ExceptionResponse;
 import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
-import cart.exception.IllegalCartException;
-import cart.exception.IllegalMemberException;
+import cart.exception.CartItemNotFoundException;
+import cart.exception.CartUnauthorizedException;
 import cart.exception.IllegalMoneyException;
 import cart.exception.IllegalOrderException;
 import cart.exception.IllegalPointException;
-import cart.exception.IllegalProductException;
 import cart.exception.IllegalQuantityException;
+import cart.exception.OrderNotFoundException;
+import cart.exception.OrderUnauthorizedException;
+import cart.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,20 +24,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<ExceptionResponse> handleException(CartItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionResponse(e.getMessage()));
+    @ExceptionHandler({
+        CartUnauthorizedException.class,
+        OrderUnauthorizedException.class})
+    public ResponseEntity<ExceptionResponse> handleException(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler({
         IllegalOrderException.class,
-        IllegalCartException.class,
-        IllegalMemberException.class,
         IllegalMoneyException.class,
         IllegalPointException.class,
-        IllegalProductException.class,
         IllegalQuantityException.class})
     public ResponseEntity<ExceptionResponse> handleIllegalException(RuntimeException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
     }
+
+    @ExceptionHandler({
+        ProductNotFoundException.class,
+        CartItemNotFoundException.class,
+        OrderNotFoundException.class})
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new ExceptionResponse(e.getMessage()));
+    }
+
 }

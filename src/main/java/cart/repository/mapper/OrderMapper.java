@@ -42,9 +42,9 @@ public class OrderMapper {
         );
     }
 
-    public static OrderEntity toOrderEntity(Order order, Member member) {
+    public static OrderEntity toOrderEntity(Order order) {
         return new OrderEntity(
-            member.getId()
+            order.getMemberId()
         );
     }
 
@@ -53,7 +53,9 @@ public class OrderMapper {
         List<OrderItem> orderItems = orderItemProducts.stream()
             .map(OrderMapper::toOrderItem)
             .collect(Collectors.toList());
-        return new Order(orderEntity.getId(), orderItems, orderEntity.getCreatedAt());
+        return new Order(
+            orderEntity.getId(), orderItems, orderEntity.getCreatedAt(),
+            Member.fromId(orderEntity.getMemberId()));
     }
 
     public static List<Order> toOrdersSortedById(

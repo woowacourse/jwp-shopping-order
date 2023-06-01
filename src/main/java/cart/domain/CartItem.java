@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.CartItemException;
+import cart.exception.CartUnauthorizedException;
 import java.util.Objects;
 
 public class CartItem {
@@ -11,9 +11,7 @@ public class CartItem {
     private final Member member;
 
     public CartItem(Member member, Product product) {
-        this.quantity = Quantity.DEFAULT;
-        this.member = member;
-        this.product = product;
+        this(null, Quantity.DEFAULT, product, member);
     }
 
     public CartItem(Long id, Quantity quantity, Product product, Member member) {
@@ -45,7 +43,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new CartUnauthorizedException(id, member.getId());
         }
     }
 

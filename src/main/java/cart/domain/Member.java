@@ -11,6 +11,10 @@ public class Member {
         this.password = password;
     }
 
+    public static Member fromId(long id) {
+        return new Member(id, null, null);
+    }
+
     public Long getId() {
         return id;
     }
