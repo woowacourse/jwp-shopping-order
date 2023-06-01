@@ -6,6 +6,7 @@ import cart.domain.member.dto.MemberWithId;
 import cart.domain.product.dto.ProductWithId;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class CouponOrder implements Order {
 
@@ -17,14 +18,14 @@ public class CouponOrder implements Order {
     private final Integer totalPrice;
     private final Integer discountedTotalPrice;
     private final Integer deliveryPrice;
-    private final LocalDateTime orderDate;
+    private final LocalDateTime orderedAt;
     private final List<CartItemWithId> cartItems;
 
     public CouponOrder(final MemberWithId member, final CouponWithId coupon, final Integer deliveryPrice,
-                       final LocalDateTime orderDate, final List<CartItemWithId> cartItems) {
+                       final LocalDateTime orderedAt, final List<CartItemWithId> cartItems) {
         this.member = member;
         this.coupon = coupon;
-        this.orderDate = orderDate;
+        this.orderedAt = orderedAt;
         this.cartItems = cartItems;
         this.totalPrice = calculateTotalPrice();
         this.discountedTotalPrice = calculateDiscountPrice();
@@ -52,8 +53,8 @@ public class CouponOrder implements Order {
     }
 
     @Override
-    public CouponWithId getCoupon() {
-        return coupon;
+    public Optional<CouponWithId> getCoupon() {
+        return Optional.of(coupon);
     }
 
     @Override
@@ -67,8 +68,8 @@ public class CouponOrder implements Order {
     }
 
     @Override
-    public LocalDateTime getOrderDate() {
-        return orderDate;
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
     }
 
     @Override

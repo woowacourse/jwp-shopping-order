@@ -1,6 +1,7 @@
 package cart.domain.cartitem;
 
 import cart.domain.member.Member;
+import cart.exception.ErrorCode;
 import cart.exception.ForbiddenException;
 import java.util.List;
 import java.util.Objects;
@@ -15,9 +16,9 @@ public class Cart {
         this.cartItems = cartItems;
     }
 
-    public void checkOwner(final Long cartItemId, final String memberName) {
+    public void checkOwner(final String memberName) {
         if (!Objects.equals(this.member.name(), memberName)) {
-            throw new ForbiddenException(String.valueOf(cartItemId), memberName);
+            throw new ForbiddenException(ErrorCode.FORBIDDEN);
         }
     }
 

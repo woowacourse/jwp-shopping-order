@@ -5,18 +5,19 @@ import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.dto.MemberWithId;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface Order {
 
     MemberWithId getMember();
 
-    CouponWithId getCoupon();
+    Optional<CouponWithId> getCoupon();
 
     List<CartItemWithId> getCartItems();
 
     Integer getDeliveryPrice();
 
-    LocalDateTime getOrderDate();
+    LocalDateTime getOrderedAt();
 
     Integer getTotalPrice();
 

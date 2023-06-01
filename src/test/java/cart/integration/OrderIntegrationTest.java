@@ -59,6 +59,31 @@ public class OrderIntegrationTest extends IntegrationTest {
             .header(LOCATION, "/orders/" + 1);
 
         // then
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/orders/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("orderId", equalTo(1))
+            .body("totalPrice", equalTo(175_000))
+            .body("discountedTotalPrice", equalTo(175_000))
+            .body("couponDiscountPrice", equalTo(0))
+            .body("deliveryPrice", equalTo(3_000))
+            .body("coupon.id", equalTo(null))
+            .body("coupon.name", equalTo(null))
+            .body("coupon.discountRate", equalTo(null))
+            .body("items[0].quantity", equalTo(10))
+            .body("items[0].product.id", equalTo(1))
+            .body("items[0].product.name", equalTo("치킨"))
+            .body("items[0].product.price", equalTo(10_000))
+            .body("items[0].product.imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("items[1].quantity", equalTo(5))
+            .body("items[1].product.id", equalTo(2))
+            .body("items[1].product.name", equalTo("피자"))
+            .body("items[1].product.price", equalTo(15_000))
+            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+
         /** 첫 주문 감사 쿠폰이 발급되었는지 확인한다. */
         given()
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
@@ -75,7 +100,6 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("[1].name", equalTo("첫 주문 감사 쿠폰"))
             .body("[1].discountRate", equalTo(10))
             .body("[1].isUsed", equalTo(false));
-        // TODO 주문 목록 확인을 통해서 검증을 진행한다.
     }
 
     @Test
@@ -108,6 +132,31 @@ public class OrderIntegrationTest extends IntegrationTest {
             .header(LOCATION, "/orders/" + 1);
 
         // then
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/orders/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("orderId", equalTo(1))
+            .body("totalPrice", equalTo(175_000))
+            .body("discountedTotalPrice", equalTo(140_000))
+            .body("couponDiscountPrice", equalTo(35_000))
+            .body("deliveryPrice", equalTo(3_000))
+            .body("coupon.id", equalTo(1))
+            .body("coupon.name", equalTo("신규 가입 축하 쿠폰"))
+            .body("coupon.discountRate", equalTo(20))
+            .body("items[0].quantity", equalTo(10))
+            .body("items[0].product.id", equalTo(1))
+            .body("items[0].product.name", equalTo("치킨"))
+            .body("items[0].product.price", equalTo(10_000))
+            .body("items[0].product.imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("items[1].quantity", equalTo(5))
+            .body("items[1].product.id", equalTo(2))
+            .body("items[1].product.name", equalTo("피자"))
+            .body("items[1].product.price", equalTo(15_000))
+            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+
         /** 첫 주문 감사 쿠폰이 발급되었는지 확인한다. */
         given()
             .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
@@ -124,7 +173,6 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("[1].name", equalTo("첫 주문 감사 쿠폰"))
             .body("[1].discountRate", equalTo(10))
             .body("[1].isUsed", equalTo(false));
-        // TODO 주문 목록 확인을 통해서 검증을 진행한다.
     }
 
     @Test
@@ -249,6 +297,45 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("errorMessage", equalTo("장바구니에 담기지 않은 상품은 주문할 수 없습니다."));
     }
 
+    @Test
+    @DisplayName("특정 주문 정보를 조회한다.")
+    void getOrderById() {
+        // given
+        쿠폰을_저장한다();
+        상품을_저장한다();
+        사용자를_저장한다();
+
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        장바구니에_상품을_추가한다(져니_로그인_요청);
+        쿠폰과_함께_상품을_주문한다(져니_로그인_요청);
+
+        // expected
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/orders/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("orderId", equalTo(1))
+            .body("totalPrice", equalTo(175_000))
+            .body("discountedTotalPrice", equalTo(140_000))
+            .body("couponDiscountPrice", equalTo(35_000))
+            .body("deliveryPrice", equalTo(3_000))
+            .body("coupon.id", equalTo(1))
+            .body("coupon.name", equalTo("신규 가입 축하 쿠폰"))
+            .body("coupon.discountRate", equalTo(20))
+            .body("items[0].quantity", equalTo(10))
+            .body("items[0].product.id", equalTo(1))
+            .body("items[0].product.name", equalTo("치킨"))
+            .body("items[0].product.price", equalTo(10_000))
+            .body("items[0].product.imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("items[1].quantity", equalTo(5))
+            .body("items[1].product.id", equalTo(2))
+            .body("items[1].product.name", equalTo("피자"))
+            .body("items[1].product.price", equalTo(15_000))
+            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+    }
+
     private void 장바구니에_상품을_추가한다(final MemberLoginRequest 져니_로그인_요청) {
         final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         final CartRequest 피자_장바구니_저장_요청 = new CartRequest(2L);
@@ -295,5 +382,13 @@ public class OrderIntegrationTest extends IntegrationTest {
         final LocalDateTime issuedAt = LocalDateTime.now();
         final LocalDateTime expiredAt = LocalDateTime.now().plusDays(3);
         jdbcTemplate.update(sql, 1L, 3L, Timestamp.valueOf(issuedAt), Timestamp.valueOf(expiredAt), 1);
+    }
+
+    private void 쿠폰과_함께_상품을_주문한다(final MemberLoginRequest 져니_로그인_요청) {
+        final List<OrderProductRequest> 주문할_상품들 = List.of(
+            new OrderProductRequest(1L, 10),
+            new OrderProductRequest(2L, 5));
+        final OrderRequest 주문_요청 = new OrderRequest(1L, 주문할_상품들);
+        주문_저장(져니_로그인_요청, 주문_요청);
     }
 }

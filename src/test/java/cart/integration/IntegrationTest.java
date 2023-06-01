@@ -7,6 +7,7 @@ import cart.application.dto.cartitem.CartRequest;
 import cart.application.dto.coupon.CouponRequest;
 import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberLoginRequest;
+import cart.application.dto.order.OrderRequest;
 import cart.application.dto.product.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,5 +85,17 @@ public class IntegrationTest {
             .post("/coupons")
             .then()
             .statusCode(HttpStatus.CREATED.value());
+    }
+
+    void 주문_저장(final MemberLoginRequest 사용자_로그인_요청, final OrderRequest 주문_등록_요청) {
+        given()
+            .auth().preemptive().basic(사용자_로그인_요청.getName(), 사용자_로그인_요청.getPassword())
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(주문_등록_요청)
+            .post("/orders")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .header(LOCATION, "/orders/" + 1);
     }
 }

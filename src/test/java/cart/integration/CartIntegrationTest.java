@@ -68,6 +68,7 @@ public class CartIntegrationTest extends IntegrationTest {
     void addCartItem_already_add() {
         // given
         사용자를_저장한다();
+        상품을_저장한다();
 
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
         final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);

@@ -2,6 +2,7 @@ package cart.application;
 
 import static cart.application.mapper.OrderMapper.converBasicOrder;
 import static cart.application.mapper.OrderMapper.convertCouponOrder;
+import static cart.application.mapper.OrderMapper.convertOrderResponse;
 
 import cart.application.dto.order.OrderProductRequest;
 import cart.application.dto.order.OrderRequest;
@@ -17,10 +18,11 @@ import cart.domain.member.dto.MemberWithId;
 import cart.domain.order.BasicOrder;
 import cart.domain.order.CouponOrder;
 import cart.domain.order.OrderRepository;
+import cart.domain.order.OrderWithId;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
+import cart.exception.ForbiddenException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -57,18 +59,23 @@ public class OrderService {
         validateOrderQuantity(orderRequest);
         final Cart cart = cartRepository.findByMemberName(memberName);
         final List<CartItemWithId> cartItems = cart.getCartItems();
-        final List<Long> productIds = getProductIds(cartItems);
-        validateOrderProductIds(orderRequest, productIds);
+        final List<Long> requestProductIds = getRequestProductIds(orderRequest);
+        validateOrderProductIds(requestProductIds, cartItems);
 
-        final MemberWithId memberWithId = memberRepository.findWithIdByName(memberName);
-        final Long couponId = orderRequest.getCouponId();
-        final Long memberId = memberWithId.getMemberId();
-
+        final MemberWithId member = memberRepository.findWithIdByName(memberName);
         final List<CartItemWithId> requestCartItems = getOrderRequestCartItems(orderRequest, cartItems);
-        final long savedOrderId = saveOrder(requestCartItems, memberWithId, couponId);
-        cartRepository.deleteByCartItemIdsAndMemberId(productIds, memberName);
-        applicationEventPublisher.publishEvent(new FirstOrderCouponEvent(memberId));
+        final long savedOrderId = saveOrder(requestCartItems, member, orderRequest.getCouponId());
+        cartRepository.deleteByCartItemIdsAndMemberId(requestProductIds, memberName);
+        applicationEventPublisher.publishEvent(new FirstOrderCouponEvent(member.getMemberId()));
         return savedOrderId;
+    }
+
+    public OrderResponse getOrderById(final String memberName, final Long id) {
+        final OrderWithId orderWithId = orderRepository.getById(id);
+        if (!orderWithId.isOwner(memberName)) {
+            throw new ForbiddenException(ErrorCode.FORBIDDEN);
+        }
+        return convertOrderResponse(orderWithId);
     }
 
     private void validateOrderQuantity(final OrderRequest orderRequest) {
@@ -80,17 +87,20 @@ public class OrderService {
         }
     }
 
-    private List<Long> getProductIds(final List<CartItemWithId> cartItems) {
+    private List<Long> getExistProductIds(final List<CartItemWithId> cartItems) {
         return cartItems.stream()
             .map(cartItemWithId -> cartItemWithId.getProduct().getProductId())
             .collect(Collectors.toUnmodifiableList());
     }
 
-    private void validateOrderProductIds(final OrderRequest orderRequest, final List<Long> productIds) {
-        final List<Long> requestProductIds = orderRequest.getItems().stream()
+    private List<Long> getRequestProductIds(final OrderRequest orderRequest) {
+        return orderRequest.getItems().stream()
             .map(OrderProductRequest::getProductId)
             .collect(Collectors.toUnmodifiableList());
+    }
 
+    private void validateOrderProductIds(final List<Long> requestProductIds, final List<CartItemWithId> cartItems) {
+        final List<Long> productIds = getExistProductIds(cartItems);
         if (!new HashSet<>(productIds).containsAll(requestProductIds)) {
             throw new BadRequestException(ErrorCode.ORDER_INVALID_PRODUCTS);
         }
@@ -99,10 +109,12 @@ public class OrderService {
     private List<CartItemWithId> getOrderRequestCartItems(final OrderRequest orderRequest,
                                                           final List<CartItemWithId> cartItems) {
         return cartItems.stream()
-            .filter(cartItem -> orderRequest.getItems().stream()
-                .anyMatch(orderProductRequest ->
-                    Objects.equals(cartItem.getProduct().getProductId(), orderProductRequest.getProductId())))
-            .collect(Collectors.toUnmodifiableList());
+            .flatMap(cartItemWithId -> orderRequest.getItems().stream()
+                .filter(orderProductRequest -> Objects.equals(
+                    cartItemWithId.getProduct().getProductId(), orderProductRequest.getProductId()))
+                .map(orderProductRequest -> new CartItemWithId(cartItemWithId.getCartId(),
+                    orderProductRequest.getQuantity(), cartItemWithId.getProduct())))
+            .collect(Collectors.toList());
     }
 
     private long saveOrder(final List<CartItemWithId> productWithIds,

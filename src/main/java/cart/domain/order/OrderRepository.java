@@ -7,4 +7,6 @@ public interface OrderRepository {
     Long saveWithCoupon(final Order order);
 
     Long countByMemberId(final Long memberId);
+
+    OrderWithId getById(final Long id);
 }

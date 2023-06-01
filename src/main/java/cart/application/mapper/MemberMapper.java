@@ -1,8 +1,8 @@
 package cart.application.mapper;
 
 import cart.application.dto.member.MemberCouponResponse;
-import cart.application.dto.member.MemberResponse;
 import cart.application.dto.member.MemberJoinRequest;
+import cart.application.dto.member.MemberResponse;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;

@@ -4,10 +4,9 @@ import cart.domain.cartitem.CartItemWithId;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.product.dto.ProductWithId;
-import cart.exception.BadRequestException;
-import cart.exception.ErrorCode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class BasicOrder implements Order {
 
@@ -15,13 +14,13 @@ public class BasicOrder implements Order {
     private final Integer totalPrice;
     private final Integer discountedTotalPrice;
     private final Integer deliveryPrice;
-    private final LocalDateTime orderDate;
+    private final LocalDateTime orderedAt;
     private final List<CartItemWithId> cartItems;
 
     public BasicOrder(final MemberWithId member, final Integer deliveryPrice,
-                      final LocalDateTime orderDate, final List<CartItemWithId> cartItems) {
+                      final LocalDateTime orderedAt, final List<CartItemWithId> cartItems) {
         this.member = member;
-        this.orderDate = orderDate;
+        this.orderedAt = orderedAt;
         this.cartItems = cartItems;
         this.totalPrice = calculateTotalOrderPrice();
         this.discountedTotalPrice = totalPrice;
@@ -44,8 +43,8 @@ public class BasicOrder implements Order {
     }
 
     @Override
-    public CouponWithId getCoupon() {
-        throw new BadRequestException(ErrorCode.NATUAL_ORDER_HAS_COUPON);
+    public Optional<CouponWithId> getCoupon() {
+        return Optional.empty();
     }
 
     @Override
@@ -59,8 +58,8 @@ public class BasicOrder implements Order {
     }
 
     @Override
-    public LocalDateTime getOrderDate() {
-        return orderDate;
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
     }
 
     @Override

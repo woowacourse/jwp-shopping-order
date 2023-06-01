@@ -19,10 +19,14 @@ public class OrderMapper {
     public static List<OrderProductEntity> convertOrderProductEntities(final List<CartItemWithId> cartItems,
                                                                        final Long orderId) {
         return cartItems.stream()
-            .map(cartItemWithId -> {
-                final ProductWithId productWithId = cartItemWithId.getProduct();
-                return new OrderProductEntity(orderId, productWithId.getProductId(),
-                    productWithId.getProduct().getPrice(), cartItemWithId.getQuantity());
-            }).collect(Collectors.toUnmodifiableList());
+            .map(cartItemWithId -> convertOrderProductEntity(orderId, cartItemWithId))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    private static OrderProductEntity convertOrderProductEntity(final Long orderId,
+                                                                final CartItemWithId cartItemWithId) {
+        final ProductWithId productWithId = cartItemWithId.getProduct();
+        return new OrderProductEntity(orderId, productWithId.getProductId(),
+            productWithId.getProduct().getPrice(), cartItemWithId.getQuantity());
     }
 }

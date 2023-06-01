@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.application.dto.coupon.CouponRequest;
 import cart.application.dto.coupon.CouponResponse;
+import cart.application.mapper.CouponMapper;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.exception.BadRequestException;
@@ -24,8 +25,7 @@ public class CouponService {
 
     public List<CouponResponse> getAllCoupons() {
         return couponRepository.findAll().stream()
-            .map(couponWithId -> new CouponResponse(couponWithId.getCouponId(), couponWithId.getCoupon().name(),
-                couponWithId.getCoupon().discountRate(), couponWithId.getCoupon().expiredAt()))
+            .map(CouponMapper::convertCouponResponse)
             .collect(Collectors.toUnmodifiableList());
     }
 

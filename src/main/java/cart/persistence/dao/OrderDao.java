@@ -1,15 +1,38 @@
 package cart.persistence.dao;
 
+import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.OrderEntity;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderDao {
+
+    private final RowMapper<OrderDto> orderDtoRowMapper = (rs, count) -> new OrderDto(
+        rs.getLong("orderId"),
+        rs.getTimestamp("orderedAt").toLocalDateTime(),
+        rs.getInt("orderQuantity"),
+        rs.getInt("totalPrice"),
+        rs.getInt("discountedTotalPrice"),
+        rs.getInt("deliveryPrice"),
+        rs.getLong("couponId"),
+        rs.getString("couponName"),
+        rs.getInt("couponDiscountRate"),
+        rs.getInt("couponPeriod"),
+        rs.getTimestamp("couponExpiredAt"),
+        rs.getLong("memberId"),
+        rs.getString("memberName"),
+        rs.getString("memberPassword"),
+        rs.getLong("productId"),
+        rs.getString("productName"),
+        rs.getInt("orderedProductPrice"),
+        rs.getString("productImageUrl"));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -37,5 +60,23 @@ public class OrderDao {
     public Long countByMemberId(final Long memberId) {
         final String sql = "SELECT COUNT(*) FROM `order` WHERE member_id = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, memberId);
+    }
+
+    public List<OrderDto> findById(final Long id) {
+        final String sql = "SELECT m.id AS memberId, m.name AS memberName, m.password AS memberPassword, "
+            + "o.id AS orderId, o.total_price AS totalPrice, o.discounted_total_price AS discountedTotalPrice, "
+            + "o.delivery_price AS deliveryPrice, o.ordered_at AS orderedAt, "
+            + "c.id AS couponId, c.name AS couponName, c.discount_rate AS couponDiscountRate, "
+            + "c.period AS couponPeriod, c.expired_at AS couponExpiredAt, "
+            + "op.ordered_product_price AS orderedProductPrice, op.quantity as orderQuantity, "
+            + "p.id AS productId, p.name AS productName, p.image_url AS productImageUrl "
+            + "FROM `order` o "
+            + "LEFT JOIN member m on o.member_id = m.id "
+            + "LEFT JOIN order_coupon oc on o.id = oc.order_id "
+            + "LEFT JOIN coupon c on c.id = oc.coupon_id "
+            + "LEFT JOIN order_product op on o.id = op.order_id "
+            + "LEFT JOIN product p on op.product_id = p.id "
+            + "WHERE o.id = ?";
+        return jdbcTemplate.query(sql, orderDtoRowMapper, id);
     }
 }
