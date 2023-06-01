@@ -22,12 +22,12 @@ public class CouponQueryDao {
                     + "dc.discount_condition_type AS dc_discount_condition,"
                     + "dt.discount_type AS dt_discount_type, dt.discount_amount_id AS dt_discount_amount,"
                     + "ad.rate AS ad_rate "
-                    + "FROM COUPON AS c "
-                    + "LEFT JOIN DISCOUNT_CONDITION AS dc ON c.discount_condition_id=dc.id "
-                    + "LEFT JOIN DISCOUNT_TYPE AS dt ON dt.id=c.discount_type_id "
-                    + "LEFT JOIN AMOUNT_DISCOUNT AS ad ON ad.id=dt.discount_amount_id ";
+                    + "FROM coupon AS c "
+                    + "LEFT JOIN discount_condition AS dc ON c.discount_condition_id=dc.id "
+                    + "LEFT JOIN discount_type AS dt ON dt.id=c.discount_type_id "
+                    + "LEFT JOIN amount_discount AS ad ON ad.id=dt.discount_amount_id ";
     private static final String FIND_BY_MEMBER_ID_SQL =
-            BASE_FIND_ALL_SQL + "JOIN COUPON_MEMBER AS mc ON mc.coupon_id=c.id WHERE mc.member_id=?";
+            BASE_FIND_ALL_SQL + "JOIN coupon_member AS mc ON mc.coupon_id=c.id WHERE mc.member_id=?";
     private static final String FIND_BY_ID_SQL =
             BASE_FIND_ALL_SQL + "WHERE c.id=?";
 
