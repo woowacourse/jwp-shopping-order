@@ -3,7 +3,6 @@ package com.woowahan.techcourse.member.ui;
 import com.woowahan.techcourse.cart.exception.AuthenticationException;
 import com.woowahan.techcourse.member.application.MemberQueryService;
 import com.woowahan.techcourse.member.domain.Member;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -28,13 +27,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-
-        String[] authHeader = authorization.split(" ");
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
+        String[] credentials = AuthExtractor.extract(authorization);
         String email = credentials[0];
         String password = credentials[1];
 

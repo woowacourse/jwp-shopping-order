@@ -2,10 +2,11 @@ package com.woowahan.techcourse.member.ui;
 
 import com.woowahan.techcourse.cart.exception.AuthenticationException;
 import com.woowahan.techcourse.member.application.MemberQueryService;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthInterceptor implements HandlerInterceptor {
@@ -18,24 +19,35 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (isPreflightRequest(request)) {
+            return true;
+        }
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            throw new AuthenticationException();
-        }
-
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException();
-        }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
+        String[] credentials = AuthExtractor.extract(authorization);
         String email = credentials[0];
         String password = credentials[1];
 
         memberQueryService.findByEmailAndPassword(email, password).orElseThrow(AuthenticationException::new);
         return true;
+    }
+
+    private boolean isPreflightRequest(HttpServletRequest request) {
+        return isOptions(request) && hasHeaders(request) && hasMethod(request) && hasOrigin(request);
+    }
+
+    private boolean isOptions(HttpServletRequest request) {
+        return request.getMethod().equalsIgnoreCase(HttpMethod.OPTIONS.toString());
+    }
+
+    private boolean hasHeaders(HttpServletRequest request) {
+        return Objects.nonNull(request.getHeader("Access-Control-Request-Headers"));
+    }
+
+    private boolean hasMethod(HttpServletRequest request) {
+        return Objects.nonNull(request.getHeader("Access-Control-Request-Method"));
+    }
+
+    private boolean hasOrigin(HttpServletRequest request) {
+        return Objects.nonNull(request.getHeader("Origin"));
     }
 }
