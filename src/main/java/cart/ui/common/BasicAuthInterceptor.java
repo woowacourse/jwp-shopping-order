@@ -1,8 +1,7 @@
 package cart.ui.common;
 
-import static cart.exception.MemberException.PasswordNotMatch;
-
 import cart.application.MemberService;
+import cart.exception.badrequest.member.MemberPasswordException;
 import cart.ui.controller.dto.response.MemberResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +24,7 @@ public class BasicAuthInterceptor implements HandlerInterceptor {
         MemberAuth memberAuth = basicAuthenticationExtractor.extract(authorization);
         MemberResponse member = memberService.getMemberByEmail(memberAuth.getEmail());
         if (!member.getPassword().equals(memberAuth.getPassword())) {
-            throw new PasswordNotMatch();
+            throw new MemberPasswordException("멤버의 비밀번호가 일치하지 않습니다.");
         }
         return true;
     }

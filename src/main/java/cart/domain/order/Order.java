@@ -1,8 +1,7 @@
 package cart.domain.order;
 
-import static cart.exception.OrderException.IllegalMember;
-
 import cart.domain.member.Member;
+import cart.exception.badrequest.order.OrderOwnerException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -46,7 +45,7 @@ public class Order {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalMember();
+            throw new OrderOwnerException();
         }
     }
 

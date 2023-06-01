@@ -9,7 +9,8 @@ import cart.dao.entity.MemberEntity;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.exception.CartItemException;
+import cart.exception.badrequest.BadRequestException;
+import cart.exception.notfound.NotFoundException;
 import cart.repository.mapper.MemberMapper;
 import cart.test.RepositoryTest;
 import java.util.List;
@@ -155,16 +156,16 @@ class CartItemRepositoryTest {
         @DisplayName("중복되는 ID가 존재하면 예외를 던진다.")
         void duplicateId() {
             assertThatThrownBy(() -> cartItemRepository.findAllInIds(List.of(cartItem.getId(), cartItem.getId())))
-                    .isInstanceOf(CartItemException.class)
-                    .hasMessage("중복된 장바구니 상품 ID가 존재합니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("중복된 장바구니 상품이 존재합니다.");
         }
 
         @Test
         @DisplayName("장바구니 상품에 존재하지 않는 ID가 있으면 예외를 던진다.")
         void notExistId() {
             assertThatThrownBy(() -> cartItemRepository.findAllInIds(List.of(cartItem.getId(), -1L)))
-                    .isInstanceOf(CartItemException.class)
-                    .hasMessage("해당 장바구니 상품이 존재하지 않습니다.");
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("ID 목록에 존재하지 않는 장바구니 상품이 있습니다.");
         }
 
         @Test
@@ -232,8 +233,8 @@ class CartItemRepositoryTest {
         @DisplayName("ID에 해당하는 장바구니 상품이 존재하지 않으면 예외를 던진다.")
         void notExistId() {
             assertThatThrownBy(() -> cartItemRepository.findById(-1L))
-                    .isInstanceOf(CartItemException.class)
-                    .hasMessage("해당 장바구니 상품이 존재하지 않습니다.");
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("해당 장바구니 상품이 존재하지 않습니다. 요청 장바구니 상품 ID: " + -1);
         }
 
         @Test

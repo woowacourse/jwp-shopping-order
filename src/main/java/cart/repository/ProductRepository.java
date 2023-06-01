@@ -3,7 +3,7 @@ package cart.repository;
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.domain.product.Product;
-import cart.exception.ProductException.NotFound;
+import cart.exception.notfound.ProductNotFoundException;
 import cart.repository.mapper.ProductMapper;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +26,8 @@ public class ProductRepository {
     }
 
     public Product getProductById(Long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId).orElseThrow(NotFound::new);
+        ProductEntity productEntity = productDao.getProductById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
         return ProductMapper.toDomain(productEntity);
     }
 

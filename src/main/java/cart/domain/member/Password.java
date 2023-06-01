@@ -1,7 +1,7 @@
 package cart.domain.member;
 
-import cart.exception.MemberException.PasswordEmpty;
-import cart.exception.MemberException.PasswordOverLength;
+import cart.exception.badrequest.member.MemberEmailException;
+import cart.exception.badrequest.member.MemberPasswordException;
 import org.apache.logging.log4j.util.Strings;
 
 class Password {
@@ -17,10 +17,10 @@ class Password {
 
     private void validate(String value) {
         if (Strings.isBlank(value)) {
-            throw new PasswordEmpty();
+            throw new MemberPasswordException("멤버 비밀번호는 존재하지 않거나 비어있을 수 없습니다.");
         }
         if (value.length() > MAXIMUM_LENGTH) {
-            throw new PasswordOverLength(value.length(), MAXIMUM_LENGTH);
+            throw new MemberEmailException("멤버 비밀번호는 최대 " + MAXIMUM_LENGTH + "글자까지 가능합니다. 현재 길이: " + value.length());
         }
     }
 

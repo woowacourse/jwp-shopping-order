@@ -1,6 +1,6 @@
 package cart.domain.order;
 
-import cart.exception.OrderException.IllegalFee;
+import cart.exception.badrequest.order.OrderDeliveryFeeException;
 
 class Fee {
 
@@ -24,7 +24,7 @@ class Fee {
 
     private void validate(int value) {
         if (value < MINIMUM_VALUE) {
-            throw new IllegalFee();
+            throw new OrderDeliveryFeeException("배송료는 음수가 될 수 없습니다.");
         }
     }
 

@@ -1,11 +1,10 @@
 package cart.application;
 
-import static cart.exception.OrderException.IllegalPointUse;
-
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import cart.exception.badrequest.order.OrderPointException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
@@ -56,7 +55,8 @@ public class OrderService {
         }
         Order order = new Order(member, orderInCart(cartItems), orderRequest.getPoint());
         if (order.getTotalPrice() < orderRequest.getPoint()) {
-            throw new IllegalPointUse(order.getTotalPrice(), orderRequest.getPoint());
+            throw new OrderPointException(
+                    "사용하려는 포인트가 총 결제 금액보다 많습니다. 총 결제 금액: " + order.getTotalPrice() + ", 사용 포인트: " + orderRequest.getPoint());
         }
         member.usePoint(orderRequest.getPoint());
         member.addPoint(order.getSavedPoint());

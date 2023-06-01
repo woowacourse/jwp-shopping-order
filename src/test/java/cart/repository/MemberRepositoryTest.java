@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.member.Member;
-import cart.exception.MemberException;
+import cart.exception.notfound.NotFoundException;
 import cart.repository.mapper.MemberMapper;
 import cart.test.RepositoryTest;
 import java.time.LocalDateTime;
@@ -70,8 +70,8 @@ class MemberRepositoryTest {
         @DisplayName("ID에 해당하는 멤버가 존재하지 않으면 예외를 던진다.")
         void notExistMember() {
             assertThatThrownBy(() -> memberRepository.getMemberById(-1L))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("해당 멤버가 존재하지 않습니다.");
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("해당 멤버가 존재하지 않습니다. 요청 멤버 ID: " + -1);
         }
 
         @Test
@@ -111,9 +111,10 @@ class MemberRepositoryTest {
         @Test
         @DisplayName("조회 시 이메일과 일치하는 멤버가 존재하지 않으면 빈 값을 반환한다.")
         void getEmpty() {
-            assertThatThrownBy(() -> memberRepository.getMemberByEmail("a@a.com"))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("해당 멤버가 존재하지 않습니다.");
+            String email = "a@a.com";
+            assertThatThrownBy(() -> memberRepository.getMemberByEmail(email))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("해당 멤버가 존재하지 않습니다. 요청 이메일: " + email);
         }
     }
 
@@ -140,9 +141,11 @@ class MemberRepositoryTest {
         @Test
         @DisplayName("조회 시 이메일, 비밀번호와 일치하는 멤버가 존재하지 않으면 예외를 던진다.")
         void getMemberWithException() {
-            assertThatThrownBy(() -> memberRepository.getMemberByEmailAndPassword("a@a.com", "password1"))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("해당 멤버가 존재하지 않습니다.");
+            String email = "a@a.com";
+            String password = "password1";
+            assertThatThrownBy(() -> memberRepository.getMemberByEmailAndPassword(email, password))
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("해당 멤버가 존재하지 않습니다. 요청 이메일: " + email + ", 요청 비밀번호: " + password);
         }
     }
 }

@@ -3,7 +3,7 @@ package cart.domain.member;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.exception.MemberException;
+import cart.exception.badrequest.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,8 @@ class MemberTest {
         @DisplayName("멤버 이메일이 존재하지 않거나, 비어있으면 예외를 던진다.")
         void emptyEmail(String email) {
             assertThatThrownBy(() -> new Member(email, "password1", 10))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("멤버 이메일은 필수입니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("멤버 이메일은 존재하지 않거나 비어있을 수 없습니다.");
         }
 
         @ParameterizedTest
@@ -33,7 +33,7 @@ class MemberTest {
             String email = "a".repeat(emailLength);
 
             assertThatThrownBy(() -> new Member(email, "password1", 10))
-                    .isInstanceOf(MemberException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("멤버 이메일은 최대 255글자까지 가능합니다. 현재 길이: " + emailLength);
         }
 
@@ -42,8 +42,8 @@ class MemberTest {
         @DisplayName("멤버 비밀번호가 존재하지 않거나, 비어있으면 예외를 던진다.")
         void emptyPassword(String password) {
             assertThatThrownBy(() -> new Member("a@a.com", password, 10))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("멤버 비밀번호는 필수입니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("멤버 비밀번호는 존재하지 않거나 비어있을 수 없습니다.");
         }
 
         @ParameterizedTest
@@ -53,7 +53,7 @@ class MemberTest {
             String password = "a".repeat(passwordLength);
 
             assertThatThrownBy(() -> new Member("a@a.com", password, 10))
-                    .isInstanceOf(MemberException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("멤버 비밀번호는 최대 255글자까지 가능합니다. 현재 길이: " + passwordLength);
         }
 
@@ -62,8 +62,8 @@ class MemberTest {
         @DisplayName("멤버 포인트가 0보다 작으면 예외를 던진다.")
         void negativePoint(int point) {
             assertThatThrownBy(() -> new Member("a@a.com", "password1", point))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("멤버의 포인트는 0보다 작을 수 없습니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("멤버 포인트는 최소 0원부터 가능합니다. 현재 포인트: " + point);
         }
     }
 
@@ -77,8 +77,8 @@ class MemberTest {
             Member member = new Member("a@a.com", "password1", 1000);
 
             assertThatThrownBy(() -> member.usePoint(-1))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("멤버의 포인트는 0보다 작을 수 없습니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("감소되는 포인트는 최소 0원부터 가능합니다. 현재 감소 포인트: " + -1);
         }
 
         @ParameterizedTest
@@ -88,8 +88,8 @@ class MemberTest {
             Member member = new Member("a@a.com", "password1", 1000);
 
             assertThatThrownBy(() -> member.usePoint(point))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("멤버의 포인트는 0보다 작을 수 없습니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("멤버 포인트는 최소 0원부터 가능합니다. 현재 포인트: " + (1000 - point));
         }
 
         @ParameterizedTest
@@ -114,8 +114,8 @@ class MemberTest {
             Member member = new Member("a@a.com", "password1", 1000);
 
             assertThatThrownBy(() -> member.addPoint(-1))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessage("멤버의 포인트는 0보다 작을 수 없습니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("증가되는 포인트는 최소 0원부터 가능합니다. 현재 증가 포인트: " + -1);
         }
 
         @ParameterizedTest

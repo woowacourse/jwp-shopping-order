@@ -1,6 +1,6 @@
 package cart.domain.product;
 
-import cart.exception.ProductException.NegativePrice;
+import cart.exception.badrequest.product.ProductPriceException;
 
 class Price {
 
@@ -15,7 +15,7 @@ class Price {
 
     private void validate(int value) {
         if (value < MINIMUM_VALUE) {
-            throw new NegativePrice();
+            throw new ProductPriceException("상품 가격은 음수일 수 없습니다. 현재 상품 가격: " + value);
         }
     }
 

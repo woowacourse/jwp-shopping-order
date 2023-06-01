@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.exception.OrderException;
+import cart.exception.badrequest.BadRequestException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -52,8 +52,8 @@ class OrderTest {
         @DisplayName("사용한 포인트가 0원보다 작으면 예외를 던진다.")
         void invalidPoint(int usedPoint) {
             assertThatThrownBy(() -> new Order(null, null, usedPoint))
-                    .isInstanceOf(OrderException.class)
-                    .hasMessage("포인트 적용은 0원 이상만 가능합니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("주문 포인트는 최소 0원부터 가능합니다. 현재 주문 포인트:" + usedPoint);
         }
 
         @Test
@@ -108,8 +108,8 @@ class OrderTest {
             Order order = new Order(memberA, List.of(orderProduct), 0);
 
             assertThatThrownBy(() -> order.checkOwner(memberB))
-                    .isInstanceOf(OrderException.class)
-                    .hasMessage("해당 주문을 관리할 수 있는 멤버가 아닙니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("주문을 관리할 수 있는 멤버가 아닙니다.");
         }
     }
 

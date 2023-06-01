@@ -1,6 +1,6 @@
 package cart.domain.order;
 
-import static cart.exception.OrderException.IllegalMinimumQuantity;
+import cart.exception.badrequest.order.OrderQuantityException;
 
 class Quantity {
 
@@ -15,7 +15,7 @@ class Quantity {
 
     private void validate(int value) {
         if (value < MINIMUM_VALUE) {
-            throw new IllegalMinimumQuantity(value, MINIMUM_VALUE);
+            throw new OrderQuantityException("주문 상품 수량은 최소 " + MINIMUM_VALUE + "개부터 가능합니다. 현재 개수: " + value);
         }
     }
 

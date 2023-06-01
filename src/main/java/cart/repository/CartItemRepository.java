@@ -1,11 +1,10 @@
 package cart.repository;
 
-import static cart.exception.CartItemException.DuplicateIds;
-
 import cart.dao.CartItemDao;
 import cart.dao.entity.CartItemEntity;
 import cart.domain.cartitem.CartItem;
-import cart.exception.CartItemException.NotFound;
+import cart.exception.badrequest.cartitem.CartItemDuplicateException;
+import cart.exception.notfound.CartItemNotFoundException;
 import cart.repository.mapper.CartItemMapper;
 import java.util.HashSet;
 import java.util.List;
@@ -26,12 +25,12 @@ public class CartItemRepository {
     public List<CartItem> findAllInIds(List<Long> ids) {
         Set<Long> uniqueIds = new HashSet<>(ids);
         if (uniqueIds.size() != ids.size()) {
-            throw new DuplicateIds();
+            throw new CartItemDuplicateException();
         }
 
         List<CartItemEntity> cartItemEntities = cartItemDao.findAllInIds(ids);
         if (cartItemEntities.size() != ids.size()) {
-            throw new NotFound();
+            throw new CartItemNotFoundException("ID 목록에 존재하지 않는 장바구니 상품이 있습니다.");
         }
 
         return cartItemEntities.stream()
@@ -53,7 +52,7 @@ public class CartItemRepository {
     public CartItem findById(Long id) {
         return cartItemDao.findById(id)
                 .map(CartItemMapper::toDomain)
-                .orElseThrow(NotFound::new);
+                .orElseThrow(() -> new CartItemNotFoundException(id));
     }
 
     public Long save(CartItem cartItem) {

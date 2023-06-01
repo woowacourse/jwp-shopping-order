@@ -1,6 +1,6 @@
 package cart.ui.common;
 
-import cart.exception.AuthenticationException;
+import cart.exception.authentication.AuthenticationException;
 import java.util.Base64;
 import org.apache.logging.log4j.util.Strings;
 

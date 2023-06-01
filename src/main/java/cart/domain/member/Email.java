@@ -1,8 +1,6 @@
 package cart.domain.member;
 
-import static cart.exception.MemberException.EmailEmpty;
-
-import cart.exception.MemberException.EmailOverLength;
+import cart.exception.badrequest.member.MemberEmailException;
 import org.apache.logging.log4j.util.Strings;
 
 class Email {
@@ -18,10 +16,10 @@ class Email {
 
     private void validate(String value) {
         if (Strings.isBlank(value)) {
-            throw new EmailEmpty();
+            throw new MemberEmailException("멤버 이메일은 존재하지 않거나 비어있을 수 없습니다.");
         }
         if (value.length() > MAXIMUM_LENGTH) {
-            throw new EmailOverLength(value.length(), MAXIMUM_LENGTH);
+            throw new MemberEmailException("멤버 이메일은 최대 " + MAXIMUM_LENGTH + "글자까지 가능합니다. 현재 길이: " + value.length());
         }
     }
 

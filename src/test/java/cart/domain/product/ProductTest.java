@@ -2,7 +2,7 @@ package cart.domain.product;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.exception.ProductException;
+import cart.exception.badrequest.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,8 +20,8 @@ class ProductTest {
         @DisplayName("상품 이름이 존재하지 않으면 예외를 던진다.")
         void emptyName(String name) {
             assertThatThrownBy(() -> new Product(1L, name, 500, "http://shopping.com"))
-                    .isInstanceOf(ProductException.class)
-                    .hasMessage("상품 이름은 존재해야 합니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("상품 이름은 존재하지 않거나 비어있을 수 없습니다.");
         }
 
         @ParameterizedTest
@@ -31,8 +31,8 @@ class ProductTest {
             String name = "a".repeat(nameLength);
 
             assertThatThrownBy(() -> new Product(1L, name, 500, "http://shopping.com"))
-                    .isInstanceOf(ProductException.class)
-                    .hasMessage("상품 이름은 최대 255글자까지 가능합니다. 현재 길이: " + name.length());
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("상품 이름은 최대 255글자까지 가능합니다. 현재 길이: " + nameLength);
         }
 
         @ParameterizedTest
@@ -40,8 +40,8 @@ class ProductTest {
         @DisplayName("상품 가격이 음수라면 예외를 던진다.")
         void negativePrice(int price) {
             assertThatThrownBy(() -> new Product(1L, "사과", price, "http://shopping.com"))
-                    .isInstanceOf(ProductException.class)
-                    .hasMessage("상품 가격은 음수일 수 없습니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("상품 가격은 음수일 수 없습니다. 현재 상품 가격: " + price);
         }
 
         @ParameterizedTest
@@ -49,8 +49,8 @@ class ProductTest {
         @DisplayName("상품 이미지 URL이 존재하지 않으면 예외를 던진다.")
         void emptyImageUrl(String imageUrl) {
             assertThatThrownBy(() -> new Product(1L, "사과", 500, imageUrl))
-                    .isInstanceOf(ProductException.class)
-                    .hasMessage("상품 이미지는 존재해야 합니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("상품 이미지 경로는 존재하지 않거나 비어있을 수 없습니다.");
         }
 
         @ParameterizedTest
@@ -60,8 +60,8 @@ class ProductTest {
             String imageUrl = "a".repeat(imageUrlLength);
 
             assertThatThrownBy(() -> new Product(1L, "사과", 500, imageUrl))
-                    .isInstanceOf(ProductException.class)
-                    .hasMessage("상품 이미지 URL은 최대 512글자까지 가능합니다. 현재 길이: " + imageUrl.length());
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("상품 이미지 경로는 최대 512글자까지 가능합니다. 현재 길이: " + imageUrlLength);
         }
     }
 }

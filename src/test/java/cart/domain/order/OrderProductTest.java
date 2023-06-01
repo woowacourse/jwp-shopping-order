@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.product.Product;
-import cart.exception.OrderException;
+import cart.exception.badrequest.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class OrderProductTest {
             Product product = new Product("치킨", 10000, "http://chicken.com");
 
             assertThatThrownBy(() -> new OrderProduct(product, quantity))
-                    .isInstanceOf(OrderException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("주문 상품 수량은 최소 1개부터 가능합니다. 현재 개수: " + quantity);
         }
     }

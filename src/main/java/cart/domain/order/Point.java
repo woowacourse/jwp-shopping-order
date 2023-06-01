@@ -1,6 +1,6 @@
 package cart.domain.order;
 
-import static cart.exception.OrderException.IllegalPoint;
+import cart.exception.badrequest.order.OrderPointException;
 
 class Point {
 
@@ -16,14 +16,14 @@ class Point {
 
     public static Point from(int totalPrice) {
         if (totalPrice < MINIMUM_VALUE) {
-            throw new IllegalPoint();
+            throw new OrderPointException("음수 가격은 포인트 계산을 할 수 없습니다.");
         }
         return new Point((int) Math.ceil(totalPrice * REWORD_RATE));
     }
 
     private void validate(int value) {
         if (value < MINIMUM_VALUE) {
-            throw new IllegalPoint();
+            throw new OrderPointException("주문 포인트는 최소 " + MINIMUM_VALUE + "원부터 가능합니다. 현재 주문 포인트:" + value);
         }
     }
 

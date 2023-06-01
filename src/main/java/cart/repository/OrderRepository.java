@@ -5,7 +5,7 @@ import cart.dao.OrderProductDao;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderProductEntity;
 import cart.domain.order.Order;
-import cart.exception.OrderException.NotFound;
+import cart.exception.notfound.OrderNotFoundException;
 import cart.repository.mapper.OrderMapper;
 import cart.repository.mapper.OrderProductMapper;
 import java.util.List;
@@ -34,7 +34,8 @@ public class OrderRepository {
     }
 
     public Order findById(Long id) {
-        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(NotFound::new);
+        OrderEntity orderEntity = orderDao.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
         List<OrderProductEntity> orderProductEntities = orderProductDao.findAllByOrderId(id);
         return OrderMapper.toDomain(orderEntity, orderProductEntities);
     }

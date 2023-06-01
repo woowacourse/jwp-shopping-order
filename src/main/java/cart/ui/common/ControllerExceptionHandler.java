@@ -1,7 +1,8 @@
 package cart.ui.common;
 
-import cart.exception.AuthenticationException;
-import cart.exception.ShoppingException;
+import cart.exception.authentication.AuthenticationException;
+import cart.exception.badrequest.BadRequestException;
+import cart.exception.notfound.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -24,7 +25,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error(String.format(ERROR_LOG_FORMAT, e.getClass(), e.getMessage()));
-        return ResponseEntity.internalServerError().body(new ErrorResponse("죄송합니다. 서버에서 오류가 발생했습니다. 잠시 후에 다시 시도해주세요."));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("죄송합니다. 서버에서 오류가 발생했습니다. 잠시 후에 다시 시도해주세요."));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -54,9 +56,15 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(ShoppingException.class)
-    public ResponseEntity<ErrorResponse> handleShoppingException(ShoppingException e) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException e) {
         log.warn(String.format(ERROR_LOG_FORMAT, e.getClass(), e.getMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
+        log.warn(String.format(ERROR_LOG_FORMAT, e.getClass(), e.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 }

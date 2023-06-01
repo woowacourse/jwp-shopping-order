@@ -3,7 +3,7 @@ package cart.repository;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.member.Member;
-import cart.exception.MemberException.NotFound;
+import cart.exception.notfound.MemberNotFoundException;
 import cart.repository.mapper.MemberMapper;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,19 +28,20 @@ public class MemberRepository {
     public Member getMemberByEmail(String email) {
         return memberDao.getMemberByEmail(email)
                 .map(MemberMapper::toDomain)
-                .orElseThrow(NotFound::new);
+                .orElseThrow(() -> new MemberNotFoundException("해당 멤버가 존재하지 않습니다. 요청 이메일: " + email));
     }
 
     public Member getMemberById(Long id) {
         return memberDao.getMemberById(id)
                 .map(MemberMapper::toDomain)
-                .orElseThrow(NotFound::new);
+                .orElseThrow(() -> new MemberNotFoundException(id));
     }
 
     public Member getMemberByEmailAndPassword(String email, String password) {
         return memberDao.getMemberByEmailAndPassword(email, password)
                 .map(MemberMapper::toDomain)
-                .orElseThrow(NotFound::new);
+                .orElseThrow(
+                        () -> new MemberNotFoundException("해당 멤버가 존재하지 않습니다. 요청 이메일: " + email + ", 요청 비밀번호: " + password));
     }
 
     public void update(Member member) {

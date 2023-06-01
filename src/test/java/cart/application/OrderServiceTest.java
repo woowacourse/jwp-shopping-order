@@ -16,8 +16,7 @@ import cart.dao.entity.OrderProductEntity;
 import cart.dao.entity.ProductEntity;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.exception.CartItemException;
-import cart.exception.OrderException;
+import cart.exception.badrequest.BadRequestException;
 import cart.repository.mapper.MemberMapper;
 import cart.repository.mapper.OrderMapper;
 import cart.test.ServiceTest;
@@ -113,8 +112,8 @@ class OrderServiceTest {
             Member member = new Member(-1L, "b@b.com", "password2", 0);
 
             assertThatThrownBy(() -> orderService.getOrderDetail(orderEntity.getId(), member))
-                    .isInstanceOf(OrderException.class)
-                    .hasMessage("해당 주문을 관리할 수 있는 멤버가 아닙니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("주문을 관리할 수 있는 멤버가 아닙니다.");
         }
 
         @Test
@@ -143,7 +142,7 @@ class OrderServiceTest {
             OrderRequest request = new OrderRequest(List.of(cartItemId), 0);
 
             assertThatThrownBy(() -> orderService.processOrder(otherMember, request))
-                    .isInstanceOf(CartItemException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
         }
 
@@ -160,8 +159,8 @@ class OrderServiceTest {
             OrderRequest request = new OrderRequest(List.of(cartItemA, cartItemB), 120001);
 
             assertThatThrownBy(() -> orderService.processOrder(MemberMapper.toDomain(savedMember), request))
-                    .isInstanceOf(OrderException.class)
-                    .hasMessage("사용하려는 포인트가 총 결제 금액보다 큽니다. 총 결제 금액: " + 120000 + ", 사용 포인트: " + 120001);
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("사용하려는 포인트가 총 결제 금액보다 많습니다. 총 결제 금액: " + 120000 + ", 사용 포인트: " + 120001);
         }
 
         @Test

@@ -9,7 +9,7 @@ import cart.dao.entity.MemberEntity;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.exception.ProductException;
+import cart.exception.notfound.NotFoundException;
 import cart.repository.mapper.MemberMapper;
 import cart.test.RepositoryTest;
 import java.util.List;
@@ -111,8 +111,8 @@ class ProductRepositoryTest {
         @DisplayName("ID의 상품이 존재하지 않으면 예외를 던진다.")
         void emptyProduct() {
             assertThatThrownBy(() -> productRepository.getProductById(-1L))
-                    .isInstanceOf(ProductException.class)
-                    .hasMessage("해당 상품이 존재하지 않습니다.");
+                    .isInstanceOf(NotFoundException.class)
+                    .hasMessage("해당 상품이 존재하지 않습니다. 요청 상품 ID: " + -1);
         }
 
         @Test

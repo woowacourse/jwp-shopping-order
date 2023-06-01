@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.exception.CartItemException;
+import cart.exception.badrequest.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class CartItemTest {
             Member member = new Member("a@a.com", "password1", 10);
 
             assertThatThrownBy(() -> new CartItem(1L, quantity, member, product))
-                    .isInstanceOf(CartItemException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("장바구니 상품 수량은 최소 1개부터 가능합니다. 현재 개수: " + quantity);
         }
     }
@@ -44,7 +44,7 @@ class CartItemTest {
             Member newMember = new Member(2L, "b@b.com", "password2", 10);
 
             assertThatThrownBy(() -> cartItem.checkOwner(newMember))
-                    .isInstanceOf(CartItemException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
         }
 
@@ -69,7 +69,7 @@ class CartItemTest {
             CartItem cartItem = new CartItem(member, new Product("치킨", 10000, "http://chicken.com"));
 
             assertThatThrownBy(() -> cartItem.changeQuantity(0))
-                    .isInstanceOf(CartItemException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("장바구니 상품 수량은 최소 1개부터 가능합니다. 현재 개수: " + 0);
         }
 

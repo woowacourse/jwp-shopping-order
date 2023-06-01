@@ -8,7 +8,7 @@ import cart.dao.entity.MemberEntity;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.exception.CartItemException;
+import cart.exception.badrequest.BadRequestException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import cart.repository.mapper.MemberMapper;
@@ -119,7 +119,7 @@ class CartItemServiceTest {
 
             assertThatThrownBy(
                     () -> cartItemService.updateQuantity(newMember, cartItem.getId(), new CartItemQuantityUpdateRequest(10)))
-                    .isInstanceOf(CartItemException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
         }
 
@@ -137,7 +137,7 @@ class CartItemServiceTest {
         void negativeQuantity() {
             assertThatThrownBy(
                     () -> cartItemService.updateQuantity(member, cartItem.getId(), new CartItemQuantityUpdateRequest(-1)))
-                    .isInstanceOf(CartItemException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("장바구니 상품 수량은 최소 1개부터 가능합니다. 현재 개수: " + -1);
         }
 
@@ -164,7 +164,7 @@ class CartItemServiceTest {
             newMember.assignId(newMemberId);
 
             assertThatThrownBy(() -> cartItemService.remove(newMember, cartItem.getId()))
-                    .isInstanceOf(CartItemException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
         }
 

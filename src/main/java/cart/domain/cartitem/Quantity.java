@@ -1,6 +1,6 @@
 package cart.domain.cartitem;
 
-import static cart.exception.CartItemException.QuantityShortage;
+import cart.exception.badrequest.cartitem.CartItemQuantityException;
 
 class Quantity {
 
@@ -15,7 +15,7 @@ class Quantity {
 
     private void validate(int value) {
         if (value < MINIMUM_VALUE) {
-            throw new QuantityShortage(value, MINIMUM_VALUE);
+            throw new CartItemQuantityException(MINIMUM_VALUE, value);
         }
     }
 

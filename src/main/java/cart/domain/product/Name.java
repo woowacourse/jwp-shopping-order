@@ -1,7 +1,6 @@
 package cart.domain.product;
 
-import cart.exception.ProductException.NameEmpty;
-import cart.exception.ProductException.NameOverLength;
+import cart.exception.badrequest.product.ProductNameException;
 import org.apache.logging.log4j.util.Strings;
 
 class Name {
@@ -17,10 +16,10 @@ class Name {
 
     private void validate(String value) {
         if (Strings.isBlank(value)) {
-            throw new NameEmpty();
+            throw new ProductNameException("상품 이름은 존재하지 않거나 비어있을 수 없습니다.");
         }
         if (value.length() > MAXIMUM_LENGTH) {
-            throw new NameOverLength(value.length(), MAXIMUM_LENGTH);
+            throw new ProductNameException("상품 이름은 최대 " + MAXIMUM_LENGTH + "글자까지 가능합니다. 현재 길이: " + value.length());
         }
     }
 
