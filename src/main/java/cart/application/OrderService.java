@@ -2,10 +2,7 @@ package cart.application;
 
 import cart.dao.*;
 import cart.domain.*;
-import cart.dto.OrderItemResponse;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
-import cart.dto.ProductResponse;
+import cart.dto.*;
 import cart.exception.InvalidCardException;
 import org.springframework.stereotype.Service;
 
@@ -86,5 +83,35 @@ public class OrderService {
             orderMap.get(orderId).getProducts().add(orderItemResponse);
         }
         return new ArrayList<>(orderMap.values());
+    }
+
+    public OrderDetailResponse findById(Member member, Long id) {
+        Member orderOwner = memberDao.findByOrderId(id);
+        if (!orderOwner.equals(member)) {
+            throw new IllegalArgumentException("로그인한 사용자의 주문 목록이 아닙니다");
+        }
+        List<DetailOrderResponseEntity> detailOrders = shoppingOrderDao.findById(id);
+        long totalPrice = detailOrders.stream()
+                .mapToLong(detailOrder -> detailOrder.getQuantity() * detailOrder.getProductPrice())
+                .sum();
+        long usedPoint = detailOrders.get(0).getUsedPoint();
+        Point savingPoint = PointEarningPolicy.calculateSavingPoints(totalPrice - usedPoint);
+        long orderId = detailOrders.get(0).getOrderId();
+        LocalDateTime orderedAt = detailOrders.get(0).getOrderedAt();
+
+        List<OrderItemResponse> orderItems = new ArrayList<>();
+
+        for (DetailOrderResponseEntity detailOrder : detailOrders) {
+            Long orderItemId = detailOrder.getOrderItemId();
+            Long quantity = detailOrder.getQuantity();
+            Long productId = detailOrder.getProductId();
+            String productName = detailOrder.getProductName();
+            Long productPrice = detailOrder.getProductPrice();
+            String productImageUrl = detailOrder.getProductImageUrl();
+
+            OrderItemResponse orderItem = new OrderItemResponse(orderItemId, quantity, new ProductResponse(productId, productName, productPrice, productImageUrl));
+            orderItems.add(orderItem);
+        }
+        return new OrderDetailResponse(orderId, usedPoint, savingPoint.getValue(), orderedAt, orderItems);
     }
 }

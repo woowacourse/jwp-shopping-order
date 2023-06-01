@@ -61,7 +61,14 @@ public class OrderIntegrationTest extends IntegrationTest {
         createOrder(member2, List.of(3), 200);
 
         getOrders(member);
+    }
 
+    @DisplayName("특정 주문의 상세정보를 불러온다")
+    @Test
+    void getOrderDetail() {
+        member = memberDao.getMemberByEmail("kangsj9665@gmail.com");
+
+        getOrderDetails(member, 22L);
     }
 
     private void createOrder(Member member, List<Integer> cartItemIds, int point) {
@@ -91,6 +98,18 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .get("/orders")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> getOrderDetails(Member member, Long id) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders/" + id)
                 .then()
                 .log().all()
                 .extract();

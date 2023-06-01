@@ -1,6 +1,9 @@
 package cart.domain;
 
+import cart.exception.OrderException;
+
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Order {
     private Long id;
@@ -21,6 +24,12 @@ public class Order {
         this.orderedAt = orderedAt;
         this.usedPoint = usedPoint;
         this.orderedItems = orderedItems;
+    }
+
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new OrderException.IllegalMember(this, member);
+        }
     }
 
     public Long getId() {

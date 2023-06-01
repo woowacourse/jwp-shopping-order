@@ -61,6 +61,15 @@ public class MemberDao {
         return new Point(jdbcTemplate.queryForObject(sql, Long.class, member.getId()));
     }
 
+    public Member findByOrderId(Long id) {
+        String sql = "SELECT m.id, m.email, m.password, m.point " +
+                "FROM member m " +
+                "JOIN shopping_order so ON m.id = so.member_id " +
+                "WHERE so.id = ?";
+        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
+        return members.isEmpty() ? null : members.get(0);
+    }
+
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
