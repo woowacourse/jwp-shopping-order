@@ -1,6 +1,6 @@
 package cart.fixture;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductFixture {
 

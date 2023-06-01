@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.dao.product;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +14,8 @@ public interface ProductDao {
     Long createProduct(Product product);
 
     void updateProduct(Long productId, Product product);
+
+    void updateStock(Long productId, Long updateStock);
 
     void deleteProduct(Long productId);
 }

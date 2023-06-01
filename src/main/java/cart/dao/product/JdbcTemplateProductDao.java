@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.dao.product;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,6 +24,7 @@ public class JdbcTemplateProductDao implements ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Optional<Product> findProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
         List<Product> products = jdbcTemplate.query(sql, new Object[]{productId}, new ProductRowMapper());
@@ -33,11 +34,13 @@ public class JdbcTemplateProductDao implements ProductDao {
         return Optional.of(products.get(0));
     }
 
+    @Override
     public List<Product> findAllProducts() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, new ProductRowMapper());
     }
 
+    @Override
     public Long createProduct(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -58,11 +61,19 @@ public class JdbcTemplateProductDao implements ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    @Override
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ?, stock = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getStock(), productId);
     }
 
+    @Override
+    public void updateStock(Long productId, Long updateStock) {
+        String sql = "UPDATE product SET stock = ? WHERE id = ?";
+        jdbcTemplate.update(sql, updateStock, productId);
+    }
+
+    @Override
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
