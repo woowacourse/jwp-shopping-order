@@ -1,6 +1,7 @@
 package cart.common;
 
 import cart.exception.AuthenticationException;
+import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponNotFoundException;
 import cart.exception.ProductNotFoundException;
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CouponNotFoundException.class)
     public ResponseEntity<String> handle(final CouponNotFoundException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(CartItemCalculateException.class)
+    public ResponseEntity<String> handle(final CartItemCalculateException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

@@ -7,7 +7,9 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.request.OrderRequestDto;
+import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
+import cart.exception.CouponDiscountOverPriceException;
 import cart.exception.CouponNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,6 +89,88 @@ class OrderServiceTest {
 
         final Member member = new Member(1L, "email", "password");
         final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1L), 1000, null);
+
+        //when, then
+        assertDoesNotThrow(() -> orderService.order(member, orderRequestDto));
+    }
+
+    @DisplayName("쿠폰의 할인 금액이 더 클 경우 예외가 발생한다.")
+    @Test
+    void order_invalid_couponOverDiscount() {
+        //given
+        given(cartItemDao.findByMemberId(anyLong()))
+                .willReturn(List.of(
+                        new CartItem(1L, 1, new Product("name1", 100, "image1"), null),
+                        new CartItem(2L, 2, new Product("name2", 200, "image2"), null)
+                ));
+
+        given(couponDao.findCouponById(anyLong()))
+                .willReturn(List.of(
+                        new Coupon(1L, 10000, "1000"),
+                        new Coupon(2L, 20000, "2000")));
+
+        final Member member = new Member(1L, "email", "password");
+        final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1L), 1000, 1L);
+
+        //when, then
+        assertThatThrownBy(() -> orderService.order(member, orderRequestDto))
+                .isInstanceOf(CouponDiscountOverPriceException.class);
+    }
+
+    @DisplayName("사용자가 예상한 계산 금액과 실 계산 금액이 다르면 예외가 발생한다.")
+    @Test
+    void order_invalid_calculateMismatch() {
+        //given
+        final int expectProductPrice = 100;
+        given(cartItemDao.findByMemberId(anyLong()))
+                .willReturn(List.of(
+                        new CartItem(1L, 1, new Product("name1", expectProductPrice, "image1"), null),
+                        new CartItem(2L, 2, new Product("name2", 200, "image2"), null)
+                ));
+
+        final int expectCouponDiscount = 2000;
+        given(couponDao.findCouponById(anyLong()))
+                .willReturn(List.of(
+                        new Coupon(1L, 1000, "1000"),
+                        new Coupon(2L, expectCouponDiscount, "2000")));
+
+        final int defaultDeliveryFee = 3000;
+        final int wrongCount = 100;
+
+        final int expectPrice = defaultDeliveryFee + expectProductPrice - expectCouponDiscount + wrongCount;
+
+        final Member member = new Member(1L, "email", "password");
+        final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1L), expectPrice, 2L);
+
+        //when, then
+        assertThatThrownBy(() -> orderService.order(member, orderRequestDto))
+                .isInstanceOf(CartItemCalculateException.class);
+    }
+
+    @DisplayName("사용자가 예상한 계산 금액과 실 계산 금액이 다르면 예외가 발생한다.")
+    @Test
+    void order_valid_match() {
+        //given
+        final int expectProductPrice = 100;
+        given(cartItemDao.findByMemberId(anyLong()))
+                .willReturn(List.of(
+                        new CartItem(1L, 1, new Product("name1", expectProductPrice, "image1"), null),
+                        new CartItem(2L, 2, new Product("name2", 200, "image2"), null)
+                ));
+
+        final int expectCouponDiscount = 2000;
+        given(couponDao.findCouponById(anyLong()))
+                .willReturn(List.of(
+                        new Coupon(1L, 1000, "1000"),
+                        new Coupon(2L, expectCouponDiscount, "2000")));
+
+        final int defaultDeliveryFee = 3000;
+        final int wrongCount = 100;
+
+        final int expectPrice = defaultDeliveryFee + expectProductPrice - expectCouponDiscount;
+
+        final Member member = new Member(1L, "email", "password");
+        final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1L), expectPrice, 2L);
 
         //when, then
         assertDoesNotThrow(() -> orderService.order(member, orderRequestDto));

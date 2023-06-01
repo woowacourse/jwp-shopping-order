@@ -10,6 +10,7 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.dto.request.OrderRequestDto;
 import cart.dto.response.OrderResponseDto;
+import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponNotFoundException;
 import org.springframework.stereotype.Service;
@@ -32,14 +33,36 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDto order(final Member member, final OrderRequestDto orderRequestDto) {
-        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        checkCartItem(cartItems, orderRequestDto);
+        final List<CartItem> cartItems = findCartItem(member, orderRequestDto);
 
         final Order order = new Order(makeOrderProduct(cartItems, orderRequestDto));
         order.applyDeliveryFee(new DeliveryFee(3000));
         applyCoupon(member, orderRequestDto, order);
+        validateExpectPrice(order, orderRequestDto);
 
         return new OrderResponseDto(1L);
+    }
+
+    private List<CartItem> findCartItem(final Member member, final OrderRequestDto orderRequestDto) {
+        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        checkCartItem(cartItems, orderRequestDto);
+        return cartItems;
+    }
+
+    private void checkCartItem(final List<CartItem> cartItems, final OrderRequestDto orderRequestDto) {
+        final List<Long> cartItemsId = cartItems.stream().map(CartItem::getId).collect(Collectors.toList());
+        final boolean allItemExist = cartItemsId.containsAll(orderRequestDto.getCartItems());
+        if (!allItemExist) {
+            throw new CartItemNotFoundException("주문 요청에 존재하지 않는 카트 아이템이 포함되어 있습니다.");
+        }
+    }
+
+    private List<OrderProduct> makeOrderProduct(final List<CartItem> cartItems, final OrderRequestDto orderRequestDto) {
+        final List<Long> cartItemsId = orderRequestDto.getCartItems();
+        return cartItems.stream()
+                .filter(cartItem -> cartItemsId.contains(cartItem.getId()))
+                .map(OrderProduct::of)
+                .collect(Collectors.toList());
     }
 
     private void applyCoupon(final Member member, final OrderRequestDto orderRequestDto, final Order order) {
@@ -58,19 +81,9 @@ public class OrderService {
         return requestCoupon.get();
     }
 
-    private void checkCartItem(final List<CartItem> cartItems, final OrderRequestDto orderRequestDto) {
-        final List<Long> cartItemsId = cartItems.stream().map(CartItem::getId).collect(Collectors.toList());
-        final boolean allItemExist = cartItemsId.containsAll(orderRequestDto.getCartItems());
-        if (!allItemExist) {
-            throw new CartItemNotFoundException("주문 요청에 존재하지 않는 카트 아이템이 포함되어 있습니다.");
+    private void validateExpectPrice(final Order order, final OrderRequestDto orderRequestDto) {
+        if (order.price() != orderRequestDto.getTotalPrice()) {
+            throw new CartItemCalculateException("구매자가 예쌍한 금액과 실 계산 금액이 다릅니다.");
         }
-    }
-
-    private List<OrderProduct> makeOrderProduct(final List<CartItem> cartItems, final OrderRequestDto orderRequestDto) {
-        final List<Long> cartItemsId = orderRequestDto.getCartItems();
-        return cartItems.stream()
-                .filter(cartItem -> cartItemsId.contains(cartItem.getId()))
-                .map(OrderProduct::of)
-                .collect(Collectors.toList());
     }
 }
