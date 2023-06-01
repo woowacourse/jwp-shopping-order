@@ -1,22 +1,52 @@
 package cart.domain;
 
-import java.util.List;
+import java.sql.Date;
 
 public class Order {
+
     private Long id;
     private Member member;
-    private List<CartItem> cartItems;
+    private OrderItems orderItems;
+    private Long productPrice;
+    private Long discountPrice;
+    private Long deliveryFee;
+    private Long totalPrice;
+    private java.sql.Date date;
 
 
-    public Order(Member member, List<CartItem> cartItems) {
+    public Order(Member member, OrderItems orderItems, Long deliveryFee, java.sql.Date date) {
         this.member = member;
-        this.cartItems = cartItems;
+        this.orderItems = orderItems;
+        this.productPrice = orderItems.calculateOrderPrice();
+        this.discountPrice = calculateDiscountedPrice();
+        this.deliveryFee = deliveryFee;
+        this.totalPrice = calculateTotalPrice();
+        this.date = date;
     }
 
-    public Order(Long id, Member member, List<CartItem> cartItems) {
+    public Order(Long id, Member member, OrderItems orderItems, Long productPrice, Long discountPrice, Long deliveryFee, Long totalPrice, Date date) {
         this.id = id;
         this.member = member;
-        this.cartItems = cartItems;
+        this.orderItems = orderItems;
+        this.productPrice = productPrice;
+        this.discountPrice = discountPrice;
+        this.deliveryFee = deliveryFee;
+        this.totalPrice = totalPrice;
+        this.date = date;
+    }
+
+    private Long calculateDiscountedPrice() {
+        if (productPrice >= 50000) {
+            return productPrice - 5000;
+        }
+        if (productPrice >= 30000) {
+            return productPrice - 3000;
+        }
+        return productPrice;
+    }
+
+    private Long calculateTotalPrice() {
+        return discountPrice + deliveryFee;
     }
 
     public Long getId() {
@@ -27,7 +57,59 @@ public class Order {
         return member;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
+    public OrderItems getOrderItems() {
+        return orderItems;
+    }
+
+    public Long getProductPrice() {
+        return productPrice;
+    }
+
+    public Long getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public Long getDeliveryFee() {
+        return deliveryFee;
+    }
+
+    public Long getTotalPrice() {
+        return totalPrice;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void setOrderItems(OrderItems orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public void setProductPrice(Long productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public void setDiscountPrice(Long discountPrice) {
+        this.discountPrice = discountPrice;
+    }
+
+    public void setDeliveryFee(Long deliveryFee) {
+        this.deliveryFee = deliveryFee;
+    }
+
+    public void setTotalPrice(Long totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

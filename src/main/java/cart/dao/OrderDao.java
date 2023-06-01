@@ -23,22 +23,30 @@ public class OrderDao {
     public Long save(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO order (member_id) VALUES(?)",
+        jdbcTemplate.update(connect -> {
+            PreparedStatement ps = connect.prepareStatement(
+                    "INSERT INTO orders(member_id, product_price, discount_price, delivery_fee, total_price, created_at) " +
+                            "VALUES(?, ?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
             ps.setLong(1, order.getMember().getId());
+            ps.setLong(2, order.getProductPrice());
+            ps.setLong(3, order.getDiscountPrice());
+            ps.setLong(4, order.getDeliveryFee());
+            ps.setLong(5, order.getTotalPrice());
+            ps.setDate(6, order.getDate());
+
             return ps;
         }, keyHolder);
 
         long orderId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        String relatedSql = "INSERT INTO order_items (order_id, cart_id) VALUES(?, ?)";
+        String relatedSql = "INSERT INTO order_items (order_id, product_name, product_price, product_image_url, product_quantity) " +
+                "VALUES(?, ?, ?, ?, ?)";
 
-        for (CartItem cartItem : order.getCartItems()) {
-            jdbcTemplate.update(relatedSql, orderId, cartItem.getId());
+        for (OrderItem orderItem : order.getOrderItems().getOrderItems()) {
+            jdbcTemplate.update(relatedSql, orderId, orderItem.getProduct().getName(), orderItem.getProduct().getPrice(), orderItem.getProduct().getImageUrl(), orderItem.getQuantity());
         }
 
         return orderId;
