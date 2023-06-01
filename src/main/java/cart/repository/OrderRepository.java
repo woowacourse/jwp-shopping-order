@@ -9,8 +9,8 @@ import cart.entity.OrderHistoryEntity;
 import cart.entity.OrderProductEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
@@ -41,10 +41,14 @@ public class OrderRepository {
         return savedEntity.getId();
     }
 
-    public List<Order> findOrdersOf(final Member member) {
-        return orderHistoryDao.findByMemberId(member.getId())
-                .stream()
-                .map(OrderHistoryEntity::toOrder)
-                .collect(Collectors.toList());
+    public List<Order> findOrdersByMemberId(final Member member) {
+        final List<OrderHistoryEntity> orderHistoryEntities = orderHistoryDao.findByMemberId(member.getId());
+
+        final List<Order> orders = new ArrayList<>();
+        for (final OrderHistoryEntity orderHistoryEntity : orderHistoryEntities) {
+            final List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(orderHistoryEntity.getId());
+        }
+
+        return null;
     }
 }

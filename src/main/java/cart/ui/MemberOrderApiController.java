@@ -2,7 +2,7 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.response.OrderResponse;
+import cart.dto.response.OrderHistoryResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ public class MemberOrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getAllOrders(Member member) {
+    public ResponseEntity<List<OrderHistoryResponse>> getAllOrders(Member member) {
         return ResponseEntity.ok(orderService.getAllOrdersOf(member));
     }
 }

@@ -6,32 +6,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Order {
-
-    private final int savedPoint;
+    private final Long id;
     private final int usedPoint;
     private final Map<Product, Integer> orderedProducts;
     private final Member member;
 
     public Order(
-            final int savedPoint,
+            final Long id,
             final int usedPoint,
             final Map<Product, Integer> orderedProducts,
             final Member member
     ) {
-        this.savedPoint = savedPoint;
+        this.id = id;
         this.usedPoint = usedPoint;
         this.orderedProducts = new HashMap<>(orderedProducts);
         this.member = member;
     }
 
-    public static Order from(
-            final int savedPoint,
+    public Order(
             final int usedPoint,
             final Map<Product, Integer> orderedProducts,
             final Member member
     ) {
-        validatePointAmount(savedPoint, usedPoint);
-        return new Order(savedPoint, usedPoint, orderedProducts, member);
+        this(null, usedPoint, new HashMap<>(orderedProducts), member);
+    }
+
+    public static Order from(
+            final int usedPoint,
+            final Map<Product, Integer> orderedProducts,
+            final Member member
+    ) {
+        return new Order(null, usedPoint, orderedProducts, member);
     }
 
     private static void validatePointAmount(final int savedPoint, final int usedPoint) {
@@ -40,15 +45,16 @@ public class Order {
         }
     }
 
-    public int calculatedUpdatedPoint() {
+    public int calculatedUpdatedPoint(final int savedPoint) {
+        validatePointAmount(savedPoint, usedPoint);
         return savedPoint - usedPoint;
     }
 
-    public int calculateOrderPrice() {
-        return calculateTotalPrice() - usedPoint;
+    public int calculateTotalPrice() {
+        return calculateOriginalPrice() - usedPoint;
     }
 
-    public int calculateTotalPrice() {
+    public int calculateOriginalPrice() {
         return orderedProducts.keySet().stream()
                 .mapToInt(
                         product -> {
@@ -58,5 +64,21 @@ public class Order {
                         }
                 )
                 .sum();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public int getUsedPoint() {
+        return usedPoint;
+    }
+
+    public Map<Product, Integer> getOrderedProducts() {
+        return orderedProducts;
+    }
+
+    public Member getMember() {
+        return member;
     }
 }

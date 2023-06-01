@@ -1,35 +1,33 @@
 package cart.entity;
 
-import cart.domain.Order;
-
 public class OrderHistoryEntity {
     private final Long id;
     private final Long memberId;
-    private final int totalPrice;
+    private final int originalPrice;
     private final int usedPoint;
-    private final int orderPrice;
+    private final int totalPrice;
 
     public OrderHistoryEntity(
             final Long id,
             final Long memberId,
-            final int totalPrice,
+            final int originalPrice,
             final int usedPoint,
-            final int orderPrice
+            final int totalPrice
     ) {
         this.id = id;
         this.memberId = memberId;
-        this.totalPrice = totalPrice;
+        this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
-        this.orderPrice = orderPrice;
+        this.totalPrice = totalPrice;
     }
 
     public OrderHistoryEntity(
             final Long memberId,
-            final int totalPrice,
+            final int originalPrice,
             final int usedPoint,
-            final int orderPrice
+            final int totalPrice
     ) {
-        this(null, memberId, totalPrice, usedPoint, orderPrice);
+        this(null, memberId, originalPrice, usedPoint, totalPrice);
     }
 
     public Long getId() {
@@ -40,19 +38,15 @@ public class OrderHistoryEntity {
         return memberId;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public int getOriginalPrice() {
+        return originalPrice;
     }
 
     public int getUsedPoint() {
         return usedPoint;
     }
 
-    public int getOrderPrice() {
-        return orderPrice;
-    }
-
-    public Order toOrder() {
-        return null;
+    public int getTotalPrice() {
+        return totalPrice;
     }
 }

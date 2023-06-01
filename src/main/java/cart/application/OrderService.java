@@ -4,7 +4,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
 import cart.dto.request.OrderRequest;
-import cart.dto.response.OrderResponse;
+import cart.dto.response.OrderHistoryResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
@@ -47,12 +47,12 @@ public class OrderService {
                         cartItemRepository::findQuantityOf
                 ));
 
-        final Order order = new Order(savedPoint, usedPoint, products, member);
+        final Order order = new Order(usedPoint, products, member);
 
-        final int totalPrice = order.calculateTotalPrice();
-        final int orderPrice = order.calculateOrderPrice();
+        final int totalPrice = order.calculateOriginalPrice();
+        final int orderPrice = order.calculateTotalPrice();
 
-        final int updatedPoint = order.calculatedUpdatedPoint();
+        final int updatedPoint = order.calculatedUpdatedPoint(savedPoint);
 
         memberRepository.updatePoint(member, updatedPoint);
         final long orderHistoryId = orderRepository.createOrderHistory(member, totalPrice, usedPoint, orderPrice);
@@ -67,8 +67,12 @@ public class OrderService {
         return orderHistoryId;
     }
 
-    public List<OrderResponse> getAllOrdersOf(final Member member) {
-        orderRepository.findOrdersOf(member);
+    public List<OrderHistoryResponse> getAllOrdersOf(final Member member) {
+        final List<Order> orders = orderRepository.findOrdersByMemberId(member);
+        for (final Order order : orders) {
+            final Long orderId = order.getId();
+            final int totalPrice = order.calculateTotalPrice();
+        }
         return null;
     }
 }

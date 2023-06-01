@@ -38,9 +38,9 @@ public class OrderHistoryDao {
         return new OrderHistoryEntity(
                 id,
                 entity.getMemberId(),
-                entity.getTotalPrice(),
+                entity.getOriginalPrice(),
                 entity.getUsedPoint(),
-                entity.getOrderPrice()
+                entity.getTotalPrice()
         );
     }
 
