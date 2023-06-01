@@ -93,25 +93,25 @@ public class OrderService {
 
 	private void compareEachCartItemIfIdEquals(final CartItem cartItem, final CartItemRequest request) {
 		if (cartItem.getId().equals(request.getId())) {
-			isInvalidProduct(cartItem, request);
-			isInvalidQuantity(cartItem, request);
-			isNotChecked(cartItem);
+			validateProduct(cartItem, request);
+			validateQuantity(cartItem, request);
+			validateChecked(cartItem);
 		}
 	}
 
-	private void isInvalidProduct(final CartItem cartItem, final CartItemRequest request) {
+	private void validateProduct(final CartItem cartItem, final CartItemRequest request) {
 		if (!cartItem.getProduct().getId().equals(request.getProductId())) {
 			throw new InvalidOrderProductException();
 		}
 	}
 
-	private void isInvalidQuantity(final CartItem cartItem, final CartItemRequest request) {
+	private void validateQuantity(final CartItem cartItem, final CartItemRequest request) {
 		if (cartItem.getQuantity() != request.getQuantity()) {
 			throw new InvalidOrderQuantityException();
 		}
 	}
 
-	private void isNotChecked(final CartItem cartItem) {
+	private void validateChecked(final CartItem cartItem) {
 		if (!cartItem.isChecked()) {
 			throw new InvalidOrderCheckedException();
 		}
