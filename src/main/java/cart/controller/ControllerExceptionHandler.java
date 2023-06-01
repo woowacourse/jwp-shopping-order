@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.IncorrectPriceException;
 import cart.exception.NonExistProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,5 +31,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Void> handleException(NonExistProductException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Void> handleException(IncorrectPriceException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }
