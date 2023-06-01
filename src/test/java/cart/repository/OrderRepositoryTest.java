@@ -30,8 +30,8 @@ class OrderRepositoryTest {
         final Order orderAfterSave = orderRepository.save(order);
 
         assertThat(orderAfterSave)
-                .extracting(Order::getTimeStamp, Order::getMember)
-                .contains(order.getTimeStamp(), MEMBER_1);
+                .extracting(Order::getTimeStamp, Order::getMemberId)
+                .contains(order.getTimeStamp(), MEMBER_1.getId());
         assertThat(orderAfterSave.getOrderProducts())
                 .extracting(OrderProduct::getProduct)
                 .contains(cartItem1.getProduct(), cartItem2.getProduct());
@@ -49,8 +49,8 @@ class OrderRepositoryTest {
         final Order orderAfterSave = orderRepository.findById(orderId);
 
         assertThat(orderAfterSave)
-                .extracting(Order::getTimeStamp, Order::getMember)
-                .contains(order.getTimeStamp(), MEMBER_1);
+                .extracting(Order::getTimeStamp, Order::getMemberId)
+                .contains(order.getTimeStamp(), MEMBER_1.getId());
         assertThat(orderAfterSave.getOrderProducts())
                 .extracting(OrderProduct::getProduct)
                 .contains(cartItem1.getProduct(), cartItem2.getProduct());

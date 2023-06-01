@@ -25,8 +25,8 @@ public class OrderDto {
 
     public static OrderDto from(final Order order) {
         final Optional<Coupon> coupon = order.getCoupon();
-        return coupon.map(value -> new OrderDto(order.getMember().getId(), value.getId(), order.getTimeStamp()))
-                .orElseGet(() -> new OrderDto(order.getMember().getId(), null, order.getTimeStamp()));
+        return coupon.map(value -> new OrderDto(order.getMemberId(), value.getId(), order.getTimeStamp()))
+                .orElseGet(() -> new OrderDto(order.getMemberId(), null, order.getTimeStamp()));
     }
 
     public Long getId() {

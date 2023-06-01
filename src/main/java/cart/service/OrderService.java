@@ -37,7 +37,7 @@ public class OrderService {
 
         final Order savedOrder = orderRepository.save(order);
         for (final CartItem cartItem : cartItems) {
-            cartItemDao.delete(cartItem.getMember().getId(), cartItem.getProduct().getId());
+            cartItemDao.delete(cartItem.getMemberId(), cartItem.getProduct().getId());
         }
 
         return savedOrder.getId();

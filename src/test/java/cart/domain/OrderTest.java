@@ -27,7 +27,7 @@ class OrderTest {
         final Order order = Order.of(member, List.of(cartItem), null);
 
         assertThat(order.getTimeStamp()).isNotNull();
-        assertThat(order.getMember()).isEqualTo(member);
+        assertThat(order.getMemberId()).isEqualTo(member.getId());
         assertThat(order.getOrderProducts()).hasSize(1)
                 .extracting(OrderProduct::getProduct)
                 .extracting(Product::getName, Product::getPrice, Product::getImageUrl)
