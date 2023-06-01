@@ -32,6 +32,7 @@ public class Order {
                            final Optional<Coupon> coupon,
                            final List<CartItem> cartItems) {
         validateSameMember(member, cartItems);
+
         List<OrderProduct> orderProducts = cartItems.stream()
                 .map(cartItem -> new OrderProduct(cartItem.getProduct(), Quantity.from(cartItem.getQuantity())))
                 .collect(toList());

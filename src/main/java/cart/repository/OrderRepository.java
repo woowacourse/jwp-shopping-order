@@ -59,4 +59,18 @@ public class OrderRepository {
                 .collect(Collectors.toList());
     }
 
+    public void deleteCartItems(List<Long> cartItemIds) {
+        for (Long cartItemId : cartItemIds) {
+            deleteCartItem(cartItemId);
+        }
+    }
+
+    private void deleteCartItem(final Long cartItemId) {
+        int deleteCount = cartItemDao.deleteById(cartItemId);
+
+        if (deleteCount == 0) {
+            throw new IllegalArgumentException("장바구니가 삭제되지 않았습니다.");
+        }
+    }
+
 }

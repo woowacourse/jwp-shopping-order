@@ -10,6 +10,7 @@ import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -74,10 +75,11 @@ public class CouponRepository {
         return memberCoupons;
     }
 
-    public Coupon findCouponByMemberCouponId(final Long memberCouponId) {
+    public Optional<Coupon> findCouponByMemberCouponId(final Long memberCouponId) {
         MemberCouponDto memberCouponDto = getMemberCouponByMemberCouponId(memberCouponId);
         CouponDto couponDto = getCouponByCouponId(memberCouponDto.getCouponId());
-        return new Coupon(couponDto.getId(), couponDto.getName(), couponDto.getDiscountRate(), couponDto.getDiscountPrice());
+        Coupon coupon = new Coupon(couponDto.getId(), couponDto.getName(), couponDto.getDiscountRate(), couponDto.getDiscountPrice());
+        return Optional.of(coupon);
     }
 
     private MemberCouponDto getMemberCouponByMemberCouponId(final Long memberCouponId) {

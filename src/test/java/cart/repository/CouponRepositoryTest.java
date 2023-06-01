@@ -12,6 +12,7 @@ import cart.domain.MemberCoupon;
 import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -110,7 +111,7 @@ class CouponRepositoryTest {
     void findByCouponByMemberCouponId() {
         initMemberCoupon();
 
-        Coupon coupon = couponRepository.findCouponByMemberCouponId(3L);
+        Coupon coupon = couponRepository.findCouponByMemberCouponId(3L).orElseThrow(NoSuchElementException::new);
 
         assertThat(coupon)
                 .extracting(Coupon::getId, Coupon::getName, Coupon::getDiscountRate, Coupon::getDiscountPrice)
