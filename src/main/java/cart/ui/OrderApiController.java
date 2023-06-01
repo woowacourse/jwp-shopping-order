@@ -5,6 +5,7 @@ import cart.application.ProductService;
 import cart.domain.Member;
 import cart.dto.OrderCartItemDto;
 import cart.dto.OrderCartItemsRequest;
+import cart.dto.OrderDto;
 import cart.dto.OrderResponse;
 import cart.dto.OrdersResponse;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,32 @@ import java.util.stream.Collectors;
 public class OrderApiController {
 
     private final OrderService orderService;
-    private final ProductService productService;
 
-    public OrderApiController(final OrderService orderService, final ProductService productService) {
+    public OrderApiController(final OrderService orderService) {
         this.orderService = orderService;
-        this.productService = productService;
+    }
+
+    @GetMapping
+    public ResponseEntity<OrdersResponse> getOrders(Member member) {
+        final List<OrderDto> orderDtos = orderService.findAllByMemberId(member.getId());
+
+        final List<OrderResponse> orderResponses = orderDtos.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
+
+        final OrdersResponse response = new OrdersResponse(orderResponses);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{cartOrderId}")
+    public ResponseEntity<OrderResponse> getOrder(Member member,
+                                                  @PathVariable final Long cartOrderId) {
+        final OrderDto orderDto = orderService.findByCartOrderId(cartOrderId);
+
+        final OrderResponse response = OrderResponse.from(orderDto);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

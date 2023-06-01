@@ -27,3 +27,4 @@
 include::member.adoc[]
 include::product.adoc[]
 include::cart-item.adoc[]
+include::order.adoc[]

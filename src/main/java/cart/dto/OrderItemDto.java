@@ -1,6 +1,6 @@
-package cart.domain;
+package cart.dto;
 
-import cart.dto.OrderCartItemDto;
+import cart.domain.CartOrder;
 
 public class OrderItemDto {
 
@@ -22,10 +22,11 @@ public class OrderItemDto {
         this.quantity = quantity;
     }
 
-    public static OrderItemDto of(final CartOrder cartOrder, final OrderCartItemDto orderCartItemDto, final int quantity) {
+    public static OrderItemDto of(final CartOrder cartOrder, final Long productId, final OrderCartItemDto orderCartItemDto, final int quantity) {
         return new OrderItemDto(
                 null,
                 cartOrder,
+                productId,
                 orderCartItemDto.getOrderCartItemName(),
                 orderCartItemDto.getOrderCartItemPrice(),
                 orderCartItemDto.getOrderCartItemImageUrl(),

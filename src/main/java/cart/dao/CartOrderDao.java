@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +32,7 @@ public class CartOrderDao {
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             Long cartOrderId = rs.getLong("cart_order.id");
             Long totalPrice = rs.getLong("cart_order.total_price");
-            Date created = rs.getDate("cart_order.created_at");
+            LocalDateTime created = rs.getTimestamp("cart_order.created_at").toLocalDateTime();
             String email = rs.getString("member.email");
             Long cash = rs.getLong("member.cash");
             Member member = Member.of(memberId, email, null, cash);
@@ -46,7 +47,7 @@ public class CartOrderDao {
                 "WHERE cart_order.id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{cartOrderId}, (rs, rowNum) -> {
             Long totalPrice = rs.getLong("cart_order.total_price");
-            Date created = rs.getDate("cart_order.created_at");
+            LocalDateTime created = rs.getTimestamp("cart_order.created_at").toLocalDateTime();
             Long memberId = rs.getLong("member.id");
             String email = rs.getString("member.email");
             Long cash = rs.getLong("member.cash");
@@ -70,6 +71,6 @@ public class CartOrderDao {
             return ps;
         }, keyHolder);
 
-        return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 }

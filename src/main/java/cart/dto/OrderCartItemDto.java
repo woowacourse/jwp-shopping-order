@@ -9,18 +9,21 @@ import javax.validation.constraints.PositiveOrZero;
 public class OrderCartItemDto {
 
     @NotNull(message = "장바구니 ID를 입력해야 합니다")
-    private final Long cartItemId;
+    private Long cartItemId;
 
     @NotBlank(message = "주문한 상품의 이름을 입력해야 합니다")
-    private final String orderCartItemName;
+    private String orderCartItemName;
 
     @NotNull(message = "주문한 상품의 가격을 입력해야 합니다")
     @PositiveOrZero(message = "주문한 상품의 가격은 0원 이상이어야 합니다")
-    private final int orderCartItemPrice;
+    private int orderCartItemPrice;
 
     @NotBlank(message = "주문한 상품 이미지 경로를 입력해야 합니다")
     @URL(message = "이미지 입력 형식에 맞지 않습니다")
-    private final String orderCartItemImageUrl;
+    private String orderCartItemImageUrl;
+
+    public OrderCartItemDto() {
+    }
 
     public OrderCartItemDto(final Long cartItemId, final String orderCartItemName, final int orderCartItemPrice, final String orderCartItemImageUrl) {
         this.cartItemId = cartItemId;
