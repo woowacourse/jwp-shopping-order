@@ -1,14 +1,13 @@
 package cart.dao;
 
 import cart.domain.Member;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
@@ -21,14 +20,18 @@ public class MemberDao {
 
     public Optional<Member> findById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
-        return Optional.of(members.get(0));
+
+        return jdbcTemplate.query(sql, new MemberRowMapper(), id)
+                .stream()
+                .findAny();
     }
 
     public Optional<Member> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
-        return Optional.of(members.get(0));
+
+        return jdbcTemplate.query(sql, new MemberRowMapper(), email)
+                .stream()
+                .findAny();
     }
 
     public List<Member> findAll() {
