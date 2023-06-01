@@ -38,8 +38,8 @@ public class CartItemApiController {
         this.cartItemService = cartItemService;
     }
 
-    @Operation(summary = "장바구니 목록 조회", description = "장바구니 목록을 조회한다.")
-    @ApiResponse(responseCode = "200", description = "장바구니 목록 조회 성공")
+    @Operation(summary = "장바구니 상품 목록 조회", description = "장바구니 상품 목록을 조회한다.")
+    @ApiResponse(responseCode = "200", description = "장바구니 상품 목록 조회 성공")
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
         return ResponseEntity.ok(cartItemService.findByMember(member));
