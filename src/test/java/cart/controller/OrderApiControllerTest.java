@@ -4,7 +4,6 @@ import cart.application.OrderService;
 import cart.dao.MemberDao;
 import cart.domain.Order;
 import cart.domain.OrderInfo;
-import cart.dto.OrderInfoResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.ui.OrdersApiController;
@@ -54,7 +53,7 @@ class OrderApiControllerTest {
                 new OrderRequest(new ArrayList<Long>(List.of(1L, 2L)), 23000L, 5000L, 2300L));
 
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
-        when(orderService.orderItems(anyLong(), any())).thenReturn(1L);
+        when(orderService.order(anyLong(), any())).thenReturn(1L);
 
         this.mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,7 +74,7 @@ class OrderApiControllerTest {
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].orderId").exists())
-                .andExpect(jsonPath("$[*].[]orderInfo[*].productId").exists())
+                .andExpect(jsonPath("$[*].orderInfo[*].productId").exists())
                 .andExpect(jsonPath("$[*].orderInfo[*].price").exists())
                 .andExpect(jsonPath("$[*].orderInfo[*].name").exists())
                 .andExpect(jsonPath("$[*].orderInfo[*].imageUrl").exists())

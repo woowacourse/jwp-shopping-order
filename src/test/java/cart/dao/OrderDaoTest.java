@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.CartItem;
 import cart.domain.Order;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,15 +11,15 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static cart.ShoppingOrderFixture.*;
+import static cart.ShoppingOrderFixture.member1;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @ActiveProfiles("test")
 @JdbcTest
 class OrderDaoTest {
 
-    private static final Order CHICKEN_ORDER = new Order(member1, List.of(new CartItem(member1, chicken)), 10000L, 5000L, 1000L);
-    private static final Order PIZZA_ORDER = new Order(member1, List.of(new CartItem(member1, pizza)), 13000L, 0L, 1300L);
+    private static final Order CHICKEN_ORDER = new Order(member1,10000L, 5000L, 1000L);
+    private static final Order PIZZA_ORDER = new Order(member1, 13000L, 0L, 1300L);
 
     private OrderDao orderDao;
 

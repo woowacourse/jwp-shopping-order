@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.application.PointService;
 import cart.dao.MemberDao;
-import cart.domain.Member;
 import cart.dto.PointResponse;
 import cart.ui.PointApiController;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +38,7 @@ class PointApiControllerTest {
         when(memberDao.getMemberByEmail("a@a.com")).thenReturn(member1);
         when(pointService.findPointByMemberId(any())).thenReturn(PointResponse.from(1000L));
 
-        this.mockMvc.perform(get("/points")
+        this.mockMvc.perform(get("/point")
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("point").exists());

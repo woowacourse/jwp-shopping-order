@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
-import static cart.ShoppingOrderFixture.salad;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;

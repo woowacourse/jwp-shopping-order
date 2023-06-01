@@ -4,13 +4,11 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderInfoDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderInfo;
+import cart.domain.*;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,28 +28,34 @@ public class OrderService {
         this.orderInfoDao = orderInfoDao;
     }
 
-    public Long orderItems(Long memberId, OrderRequest orderRequest) {
+    @Transactional
+    public Long order(Long memberId, OrderRequest orderRequest) {
+        OrderManager orderManager = new OrderManager(orderRequest.getOrder()
+                .stream()
+                .map(cartItemDao::findById)
+                .collect(Collectors.toList()));
+
         Order order = new Order(memberDao.getMemberById(memberId),
-                orderRequest.getOrder()
-                        .stream()
-                        .map(cartItemDao::findById)
-                        .collect(Collectors.toList()),
                 orderRequest.getOriginalPrice(),
                 orderRequest.getUsedPoint(),
                 orderRequest.getPointToAdd());
 
-        Long orderId = orderDao.save(order);
+        orderManager.validateOrder(order);
+        order.applyPoint();
+        return persistOrderData(orderRequest, orderManager, order);
+    }
 
-        for (CartItem cartItem : order.getCartItems()) {
+    public Long persistOrderData(OrderRequest orderRequest, OrderManager orderManager, Order order) {
+        Long orderId = orderDao.save(order);
+        for (CartItem cartItem : orderManager.getCartItems()) {
             OrderInfo orderInfo = new OrderInfo(orderId, cartItem.getProduct(), cartItem.getQuantity());
             orderInfoDao.save(orderInfo);
         }
 
-        memberDao.updateMember(order.getMember());
-
         for (Long cartItemId : orderRequest.getOrder()) {
             cartItemDao.deleteById(cartItemId);
         }
+        memberDao.updateMember(order.getMember());
 
         return orderId;
     }
