@@ -1,7 +1,8 @@
-package cart.domain.orderproduct;
+package cart.domain.order;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
+import cart.exception.authorization.OrderException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -29,6 +30,12 @@ public class Order {
         this.usedPoint = usedPoint;
         this.deliveryFee = deliveryFee;
         this.orderedAt = orderedAt;
+    }
+
+    public void checkOwner(final Member member) {
+        if (!Objects.equals(this.member, member)) {
+            throw new OrderException(member.getEmail());
+        }
     }
 
     public Long getId() {

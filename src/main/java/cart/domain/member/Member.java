@@ -51,8 +51,16 @@ public class Member {
         return id;
     }
 
+    public MemberEmail getEmail() {
+        return email;
+    }
+
     public String getEmailValue() {
         return email.getEmail();
+    }
+
+    public MemberPassword getPassword() {
+        return password;
     }
 
     public String getPasswordValue() {

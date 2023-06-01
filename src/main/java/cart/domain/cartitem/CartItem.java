@@ -2,7 +2,7 @@ package cart.domain.cartitem;
 
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.exception.CartItemException;
+import cart.exception.authorization.CartItemException;
 
 import java.util.Objects;
 
@@ -35,13 +35,13 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public void checkOwner(Member member) {
+    public void checkOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new CartItemException(member.getEmail());
         }
     }
 
-    public CartItem changeQuantity(int quantity) {
+    public CartItem updateQuantity(int quantity) {
         return new CartItem(id, member, product, quantity);
     }
 

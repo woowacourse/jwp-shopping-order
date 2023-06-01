@@ -3,8 +3,8 @@ package cart.application;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
-import cart.domain.orderproduct.Order;
-import cart.domain.orderproduct.OrderProduct;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderProductDto;
 import cart.dto.OrderRequest;
@@ -38,20 +38,20 @@ public class OrderService {
     @Transactional
     public Long order(final Member member, final OrderRequest request) {
         final Member findMember = memberRepository.findByEmail(member.getEmailValue());
-        final CartItems cartItems = new CartItems(member, cartItemRepository.findAllByIds(request.getCartItemIds()));
+        final CartItems cartItems = new CartItems(cartItemRepository.findAllByIds(request.getCartItemIds()));
+        cartItems.checkOwner(findMember);
         final int totalPrice = cartItems.getTotalPrice();
         if (totalPrice < request.getPoint()) {
             throw new InvalidPointUseException(totalPrice, request.getPoint());
         }
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
         memberRepository.save(updatedMember);
-        // TODO : 소유권 확인, 없는 cartItem에 대한 주문 요청
-
         return orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
     }
 
-    public OrderDetailResponse getOrderDetail(final Long orderId) {
+    public OrderDetailResponse getOrderDetail(final Member member, final Long orderId) {
         final Order order = orderRepository.findById(orderId);
+        order.checkOwner(member);
         final List<OrderProduct> orderProducts = orderRepository.findAllByOrderId(orderId);
 
         return getOrderDetailResponse(order, orderProducts);
@@ -59,11 +59,11 @@ public class OrderService {
 
     public List<OrderDetailResponse> getAllOrderDetails(final Member member) {
         final List<Order> orders = orderRepository.findAllByMemberId(member.getId());
+        orders.forEach(order -> order.checkOwner(member));
         final List<OrderDetailResponse> result = new ArrayList<>();
         for (Order order : orders) {
             final List<OrderProduct> orderProducts = orderRepository.findAllByOrderId(order.getId());
-            final OrderDetailResponse orderDetailResponse = getOrderDetailResponse(order, orderProducts);
-            result.add(orderDetailResponse);
+            result.add(getOrderDetailResponse(order, orderProducts));
         }
         return result;
     }

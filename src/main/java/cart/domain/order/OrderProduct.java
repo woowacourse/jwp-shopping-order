@@ -1,4 +1,4 @@
-package cart.domain.orderproduct;
+package cart.domain.order;
 
 import cart.domain.cartitem.Quantity;
 import cart.domain.product.ProductImageUrl;

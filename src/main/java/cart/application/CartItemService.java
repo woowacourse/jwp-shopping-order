@@ -31,11 +31,10 @@ public class CartItemService {
         return cartItemRepository.findAllByMemberId(member.getId());
     }
 
-    // TODO : 전체적으로 소유권은 체크해줬고, 해당 카트 아이템이 실제로 존재하는지 체크는 하지 않음
     @Transactional
     public Long addCartItem(final Member member, final CartItemRequest request) {
         final Product product = productRepository.findById(request.getProductId());
-        final CartItems cartItems = new CartItems(member, cartItemRepository.findAllByMemberId(member.getId()));
+        final CartItems cartItems = new CartItems(cartItemRepository.findAllByMemberId(member.getId()));
         final Optional<CartItem> cartItemOptional = cartItems.findProduct(product);
         if (cartItemOptional.isEmpty()) {
             return cartItemRepository.save(new CartItem(member, product));
@@ -56,7 +55,7 @@ public class CartItemService {
             cartItemRepository.delete(cartItem);
             return;
         }
-        final CartItem updatedCartItem = cartItem.changeQuantity(request.getQuantity());
+        final CartItem updatedCartItem = cartItem.updateQuantity(request.getQuantity());
         cartItemRepository.save(updatedCartItem);
     }
 

@@ -7,9 +7,9 @@ import cart.dao.ProductDao;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
-import cart.domain.orderproduct.DeliveryFee;
-import cart.domain.orderproduct.Order;
-import cart.domain.orderproduct.OrderProduct;
+import cart.domain.order.DeliveryFee;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
 import cart.domain.product.Product;
 import cart.exception.notfound.OrderNotFoundException;
 import org.springframework.stereotype.Repository;
@@ -44,9 +44,9 @@ public class OrderRepository {
         return orderId;
     }
 
-    public Order findById(final Long id) {
-        return orderDao.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException(id));
+    public Order findById(final Long orderId) {
+        return orderDao.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
     public List<OrderProduct> findAllByOrderId(final Long orderId) {

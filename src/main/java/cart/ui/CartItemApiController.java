@@ -30,6 +30,13 @@ public class CartItemApiController {
         this.cartItemService = cartItemService;
     }
 
+    @PostMapping
+    public ResponseEntity<Void> addCartItems(Member member,
+                                             @RequestBody CartItemRequest request) {
+        final Long cartItemId = cartItemService.addCartItem(member, request);
+        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
+    }
+
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(final Member member) {
         final List<CartItemResponse> cartItemResponses = cartItemService.getCartItemsByMember(member)
@@ -37,13 +44,6 @@ public class CartItemApiController {
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(cartItemResponses);
-    }
-
-    @PostMapping
-    public ResponseEntity<Void> addCartItems(Member member,
-                                             @RequestBody CartItemRequest request) {
-        final Long cartItemId = cartItemService.addCartItem(member, request);
-        return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
     @PatchMapping("/{cartItemId}")

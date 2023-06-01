@@ -36,7 +36,7 @@ public class OrderApiController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDetailResponse> orderDetail(Member member,
                                                            @PathVariable Long orderId) {
-        final OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
+        final OrderDetailResponse orderDetail = orderService.getOrderDetail(member, orderId);
         return ResponseEntity.ok(orderDetail);
     }
 

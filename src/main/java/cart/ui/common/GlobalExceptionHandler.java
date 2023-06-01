@@ -1,9 +1,9 @@
 package cart.ui.common;
 
 import cart.dto.ErrorResponse;
-import cart.exception.CartItemException;
 import cart.exception.GlobalException;
-import cart.exception.authorization.AuthenticationException;
+import cart.exception.authentication.AuthenticationException;
+import cart.exception.authorization.AuthorizationException;
 import cart.exception.notfound.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +24,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationException(final AuthorizationException e) {
+        log.info("Exception from handleAuthorizationException = ", e);
+        final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(GlobalException.class)

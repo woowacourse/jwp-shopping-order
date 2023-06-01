@@ -1,4 +1,4 @@
-package cart.exception.authorization;
+package cart.exception.authentication;
 
 public class PasswordNotMatchException extends AuthenticationException {
 

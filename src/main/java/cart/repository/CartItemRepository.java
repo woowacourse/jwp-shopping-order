@@ -2,6 +2,7 @@ package cart.repository;
 
 import cart.dao.CartItemDao;
 import cart.domain.cartitem.CartItem;
+import cart.exception.InvalidCartItemsException;
 import cart.exception.notfound.CartItemNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +36,11 @@ public class CartItemRepository {
     }
 
     public List<CartItem> findAllByIds(final List<Long> ids) {
-        return cartItemDao.findAllByIds(ids);
+        final List<CartItem> cartItems = cartItemDao.findAllByIds(ids);
+        if (ids.size() != cartItems.size()) {
+            throw new InvalidCartItemsException(ids);
+        }
+        return cartItems;
     }
 
     public void delete(final CartItem cartItem) {

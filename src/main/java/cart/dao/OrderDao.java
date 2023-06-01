@@ -2,8 +2,8 @@ package cart.dao;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
-import cart.domain.orderproduct.DeliveryFee;
-import cart.domain.orderproduct.Order;
+import cart.domain.order.DeliveryFee;
+import cart.domain.order.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
