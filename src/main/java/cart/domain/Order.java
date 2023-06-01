@@ -15,7 +15,7 @@ public class Order {
     private final Money earnedPoints;
     private final LocalDateTime orderDate;
 
-    public Order(List<OrderItem> orderItems, Long memberId, Money usedPoints, Money earnedPoints,
+    private Order(List<OrderItem> orderItems, Long memberId, Money usedPoints, Money earnedPoints,
             LocalDateTime orderDate) {
         this(null, orderItems, memberId, usedPoints, earnedPoints, orderDate);
     }
@@ -39,6 +39,11 @@ public class Order {
         Money earnedPoints = pointEarnPolicy.calculateEarnPoints(totalPrice);
 
         return new Order(orderItems, memberId, usedPoints, earnedPoints, LocalDateTime.now());
+    }
+
+    public static Order of(Long id, List<OrderItem> orderItems, Long memberId, Money usedPoints, Money earnedPoints,
+            LocalDateTime orderDate) {
+        return new Order(id, orderItems, memberId, usedPoints, earnedPoints, orderDate);
     }
 
     private static Money calculateTotalPrice(List<OrderItem> orderItems) {
