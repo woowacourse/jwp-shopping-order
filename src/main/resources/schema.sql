@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `order`
     member_id     BIGINT NOT NULL,
     total_price   INT    NOT NULL,
     payment_price INT    NOT NULL,
-    point         INT      DEFAULT 0,
+    totalPoint         INT      DEFAULT 0,
     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

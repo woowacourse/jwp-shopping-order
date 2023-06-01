@@ -19,6 +19,10 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public int calculatePriceBy(final int quantity) {
+        return quantity * price;
+    }
+
     public Long getId() {
         return id;
     }
