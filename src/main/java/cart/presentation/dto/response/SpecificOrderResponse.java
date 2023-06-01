@@ -5,15 +5,15 @@ import java.util.List;
 public class SpecificOrderResponse {
 
     private final Long orderId;
-    private final List<OrderInfo> orderInfo;
+    private final List<OrderDto> orderDto;
     private final Integer originalPrice;
     private final Integer usedPoint;
     private final Integer pointToAdd;
 
-    public SpecificOrderResponse(Long orderId, List<OrderInfo> orderInfo,
+    public SpecificOrderResponse(Long orderId, List<OrderDto> orderDto,
                                  Integer originalPrice, Integer usedPoint, Integer pointToAdd) {
         this.orderId = orderId;
-        this.orderInfo = orderInfo;
+        this.orderDto = orderDto;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
@@ -23,8 +23,8 @@ public class SpecificOrderResponse {
         return orderId;
     }
 
-    public List<OrderInfo> getOrderInfo() {
-        return orderInfo;
+    public List<OrderDto> getOrderInfo() {
+        return orderDto;
     }
 
     public Integer getOriginalPrice() {

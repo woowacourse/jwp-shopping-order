@@ -1,6 +1,6 @@
 package cart.presentation.dto.response;
 
-public class OrderInfo {
+public class OrderDto {
 
     private final Long productId;
     private final Integer price;
@@ -8,7 +8,7 @@ public class OrderInfo {
     private final String imageUrl;
     private final Integer quantity;
 
-    public OrderInfo(Long productId, Integer price, String name, String imageUrl, Integer quantity) {
+    public OrderDto(Long productId, Integer price, String name, String imageUrl, Integer quantity) {
         this.productId = productId;
         this.price = price;
         this.name = name;

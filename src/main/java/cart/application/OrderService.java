@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.application.domain.OrderInfo;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberRepository;
 import cart.application.repository.OrderRepository;
@@ -7,7 +8,7 @@ import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 import cart.application.domain.Order;
 import cart.application.domain.Product;
-import cart.presentation.dto.response.OrderInfo;
+import cart.presentation.dto.response.OrderDto;
 import cart.presentation.dto.response.OrderResponse;
 import cart.presentation.dto.request.OrderRequest;
 import cart.presentation.dto.response.SpecificOrderResponse;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+
+    // TODO: MEMBER 검증로직 추가(service에서 할지, resolver에서 할지)
 
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
@@ -32,20 +35,34 @@ public class OrderService {
     }
 
     public void issue(Member member, OrderRequest request) {
-        List<CartItem> cartItems = makeCartItemsFromId(request);
-        Order order = new Order(null, cartItems, request.getOriginalPrice(),
-                request.getUsedPoint(), request.getPointToAdd());
+        Order order = new Order(null, member, makeOrderInfoFromRequest(request),
+                request.getOriginalPrice(),
+                request.getUsedPoint(),
+                request.getPointToAdd());
+
         orderRepository.insert(order);
-        subtractPoint(member, request.getUsedPoint());
+        subtractUserPoint(member, request.getUsedPoint());
     }
 
-    private List<CartItem> makeCartItemsFromId(OrderRequest request) {
-        return request.getOrder().stream()
+    private List<OrderInfo> makeOrderInfoFromRequest(OrderRequest request) {
+        return makeCartItemsFromIds(request.getOrder()).stream()
+                .map(this::makeCartItemToOrderInfo)
+                .collect(Collectors.toList());
+    }
+
+    private List<CartItem> makeCartItemsFromIds(List<Long> ids) {
+        return ids.stream()
                 .map(cartItemRepository::findById)
                 .collect(Collectors.toList());
     }
 
-    private void subtractPoint(Member member, int usedPoint) {
+    private OrderInfo makeCartItemToOrderInfo(CartItem cartItem) {
+        Product product = cartItem.getProduct();
+        return new OrderInfo(null, product, product.getName(), product.getPrice(),
+                product.getImageUrl(), cartItem.getQuantity());
+    }
+
+    private void subtractUserPoint(Member member, int usedPoint) {
         if (member.getPoint() - usedPoint < 0) {
             throw new PointExceedException();
         }
@@ -57,25 +74,25 @@ public class OrderService {
     public List<OrderResponse> getAllOrders(Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         return orders.stream()
-                .map(order -> new OrderResponse(order.getId(), mapCartItemsToOrderInfo(order.getCartItems())))
+                .map(order -> new OrderResponse(order.getId(), mapOrderInfoToOrderDto(order.getOrderInfo())))
                 .collect(Collectors.toList());
     }
 
-    private List<OrderInfo> mapCartItemsToOrderInfo(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(this::makeOrderInfo)
+    private List<OrderDto> mapOrderInfoToOrderDto(List<OrderInfo> orderInfo) {
+        return orderInfo.stream()
+                .map(this::makeOrderDto)
                 .collect(Collectors.toList());
     }
 
-    private OrderInfo makeOrderInfo(CartItem cartItem) {
-        Product product = cartItem.getProduct();
-        return new OrderInfo(product.getId(), product.getPrice(), product.getName(),
-                product.getImageUrl(),cartItem.getQuantity());
+    private OrderDto makeOrderDto(OrderInfo orderInfo) {
+        Product product = orderInfo.getProduct();
+        return new OrderDto(product.getId(), product.getPrice(), product.getName(),
+                product.getImageUrl(), orderInfo.getQuantity());
     }
 
     public SpecificOrderResponse getSpecificOrder(Member member, Long orderId) {
         Order order = orderRepository.findById(orderId);
-        return new SpecificOrderResponse(order.getId(), mapCartItemsToOrderInfo(order.getCartItems()),
+        return new SpecificOrderResponse(order.getId(), mapOrderInfoToOrderDto(order.getOrderInfo()),
                 order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());
     }
 }
