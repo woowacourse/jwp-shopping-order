@@ -1,6 +1,9 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
+import cart.exception.InvalidOrderCheckedException;
+import cart.exception.InvalidOrderProductException;
+import cart.exception.InvalidOrderQuantityException;
 
 import java.util.Objects;
 
@@ -26,24 +29,12 @@ public class CartItem {
         this.checked = checked;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
     public boolean isChecked() {
         return checked;
+    }
+
+    public boolean isSameId(Long otherId) {
+        return id.equals(otherId);
     }
 
     public void checkOwner(Member member) {
@@ -58,6 +49,47 @@ public class CartItem {
 
     public void changeChecked(final boolean checked) {
         this.checked = checked;
+    }
+
+    public void validateSameItems(final CartItem other) {
+        validateSameProduct(other);
+        validateSameQuantity(other);
+        validateSameChecked(other);
+    }
+
+
+    private void validateSameProduct(final CartItem other) {
+        if (!product.equals(other.product)) {
+            throw new InvalidOrderProductException();
+        }
+    }
+
+    private void validateSameQuantity(final CartItem other) {
+        if (quantity != other.quantity) {
+            throw new InvalidOrderQuantityException();
+        }
+    }
+
+    private void validateSameChecked(final CartItem other) {
+        if (checked != other.checked) {
+            throw new InvalidOrderCheckedException();
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     @Override

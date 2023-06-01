@@ -2,6 +2,7 @@ package cart.dto.request;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderCreateRequest {
 
@@ -19,5 +20,11 @@ public class OrderCreateRequest {
 
     public List<CartItemRequest> getCartItems() {
         return new ArrayList<>(cartItems);
+    }
+
+    public List<Long> getCartItemIds() {
+        return cartItems.stream()
+                .map(CartItemRequest::getId)
+                .collect(Collectors.toList());
     }
 }

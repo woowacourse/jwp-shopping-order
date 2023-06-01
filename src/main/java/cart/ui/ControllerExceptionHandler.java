@@ -40,4 +40,10 @@ public class ControllerExceptionHandler {
         logger.error("Error from CustomApiException : ", e);
         return ResponseEntity.badRequest().body(e.getClass().getSimpleName());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Void> handleUnexpectedException(Exception exception) {
+        logger.error("Error from unexpectedException", exception);
+        return ResponseEntity.internalServerError().build();
+    }
 }
