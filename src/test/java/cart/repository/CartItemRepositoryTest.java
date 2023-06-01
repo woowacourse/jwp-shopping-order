@@ -1,119 +1,85 @@
 package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
-import cart.domain.CartItemEntity;
-import cart.domain.Member;
-import cart.domain.Product;
 import cart.domain.Quantity;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import cart.exception.CartItemNotFoundException;
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
-@ExtendWith(MockitoExtension.class)
-class CartItemRepositoryTest {
+class CartItemRepositoryTest extends RepositoryTest {
 
-    private static final Member dummyMember = new Member(1L, "email1", "pw1", 1);
-    private static final Product dummyProduct = new Product(1L, "name1", 1, "imageUrl1", 1);
-    private static final Quantity dummyQuantity = new Quantity(1);
-
-    @Mock
-    private MemberDao memberDao;
-    @Mock
-    private ProductDao productDao;
-    @Mock
-    private CartItemDao cartItemDao;
-    @InjectMocks
-    private CartItemRepository repository;
+    private long saveCartItemAndGetId() {
+        return cartItemRepository.save(dummyCartItem);
+    }
 
     @Test
     void 새로운_객체를_추가한다() {
         // given
-        CartItem cartItem = new CartItem(dummyMember, dummyProduct, dummyQuantity);
+        insertDummyMemberAndProduct();
 
         // when
-        repository.add(cartItem);
+        Long savedId = cartItemRepository.save(dummyCartItem);
 
         // then
-        verify(cartItemDao).insert(any(CartItemEntity.class));
+        assertThat(savedId).isEqualTo(savedId);
     }
 
     @Test
     void ID로_객체를_조회한다() {
         // given
-        long id = 1L;
-
-        CartItemEntity cartItemEntity = new CartItemEntity(1L, 1L, 1L, 1);
-        when(cartItemDao.findById(id))
-                .thenReturn(cartItemEntity);
-        when(memberDao.findById(id))
-                .thenReturn(dummyMember);
-        when(productDao.findById(id))
-                .thenReturn(dummyProduct);
+        insertDummyMemberAndProduct();
+        long savedId = saveCartItemAndGetId();
 
         // when
-        CartItem cartItem = repository.findById(id);
+        CartItem result = cartItemRepository.findById(savedId);
 
         // then
-        CartItem expect = new CartItem(id, dummyMember, dummyProduct, dummyQuantity);
-
-        assertThat(cartItem).isEqualTo(expect);
+        assertThat(result).isEqualTo(dummyCartItem);
     }
 
     @Test
     void 회원ID로_객체를_조회한다() {
         // given
-        long memberId = dummyMember.getId();
-
-        List<CartItemEntity> cartItemEntities = List.of(new CartItemEntity(1L, dummyMember.getId(), dummyProduct.getId(), 1));
-        when(cartItemDao.findByMemberId(anyLong()))
-                .thenReturn(cartItemEntities);
+        insertDummyMemberAndProduct();
+        saveCartItemAndGetId();
 
         // when
-        List<CartItem> result = repository.findByMemberId(memberId);
+        List<CartItem> result = cartItemRepository.findByMemberId(dummyMember.getId());
 
         // then
-        assertThat(result).hasSize(1);
+        assertThat(result).contains(dummyCartItem);
     }
 
     @Test
     void 새로운_객체로_수정한다() {
         // given
-        long id = 1L;
-        int quantity = 10;
-        CartItem cartItem = new CartItem(id, dummyMember, dummyProduct, dummyQuantity);
-        CartItemEntity cartItemEntity = new CartItemEntity(id, dummyMember.getId(), dummyProduct.getId(), quantity);
+        insertDummyMemberAndProduct();
+        long savedId = saveCartItemAndGetId();
+
+        CartItem newCartItem = new CartItem(savedId, dummyMember, dummyProduct, new Quantity(99));
 
         // when
-        repository.update(cartItem);
+        cartItemRepository.update(newCartItem);
 
         // then
-        verify(cartItemDao).update(cartItemEntity);
+        CartItem result = cartItemRepository.findById(savedId);
+        assertThat(result.getQuantityValue()).isEqualTo(99);
     }
 
     @Test
     void ID로_저장된_객체를_삭제한다() {
         // given
-        long id = 1L;
-        int quantity = 10;
-        new CartItem(id, dummyMember, dummyProduct, dummyQuantity);
-        new CartItemEntity(id, dummyMember.getId(), dummyProduct.getId(), quantity);
+        insertDummyMemberAndProduct();
+        long savedId = saveCartItemAndGetId();
 
         // when
-        repository.deleteById(id);
+        cartItemRepository.deleteById(savedId);
 
         // then
-        verify(cartItemDao).deleteById(id);
+        assertThatThrownBy(() -> cartItemRepository.findById(savedId))
+                .isInstanceOf(CartItemNotFoundException.class);
     }
 }
