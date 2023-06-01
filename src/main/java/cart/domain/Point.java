@@ -22,12 +22,27 @@ public class Point {
         return new Point(id, value, comment, createAt, expiredAt);
     }
 
-    public static Point of(int value, String comment, PointExpirePolicy pointExpirePolicy) {
-        LocalDate createAt = LocalDate.now();
-        return new Point(null, value, comment, createAt, calculateExpiredAt(createAt, pointExpirePolicy));
+    public static Point of(int value, String comment, LocalDate expiredAt) {
+        return new Point(null, value, comment, LocalDate.now(), expiredAt);
     }
 
-    private static LocalDate calculateExpiredAt(LocalDate createAt, PointExpirePolicy pointExpirePolicy) {
-        return pointExpirePolicy.calculateExpireDate(createAt);
+    public Long getId() {
+        return id;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public LocalDate getCreateAt() {
+        return createAt;
+    }
+
+    public LocalDate getExpiredAt() {
+        return expiredAt;
     }
 }

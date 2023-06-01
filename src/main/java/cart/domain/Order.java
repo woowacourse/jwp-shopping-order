@@ -7,32 +7,32 @@ public class Order {
 
     private Long id;
     private final OrderStatus orderStatus;
-    private final int savedPoint;
     private final int usedPoint;
     private final List<OrderItem> orderItems;
     private final Member member;
 
     public Order(int usedPoint, List<OrderItem> orderItems, Member member) {
-        this.savedPoint = calculateSavedPoint(orderItems);
         this.orderStatus = OrderStatus.PENDING;
         this.usedPoint = usedPoint;
         this.orderItems = orderItems;
         this.member = member;
     }
 
-    public Order(Long id, OrderStatus orderStatus, int savedPoint, int usedPoint, List<OrderItem> orderItems, Member member) {
+    public Order(Long id, OrderStatus orderStatus, int usedPoint, List<OrderItem> orderItems, Member member) {
         this.id = id;
         this.orderStatus = orderStatus;
-        this.savedPoint = savedPoint;
         this.usedPoint = usedPoint;
         this.orderItems = orderItems;
         this.member = member;
     }
 
-    private static int calculateSavedPoint(List<OrderItem> orderItems) {
-        return orderItems.stream()
+    public Point calculateSavedPoint(PointAccumulationPolicy pointAccumulationPolicy) {
+        int totalCost = orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
-                .sum();  // 포인트 정책 반영
+                .sum() - usedPoint;
+
+        return pointAccumulationPolicy
+                .calculateAccumulationPoint(totalCost);
     }
 
     public Long getId() {
@@ -41,10 +41,6 @@ public class Order {
 
     public OrderStatus getOrderStatus() {
         return orderStatus;
-    }
-
-    public int getSavedPoint() {
-        return savedPoint;
     }
 
     public int getUsedPoint() {
@@ -64,12 +60,12 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return savedPoint == order.savedPoint && usedPoint == order.usedPoint && Objects.equals(id, order.id) && orderStatus == order.orderStatus && Objects.equals(orderItems, order.orderItems) && Objects.equals(member, order.member);
+        return usedPoint == order.usedPoint && Objects.equals(id, order.id) && orderStatus == order.orderStatus && Objects.equals(orderItems, order.orderItems) && Objects.equals(member, order.member);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderStatus, savedPoint, usedPoint, orderItems, member);
+        return Objects.hash(id, orderStatus, usedPoint, orderItems, member);
     }
 
     @Override
@@ -77,7 +73,6 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", orderStatus=" + orderStatus +
-                ", savedPoint=" + savedPoint +
                 ", usedPoint=" + usedPoint +
                 ", orderItems=" + orderItems +
                 ", member=" + member +
