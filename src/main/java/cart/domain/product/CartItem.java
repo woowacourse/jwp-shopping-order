@@ -23,6 +23,10 @@ public class CartItem {
         this(null, new Quantity(quantity), product, member.getId());
     }
 
+    public CartItem(final Member member, final Product product) {
+        this(null, new Quantity(1), product, member.getId());
+    }
+
     public Long getId() {
         return id;
     }

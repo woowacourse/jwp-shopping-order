@@ -43,7 +43,7 @@ public class TestDataFixture {
             = new Coupon(null, "5000원 할인 쿠폰", 50, CouponType.CONSTANT_DISCOUNT);
 
     //AuthHeader
-    public static final String AUTH_HEADER =
+    public static final String MEMBER_1_AUTH_HEADER =
             "Basic " + new String(getEncoder().encode(
                     String.format("%s:%s", MEMBER_1.getEmail(), MEMBER_1.getPassword()).getBytes()));
 
