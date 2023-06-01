@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.auth;
 
 import cart.Repository.MemberRepository;
 import cart.domain.Member.Email;
@@ -41,8 +41,15 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String decodedString = new String(decodedBytes);
 
         String[] credentials = decodedString.split(":");
-        Email email = new Email(credentials[0]);
-        Password password = new Password(credentials[1]);
+        String credentialEmail = credentials[0];
+        String credentialPassword = credentials[1];
+
+        if(credentialEmail.isBlank() || credentialPassword.isBlank()){
+            throw new AuthenticationException();
+        }
+
+        Email email = new Email(credentialEmail);
+        Password password = new Password(credentialPassword);
 
         // 본인 여부 확인
         Member member = memberRepository.getMemberByEmail(email);
