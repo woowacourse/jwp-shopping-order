@@ -33,15 +33,14 @@ public class OrderService {
     }
 
     public Long order(final OrderRequest request) {
-        final List<Long> cartItemIds = request.getCartItemIds();
-        final CartItems cartItems = cartItemRepository.findAllByCartItemIds(cartItemIds);
-        if (cartItems.isNotSameSize(cartItemIds.size())) {
+        final CartItems cartItems = cartItemRepository.findAllByCartItemIds(request.getCartItemIds());
+        if (cartItems.isNotSameSize(request.getCartItemIds().size())) {
             throw new NoSuchElementException("존재하지 않는 상품이 포함되어 있습니다.");
         }
 
         Coupon coupon = checkCoupon(request, cartItems.getMemberId());
 
-        cartItemRepository.deleteAllByIds(cartItemIds);
+        cartItemRepository.deleteAllByIds(request.getCartItemIds());
 
         final List<OrderItem> orderItems = cartItems.getCartItems().stream()
                 .map(it -> new OrderItem(it.getProduct(), it.getQuantity()))

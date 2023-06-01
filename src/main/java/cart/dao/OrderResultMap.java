@@ -7,13 +7,15 @@ import java.time.LocalDateTime;
 public class OrderResultMap {
 
     private final Long orderId;
+    private final Long orderItemId;
     private final ProductEntity productEntity;
     private final LocalDateTime date;
     private final int quantity;
     private final int price;
 
-    public OrderResultMap(final Long orderId, final ProductEntity productEntity, final LocalDateTime date, final int quantity, final int price) {
+    public OrderResultMap(final Long orderId, final Long orderItemId, final ProductEntity productEntity, final LocalDateTime date, final int quantity, final int price) {
         this.orderId = orderId;
+        this.orderItemId = orderItemId;
         this.productEntity = productEntity;
         this.date = date;
         this.quantity = quantity;
@@ -22,6 +24,10 @@ public class OrderResultMap {
 
     public Long getOrderId() {
         return orderId;
+    }
+
+    public Long getOrderItemId() {
+        return orderItemId;
     }
 
     public ProductEntity getProductEntity() {

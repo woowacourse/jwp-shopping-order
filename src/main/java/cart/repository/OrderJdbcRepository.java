@@ -62,7 +62,7 @@ public class OrderJdbcRepository implements OrderRepository {
             for (OrderResultMap orderResultMap : orderResultMaps) {
                 final ProductEntity productEntity = orderResultMap.getProductEntity();
                 final Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
-                final OrderItem orderItem = new OrderItem(orderId, product, orderResultMap.getQuantity());
+                final OrderItem orderItem = new OrderItem(orderResultMap.getOrderItemId(), product, orderResultMap.getQuantity());
                 orderItems.add(orderItem);
             }
             final Order order = new Order(orderId, orderItems, null, null, orderResultMaps.get(0).getPrice(), orderResultMaps.get(0).getDate());
