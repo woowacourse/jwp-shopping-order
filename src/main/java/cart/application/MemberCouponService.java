@@ -4,6 +4,7 @@ import cart.dao.CouponRepository;
 import cart.dao.MemberCouponRepository;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
+import cart.domain.member.Member;
 import cart.dto.coupon.MemberCouponResponse;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +22,9 @@ public class MemberCouponService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
-    public void add(final Long memberId, final Long couponId) {
+    public void add(final Member member, final Long couponId) {
         Coupon coupon = couponRepository.findById(couponId);
-        memberCouponRepository.save(memberId, new MemberCoupon(coupon));
+        memberCouponRepository.save(new MemberCoupon(member, coupon));
     }
 
     public List<MemberCouponResponse> getMemberCoupons(final Long memberId) {

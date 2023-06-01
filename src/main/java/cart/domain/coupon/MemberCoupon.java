@@ -1,6 +1,5 @@
 package cart.domain.coupon;
 
-import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 
 import java.time.LocalDateTime;
@@ -8,7 +7,7 @@ import java.time.LocalDateTime;
 public class MemberCoupon {
 
     private Long id;
-    private Member member;
+    private final Member member;
     private final Coupon coupon;
     private final boolean isUsed;
     private final LocalDateTime issuedAt;
@@ -23,7 +22,8 @@ public class MemberCoupon {
         this.expiredAt = expiredAt;
     }
 
-    public MemberCoupon(final Coupon coupon) {
+    public MemberCoupon(final Member member, final Coupon coupon) {
+        this.member = member;
         this.coupon = coupon;
         this.isUsed = false;
         this.issuedAt = LocalDateTime.now();

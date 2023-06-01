@@ -21,9 +21,9 @@ public class MemberService {
 
     @Transactional
     public void add(final MemberRequest memberRequest) {
-        Member newMember = new Member(memberRequest.getName(), memberRequest.getPassword());
-        Long memberId = memberDao.addMember(newMember);
-        memberCouponService.add(memberId, 1L);
+        Long memberId = memberDao.addMember(new Member(memberRequest.getName(), memberRequest.getPassword()));
+        Member newMember = new Member(memberId, memberRequest.getName(), memberRequest.getPassword());
+        memberCouponService.add(new Member(memberId, newMember.getName(), newMember.getPassword()), 1L);
     }
 
     public TokenResponse generateMemberToken(final MemberRequest memberRequest) {

@@ -20,7 +20,7 @@ public class MemberCouponApiController {
 
     @PostMapping("/{couponId}")
     public ResponseEntity<Void> addMemberCoupon(final Member member, @PathVariable final Long couponId) {
-        memberCouponService.add(member.getId(), couponId);
+        memberCouponService.add(member, couponId);
         return ResponseEntity.ok().build();
     }
 
