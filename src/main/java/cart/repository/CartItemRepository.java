@@ -102,8 +102,7 @@ public class CartItemRepository {
         return new CartItem(cartItem.getId(), cartItem.getQuantity(), product, member);
     }
 
-    public void deleteOrderedCartItem(final List<Long> cartItemIds) {
-
+    public void deleteOrderedCartItem(List<Long> cartItemIds) {
         cartItemDao.deleteByIds(cartItemIds);
     }
 }

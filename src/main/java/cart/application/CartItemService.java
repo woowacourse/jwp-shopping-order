@@ -1,11 +1,15 @@
 package cart.application;
 
+import static cart.exception.ErrorMessage.INVALID_CART_ITEM_OWNER;
+
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.CartItemsDeleteRequest;
+import cart.exception.CartItemException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import java.util.List;
@@ -13,8 +17,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @Transactional(readOnly = true)
+@Service
 public class CartItemService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
@@ -54,10 +58,27 @@ public class CartItemService {
     }
 
     @Transactional
-    public void remove(Member member, Long id) {
+    public void removeCartItem(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
         cartItemRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void removeCartItems(Member member, CartItemsDeleteRequest cartItemsDeleteRequest) {
+        List<Long> cartItemIds = cartItemsDeleteRequest.getCartItemIds();
+        List<CartItem> cartItems = cartItemIds.stream()
+                .map(cartItemRepository::findById)
+                .collect(Collectors.toList());
+
+        boolean isNotOwner = cartItems.stream()
+                .anyMatch(cartItem -> !cartItem.isSameOwner(member));
+
+        if (isNotOwner) {
+            throw new CartItemException(INVALID_CART_ITEM_OWNER);
+        }
+
+        cartItemRepository.deleteOrderedCartItem(cartItemIds);
     }
 }

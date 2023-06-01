@@ -6,6 +6,9 @@ import static io.restassured.RestAssured.given;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
+import cart.dto.CartItemsDeleteRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -68,5 +71,19 @@ public class CartItemStep {
     public static Long 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(Member 멤버, Long 상품_ID) {
         var 응답 = 장바구니_상품_추가_요청(멤버, 상품_ID);
         return 헤더_ID_값_파싱(응답);
+    }
+
+    public static ExtractableResponse<Response> 장바구니_상품들_삭제_요청(
+            Member 멤버, CartItemsDeleteRequest 요청, ObjectMapper objectMapper
+    ) throws JsonProcessingException {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(멤버.getEmail(), 멤버.getPassword())
+                .body(objectMapper.writeValueAsString(요청))
+                .when()
+                .delete("/cart-items")
+                .then()
+                .log().all()
+                .extract();
     }
 }

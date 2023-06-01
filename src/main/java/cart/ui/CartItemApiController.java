@@ -5,8 +5,10 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.CartItemsDeleteRequest;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,8 +50,18 @@ public class CartItemApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
-        cartItemService.remove(member, id);
+    public ResponseEntity<Void> removeCartItem(Member member, @PathVariable Long id) {
+        cartItemService.removeCartItem(member, id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> removeCartItems(
+            Member member,
+            @Valid @RequestBody CartItemsDeleteRequest cartItemsDeleteRequest
+    ) {
+        cartItemService.removeCartItems(member, cartItemsDeleteRequest);
 
         return ResponseEntity.noContent().build();
     }

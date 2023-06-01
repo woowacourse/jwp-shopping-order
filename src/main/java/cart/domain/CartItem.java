@@ -42,6 +42,10 @@ public class CartItem {
         }
     }
 
+    public boolean isSameOwner(Member member) {
+        return this.member.equals(member);
+    }
+
     public CartItem changeQuantity(int quantity) {
         return new CartItem(id, quantity, product, member);
     }
