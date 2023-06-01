@@ -19,8 +19,8 @@ public class CartItem {
         this.memberId = memberId;
     }
 
-    public CartItem(final Member member, final Product product) {
-        this(null, new Quantity(1), product, member.getId());
+    public CartItem(final Integer quantity, final Member member, final Product product) {
+        this(null, new Quantity(quantity), product, member.getId());
     }
 
     public Long getId() {
