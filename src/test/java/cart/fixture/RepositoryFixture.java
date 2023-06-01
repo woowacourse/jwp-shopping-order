@@ -2,9 +2,12 @@ package cart.fixture;
 
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
+import cart.dao.OrderDao;
+import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
+import cart.repository.OrderRepository;
 import cart.repository.ProductRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -26,5 +29,12 @@ public class RepositoryFixture {
         MemberDao memberDao = new MemberDao(jdbcTemplate);
 
         return new MemberRepository(memberDao);
+    }
+
+    public static OrderRepository orderRepository(JdbcTemplate jdbcTemplate) {
+        OrderDao orderDao = new OrderDao(jdbcTemplate);
+        OrderItemDao orderItemDao = new OrderItemDao(jdbcTemplate);
+
+        return new OrderRepository(orderDao, orderItemDao);
     }
 }
