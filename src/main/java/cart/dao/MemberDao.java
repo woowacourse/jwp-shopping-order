@@ -77,12 +77,22 @@ public class MemberDao {
     }
 
     public List<MemberEntity> findAll() {
-        String sql = "SELECT * from member";
+        String sql = "SELECT * FROM member";
 
         try {
             return jdbcTemplate.query(sql, memberEntityRowMapper);
         } catch (EmptyResultDataAccessException e) {
             return Collections.emptyList();
+        }
+    }
+
+    public Optional<Integer> findPointById(Long memberId) {
+        String sql = "SELECT point FROM member WHERE id = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, memberId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 }

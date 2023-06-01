@@ -64,4 +64,9 @@ public class MemberRepository {
                 memberEntity.getPoint()
         );
     }
+
+    public int findPointByMember(Member member) {
+        return memberDao.findPointById(member.getId())
+                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+    }
 }

@@ -29,12 +29,14 @@ public class CartItemDao {
                 rs.getInt("cart_quantity"),
                 null, null
         );
+
         MemberEntity memberEntity = new MemberEntity(
                 rs.getLong("cart_member_id"),
                 rs.getString("member_email"),
                 null,
                 rs.getInt("member_point"),
                 null, null);
+
         ProductEntity productEntity = new ProductEntity(
                 rs.getLong("product_id"),
                 rs.getString("product_name"),
@@ -42,6 +44,7 @@ public class CartItemDao {
                 rs.getString("product_image_url"),
                 null, null
         );
+
         return new CartItemWithMemberAndProductEntity(cartItemEntity, memberEntity, productEntity);
     };
 
