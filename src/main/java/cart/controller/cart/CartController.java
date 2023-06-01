@@ -42,18 +42,18 @@ public class CartController {
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{cartItemId}")
     public ResponseEntity<Void> updateCartItemQuantity(@Auth final Member member,
-                                                       @PathVariable("id") final Long cartItemId,
+                                                       @PathVariable final Long cartItemId,
                                                        @RequestBody @Valid final CartItemQuantityUpdateRequest request) {
         cartService.updateQuantity(member, cartItemId, request);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{cartItemId}")
     public ResponseEntity<Void> removeCartItems(@Auth final Member member,
-                                                @PathVariable final Long id) {
-        cartService.remove(member, id);
+                                                @PathVariable final Long cartItemId) {
+        cartService.remove(member, cartItemId);
         return ResponseEntity.noContent().build();
     }
 }

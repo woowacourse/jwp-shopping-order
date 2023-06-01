@@ -36,7 +36,6 @@ public class PaymentController {
     @GetMapping("/coupons")
     public ResponseEntity<PaymentUsingCouponsResponse> applyCoupon(@OrderAuth final Member member,
                                                                    @RequestParam("couponsId") @Valid final List<Long> ids) {
-        // http://localhost:8080/payments/coupons?couponsId=1,2,3
         return ResponseEntity.ok(paymentService.applyCoupons(member, ids));
     }
 

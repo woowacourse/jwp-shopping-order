@@ -136,7 +136,7 @@ public class ProductControllerIntegrationTest {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .body(saleReq)
-                .when().post("/products/sales/" + id);
+                .when().post("/products/" + id + "/sales");
 
         response.then()
                 .statusCode(HttpStatus.CREATED.value())
@@ -156,7 +156,7 @@ public class ProductControllerIntegrationTest {
         Response response = given()
                 .contentType(ContentType.JSON)
                 .body(saleReq)
-                .when().delete("/products/sales/" + id);
+                .when().delete("/products/" + id + "/sales");
 
         response.then()
                 .statusCode(HttpStatus.OK.value())

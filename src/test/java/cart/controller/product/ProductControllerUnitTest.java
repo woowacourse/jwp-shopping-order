@@ -206,7 +206,7 @@ class ProductControllerUnitTest {
         when(productService.applySale(id, request)).thenReturn(1L);
 
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/products/sales/{id}", id)
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/products/" + id + "/sales")
                         .header("Authorization", "member")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)
@@ -220,7 +220,7 @@ class ProductControllerUnitTest {
                                 fieldWithPath("amount").description("10")
                         ),
                         responseHeaders(
-                                headerWithName("Location").description("/products/sales/{id}")
+                                headerWithName("Location").description("/products/" + id + "/sales")
                         )
 
                 ));
@@ -234,7 +234,7 @@ class ProductControllerUnitTest {
         when(productService.unapplySale(id)).thenReturn(id);
 
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/products/sales/{id}", id)
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/products/" + id + "/sales")
                         .header("Authorization", "member")
                 ).andExpect(status().isOk())
                 .andDo(customDocument("unapply_sale",
@@ -242,7 +242,7 @@ class ProductControllerUnitTest {
                                 headerWithName("Authorization").description("Basic auth credentials")
                         ),
                         responseHeaders(
-                                headerWithName("Location").description("/products/sales/{id}")
+                                headerWithName("Location").description("/products/" + id + "/sales")
                         )
 
                 ));

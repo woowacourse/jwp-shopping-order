@@ -34,8 +34,8 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAllProducts());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> findProductById(@PathVariable("id") final Long productId) {
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> findProductById(@PathVariable final Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 
@@ -45,28 +45,28 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable("id") final Long productId,
+    @PutMapping("/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable final Long productId,
                                               @RequestBody @Valid final ProductRequest productRequest) {
         productService.updateProduct(productId, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") final Long productId) {
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/sales/{id}")
-    public ResponseEntity<Void> applySale(@PathVariable("id") final Long productId,
+    @PostMapping("/{productId}/sales")
+    public ResponseEntity<Void> applySale(@PathVariable final Long productId,
                                           @RequestBody @Valid final SaleProductRequest request) {
         long id = productService.applySale(productId, request);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
-    @DeleteMapping("/sales/{id}")
-    public ResponseEntity<Void> unapplySale(@PathVariable("id") final Long productId) {
+    @DeleteMapping("/{productId}/sales")
+    public ResponseEntity<Void> unapplySale(@PathVariable final Long productId) {
         long id = productService.unapplySale(productId);
         return ResponseEntity.ok().location(URI.create("/products/" + id)).build();
     }
