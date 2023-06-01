@@ -15,6 +15,8 @@ import static org.mockito.Mockito.times;
 import cart.cartitem.domain.CartItem;
 import cart.cartitem.domain.CartItemRepository;
 import cart.common.execption.BaseExceptionType;
+import cart.coupon.domain.CouponRepository;
+import cart.coupon.domain.CouponValidator;
 import cart.member.domain.Member;
 import cart.order.application.dto.PlaceOrderCommand;
 import cart.order.domain.OrderRepository;
@@ -22,6 +24,7 @@ import cart.order.domain.OrderValidator;
 import cart.order.domain.service.OrderPlaceService;
 import cart.order.exception.OrderException;
 import cart.product.domain.Product;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -35,11 +38,15 @@ class OrderServiceTest {
 
     private final OrderRepository orderRepository = mock(OrderRepository.class);
     private final CartItemRepository cartItemRepository = mock(CartItemRepository.class);
+    private final CouponRepository couponRepository = mock(CouponRepository.class);
     private final OrderValidator orderValidator = mock(OrderValidator.class);
-    private final OrderPlaceService orderPlaceService =
-            new OrderPlaceService(orderRepository, cartItemRepository, orderValidator);
 
-    private final OrderService orderService = new OrderService(orderRepository, orderPlaceService, cartItemRepository);
+    private final CouponValidator couponValidator = mock(CouponValidator.class);
+
+    private final OrderPlaceService orderPlaceService =
+            new OrderPlaceService(orderRepository, cartItemRepository, orderValidator, couponValidator);
+
+    private final OrderService orderService = new OrderService(orderPlaceService, cartItemRepository, couponRepository);
 
     @Test
     void 상품을_주문한다() {
@@ -47,7 +54,7 @@ class OrderServiceTest {
         doNothing().when(orderValidator).validate(eq(1L), any());
         PlaceOrderCommand command = new PlaceOrderCommand(1L, List.of(
                 1L, 2L
-        ));
+        ), Collections.emptyList());
         Product product1 = new Product("말랑", 1000, "image");
         Product product2 = new Product("코코닥", 2000, "image2");
         Member member = new Member(1L, "email", "1234");
@@ -71,7 +78,7 @@ class OrderServiceTest {
                 .given(orderValidator).validate(eq(1L), any());
         PlaceOrderCommand command = new PlaceOrderCommand(1L, List.of(
                 1L, 2L
-        ));
+        ), Collections.emptyList());
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
@@ -88,7 +95,7 @@ class OrderServiceTest {
         doNothing().when(orderValidator).validate(eq(1L), any());
         PlaceOrderCommand command = new PlaceOrderCommand(1L, List.of(
                 1L, 2L
-        ));
+        ), Collections.emptyList());
         Product product1 = new Product("말랑", 1000, "image");
         Product product2 = new Product("코코닥", 2000, "image2");
         Member member = new Member(1L, "email", "1234");

@@ -11,16 +11,18 @@ import cart.order.presentation.dto.PlaceOrderRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderSteps {
 
     public static ExtractableResponse<Response> 상품_주문_요청(
             Member 회원,
-            Long... 장바구니_상품_ID들
+            List<Long> 장바구니_상품_ID들,
+            List<Long> 쿠폰_ID들
     ) {
         return given(회원)
-                .body(new PlaceOrderRequest(Arrays.asList(장바구니_상품_ID들)))
+                .body(new PlaceOrderRequest(장바구니_상품_ID들, 쿠폰_ID들))
                 .when().post("/orders")
                 .then().log().all()
                 .extract();
@@ -32,7 +34,7 @@ public class OrderSteps {
     ) {
         return given(회원)
                 .when().get("/orders/{id}", 주문_ID)
-                .then()
+                .then().log().all()
                 .extract()
                 .as(OrderResponse.class);
     }
@@ -41,10 +43,11 @@ public class OrderSteps {
             Long 주문상품_ID,
             String 이름,
             int 가격,
+            int 실제_주문_가격,
             int 수량,
             String 이미지_주소
     ) {
-        return new OrderItemResponse(주문상품_ID, 이름, 가격, 수량, 이미지_주소);
+        return new OrderItemResponse(주문상품_ID, 이름, 가격, 실제_주문_가격, 수량, 이미지_주소);
     }
 
     public static OrderResponse 주문_정보(
@@ -75,7 +78,7 @@ public class OrderSteps {
     ) {
         return given(회원)
                 .when().get("/orders")
-                .then()
+                .then().log().all()
                 .extract()
                 .as(OrderResponses.class);
     }

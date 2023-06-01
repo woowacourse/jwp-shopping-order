@@ -32,10 +32,10 @@ class OrderTest {
         // given
         Order order = new Order(1L, 1L,
                 new OrderItem(3L, 10, 1L, "말랑", 1000, 1000, "image"),  // 1000 * 10
-                new OrderItem(4L, 20, 2L, "코코닥", 2000, 1000, "image")  // 2000 *  20
+                new OrderItem(4L, 20, 2L, "코코닥", 2000, 1500, "image")  // 2000 *  20
         );
 
         // when & then
-        assertThat(order.totalPrice()).isEqualTo(50000);
+        assertThat(order.totalPrice()).isEqualTo(40000);
     }
 }

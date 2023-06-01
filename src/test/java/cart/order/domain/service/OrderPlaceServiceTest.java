@@ -1,5 +1,6 @@
 package cart.order.domain.service;
 
+import static cart.coupon.exception.CouponExceptionType.APPLY_MULTIPLE_TO_PRODUCT;
 import static cart.order.exception.OrderExceptionType.MISMATCH_PRODUCT;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,11 +16,18 @@ import static org.mockito.Mockito.times;
 import cart.cartitem.domain.CartItem;
 import cart.cartitem.domain.CartItemRepository;
 import cart.common.execption.BaseExceptionType;
+import cart.coupon.domain.Coupon;
+import cart.coupon.domain.CouponValidator;
+import cart.coupon.domain.GeneralCouponType;
+import cart.coupon.domain.RateDiscountPolicy;
+import cart.coupon.exception.CouponException;
 import cart.member.domain.Member;
 import cart.order.domain.OrderRepository;
 import cart.order.domain.OrderValidator;
 import cart.order.exception.OrderException;
 import cart.product.domain.Product;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -44,6 +52,9 @@ class OrderPlaceServiceTest {
     @Mock
     private OrderValidator orderValidator;
 
+    @Mock
+    private CouponValidator couponValidator;
+
     @InjectMocks
     private OrderPlaceService orderPlaceService;
 
@@ -57,7 +68,7 @@ class OrderPlaceServiceTest {
         CartItem cartItem = new CartItem(2L, 10, product, member);
 
         // when
-        Long id = orderPlaceService.placeOrder(member.getId(), of(cartItem));
+        Long id = orderPlaceService.placeOrder(member.getId(), of(cartItem), Collections.emptyList());
 
         // then
         assertThat(id).isEqualTo(1L);
@@ -76,10 +87,38 @@ class OrderPlaceServiceTest {
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->
-                orderPlaceService.placeOrder(member.getId(), of(cartItem))
+                orderPlaceService.placeOrder(member.getId(), of(cartItem), Collections.emptyList())
         ).exceptionType();
 
         // then
         assertThat(baseExceptionType).isEqualTo(MISMATCH_PRODUCT);
+    }
+
+    @Test
+    void 쿠폰_관련_오류가_발생하면_주문할_수_없다() {
+        // given
+        willThrow(new CouponException(APPLY_MULTIPLE_TO_PRODUCT))
+                .given(couponValidator).validate(any(), any(), any());
+        Product product = new Product(1L, "말랑", 1000, "image");
+        Member member = new Member(1L, "email", "1234");
+        CartItem cartItem = new CartItem(2L, 10, product, member);
+        Coupon 쿠폰1 = new Coupon(1L, "쿠폰1",
+                new RateDiscountPolicy(50),
+                new GeneralCouponType(),
+                2L
+        );
+        Coupon 쿠폰2 = new Coupon(2L, "쿠폰2",
+                new RateDiscountPolicy(50),
+                new GeneralCouponType(),
+                2L
+        );
+
+        // when
+        BaseExceptionType baseExceptionType = assertThrows(CouponException.class, () ->
+                orderPlaceService.placeOrder(member.getId(), of(cartItem), List.of(쿠폰1, 쿠폰2))
+        ).exceptionType();
+
+        // then
+        assertThat(baseExceptionType).isEqualTo(APPLY_MULTIPLE_TO_PRODUCT);
     }
 }
