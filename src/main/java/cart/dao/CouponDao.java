@@ -64,10 +64,4 @@ public class CouponDao {
         String sql = "delete from coupon where id = ?";
         jdbcTemplate.update(sql, id);
     }
-
-    public void delete(List<Long> ids) {
-        final String sql = "delete from coupon where id IN (:ids)";
-        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
-        namedJdbcTemplate.update(sql, parameters);
-    }
 }

@@ -6,6 +6,7 @@ import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponRequest;
 import cart.dto.coupon.CouponResponse;
+import cart.domain.member.MemberCoupon;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class CouponController {
 
     @GetMapping("/coupons")
     public ResponseEntity<List<CouponResponse>> showAllCoupons(Member member) {
-        List<Coupon> coupons = member.getCoupons();
+        List<MemberCoupon> coupons = member.getCoupons();
         List<CouponResponse> couponResponses = coupons.stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
