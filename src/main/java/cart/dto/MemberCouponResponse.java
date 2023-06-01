@@ -6,13 +6,15 @@ public class MemberCouponResponse {
     private final String discountType;
     private final Double discountRate;
     private final Integer discountAmount;
+    private final Integer minimumPrice;
 
-    public MemberCouponResponse(Long id, String name, String discountType, Double discountRate, Integer discountAmount) {
+    public MemberCouponResponse(Long id, String name, String discountType, Double discountRate, Integer discountAmount, Integer minimumPrice) {
         this.id = id;
         this.name = name;
         this.discountType = discountType;
         this.discountRate = discountRate;
         this.discountAmount = discountAmount;
+        this.minimumPrice = minimumPrice;
     }
 
     public Long getId() {
@@ -33,5 +35,9 @@ public class MemberCouponResponse {
 
     public Integer getDiscountAmount() {
         return discountAmount;
+    }
+
+    public Integer getMinimumPrice() {
+        return minimumPrice;
     }
 }

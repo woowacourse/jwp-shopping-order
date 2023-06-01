@@ -34,7 +34,8 @@ public class MemberCouponService {
                 memberCoupon.getCoupon().getName(),
                 memberCoupon.getCoupon().getDiscountType().getName(),
                 memberCoupon.getCoupon().getDiscountPercent(),
-                memberCoupon.getCoupon().getDiscountAmount()
+                memberCoupon.getCoupon().getDiscountAmount(),
+                memberCoupon.getCoupon().getMinimumPrice()
         );
     }
 
@@ -46,7 +47,8 @@ public class MemberCouponService {
                                 memberCoupon.getCoupon().getName(),
                                 memberCoupon.getCoupon().getDiscountType().getName(),
                                 memberCoupon.getCoupon().getDiscountPercent(),
-                                memberCoupon.getCoupon().getDiscountAmount()
+                                memberCoupon.getCoupon().getDiscountAmount(),
+                                memberCoupon.getCoupon().getMinimumPrice()
                         )
                 )
                 .collect(Collectors.toList());
@@ -60,7 +62,8 @@ public class MemberCouponService {
                                 memberCoupon.getCoupon().getName(),
                                 memberCoupon.getCoupon().getDiscountType().getName(),
                                 memberCoupon.getCoupon().getDiscountPercent(),
-                                memberCoupon.getCoupon().getDiscountAmount()
+                                memberCoupon.getCoupon().getDiscountAmount(),
+                                memberCoupon.getCoupon().getMinimumPrice()
                         )
                 )
                 .collect(Collectors.toList());
