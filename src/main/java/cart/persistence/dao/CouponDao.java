@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CouponDao {
@@ -30,10 +31,10 @@ public class CouponDao {
         return jdbcTemplate.query(sql, new CouponEntityRowMapper());
     }
 
-    public CouponEntity findById(Long id) {
+    public Optional<CouponEntity> findById(Long id) {
         String sql = "SELECT * FROM coupon WHERE id = ?";
         List<CouponEntity> coupons = jdbcTemplate.query(sql, new Object[]{id}, new CouponEntityRowMapper());
-        return coupons.isEmpty() ? null : coupons.get(0);
+        return coupons.isEmpty() ? Optional.empty() : Optional.ofNullable(coupons.get(0));
     }
 
     public Long add(CouponEntity coupon) {

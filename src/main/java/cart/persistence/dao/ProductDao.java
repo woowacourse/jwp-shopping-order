@@ -1,6 +1,7 @@
 package cart.persistence.dao;
 
 import cart.domain.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -31,14 +33,21 @@ public class ProductDao {
         });
     }
 
-    public Product getProductById(Long productId) {
+    public Optional<Product> getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+
+        try {
+            Product product = jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+                String name = rs.getString("name");
+                int price = rs.getInt("price");
+                String imageUrl = rs.getString("image_url");
+                return new Product(productId, name, price, imageUrl);
+            });
+            return Optional.ofNullable(product);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+
     }
 
     public Long createProduct(Product product) {

@@ -2,6 +2,7 @@ package cart.persistence.repository;
 
 import cart.domain.Member;
 import cart.domain.MemberRepository;
+import cart.exception.NoSuchMemberException;
 import cart.persistence.dao.MemberDao;
 import cart.persistence.entity.MemberEntity;
 import org.springframework.stereotype.Repository;
@@ -27,13 +28,13 @@ public class DbMemberRepository implements MemberRepository {
 
     @Override
     public Member findById(Long id) {
-        MemberEntity memberEntity = memberDao.findById(id); // TODO null 예외 처리
+        MemberEntity memberEntity = memberDao.findById(id).orElseThrow(() -> new NoSuchMemberException()); // TODO null 예외 처리
         return mapToMember(memberEntity);
     }
 
     @Override
     public Member findByEmail(String email) {
-        MemberEntity memberEntity = memberDao.findByEmail(email);
+        MemberEntity memberEntity = memberDao.findByEmail(email).orElseThrow(() -> new NoSuchMemberException());
         return mapToMember(memberEntity);
     }
 

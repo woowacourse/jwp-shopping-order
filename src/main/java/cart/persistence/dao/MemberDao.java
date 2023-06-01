@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -26,16 +27,16 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public MemberEntity findById(Long id) {
+    public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
         List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberEntityRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        return members.isEmpty() ? Optional.empty() : Optional.ofNullable(members.get(0));
     }
 
-    public MemberEntity findByEmail(String email) {
+    public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
         List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberEntityRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        return members.isEmpty() ? Optional.empty() : Optional.ofNullable(members.get(0));
     }
 
     public Long add(MemberEntity MemberEntity) {

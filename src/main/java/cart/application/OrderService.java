@@ -43,15 +43,16 @@ public class OrderService {
         // 총가격, 할인가 계산
         int totalPrice = calculateTotalPriceOfProducts(orderProducts);
         int discountPrice = totalPrice;
-        MemberCoupon usedMemberCoupon = null;
+        Coupon usedCoupon = null;
         if (orderRequest.getCouponId() != null) {
-            usedMemberCoupon = memberCouponRepository.findById(orderRequest.getCouponId());
+            MemberCoupon usedMemberCoupon = memberCouponRepository.findById(orderRequest.getCouponId());
             discountPrice = usedMemberCoupon.discount(totalPrice);
             memberCouponRepository.delete(usedMemberCoupon.getId());
+            usedCoupon = usedMemberCoupon.getCoupon();
         }
 
         // TODO order가 MemberCoupon을 가지게 변경
-        Order order = new Order(totalPrice, discountPrice, orderProducts, usedMemberCoupon.getCoupon(), member);
+        Order order = new Order(totalPrice, discountPrice, orderProducts, usedCoupon, member);
         orderRequest.getSelectCartIds().stream()
                 .forEach(cartItemDao::deleteById);
         return orderRepository.add(order);
@@ -60,7 +61,7 @@ public class OrderService {
     public List<OrderProduct> getOrderProducts(List<Long> cartItemIds) {
         return cartItemIds.stream()
                 .map(cartId -> {
-                    CartItem cartItem = cartItemDao.findById(cartId);
+                    CartItem cartItem = cartItemDao.findById(cartId).orElseThrow(() -> new IllegalArgumentException("접근할 수 없는 장바구니 아이템입니다."));
                     Product product = cartItem.getProduct();
                     return new OrderProduct(
                             product.getName(),
@@ -119,14 +120,18 @@ public class OrderService {
                 }).collect(Collectors.toList());
 
         Coupon coupon = order.getUsedCoupon();
-        CouponResponse couponResponse = new CouponResponse(
-                coupon.getId(),
-                coupon.getName(),
-                coupon.getDiscountType().getName(),
-                coupon.getDiscountPercent(),
-                coupon.getDiscountAmount(),
-                coupon.getMinimumPrice()
-        );
+
+        CouponResponse couponResponse = null;
+        if (coupon != null) {
+            couponResponse = new CouponResponse(
+                    coupon.getId(),
+                    coupon.getName(),
+                    coupon.getDiscountType().getName(),
+                    coupon.getDiscountPercent(),
+                    coupon.getDiscountAmount(),
+                    coupon.getMinimumPrice()
+            );
+        }
 
         return new OrderDetailResponse( // originalPrice, discountPrice, confirmState, couponResponse
                 order.getId(),
@@ -158,18 +163,4 @@ public class OrderService {
         CouponResponse couponResponse = new CouponResponse(coupon.getId(), coupon.getName(), coupon.getDiscountType().getName(), coupon.getDiscountPercent(), coupon.getDiscountAmount(), coupon.getMinimumPrice());
         return new OrderConfirmResponse(couponResponse);
     }
-
-
 }
-
-/*
-
- * [ ] 주문 확정
- * [ ] 주문 확정시 사용 가능한 쿠폰을 유저에게 발급
-
- * [ ] 주문 리스트 조회
- * [ ] 주문 상세 조회
-
- * [ ] 주문 취소
- * [ ] 주문시 사용했던 쿠폰 재발급
- */

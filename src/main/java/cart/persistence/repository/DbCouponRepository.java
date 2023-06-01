@@ -2,6 +2,7 @@ package cart.persistence.repository;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
+import cart.exception.NoSuchCouponException;
 import cart.persistence.dao.CouponDao;
 import cart.persistence.entity.CouponEntity;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,7 @@ public class DbCouponRepository implements CouponRepository {
 
     @Override
     public Coupon findById(Long id) {
-        CouponEntity couponEntity = couponDao.findById(id);
+        CouponEntity couponEntity = couponDao.findById(id).orElseThrow(() -> new NoSuchCouponException());
         return mapToCoupon(couponEntity);
     }
 

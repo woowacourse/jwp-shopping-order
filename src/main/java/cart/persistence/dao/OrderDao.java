@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderDao {
@@ -30,10 +31,10 @@ public class OrderDao {
         return jdbcTemplate.query(sql, new Object[]{memberId}, new OrderEntityRowMapper());
     }
 
-    public OrderEntity findOrderById(Long id) {
+    public Optional<OrderEntity> findOrderById(Long id) {
         String sql = "SELECT * FROM purchase_order WHERE id = ?";
         List<OrderEntity> orders = jdbcTemplate.query(sql, new Object[]{id}, new OrderEntityRowMapper());
-        return orders.isEmpty() ? null : orders.get(0);
+        return orders.isEmpty() ? Optional.empty() : Optional.ofNullable(orders.get(0));
     }
 
     public Long add(OrderEntity orderEntity) {

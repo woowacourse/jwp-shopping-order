@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberCouponDao {
@@ -35,16 +36,16 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, new Object[]{memberId}, new MemberCouponEntityRowMapper());
     }
 
-    public MemberCouponEntity findById(Long id) {
+    public Optional<MemberCouponEntity> findById(Long id) {
         String sql = "SELECT * FROM member_coupon WHERE id = ?";
         List<MemberCouponEntity> memberCoupons = jdbcTemplate.query(sql, new Object[]{id}, new MemberCouponEntityRowMapper());
-        return memberCoupons.isEmpty() ? null : memberCoupons.get(0);
+        return memberCoupons.isEmpty() ? Optional.empty() : Optional.ofNullable(memberCoupons.get(0));
     }
 
-    public MemberCouponEntity findOneByCouponId(Long couponId) {
+    public Optional<MemberCouponEntity> findOneByCouponId(Long couponId) {
         String sql = "SELECT * FROM member_coupon WHERE coupon_id = ?";
         List<MemberCouponEntity> memberCoupons = jdbcTemplate.query(sql, new Object[]{couponId}, new MemberCouponEntityRowMapper());
-        return memberCoupons.isEmpty() ? null : memberCoupons.get(0);
+        return memberCoupons.isEmpty() ? Optional.empty() : Optional.ofNullable(memberCoupons.get(0));
     }
 
     public Long add(MemberCouponEntity memberCouponEntity) {

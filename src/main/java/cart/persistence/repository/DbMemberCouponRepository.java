@@ -3,6 +3,9 @@ package cart.persistence.repository;
 import cart.domain.Member;
 import cart.domain.memberCoupon.MemberCoupon;
 import cart.domain.memberCoupon.MemberCouponRepository;
+import cart.exception.NoSuchCouponException;
+import cart.exception.NoSuchMemberCouponException;
+import cart.exception.NoSuchMemberException;
 import cart.persistence.dao.CouponDao;
 import cart.persistence.dao.MemberCouponDao;
 import cart.persistence.dao.MemberDao;
@@ -44,13 +47,13 @@ public class DbMemberCouponRepository implements MemberCouponRepository {
 
     @Override
     public MemberCoupon findByCouponId(Long couponId) { // TODO findOne null 예외 처리 추가
-        MemberCouponEntity memberCouponEntity = memberCouponDao.findOneByCouponId(couponId);
+        MemberCouponEntity memberCouponEntity = memberCouponDao.findOneByCouponId(couponId).orElseThrow(() -> new NoSuchMemberCouponException());
         return mapToMemberCoupon(memberCouponEntity);
     }
 
     @Override
     public MemberCoupon findById(Long id) {
-        MemberCouponEntity memberCouponEntity = memberCouponDao.findById(id);
+        MemberCouponEntity memberCouponEntity = memberCouponDao.findById(id).orElseThrow(() -> new NoSuchMemberCouponException());
         return mapToMemberCoupon(memberCouponEntity);
     }
 
@@ -72,8 +75,8 @@ public class DbMemberCouponRepository implements MemberCouponRepository {
     }
 
     private MemberCoupon mapToMemberCoupon(MemberCouponEntity memberCouponEntity) {
-        MemberEntity memberEntity = memberDao.findById(memberCouponEntity.getMemberId());
-        CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getCouponId());
+        MemberEntity memberEntity = memberDao.findById(memberCouponEntity.getMemberId()).orElseThrow(() -> new NoSuchMemberException());
+        CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getCouponId()).orElseThrow(() -> new NoSuchCouponException());
 
         return new MemberCoupon(
                 memberCouponEntity.getId(),
