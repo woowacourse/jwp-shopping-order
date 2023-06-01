@@ -7,6 +7,7 @@ import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
 import cart.entity.ProductEntity;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -45,7 +46,7 @@ class OrderProductDaoTest {
         hamburgerId = productDao.save(new ProductEntity("햄버거", BigDecimal.valueOf(30000), "http://hamburger.com"));
 
         OrderDao orderDao = new OrderDao(jdbcTemplate);
-        orderId = orderDao.save(new OrderEntity(memberId, 3000));
+        orderId = orderDao.save(new OrderEntity(memberId, 3000, "2020060102301", LocalDateTime.now()));
     }
 
     @Test

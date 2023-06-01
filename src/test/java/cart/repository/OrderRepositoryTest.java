@@ -1,8 +1,8 @@
 package cart.repository;
 
 import static cart.fixture.TestFixture.밀리;
-import static cart.fixture.TestFixture.상품_치킨_10개;
-import static cart.fixture.TestFixture.상품_피자_1개;
+import static cart.fixture.TestFixture.장바구니_밀리_치킨_10개;
+import static cart.fixture.TestFixture.장바구니_밀리_피자_1개;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -40,7 +40,7 @@ class OrderRepositoryTest {
         given(orderDao.save(any()))
                 .willReturn(1L);
 
-        Order order = new Order(밀리, List.of(상품_치킨_10개, 상품_피자_1개), 3000);
+        Order order = Order.of(밀리, List.of(장바구니_밀리_치킨_10개, 장바구니_밀리_피자_1개), 3000);
         Order savedOrder = orderRepository.save(order);
 
         verify(orderProductDao, times(1)).saveAll(any());

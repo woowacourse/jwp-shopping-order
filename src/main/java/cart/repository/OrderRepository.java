@@ -27,15 +27,19 @@ public class OrderRepository {
     public Order save(Order order) {
         Member member = order.getMember();
         Money deliveryFee = order.getDeliveryFee();
-        Long savedOrderId = orderDao.save(toEntity(member, deliveryFee));
+        Long savedOrderId = orderDao.save(toEntity(order));
 
         List<OrderProductEntity> orderProductEntities = toEntities(order, savedOrderId);
         orderProductDao.saveAll(orderProductEntities);
-        return new Order(savedOrderId, member, order.getItems(), deliveryFee);
+        return new Order(savedOrderId, member, order.getItems(), deliveryFee, order.getOrderDate(),
+                order.getOrderNumber());
     }
 
-    private OrderEntity toEntity(Member member, Money deliveryFee) {
-        return new OrderEntity(member.getId(), deliveryFee.getValue().intValue());
+    private OrderEntity toEntity(Order order) {
+        Member member = order.getMember();
+        Money deliveryFee = order.getDeliveryFee();
+        return new OrderEntity(member.getId(), deliveryFee.getValue().intValue(), order.getOrderNumber(),
+                order.getOrderDate());
     }
 
     private List<OrderProductEntity> toEntities(Order order, Long savedOrderId) {

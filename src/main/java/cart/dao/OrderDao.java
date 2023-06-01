@@ -3,6 +3,7 @@ package cart.dao;
 import cart.entity.OrderEntity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,7 +20,7 @@ public class OrderDao {
     }
 
     public Long save(OrderEntity order) {
-        String sql = "INSERT INTO orders (member_id, delivery_fee) VALUES (?, ?)";
+        String sql = "INSERT INTO orders (member_id, orders_number, delivery_fee, created_at) VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -30,7 +31,9 @@ public class OrderDao {
             );
 
             ps.setLong(1, order.getMemberId());
-            ps.setInt(2, order.getDeliveryFee());
+            ps.setString(2, order.getOrderNumber());
+            ps.setInt(3, order.getDeliveryFee());
+            ps.setTimestamp(4, Timestamp.valueOf(order.getCreatedAt()));
 
             return ps;
         }, keyHolder);

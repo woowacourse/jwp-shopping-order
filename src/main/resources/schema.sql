@@ -26,9 +26,11 @@ CREATE TABLE cart_item
 
 CREATE TABLE orders
 (
-    id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id    BIGINT NOT NULL,
-    delivery_fee INT    NOT NULL,
+    id           BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT       NOT NULL,
+    orders_number VARCHAR(255) NOT NULL,
+    delivery_fee INT          NOT NULL,
+    created_at   TIMESTAMP    NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
 
