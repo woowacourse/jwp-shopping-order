@@ -6,7 +6,7 @@ public class CartItemIdExceptionResponse extends ExceptionResponse {
 
     private List<Long> unknownCartItemIds;
 
-    private CartItemIdExceptionResponse(){
+    private CartItemIdExceptionResponse() {
         super();
     }
 

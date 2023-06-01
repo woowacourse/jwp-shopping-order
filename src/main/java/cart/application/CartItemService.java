@@ -58,7 +58,7 @@ public class CartItemService {
 
     private CartItem findCartItem(final Long id) {
         CartItem cartItem = cartItemDao.findById(id);
-        if(cartItem == null){
+        if (cartItem == null) {
             throw new InvalidCartItem();
         }
         return cartItem;

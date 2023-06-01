@@ -1,6 +1,5 @@
 package cart.acceptence.steps;
 
-import cart.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

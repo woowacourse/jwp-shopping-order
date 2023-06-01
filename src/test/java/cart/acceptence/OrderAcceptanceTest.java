@@ -96,8 +96,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             assertThat(주문_등록_결과.jsonPath().getObject("payload", CartItemIdExceptionResponse.class))
                     .usingRecursiveComparison()
                     .isEqualTo(new CartItemIdExceptionResponse(
-                            "등록되지 않은 상품이 포함되어 있습니다. 다시 한번 확인해주세요",
-                            List.of(존재하지_않는_장바구니_아이템_아이디)
+                                    "등록되지 않은 상품이 포함되어 있습니다. 다시 한번 확인해주세요",
+                                    List.of(존재하지_않는_장바구니_아이템_아이디)
                             )
                     );
         }

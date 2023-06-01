@@ -1,7 +1,6 @@
 package cart.acceptence;
 
 import cart.dto.response.ProductResponse;
-import cart.dto.response.exception.CartItemIdExceptionResponse;
 import cart.dto.response.exception.ExceptionResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

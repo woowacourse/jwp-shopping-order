@@ -4,7 +4,7 @@ public class Payload {
 
     private ExceptionResponse payload;
 
-    private Payload(){
+    private Payload() {
     }
 
     public Payload(final ExceptionResponse payload) {

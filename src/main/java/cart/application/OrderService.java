@@ -63,12 +63,12 @@ public class OrderService {
     }
 
     private void checkQuantity(final List<OrderItemDto> orders, final List<CartItem> cartItems) {
-        for(OrderItemDto orderItemDto : orders){
+        for (OrderItemDto orderItemDto : orders) {
             CartItem cartItem = cartItems.stream()
                     .filter(item -> Objects.equals(item.getId(), orderItemDto.getCartItemId())).
                     findFirst()
                     .orElseThrow(InvalidCartItem::new);
-            if(orderItemDto.getQuantity() != cartItem.getQuantity()){
+            if (orderItemDto.getQuantity() != cartItem.getQuantity()) {
                 throw new QuantityNotSame();
             }
         }
@@ -76,7 +76,7 @@ public class OrderService {
 
     private void checkIllegalMember(final Member member, final List<CartItem> cartItems) {
         boolean isIllegalMember = List.copyOf(cartItems).stream().anyMatch(item -> !item.checkMember(member));
-        if(isIllegalMember){
+        if (isIllegalMember) {
             throw new IllegalMember();
         }
     }
@@ -118,18 +118,18 @@ public class OrderService {
                 .stream()
                 .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
                 collect(Collectors.toUnmodifiableList());
-        return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalProductsPrice()+order.getShippingFee(), orderDetails);
+        return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalProductsPrice() + order.getShippingFee(), orderDetails);
     }
 
     public List<OrderResponse> getOrdersByMember(final Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         List<OrderResponse> orderResponses = new ArrayList<>();
-        for(Order order : orders){
+        for (Order order : orders) {
             List<OrderDetailsDto> orderDetails = order.getOrderItems()
                     .stream()
                     .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
                     collect(Collectors.toUnmodifiableList());
-            orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalProductsPrice()+order.getShippingFee(), orderDetails));
+            orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalProductsPrice() + order.getShippingFee(), orderDetails));
         }
         return orderResponses;
     }

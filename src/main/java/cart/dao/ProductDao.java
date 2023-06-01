@@ -34,7 +34,7 @@ public class ProductDao {
     }
 
     public Optional<Product> getProductById(Long productId) {
-        try{
+        try {
             String sql = "SELECT * FROM product WHERE id = ?";
             return Optional.of(jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
                 String name = rs.getString("name");
@@ -42,7 +42,7 @@ public class ProductDao {
                 String imageUrl = rs.getString("image_url");
                 return new Product(productId, name, price, imageUrl);
             }));
-        }catch(EmptyResultDataAccessException exception){
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }

@@ -15,11 +15,11 @@ public class ShippingFeeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Long> selectShippingFee(){
-        try{
+    public Optional<Long> selectShippingFee() {
+        try {
             String sql = "SELECT fee FROM shipping_fee WHERE id = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Long.class, 1));
-        } catch (EmptyResultDataAccessException exception){
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }

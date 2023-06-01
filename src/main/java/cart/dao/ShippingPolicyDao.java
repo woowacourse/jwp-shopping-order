@@ -15,11 +15,11 @@ public class ShippingPolicyDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Long> selectDiscountThreshold(){
-        try{
+    public Optional<Long> selectDiscountThreshold() {
+        try {
             String sql = "SELECT threshold FROM shipping_discount_policy WHERE id = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Long.class, 1));
-        } catch (EmptyResultDataAccessException exception){
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }

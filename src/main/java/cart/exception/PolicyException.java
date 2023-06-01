@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class PolicyException extends RuntimeException{
+public class PolicyException extends RuntimeException {
 
     public PolicyException(String message) {
         super(message);

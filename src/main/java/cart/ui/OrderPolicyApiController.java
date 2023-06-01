@@ -1,12 +1,9 @@
 package cart.ui;
 
 import cart.application.OrderPolicyService;
-import cart.domain.Member;
 import cart.dto.response.OrderPolicyResponse;
-import cart.dto.response.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

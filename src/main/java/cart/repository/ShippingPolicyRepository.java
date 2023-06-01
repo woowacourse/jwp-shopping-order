@@ -18,7 +18,7 @@ public class ShippingPolicyRepository {
         this.shippingPolicyDao = shippingPolicyDao;
     }
 
-    public ShippingPolicy findShippingPolicy(){
+    public ShippingPolicy findShippingPolicy() {
         long basicShippingFee = shippingFeeDao.selectShippingFee()
                 .orElseThrow(NoShippingFee::new);
         long threshold = shippingPolicyDao.selectDiscountThreshold()

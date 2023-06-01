@@ -28,6 +28,7 @@ public class CartItemException extends RuntimeException {
     public static class UnknownCartItem extends CartItemException {
 
         private final List<Long> unknownCartItemIds;
+
         public UnknownCartItem(final List<Long> unknownCartItemIds) {
             super("등록되지 않은 상품이 포함되어 있습니다. 다시 한번 확인해주세요");
             this.unknownCartItemIds = unknownCartItemIds;

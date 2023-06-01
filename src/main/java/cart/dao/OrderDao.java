@@ -49,10 +49,10 @@ public class OrderDao {
     }
 
     public Optional<OrderEntity> findById(final long id) {
-        try{
+        try {
             String sql = "SELECT * FROM orders WHERE id = ?";
             return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
-        }catch(EmptyResultDataAccessException exception){
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }

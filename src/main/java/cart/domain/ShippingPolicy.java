@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.exception.PolicyException.NoShippingFee;
-
 import java.util.List;
 
 public class ShippingPolicy {
@@ -14,7 +12,7 @@ public class ShippingPolicy {
         this.threshold = threshold;
     }
 
-    public long calculateShippingFee(final List<OrderItem> orderItems){
+    public long calculateShippingFee(final List<OrderItem> orderItems) {
         long shippingFee = basicShippingFee;
         long totalProductPrice = orderItems.stream()
                 .mapToLong(item -> item.getQuantity() * item.getProduct().getPrice())
