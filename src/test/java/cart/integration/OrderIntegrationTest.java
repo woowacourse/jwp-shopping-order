@@ -1,6 +1,5 @@
 package cart.integration;
 
-import cart.controller.dto.request.CartItemRequest;
 import cart.controller.dto.request.OrderRequest;
 import cart.controller.dto.request.ProductRequest;
 import cart.integration.common.AuthInfo;

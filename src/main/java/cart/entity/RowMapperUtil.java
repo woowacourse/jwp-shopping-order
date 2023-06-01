@@ -44,7 +44,8 @@ public class RowMapperUtil {
             rs.getLong("id"),
             rs.getLong("member_id"),
             rs.getInt("original_price"),
-            rs.getInt("discount_price")
+            rs.getInt("discount_price"),
+            rs.getTimestamp("created_at").toLocalDateTime()
     );
 
     public static final RowMapper<OrderItemWithProductEntity> orderItemWithProductEntityRowMapper = (rs, rn) ->
