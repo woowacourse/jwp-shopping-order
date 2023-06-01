@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.dto.OrderRequest;
@@ -11,9 +10,11 @@ import org.springframework.stereotype.Service;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final MemberService memberService;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, MemberService memberService) {
         this.orderRepository = orderRepository;
+        this.memberService = memberService;
     }
 
     public Long save(final Member member, final OrderRequest orderRequest) {
@@ -25,6 +26,7 @@ public class OrderService {
                 orderRequest.getTotalMemberDiscountAmount(),
                 orderRequest.getShippingFee());
 
+        memberService.update(member, orderRequest.getTotalPrice());
         return orderRepository.save(order, orderRequest.getCartItemIds()) ;
     }
 }

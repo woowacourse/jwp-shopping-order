@@ -19,7 +19,7 @@ class OrderTest {
     @DisplayName("총 할인된 구매 금액이 50,000원을 이상이면 배송료는 무료이고 그렇지 않으면 배송료는 3,000원 입니다.")
     void determine_shipping_fee(int purchasePrice, int expect) {
         // given
-        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
+        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND, 500_000);
         List<OrderItem> orderItems = List.of(
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
@@ -38,7 +38,7 @@ class OrderTest {
     @DisplayName("계산되 주문서와 요청된 주문서가 다르면 에러를 발생한다.")
     void check_request_bill(List<Integer> request) {
         // given
-        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
+        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND, 500_000);
         List<OrderItem> orderItems = List.of(
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0), // 8000원
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10)); // 27000원

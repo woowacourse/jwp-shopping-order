@@ -32,7 +32,7 @@ class OrderDaoTest {
     @DisplayName("주문을 저장한다.")
     void insert_order_data() {
         // given
-        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
+        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND, 500_000);
         List<OrderItem> orderItems = List.of(
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));

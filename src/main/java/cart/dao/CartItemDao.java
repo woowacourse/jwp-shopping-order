@@ -33,7 +33,7 @@ public class CartItemDao {
         int discountRate = rs.getInt("discount_rate");
         Long cartItemId = rs.getLong("cart_item.id");
         int quantity = rs.getInt("cart_item.quantity");
-        Member member = new Member(memberId, email, "Abcd1234@", Rank.valueOf(rs.getString("rank")));
+        Member member = new Member(memberId, email, "Abcd1234@", Rank.valueOf(rs.getString("rank")), rs.getInt("total_purchase_amount"));
         Product product = new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
         return new CartItem(cartItemId, quantity, product, member);
     };
@@ -47,7 +47,7 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.rank ,product.id, product.name, product.price, product.image_url, product.is_discounted, product.discount_rate, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.rank, member.total_purchase_amount ,product.id, product.name, product.price, product.image_url, product.is_discounted, product.discount_rate, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -62,7 +62,7 @@ public class CartItemDao {
             int discountRate = rs.getInt("discount_rate");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, "Abcd1234@", Rank.valueOf(rs.getString("rank")));
+            Member member = new Member(memberId, email, "Abcd1234@", Rank.valueOf(rs.getString("rank")), rs.getInt("total_purchase_amount"));
             Product product = new Product(productId, name, price, imageUrl, isDiscounted, discountRate);
             return new CartItem(cartItemId, quantity, product, member);
         });
@@ -88,7 +88,7 @@ public class CartItemDao {
     }
 
     public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.rank ,product.id, product.name, product.price, product.image_url, product.is_discounted, product.discount_rate, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.rank, member.total_purchase_amount, product.id, product.name, product.price, product.image_url, product.is_discounted, product.discount_rate, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -99,7 +99,7 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByIds(final List<Long> cartItemIds) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.rank ,product.id, product.name, product.price, product.image_url, product.is_discounted, product.discount_rate, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, member.rank, member.total_purchase_amount, product.id, product.name, product.price, product.image_url, product.is_discounted, product.discount_rate, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +

@@ -26,7 +26,7 @@ class OrderItemTest {
     void calculate_discount_price_by_member_discount() {
         // given
         OrderItem orderItem = new OrderItem(1L, "포카칩", 1000, "이미지", 5, 10);
-        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
+        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND, 500_000);
         int expect = 4000;
 
         // when

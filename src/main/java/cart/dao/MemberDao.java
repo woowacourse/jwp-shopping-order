@@ -57,8 +57,8 @@ public class MemberDao {
     }
 
     public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+        String sql = "UPDATE member SET email = ?, password = ?, rank = ?, total_purchase_amount = ? WHERE id = ?";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getRank().name(), member.getTotalPurchaseAmount(), member.getId());
     }
 
     public void deleteMember(Long id) {
@@ -74,7 +74,7 @@ public class MemberDao {
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"), Rank.valueOf(rs.getString("rank")));
+            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"), Rank.valueOf(rs.getString("rank")), rs.getInt("total_purchase_amount"));
         }
     }
 }

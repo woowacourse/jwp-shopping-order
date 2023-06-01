@@ -13,7 +13,7 @@ class OrderItemsTest {
     @DisplayName("주문 시 최종 구매 금액(할인 금액)을 계산한다.")
     void calculate_discounted_purchase_money() {
         // given
-        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
+        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND, 500_000);
         OrderItems orderItems = new OrderItems(List.of(
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10)));
@@ -49,7 +49,7 @@ class OrderItemsTest {
     @DisplayName("멤버 할인 금액을 구하는 기능 추가")
     void calculate_member_benefit() {
         // given
-        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND);
+        Member member = new Member(1L, "ako@wooteco.com", "Abcd1234@", Rank.DIAMOND, 500_000);
         OrderItems orderItems = new OrderItems(List.of(
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10)));

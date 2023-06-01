@@ -19,6 +19,10 @@ public class Money {
         return (int) (money * percent);
     }
 
+    public int plus(int consumptionAmount) {
+        return money + consumptionAmount;
+    }
+
     public boolean isSame(final int otherMoney) {
         return this.money == otherMoney;
     }
