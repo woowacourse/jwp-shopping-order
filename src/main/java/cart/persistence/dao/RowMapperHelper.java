@@ -3,10 +3,12 @@ package cart.persistence.dao;
 import cart.domain.coupon.CouponType;
 import cart.persistence.dto.CartDetailDTO;
 import cart.persistence.dto.MemberCouponDetailDTO;
+import cart.persistence.dto.OrderDetailDTO;
 import cart.persistence.entity.CartItemEntity;
 import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberCouponEntity;
 import cart.persistence.entity.MemberEntity;
+import cart.persistence.entity.OrderEntity;
 import cart.persistence.entity.ProductEntity;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -136,6 +138,37 @@ public class RowMapperHelper {
             CouponEntity coupon = couponRowMapperWithTable().mapRow(rs, rowNum);
             MemberEntity member = memberRowMapperWithTable().mapRow(rs, rowNum);
             return new MemberCouponDetailDTO(memberCoupon, coupon, member);
+        };
+    }
+
+    public static RowMapper<OrderEntity> orderRowMapper() {
+        return getOrderRowMapper(false);
+    }
+
+    private static RowMapper<OrderEntity> orderRowMapperWithTable() {
+        return getOrderRowMapper(true);
+    }
+
+    private static RowMapper<OrderEntity> getOrderRowMapper(boolean withTable) {
+        return (rs, rowNum) -> {
+            String prefix = withTable ? "order." : "";
+            return new OrderEntity(
+                    rs.getLong(prefix + "id"),
+                    rs.getLong(prefix + "member_id"),
+                    rs.getLong(prefix + "member_coupon_id"),
+                    rs.getInt(prefix + "shipping_fee"),
+                    rs.getInt(prefix + "total_price"),
+                    rs.getTimestamp(prefix + "created_at")
+            );
+        };
+    }
+
+    public static RowMapper<OrderDetailDTO> orderDetailRowMapper() {
+        return (rs, rowNum) -> {
+            OrderEntity order = orderRowMapperWithTable().mapRow(rs, rowNum);
+            MemberCouponEntity memberCoupon = memberCouponRowMapperWithTable().mapRow(rs, rowNum);
+            MemberEntity member = memberRowMapperWithTable().mapRow(rs, rowNum);
+            return new OrderDetailDTO(order, member, memberCoupon);
         };
     }
 }
