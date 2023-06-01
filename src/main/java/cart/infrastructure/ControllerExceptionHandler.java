@@ -12,9 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
+public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class.getName());
 
@@ -30,29 +31,25 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<ErrorResponse> handleCartItemException(final CartItemException.IllegalMember exception) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(exception.getMessage()));
-    }
-
-    @ExceptionHandler(CartItemException.IllegalId.class)
-    public ResponseEntity<ErrorResponse> handleCartItemException(final CartItemException.IllegalId exception) {
+    @ExceptionHandler(CartItemException.class)
+    public ResponseEntity<ErrorResponse> handleCartItemException(final CartItemException exception) {
+        if (exception.getClass() == CartItemException.IllegalMember.class) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(exception.getMessage()));
+        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }
 
-    @ExceptionHandler(CartItemException.IllegalQuantity.class)
-    public ResponseEntity<ErrorResponse> handleCartItemException(final CartItemException.IllegalQuantity exception) {
+    @ExceptionHandler(MoneyException.class)
+    public ResponseEntity<ErrorResponse> handleMoneyException(final MoneyException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }
 
-    @ExceptionHandler(MoneyException.IllegalValue.class)
-    public ResponseEntity<ErrorResponse> handleMoneyException(final MoneyException.IllegalValue exception) {
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<ErrorResponse> handleOrderException(final OrderException exception) {
+        if (exception.getClass() == OrderException.OutOfDatedProductPrice.class) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(exception.getMessage()));
+        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
-    }
-
-    @ExceptionHandler(OrderException.OutOfDatedProductPrice.class)
-    public ResponseEntity<ErrorResponse> handleOrderException(final OrderException.OutOfDatedProductPrice exception) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(OrderException.IllegalId.class)
