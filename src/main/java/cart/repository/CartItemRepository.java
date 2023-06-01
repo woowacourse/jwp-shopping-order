@@ -34,10 +34,6 @@ public class CartItemRepository {
     }
 
     public void updateQuantity(CartItem cartItem) {
-        if (!cartItemDao.isExistBy(cartItem.getId())) {
-            throw new CartItemException.NotFound(cartItem.getId());
-        }
-
         cartItemDao.updateQuantity(cartItem);
     }
 

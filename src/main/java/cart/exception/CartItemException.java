@@ -21,8 +21,8 @@ public class CartItemException extends RuntimeException {
     }
 
     public static class NotFound extends CartItemException {
-        public NotFound(Long id) {
-            super("해당 장바구니 상품을 찾을 수 없습니다 : " + id);
+        public NotFound() {
+            super("해당 장바구니 상품을 찾을 수 없습니다.");
         }
     }
 }

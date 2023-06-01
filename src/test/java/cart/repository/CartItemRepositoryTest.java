@@ -36,14 +36,4 @@ class CartItemRepositoryTest {
                 .isInstanceOf(CartItemException.AlreadyExist.class)
                 .hasMessageContaining("의 장바구니에 이미 ");
     }
-
-    @Test
-    @DisplayName("updateQuantity는 존재하지 않는 ID의 cartItem을 전달하면 예외가 발생한다.")
-    void updateQuantityFailTest() {
-        given(cartItemDao.isExistBy(anyLong())).willReturn(false);
-
-        assertThatThrownBy(() -> cartItemRepository.updateQuantity(TWO_CHICKEN))
-                .isInstanceOf(CartItemException.NotFound.class)
-                .hasMessageContaining("해당 장바구니 상품을 찾을 수 없습니다 : ");
-    }
 }

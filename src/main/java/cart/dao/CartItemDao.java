@@ -92,12 +92,6 @@ public class CartItemDao {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, memberId, productId));
     }
 
-    public boolean isExistBy(Long id) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM cart_item WHERE id = ?)";
-
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
-    }
-
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 
