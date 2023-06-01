@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -63,5 +64,14 @@ public class MemberCouponDao {
     public Long createUserCoupon(MemberCouponEntity memberCouponEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(memberCouponEntity);
         return insertAction.executeAndReturnKey(params).longValue();
+    }
+
+    public List<CouponEntity> findCouponByMemberId(Long memberId) {
+        String sql = "SELECT * " +
+                "FROM member_coupon " +
+                "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
+                " where member_id = ? and availability = ?";
+
+        return jdbcTemplate.query(sql,rowMapper,memberId,true);
     }
 }

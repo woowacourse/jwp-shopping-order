@@ -12,6 +12,9 @@ import cart.entity.MemberCouponEntity;
 import cart.exception.CouponException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 public class CouponRepsitoryImpl implements CouponRepository {
     private final CouponDao couponDao;
@@ -35,7 +38,12 @@ public class CouponRepsitoryImpl implements CouponRepository {
         return memberCouponDao.createUserCoupon(new MemberCouponEntity(couponId, member.getId(), true));
     }
 
-
+    @Override
+    public List<Coupon> getUserCoupon(Member member) {
+        return memberCouponDao.findCouponByMemberId(member.getId()).stream()
+                .map(this::toDomain)
+                .collect(Collectors.toList());
+    }
 
     private CouponEntity toEntity(Coupon coupon) {
         return new CouponEntity(coupon.getName(),
@@ -46,9 +54,6 @@ public class CouponRepsitoryImpl implements CouponRepository {
     }
 
     private Coupon toDomain(CouponEntity entity) {
-        if (entity.equals(CouponEntity.EMPTY)) {
-            return Coupon.empty();
-        }
         CouponTypes couponType = DiscountType.from(entity.getDiscountType());
         return new Coupon(entity.getId(), entity.getName(), couponType,
                 entity.getMinimumPrice(), entity.getDiscountPrice(), entity.getDiscountRate());

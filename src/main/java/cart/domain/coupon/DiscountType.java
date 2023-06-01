@@ -6,7 +6,7 @@ import cart.exception.CouponException;
 import java.util.Arrays;
 
 public enum DiscountType {
-    percentDiscount("percent",new PercentDiscount()),
+    percentDiscount("percentage",new PercentDiscount()),
     reductionDiscount("reduction",new PriceDiscount()),
     NONE("none",new EmptyDiscount());
 
@@ -23,7 +23,7 @@ public enum DiscountType {
                 .filter(it -> it.typeName.toLowerCase().equals(input.toLowerCase()))
                 .map(it -> it.type)
                 .findAny()
-                .orElseThrow(() -> new CouponException("percent, reduction 타입의 쿠폰만 발급 가능합니다."));
+                .orElseThrow(() -> new CouponException("percentage, reduction 타입의 쿠폰만 발급 가능합니다."));
     }
 
     public String getTypeName() {

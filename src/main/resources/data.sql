@@ -16,5 +16,5 @@ INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
 
 INSERT INTO coupon (`name`, discount_type,minimum_price, discount_price, discount_rate) VALUES ('5000원 할인 쿠폰', 'reduction',10000,5000,0);
 INSERT INTO coupon (`name`, discount_type,minimum_price, discount_price, discount_rate) VALUES ('10000 할인 쿠폰', 'reduction',10000,10000,0);
-INSERT INTO coupon (`name`, discount_type,minimum_price, discount_price, discount_rate) VALUES ('50% 할인 쿠폰', 'percent',5000,0,0.5);
-INSERT INTO coupon (`name`, discount_type,minimum_price, discount_price, discount_rate) VALUES ('20% 할인 쿠폰', 'percent',5000,0,0.2);
+INSERT INTO coupon (`name`, discount_type,minimum_price, discount_price, discount_rate) VALUES ('50% 할인 쿠폰', 'percentage',5000,0,0.5);
+INSERT INTO coupon (`name`, discount_type,minimum_price, discount_price, discount_rate) VALUES ('20% 할인 쿠폰', 'percentage',5000,0,0.2);
