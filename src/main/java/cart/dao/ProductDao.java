@@ -4,6 +4,8 @@ import cart.entity.ProductEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,6 +13,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
+    private static final RowMapper<ProductEntity> MAPPER = (resultSet, rowNum) -> new ProductEntity(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getInt("price"),
+            resultSet.getString("image_url")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
@@ -19,6 +27,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
+                .usingColumns("name", "price", "image_url")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -35,12 +44,11 @@ public class ProductDao {
 
     public ProductEntity findById(final long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
-            final String name = rs.getString("name");
-            final int price = rs.getInt("price");
-            final String imageUrl = rs.getString("image_url");
-            return new ProductEntity(id, name, price, imageUrl);
-        });
+        try {
+            return jdbcTemplate.queryForObject(sql, MAPPER, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchElementException();
+        }
     }
 
     public long createProduct(final ProductEntity productEntity) {
