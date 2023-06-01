@@ -20,4 +20,17 @@ class CartItemTest {
         //then
         assertThat(result).isEqualTo(20000);
     }
+
+    @Test
+    @DisplayName("카트아이템에 담긴 product와 일치하는 product인지 확인한다.")
+    void isSameProduct() {
+        //given
+        final CartItem cartItem = Fixture.CART_ITEM1;
+
+        //when
+        final boolean result = cartItem.isSameProduct(Fixture.CHICKEN_PRODUCT.getId());
+
+        //then
+        assertThat(result).isTrue();
+    }
 }

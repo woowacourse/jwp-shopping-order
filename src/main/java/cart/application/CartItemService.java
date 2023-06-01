@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -29,6 +30,8 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
+        final CartItems cartItems = new CartItems(cartItemDao.findByMemberId(member.getId()));
+        cartItems.validateContainDuplicatedProduct(cartItemRequest.getProductId());
         return cartItemDao.save(new CartItem(productDao.getProductById(cartItemRequest.getProductId()), member));
     }
 

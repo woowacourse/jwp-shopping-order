@@ -54,4 +54,8 @@ public class CartItem {
     public Integer calculateTotalPrice() {
         return product.getPrice() * quantity;
     }
+
+    public boolean isSameProduct(Long productId) {
+        return this.product.getId().equals(productId);
+    }
 }
