@@ -24,14 +24,26 @@ Request: Authorization
 Response: orderId, CartItemResponse[id, quantity, ProductResponse(id, name, price, imageUrl)]
 ```
 
-* 금액에 따른 할인율 조회
+* 할인율 조회
 
 ```
-미정
+GET /discount
+Request: Query Parameters(price, memberGrade)
+Response: [policyName, discountRate, discountPrice]
 ```
 
-* 등급에 따른 할인율 조회
+## 할인율
 
-```
-미정
-```
+### 회원 등급별
+
+- GOLD 5% 할인
+- SILVER 3% 할인
+- BRONZE 1% 할인
+
+### 금액 구간별
+
+- 0 - 9,999 => 1% 할인
+- 10,000 - 19,999 => 2% 할인
+- 20,000 - 29,999 => 3% 할인
+- ...
+- 100,000 ~ 10% 할인
