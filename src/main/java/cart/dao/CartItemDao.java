@@ -69,7 +69,7 @@ public class CartItemDao {
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
 
-        List<CartItem> cartItems = jdbcTemplate.query(sql, (rs, rowNum) -> {
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
             Long productId = rs.getLong("id");
@@ -81,25 +81,19 @@ public class CartItemDao {
             Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, member, product);
-        }, id);
-        return Optional.of(cartItems.get(0));
+        }, id)
+                .stream()
+                .findAny();
     }
-
 
     public boolean isExistBy(Long memberId, Long productId) {
         final String sql = "SELECT EXISTS (SELECT 1 FROM cart_item WHERE member_id = ? AND product_id = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, memberId, productId));
     }
 
-
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
-    }
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
     }
 
     public void deleteById(Long id) {
