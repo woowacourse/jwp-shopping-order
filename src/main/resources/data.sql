@@ -29,27 +29,27 @@ VALUES (5, 3, '피자', 13000,
         2);
 
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('회원가입 축하 쿠폰 🎉' 'RATE', 'ALL', null, 30, 1);
+VALUES ('회원가입 축하 쿠폰 🎉', 'RATE', 'ALL', null, 30, 1);
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('회원가입 축하 쿠폰 🎉' 'RATE', 'ALL', null, 30, 2);
+VALUES ('회원가입 축하 쿠폰 🎉', 'RATE', 'ALL', null, 30, 2);
 
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('생일 축하 쿠폰 🎂' 'FIX', 'SPECIFIC', 1L, 3000, 1);
+VALUES ('생일 축하 쿠폰 🎂', 'FIX', 'SPECIFIC', 1, 3000, 1);
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('어린이날 기념 쿠폰 🎁' 'RATE', 'SPECIFIC', 2L, 10, 2);
+VALUES ('어린이날 기념 쿠폰 🎁', 'RATE', 'SPECIFIC', 2, 10, 2);
 
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('치킨 3000원 할인 쿠폰 🍗' 'FIX', 'SPECIFIC', 1L, 3000, 1);
+VALUES ('치킨 3000원 할인 쿠폰 🍗', 'FIX', 'SPECIFIC', 1, 3000, 1);
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('치킨 3000원 할인 쿠폰 🍗' 'FIX', 'SPECIFIC', 1L, 3000, 2);
+VALUES ('치킨 3000원 할인 쿠폰 🍗', 'FIX', 'SPECIFIC', 1, 3000, 2);
 
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('샐러드 50% 할인 쿠폰 🥗' 'RATE', 'SPECIFIC', 2L, 50, 1);
+VALUES ('샐러드 50% 할인 쿠폰 🥗', 'RATE', 'SPECIFIC', 2, 50, 1);
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('샐러드 50% 할인 쿠폰 🥗' 'RATE', 'SPECIFIC', 2L, 50, 2);
+VALUES ('샐러드 50% 할인 쿠폰 🥗', 'RATE', 'SPECIFIC', 2, 50, 2);
 
 
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('타이어보다 싸다. 전상품 80% 할인 쿠폰 🛞' 'RATE', 'ALL', null, 80, 1);
+VALUES ('타이어보다 싸다. 전상품 80% 할인 쿠폰 🛞', 'RATE', 'ALL', null, 80, 1);
 INSERT INTO coupon (name, discount_type, target_type, target_product_id, coupon_value, member_id)
-VALUES ('타이어보다 싸다. 전상품 80% 할인 쿠폰 🛞' 'RATE', 'ALL', null, 80, 2);
+VALUES ('타이어보다 싸다. 전상품 80% 할인 쿠폰 🛞', 'RATE', 'ALL', null, 80, 2);
