@@ -1,11 +1,14 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
+import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,10 +34,7 @@ class MemberCouponDaoTest {
     void beforeEach() {
         memberCouponDao = new MemberCouponDao(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
-//        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
     }
-
-
 
     @Test
     @DisplayName("Member Coupon 저장을 확인한다.")
@@ -71,6 +71,20 @@ class MemberCouponDaoTest {
     void findById_returnEmpty() {
         Optional<MemberCouponDto> memberCouponDto = memberCouponDao.findById(1L);
         assertThat(memberCouponDto).isNotPresent();
+    }
+
+    @Test
+    @DisplayName("Member id 로 해당하는 Member Coupon 을 찾는다.")
+    void findByMemberId() {
+        String sql = "INSERT INTO member_coupon(id, member_id, coupon_id) VALUES(?, ?, ?)";
+        jdbcTemplate.update(sql, 1L, 2L, 3L);
+        jdbcTemplate.update(sql, 2L, 2L, 4L);
+        jdbcTemplate.update(sql, 3L, 1L, 5L);
+
+        List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(2L);
+        assertThat(memberCouponDtos).hasSize(2)
+                .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
+                .containsExactly(tuple(2L, 3L), tuple(2L, 4L));
     }
 
 }
