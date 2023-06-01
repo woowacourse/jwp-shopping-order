@@ -24,4 +24,12 @@ public class ShippingPolicy {
         }
         return shippingFee;
     }
+
+    public long getBasicShippingFee() {
+        return basicShippingFee;
+    }
+
+    public long getThreshold() {
+        return threshold;
+    }
 }
