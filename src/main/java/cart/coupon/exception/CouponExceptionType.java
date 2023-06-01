@@ -20,6 +20,21 @@ public enum CouponExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "잘못된 쿠폰 ID 입니다."
     ),
+    NO_AUTHORITY_USE_COUPON(
+            403,
+            HttpStatus.BAD_REQUEST,
+            "쿠폰의 소유자가 아닙니다."
+    ),
+    APPLY_MULTIPLE_TO_PRODUCT(
+            404,
+            HttpStatus.BAD_REQUEST,
+            "한 상품에 하나의 쿠폰만 적용 가능합니다."
+    ),
+    EXIST_UNUSED_COUPON(
+            404,
+            HttpStatus.BAD_REQUEST,
+            "적용되지 않은 쿠폰이 존재합니다."
+    ),
     ;
 
     private final int errorCode;
