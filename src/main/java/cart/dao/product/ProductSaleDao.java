@@ -35,10 +35,6 @@ public class ProductSaleDao {
         return count > 0;
     }
 
-    public void update(final long productId, final int amount) {
-
-    }
-
     public ProductSaleEntity findByProductId(final long productId) {
         String sql = "SELECT * FROM product_sale WHERE product_id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, productId);
@@ -53,10 +49,5 @@ public class ProductSaleDao {
         Number generatedId = simpleJdbcInsert.executeAndReturnKey(parameters);
 
         return generatedId.longValue();
-    }
-
-    public void deleteById(final Long policyId) {
-        String sql = "DELETE FROM product_sale WHERE id = ?";
-        jdbcTemplate.update(sql, policyId);
     }
 }

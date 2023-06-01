@@ -36,22 +36,18 @@ CREATE TABLE coupon
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
     policy_id BIGINT       NOT NULL,
---     member_id BIGINT       NOT NULL,
-    member_id BIGINT       NOT NULL,
-    FOREIGN KEY (policy_id) REFERENCES policy (id),
---     FOREIGN KEY (member_id) REFERENCES member (id)
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    FOREIGN KEY (policy_id) REFERENCES policy (id)
 );
 
 -- 추가 테이블
--- CREATE TABLE member_coupon
--- (
---     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
---     coupon_id BIGINT NOT NULL,
---     member_id BIGINT NOT NULL,
---     FOREIGN KEY (coupon_id) REFERENCES coupon (id),
---     FOREIGN KEY (member_id) REFERENCES member (id)
--- );
+CREATE TABLE member_coupon
+(
+    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    coupon_id BIGINT NOT NULL,
+    member_id BIGINT NOT NULL,
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
+);
 
 CREATE TABLE cart
 (

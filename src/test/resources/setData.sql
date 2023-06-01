@@ -1,4 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE member_coupon;
 TRUNCATE TABLE product_sale;
 TRUNCATE TABLE order_item_history;
 TRUNCATE TABLE coupon_history;
@@ -28,10 +29,15 @@ INSERT INTO product (id, name, price, image_url , isOnSale, salePrice) VALUES (4
 INSERT INTO member (id, email, password) VALUES (1, 'a@a.com', '1234');
 INSERT INTO member (id, email, password) VALUES (2, 'b@b.com', '1234');
 
-INSERT INTO coupon (id, name, policy_id, member_id) VALUES (1, '전체 10% 할인 쿠폰', 5, 1);
-INSERT INTO coupon (id, name, policy_id, member_id) VALUES (2, '전체 2000원 할인 쿠폰', 6, 1);
-INSERT INTO coupon (id, name, policy_id, member_id) VALUES (3, 'DELIVERY_FREE', 7, 1);
-INSERT INTO coupon (id, name, policy_id, member_id) VALUES (4, 'DELIVERY_FREE', 7, 2);
+INSERT INTO coupon (id, name, policy_id) VALUES (1, '전체 10% 할인 쿠폰', 5);
+INSERT INTO coupon (id, name, policy_id) VALUES (2, '전체 2000원 할인 쿠폰', 6);
+INSERT INTO coupon (id, name, policy_id) VALUES (3, 'DELIVERY_FREE', 7);
+INSERT INTO coupon (id, name, policy_id) VALUES (4, 'DELIVERY_FREE', 7);
+
+INSERT INTO member_coupon (id, coupon_id, member_id) VALUES (1, 1, 1);
+INSERT INTO member_coupon (id, coupon_id, member_id) VALUES (2, 2, 1);
+INSERT INTO member_coupon (id, coupon_id, member_id) VALUES (3, 3, 1);
+INSERT INTO member_coupon (id, coupon_id, member_id) VALUES (4, 1, 2);
 
 INSERT INTO cart (id, member_id) values ('1', '1');
 INSERT INTO cart (id, member_id) values ('2', '2');

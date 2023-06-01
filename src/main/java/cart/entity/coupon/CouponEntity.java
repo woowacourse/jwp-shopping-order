@@ -5,13 +5,11 @@ public class CouponEntity {
     private final long id;
     private final String name;
     private final long policyId;
-    private final long memberId;
 
-    public CouponEntity(final long id, final String name, final long policyId, final long memberId) {
+    public CouponEntity(final long id, final String name, final long policyId) {
         this.id = id;
         this.name = name;
         this.policyId = policyId;
-        this.memberId = memberId;
     }
 
     public long getId() {
@@ -24,9 +22,5 @@ public class CouponEntity {
 
     public long getPolicyId() {
         return policyId;
-    }
-
-    public long getMemberId() {
-        return memberId;
     }
 }

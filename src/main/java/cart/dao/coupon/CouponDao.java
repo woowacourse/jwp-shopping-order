@@ -25,8 +25,7 @@ public class CouponDao {
             new CouponEntity(
                     rs.getLong("id"),
                     rs.getString("name"),
-                    rs.getLong("policy_id"),
-                    rs.getLong("member_id")
+                    rs.getLong("policy_id")
             );
 
     public List<CouponEntity> findAllCouponEntitiesByMemberId(final long memberId) {
