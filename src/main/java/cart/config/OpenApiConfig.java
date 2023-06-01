@@ -20,6 +20,12 @@ public class OpenApiConfig {
         SecurityScheme basic = new SecurityScheme()
                 .type(Type.HTTP)
                 .scheme("Basic");
-        return new OpenAPI().components(new Components().addSecuritySchemes("basic", basic)).info(info);
+        OpenAPI openApi = new OpenAPI()
+                .components(new Components().addSecuritySchemes("basic", basic))
+                .info(info);
+        openApi.addExtension("x-allowed-origins", "*");
+        openApi.addExtension("x-allowed-methods", "*");
+        openApi.addExtension("x-allowed-headers", "*");
+        return openApi;
     }
 }
