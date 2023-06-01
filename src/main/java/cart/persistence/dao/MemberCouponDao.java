@@ -43,7 +43,7 @@ public class MemberCouponDao {
         }
     }
 
-    public List<MemberCouponDetailDTO> findValidByMemberId(final long memberId) {
+    public List<MemberCouponDetailDTO> findValidCouponByMemberId(final long memberId) {
         String sql = "SELECT * FROM member_coupon "
                 + "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id "
                 + "WHERE member_id = ? "

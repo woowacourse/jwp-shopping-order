@@ -89,7 +89,7 @@ class MemberCouponDaoTest {
         memberCouponDao.create(usedCoupon);
 
         // when
-        List<MemberCouponDetailDTO> result = memberCouponDao.findValidByMemberId(memberId);
+        List<MemberCouponDetailDTO> result = memberCouponDao.findValidCouponByMemberId(memberId);
 
         // then
         assertAll(

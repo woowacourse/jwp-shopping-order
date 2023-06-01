@@ -1,9 +1,9 @@
 package cart.persistence.dao;
 
-import static cart.fixture.CouponFixture.금액쿠폰_10000원이상_1000할인_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.fixture.CouponFixture.금액_10000원이상_1000원할인;
 import cart.persistence.entity.CouponEntity;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ class CouponDaoTest {
     @Test
     void 쿠폰을_조회_및_생성한다() {
         // given
-        CouponEntity coupon = 금액쿠폰_10000원이상_1000할인_엔티티;
+        CouponEntity coupon = 금액_10000원이상_1000원할인.ENTITY;
 
         // when
         long id = couponDao.create(coupon);

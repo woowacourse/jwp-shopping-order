@@ -1,11 +1,24 @@
 package cart.fixture;
 
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponInfo;
 import cart.domain.coupon.CouponType;
 import cart.persistence.entity.CouponEntity;
 
 public class CouponFixture {
 
-    public static CouponEntity 금액쿠폰_10000원이상_1000할인_엔티티 = new CouponEntity("10% 할인쿠폰", 10000, 1000, CouponType.AMOUNT,
-            1000,
-            null);
+    public static class 금액_10000원이상_1000원할인 {
+
+        public static final String NAME = "1000원 할인쿠폰";
+        public static final int MIN_ORDER_PRICE = 10_000;
+        public static final int MAX_DISCOUNT_PRICE = 10_000;
+        public static final CouponType TYPE = CouponType.AMOUNT;
+        public static final Integer DISCOUNT_AMOUNT = 1000;
+        public static final Double DISCOUNT_PERCENT = null;
+
+        public static final CouponEntity ENTITY = new CouponEntity(NAME, MIN_ORDER_PRICE,
+                MAX_DISCOUNT_PRICE, TYPE, DISCOUNT_AMOUNT, DISCOUNT_PERCENT);
+        public static final CouponInfo COUPON_INFO = new CouponInfo(1L, NAME, MIN_ORDER_PRICE, MAX_DISCOUNT_PRICE);
+        public static final Coupon COUPON = new Coupon(COUPON_INFO, DISCOUNT_AMOUNT, TYPE);
+    }
 }
