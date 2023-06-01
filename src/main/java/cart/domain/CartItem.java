@@ -39,6 +39,10 @@ public class CartItem {
         return product.getPrice().multiply(quantity);
     }
 
+    public Price getDiscountedPrice() {
+        return product.getDiscountedPrice().multiply(quantity);
+    }
+
     public Long getId() {
         return id;
     }

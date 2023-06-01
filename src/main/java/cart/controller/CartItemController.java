@@ -1,22 +1,18 @@
 package cart.controller;
 
 import cart.config.auth.Auth;
+import cart.domain.Order;
+import cart.domain.Price;
 import cart.domain.coupon.Coupon;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.domain.coupon.Coupons;
+import cart.domain.coupon.ProductCoupon;
+import cart.domain.coupon.SingleCoupon;
+import cart.dto.*;
 import cart.service.CartItemService;
 import cart.service.CouponService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
@@ -61,16 +57,11 @@ public class CartItemController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/coupons/{couponIds}")
-    public ResponseEntity applyCoupons(@Auth Member member, @PathVariable List<Long> couponIds) {
-        List<Long> notNullCouponIds = couponIds.stream().
-                filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        List<Coupon> coupons = couponService.findByIds(notNullCouponIds);
-
-//        cartItemService.applyCoupon(member, );
-
-        return null;
+    @GetMapping("/coupons")
+    public ResponseEntity<OrderResponse> applyCoupons(@Auth Member member, @RequestParam(name = "id") List<Long> couponIds) {
+        Order order = cartItemService.applyCoupons(member, couponIds);
+        return ResponseEntity.ok().body(OrderResponse.from(order));
     }
+
 }
+

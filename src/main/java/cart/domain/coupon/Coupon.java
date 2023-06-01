@@ -1,7 +1,6 @@
 package cart.domain.coupon;
 
 import cart.domain.Price;
-import cart.domain.policy.DiscountPolicy;
 
 public interface Coupon {
 
@@ -15,6 +14,6 @@ public interface Coupon {
 
     int getDiscountValue();
 
-    String getRange();
+    String getCategory();
 
 }

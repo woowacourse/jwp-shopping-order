@@ -24,8 +24,10 @@ CREATE TABLE cart_item (
 CREATE TABLE coupon (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
-    discount_policy_name VARCHAR(255) NOT NULL UNIQUE,
-    discount_value INT NOT NULL
+    discount_policy_name VARCHAR(255) NOT NULL,
+    discount_value INT NOT NULL,
+    category VARCHAR(255) NOT NULL
+
 );
 
 CREATE TABLE coupon_box (

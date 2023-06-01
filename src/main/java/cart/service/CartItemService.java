@@ -6,15 +6,14 @@ import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
-import cart.dto.CartItemPriceResponse;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.domain.coupon.ProductCoupon;
+import cart.domain.coupon.SingleCoupon;
+import cart.dto.*;
 import cart.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,21 +57,67 @@ public class CartItemService {
         cartItemDao.deleteById(id);
     }
 
-    public List<CartItemPriceResponse> applyCoupon(Member member, Coupon coupon) {
+    private List<OrderCartItem> applyCoupon(Member member, Coupon coupon) {
         Coupons coupons = new Coupons(couponDao.findByMemberId(member.getId()));
 
         validateCoupon(coupons, coupon);
 
-        List<CartItemPriceResponse> cartItemPrice = new ArrayList<>();
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        for (CartItem cartItem : cartItems) {
-            Price originalPrice = cartItem.getPrice();
-            Price discountedPrice = cartItem.applyCoupon(coupon);
-            cartItemPrice.add(new CartItemPriceResponse(
-                    cartItem.getId(), originalPrice, originalPrice.minus(discountedPrice)));
+        return cartItems.stream()
+                .map(cartItem -> new OrderCartItem(cartItem, coupon))
+                .collect(Collectors.toList());
+    }
+
+    private List<OrderCartItem> notApplyCoupon(Member member) {
+        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        return cartItems.stream()
+                .map(OrderCartItem::new)
+                .collect(Collectors.toList());
+    }
+
+    public Order applyCoupons(Member member, List<Long> couponIds) {
+        List<Long> notNullCouponIds = couponIds.stream().
+                filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        if (notNullCouponIds.size() == 0) {
+            List<OrderCartItem> orderCartItems = notApplyCoupon(member);
+            return new Order(orderCartItems);
         }
 
-        return cartItemPrice;
+        Coupons coupons = new Coupons(notNullCouponIds.stream()
+                .map(couponDao::getCouponById)
+                .collect(Collectors.toList()));
+
+        List<Coupon> productCoupons = coupons.findCoupons(ProductCoupon.CATEGORY);
+        List<OrderCartItem> orderCartItems = applyProductCoupon(member, productCoupons);
+
+        List<Coupon> singleCoupons = coupons.findCoupons(SingleCoupon.CATEGORY);
+        return getOrder(orderCartItems, singleCoupons);
+    }
+
+    private Order getOrder(List<OrderCartItem> orderCartItems, List<Coupon> singleCoupons) {
+        if (singleCoupons.size() == 0) {
+            return new Order(orderCartItems);
+        }
+
+        if (singleCoupons.size() == 1) {
+            return new Order(orderCartItems, singleCoupons.get(0));
+        }
+
+        throw new IllegalArgumentException("중복할인이 불가능합니다. (모든항목)");
+    }
+
+    private List<OrderCartItem> applyProductCoupon(Member member, List<Coupon> productCoupons) {
+        if (productCoupons.size() == 0) {
+            return notApplyCoupon(member);
+        }
+
+        if (productCoupons.size() == 1) {
+            return applyCoupon(member, productCoupons.get(0));
+        }
+
+        throw new IllegalArgumentException("중복할인이 불가능합니다.(상품할인)");
     }
 
     private void validateCoupon(Coupons coupons, Coupon coupon) {
