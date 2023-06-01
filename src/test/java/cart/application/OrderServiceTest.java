@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
+import cart.dao.OrderDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Member;
@@ -33,6 +34,9 @@ class OrderServiceTest {
 
     @Mock
     private CouponDao couponDao;
+
+    @Mock
+    private OrderDao orderDao;
 
     @InjectMocks
     private OrderService orderService;
@@ -81,14 +85,14 @@ class OrderServiceTest {
     @Test
     void order_valid_exceptCoupon() {
         //given
+        final Member member = new Member(1L, "email", "password");
         given(cartItemDao.findByMemberId(anyLong()))
                 .willReturn(List.of(
-                        new CartItem(1L, 1, new Product("name1", 100, "image1"), null),
-                        new CartItem(2L, 2, new Product("name2", 200, "image2"), null)
+                        new CartItem(1L, 1, new Product("name1", 100, "image1"), member),
+                        new CartItem(2L, 2, new Product("name2", 200, "image2"), member)
                 ));
 
-        final Member member = new Member(1L, "email", "password");
-        final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1L), 1000, null);
+        final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(1L), 3100, null);
 
         //when, then
         assertDoesNotThrow(() -> orderService.order(member, orderRequestDto));

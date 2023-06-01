@@ -19,12 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CouponDaoTest {
     @Autowired
     DataSource dataSource;
+    JdbcTemplate jdbcTemplate;
 
     CouponDao couponDao;
 
     @BeforeEach
     void setting() {
-        couponDao = new CouponDao(new JdbcTemplate(dataSource));
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        couponDao = new CouponDao(jdbcTemplate);
     }
 
     /**
@@ -37,23 +39,18 @@ class CouponDaoTest {
         //given
 
         //targetCoupon
-        dataSource.getConnection()
-                .prepareStatement("insert into coupon values (1, 1000, '1000')").executeUpdate();
-        dataSource.getConnection()
-                .prepareStatement("insert into coupon values (2, 2000, '2000')").executeUpdate();
+        jdbcTemplate.update("insert into coupon values (1, 1000, '1000')");
+        jdbcTemplate.update("insert into coupon values (2, 2000, '2000')");
 
         //otherCoupon
-        dataSource.getConnection()
-                .prepareStatement("insert into coupon values (3, 3000, '3000')").executeUpdate();
+        jdbcTemplate.update("insert into coupon values (3, 3000, '3000')");
 
         //targetUser
-        dataSource.getConnection()
-                .prepareStatement("insert into user_coupon values (1, 1, 1)").executeUpdate();
-        dataSource.getConnection()
-                .prepareStatement("insert into user_coupon values (2, 1, 2)").executeUpdate();
+        jdbcTemplate.update("insert into user_coupon values (1, 1, 1)");
+        jdbcTemplate.update("insert into user_coupon values (2, 1, 2)");
+
         //otherUser
-        dataSource.getConnection()
-                .prepareStatement("insert into user_coupon values (3, 2, 3)").executeUpdate();
+        jdbcTemplate.update("insert into user_coupon values (3, 2, 3)");
 
         //when
         final List<Coupon> couponById = couponDao.findCouponById(1L);
@@ -69,11 +66,9 @@ class CouponDaoTest {
     @Test
     void deleteUserCoupon() throws SQLException {
         //given
-        dataSource.getConnection()
-                .prepareStatement("insert into coupon values (1, 1000, '1000')").executeUpdate();
+        jdbcTemplate.update("insert into coupon values (1, 1000, '1000')");
+        jdbcTemplate.update("insert into user_coupon values (1, 1, 1)");
 
-        dataSource.getConnection()
-                .prepareStatement("insert into user_coupon values (1, 1, 1)").executeUpdate();
 
         final Coupon deletingCoupon = new Coupon(1L, 100, null);
         final List<Coupon> userCoupons = couponDao.findCouponById(1L);
