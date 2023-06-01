@@ -1,6 +1,6 @@
 package cart.dto.cartitem;
 
-import cart.domain.CartItem;
+import cart.domain.cartitem.CartItem;
 import cart.dto.product.ProductResponse;
 
 public class CartItemResponse {
