@@ -22,9 +22,9 @@ class BasicOrderTest {
         final MemberWithId 져니 = new MemberWithId(1L,
             Member.create("journey", EncryptedPassword.create("password")));
         final CartItemWithId 치킨_장바구니_아이템 = new CartItemWithId(1L, 10, new ProductWithId(1L,
-            new Product("치킨", 20000, "chicken_image_url")));
+            new Product("치킨", 20000, "chicken_image_url", false)));
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
-            new Product("피자", 30000, "pizza_image_url")));
+            new Product("피자", 30000, "pizza_image_url", false)));
         final BasicOrder 주문 = new BasicOrder(져니, 3000, LocalDateTime.now(), List.of(치킨_장바구니_아이템, 피자_장바구니_아이템));
 
         // when
@@ -42,9 +42,9 @@ class BasicOrderTest {
         final MemberWithId 져니 = new MemberWithId(1L,
             Member.create("journey", EncryptedPassword.create("password")));
         final CartItemWithId 치킨_장바구니_아이템 = new CartItemWithId(1L, 10, new ProductWithId(1L,
-            new Product("치킨", 20000, "chicken_image_url")));
+            new Product("치킨", 20000, "chicken_image_url", false)));
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
-            new Product("피자", 30000, "pizza_image_url")));
+            new Product("피자", 30000, "pizza_image_url", false)));
         final BasicOrder 주문 = new BasicOrder(져니, 3000, LocalDateTime.now(), List.of(치킨_장바구니_아이템, 피자_장바구니_아이템));
 
         // when

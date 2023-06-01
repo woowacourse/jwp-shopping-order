@@ -1,5 +1,6 @@
 package cart.persistence.mapper;
 
+import static cart.persistence.mapper.ProductMapper.convertProduct;
 import static cart.persistence.mapper.ProductMapper.convertProductWithId;
 
 import cart.domain.cartitem.Cart;
@@ -41,8 +42,7 @@ public class CartMapper {
     }
 
     private static CartItemWithId convertCartItemWithId(final OrderDto orderDto) {
-        return new CartItemWithId(orderDto.getOrderQuantity(),
-            new ProductWithId(orderDto.getProductId(),
-                new Product(orderDto.getProductName(), orderDto.getProductPrice(), orderDto.getProductImageUrl())));
+        final ProductWithId productWithId = convertProductWithId(orderDto);
+        return new CartItemWithId(orderDto.getOrderQuantity(), productWithId);
     }
 }

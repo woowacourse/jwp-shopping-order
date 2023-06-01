@@ -6,6 +6,7 @@ import static cart.persistence.mapper.ProductMapper.convertProductEntity;
 import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
 import cart.domain.product.dto.ProductWithId;
+import cart.exception.DBException;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
 import cart.persistence.dao.ProductDao;
@@ -26,7 +27,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<ProductWithId> getAllProducts() {
-        return productDao.getAllProducts().stream()
+        return productDao.getNotDeletedProducts().stream()
             .map(ProductMapper::convertProductWithId)
             .collect(Collectors.toUnmodifiableList());
     }
@@ -47,12 +48,18 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void updateProduct(final Long productId, final Product product) {
         final ProductEntity productEntity = convertProductEntity(product);
-        productDao.updateProduct(productId, productEntity);
+        final int updatedCount = productDao.updateProduct(productId, productEntity);
+        if (updatedCount != 1) {
+            throw new DBException(ErrorCode.DB_UPDATE_ERROR);
+        }
     }
 
     @Override
     public void deleteProduct(final Long productId) {
-        productDao.deleteProduct(productId);
+        final int deletedCount = productDao.updateProductDeleted(productId);
+        if (deletedCount != 1) {
+            throw new DBException(ErrorCode.DB_DELETE_ERROR);
+        }
     }
 
     @Override

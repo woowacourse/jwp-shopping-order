@@ -26,9 +26,9 @@ class CouponOrderTest {
         final CouponWithId 신규_가입_축하_쿠폰 = new CouponWithId(1L,
             Coupon.create("신규 가입 축하 쿠폰", 20, 10, LocalDateTime.now().plusDays(10)));
         final CartItemWithId 치킨_장바구니_아이템 = new CartItemWithId(1L, 10, new ProductWithId(1L,
-            new Product("치킨", 20000, "chicken_image_url")));
+            new Product("치킨", 20000, "chicken_image_url", false)));
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
-            new Product("피자", 30000, "pizza_image_url")));
+            new Product("피자", 30000, "pizza_image_url", false)));
         final CouponOrder 주문 = new CouponOrder(져니, 신규_가입_축하_쿠폰, 3000, LocalDateTime.now(),
             List.of(치킨_장바구니_아이템, 피자_장바구니_아이템));
 
@@ -49,9 +49,9 @@ class CouponOrderTest {
         final CouponWithId 신규_가입_축하_쿠폰 = new CouponWithId(1L,
             Coupon.create("신규 가입 축하 쿠폰", 20, 10, LocalDateTime.now().plusDays(10)));
         final CartItemWithId 치킨_장바구니_아이템 = new CartItemWithId(1L, 10, new ProductWithId(1L,
-            new Product("치킨", 20000, "chicken_image_url")));
+            new Product("치킨", 20000, "chicken_image_url", false)));
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
-            new Product("피자", 30000, "pizza_image_url")));
+            new Product("피자", 30000, "pizza_image_url", false)));
         final CouponOrder 주문 = new CouponOrder(져니, 신규_가입_축하_쿠폰, 3000, LocalDateTime.now(),
             List.of(치킨_장바구니_아이템, 피자_장바구니_아이템));
 

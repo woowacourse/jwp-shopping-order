@@ -23,6 +23,7 @@ public class OrderDto {
     private final String productName;
     private final Integer productPrice;
     private final String productImageUrl;
+    private final Boolean productIsDeleted;
 
     public OrderDto(final Long orderId, final LocalDateTime orderedAt, final Integer orderQuantity,
                     final Integer totalPrice, final Integer discountedTotalPrice, final Integer deliveryPrice,
@@ -30,7 +31,7 @@ public class OrderDto {
                     final Integer couponPeriod, final Timestamp couponExpiredAt,
                     final Long memberId, final String memberName, final String memberPassword, final Long productId,
                     final String productName, final Integer productPrice,
-                    final String productImageUrl) {
+                    final String productImageUrl, final Boolean productIsDeleted) {
         this.orderId = orderId;
         this.orderedAt = orderedAt;
         this.orderQuantity = orderQuantity;
@@ -49,6 +50,7 @@ public class OrderDto {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
+        this.productIsDeleted = productIsDeleted;
     }
 
     public Long getOrderId() {
@@ -124,5 +126,9 @@ public class OrderDto {
 
     public String getProductImageUrl() {
         return productImageUrl;
+    }
+
+    public Boolean getProductIsDeleted() {
+        return productIsDeleted;
     }
 }

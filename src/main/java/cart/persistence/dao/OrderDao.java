@@ -32,7 +32,9 @@ public class OrderDao {
         rs.getLong("productId"),
         rs.getString("productName"),
         rs.getInt("orderedProductPrice"),
-        rs.getString("productImageUrl"));
+        rs.getString("productImageUrl"),
+        rs.getBoolean("productIsDeleted")
+    );
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -69,7 +71,7 @@ public class OrderDao {
             + "c.id AS couponId, c.name AS couponName, c.discount_rate AS couponDiscountRate, "
             + "c.period AS couponPeriod, c.expired_at AS couponExpiredAt, "
             + "op.ordered_product_price AS orderedProductPrice, op.quantity as orderQuantity, "
-            + "p.id AS productId, p.name AS productName, p.image_url AS productImageUrl "
+            + "p.id AS productId, p.name AS productName, p.image_url AS productImageUrl, p.is_deleted As productIsDeleted "
             + "FROM `order` o "
             + "LEFT JOIN member m on o.member_id = m.id "
             + "LEFT JOIN order_coupon oc on o.id = oc.order_id "
@@ -87,7 +89,7 @@ public class OrderDao {
             + "c.id AS couponId, c.name AS couponName, c.discount_rate AS couponDiscountRate, "
             + "c.period AS couponPeriod, c.expired_at AS couponExpiredAt, "
             + "op.ordered_product_price AS orderedProductPrice, op.quantity as orderQuantity, "
-            + "p.id AS productId, p.name AS productName, p.image_url AS productImageUrl "
+            + "p.id AS productId, p.name AS productName, p.image_url AS productImageUrl, p.is_deleted As productIsDeleted "
             + "FROM `order` o "
             + "LEFT JOIN member m on o.member_id = m.id "
             + "LEFT JOIN order_coupon oc on o.id = oc.order_id "

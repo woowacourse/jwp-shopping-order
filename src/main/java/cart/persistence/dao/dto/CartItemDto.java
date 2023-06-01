@@ -11,11 +11,11 @@ public class CartItemDto {
     private final String productImageUrl;
     private final int productPrice;
     private final int productQuantity;
+    private final boolean productIsDeleted;
 
     public CartItemDto(final Long cartId, final Long memberId, final String memberName, final String memberPassword,
-                       final Long productId,
-                       final String productName, final String productImageUrl, final int productPrice,
-                       final int productQuantity) {
+                       final Long productId, final String productName, final String productImageUrl,
+                       final int productPrice, final int productQuantity, final boolean productIsDeleted) {
         this.cartId = cartId;
         this.memberId = memberId;
         this.memberName = memberName;
@@ -25,6 +25,7 @@ public class CartItemDto {
         this.productImageUrl = productImageUrl;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
+        this.productIsDeleted = productIsDeleted;
     }
 
     public Long getCartId() {
@@ -61,5 +62,9 @@ public class CartItemDto {
 
     public int getProductQuantity() {
         return productQuantity;
+    }
+
+    public boolean isProductIsDeleted() {
+        return productIsDeleted;
     }
 }

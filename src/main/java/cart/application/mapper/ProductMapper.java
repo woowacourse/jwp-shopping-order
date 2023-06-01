@@ -9,11 +9,12 @@ public class ProductMapper {
 
     public static Product convertProduct(final ProductWithId productWithId) {
         return new Product(productWithId.getProduct().getName(), productWithId.getProduct().getPrice(),
-            productWithId.getProduct().getImageUrl());
+            productWithId.getProduct().getImageUrl(), productWithId.getProduct().isDeleted());
     }
 
     public static Product convertProduct(final ProductRequest productRequest) {
-        return new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        return new Product(productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImageUrl(), false);
     }
 
     public static ProductResponse convertProductResponse(final Long productId, final Product product) {

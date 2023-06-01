@@ -21,7 +21,8 @@ public class ProductDao {
         final String name = rs.getString("name");
         final String imageUrl = rs.getString("image_url");
         final int price = rs.getInt("price");
-        return new ProductEntity(productId, name, imageUrl, price);
+        final boolean isDeleted = rs.getBoolean("is_deleted");
+        return new ProductEntity(productId, name, imageUrl, price, isDeleted);
     };
 
     private final JdbcTemplate jdbcTemplate;
@@ -30,13 +31,14 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> getAllProducts() {
-        String sql = "SELECT * FROM product";
+    public List<ProductEntity> getNotDeletedProducts() {
+        String sql = "SELECT id, name, image_url, price, is_deleted FROM product "
+            + "WHERE is_deleted = 0";
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
     public Optional<ProductEntity> getProductById(final Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+        String sql = "SELECT id, name, image_url, price, is_deleted FROM product WHERE id = ? and is_deleted = 0";
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, productEntityRowMapper, productId));
         } catch (EmptyResultDataAccessException exception) {
@@ -64,14 +66,14 @@ public class ProductDao {
         return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public int deleteProduct(final Long productId) {
-        final String sql = "DELETE FROM product WHERE id = ?";
-        return jdbcTemplate.update(sql, productId);
-    }
-
     public boolean existById(final Long id) {
-        final String sql = "SELECT COUNT(*) FROM product WHERE id = ?";
+        final String sql = "SELECT COUNT(*) FROM product WHERE id = ? and is_deleted = 0";
         final long count = jdbcTemplate.queryForObject(sql, Long.class, id);
         return count > 0;
+    }
+
+    public int updateProductDeleted(final Long productId) {
+        final String sql = "UPDATE product SET is_deleted = 1 WHERE id = ?";
+        return jdbcTemplate.update(sql, productId);
     }
 }

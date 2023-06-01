@@ -27,12 +27,12 @@ public class DaoTestHelper extends DaoTest {
     CartItemDao cartItemDao;
 
     Long 치킨_저장() {
-        final ProductEntity 치킨 = new ProductEntity("치킨", "chicken_image_url", 20000);
+        final ProductEntity 치킨 = new ProductEntity("치킨", "chicken_image_url", 20000, false);
         return productDao.insert(치킨);
     }
 
     Long 피자_저장() {
-        final ProductEntity 피자 = new ProductEntity("피자", "pizza_image_url", 30000);
+        final ProductEntity 피자 = new ProductEntity("피자", "pizza_image_url", 30000, false);
         return productDao.insert(피자);
     }
 

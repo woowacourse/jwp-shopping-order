@@ -30,8 +30,9 @@ public class CartItemDao {
         final int productPrice = rs.getInt("price");
         final String productImageUrl = rs.getString("imageUrl");
         final int productQuantity = rs.getInt("quantity");
+        final boolean productIsDeleted = rs.getBoolean("isDeleted");
         return new CartItemDto(cartItemId, memberId, memberName, memberPassword, productId, productName,
-            productImageUrl, productPrice, productQuantity);
+            productImageUrl, productPrice, productQuantity, productIsDeleted);
     };
 
     public CartItemDao(final JdbcTemplate jdbcTemplate,
@@ -44,7 +45,7 @@ public class CartItemDao {
         final String sql = "SELECT cart_item.id AS cartItemId, cart_item.member_id AS memberId, "
             + "member.name AS memberName, member.password AS password, product.id AS productId, "
             + "product.name AS productName, product.price AS price, product.image_url AS imageUrl, "
-            + "cart_item.quantity AS quantity " +
+            + "cart_item.quantity AS quantity, product.is_deleted AS isDeleted " +
             "FROM cart_item " +
             "INNER JOIN member ON cart_item.member_id = member.id " +
             "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -71,7 +72,7 @@ public class CartItemDao {
             final String sql = "SELECT cart_item.id AS cartItemId, cart_item.member_id AS memberId, "
                 + "member.name AS memberName, member.password AS password, product.id AS productId, "
                 + "product.name AS productName, product.price AS price, product.image_url AS imageUrl, "
-                + "cart_item.quantity AS quantity " +
+                + "cart_item.quantity AS quantity, product.is_deleted AS isDeleted " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
