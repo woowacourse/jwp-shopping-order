@@ -1,6 +1,4 @@
-package cart.repository;
-
-import cart.domain.CartItems;
+package cart.domain.cart;
 
 import java.util.List;
 

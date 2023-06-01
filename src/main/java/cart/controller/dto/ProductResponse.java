@@ -1,7 +1,7 @@
-package cart.dto;
+package cart.controller.dto;
 
-import cart.domain.OrderItem;
 import cart.domain.Product;
+import cart.domain.order.OrderItem;
 
 public class ProductResponse {
     private Long id;

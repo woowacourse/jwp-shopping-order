@@ -1,12 +1,12 @@
 package cart.service;
 
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.controller.dto.OrderResponse;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
-import cart.dto.OrderResponse;
-import cart.repository.OrderRepository;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.order.OrderRepository;
 import cart.service.order.OrderProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

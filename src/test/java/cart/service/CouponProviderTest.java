@@ -1,11 +1,11 @@
 package cart.service;
 
-import cart.domain.Member;
+import cart.controller.dto.CouponResponse;
+import cart.controller.dto.CouponTypeResponse;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
-import cart.dto.CouponResponse;
-import cart.dto.CouponTypeResponse;
-import cart.repository.coupon.CouponRepository;
+import cart.domain.member.Member;
 import cart.service.coupon.CouponProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

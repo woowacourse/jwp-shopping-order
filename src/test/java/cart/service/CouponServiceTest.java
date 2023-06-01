@@ -1,14 +1,14 @@
 package cart.service;
 
-import cart.domain.Member;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
-import cart.dto.CouponReissueRequest;
+import cart.domain.member.Member;
 import cart.exception.CannotChangeCouponStatusException;
 import cart.exception.CannotDeleteCouponException;
 import cart.repository.MemberJdbcRepository;
-import cart.repository.coupon.CouponRepository;
 import cart.service.coupon.CouponService;
+import cart.service.dto.CouponReissueRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

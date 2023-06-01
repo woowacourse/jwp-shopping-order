@@ -1,9 +1,10 @@
 package cart.repository;
 
 import cart.dao.CartItemDao;
-import cart.dao.entity.CartItemResultMap;
-import cart.domain.CartItem;
-import cart.domain.CartItems;
+import cart.dao.dto.CartItemResultMap;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItemRepository;
+import cart.domain.cart.CartItems;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

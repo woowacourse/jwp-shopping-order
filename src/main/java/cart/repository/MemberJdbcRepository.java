@@ -4,9 +4,10 @@ import cart.dao.CouponDao;
 import cart.dao.MemberDao;
 import cart.dao.entity.CouponTypeCouponEntity;
 import cart.dao.entity.MemberEntity;
-import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
+import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

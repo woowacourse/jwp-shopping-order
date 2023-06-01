@@ -1,6 +1,7 @@
-package cart.domain;
+package cart.domain.order;
 
 import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;

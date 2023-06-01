@@ -1,8 +1,8 @@
-package cart.dao.entity;
+package cart.dao.dto;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.member.Member;
 
 public class CartItemResultMap {
 

@@ -1,12 +1,13 @@
-package cart.repository.coupon;
+package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.entity.CouponEntity;
 import cart.dao.entity.CouponTypeCouponEntity;
 import cart.dao.entity.CouponTypeEntity;
-import cart.domain.Member;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
+import cart.domain.member.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

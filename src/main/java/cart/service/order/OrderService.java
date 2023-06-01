@@ -1,14 +1,14 @@
 package cart.service.order;
 
-import cart.domain.CartItems;
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.cart.CartItemRepository;
+import cart.domain.cart.CartItems;
 import cart.domain.coupon.Coupon;
-import cart.dto.OrderRequest;
+import cart.domain.coupon.CouponRepository;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.order.OrderRepository;
 import cart.exception.AlreadyUsedCouponException;
-import cart.repository.CartItemRepository;
-import cart.repository.OrderRepository;
-import cart.repository.coupon.CouponRepository;
+import cart.service.dto.OrderRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;

@@ -1,7 +1,7 @@
 package cart.acceptance;
 
 import cart.dao.MemberDao;
-import cart.dto.CouponReissueRequest;
+import cart.service.dto.CouponReissueRequest;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.service.dto;
 
 import org.springframework.lang.Nullable;
 

@@ -1,6 +1,4 @@
-package cart.repository;
-
-import cart.domain.Member;
+package cart.domain.member;
 
 public interface MemberRepository {
 

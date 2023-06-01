@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.member;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;

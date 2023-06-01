@@ -1,19 +1,17 @@
-package cart.dto;
+package cart.controller.dto;
 
-public class CouponResponse {
+public class CouponTypeResponse {
 
     private final Long id;
     private final String name;
     private final int discountAmount;
     private final String description;
-    private final boolean used;
 
-    public CouponResponse(final Long id, final String name, final int discountAmount, final String description, final boolean used) {
+    public CouponTypeResponse(final Long id, final String name, final int discountAmount, final String description) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
         this.description = description;
-        this.used = used;
     }
 
     public Long getId() {
@@ -30,9 +28,5 @@ public class CouponResponse {
 
     public String getDescription() {
         return description;
-    }
-
-    public boolean isUsed() {
-        return used;
     }
 }

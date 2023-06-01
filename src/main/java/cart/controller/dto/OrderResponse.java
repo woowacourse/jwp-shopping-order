@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.controller.dto;
 
 import java.util.Date;
 import java.util.List;

@@ -1,11 +1,11 @@
 package cart.controller;
 
-import cart.domain.Member;
-import cart.dto.CouponReissueRequest;
-import cart.dto.CouponResponse;
-import cart.dto.CouponTypeResponse;
+import cart.controller.dto.CouponResponse;
+import cart.controller.dto.CouponTypeResponse;
+import cart.domain.member.Member;
 import cart.service.coupon.CouponProvider;
 import cart.service.coupon.CouponService;
+import cart.service.dto.CouponReissueRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

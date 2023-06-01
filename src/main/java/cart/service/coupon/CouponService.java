@@ -1,13 +1,13 @@
 package cart.service.coupon;
 
-import cart.domain.Member;
 import cart.domain.coupon.Coupon;
-import cart.dto.CouponReissueRequest;
+import cart.domain.coupon.CouponRepository;
+import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 import cart.exception.CannotChangeCouponStatusException;
 import cart.exception.CannotDeleteCouponException;
 import cart.repository.MemberJdbcRepository;
-import cart.repository.MemberRepository;
-import cart.repository.coupon.CouponRepository;
+import cart.service.dto.CouponReissueRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

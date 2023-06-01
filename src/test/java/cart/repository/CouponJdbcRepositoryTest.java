@@ -1,10 +1,9 @@
 package cart.repository;
 
 import cart.dao.CouponDao;
-import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
-import cart.repository.coupon.CouponJdbcRepository;
+import cart.domain.member.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;

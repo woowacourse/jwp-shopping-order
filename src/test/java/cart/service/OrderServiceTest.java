@@ -1,12 +1,16 @@
 package cart.service;
 
-import cart.domain.*;
+import cart.domain.Product;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItemRepository;
+import cart.domain.cart.CartItems;
 import cart.domain.coupon.Coupon;
-import cart.dto.OrderRequest;
+import cart.domain.coupon.CouponRepository;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderRepository;
 import cart.exception.AlreadyUsedCouponException;
-import cart.repository.CartItemRepository;
-import cart.repository.OrderRepository;
-import cart.repository.coupon.CouponRepository;
+import cart.service.dto.OrderRequest;
 import cart.service.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;

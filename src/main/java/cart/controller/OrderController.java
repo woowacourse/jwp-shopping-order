@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.domain.Member;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.controller.dto.OrderResponse;
+import cart.domain.member.Member;
+import cart.service.dto.OrderRequest;
 import cart.service.order.OrderProvider;
 import cart.service.order.OrderService;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.MemberEntity;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

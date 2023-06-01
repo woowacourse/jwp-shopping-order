@@ -1,11 +1,11 @@
 package cart.service.coupon;
 
-import cart.domain.Member;
+import cart.controller.dto.CouponResponse;
+import cart.controller.dto.CouponTypeResponse;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponRepository;
 import cart.domain.coupon.Coupons;
-import cart.dto.CouponResponse;
-import cart.dto.CouponTypeResponse;
-import cart.repository.coupon.CouponRepository;
+import cart.domain.member.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
