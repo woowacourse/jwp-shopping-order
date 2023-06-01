@@ -72,4 +72,8 @@ public class CartRepository {
     public long createMemberCart(final long memberId) {
         return cartDao.createMemberCart(memberId);
     }
+
+    public void deleteAllCartItems(final Cart cart) {
+        cartDao.deleteAllCartItemsByCartId(cart.getId());
+    }
 }

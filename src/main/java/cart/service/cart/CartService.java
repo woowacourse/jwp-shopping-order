@@ -82,4 +82,10 @@ public class CartService {
             throw new MemberNotOwnerException();
         }
     }
+
+    @Transactional
+    public void deleteAllCartItems(final Member member) {
+        Cart cart = cartRepository.findCartByMemberId(member.getId());
+        cartRepository.deleteAllCartItems(cart);
+    }
 }
