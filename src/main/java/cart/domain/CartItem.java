@@ -23,6 +23,21 @@ public class CartItem {
         this.member = member;
     }
 
+    public CartItem(Long id, int quantity, Product product) {
+        this.id = id;
+        this.quantity = quantity;
+        this.product = product;
+        this.member = null;
+    }
+
+    public Price applyCoupon(Coupon coupon) {
+        return product.applyCoupon(coupon).multiply(quantity);
+    }
+
+    public Price getPrice() {
+        return product.getPrice().multiply(quantity);
+    }
+
     public Long getId() {
         return id;
     }

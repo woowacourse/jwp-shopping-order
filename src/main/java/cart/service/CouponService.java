@@ -24,4 +24,10 @@ public class CouponService {
                 .map(CouponResponse::of)
                 .collect(Collectors.toList());
     }
+
+    public List<Coupon> findByIds(List<Long> ids) {
+        return ids.stream()
+                .map(id -> couponDao.getCouponById(id))
+                .collect(Collectors.toList());
+    }
 }

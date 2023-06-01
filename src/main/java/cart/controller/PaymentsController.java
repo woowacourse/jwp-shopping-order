@@ -23,11 +23,4 @@ public class PaymentsController {
         this.paymentsService = paymentsService;
     }
 
-//    @GetMapping("/coupons/{couponIds}")
-//    public ResponseEntity applyCoupons(@Auth Member member, @PathVariable List<Long> couponIds) {
-//        List<Long> notNullCouponIds = couponIds.stream().
-//                filter(Objects::nonNull)
-//                .collect(Collectors.toList());
-//        return null;
-//    }
 }

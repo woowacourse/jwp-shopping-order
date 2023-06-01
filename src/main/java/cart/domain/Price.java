@@ -29,6 +29,10 @@ public class Price {
         return new Price(this.value - price.value);
     }
 
+    public Price multiply(int quantity) {
+        return new Price(value * quantity);
+    }
+
     public boolean isMoreThan(Price price) {
         return this.value > price.value;
     }

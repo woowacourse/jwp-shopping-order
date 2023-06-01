@@ -1,11 +1,13 @@
 package cart.controller;
 
 import cart.config.auth.Auth;
+import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.service.CartItemService;
+import cart.service.CouponService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,15 +20,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart-items")
 public class CartItemController {
 
     private final CartItemService cartItemService;
+    private final CouponService couponService;
 
-    public CartItemController(CartItemService cartItemService) {
+    public CartItemController(CartItemService cartItemService, CouponService couponService) {
         this.cartItemService = cartItemService;
+        this.couponService = couponService;
     }
 
     @GetMapping
@@ -53,5 +59,18 @@ public class CartItemController {
         cartItemService.remove(member, id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/coupons/{couponIds}")
+    public ResponseEntity applyCoupons(@Auth Member member, @PathVariable List<Long> couponIds) {
+        List<Long> notNullCouponIds = couponIds.stream().
+                filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        List<Coupon> coupons = couponService.findByIds(notNullCouponIds);
+
+//        cartItemService.applyCoupon(member, );
+
+        return null;
     }
 }
