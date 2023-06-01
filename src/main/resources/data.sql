@@ -13,11 +13,11 @@ WHERE NOT EXISTS (SELECT * FROM product WHERE name = '피자' AND price = 13000 
 
 INSERT INTO member (email, password, point)
 SELECT 'a@a.com', '1234', 10000 FROM DUAL
-WHERE NOT EXISTS (SELECT * FROM member WHERE email = 'a@a.com' AND password = '1234' AND point = 10000);
+WHERE NOT EXISTS (SELECT * FROM member WHERE email = 'a@a.com' AND password = '1234');
 
 INSERT INTO member (email, password, point)
 SELECT 'b@b.com', '1234', 1000 FROM DUAL
-WHERE NOT EXISTS (SELECT * FROM member WHERE email = 'b@b.com' AND password = '1234' AND point = 1000);
+WHERE NOT EXISTS (SELECT * FROM member WHERE email = 'b@b.com' AND password = '1234');
 
 
 INSERT INTO cart_item (member_id, product_id, quantity)
