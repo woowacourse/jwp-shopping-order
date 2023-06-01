@@ -153,3 +153,56 @@ include::{snippets}/payment-controller-unit-test/pay/http-request.adoc[]
 ==== 응답
 
 include::{snippets}/payment-controller-unit-test/pay/http-response.adoc[]
+
+== 쿠폰
+
+=== 쿠폰 전체 조회
+
+==== 요청
+
+include::{snippets}/coupon-controller-unit-test/find_all_coupons/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/coupon-controller-unit-test/find_all_coupons/http-response.adoc[]
+
+=== 쿠폰 단건 조회
+
+==== 요청
+
+include::{snippets}/coupon-controller-unit-test/find_coupon_by_id/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/coupon-controller-unit-test/find_coupon_by_id/http-response.adoc[]
+
+=== 쿠폰 생성
+
+==== 요청
+
+include::{snippets}/coupon-controller-unit-test/create-coupon/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/coupon-controller-unit-test/create-coupon/http-response.adoc[]
+
+=== 쿠폰 삭제
+
+==== 요청
+
+include::{snippets}/coupon-controller-unit-test/delete_coupon/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/coupon-controller-unit-test/delete_coupon/http-response.adoc[]
+
+
+=== 유저에게 쿠폰 전송
+
+==== 요청
+
+include::{snippets}/coupon-controller-unit-test/give_coupon/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/coupon-controller-unit-test/give_coupon/http-response.adoc[]

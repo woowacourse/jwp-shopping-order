@@ -2,8 +2,10 @@ package cart.handler;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemNotFoundException;
+import cart.exception.CouponCreateBadRequestException;
 import cart.exception.CouponNotFoundException;
 import cart.exception.EmailInvalidException;
+import cart.exception.MemberNotFoundException;
 import cart.exception.MemberNotOwnerException;
 import cart.exception.PasswordInvalidException;
 import cart.exception.QuantityExceedsCartException;
@@ -44,6 +46,11 @@ public class GlobalExceptionHandler {
         return responseNotFound(exception.getMessage());
     }
 
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<String> handleMemberNotFoundException(final MemberNotFoundException exception) {
+        return responseNotFound(exception.getMessage());
+    }
+
     @ExceptionHandler(EmailInvalidException.class)
     public ResponseEntity<String> handleEmailInvalidException(final EmailInvalidException exception) {
         return responseBadRequest(exception.getMessage());
@@ -61,6 +68,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SalePercentageInvalidRangeException.class)
     public ResponseEntity<String> handleSalePercentageInvalidRangeException(final SalePercentageInvalidRangeException exception) {
+        return responseBadRequest(exception.getMessage());
+    }
+
+    @ExceptionHandler(CouponCreateBadRequestException.class)
+    public ResponseEntity<String> handlerCouponCreateBadRequestException(final CouponCreateBadRequestException exception) {
         return responseBadRequest(exception.getMessage());
     }
 

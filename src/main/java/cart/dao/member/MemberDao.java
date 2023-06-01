@@ -54,5 +54,11 @@ public class MemberDao {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public boolean isExistMemberById(final Long memberId) {
+        String sql = "SELECT COUNT(*) FROM member WHERE id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, memberId);
+        return count > 0;
+    }
 }
 

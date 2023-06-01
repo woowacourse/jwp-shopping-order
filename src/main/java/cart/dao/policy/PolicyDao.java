@@ -83,4 +83,25 @@ public class PolicyDao {
 
         return generatedId.longValue();
     }
+
+    public boolean isExistSamePolicy(final boolean isPercentage, final int amount) {
+        String sql = "SELECT COUNT(*) FROM policy WHERE isPercentage = ? AND amount = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, isPercentage, amount);
+        return count > 0;
+    }
+
+    public long createPolicy(final boolean isPercentage, final int amount) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put("isPercentage", isPercentage);
+        parameters.put("amount", amount);
+
+        Number generatedId = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return generatedId.longValue();
+    }
+
+    public PolicyEntity findByIsPercentageAndAmount(final boolean isPercentage, final int amount) {
+        String sql = "SELECT * FROM policy WHERE isPercentage= ? AND amount = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, isPercentage, amount);
+    }
 }

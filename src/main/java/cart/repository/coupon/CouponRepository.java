@@ -77,4 +77,27 @@ public class CouponRepository {
     public void deleteAllByIds(final List<Long> couponIds) {
         couponDao.deleteAllByIds(couponIds);
     }
+
+    public long save(final String name, final boolean isPercentage, final int amount) {
+        if (policyDao.isExistSamePolicy(isPercentage, amount)) {
+            long policyId = policyDao.findByIsPercentageAndAmount(isPercentage, amount).getId();
+            return couponDao.save(name, policyId);
+        }
+
+        long policyId = policyDao.createPolicy(isPercentage, amount);
+        return couponDao.save(name, policyId);
+    }
+
+    public Coupons findAll() {
+        return makeCoupons(couponDao.findAll());
+    }
+
+    public Coupon findById(final Long couponId) {
+        CouponEntity couponEntity = couponDao.findById(couponId);
+        return createCoupon(couponEntity);
+    }
+
+    public boolean isExistCouponById(final Long couponId) {
+        return couponDao.isExistCouponById(couponId);
+    }
 }

@@ -6,7 +6,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class MemberCouponDao {
@@ -31,5 +33,16 @@ public class MemberCouponDao {
     public List<MemberCouponEntity> findAllByMemberId(final long memberId) {
         String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
+    public long save(final long memberId, final long couponId) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put("member_id", memberId);
+        parameters.put("coupon_id", couponId);
+
+        Number generatedId = simpleJdbcInsert.executeAndReturnKey(parameters);
+
+        return generatedId.longValue();
     }
 }

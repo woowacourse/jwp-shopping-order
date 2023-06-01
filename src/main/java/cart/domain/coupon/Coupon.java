@@ -3,14 +3,17 @@ package cart.domain.coupon;
 import cart.domain.discount.Policy;
 import cart.domain.discount.PolicyDiscount;
 import cart.domain.discount.PolicyPercentage;
+import cart.exception.CouponCreateBadRequestException;
 
 import java.util.Objects;
 
 public class Coupon {
 
     private static final String DELIVERY_COUPON = "DELIVERY";
+    private static final int MINIMUM_AMOUNT = 1;
+    private static final int MAXIMUM_AMOUNT = 100;
 
-    private final Long id;
+    private Long id;
     private final String name;
     private final Policy policy;
 
@@ -18,6 +21,30 @@ public class Coupon {
         this.id = id;
         this.name = name;
         this.policy = policy;
+    }
+
+    public Coupon(final String name, final Policy policy) {
+        this.name = name;
+        this.policy = policy;
+    }
+
+    public static Coupon create(final String name, final boolean isPercentage, final int amount) {
+        validateCoupon(isPercentage, amount);
+        return new Coupon(name, createPolicy(isPercentage, amount));
+    }
+
+    public static void validateCoupon(final boolean isPercentage, final int amount) {
+        if (isPercentage && (amount > MAXIMUM_AMOUNT || amount < MINIMUM_AMOUNT)) {
+            throw new CouponCreateBadRequestException();
+        }
+    }
+
+    public static Policy createPolicy(final boolean isPercentage, final int amount) {
+        if (isPercentage) {
+            return new PolicyPercentage(amount);
+        }
+
+        return new PolicyDiscount(amount);
     }
 
     public boolean isSame(final Long id) {

@@ -32,4 +32,8 @@ public class MemberRepository {
         MemberEntity memberEntity = memberDao.getMemberById(id);
         return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
     }
+
+    public boolean isExistMemberById(final Long memberId) {
+        return memberDao.isExistMemberById(memberId);
+    }
 }
