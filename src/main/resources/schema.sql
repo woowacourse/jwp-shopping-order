@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS payment, order_item, orders, cart_item, product, member;
+
 CREATE TABLE product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
@@ -18,4 +20,32 @@ CREATE TABLE cart_item (
     quantity INT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+CREATE TABLE orders (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    created_at DATETIME DEFAULT NOW() NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(id)
+);
+
+CREATE TABLE order_item (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+CREATE TABLE payment (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    original_price INT NOT NULL,
+    discount_price INT NOT NULL,
+    final_price INT NOT NULL,
+    order_id BIGINT NOT NULL,
+    member_id BIGINT NOT NULL,
+    created_at DATETIME DEFAULT NOW() NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (member_id) REFERENCES member(id)
 );
