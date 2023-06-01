@@ -25,7 +25,7 @@
 | 권한 거부
 
 | `404 Not Found`
-| 존재하지 않는 요청 리소스
+| 존재하지 않는 리소스에 대한 요청
 
 | `500 Internal Server Error`
 | 서버 에러
@@ -124,3 +124,49 @@ include::{snippets}/cart-item-api-controller-test/remove-cart-items/request-head
 
 ==== 응답
 include::{snippets}/cart-item-api-controller-test/remove-cart-items/http-response.adoc[]
+
+=== 장바구니 주문 확인
+
+==== 요청
+include::{snippets}/cart-item-api-controller-test/checkout/http-request.adoc[]
+include::{snippets}/cart-item-api-controller-test/checkout/request-headers.adoc[]
+include::{snippets}/cart-item-api-controller-test/checkout/request-parameters.adoc[]
+
+==== 응답
+include::{snippets}/cart-item-api-controller-test/checkout/http-response.adoc[]
+include::{snippets}/cart-item-api-controller-test/checkout/response-fields.adoc[]
+
+== 주문 API
+
+=== 주문
+
+==== 요청
+include::{snippets}/order-api-controller-test/order/http-request.adoc[]
+include::{snippets}/order-api-controller-test/order/request-headers.adoc[]
+include::{snippets}/order-api-controller-test/order/request-fields.adoc[]
+
+==== 응답
+include::{snippets}/order-api-controller-test/order/http-response.adoc[]
+include::{snippets}/order-api-controller-test/order/response-headers.adoc[]
+
+=== 주문 단일 조회(상세 조회)
+
+==== 요청
+include::{snippets}/order-api-controller-test/find-by-order-id/http-request.adoc[]
+include::{snippets}/order-api-controller-test/find-by-order-id/request-headers.adoc[]
+include::{snippets}/order-api-controller-test/find-by-order-id/path-parameters.adoc[]
+
+==== 응답
+include::{snippets}/order-api-controller-test/find-by-order-id/http-response.adoc[]
+include::{snippets}/order-api-controller-test/find-by-order-id/response-fields.adoc[]
+
+=== 주문 목록 조회
+
+==== 요청
+include::{snippets}/order-api-controller-test/find-by-last-id-and-size/http-request.adoc[]
+include::{snippets}/order-api-controller-test/find-by-last-id-and-size/request-headers.adoc[]
+include::{snippets}/order-api-controller-test/find-by-last-id-and-size/request-parameters.adoc[]
+
+==== 응답
+include::{snippets}/order-api-controller-test/find-by-last-id-and-size/http-response.adoc[]
+include::{snippets}/order-api-controller-test/find-by-last-id-and-size/response-fields.adoc[]
