@@ -1,5 +1,4 @@
 package cart.discountpolicy.application;
-
 import cart.discountpolicy.DiscountPolicy;
 import org.springframework.stereotype.Repository;
 
