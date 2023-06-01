@@ -62,7 +62,6 @@ public class CartService {
             return;
         }
 
-        cart.changeQuantity(cartItem.getId(), request.getQuantity());
         cartItem.changeQuantity(request.getQuantity());
         cartRepository.updateCartItemQuantity(cartItem);
     }
