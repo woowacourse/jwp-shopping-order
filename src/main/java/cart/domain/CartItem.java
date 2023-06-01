@@ -47,15 +47,34 @@ public class CartItem {
         }
     }
 
-    public boolean hasSameProduct(final Product product) {
-        return this.product.equals(product);
-    }
-
-    public boolean isSameQuantity(final int quantity) {
-        return this.quantity == quantity;
-    }
-
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final CartItem cartItem = (CartItem) o;
+        return quantity == cartItem.quantity && Objects.equals(product, cartItem.product) && Objects.equals(member, cartItem.member) && Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, member, id, quantity);
+    }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "product=" + product +
+                ", member=" + member +
+                ", id=" + id +
+                ", quantity=" + quantity +
+                '}';
     }
 }
