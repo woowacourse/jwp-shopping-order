@@ -4,7 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 
-public class CartItemDto {
+public class CartItemResultMap {
 
     private final Long memberId;
     private final String email;
@@ -15,7 +15,7 @@ public class CartItemDto {
     private final Long cartItemId;
     private final int cartItemQuantity;
 
-    public CartItemDto(final Long memberId, final String email, final Long productId, final String name, final int price, final String imageUrl, final Long cartItemId, final int cartItemQuantity) {
+    public CartItemResultMap(final Long memberId, final String email, final Long productId, final String name, final int price, final String imageUrl, final Long cartItemId, final int cartItemQuantity) {
         this.memberId = memberId;
         this.email = email;
         this.productId = productId;

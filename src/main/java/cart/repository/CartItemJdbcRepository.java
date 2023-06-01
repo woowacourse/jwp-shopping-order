@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.dao.CartItemDao;
-import cart.dao.entity.CartItemDto;
+import cart.dao.entity.CartItemResultMap;
 import cart.domain.CartItem;
 import cart.domain.CartItems;
 import org.springframework.stereotype.Repository;
@@ -21,9 +21,9 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public CartItems findAllByCartItemIds(final List<Long> itemIds) {
-        List<CartItemDto> cartItemEntities = cartItemDao.findByIds(itemIds);
+        List<CartItemResultMap> cartItemEntities = cartItemDao.findByIds(itemIds);
         final List<CartItem> cartItems = cartItemEntities.stream()
-                .map(CartItemDto::toDomain)
+                .map(CartItemResultMap::toDomain)
                 .collect(toList());
         return CartItems.from(cartItems);
     }

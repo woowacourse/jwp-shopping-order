@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.CartItemDto;
+import cart.dao.entity.CartItemResultMap;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
@@ -22,8 +22,7 @@ import java.util.Objects;
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcOperations namedParameterJdbcTemplate;
-//    String sql = "SELECT ci.id cartItemId, ci.member_id memberId, m.email email, p.id productId, p.name productName, p.price productPrice, p.image_url productImgUrl, ci.quantity quantity " +
-    private final RowMapper<CartItemDto> cartItemDtoRowMapper = (rs, rowNum) -> new CartItemDto(
+    private final RowMapper<CartItemResultMap> cartItemDtoRowMapper = (rs, rowNum) -> new CartItemResultMap(
             rs.getLong("memberId"),
             rs.getString("email"),
             rs.getLong("productId"),
@@ -102,7 +101,7 @@ public class CartItemDao {
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
-    public List<CartItemDto> findByIds(final List<Long> itemIds) {
+    public List<CartItemResultMap> findByIds(final List<Long> itemIds) {
         String sql = "SELECT ci.id cartItemId, ci.member_id memberId, m.email email, p.id productId, p.name productName, p.price productPrice, p.image_url productImgUrl, ci.quantity quantity " +
                 "FROM cart_item ci " +
                 "INNER JOIN member m ON ci.member_id = m.id " +
