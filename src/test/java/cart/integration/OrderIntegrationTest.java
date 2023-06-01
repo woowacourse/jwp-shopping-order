@@ -68,7 +68,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("사용자는 상세 주문 내역을 확인할 수 있다.")
     void findDetailOrderHistory_success() {
         // given
-        createOrder(List.of(1L, 2L),  member1);
+        createOrder(List.of(1L, 2L), member1);
 
         // when
         ExtractableResponse<Response> detailOrderHistory = findDetailOrderHistory(1L, member1);
@@ -77,7 +77,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(detailOrderHistory.jsonPath().getObject(".", OrderResponse.class))
             .usingRecursiveComparison()
             .ignoringFields("orderDate")
-            .isEqualTo(new OrderResponse(1L, BigDecimal.valueOf(100_000), Timestamp.valueOf(LocalDateTime.now()),
+            .isEqualTo(new OrderResponse(1L, BigDecimal.valueOf(100_000),
+                Timestamp.valueOf(LocalDateTime.now()),
                 List.of(
                     new OrderItemResponse(1L, 2, BigDecimal.valueOf(10_000), "치킨", "chickenImg"),
                     new OrderItemResponse(2L, 4, BigDecimal.valueOf(20_000), "샐러드", "saladImg")
@@ -86,12 +87,26 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     @DisplayName("자신의 장바구니에 없는 장바구니 상품을 주문하면 주문에 실패한다.")
-    void order_noCartItemFound_fail() {
+    void order_noCartItemOfMember_fail() {
         // when
         ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(3L), member1);
 
         // then
         assertThat(orderCreateResponse.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(orderCreateResponse.body().jsonPath().getString("message")).
+            isEqualTo("해당 장바구니에 접근 권한이 없습니다. cartItemId = 3, memberId = 1");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 장바구니 상품을 주문하면 주문에 실패한다.")
+    void order_noCartItemId_fail() {
+        // when
+        ExtractableResponse<Response> orderCreateResponse = createOrder(List.of(4L), member1);
+
+        // then
+        assertThat(orderCreateResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(orderCreateResponse.body().jsonPath().getString("message"))
+            .isEqualTo("존재하지 않는 장바구니 상품이 포함되어 있습니다.");
     }
 
     private ExtractableResponse<Response> createOrder(List<Long> cartItemIds, Member member) {
