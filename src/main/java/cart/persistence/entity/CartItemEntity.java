@@ -1,6 +1,6 @@
 package cart.persistence.entity;
 
-import cart.domain.CartItem;
+import cart.domain.cartitem.CartItem;
 
 public class CartItemEntity {
 

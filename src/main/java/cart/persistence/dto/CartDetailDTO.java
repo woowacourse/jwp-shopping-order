@@ -1,8 +1,8 @@
 package cart.persistence.dto;
 
-import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.cartitem.CartItem;
 import cart.persistence.entity.CartItemEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
