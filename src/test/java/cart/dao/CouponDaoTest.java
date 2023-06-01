@@ -1,12 +1,11 @@
 package cart.dao;
 
 import static cart.domain.CouponType.FIXED;
-import static cart.domain.CouponType.RATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Coupon;
-import java.util.List;
+import cart.entity.CouponEntity;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,42 +52,28 @@ class CouponDaoTest {
         Long id = couponDao.save(expected);
 
         // when
-        Coupon actual = couponDao.findById(id).get();
+        CouponEntity actual = couponDao.findById(id).get();
 
         // then
-        asserThatWithoutId(actual, expected);
+        assertCouponEntity(actual, expected);
     }
 
     @Test
     void 쿠폰_조회시_아이디가_존재하지_않으면_빈값() {
         // when
-        Optional<Coupon> actual = couponDao.findById(1L);
+        Optional<CouponEntity> actual = couponDao.findById(1L);
 
         // then
         assertThat(actual).isEmpty();
     }
 
-    @Test
-    void 모든_쿠폰을_조회한다() {
-        // given
-        Coupon fixed = new Coupon("1000원 할인 쿠폰", FIXED, 1000);
-        Coupon rate = new Coupon("10% 할인 쿠폰", RATE, 10);
-        couponDao.save(fixed);
-        couponDao.save(rate);
 
-        // when
-        List<Coupon> actual = couponDao.findAll();
-
-        // then
+    private void assertCouponEntity(CouponEntity actual, Coupon expected) {
         assertAll(
-                () -> asserThatWithoutId(actual.get(0), fixed),
-                () -> asserThatWithoutId(actual.get(1), rate)
+                () -> assertThat(actual.getId()).isPositive(),
+                () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
+                () -> assertThat(actual.getType()).isEqualTo(expected.getType().name()),
+                () -> assertThat(actual.getDiscountAmount()).isEqualTo(expected.getDiscountAmount())
         );
-    }
-
-    private void asserThatWithoutId(Coupon actual, Coupon expected) {
-        assertThat(actual).usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(expected);
     }
 }

@@ -12,15 +12,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
-import cart.exception.CartItemDuplicateException;
 import cart.exception.ItemOwnerNotMatchException;
 import cart.exception.ProductNotFound;
+import cart.repository.CartItemRepository;
+import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -36,16 +35,16 @@ class CartItemServiceTest {
 
     private static final CartItemRequest CART_ITEM_REQUEST = new CartItemRequest(CHICKEN.getId());
 
-    private CartItemDao cartItemDao = mock(CartItemDao.class);
-    private ProductDao productDao = mock(ProductDao.class);
-    private CartItemService cartItemService = new CartItemService(cartItemDao, productDao);
+    private CartItemRepository cartItemRepository = mock(CartItemRepository.class);
+    private ProductRepository productRepository = mock(ProductRepository.class);
+    private CartItemService cartItemService = new CartItemService(cartItemRepository, productRepository);
 
     @Test
     void 아이템을_추가한다() {
         // given
-        given(productDao.findById(1L))
+        given(productRepository.findById(1L))
                 .willReturn(Optional.of(CHICKEN));
-        given(cartItemDao.save(any()))
+        given(cartItemRepository.save(any()))
                 .willReturn(1L);
 
         // when
@@ -58,25 +57,12 @@ class CartItemServiceTest {
     @Test
     void 아이템_추가시_해당하는_상품이_없으면_예외() {
         // given
-        given(productDao.findById(1L))
+        given(productRepository.findById(1L))
                 .willReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> cartItemService.add(MEMBER, CART_ITEM_REQUEST))
                 .isInstanceOf(ProductNotFound.class);
-    }
-
-    @Test
-    void 이미_존재하는_아이템을_추가하면_예외() {
-        // given
-        given(productDao.findById(1L))
-                .willReturn(Optional.of(CHICKEN));
-        given(cartItemDao.findByMemberIdAndProductId(MEMBER.getId(), CHICKEN.getId()))
-                .willReturn(Optional.of(new CartItem(1L, 1, CHICKEN, MEMBER.getId())));
-
-        // when & then
-        assertThatThrownBy(() -> cartItemService.add(MEMBER, CART_ITEM_REQUEST))
-                .isInstanceOf(CartItemDuplicateException.class);
     }
 
     @Test
@@ -86,7 +72,7 @@ class CartItemServiceTest {
                 new CartItem(1L, 5, CHICKEN, 1L),
                 new CartItem(2L, 10, PIZZA, 1L)
         );
-        given(cartItemDao.findByMemberId(MEMBER.getId()))
+        given(cartItemRepository.findAllByMemberId(MEMBER.getId()))
                 .willReturn(expected);
         // when
         List<CartItemResponse> actual = cartItemService.findByMember(MEMBER);
@@ -102,15 +88,15 @@ class CartItemServiceTest {
         CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(0);
         long cartItemId = 1L;
         CartItem cartItem = new CartItem(cartItemId, 1, PIZZA, MEMBER.getId());
-        given(cartItemDao.findById(cartItemId))
+        given(cartItemRepository.findById(cartItemId))
                 .willReturn(Optional.of(cartItem));
 
         // when
         cartItemService.updateQuantity(MEMBER, cartItemId, request);
 
         // then
-        verify(cartItemDao, times(1)).deleteById(cartItemId);
-        verify(cartItemDao, times(0)).updateQuantity(any());
+        verify(cartItemRepository, times(1)).deleteById(cartItemId);
+        verify(cartItemRepository, times(0)).updateQuantity(any());
     }
 
     @Test
@@ -119,15 +105,15 @@ class CartItemServiceTest {
         CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(10);
         long cartItemId = 1L;
         CartItem cartItem = new CartItem(cartItemId, 1, PIZZA, MEMBER.getId());
-        given(cartItemDao.findById(cartItemId))
+        given(cartItemRepository.findById(cartItemId))
                 .willReturn(Optional.of(cartItem));
 
         // when
         cartItemService.updateQuantity(MEMBER, cartItemId, request);
 
         // then
-        verify(cartItemDao, times(0)).deleteById(any());
-        verify(cartItemDao, times(1)).updateQuantity(any());
+        verify(cartItemRepository, times(0)).deleteById(any());
+        verify(cartItemRepository, times(1)).updateQuantity(any());
     }
 
     @Test
@@ -135,7 +121,7 @@ class CartItemServiceTest {
         // given
         CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(10);
         CartItem cartItem = new CartItem(1L, 1, PIZZA, MEMBER.getId() + 1);
-        given(cartItemDao.findById(1L))
+        given(cartItemRepository.findById(1L))
                 .willReturn(Optional.of(cartItem));
 
         // when & then
@@ -147,7 +133,7 @@ class CartItemServiceTest {
     void 장바구니_상품을_삭제한다() {
         // given
         CartItem cartItem = new CartItem(1L, 1, PIZZA, MEMBER.getId());
-        given(cartItemDao.findById(1L))
+        given(cartItemRepository.findById(1L))
                 .willReturn(Optional.of(cartItem));
         // when & then
         assertThatNoException().isThrownBy(() -> cartItemService.remove(MEMBER, cartItem.getId()));
@@ -157,7 +143,7 @@ class CartItemServiceTest {
     void 상품_삭제시_해당하는_멤버의_상품이_아니면_예외() {
         // given
         CartItem cartItem = new CartItem(1L, 1, PIZZA, MEMBER.getId() + 1);
-        given(cartItemDao.findById(1L))
+        given(cartItemRepository.findById(1L))
                 .willReturn(Optional.of(cartItem));
 
         // when & then

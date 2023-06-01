@@ -6,9 +6,10 @@ import static cart.fixture.MemberFixture.MEMBER;
 import static cart.fixture.ProductFixture.CHICKEN;
 import static cart.fixture.ProductFixture.PIZZA;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.entity.CartItemEntity;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,10 +41,10 @@ class CartItemDaoTest {
         // given
         insertMember(MEMBER, jdbcTemplate);
         insertProduct(CHICKEN, jdbcTemplate);
-        CartItem cartItem = new CartItem(CHICKEN, MEMBER.getId());
+        CartItemEntity cartItemEntity = new CartItemEntity(CHICKEN.getId(), MEMBER.getId(), 2);
 
         // when
-        Long actual = cartItemDao.save(cartItem);
+        Long actual = cartItemDao.save(cartItemEntity);
 
         // then
         assertThat(actual).isPositive();
@@ -54,22 +55,26 @@ class CartItemDaoTest {
         // given
         insertMember(MEMBER, jdbcTemplate);
         insertProduct(CHICKEN, jdbcTemplate);
-        CartItem expected = new CartItem(CHICKEN, MEMBER.getId());
+        CartItemEntity expected = new CartItemEntity(CHICKEN.getId(), MEMBER.getId(), 2);
         Long cartItemId = cartItemDao.save(expected);
 
         // when
-        CartItem actual = cartItemDao.findById(cartItemId).get();
+        CartItemEntity actual = cartItemDao.findById(cartItemId).get();
 
         // then
-        assertThat(actual).usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(expected);
+        assertAll(
+                () -> assertThat(actual.getId()).isPositive(),
+                () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId()),
+                () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId()),
+                () -> assertThat(actual.getQuantity()).isEqualTo(expected.getQuantity())
+        );
+
     }
 
     @Test
     void 존재하지_않는_아이디로_조회시_빈값_반환() {
         // when
-        Optional<CartItem> actual = cartItemDao.findById(1L);
+        Optional<CartItemEntity> actual = cartItemDao.findById(1L);
 
         // then
         assertThat(actual).isEmpty();
@@ -81,14 +86,17 @@ class CartItemDaoTest {
         insertMember(MEMBER, jdbcTemplate);
         insertProduct(CHICKEN, jdbcTemplate);
         insertProduct(PIZZA, jdbcTemplate);
-        cartItemDao.save(new CartItem(CHICKEN, MEMBER.getId()));
-        cartItemDao.save(new CartItem(PIZZA, MEMBER.getId()));
+        CartItemEntity chickenCartItem = new CartItemEntity(CHICKEN.getId(), MEMBER.getId(), 2);
+        CartItemEntity pizzaCartItem = new CartItemEntity(PIZZA.getId(), MEMBER.getId(), 5);
+
+        cartItemDao.save(chickenCartItem);
+        cartItemDao.save(pizzaCartItem);
 
         insertMember(new Member(2L, "bbb@kakao.naver.com", "password"), jdbcTemplate);
-        cartItemDao.save(new CartItem(CHICKEN, 2L));
+        cartItemDao.save(new CartItemEntity(CHICKEN.getId(), 2L, 10));
 
         // when
-        List<CartItem> actual = cartItemDao.findByMemberId(MEMBER.getId());
+        List<CartItemEntity> actual = cartItemDao.findByMemberId(MEMBER.getId());
 
         // then
         assertThat(actual.size()).isEqualTo(2);
@@ -99,7 +107,8 @@ class CartItemDaoTest {
         // given
         insertMember(MEMBER, jdbcTemplate);
         insertProduct(CHICKEN, jdbcTemplate);
-        Long cartItemId = cartItemDao.save(new CartItem(CHICKEN, MEMBER.getId()));
+        CartItemEntity cartItemEntity = new CartItemEntity(CHICKEN.getId(), MEMBER.getId(), 2);
+        Long cartItemId = cartItemDao.save(cartItemEntity);
 
         // when
         cartItemDao.deleteById(cartItemId);
@@ -113,14 +122,15 @@ class CartItemDaoTest {
         // given
         insertMember(MEMBER, jdbcTemplate);
         insertProduct(CHICKEN, jdbcTemplate);
-        Long cartItemId = cartItemDao.save(new CartItem(CHICKEN, MEMBER.getId()));
-        CartItem expected = new CartItem(cartItemId, 10, CHICKEN, MEMBER.getId());
+        CartItemEntity cartItemEntity = new CartItemEntity(CHICKEN.getId(), MEMBER.getId(), 2);
+        Long cartItemId = cartItemDao.save(cartItemEntity);
+        CartItemEntity expected = new CartItemEntity(cartItemId, CHICKEN.getId(), MEMBER.getId(), 10);
 
         // when
         cartItemDao.updateQuantity(expected);
 
         // then
-        CartItem actual = cartItemDao.findById(cartItemId).get();
+        CartItemEntity actual = cartItemDao.findById(cartItemId).get();
         assertThat(actual.getQuantity()).isEqualTo(10);
     }
 }

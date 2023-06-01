@@ -3,7 +3,7 @@ package cart.ui;
 
 import cart.application.CouponService;
 import cart.domain.Member;
-import cart.dto.response.CouponResponse;
+import cart.dto.response.MemberCouponResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +22,8 @@ public class CouponController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CouponResponse>> findAllByMember(Member member) {
-        List<CouponResponse> response = couponService.findAllByMemberId(member.getId());
+    public ResponseEntity<List<MemberCouponResponse>> findAllByMember(Member member) {
+        List<MemberCouponResponse> response = couponService.findAllByMemberId(member.getId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

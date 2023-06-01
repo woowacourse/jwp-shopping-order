@@ -1,16 +1,12 @@
 package cart.dao;
 
-import cart.domain.Coupon;
-import cart.domain.CouponType;
-import cart.domain.MemberCoupon;
-import java.util.HashMap;
+import cart.entity.MemberCouponEntity;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -21,15 +17,11 @@ public class MemberCouponDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static final RowMapper<MemberCoupon> rowMapper = (rs, rowNum) -> new MemberCoupon(
+    private static final RowMapper<MemberCouponEntity> rowMapper = (rs, rowNum) -> new MemberCouponEntity(
             rs.getLong("id"),
             rs.getLong("member_id"),
-            new Coupon(
-                    rs.getLong("coupon.id"),
-                    rs.getString("coupon.name"),
-                    CouponType.from(rs.getString("coupon.type")),
-                    rs.getInt("coupon.discount_amount")
-            ));
+            rs.getLong("coupon_id"),
+            rs.getBoolean("used"));
 
 
     public MemberCouponDao(JdbcTemplate jdbcTemplate) {
@@ -40,17 +32,13 @@ public class MemberCouponDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public Long save(MemberCoupon memberCoupon) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("member_id", memberCoupon.getMemberId());
-        parameters.put("coupon_id", memberCoupon.getCoupon().getId());
-        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+    public Long save(MemberCouponEntity memberCouponEntity) {
+        final SqlParameterSource source = new BeanPropertySqlParameterSource(memberCouponEntity);
+        return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
-    public List<MemberCoupon> findAllByIds(Set<Long> ids) {
-        String sql = "SELECT * FROM member_coupon WHERE id IN (:ids)";
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("ids", ids);
-        return namedParameterJdbcTemplate.query(sql, parameters, rowMapper);
+    public List<MemberCouponEntity> findAllByMemberId(Long memberId) {
+        String sql = "select * from member_coupon where member_id = ? and used = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId, false);
     }
 }

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Coupon;
 import cart.domain.Member;
-import cart.dto.response.CouponResponse;
+import cart.dto.response.MemberCouponResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -50,7 +50,7 @@ public class CouponIntegrationTest extends IntegrationTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        List<CouponResponse> body = response.as(new ParameterizedTypeReference<List<CouponResponse>>() {
+        List<MemberCouponResponse> body = response.as(new ParameterizedTypeReference<List<MemberCouponResponse>>() {
                 }.getType()
         );
         쿠폰을_검증한다(body.get(0), 천원_할인_쿠폰);
@@ -67,14 +67,12 @@ public class CouponIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private void 쿠폰을_검증한다(CouponResponse 결과, Coupon 쿠폰) {
+    private void 쿠폰을_검증한다(MemberCouponResponse 결과, Coupon 쿠폰) {
         assertAll(
                 () -> assertThat(결과.getId()).isEqualTo(쿠폰.getId()),
                 () -> assertThat(결과.getName()).isEqualTo(쿠폰.getName()),
-                () -> assertThat(결과.getType()).isEqualTo(쿠폰.getType().name()),
-                () -> assertThat(결과.getDiscountAmount()).isEqualTo(쿠폰.getDiscountAmount())
+                () -> assertThat(결과.getDiscount().getType()).isEqualTo(쿠폰.getType().name()),
+                () -> assertThat(결과.getDiscount().getAmount()).isEqualTo(쿠폰.getDiscountAmount())
         );
     }
-
-
 }

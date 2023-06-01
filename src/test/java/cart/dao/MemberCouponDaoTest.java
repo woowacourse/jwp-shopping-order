@@ -8,7 +8,6 @@ import static cart.fixture.MemberFixture.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
-import cart.domain.MemberCoupon;
 import cart.entity.MemberCouponEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +40,7 @@ class MemberCouponDaoTest {
         // given
         insertMember(MEMBER, jdbcTemplate);
         insertCoupon(천원_할인_쿠폰, jdbcTemplate);
-        MemberCouponEntity memberCouponEntity = new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId());
+        MemberCouponEntity memberCouponEntity = new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), false);
 
         // when
         Long actual = memberCouponDao.save(memberCouponEntity);
@@ -64,7 +63,7 @@ class MemberCouponDaoTest {
         insertMemberCoupon(otherMember, 천원_할인_쿠폰, jdbcTemplate);
 
         // when
-        List<MemberCoupon> actual = memberCouponDao.findAllByMemberId(MEMBER.getId());
+        List<MemberCouponEntity> actual = memberCouponDao.findAllByMemberId(MEMBER.getId());
 
         // then
         assertThat(actual.size()).isEqualTo(2);

@@ -8,11 +8,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.ProductNotFound;
+import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -27,14 +27,14 @@ class ProductServiceTest {
 
     private static final ProductRequest PRODUCT_REQUEST = new ProductRequest("치킨", 10_000, "www.naver.com");
 
-    private ProductDao productDao = mock(ProductDao.class);
-    private ProductService productService = new ProductService(productDao);
+    private ProductRepository productRepository = mock(ProductRepository.class);
+    private ProductService productService = new ProductService(productRepository);
 
     @Test
     void 단일_상품을_반환한다() {
         // given
         Product expected = new Product(1L, "치킨", 10_000, "www.naver.com");
-        given(productDao.findById(1L))
+        given(productRepository.findById(1L))
                 .willReturn(Optional.of(expected));
 
         // when
@@ -48,7 +48,7 @@ class ProductServiceTest {
     @Test
     void 상품_조회시_없으면_예외() {
         // given
-        given(productDao.findById(1L))
+        given(productRepository.findById(1L))
                 .willReturn(Optional.empty());
 
         // when & then
@@ -64,7 +64,7 @@ class ProductServiceTest {
                 new Product(2L, "피자", 20_000, "www.kakao.com")
 
         );
-        given(productDao.findAll())
+        given(productRepository.findAll())
                 .willReturn(expected);
 
         // when
@@ -78,7 +78,7 @@ class ProductServiceTest {
     @Test
     void 상품을_생성한다() {
         // given
-        given(productDao.save(any()))
+        given(productRepository.save(any()))
                 .willReturn(1L);
 
         // when
@@ -91,7 +91,7 @@ class ProductServiceTest {
     @Test
     void 상품을_갱신한다() {
         // given
-        given(productDao.findById(1L))
+        given(productRepository.findById(1L))
                 .willReturn(Optional.of(CHICKEN));
 
         // when & then
@@ -101,7 +101,7 @@ class ProductServiceTest {
     @Test
     void 상품을_갱신시_상품이_없으면_예외() {
         // given
-        given(productDao.findById(1L))
+        given(productRepository.findById(1L))
                 .willReturn(Optional.empty());
 
         // when & then
@@ -111,7 +111,7 @@ class ProductServiceTest {
 
     @Test
     void 상품을_삭제한다() {
-        given(productDao.findById(1L))
+        given(productRepository.findById(1L))
                 .willReturn(Optional.of(CHICKEN));
 
         // when && then
@@ -121,7 +121,7 @@ class ProductServiceTest {
     @Test
     void 상품을_삭제시_상품이_없으면_예외() {
         // given
-        given(productDao.findById(1L))
+        given(productRepository.findById(1L))
                 .willReturn(Optional.empty());
 
         // when & then

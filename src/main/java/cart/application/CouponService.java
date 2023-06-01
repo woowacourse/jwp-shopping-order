@@ -2,23 +2,23 @@ package cart.application;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.dao.CouponDao;
-import cart.dto.response.CouponResponse;
+import cart.dto.response.MemberCouponResponse;
+import cart.repository.CouponRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CouponService {
 
-    private final CouponDao couponDao;
+    private final CouponRepository couponRepository;
 
-    public CouponService(CouponDao couponDao) {
-        this.couponDao = couponDao;
+    public CouponService(CouponRepository couponRepository) {
+        this.couponRepository = couponRepository;
     }
 
-    public List<CouponResponse> findAllByMemberId(Long memberId) {
-        return couponDao.findAllByMemberId(memberId).stream()
-                .map(CouponResponse::from)
+    public List<MemberCouponResponse> findAllByMemberId(Long memberId) {
+        return couponRepository.findAllByMemberId(memberId).stream()
+                .map(MemberCouponResponse::from)
                 .collect(toList());
     }
 }

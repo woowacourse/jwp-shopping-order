@@ -5,10 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import cart.dao.CouponDao;
 import cart.domain.Coupon;
 import cart.domain.CouponType;
-import cart.dto.response.CouponResponse;
+import cart.domain.MemberCoupon;
+import cart.dto.response.MemberCouponResponse;
+import cart.repository.CouponRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -20,20 +21,22 @@ import org.junit.jupiter.api.Test;
 @DisplayName("CouponService 은(는)")
 class CouponServiceTest {
 
-    private CouponDao couponDao = mock(CouponDao.class);
-    private CouponService couponService = new CouponService(couponDao);
+    private CouponRepository couponRepository = mock(CouponRepository.class);
+    private CouponService couponService = new CouponService(couponRepository);
 
     @Test
     void 회원_아이디를_통해_모든_쿠폰을_반환한다() {
         // given
         Coupon firstCoupon = new Coupon(1L, "1000원 쿠폰", CouponType.FIXED, 1000);
         Coupon secondCoupon = new Coupon(2L, "10% 쿠폰", CouponType.RATE, 10);
-        List<Coupon> coupons = List.of(firstCoupon, secondCoupon);
-        given(couponDao.findAllByMemberId(1L))
-                .willReturn(coupons);
+        List<MemberCoupon> memberCoupons = List.of(
+                new MemberCoupon(1L, 1L, firstCoupon, false),
+                new MemberCoupon(2L, 1L, secondCoupon, false));
+        given(couponRepository.findAllByMemberId(1L))
+                .willReturn(memberCoupons);
 
         // when
-        List<CouponResponse> actual = couponService.findAllByMemberId(1L);
+        List<MemberCouponResponse> actual = couponService.findAllByMemberId(1L);
 
         // then
         assertThat(actual.size()).isEqualTo(2);
@@ -41,12 +44,12 @@ class CouponServiceTest {
         assertCoupon(actual.get(1), secondCoupon);
     }
 
-    private void assertCoupon(CouponResponse actual, Coupon expected) {
+    private void assertCoupon(MemberCouponResponse actual, Coupon expected) {
         assertAll(
                 () -> assertThat(actual.getId()).isEqualTo(expected.getId()),
                 () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
-                () -> assertThat(actual.getType()).isEqualTo(expected.getType().name()),
-                () -> assertThat(actual.getDiscountAmount()).isEqualTo(expected.getDiscountAmount())
+                () -> assertThat(actual.getDiscount().getType()).isEqualTo(expected.getType().name()),
+                () -> assertThat(actual.getDiscount().getAmount()).isEqualTo(expected.getDiscountAmount())
         );
     }
 }

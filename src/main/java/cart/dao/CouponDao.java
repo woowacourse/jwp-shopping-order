@@ -1,8 +1,8 @@
 package cart.dao;
 
 import cart.domain.Coupon;
-import cart.domain.CouponType;
 import cart.entity.CouponEntity;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,14 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CouponDao {
 
-    private static final RowMapper<Coupon> rowMapper = (rs, rowNum) -> new Coupon(
-            rs.getLong("id"),
-            rs.getString("name"),
-            CouponType.from(rs.getString("type")),
-            rs.getInt("discount_amount")
-    );
-
-    private static final RowMapper<CouponEntity> entityRowMapper = (rs, rowNum) -> new CouponEntity(
+    private static final RowMapper<CouponEntity> rowMapper = (rs, rowNum) -> new CouponEntity(
             rs.getLong("id"),
             rs.getString("name"),
             rs.getString("type"),
@@ -50,7 +43,7 @@ public class CouponDao {
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
-    public Optional<Coupon> findById(Long id) {
+    public Optional<CouponEntity> findById(Long id) {
         String sql = "select * from coupon where id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
@@ -59,23 +52,19 @@ public class CouponDao {
         }
     }
 
-    public List<Coupon> findAll() {
+    public List<CouponEntity> findAll() {
         String sql = "select * from coupon";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public List<Coupon> findAllByMemberId(Long memberId) {
-        String sql = "select coupon.id, coupon.name, coupon.type, coupon.discount_amount, member_coupon.member_id " +
-                "from coupon " +
-                "join member_coupon on coupon.id = member_coupon.coupon_id " +
-                "where member_coupon.member_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
-    }
-
     public List<CouponEntity> findAllByIds(Set<Long> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         String sql = "SELECT * FROM coupon WHERE id IN (:ids)";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
-        return namedParameterJdbcTemplate.query(sql, parameters, entityRowMapper);
+        return namedParameterJdbcTemplate.query(sql, parameters, rowMapper);
     }
 }

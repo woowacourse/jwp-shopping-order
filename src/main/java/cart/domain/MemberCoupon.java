@@ -5,15 +5,17 @@ public class MemberCoupon {
     private Long id;
     private Long memberId;
     private Coupon coupon;
+    private Boolean used;
 
     public MemberCoupon(Long memberId, Coupon coupon) {
-        this(null, memberId, coupon);
+        this(null, memberId, coupon, false);
     }
 
-    public MemberCoupon(Long id, Long memberId, Coupon coupon) {
+    public MemberCoupon(Long id, Long memberId, Coupon coupon, Boolean used) {
         this.id = id;
         this.memberId = memberId;
         this.coupon = coupon;
+        this.used = used;
     }
 
     public Long getId() {
@@ -26,5 +28,9 @@ public class MemberCoupon {
 
     public Coupon getCoupon() {
         return coupon;
+    }
+
+    public Boolean isUsed() {
+        return used;
     }
 }

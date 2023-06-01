@@ -18,6 +18,12 @@ public class MemberCouponResponse {
         this.discount = discount;
     }
 
+    public static MemberCouponResponse from(MemberCoupon memberCoupon) {
+        Coupon coupon = memberCoupon.getCoupon();
+        return new MemberCouponResponse(memberCoupon.getId(), coupon.getName(),
+                new DiscountResponse(coupon.getType().name(), coupon.getDiscountAmount()));
+    }
+
     public Long getId() {
         return id;
     }
@@ -28,11 +34,5 @@ public class MemberCouponResponse {
 
     public DiscountResponse getDiscount() {
         return discount;
-    }
-
-    public static MemberCouponResponse from(MemberCoupon memberCoupon) {
-        Coupon coupon = memberCoupon.getCoupon();
-        return new MemberCouponResponse(memberCoupon.getId(), coupon.getName(),
-                new DiscountResponse(coupon.getType().name(), coupon.getDiscountAmount()));
     }
 }

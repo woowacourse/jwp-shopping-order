@@ -1,9 +1,9 @@
 package cart.dao;
 
-import cart.domain.Product;
+import cart.entity.ProductEntity;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,7 +17,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
 
-    private static final RowMapper<Product> productRowMapper = (rs, rowNum) -> new Product(
+
+    private static final RowMapper<ProductEntity> productRowMapper = (rs, rowNum) -> new ProductEntity(
             rs.getLong("id"),
             rs.getString("name"),
             rs.getInt("price"),
@@ -37,17 +38,17 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public Long save(Product product) {
-        final SqlParameterSource source = new BeanPropertySqlParameterSource(product);
+    public Long save(ProductEntity productEntity) {
+        final SqlParameterSource source = new BeanPropertySqlParameterSource(productEntity);
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
-    public Optional<Product> findById(Long id) {
+    public Optional<ProductEntity> findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productRowMapper, id));
@@ -56,9 +57,10 @@ public class ProductDao {
         }
     }
 
-    public int updateById(Long id, Product product) {
+    public int update(ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
+        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(),
+                productEntity.getId());
     }
 
     public int deleteById(Long id) {
@@ -66,7 +68,11 @@ public class ProductDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public List<Product> findAllByIds(Set<Long> ids) {
+    public List<ProductEntity> findAllByIds(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         String sql = "SELECT * FROM product WHERE id IN (:ids)";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);

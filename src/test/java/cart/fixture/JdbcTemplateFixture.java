@@ -41,8 +41,13 @@ public class JdbcTemplateFixture {
                 orderItemEntity.getProductImageUrl());
     }
 
-    public static void insertMemberCoupon(Member member, Coupon coupon, JdbcTemplate jdbcTemplate) {
+    public static void insertMemberCouponReturnId(Long id, Member member, Coupon coupon, JdbcTemplate jdbcTemplate) {
         String sql = "INSERT INTO member_coupon(member_id, coupon_id) VALUES (?,?)";
         jdbcTemplate.update(sql, member.getId(), coupon.getId());
+    }
+
+    public static void insertMemberCoupon(Member member, Coupon coupon, JdbcTemplate jdbcTemplate) {
+        String sql = "INSERT INTO member_coupon(member_id, coupon_id, used) VALUES (?,?, ?)";
+        jdbcTemplate.update(sql, member.getId(), coupon.getId(), false);
     }
 }

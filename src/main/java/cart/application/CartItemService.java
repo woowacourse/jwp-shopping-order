@@ -2,54 +2,49 @@ package cart.application;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
-import cart.exception.CartItemDuplicateException;
 import cart.exception.CartItemException;
 import cart.exception.ProductNotFound;
+import cart.repository.CartItemRepository;
+import cart.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CartItemService {
 
-    private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
+    private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
 
-    public CartItemService(CartItemDao cartItemDao, ProductDao productDao) {
-        this.cartItemDao = cartItemDao;
-        this.productDao = productDao;
+    public CartItemService(CartItemRepository cartItemRepository, ProductRepository productRepository) {
+        this.cartItemRepository = cartItemRepository;
+        this.productRepository = productRepository;
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productDao.findById(cartItemRequest.getProductId())
+        Product product = productRepository.findById(cartItemRequest.getProductId())
                 .orElseThrow(ProductNotFound::new);
-        validateDuplicateCartItem(member.getId(), cartItemRequest.getProductId());
         CartItem cartItem = new CartItem(product, member.getId());
-        return cartItemDao.save(cartItem);
+        return cartItemRepository.save(cartItem);
     }
 
-    private void validateDuplicateCartItem(Long memberId, Long productId) {
-        if (cartItemDao.findByMemberIdAndProductId(memberId, productId).isPresent()) {
-            throw new CartItemDuplicateException();
-        }
-    }
-
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        List<CartItem> cartItems = cartItemRepository.findAllByMemberId(member.getId());
         return cartItems.stream()
                 .map(CartItemResponse::of)
                 .collect(toList());
     }
 
     private CartItem findCartItemById(Long id) {
-        return cartItemDao.findById(id)
+        return cartItemRepository.findById(id)
                 .orElseThrow(CartItemException::new);
     }
 
@@ -58,17 +53,17 @@ public class CartItemService {
         cartItem.checkOwner(member.getId());
 
         if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+            cartItemRepository.deleteById(id);
             return;
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemRepository.updateQuantity(cartItem);
     }
 
     public void remove(Member member, Long id) {
         CartItem cartItem = findCartItemById(id);
         cartItem.checkOwner(member.getId());
-        cartItemDao.deleteById(id);
+        cartItemRepository.deleteById(id);
     }
 }
