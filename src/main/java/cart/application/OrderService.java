@@ -10,11 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.dto.OrderDto;
+import cart.dao.dto.OrderItemDto;
 import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.domain.Order;
+import cart.domain.OrderItem;
+import cart.domain.Product;
 import cart.dto.OrderRequest;
 
 @Service
@@ -60,20 +63,40 @@ public class OrderService {
         orderItemDao.insertAll(orderId, order.getOrderItems());
     }
 
-    public Order getBy(Long id) {
+    public List<Order> getBy(Member owner) {
+        return orderDao.selectAllBy(owner.getId()).stream()
+                .map(OrderDto::getId)
+                .map(id -> getBy(owner, id))
+                .collect(Collectors.toList());
+    }
+
+    public Order getBy(Member owner, Long id) {
         OrderDto orderDto = orderDao.selectBy(id);
         return new Order(
                 orderDto.getId(),
                 memberService.getMemberBy(orderDto.getMemberId()),
-                orderItemDao.selectAllOf(id),
+                toOrderItems(owner, orderItemDao.selectAllOf(id)),
                 orderDto.getCreatedAt()
         );
     }
 
-    public List<Order> getBy(Member member) {
-        return orderDao.selectAllBy(member.getId()).stream()
-                .map(OrderDto::getId)
-                .map(this::getBy)
+    private List<OrderItem> toOrderItems(Member owner, List<OrderItemDto> orderItemDtos) {
+        return orderItemDtos.stream()
+                .map(dto -> toOrderItem(owner, dto))
                 .collect(Collectors.toList());
+    }
+
+    private OrderItem toOrderItem(Member owner, OrderItemDto orderItemDto) {
+        return new OrderItem(
+                orderItemDto.getId(),
+                new Product(
+                        orderItemDto.getOrderedProductId(),
+                        orderItemDto.getOrderedProductName(),
+                        orderItemDto.getOrderedProductPrice(),
+                        orderItemDto.getOrderedProductImageUrl()
+                ),
+                orderItemDto.getQuantity(),
+                couponService.getMemberCouponsBy(owner, orderItemDto.getMemberCouponIds())
+        );
     }
 }

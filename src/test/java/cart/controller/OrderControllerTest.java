@@ -145,7 +145,7 @@ public class OrderControllerTest extends ControllerTestWithDocs {
 
     @Test
     void id로_주문_조회() throws Exception {
-        when(orderService.getBy(eq(ORDER_ONE_MEMBER_A.getId()))).thenReturn(ORDER_ONE_MEMBER_A);
+        when(orderService.getBy(eq(MEMBER_A), eq(ORDER_ONE_MEMBER_A.getId()))).thenReturn(ORDER_ONE_MEMBER_A);
         OrderResponse orderResponse = OrderResponse.of(ORDER_ONE_MEMBER_A);
 
         ResultActions result = mockMvc.perform(get("/orders/{id}", ORDER_ONE_MEMBER_A.getId())

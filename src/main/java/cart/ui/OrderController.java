@@ -38,7 +38,7 @@ public class OrderController {
 
     @GetMapping("/orders/{id}")
     public ResponseEntity<OrderResponse> order(Member member, @PathVariable Long id) {
-        Order order = orderService.getBy(id);
+        Order order = orderService.getBy(member, id);
         return ResponseEntity.ok(OrderResponse.of(order));
     }
 }

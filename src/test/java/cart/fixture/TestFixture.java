@@ -56,8 +56,6 @@ public class TestFixture {
     public static Order ORDER_ONE_MEMBER_A = new Order(1L, MEMBER_A, ORDER_ITEMS_ONE);
     public static Order ORDER_TWO_MEMBER_A = new Order(2L, MEMBER_A, ORDER_ITEMS_TWO);
 
-    public static OrderItem ORDERED_치킨_COUPON_USED = new OrderItem(null, 치킨, 1);
-
     public static Coupon COUPON_FIXED_2000 = new Coupon(1L, 2000, DiscountPolicy.FIXED);
     public static Coupon COUPON_PERCENTAGE_50 = new Coupon(2L, 50, DiscountPolicy.PERCENTAGE);
 

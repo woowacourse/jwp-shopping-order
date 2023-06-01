@@ -79,6 +79,7 @@ public class OrderItem {
                 "id=" + id +
                 ", orderedProduct=" + orderedProduct +
                 ", quantity=" + quantity +
+                ", memberCoupons=" + memberCoupons +
                 '}';
     }
 }

@@ -43,6 +43,14 @@ CREATE TABLE if not exists order_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
+CREATE TABLE if not exists order_item_member_coupon
+(
+    id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_item_id    BIGINT NOT NULL,
+    member_coupon_id BIGINT NOT NULL,
+    FOREIGN KEY (order_item_id) REFERENCES order_item (id)
+);
+
 CREATE TABLE if not exists coupon
 (
     id              BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
