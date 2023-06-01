@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS purchase_order (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     original_price INT NOT NULL,
     discount_price INT NOT NULL,
-    used_coupon_id BIGINT NOT NULL,
+    used_coupon_id BIGINT,
     confirm_state BOOL NOT NULL,
     member_id BIGINT NOT NULL,
     FOREIGN KEY (used_coupon_id) REFERENCES coupon(id),
@@ -55,5 +55,7 @@ CREATE TABLE IF NOT EXISTS order_product (
     image_url VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     order_id BIGINT NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES purchase_order(id)
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES purchase_order(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id)
 );

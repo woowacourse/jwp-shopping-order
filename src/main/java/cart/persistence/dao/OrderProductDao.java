@@ -21,7 +21,7 @@ public class OrderProductDao {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_product")
-                .usingColumns("name", "price", "image_url", "quantity", "order_id")
+                .usingColumns("name", "price", "image_url", "quantity", "order_id", "product_id")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -44,7 +44,8 @@ public class OrderProductDao {
                     rs.getInt("price"),
                     rs.getString("image_url"),
                     rs.getInt("quantity"),
-                    rs.getLong("order_id")
+                    rs.getLong("order_id"),
+                    rs.getLong("product_id")
             );
         }
     }

@@ -1,13 +1,7 @@
 package cart.persistence.repository;
 
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderProduct;
-import cart.domain.OrderRepository;
-import cart.persistence.dao.CouponDao;
-import cart.persistence.dao.MemberDao;
-import cart.persistence.dao.OrderDao;
-import cart.persistence.dao.OrderProductDao;
+import cart.domain.*;
+import cart.persistence.dao.*;
 import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderEntity;
@@ -23,12 +17,14 @@ public class DbOrderRepository implements OrderRepository { // TODO dao 의존 .
     private final OrderProductDao orderProductDao;
     private final CouponDao couponDao;
     private final MemberDao memberDao;
+    private final ProductDao productDao;
 
-    public DbOrderRepository(OrderDao orderDao, OrderProductDao orderProductDao, CouponDao couponDao, MemberDao memberDao) {
+    public DbOrderRepository(OrderDao orderDao, OrderProductDao orderProductDao, CouponDao couponDao, MemberDao memberDao, ProductDao productDao) {
         this.orderDao = orderDao;
         this.orderProductDao = orderProductDao;
         this.couponDao = couponDao;
         this.memberDao = memberDao;
+        this.productDao = productDao;
     }
 
     @Override
@@ -59,16 +55,26 @@ public class DbOrderRepository implements OrderRepository { // TODO dao 의존 .
         orderDao.delete(id);
     }
 
+    @Override
+    public Long update(Order order) {
+        return orderDao.update(mapToOrderEntity(order));
+    }
+
     private Order mapToOrder(OrderEntity orderEntity) {
         List<OrderProductEntity> orderProductEntities = orderProductDao.findOrderProductsByOrderId(orderEntity.getId());
         List<OrderProduct> orderProducts = orderProductEntities.stream() // TODO entity to model 로직 개선 필요
-                .map(orderProductEntity -> new OrderProduct(
-                        orderProductEntity.getId(),
-                        orderProductEntity.getName(),
-                        orderProductEntity.getPrice(),
-                        orderProductEntity.getImageUrl(),
-                        orderProductEntity.getQuantity()
-                )).collect(Collectors.toList());
+                .map(orderProductEntity -> {
+                    Product product = productDao.getProductById(orderProductEntity.getProductId()); // TODO
+                    return new OrderProduct(
+                            orderProductEntity.getId(),
+                            orderProductEntity.getName(),
+                            orderProductEntity.getPrice(),
+                            orderProductEntity.getImageUrl(),
+                            orderProductEntity.getQuantity(),
+                            product);
+                }).collect(Collectors.toList());
+
+
         CouponEntity couponEntity = couponDao.findById(orderEntity.getUsedCouponId());
         MemberEntity memberEntity = memberDao.findById(orderEntity.getMemberId());
         return new Order(
@@ -83,12 +89,17 @@ public class DbOrderRepository implements OrderRepository { // TODO dao 의존 .
     }
 
     private OrderEntity mapToOrderEntity(Order order) {
+        Long usedCouponId = null;
+        if (order.getUsedCoupon() != null) {
+            usedCouponId = order.getUsedCoupon().getId();
+        }
+
         return new OrderEntity(
                 order.getId(),
                 order.getOriginalPrice(),
                 order.getDiscountPrice(),
                 order.getConfirmState(),
-                order.getUsedCoupon().getId(),
+                usedCouponId,
                 order.getMember().getId()
         );
     }
@@ -100,7 +111,7 @@ public class DbOrderRepository implements OrderRepository { // TODO dao 의존 .
                 orderProduct.getPrice(),
                 orderProduct.getImageUrl(),
                 orderProduct.getQuantity(),
-                orderId
-        );
+                orderId,
+                orderProduct.getProduct().getId());
     }
 }
