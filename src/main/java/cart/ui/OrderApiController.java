@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderAdditionResponse> saveOrder(Member member, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderAdditionResponse> saveOrder(Member member, @Valid @RequestBody OrderRequest orderRequest) {
         OrderAdditionResponse response = orderService.saveOrder(member, orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + response.getOrderId())).body(response);
     }
