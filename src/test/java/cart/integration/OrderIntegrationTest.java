@@ -31,7 +31,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         // then
         assertThat(orderCreateResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(orderCreateResponse.header("Location")).contains("/order/1");
+        assertThat(orderCreateResponse.header("Location")).contains("/orders/1");
     }
 
     @Test
@@ -102,7 +102,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .auth().preemptive().basic(member.getEmail(), member.getPassword())
             .body(orderRequest)
             .when()
-            .post("/order")
+            .post("/orders")
             .then()
             .log().all()
             .extract();
@@ -112,7 +112,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         return given()
             .auth().preemptive().basic(member.getEmail(), member.getPassword())
             .when()
-            .get("/order")
+            .get("/orders")
             .then()
             .extract();
     }
@@ -122,7 +122,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .auth().preemptive().basic(member.getEmail(), member.getPassword())
             .pathParam("id", orderId)
             .when()
-            .get("/order/{id}")
+            .get("/orders/{id}")
             .then()
             .extract();
     }

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderApiController {
 
     private final OrderService orderService;
@@ -29,7 +29,7 @@ public class OrderApiController {
     @PostMapping
     public ResponseEntity<Void> createOrder(@RequestBody OrderRequest request, Member member) {
         long orderId = orderService.createOrder(request, member);
-        return ResponseEntity.created(URI.create("/order/" + orderId)).build();
+        return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @GetMapping("/{id}")
@@ -50,6 +50,5 @@ public class OrderApiController {
             .map(OrderResponse::fromOrder)
             .collect(Collectors.toList());
     }
-
 
 }
