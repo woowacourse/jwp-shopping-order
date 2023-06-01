@@ -76,7 +76,7 @@ public class OrderProductDao {
         final String sql = "SELECT op.id AS orderproduct_id, op.product_id AS product_id, " +
                 "op.product_name, op.product_price, op.product_image_url, op.quantity, " +
                 "m.id AS member_id, m.email, " +
-                "o.id AS order_id, o.used_point, o.saved_point, o.delivery_fee, o.created_at, " +
+                "o.id AS order_id, o.used_point, o.saved_point, o.delivery_fee, o.created_at " +
                 "FROM order_product op " +
                 "JOIN orders o ON o.id = op.order_id " +
                 "JOIN member m ON m.id = o.member_id " +
@@ -89,7 +89,7 @@ public class OrderProductDao {
         final String sql = "SELECT op.id AS orderproduct_id, op.product_id AS product_id, " +
                 "op.product_name, op.product_price, op.product_image_url, op.quantity, " +
                 "m.id AS member_id, m.email, " +
-                "o.id AS order_id, o.used_point, o.saved_point, o.delivery_fee, o.created_at, " +
+                "o.id AS order_id, o.used_point, o.saved_point, o.delivery_fee, o.created_at " +
                 "FROM order_product op " +
                 "JOIN orders o ON o.id = op.order_id " +
                 "JOIN member m ON m.id = o.member_id " +
