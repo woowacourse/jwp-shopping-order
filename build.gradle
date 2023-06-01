@@ -17,7 +17,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
-    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
 
     runtimeOnly 'com.h2database:h2'
 }
