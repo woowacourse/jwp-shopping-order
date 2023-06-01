@@ -1,22 +1,20 @@
 package cart.entity;
 
-public class CartItemDetailEntity {
+public class CartItemWithProductEntity {
 
     private final long id;
     private final long memberId;
-    private final String memberEmail;
     private final long productId;
     private final String productName;
     private final int productPrice;
     private final String productImageUrl;
     private final int quantity;
 
-    public CartItemDetailEntity(final long id, final long memberId, final String memberEmail,
-                                final long productId, final String productName, final int productPrice,
-                                final String productImageUrl, final int quantity) {
+    public CartItemWithProductEntity(final long id, final long memberId, final long productId,
+                                     final String productName, final int productPrice, final String productImageUrl,
+                                     final int quantity) {
         this.id = id;
         this.memberId = memberId;
-        this.memberEmail = memberEmail;
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
@@ -30,10 +28,6 @@ public class CartItemDetailEntity {
 
     public long getMemberId() {
         return memberId;
-    }
-
-    public String getMemberEmail() {
-        return memberEmail;
     }
 
     public long getProductId() {

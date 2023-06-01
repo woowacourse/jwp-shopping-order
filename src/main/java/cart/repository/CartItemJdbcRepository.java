@@ -6,8 +6,9 @@ import cart.domain.Member;
 import cart.domain.Price;
 import cart.domain.Product;
 import cart.domain.Quantity;
-import cart.entity.CartItemDetailEntity;
+import cart.entity.CartItemWithMemberAndProductEntity;
 import cart.entity.CartItemEntity;
+import cart.entity.CartItemWithProductEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,9 +24,15 @@ public class CartItemJdbcRepository implements CartItemRepository {
     }
 
     @Override
+    public List<CartItem> findByIds(final List<Long> ids) {
+        List<CartItemWithProductEntity> entities = cartItemDao.findProductDetailByIds(ids);
+        return null;
+    }
+
+    @Override
     public List<CartItem> findByMember(final Member member) {
-        List<CartItemDetailEntity> cartItemDetailEntities = cartItemDao.findByMemberId(member.getId());
-        return mapToDomains(cartItemDetailEntities);
+        List<CartItemWithMemberAndProductEntity> entities = cartItemDao.findAllDetailByMemberId(member.getId());
+        return mapToDomains(entities);
     }
 
     @Override
@@ -49,13 +56,13 @@ public class CartItemJdbcRepository implements CartItemRepository {
         return cartItemDao.findMemberIdById(id);
     }
 
-    private List<CartItem> mapToDomains(final List<CartItemDetailEntity> entities) {
+    private List<CartItem> mapToDomains(final List<CartItemWithMemberAndProductEntity> entities) {
         return entities.stream()
                 .map(this::toDomain)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private CartItem toDomain(final CartItemDetailEntity entity) {
+    private CartItem toDomain(final CartItemWithMemberAndProductEntity entity) {
         return new CartItem(
                 entity.getId(),
                 new Member(entity.getMemberId(), entity.getMemberEmail()),
