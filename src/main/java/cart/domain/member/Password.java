@@ -15,7 +15,7 @@ public class Password {
     private final String value;
 
     public Password(final String value) {
-        validateFormat(value);
+//        validateFormat(value);
         this.value = value;
     }
 
