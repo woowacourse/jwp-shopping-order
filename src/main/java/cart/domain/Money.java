@@ -48,4 +48,19 @@ public class Money {
     public Money multiply(double rate) {
         return new Money((int) (this.value * rate));
     }
+
+    public Money subtract(Money subtractive) {
+        return new Money(this.value - subtractive.value);
+    }
+
+    @Override
+    public String toString() {
+        return "Money{" +
+                "value=" + value +
+                '}';
+    }
+
+    public boolean isGreaterThanOrEqual(Money other) {
+        return this.value >= other.value;
+    }
 }

@@ -55,4 +55,28 @@ class MoneyTest {
         //then
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("다른 Money를 빼면 차를 값으로 가진 Money 객체를 반환한다.")
+    void subtract() {
+        //given
+        Money base = new Money(10_000);
+        Money subtractive = new Money(1_000);
+        //when
+        Money actual = base.subtract(subtractive);
+        //then
+        assertThat(actual).isEqualTo(new Money(9_000));
+    }
+
+    @Test
+    @DisplayName("값이 작은 Money와 비교할 경우 true를 반환한다.")
+    void isGreaterThan() {
+        //given
+        Money money = new Money(10_000);
+        Money other = new Money(1_000);
+        //when
+        boolean result = money.isGreaterThanOrEqual(other);
+        //then
+        assertThat(result).isTrue();
+    }
 }

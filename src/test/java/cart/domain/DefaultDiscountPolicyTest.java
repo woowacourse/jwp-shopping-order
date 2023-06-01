@@ -1,5 +1,9 @@
 package cart.domain;
 
+import static cart.domain.fixture.DiscountPolicyFixture.defaultDiscountPolicy;
+import static cart.domain.fixture.OrderFixture.order;
+import static cart.domain.fixture.OrderFixture.orderUnderDiscountThreshold;
+
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +17,6 @@ class DefaultDiscountPolicyTest {
     void calculateDiscountAmount() {
         //given
         //when
-        DiscountPolicy defaultDiscountPolicy = new DefaultDiscountPolicy(0.1);
         Order order = new Order(null, List.of(
                 new OrderItem("치킨", 1, "http://example.com/chicken.jpg", new Money(10_000)),
                 new OrderItem("피자", 2, "http://example.com/pizza.jpg", new Money(30_000)),
@@ -23,6 +26,26 @@ class DefaultDiscountPolicyTest {
 
         //then
         Assertions.assertThat(money).isEqualTo(new Money(5_500));
+    }
+
+    @Test
+    @DisplayName("Order 객체를 받았을 때 정책이 해당 주문에 적용될 수 있으면 true를 반환한다.")
+    void canApply_true() {
+        //given
+        //when
+        boolean actual = defaultDiscountPolicy.canApply(order);
+        //then
+        Assertions.assertThat(actual).isTrue();
+    }
+
+    @Test
+    @DisplayName("Order 객체를 받았을 때 정책이 해당 주문에 적용될 수 없으면 false를 반환한다.")
+    void canApply_false() {
+        //given
+        //when
+        boolean actual = defaultDiscountPolicy.canApply(orderUnderDiscountThreshold);
+        //then
+        Assertions.assertThat(actual).isFalse();
     }
 
 }

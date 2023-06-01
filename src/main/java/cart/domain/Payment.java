@@ -1,32 +1,32 @@
 package cart.domain;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.util.List;
+import java.util.Map;
 
 public class Payment {
 
-    private final Long id;
-    private final Money originalTotalPrice;
-    private final Money discountAmount;
-    private final Money deliveryFee;
+    private final List<DiscountPolicy> discountPolicies;
+    private final List<DeliveryPolicy> deliveryPolicies;
 
-    public Payment(Long id, Money originalTotalPrice, Money discountAmount, Money deliveryFee) {
-        this.id = id;
-        this.originalTotalPrice = originalTotalPrice;
-        this.discountAmount = discountAmount;
-        this.deliveryFee = deliveryFee;
+    public Payment(List<DiscountPolicy> discountPolicies, List<DeliveryPolicy> deliveryPolicies) {
+        this.discountPolicies = discountPolicies;
+        this.deliveryPolicies = deliveryPolicies;
     }
 
-    public Payment(Money originalTotalPrice, Money discountAmount, Money deliveryFee) {
-        this(null, originalTotalPrice, discountAmount, deliveryFee);
-    }
-
-
-    public static Payment of(Order order, List<DiscountPolicy> discountPolicies, DeliveryPolicy deliveryPolicy) {
+    public PaymentRecord createPaymentRecord(Order order) {
         Money originalTotalPrice = order.calculateOriginalTotalPrice();
-        Money discountAmount = discountPolicies.stream()
-                .map(discountPolicy -> discountPolicy.calculateDiscountAmount(order))
-                .reduce(Money.from(0), Money::add);
-        Money deliveryFee = deliveryPolicy.calculateDeliveryFee(order);
-        return new Payment(null, originalTotalPrice, discountAmount, deliveryFee);
+        Map<DiscountPolicy, Money> policyToDiscountAmounts = discountPolicies.stream()
+                .filter(discountPolicy -> discountPolicy.canApply(order))
+                .collect(toMap(discountPolicy -> discountPolicy,
+                        discountPolicy -> discountPolicy.calculateDiscountAmount(order)));
+
+        // TODO: 적용되는 정책 필터링
+        Map<DeliveryPolicy, Money> policyToDeliveryFees = deliveryPolicies.stream()
+                .collect(toMap(deliveryPolicy -> deliveryPolicy,
+                        (DeliveryPolicy deliveryPolicy) -> deliveryPolicy.calculateDeliveryFee(order)));
+
+        return new PaymentRecord(order, originalTotalPrice, policyToDiscountAmounts, policyToDeliveryFees);
     }
 }
