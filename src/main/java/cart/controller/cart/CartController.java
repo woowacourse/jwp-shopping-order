@@ -36,8 +36,8 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(@Auth final Member member,
-                                             @RequestBody @Valid final CartItemRequest cartItemRequest) {
+    public ResponseEntity<Void> addCartItem(@Auth final Member member,
+                                            @RequestBody @Valid final CartItemRequest cartItemRequest) {
         Long cartItemId = cartService.add(member, cartItemRequest);
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
@@ -51,8 +51,8 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> removeCartItems(@Auth final Member member,
-                                                @PathVariable final Long cartItemId) {
+    public ResponseEntity<Void> removeCartItem(@Auth final Member member,
+                                               @PathVariable final Long cartItemId) {
         cartService.remove(member, cartItemId);
         return ResponseEntity.noContent().build();
     }
