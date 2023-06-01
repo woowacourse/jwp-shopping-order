@@ -1,10 +1,9 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
-import cart.dao.MemberCouponDao;
 import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
-import cart.domain.member.MemberCoupon;
+import cart.domain.member.MemberCoupons;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.product.Product;
@@ -12,6 +11,7 @@ import cart.dto.order.OrderProductRequest;
 import cart.dto.order.OrderRequest;
 import cart.exception.MemberCouponNotFoundException;
 import cart.exception.OrderCartMismatchException;
+import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,50 +24,44 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final MemberCouponDao memberCouponDao;
+    private final MemberCouponRepository memberCouponRepository;
     private final CartItemDao cartItemDao;
 
-    public OrderService(final OrderRepository orderRepository, final MemberCouponDao memberCouponDao, final CartItemDao cartItemDao) {
+    public OrderService(final OrderRepository orderRepository, final MemberCouponRepository memberCouponRepository, final CartItemDao cartItemDao) {
         this.orderRepository = orderRepository;
-        this.memberCouponDao = memberCouponDao;
+        this.memberCouponRepository = memberCouponRepository;
         this.cartItemDao = cartItemDao;
     }
 
     @Transactional
     public Long createOrder(List<OrderRequest> orderRequests, Member member) {
-        List<OrderItem> orderItems = requestToOrderItems(orderRequests, member);
         clearCartItems(orderRequests, member.getId());
+        List<OrderItem> orderItems = requestToOrderItems(orderRequests, member);
         return orderRepository.create(orderItems, member.getId());
     }
 
     private List<OrderItem> requestToOrderItems(final List<OrderRequest> orderRequests, final Member member) {
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderRequest orderRequest : orderRequests) {
-
-            List<MemberCoupon> coupons = memberCouponDao.findByIds(orderRequest.getMemberCouponIds());
-
-            if (!coupons.isEmpty()) {
-                clearCoupons(coupons, member);
-            }
+            MemberCoupons requestCoupons = usedCoupon(member, orderRequest);
 
             OrderProductRequest productRequest = orderRequest.getProductRequest();
-            orderItems.add(new OrderItem(productRequest.toProduct(), orderRequest.getQuantity(), coupons));
+            orderItems.add(new OrderItem(productRequest.toProduct(), orderRequest.getQuantity(), requestCoupons.getCoupons()));
         }
         return orderItems;
     }
 
-    private void clearCoupons(final List<MemberCoupon> coupons, final Member member) {
-        List<MemberCoupon> memberCoupons = member.getCoupons();
+    private MemberCoupons usedCoupon(final Member member, final OrderRequest orderRequest) {
+        MemberCoupons memberCoupons = memberCouponRepository.findByIds(orderRequest.getMemberCouponIds());
+        MemberCoupons requestCoupons = memberCouponRepository.findByMemberId(member.getId());
 
-        if (!memberCoupons.containsAll(coupons)) {
+        if (memberCoupons.isNotContains(requestCoupons)) {
             throw new MemberCouponNotFoundException();
         }
 
-        List<Long> couponIds = coupons.stream()
-                .map(MemberCoupon::getId)
-                .collect(Collectors.toList());
-
-        memberCouponDao.delete(couponIds);
+        MemberCoupons unUsedmemberCoupons = memberCoupons.useCoupons(requestCoupons);
+        memberCouponRepository.updateCoupons(unUsedmemberCoupons, member);
+        return requestCoupons;
     }
 
     private void clearCartItems(final List<OrderRequest> orderRequests, final Long memberId) {

@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
 import cart.domain.member.MemberCoupon;
+import cart.domain.member.MemberCoupons;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.Collections;
 import java.util.List;
 
@@ -75,5 +77,25 @@ public class MemberCouponDao {
         final String sql = "delete from member_coupon where id IN (:ids)";
         SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
         namedJdbcTemplate.update(sql, parameters);
+    }
+
+    public void deleteByMemberId(Long memberId) {
+        final String sql = "delete from member_coupon where member_id = ?";
+        jdbcTemplate.update(sql, memberId);
+    }
+
+    public void saveAll(MemberCoupons memberCoupons, Long memberId) {
+        String sql = "INSERT INTO member_coupon (member_id, coupon_id) " +
+                "VALUES (?, ?)";
+
+        List<MemberCoupon> coupons = memberCoupons.getCoupons();
+
+        jdbcTemplate.batchUpdate(sql,
+                coupons,
+                coupons.size(),
+                (PreparedStatement ps, MemberCoupon memberCoupon) -> {
+                    ps.setLong(1, memberId);
+                    ps.setLong(2, memberCoupon.getCoupon().getId());
+                });
     }
 }

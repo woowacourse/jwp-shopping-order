@@ -1,12 +1,12 @@
 package cart.ui;
 
 import cart.application.CouponService;
-import cart.dao.MemberCouponDao;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
+import cart.domain.member.MemberCoupons;
 import cart.dto.coupon.CouponRequest;
 import cart.dto.coupon.CouponResponse;
-import cart.domain.member.MemberCoupon;
+import cart.repository.MemberCouponRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
 public class CouponController {
 
     private final CouponService couponService;
-    private final MemberCouponDao memberCouponDao;
+    private final MemberCouponRepository memberCouponRepository;
 
-    public CouponController(final CouponService couponService, final MemberCouponDao memberCouponDao) {
+    public CouponController(final CouponService couponService, final MemberCouponRepository memberCouponRepository) {
         this.couponService = couponService;
-        this.memberCouponDao = memberCouponDao;
+        this.memberCouponRepository = memberCouponRepository;
     }
 
     @GetMapping("/coupons")
     public ResponseEntity<List<CouponResponse>> showAllCoupons(Member member) {
-        List<MemberCoupon> coupons = member.getCoupons();
-        List<CouponResponse> couponResponses = coupons.stream()
+        MemberCoupons coupons = memberCouponRepository.findByMemberId(member.getId());
+        List<CouponResponse> couponResponses = coupons.getCoupons().stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(couponResponses);
@@ -37,7 +37,7 @@ public class CouponController {
 
     @PostMapping("/coupon")
     public ResponseEntity<Void> addCoupon(@Valid @RequestBody Long couponId, Member member) {
-        memberCouponDao.create(couponId, member.getId());
+        memberCouponRepository.create(couponId, member.getId());
         return ResponseEntity.noContent().build();
     }
 
