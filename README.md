@@ -51,7 +51,7 @@
 ---
 
 ## DB 다이어그램
-<img src="https://raw.githubusercontent.com/Cl8D/jwp-shopping-order/step1/src/main/resources/static/file/db-diagram.png">
+<img src="https://raw.githubusercontent.com/Cl8D/jwp-shopping-order/4dbe8e0b7252fb66f40dbcff12f1c21ffda558e1/src/main/resources/static/file/db-diagram.png">
 
 ---
 
