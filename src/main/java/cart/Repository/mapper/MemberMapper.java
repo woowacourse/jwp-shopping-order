@@ -1,4 +1,4 @@
-package cart.Repository;
+package cart.Repository.mapper;
 
 import cart.domain.Member.Member;
 import cart.entity.MemberEntity;

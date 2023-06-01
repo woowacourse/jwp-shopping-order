@@ -1,4 +1,4 @@
-package cart.Repository;
+package cart.Repository.mapper;
 
 import cart.domain.Order.Order;
 import cart.domain.Order.OrderItem;
@@ -29,10 +29,9 @@ public class OrderMapper {
 
     public OrderItem toOrderItem(OrderItemEntity orderItemEntity, Map<Long, Product> productMappingById) {
         Long productId = orderItemEntity.getProductId();
-        Product product = productMappingById.get(productId);
 
         return new OrderItem(
-                product,
+                productMappingById.get(productId),
                 orderItemEntity.getQuantity()
         );
     }
@@ -44,10 +43,8 @@ public class OrderMapper {
                 .map(it -> toOrderItem(it, productMappingById))
                 .collect(Collectors.toUnmodifiableList());
 
-        Long orderId = orderEntity.getId();
-
         return new Order(
-                orderId,
+                orderEntity.getId(),
                 orderEntity.getOrderDate(),
                 orderItems
         );

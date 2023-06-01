@@ -53,14 +53,14 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .ignoringFields("orderDate")
                 .isEqualTo(new OrderResponse(1L, 20_000, time,
                         List.of(
-                                new OrderItemResponse(1L, 2, "치킨", 10_000, "chickenImg")
+                                new OrderItemResponse(1L, 2, "치킨", 10_000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
                         )));
         assertThat(orderHistoryResponse.jsonPath().getObject("[1]", OrderResponse.class))
                 .usingRecursiveComparison()
                 .ignoringFields("orderDate")
                 .isEqualTo(new OrderResponse(2L, 80_000, time,
                         List.of(
-                                new OrderItemResponse(2L, 4, "샐러드", 20_000, "saladImg")
+                                new OrderItemResponse(2L, 4, "샐러드", 20_000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
                         )));
     }
 
@@ -79,8 +79,8 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .ignoringFields("orderDate")
                 .isEqualTo(new OrderResponse(1L, 100_000, Timestamp.valueOf(LocalDateTime.now()),
                         List.of(
-                                new OrderItemResponse(1L, 2, "치킨", 10_000, "chickenImg"),
-                                new OrderItemResponse(2L, 4, "샐러드", 20_000, "saladImg")
+                                new OrderItemResponse(1L, 2, "치킨", 10_000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"),
+                                new OrderItemResponse(2L, 4, "샐러드", 20_000, "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80")
                         )));
     }
 

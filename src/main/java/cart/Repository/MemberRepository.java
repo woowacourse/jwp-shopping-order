@@ -1,5 +1,6 @@
 package cart.Repository;
 
+import cart.Repository.mapper.MemberMapper;
 import cart.dao.MemberDao;
 import cart.domain.Member.Email;
 import cart.domain.Member.Member;

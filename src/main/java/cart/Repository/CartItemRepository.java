@@ -1,5 +1,6 @@
 package cart.Repository;
 
+import cart.Repository.mapper.CartItemMapper;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
@@ -10,10 +11,7 @@ import cart.entity.ProductEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toMap;
 
 @Repository
 public class CartItemRepository {
@@ -32,27 +30,27 @@ public class CartItemRepository {
     public List<CartItem> findByMemberId(Long memberId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
 
-        Map<Long, ProductEntity> productsInCart = getProductInCarts(cartItemEntities);
-
         MemberEntity memberEntity = memberDao.getMemberById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
 
-        return cartItemMapper.toCartItems(cartItemEntities, productsInCart, memberEntity);
+        List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
+
+        return cartItemMapper.toCartItems(
+                cartItemEntities,
+                productsInCarts,
+                memberEntity);
     }
 
-    private Map<Long, ProductEntity> getProductInCarts(List<CartItemEntity> cartItemEntities) {
+    private List<ProductEntity> getProductInCarts(List<CartItemEntity> cartItemEntities) {
         List<Long> cartItemIds = cartItemEntities.stream().map(CartItemEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
 
-        Map<Long, ProductEntity> productsInCart = productDao.getProductByIds(cartItemIds)
-                .stream()
-                .collect(toMap(ProductEntity::getId, productEntity -> productEntity));
-        return productsInCart;
+        return productDao.getProductByIds(cartItemIds);
     }
 
     public List<CartItem> findByIds(List<Long> cartItemIds) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(cartItemIds);
-        Map<Long, ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
+        List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
 
         MemberEntity memberEntity = memberDao.getMemberById(cartItemEntities.get(0).getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));

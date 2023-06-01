@@ -11,16 +11,16 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 
 
-INSERT INTO orders (member_id) VALUES (1);
-INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (1, 1, 10, 1000);
-INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (1, 2, 20, 2000);
-INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (1, 3, 30, 3000);
-
-INSERT INTO orders (member_id) VALUES (1);
-INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (2, 1, 100, 10);
-INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (2, 2, 200, 20);
-
-
-INSERT INTO orders (member_id) VALUES (2);
-INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (3, 1, 1, 100);
-INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (3, 2, 2, 200);
+-- INSERT INTO orders (member_id) VALUES (1);
+-- INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (1, 1, 10, 1000);
+-- INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (1, 2, 20, 2000);
+-- INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (1, 3, 30, 3000);
+--
+-- INSERT INTO orders (member_id) VALUES (1);
+-- INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (2, 1, 100, 10);
+-- INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (2, 2, 200, 20);
+--
+--
+-- INSERT INTO orders (member_id) VALUES (2);
+-- INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (3, 1, 1, 100);
+-- INSERT INTO order_item (order_id, product_id, quantity, price) VALUES (3, 2, 2, 200);

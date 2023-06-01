@@ -1,6 +1,7 @@
-package cart.Repository;
+package cart.Repository.mapper;
 
 import cart.domain.CartItem;
+import cart.domain.Product.Product;
 import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
@@ -22,23 +23,30 @@ public class CartItemMapper {
         this.memberMapper = memberMapper;
     }
 
-    public List<CartItem> toCartItems(List<CartItemEntity> cartItemEntities, Map<Long, ProductEntity> productsInCart, MemberEntity memberEntity) {
+    public List<CartItem> toCartItems(List<CartItemEntity> cartItemEntities, List<ProductEntity> productEntities, MemberEntity memberEntity) {
+        Map<Long, Product> productMappingById = productMapper.productMappingById(productEntities);
+
         return cartItemEntities.stream()
-                .map(it -> toCartItemFrom(it, productsInCart, memberEntity))
+                .map(it -> toCartItem(it, productMappingById.get(it.getProductId()), memberEntity))
                 .collect(toList());
     }
-
-    private CartItem toCartItemFrom(CartItemEntity cartItemEntity, Map<Long, ProductEntity> productsInCart, MemberEntity memberEntity) {
-        ProductEntity productEntity = productsInCart.get(cartItemEntity.getProductId());
-
-        return toCartItem(cartItemEntity, productEntity, memberEntity);
-    }
+//
+//    private CartItem toCartItemFrom(CartItemEntity cartItemEntity, Map<Long, ProductEntity> productsInCart, MemberEntity memberEntity) {
+//        ProductEntity productEntity = productsInCart.get(cartItemEntity.getProductId());
+//
+//        return toCartItem(cartItemEntity, productEntity, memberEntity);
+//    }
 
     public CartItem toCartItem(CartItemEntity cartItemEntity, ProductEntity productEntity, MemberEntity memberEntity) {
+        Product product = productMapper.toProduct(productEntity);
+        return toCartItem(cartItemEntity, product, memberEntity);
+    }
+
+    public CartItem toCartItem(CartItemEntity cartItemEntity, Product product, MemberEntity memberEntity) {
         return new CartItem(
                 cartItemEntity.getId(),
                 cartItemEntity.getQuantity(),
-                productMapper.toProduct(productEntity),
+                product,
                 memberMapper.toMember(memberEntity)
         );
     }
