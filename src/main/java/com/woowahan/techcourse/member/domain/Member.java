@@ -1,5 +1,7 @@
 package com.woowahan.techcourse.member.domain;
 
+import java.util.Objects;
+
 public class Member {
 
     private final Long id;
@@ -25,12 +27,6 @@ public class Member {
     }
 
     public boolean checkPassword(String password) {
-        if (this.password == null && password == null) {
-            return true;
-        }
-        if (this.password == null || password == null) {
-            return false;
-        }
-        return this.password.equals(password);
+        return Objects.equals(this.password, password);
     }
 }
