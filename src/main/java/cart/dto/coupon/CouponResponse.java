@@ -25,7 +25,7 @@ public class CouponResponse {
         this.name = coupon.getName();
         this.discountRate = coupon.getDiscountRate();
         this.period = coupon.getPeriod();
-        this.expiredAt = coupon.getExpiredDate();
+        this.expiredAt = coupon.getExpiredAt();
     }
 
     public String getName() {

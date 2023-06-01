@@ -27,7 +27,7 @@ public class MemberCoupon {
         this.coupon = coupon;
         this.isUsed = false;
         this.issuedAt = LocalDateTime.now();
-        this.expiredAt = calculateExpiredDate(coupon.getExpiredDate(), issuedAt.plusDays(coupon.getPeriod()));
+        this.expiredAt = calculateExpiredDate(coupon.getExpiredAt(), issuedAt.plusDays(coupon.getPeriod()));
     }
 
     private LocalDateTime calculateExpiredDate(final LocalDateTime couponExpiredDate, final LocalDateTime memberCouponExpiredDate) {
