@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.application.dto.PostOrderRequest;
 import cart.application.dto.SingleKindProductRequest;
+import cart.application.event.CartItemDeleteEvent;
+import cart.application.event.PointEvent;
 import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
@@ -24,14 +27,12 @@ import cart.exception.IllegalOrderException;
 @Service
 public class AddOrderService {
 
-    private final PointService pointService;
-    private final CartItemService cartItemService;
+    private final ApplicationEventPublisher publisher;
     private final OrderDao orderDao;
     private final ProductDao productDao;
 
-    public AddOrderService(PointService pointService, CartItemService cartItemService, OrderDao orderDao, ProductDao productDao) {
-        this.pointService = pointService;
-        this.cartItemService = cartItemService;
+    public AddOrderService(ApplicationEventPublisher publisher, OrderDao orderDao, ProductDao productDao) {
+        this.publisher = publisher;
         this.orderDao = orderDao;
         this.productDao = productDao;
     }
@@ -44,12 +45,11 @@ public class AddOrderService {
             .sum();
 
         LocalDateTime now = LocalDateTime.now();
-        int usePointAmount = request.getUsedPoint();
-        int payAmount = totalPrice - usePointAmount;
+        int payAmount = totalPrice - request.getUsedPoint();
         Long orderId = orderDao.insert(new Order(member, now, payAmount, OrderStatus.PENDING, quantityAndProducts));
 
-        pointService.handlePointProcessInOrder(orderId, member.getId(), usePointAmount, payAmount, now);
-        cartItemService.removeAllWithOutCheckingOwner(member.getId(), quantityAndProducts);
+        handlePoint(member, request, now, payAmount, orderId);
+        handleCartItemDeletion(member, quantityAndProducts);
         return orderId;
     }
 
@@ -71,5 +71,13 @@ public class AddOrderService {
         if (productIds.size() != foundProducts.size()) {
             throw new IllegalOrderException("존재하지 않는 상품을 주문할 수 없습니다");
         }
+    }
+
+    private void handlePoint(Member member, PostOrderRequest request, LocalDateTime now, int payAmount, Long orderId) {
+        publisher.publishEvent(new PointEvent(orderId, member.getId(), request.getUsedPoint(), payAmount, now));
+    }
+
+    private void handleCartItemDeletion(Member member, List<QuantityAndProduct> quantityAndProducts) {
+        publisher.publishEvent(new CartItemDeleteEvent(member.getId(), quantityAndProducts));
     }
 }

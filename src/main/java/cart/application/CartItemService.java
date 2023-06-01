@@ -1,19 +1,22 @@
 package cart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
+
+import cart.application.dto.CartItemQuantityUpdateRequest;
+import cart.application.dto.CartItemRequest;
+import cart.application.dto.CartItemResponse;
+import cart.application.event.CartItemDeleteEvent;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.application.dto.CartItemQuantityUpdateRequest;
-import cart.application.dto.CartItemRequest;
-import cart.application.dto.CartItemResponse;
 import cart.domain.Product;
 import cart.domain.QuantityAndProduct;
-
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
@@ -54,7 +57,10 @@ public class CartItemService {
         cartItemDao.deleteById(id);
     }
 
-    public void removeAllWithOutCheckingOwner(long memberId, List<QuantityAndProduct> quantityAndProducts) {
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void removeAllWithOutCheckingOwner(CartItemDeleteEvent event) {
+        long memberId = event.getMemberId();
+        List<QuantityAndProduct> quantityAndProducts = event.getQuantityAndProducts();
         for (QuantityAndProduct quantityAndProduct : quantityAndProducts) {
             Product product = quantityAndProduct.getProduct();
             cartItemDao.delete(memberId, product.getId());

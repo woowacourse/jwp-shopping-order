@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
+import cart.application.event.PointEvent;
 import cart.dao.PointAdditionDao;
 import cart.dao.PointUsageDao;
 import cart.domain.PointAddition;
@@ -43,7 +46,13 @@ public class PointService {
             .sum();
     }
 
-    public void handlePointProcessInOrder(long orderId, long memberId, int usePointAmount, int payAmount, LocalDateTime now) {
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void handlePointProcessInOrder(PointEvent event) {
+        long orderId = event.getOrderId();
+        long memberId = event.getMemberId();
+        int usePointAmount = event.getUsePointAmount();
+        int payAmount = event.getPayAmount();
+        LocalDateTime now = event.getNow();
         if (usePointAmount != 0) {
             validateNotUsingMorePointThanPrice(usePointAmount, payAmount);
             usePoint(memberId, usePointAmount);

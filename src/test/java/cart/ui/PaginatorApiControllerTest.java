@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cart.WebMvcConfig;
+import cart.application.AddOrderService;
 import cart.application.FindOrderService;
 import cart.application.dto.GetOrdersRequest;
 import cart.application.dto.PostOrderRequest;
@@ -48,6 +49,8 @@ class PaginatorApiControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private FindOrderService findOrderService;
+    @MockBean
+    private AddOrderService addOrderService;
 
     @Nested
     class 주문_목록_조회_테스트 {
