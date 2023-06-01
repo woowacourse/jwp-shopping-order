@@ -22,34 +22,34 @@ public class ProductApiController {
 
     private final ProductService productService;
 
-    public ProductApiController(ProductService productService) {
+    public ProductApiController(final ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> findAll() {
         return ResponseEntity.ok(productService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> findById(@PathVariable final Long id) {
         return ResponseEntity.ok(productService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> create(@RequestBody final ProductRequest productRequest) {
         Long id = productService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody final ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

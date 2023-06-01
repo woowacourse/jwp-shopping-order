@@ -8,7 +8,7 @@ import cart.domain.value.Name;
 public class Product {
     private Long id;
     private Name name;
-    private Money money;
+    private Money price;
     private ImageUrl imageUrl;
     private boolean isDiscounted;
     private DiscountRate discountRate;
@@ -19,7 +19,7 @@ public class Product {
             final String imageUrl
     ) {
         this.name = new Name(name);
-        this.money = new Money(price);
+        this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
     }
 
@@ -31,7 +31,7 @@ public class Product {
     ) {
         this.id = id;
         this.name = new Name(name);
-        this.money = new Money(price);
+        this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
     }
 
@@ -45,10 +45,14 @@ public class Product {
     ) {
         this.id = id;
         this.name = new Name(name);
-        this.money = new Money(price);
+        this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.isDiscounted = isDiscounted;
         this.discountRate = new DiscountRate(discountRate);
+    }
+
+    public int calculateDiscountedPrice() {
+        return (int) (price.getValue() * (1 - (discountRate.getValue() / 100.0)));
     }
 
     public Long getId() {
@@ -60,7 +64,7 @@ public class Product {
     }
 
     public int getPrice() {
-        return money.getValue();
+        return price.getValue();
     }
 
     public String getImageUrl() {
