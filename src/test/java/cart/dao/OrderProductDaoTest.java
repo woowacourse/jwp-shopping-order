@@ -31,7 +31,7 @@ class OrderProductDaoTest {
     void beforeEach() {
         jdbcTemplate = new JdbcTemplate(dataSource);
         orderProductDao = new OrderProductDao(dataSource);
-        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
+//        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
     }
 
     @Test

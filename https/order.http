@@ -10,7 +10,7 @@ content-type: application/json
   "id": 1,
   "orderProducts": [
     {
-      "productResponse": {
+      "productResponseDto": {
         "id": 1,
         "name": "치킨",
         "price": 10000,
@@ -38,7 +38,7 @@ Content-type: application/json
     "id": 1,
     "orderProducts": [
       {
-        "productResponse": {
+        "productResponseDto": {
           "id": 1,
           "name": "치킨",
           "price": 10000,
@@ -56,7 +56,7 @@ Content-type: application/json
     "id": 2,
     "orderProducts": [
       {
-        "productResponse": {
+        "productResponseDto": {
           "id": 1,
           "name": "치킨",
           "price": 10000,
@@ -93,7 +93,7 @@ Content-Type: application/json
   "id": 1,
   "orderProducts": [
     {
-      "productResponse": {
+      "productResponseDto": {
         "id": 1,
         "name": "치킨",
         "price": 10000,
@@ -128,7 +128,7 @@ Content-Type: application/json
   "id": 1,
   "orderProducts": [
     {
-      "productResponse": {
+      "productResponseDto": {
         "id": 1,
         "name": "치킨",
         "price": 10000,

@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dto.CouponDto;
-import cart.dto.MemberCouponDto;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class CouponDao {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getDouble("discount_rate"),
-            rs.getInt("discount_charge"));
+            rs.getInt("discount_price"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -35,7 +34,7 @@ public class CouponDao {
         Map<String, Object> params = new HashMap<>();
         params.put("name", couponDto.getName());
         params.put("discount_rate", couponDto.getDiscountRate());
-        params.put("discount_charge", couponDto.getDiscountCharge());
+        params.put("discount_price", couponDto.getDiscountPrice());
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 

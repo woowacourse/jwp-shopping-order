@@ -12,7 +12,7 @@ import cart.domain.Member;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.ProductResponseDto;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -74,7 +74,7 @@ class OrderIntegrationTest extends IntegrationTest {
                 .isEqualTo(PRICE * 2);
         assertThat(result.getOrderProducts())
                 .extracting(OrderProductResponseDto::getProductResponse)
-                .extracting(ProductResponse::getName, ProductResponse::getPrice, ProductResponse::getImageUrl)
+                .extracting(ProductResponseDto::getName, ProductResponseDto::getPrice, ProductResponseDto::getImageUrl)
                 .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
 
         // 주문한 물품을 장바구니에서 삭제한다.
@@ -93,7 +93,7 @@ class OrderIntegrationTest extends IntegrationTest {
         assertThat(orderResponse.getTotalPrice()).isEqualTo(PRICE * 2);
         assertThat(orderResponse.getOrderProducts())
                 .extracting(OrderProductResponseDto::getProductResponse)
-                .extracting(ProductResponse::getName, ProductResponse::getPrice, ProductResponse::getImageUrl)
+                .extracting(ProductResponseDto::getName, ProductResponseDto::getPrice, ProductResponseDto::getImageUrl)
                 .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
     }
 

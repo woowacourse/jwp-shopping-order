@@ -31,7 +31,7 @@ class MemberCouponDaoTest {
     void beforeEach() {
         memberCouponDao = new MemberCouponDao(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
+//        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
     }
 
 

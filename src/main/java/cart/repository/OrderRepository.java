@@ -6,10 +6,12 @@ import cart.dao.OrderProductDao;
 import cart.dao.dto.OrderDto;
 import cart.dao.dto.OrderProductDto;
 import cart.domain.CartItem;
+import cart.domain.Coupon;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -28,12 +30,18 @@ public class OrderRepository {
         this.cartItemDao = cartItemDao;
     }
 
-
     public Order save(final Order order) {
         OrderDto orderDto = OrderDto.from(order);
         Long orderId = orderDao.insert(orderDto);
         List<OrderProduct> orderProductsAfterSave = saveOrderProducts(orderId, order.getOrderProducts());
-        return new Order(orderId, order.getTimeStamp(), order.getMember(), orderProductsAfterSave);
+
+        return new Order(
+                orderId,
+                order.getTimeStamp(),
+                order.getMember(),
+                order.getCoupon(),
+                orderProductsAfterSave
+        );
     }
 
     private List<OrderProduct> saveOrderProducts(final Long orderId, final List<OrderProduct> orderProducts) {
@@ -49,7 +57,8 @@ public class OrderRepository {
 
     public List<CartItem> findCartItemById(List<Long> cartItemIds) {
         return cartItemIds.stream()
-                .map(id -> cartItemDao.findById(id))
+                .map(cartItemDao::findById)
                 .collect(Collectors.toList());
     }
+
 }

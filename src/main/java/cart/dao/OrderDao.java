@@ -16,6 +16,7 @@ public class OrderDao {
     private static final RowMapper<OrderDto> orderDtoRowMapper = (rs, rn) -> new OrderDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
+            rs.getLong("coupon_id"),
             rs.getTimestamp("time_stamp").toLocalDateTime()
     );
 
@@ -32,7 +33,8 @@ public class OrderDao {
     public Long insert(OrderDto orderDto) {
         Map<String, Object> params = Map.of(
                 "time_stamp", orderDto.getTimeStamp(),
-                "member_id", orderDto.getMemberId()
+                "member_id", orderDto.getMemberId(),
+                "coupon_id", orderDto.getCouponId()
         );
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();

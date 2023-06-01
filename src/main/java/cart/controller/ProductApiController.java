@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.ProductResponseDto;
 import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;
@@ -27,12 +27,12 @@ public class ProductApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 

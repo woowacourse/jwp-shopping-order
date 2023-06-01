@@ -6,12 +6,12 @@ public class CartItemResponse {
 
     private Long id;
     private int quantity;
-    private ProductResponse product;
+    private ProductResponseDto product;
 
     private CartItemResponse() {
     }
 
-    private CartItemResponse(Long id, int quantity, ProductResponse product) {
+    private CartItemResponse(Long id, int quantity, ProductResponseDto product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -21,7 +21,7 @@ public class CartItemResponse {
         return new CartItemResponse(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
+                ProductResponseDto.from(cartItem.getProduct())
         );
     }
 
@@ -33,7 +33,7 @@ public class CartItemResponse {
         return quantity;
     }
 
-    public ProductResponse getProduct() {
+    public ProductResponseDto getProduct() {
         return product;
     }
 }

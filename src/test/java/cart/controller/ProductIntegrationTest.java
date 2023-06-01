@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.ProductResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,7 +61,7 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .jsonPath()
-                .getObject(".", ProductResponse.class);
+                .getObject(".", ProductResponseDto.class);
 
         assertThat(responseProduct.getId()).isNotNull();
         assertThat(responseProduct.getName()).isEqualTo("피자");

@@ -1,11 +1,9 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.dto.CouponDto;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +21,7 @@ class CouponDaoTest {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getDouble("discount_rate"),
-            rs.getInt("discount_charge"));
+            rs.getInt("discount_price"));
 
     @Autowired
     private DataSource dataSource;
@@ -34,7 +32,7 @@ class CouponDaoTest {
     void beforeEach() {
         couponDao = new CouponDao(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
+//        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
     }
 
     @Test
@@ -53,20 +51,20 @@ class CouponDaoTest {
                 CouponDto::getId,
                 CouponDto::getName,
                 CouponDto::getDiscountRate,
-                CouponDto::getDiscountCharge
+                CouponDto::getDiscountPrice
         ).contains(1L, "홍실 할인", 2d, 0);
     }
 
     @Test
     @DisplayName("Coupon Dto 를 조회하는 기능 테스트")
     void findByIdTest() {
-        String sql = "INSERT INTO coupon(id, name, discount_rate, discount_charge) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO coupon(id, name, discount_rate, discount_price) VALUES(?, ?, ?, ?)";
         jdbcTemplate.update(sql, 1L, "홍실 할인", 2d, 0);
         CouponDto queryResult = couponDao.findById(1L).orElseThrow(IllegalArgumentException::new);
         assertThat(queryResult.getId()).isEqualTo(1L);
         assertThat(queryResult.getName()).isEqualTo("홍실 할인");
         assertThat(queryResult.getDiscountRate()).isEqualTo(2d);
-        assertThat(queryResult.getDiscountCharge()).isZero();
+        assertThat(queryResult.getDiscountPrice()).isZero();
     }
 
     @Test

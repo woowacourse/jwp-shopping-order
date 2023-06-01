@@ -19,6 +19,7 @@ class OrderDaoTest {
     private static final RowMapper<OrderDto> orderDtoRowMapper = (rs, rn) -> new OrderDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
+            rs.getLong("coupon_id"),
             rs.getTimestamp("time_stamp").toLocalDateTime()
     );
 
@@ -31,20 +32,21 @@ class OrderDaoTest {
     void beforeEach() {
         orderDao = new OrderDao(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
+//        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
     }
 
     @Test
     @DisplayName("orderDto를 저장하는 기능 테스트")
     void insertTest() {
         LocalDateTime dateTime = LocalDateTime.now();
-        OrderDto orderDto = new OrderDto(2L, dateTime);
+        OrderDto orderDto = new OrderDto(2L, 1L, 1L, dateTime);
 
         Long orderId = orderDao.insert(orderDto);
 
         String sql = "SELECT * FROM orders WHERE id = ?";
         OrderDto queryResultOrder = jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId);
         assertThat(orderDto.getMemberId()).isEqualTo(queryResultOrder.getMemberId());
+        assertThat(orderDto.getCouponId()).isEqualTo(queryResultOrder.getCouponId());
         assertThat(orderDto.getTimeStamp()).isEqualTo(queryResultOrder.getTimeStamp());
     }
 
@@ -52,14 +54,16 @@ class OrderDaoTest {
     @DisplayName("orderDto를 조회하는 기능 테스트")
     void findByIdTest() {
         LocalDateTime dateTime = LocalDateTime.now();
-        OrderDto orderDto = new OrderDto(1L, 2L, dateTime);
-        String sql = "INSERT INTO orders (id, member_id, time_stamp) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, orderDto.getId(), orderDto.getMemberId(), orderDto.getTimeStamp());
+        OrderDto orderDto = new OrderDto(1L, 1L, 1L, dateTime);
+        String sql = "INSERT INTO orders (id, member_id, coupon_id, time_stamp) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, orderDto.getId(), orderDto.getMemberId(), orderDto.getCouponId(), orderDto.getTimeStamp());
 
         OrderDto queryResultOrder = orderDao.findById(orderDto.getId())
                 .orElseThrow(IllegalArgumentException::new);
 
+        assertThat(orderDto.getId()).isEqualTo(queryResultOrder.getId());
         assertThat(orderDto.getMemberId()).isEqualTo(queryResultOrder.getMemberId());
+        assertThat(orderDto.getCouponId()).isEqualTo(queryResultOrder.getCouponId());
         assertThat(orderDto.getTimeStamp()).isEqualTo(queryResultOrder.getTimeStamp());
     }
 

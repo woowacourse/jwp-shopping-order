@@ -5,13 +5,16 @@ public class CouponDto {
     private final Long id;
     private final String name;
     private final Double discountRate;
-    private final Integer discountCharge;
+    private final Integer discountPrice;
 
-    public CouponDto(final Long id, final String name, final Double discountRate, final Integer discountCharge) {
+    public CouponDto(final Long id,
+                     final String name,
+                     final Double discountRate,
+                     final Integer discountPrice) {
         this.id = id;
         this.name = name;
         this.discountRate = discountRate;
-        this.discountCharge = discountCharge;
+        this.discountPrice = discountPrice;
     }
 
     public Long getId() {
@@ -26,8 +29,8 @@ public class CouponDto {
         return discountRate;
     }
 
-    public Integer getDiscountCharge() {
-        return discountCharge;
+    public Integer getDiscountPrice() {
+        return discountPrice;
     }
 
 }

@@ -1,35 +1,57 @@
 package cart.controller.response;
 
-import cart.domain.OrderProduct;
-import java.time.LocalDateTime;
+import cart.domain.Order;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderResponseDto {
 
     private final Long id;
     private final List<OrderProductResponseDto> orderProducts;
-    private final LocalDateTime timestamp;
+    private final String timestamp;
+    private final Integer originPrice;
+    private final Integer discountPrice;
     private final Integer totalPrice;
 
-    private OrderResponseDto() {
-        this(null, null, null, null);
-    }
 
     public OrderResponseDto(final Long id,
                             final List<OrderProductResponseDto> orderProducts,
-                            final LocalDateTime timestamp,
+                            final String timestamp,
+                            final Integer originPrice,
+                            final Integer discountPrice,
                             final Integer totalPrice) {
         this.id = id;
         this.orderProducts = orderProducts;
         this.timestamp = timestamp;
+        this.originPrice = originPrice;
+        this.discountPrice = discountPrice;
         this.totalPrice = totalPrice;
+    }
+
+    public static OrderResponseDto from(final Order order) {
+        Integer originalPrice = order.calculateTotalPrice();
+        Integer cutPrice = order.calculateCutPrice();
+        return new OrderResponseDto(
+                order.getId(),
+                toOrderProductResponseDtos(order),
+                order.getTimeStamp().toString(),
+                originalPrice,
+                cutPrice,
+                originalPrice - cutPrice
+        );
+    }
+
+    private static List<OrderProductResponseDto> toOrderProductResponseDtos(final Order order) {
+        return order.getOrderProducts().stream()
+                .map(OrderProductResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     public List<OrderProductResponseDto> getOrderProducts() {
         return orderProducts;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
@@ -39,6 +61,14 @@ public class OrderResponseDto {
 
     public Long getId() {
         return id;
+    }
+
+    public Integer getOriginPrice() {
+        return originPrice;
+    }
+
+    public Integer getDiscountPrice() {
+        return discountPrice;
     }
 
 }
