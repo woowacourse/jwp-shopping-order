@@ -1,16 +1,29 @@
 package cart.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import cart.domain.Point;
 import cart.entity.PointEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PointDao {
+
+    private final RowMapper<PointEntity> rowMapper = (rs, rowNum) -> new PointEntity(
+            rs.getLong("id"),
+            rs.getInt("earned_point"),
+            rs.getInt("left_point"),
+            rs.getLong("member_id"),
+            rs.getTimestamp("expired_at"),
+            rs.getTimestamp("created_at")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -34,8 +47,22 @@ public class PointDao {
         return new PointEntity(id, pointEntity);
     }
 
-    public Point findLeftPointByMemberId(final Long memberId) {
-        final String sql = "SELECT SUM(left_point) as total FROM point WHERE member_id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> Point.valueOf(rs.getInt("total")), memberId);
+    public List<PointEntity> findRemainingPointsByMemberId(final Long memberId) {
+        final String sql = "SELECT id, earned_point, left_point, member_id, expired_at, created_at FROM point WHERE member_id = ? AND left_point > 0 ORDER BY expired_at";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
+    public Optional<PointEntity> findById(final Long id) {
+        final String sql = "SELECT id, earned_point, left_point, member_id, expired_at, created_at FROM point WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public void updateLeftPoint(final Long id, final Point leftPoint) {
+        final String sql = "UPDATE point SET left_point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, leftPoint.getValue(), id);
     }
 }
