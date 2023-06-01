@@ -45,12 +45,12 @@ CREATE TABLE member_coupon (
 CREATE TABLE `order` (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    coupon_id BIGINT,
+    member_coupon_id BIGINT,
     shipping_fee INT NOT NULL,
     total_price INT NOT NULL,
     created_at DATETIME DEFAULT current_timestamp NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
-    FOREIGN KEY (coupon_id) REFERENCES coupon(id)
+    FOREIGN KEY (member_coupon_id) REFERENCES member_coupon(id)
 );
 
 CREATE TABLE order_item (

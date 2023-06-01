@@ -51,7 +51,7 @@ public class OrderItemDao {
     }
 
     public List<OrderItemEntity> findByOrderIds(final List<Long> orderIds) {
-        final String sql = "SELECT * FROM order_item WHERE id IN (%s) ";
+        final String sql = "SELECT * FROM order_item WHERE order_id IN (%s) ";
 
         String inSql = String.join(",", Collections.nCopies(orderIds.size(), "?"));
         return jdbcTemplate.query(
@@ -59,5 +59,11 @@ public class OrderItemDao {
                 orderIds.toArray(),
                 rowMapper
         );
+    }
+
+    public List<OrderItemEntity> finByOrderId(final Long orderId) {
+        final String sql = "SELECT * FROM order_item WHERE order_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 }

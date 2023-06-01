@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -62,6 +63,22 @@ public class OrderRepository {
         return allOrderEntities.stream()
                 .map(orderEntity -> orderEntity.toOrder(member, orderItemByOrderId, couponById))
                 .collect(Collectors.toList());
+    }
+
+    public Order findByIdAndMember(final Long id, final Member member) {
+        OrderEntity orderEntity = orderDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+        MemberCouponEntity memberCouponEntity = memberCouponDao.findById(orderEntity.getCouponId())
+                .orElseThrow(() -> new IllegalArgumentException("멤버 쿠폰이 존재하지 않습니다."));
+        CouponEntity couponEntity = couponDao.findById(memberCouponEntity.getId())
+                .orElseThrow(() -> new IllegalArgumentException("쿠폰이 존재하지 않습니다."));
+
+        Coupon coupon = memberCouponEntity.toCoupon(couponEntity);
+        List<OrderItem> orderItems = orderItemDao.finByOrderId(orderEntity.getId())
+                .stream()
+                .map(OrderItemEntity::toOrderItem)
+                .collect(Collectors.toList());
+        return Order.of(orderItems, member, coupon);
     }
 
     private Map<Long, Coupon> getCouponByOrders(final List<OrderEntity> allOrderEntities) {
