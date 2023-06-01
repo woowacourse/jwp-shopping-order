@@ -1,12 +1,10 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.application.MemberService;
 import cart.domain.Member;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.CartResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +28,10 @@ public class CartItemApiController {
     }
 
     @GetMapping
-    public ResponseEntity<CartResponse> showCart(Member member) {
+    public ResponseEntity<List<CartItemDto>> showCart(Member member) {
         List<CartItemDto> cartItems = cartItemService.findByMember(member);
-        CartResponse response = new CartResponse(cartItems);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(cartItems);
     }
 
     @PostMapping

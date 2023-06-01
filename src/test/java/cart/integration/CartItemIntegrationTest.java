@@ -1,23 +1,26 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.domain.Point;
+import cart.domain.Product;
+import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.dto.CartResponse;
 import cart.dto.ProductRequest;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
@@ -42,6 +45,23 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     }
 
+    @Test
+    void testtest() {
+        List<Product> list1 = List.of(
+                new Product(1L, "p1", 1000, "url1", 10),
+                new Product(2L, "p2", 2000, "url2", 20),
+                new Product(3L, "p3", 3000, "url3", 30)
+        );
+
+        List<Product> list2 = List.of(
+                new Product(1L, "p1", 1000, "url1", 100),
+                new Product(2L, "p2", 2000, "url2", 200),
+                new Product(3L, "p3", 3000, "url5", 300)
+        );
+
+        System.out.println(list1.equals(list2));
+    }
+
     @DisplayName("[장바구니 추가] 장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
@@ -54,7 +74,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("[장바구니 추가] 잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
-        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf", new Point(0));
+        Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf",
+                new Point(0));
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
@@ -68,9 +89,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
         Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
 
         ExtractableResponse<Response> response = requestGetCartItems(member);
-        CartResponse cart = response.as(CartResponse.class);
+        List<CartItemDto> cartItems = response.as(new TypeRef<>() {
+        });
 
-        assertThat(cart.getCartItems()).isNotEmpty();
+        assertThat(cartItems).isNotEmpty();
     }
 
     @DisplayName("[장바구니 수량 수정] 장바구니에 담긴 아이템의 수량을 변경한다.")
