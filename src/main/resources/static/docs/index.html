@@ -465,6 +465,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_장바구니_상품_모두_결제">3.3. 장바구니 상품 모두 결제</a></li>
 </ul>
 </li>
+<li><a href="#_쿠폰">4. 쿠폰</a>
+<ul class="sectlevel2">
+<li><a href="#_쿠폰_전체_조회">4.1. 쿠폰 전체 조회</a></li>
+<li><a href="#_쿠폰_단건_조회">4.2. 쿠폰 단건 조회</a></li>
+<li><a href="#_쿠폰_생성">4.3. 쿠폰 생성</a></li>
+<li><a href="#_쿠폰_삭제">4.4. 쿠폰 삭제</a></li>
+<li><a href="#_유저에게_쿠폰_전송">4.5. 유저에게 쿠폰 전송</a></li>
+</ul>
+</li>
+<li><a href="#_멤버">5. 멤버</a>
+<ul class="sectlevel2">
+<li><a href="#_멤버_생성">5.1. 멤버 생성</a></li>
+<li><a href="#_멤버_전체_조회">5.2. 멤버 전체 조회</a></li>
+<li><a href="#_멤버_개별_조회">5.3. 멤버 개별 조회</a></li>
+<li><a href="#_멤버_삭제">5.4. 멤버 삭제</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -971,7 +988,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Location</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">/products/sales/{id}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/products/1/sales</p></td>
 </tr>
 </tbody>
 </table>
@@ -1010,7 +1027,7 @@ Location: /products/0</code></pre>
 </table>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /products/sales/1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /products/1/sales HTTP/1.1
 Authorization: member
 Host: localhost:8080</code></pre>
 </div>
@@ -1032,7 +1049,7 @@ Host: localhost:8080</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Location</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">/products/sales/{id}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/products/1/sales</p></td>
 </tr>
 </tbody>
 </table>
@@ -1251,9 +1268,9 @@ Content-Length: 399
     "productName" : "치킨",
     "price" : 20000,
     "quantity" : 10,
-    "imgUrl" : "img.img",
     "isOnSale" : false,
-    "salePrice" : 0
+    "salePrice" : 0,
+    "imgUrl" : "img.img"
   } ],
   "coupons" : [ {
     "couponId" : 1,
@@ -1398,11 +1415,280 @@ Location: /payments/0</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_쿠폰"><a class="link" href="#_쿠폰">4. 쿠폰</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_쿠폰_전체_조회"><a class="link" href="#_쿠폰_전체_조회">4.1. 쿠폰 전체 조회</a></h3>
+<div class="sect3">
+<h4 id="_요청_13"><a class="link" href="#_요청_13">4.1.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /coupons HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_13"><a class="link" href="#_응답_13">4.1.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 126
+
+[ {
+  "couponId" : 1,
+  "couponName" : "1000원 할인 쿠폰"
+}, {
+  "couponId" : 2,
+  "couponName" : "10% 할인 쿠폰"
+} ]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_쿠폰_단건_조회"><a class="link" href="#_쿠폰_단건_조회">4.2. 쿠폰 단건 조회</a></h3>
+<div class="sect3">
+<h4 id="_요청_14"><a class="link" href="#_요청_14">4.2.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /coupons/1 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_14"><a class="link" href="#_응답_14">4.2.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 62
+
+{
+  "couponId" : 1,
+  "couponName" : "1000원 할인 쿠폰"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_쿠폰_생성"><a class="link" href="#_쿠폰_생성">4.3. 쿠폰 생성</a></h3>
+<div class="sect3">
+<h4 id="_요청_15"><a class="link" href="#_요청_15">4.3.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /coupons HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 65
+Host: localhost:8080
+
+{
+  "name" : "쿠폰",
+  "isPercentage" : true,
+  "amount" : 10
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_15"><a class="link" href="#_응답_15">4.3.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Location: /coupons/0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_쿠폰_삭제"><a class="link" href="#_쿠폰_삭제">4.4. 쿠폰 삭제</a></h3>
+<div class="sect3">
+<h4 id="_요청_16"><a class="link" href="#_요청_16">4.4.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /coupons/1 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_16"><a class="link" href="#_응답_16">4.4.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_유저에게_쿠폰_전송"><a class="link" href="#_유저에게_쿠폰_전송">4.5. 유저에게 쿠폰 전송</a></h3>
+<div class="sect3">
+<h4 id="_요청_17"><a class="link" href="#_요청_17">4.5.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /coupons/1/members/1 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_17"><a class="link" href="#_응답_17">4.5.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_멤버"><a class="link" href="#_멤버">5. 멤버</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_멤버_생성"><a class="link" href="#_멤버_생성">5.1. 멤버 생성</a></h3>
+<div class="sect3">
+<h4 id="_요청_18"><a class="link" href="#_요청_18">5.1.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /members HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 48
+Host: localhost:8080
+
+{
+  "email" : "a@a.com",
+  "password" : "1234"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_18"><a class="link" href="#_응답_18">5.1.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_멤버_전체_조회"><a class="link" href="#_멤버_전체_조회">5.2. 멤버 전체 조회</a></h3>
+<div class="sect3">
+<h4 id="_요청_19"><a class="link" href="#_요청_19">5.2.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /members HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_19"><a class="link" href="#_응답_19">5.2.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 70
+
+[ {
+  "memberId" : 1,
+  "email" : "a@a.com",
+  "password" : "1234"
+} ]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_멤버_개별_조회"><a class="link" href="#_멤버_개별_조회">5.3. 멤버 개별 조회</a></h3>
+<div class="sect3">
+<h4 id="_요청_20"><a class="link" href="#_요청_20">5.3.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /members/1 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_20"><a class="link" href="#_응답_20">5.3.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 66
+
+{
+  "memberId" : 1,
+  "email" : "a@a.com",
+  "password" : "1234"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_멤버_삭제"><a class="link" href="#_멤버_삭제">5.4. 멤버 삭제</a></h3>
+<div class="sect3">
+<h4 id="_요청_21"><a class="link" href="#_요청_21">5.4.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /members/1 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_21"><a class="link" href="#_응답_21">5.4.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-30 20:12:09 +0900
+Last updated 2023-06-01 23:41:30 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
