@@ -25,6 +25,8 @@
 
 | HttpMethod | URL                       | HttpStatus | Description         |
 |------------|---------------------------|------------|---------------------|
+| POST       | /members/join             | 200        | 새로운 멤버를 추가한다.       |
+| GET        | /members/{memberId}       | 200        | 특정 멤버를 조회한다.        |
 | GET        | /members/points           | 200        | 멤버의 포인트를 조회한다.      |
 | GET        | /members/orders           | 200        | 멤버의 주문 목록을 조회한다.    |
 | GET        | /members/orders/{orderId} | 200        | 멤버의 주문 상세 정보를 조회한다. |
