@@ -39,7 +39,7 @@ public class CouponResponse {
         return description;
     }
 
-    public boolean isUsed() {
+    public boolean getIsUsed() {
         return isUsed;
     }
 }
