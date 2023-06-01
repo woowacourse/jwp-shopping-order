@@ -7,7 +7,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
@@ -23,7 +22,6 @@ import cart.entity.OrderedItemEntity;
 import cart.exception.InvalidOrderException;
 
 @Repository
-@Transactional(readOnly = true)
 public class OrderRepository {
     private final OrderDao orderDao;
     private final CartItemDao cartItemDao;
@@ -42,7 +40,6 @@ public class OrderRepository {
         this.productDao = productDao;
     }
 
-    @Transactional
     public Long save(Order order) {
         final OrderEntity orderEntity = new OrderEntity(order.getPrice(), order.getMember().getId());
         final Long orderId = orderDao.addOrder(orderEntity);

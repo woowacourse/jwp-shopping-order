@@ -3,7 +3,6 @@ package cart.repository;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
@@ -11,7 +10,6 @@ import cart.domain.CartItems;
 import cart.domain.Member;
 
 @Repository
-@Transactional(readOnly = true)
 public class CartItemRepository {
     private final CartItemDao cartItemDao;
 
