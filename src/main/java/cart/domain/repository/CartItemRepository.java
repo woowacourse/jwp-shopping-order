@@ -20,4 +20,6 @@ public interface CartItemRepository {
     void updateQuantity(CartItem cartItem);
 
     List<CartItem> findAllByIds(Member member, List<Long> cartProductIds);
+
+    void deleteByMemberCartItemIds(Long memberId, List<CartItem> cartItems);
 }

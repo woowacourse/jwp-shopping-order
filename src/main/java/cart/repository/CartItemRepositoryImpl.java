@@ -62,6 +62,14 @@ public class CartItemRepositoryImpl implements CartItemRepository {
                 .map(this::toDomain).collect(Collectors.toList());
     }
 
+    @Override
+    public void deleteByMemberCartItemIds(Long memberId, List<CartItem> cartItems) {
+        List<Long> cartItemIds = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+        cartItemDao.deleteByMemberCartItemIds(memberId, cartItemIds);
+    }
+
     private CartItemEntity toEntity(CartItem cartItem) {
         return new CartItemEntity(cartItem.getId(), cartItem.getMember().getId(),
                 cartItem.getProduct().getId(), cartItem.getQuantity());

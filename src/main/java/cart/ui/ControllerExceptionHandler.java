@@ -1,7 +1,6 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
+import cart.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,6 +17,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(CartItemException.IllegalMember.class)
     public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @ExceptionHandler({CartItemException.class, CouponException.class, OrderException.class, ProductException.class})
+    public ResponseEntity<Void> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 }

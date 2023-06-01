@@ -93,7 +93,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 
-    public void deleteByOrder(Long id, List<Long> cartItemIds) {
+    public void deleteByMemberCartItemIds(Long id, List<Long> cartItemIds) {
         String sql = "DELETE FROM cart_item WHERE member_id = :memberId AND id IN (:cartItemIds)";
         SqlParameterSource source = new MapSqlParameterSource()
                 .addValue("memberId", id)
