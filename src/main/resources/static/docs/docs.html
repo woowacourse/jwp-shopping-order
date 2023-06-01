@@ -1259,19 +1259,25 @@ Authorization: Basic YUBhLmNvbToxMjM0</code></pre>
 </table>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Optional</th>
+<th class="tableblock halign-left valign-top">Constraint</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ids</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">장바구니에서 주문할 상품 ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구분자 ','를 사용한 숫자</p></td>
 </tr>
 </tbody>
 </table>
@@ -1556,7 +1562,7 @@ Content-Length: 438
   "payPrice" : 27000,
   "earnedPoints" : 3000,
   "usedPoints" : 3000,
-  "orderDate" : "2023-06-01 05:06:24"
+  "orderDate" : "2023-06-01 06:06:46"
 }</code></pre>
 </div>
 </div>
@@ -1666,19 +1672,25 @@ Authorization: Basic YUBhLmNvbToxMjM0</code></pre>
 </table>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Optional</th>
+<th class="tableblock halign-left valign-top">Constraint</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>last-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">마지막으로 조회한 주문 ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">첫 번째 페이지 요청 시에만 생략</p></td>
 </tr>
 </tbody>
 </table>
@@ -1705,7 +1717,7 @@ Content-Length: 1444
     "payPrice" : 27000,
     "earnedPoints" : 3000,
     "usedPoints" : 3000,
-    "orderDate" : "2023-06-01 05:06:24"
+    "orderDate" : "2023-06-01 06:06:46"
   }, {
     "id" : 2,
     "orderItems" : [ {
@@ -1719,7 +1731,7 @@ Content-Length: 1444
     "payPrice" : 27000,
     "earnedPoints" : 3000,
     "usedPoints" : 3000,
-    "orderDate" : "2023-06-01 05:06:24"
+    "orderDate" : "2023-06-01 06:06:46"
   }, {
     "id" : 1,
     "orderItems" : [ {
@@ -1733,7 +1745,7 @@ Content-Length: 1444
     "payPrice" : 27000,
     "earnedPoints" : 3000,
     "usedPoints" : 3000,
-    "orderDate" : "2023-06-01 05:06:24"
+    "orderDate" : "2023-06-01 06:06:46"
   } ],
   "lastOrderId" : 1
 }</code></pre>

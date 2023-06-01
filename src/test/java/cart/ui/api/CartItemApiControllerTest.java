@@ -185,7 +185,7 @@ class CartItemApiControllerTest extends DocsTest {
                                         headerWithName("Authorization").description("사용자 Basic 인증 정보").attributes(field("constraint", "Basic 형식 토큰"))
                                 ),
                                 requestParameters(
-                                        parameterWithName("ids").description("장바구니에서 주문할 상품 ID").attributes(field("optional", "true")).attributes(field("constraint", "구분자 ','를 사용한 숫자"))
+                                        parameterWithName("ids").description("장바구니에서 주문할 상품 ID").attributes(field("optional", "false")).attributes(field("constraint", "구분자 ','를 사용한 숫자"))
                                 ),
                                 responseFields(
                                         fieldWithPath("cartItems.[*].id").type(JsonFieldType.NUMBER).description("장바구니 상품 ID"),
