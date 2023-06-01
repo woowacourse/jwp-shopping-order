@@ -75,7 +75,7 @@ class OrderApiControllerTest {
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].orderId").exists())
-                .andExpect(jsonPath("$[*].orderInfo[*].productId").exists())
+                .andExpect(jsonPath("$[*].[]orderInfo[*].productId").exists())
                 .andExpect(jsonPath("$[*].orderInfo[*].price").exists())
                 .andExpect(jsonPath("$[*].orderInfo[*].name").exists())
                 .andExpect(jsonPath("$[*].orderInfo[*].imageUrl").exists())

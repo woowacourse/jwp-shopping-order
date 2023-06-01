@@ -4,6 +4,7 @@ import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.PointException;
 import cart.exception.PriceInconsistencyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,5 +31,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(PointException.class)
     public ResponseEntity<Void> handlerPointException(PointException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<Void> emptyResultDataAccessException(EmptyResultDataAccessException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }
