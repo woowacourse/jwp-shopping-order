@@ -89,4 +89,22 @@ public class ProductDao {
         String sql = "UPDATE product SET is_deleted = TRUE WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
+
+    public List<Product> getPagedProductsDescending(final int unitSize, final int page) {
+        String sql = "SELECT id, name, price, image_url, is_deleted FROM product "
+                + "WHERE is_deleted = FALSE "
+                + "ORDER BY id DESC "
+                + "LIMIT ?,?";
+
+        int startOrder = unitSize * (page - 1);
+
+        return jdbcTemplate.query(sql, new Object[]{startOrder, unitSize}, (rs, rowNum) -> {
+            Long id = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            boolean isDeleted = rs.getBoolean("is_deleted");
+            return new Product(id, name, price, imageUrl, isDeleted);
+        });
+    }
 }
