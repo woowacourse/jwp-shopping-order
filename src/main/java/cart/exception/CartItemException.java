@@ -35,4 +35,18 @@ public abstract class CartItemException extends RuntimeException {
             super("수량은 음수일 수 없습니다.");
         }
     }
+
+    public static class InvalidIdsFormat extends CartItemException {
+
+        public InvalidIdsFormat(String message) {
+            super(message);
+        }
+    }
+
+    public static class DuplicateIds extends CartItemException {
+
+        public DuplicateIds() {
+            super("주문할 장바구니 상품 ID는 중복될 수 없습니다.");
+        }
+    }
 }
