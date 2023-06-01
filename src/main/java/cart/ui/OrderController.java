@@ -34,7 +34,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderDetailResponse> findOrderById(Member member, @PathVariable Long id) {
-        return ResponseEntity.ok(orderService.findOrderById(id));
+        return ResponseEntity.ok(orderService.findOrderById(member, id));
     }
 
     @DeleteMapping("/{id}")
@@ -45,6 +45,6 @@ public class OrderController {
 
     @PatchMapping("/{id}/confirm")
     public ResponseEntity<OrderConfirmResponse> confirmOrder(Member member, @PathVariable Long id) {
-        return ResponseEntity.ok(orderService.confirmOrder(id));
+        return ResponseEntity.ok(orderService.confirmOrder(member, id));
     }
 }

@@ -113,8 +113,10 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderDetailResponse findOrderById(Long id) {
+    public OrderDetailResponse findOrderById(Member member, Long id) {
         Order order = orderRepository.findOrderById(id);
+        validateOwnerOfOrder(member, order);
+
         List<OrderProductResponse> orderProductResponses = order.getOrderProducts().stream()
                 .map(orderProduct -> {
                     ProductResponse productResponse = new ProductResponse(
@@ -154,16 +156,23 @@ public class OrderService {
         );
     }
 
-    public void deleteOrderById(Member member, Long id) {
-        Coupon coupon = orderRepository.findOrderById(id).getUsedCoupon();
-        orderRepository.delete(id);
+    public void deleteOrderById(Member member, Long orderId) {
+        // 유저의 order인지 검증
+        Order order = orderRepository.findOrderById(orderId);
+        validateOwnerOfOrder(member, order);
+
+        Coupon coupon = order.getUsedCoupon();
+        orderRepository.delete(orderId);
 
         // 사용했던 쿠폰 재발급
-        memberCouponRepository.add(new MemberCoupon(member, coupon));
+        if (coupon != null) {
+            memberCouponRepository.add(new MemberCoupon(member, coupon));
+        }
     }
 
-    public OrderConfirmResponse confirmOrder(Long id) {
+    public OrderConfirmResponse confirmOrder(Member member, Long id) {
         Order order = orderRepository.findOrderById(id);
+        validateOwnerOfOrder(member, order);
         order.confirm();
         orderRepository.update(order);
 
@@ -173,5 +182,11 @@ public class OrderService {
         Coupon coupon = couponRepository.findById(1L);
         CouponResponse couponResponse = new CouponResponse(coupon.getId(), coupon.getName(), coupon.getDiscountType().getName(), coupon.getDiscountPercent(), coupon.getDiscountAmount(), coupon.getMinimumPrice());
         return new OrderConfirmResponse(couponResponse);
+    }
+
+    private void validateOwnerOfOrder(Member member, Order order) {
+        if (!order.getMember().equals(member)) {
+            throw new IllegalArgumentException("접근할 수 없는 주문입니다.");
+        }
     }
 }
