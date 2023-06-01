@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.OrderItemEntity;
+import cart.entity.OrderItemWithProductEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
+
+import static cart.entity.RowMapperUtil.orderItemWithProductEntityRowMapper;
 
 @Repository
 public class OrderItemDao {
@@ -46,5 +49,14 @@ public class OrderItemDao {
             return;
         }
         throw new RuntimeException("주문 상품 목록 등록 시 다른 데이터에도 영향이 갔습니다.");
+    }
+
+    public List<OrderItemWithProductEntity> findProductDetailByOrderId(final long orderId) {
+        final String sql = "SELECT order_item.id, order_item.order_id, " +
+                "product.id, product.name, product.price, product.image_url, order_item.quantity " +
+                "FROM order_item " +
+                "INNER JOIN product ON product.id = order_item.product_id " +
+                "WHERE order_item.order_id = ?";
+        return jdbcTemplate.query(sql, orderItemWithProductEntityRowMapper, orderId);
     }
 }
