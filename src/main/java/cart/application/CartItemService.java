@@ -1,17 +1,16 @@
 package cart.application;
 
-import cart.repository.dao.CartItemDao;
-import cart.repository.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import java.util.Optional;
-import org.springframework.stereotype.Service;
-
+import cart.repository.dao.CartItemDao;
+import cart.repository.dao.ProductDao;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
@@ -66,5 +65,12 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    public CartItemResponse findByCartItemId(final Member member, final Long cartItemId) {
+        final CartItem findCartItem = cartItemDao.findById(cartItemId);
+        findCartItem.checkOwner(member);
+
+        return CartItemResponse.of(findCartItem);
     }
 }
