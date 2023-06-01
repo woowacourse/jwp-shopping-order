@@ -1,4 +1,4 @@
-package cart;
+package cart.config;
 
 import cart.dao.MemberDao;
 import cart.ui.MemberArgumentResolver;
@@ -23,8 +23,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .allowedOrigins(
                 "http://localhost:3000",
                 "http://218.39.176.142:3000",
+                "https://woowasplit.shop/",
                 "https://react-shopping-cart-woowa.netlify.app/",
-                "https://woowasplit.shop/"
+                "https://react-shopping-cart-prod-6izahtdpl-shackstack.vercel.app/"
             )
             .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTION")
             .allowedHeaders("*")
