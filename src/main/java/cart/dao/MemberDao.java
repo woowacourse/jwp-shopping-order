@@ -20,16 +20,18 @@ public class MemberDao {
 
     public Optional<Member> findById(Long id) {
         String sql = "SELECT * FROM tb_member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
 
-        return Optional.of(members.get(0));
+        return jdbcTemplate.query(sql, new MemberRowMapper(), id)
+                .stream()
+                .findAny();
     }
 
     public Optional<Member> findByEmail(String email) {
         String sql = "SELECT * FROM tb_member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
 
-        return Optional.of(members.get(0));
+        return jdbcTemplate.query(sql, new MemberRowMapper(), email)
+                .stream()
+                .findAny();
     }
 
     public List<Member> findAll() {
