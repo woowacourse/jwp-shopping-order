@@ -2,7 +2,9 @@ package cart.ui;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.exception.AuthenticationException;
+import cart.exception.AuthenticationException.ForbiddenMember;
+import cart.exception.AuthenticationException.InvalidTokenFormat;
+import cart.exception.AuthenticationException.LoginFailed;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -30,10 +32,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter,
-                                  ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         validateAuthorizationHeader(header);
@@ -48,23 +48,23 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             String password = credentials[PASSWORD_INDEX];
 
             Member member = memberDao.findByEmail(email)
-                    .orElseThrow(() -> new AuthenticationException("로그인에 실패했습니다."));
-            
+                    .orElseThrow(LoginFailed::new);
+
             if (!member.checkPassword(password)) {
-                throw new AuthenticationException("로그인에 실패했습니다.");
+                throw new LoginFailed();
             }
             return member;
         } catch (ArrayIndexOutOfBoundsException ex) {
-            throw new AuthenticationException("토큰 형식이 올바르지 않습니다.", ex);
+            throw new InvalidTokenFormat("토큰 형식이 올바르지 않습니다.", ex);
         }
     }
 
     private void validateAuthorizationHeader(String header) {
         if (header == null) {
-            throw new AuthenticationException("로그인이 필요한 기능입니다.");
+            throw new ForbiddenMember();
         }
         if (checkNonBasicType(header)) {
-            throw new AuthenticationException("Basic 인증 방식이 아닙니다.");
+            throw new InvalidTokenFormat("올바른 인증 방식이 아닙니다.");
         }
     }
 

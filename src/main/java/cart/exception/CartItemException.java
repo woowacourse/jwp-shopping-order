@@ -2,8 +2,9 @@ package cart.exception;
 
 import cart.domain.Member;
 
-public class CartItemException extends RuntimeException {
-    public CartItemException(String message) {
+public abstract class CartItemException extends RuntimeException {
+
+    private CartItemException(String message) {
         super(message);
     }
 
