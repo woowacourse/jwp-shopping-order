@@ -30,12 +30,12 @@ public class ProductDao {
     }
 
     public List<Product> findAll() {
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Optional<Product> findById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+        String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
         return jdbcTemplate.query(sql, rowMapper, productId).stream().findAny();
     }
 

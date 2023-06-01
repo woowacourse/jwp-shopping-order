@@ -13,15 +13,14 @@ import org.springframework.stereotype.Repository;
 public class OrderItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-
     private final RowMapper<OrderItem> rowMapper = (rs, rowNum) -> {
-        long orderItemId = rs.getLong("order_item.id");
-        int orderItemQuantity = rs.getInt("order_item.quantity");
-        long orderItemPrice = rs.getLong("order_item.price");
-        long productId = rs.getLong("product.id");
-        String productName = rs.getString("product.name");
-        String imageUrl = rs.getString("product.image_url");
-        long productPrice = rs.getLong("product.price");
+        long orderItemId = rs.getLong("oi_id");
+        int orderItemQuantity = rs.getInt("quantity");
+        long orderItemPrice = rs.getLong("oi_price");
+        long productId = rs.getLong("p_id");
+        String productName = rs.getString("name");
+        String imageUrl = rs.getString("image_url");
+        long productPrice = rs.getLong("p_price");
 
         Product product = new Product(productId, productName, productPrice, imageUrl);
         return new OrderItem(orderItemId, product, orderItemQuantity, orderItemPrice);
@@ -44,10 +43,10 @@ public class OrderItemDao {
     }
 
     public List<OrderItem> findByOrderId(Long orderId) {
-        String sql = "SELECT o.id, o.quantity, o.price, p.id, p.name, p.image_url, p.price " +
-                "FROM order_item AS o " +
-                "INNER JOIN product AS p ON p.id = o.product_id " +
-                "WHERE o.order_id = ?";
+        String sql = "SELECT oi.id AS oi_id, oi.quantity, oi.price AS oi_price, p.id AS p_id, p.name, p.image_url, p.price AS p_price " +
+                "FROM order_item AS oi " +
+                "INNER JOIN product AS p ON p.id = oi.product_id " +
+                "WHERE oi.order_id = ?";
         return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 }

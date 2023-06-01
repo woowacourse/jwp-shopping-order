@@ -38,7 +38,7 @@ public class OrderDao {
     }
 
     public Optional<OrderEntity> findById(Long orderId) {
-        String sql = "SELECT id, created_at, spend_point, member_id " +
+        String sql = "SELECT id, member_id, spend_point, created_at " +
                 "FROM orders " +
                 "WHERE id = ?";
 
@@ -46,7 +46,7 @@ public class OrderDao {
     }
 
     public List<OrderEntity> findAllByMember(Long memberId) {
-        String sql = "SELECT id, created_at, spend_point, member_id " +
+        String sql = "SELECT id, member_id, spend_point, created_at " +
                 "FROM orders " +
                 "WHERE member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);

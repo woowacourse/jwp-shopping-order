@@ -17,14 +17,14 @@ public class CartItemDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<CartItem> rowMapper = (rs, rowNum) -> {
         long memberId = rs.getLong("member_id");
-        String email = rs.getString("member.email");
-        Long productId = rs.getLong("product.id");
-        String name = rs.getString("product.name");
-        int price = rs.getInt("product.price");
-        String imageUrl = rs.getString("product.image_url");
-        Long cartItemId = rs.getLong("id");
+        String email = rs.getString("email");
+        Long productId = rs.getLong("p_id");
+        String name = rs.getString("name");
+        int price = rs.getInt("price");
+        String imageUrl = rs.getString("image_url");
+        Long cartItemId = rs.getLong("ci_id");
         int quantity = rs.getInt("quantity");
-        long point = rs.getLong("member_point.point");
+        long point = rs.getLong("point");
         Member member = new Member(memberId, email, null, point);
         Product product = new Product(productId, name, price, imageUrl);
         return new CartItem(cartItemId, quantity, product, member);
@@ -38,12 +38,12 @@ public class CartItemDao {
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity, member_point.point " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "INNER JOIN member_point ON cart_item.member_id = member_point.member_id " +
-                "WHERE cart_item.member_id = ?";
+        String sql = "SELECT ci.id AS ci_id, ci.member_id, m.email, p.id AS p_id, p.name, p.price, p.image_url, ci.quantity, mp.point " +
+                "FROM cart_item AS ci " +
+                "INNER JOIN member AS m ON ci.member_id = m.id " +
+                "INNER JOIN product AS p ON ci.product_id = p.id " +
+                "INNER JOIN member_point AS mp ON ci.member_id = mp.member_id " +
+                "WHERE ci.member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
@@ -56,12 +56,12 @@ public class CartItemDao {
     }
 
     public Optional<CartItem> findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity, member_point.point " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "INNER JOIN member_point ON cart_item.member_id = member_point.member_id " +
-                "WHERE cart_item.id = ?";
+        String sql = "SELECT ci.id AS ci_id, ci.member_id, m.email, p.id AS p_id, p.name, p.price, p.image_url, ci.quantity, mp.point " +
+                "FROM cart_item AS ci " +
+                "INNER JOIN member AS m ON ci.member_id = m.id " +
+                "INNER JOIN product AS p ON ci.product_id = p.id " +
+                "INNER JOIN member_point AS mp ON ci.member_id = mp.member_id " +
+                "WHERE ci.id = ?";
         return jdbcTemplate.query(sql, rowMapper, id).stream().findAny();
     }
 
