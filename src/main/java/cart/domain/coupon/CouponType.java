@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.coupon;
 
 import cart.exception.CouponTypeNotFoundException;
 import java.util.Arrays;

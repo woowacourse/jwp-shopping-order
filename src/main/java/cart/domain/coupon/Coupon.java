@@ -1,4 +1,6 @@
-package cart.domain;
+package cart.domain.coupon;
+
+import cart.domain.Price;
 
 public class Coupon {
 

@@ -1,7 +1,7 @@
 package cart.dao.dto;
 
-import cart.domain.Coupon;
-import cart.domain.CouponType;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponType;
 
 public class CouponDto {
 
