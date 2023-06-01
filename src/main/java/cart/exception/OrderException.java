@@ -26,4 +26,11 @@ public abstract class OrderException extends RuntimeException {
             super("사용할 포인트가 소지 포인트보다 많습니다.");
         }
     }
+
+    public static class IllegalMember extends OrderException {
+
+        public IllegalMember() {
+            super("해당 사용자의 주문 내역이 아닙니다.");
+        }
+    }
 }
