@@ -1,8 +1,8 @@
-package cart.dao;
+package cart.dao.cartitem;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -23,6 +23,7 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Optional<CartItem> findCartItemById(Long id) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, product.stock, cart_item.quantity " +
                 "FROM cart_item " +
@@ -32,7 +33,7 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
-            Long productId = rs.getLong("id");
+            Long productId = rs.getLong("product.id");
             String name = rs.getString("name");
             Long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
@@ -59,7 +60,7 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{memberId, productId}, (rs, rowNum) -> {
             Long findMemberId = rs.getLong("member_id");
             String email = rs.getString("email");
-            Long findProductId = rs.getLong("id");
+            Long findProductId = rs.getLong("product.id");
             String name = rs.getString("name");
             Long price = rs.getLong("price");
             String imageUrl = rs.getString("image_url");
@@ -77,6 +78,7 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
         return Optional.of(cartItems.get(0));
     }
 
+    @Override
     public List<CartItem> findAllCartItemsByMemberId(Long memberId) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, product.stock, cart_item.quantity " +
                 "FROM cart_item " +
@@ -98,6 +100,15 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
         });
     }
 
+    @Override
+    public List<Long> findAllCartIdsByMemberId(Long memberId) {
+        String sql = "SELECT id FROM cart_item WHERE member_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) ->
+                rs.getLong("id")
+        );
+    }
+
+    @Override
     public Long save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -117,16 +128,19 @@ public class JdbcTemplateCartItemDao implements CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    @Override
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);

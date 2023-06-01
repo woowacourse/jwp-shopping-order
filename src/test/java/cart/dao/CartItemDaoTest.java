@@ -1,8 +1,14 @@
 package cart.dao;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.dao.cartitem.CartItemDao;
+import cart.dao.cartitem.JdbcTemplateCartItemDao;
+import cart.dao.member.JdbcTemplateMemberDao;
+import cart.dao.member.MemberDao;
+import cart.dao.product.JdbcTemplateProductDao;
+import cart.dao.product.ProductDao;
+import cart.domain.cartitem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,7 +62,7 @@ public class CartItemDaoTest {
         // given
         CartItem cartItem = new CartItem(
                 new Member(하디_아이디, 하디.getEmail(), 하디.getPassword()),
-                new Product(피자_아이디, 피자.getName(), 피자.getPrice(), 피자.getImageUrl(), 피자.getStock()));
+                new Product(샐러드_아이디, 샐러드.getName(), 샐러드.getPrice(), 샐러드.getImageUrl(), 피자.getStock()));
 
         // when
         Long cartItemId = cartItemDao.save(cartItem);
@@ -65,7 +71,7 @@ public class CartItemDaoTest {
         SoftAssertions softAssertions = new SoftAssertions();
         softAssertions.assertThat(cartItemDao.findCartItemById(cartItemId))
                 .isPresent();
-        softAssertions.assertThat(cartItemDao.findCartItemByMemberIdAndProductId(하디_아이디, 피자_아이디))
+        softAssertions.assertThat(cartItemDao.findCartItemByMemberIdAndProductId(하디_아이디, 샐러드_아이디))
                 .isPresent();
         softAssertions.assertAll();
     }
