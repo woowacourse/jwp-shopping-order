@@ -14,22 +14,22 @@ class MemberDaoTest extends DaoTest {
 
     @Test
     void 멤버_id를_통해_멤버를_찾는다() {
-        final Member member = memberDao.getMemberById(1L);
+        final Member member = memberDao.getMemberById(2L);
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(member.getId()).isEqualTo(1L);
-            softAssertions.assertThat(member.getEmail()).isEqualTo("a@a.com");
+            softAssertions.assertThat(member.getId()).isEqualTo(2L);
+            softAssertions.assertThat(member.getEmail()).isEqualTo("ber@ber.com");
             softAssertions.assertThat(member.getPassword()).isEqualTo("1234");
         });
     }
 
     @Test
     void 이메일_주소를_통해_멤버를_찾는다() {
-        final Member member = memberDao.getMemberByEmail("a@a.com");
+        final Member member = memberDao.getMemberByEmail("ber@ber.com");
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(member.getId()).isEqualTo(1L);
-            softAssertions.assertThat(member.getEmail()).isEqualTo("a@a.com");
+            softAssertions.assertThat(member.getId()).isEqualTo(2L);
+            softAssertions.assertThat(member.getEmail()).isEqualTo("ber@ber.com");
             softAssertions.assertThat(member.getPassword()).isEqualTo("1234");
         });
     }
@@ -58,7 +58,7 @@ class MemberDaoTest extends DaoTest {
         final List<Member> members = memberDao.getAllMembers();
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(members).hasSize(4);
+            softAssertions.assertThat(members).hasSize(3);
             softAssertions.assertThat(members.get(0)).isEqualTo(MemberA.ENTITY);
         });
     }

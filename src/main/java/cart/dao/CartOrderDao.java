@@ -71,6 +71,6 @@ public class CartOrderDao {
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return (Long) Objects.requireNonNull(keyHolder.getKeys().get("ID"));
     }
 }
