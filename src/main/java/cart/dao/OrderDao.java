@@ -75,6 +75,11 @@ public class OrderDao {
         
     }
     
+    public void delete(Long orderId) {
+        String sql = "DELETE FROM orders WHERE id = ?";
+        jdbcTemplate.update(sql, orderId);
+    }
+    
     
     private class OrderMapper implements RowMapper<Void> {
     
