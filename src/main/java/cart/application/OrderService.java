@@ -6,18 +6,17 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.domain.Point;
 import cart.domain.PointPolicy;
 import cart.domain.ShippingPolicy;
 import cart.dto.request.OrderItemDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderAdditionResponse;
-import cart.dto.response.OrderDetailsDto;
 import cart.dto.response.OrderResponse;
 import cart.exception.CartItemException.IllegalMember;
 import cart.exception.CartItemException.InvalidCartItem;
 import cart.exception.CartItemException.QuantityNotSame;
 import cart.exception.CartItemException.UnknownCartItem;
-import cart.exception.OrderException.LackOfPoint;
 import cart.repository.OrderRepository;
 import cart.repository.ShippingPolicyRepository;
 import org.springframework.stereotype.Service;
@@ -51,6 +50,7 @@ public class OrderService {
 
     public OrderAdditionResponse saveOrder(final Member member, final OrderRequest orderRequest) {
         List<CartItem> cartItems = findCartItems(orderRequest);
+        Point usedPoint = new Point(orderRequest.getUsedPoint());
 
         checkIllegalMember(member, cartItems);
         checkUnknownCartItemIds(extractOrderCartItemIds(orderRequest), cartItems);
@@ -58,24 +58,22 @@ public class OrderService {
 
         ShippingPolicy shippingPolicy = shippingPolicyRepository.findShippingPolicy();
         List<OrderItem> orderItems = OrderItem.of(cartItems);
-        Order order = Order.of(member, shippingPolicy.calculateShippingFee(orderItems), orderRequest.getUsedPoint(), orderItems);
+        Order order = Order.of(member, shippingPolicy.calculateShippingFee(orderItems), usedPoint.getPoint(), orderItems);
         order.checkTotalProductsPrice(orderRequest.getTotalProductsPrice());
         order.checkShippingFee(orderRequest.getShippingFee());
 
-        long totalPoint = pointDao.selectByMemberId(member.getId());
-        long usedPoint = orderRequest.getUsedPoint();
-        if (totalPoint < usedPoint) {
-            throw new LackOfPoint();
-        }
-        long newEarnedPoint = PointPolicy.getEarnedPoint(order.getPayment());
+        Point totalPoint = new Point(pointDao.selectByMemberId(member.getId()));
+        Point newEarnedPoint = PointPolicy.getEarnedPoint(order.getPayment());
+        Point updatedPoint = totalPoint.use(usedPoint)
+                .add(newEarnedPoint);
 
         long orderId = orderRepository.save(order);
         for (CartItem cartItem : cartItems) {
             cartItemDao.deleteById(cartItem.getId());
         }
-        pointDao.update(member.getId(), totalPoint - usedPoint + newEarnedPoint);
+        pointDao.update(member.getId(), updatedPoint.getPoint());
 
-        return new OrderAdditionResponse(orderId, newEarnedPoint);
+        return new OrderAdditionResponse(orderId, newEarnedPoint.getPoint());
     }
 
     private void checkQuantity(final List<OrderItemDto> orders, final List<CartItem> cartItems) {

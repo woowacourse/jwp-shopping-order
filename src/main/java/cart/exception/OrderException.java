@@ -23,4 +23,10 @@ public class OrderException extends RuntimeException {
             super("포인트가 부족합니다");
         }
     }
+
+    public static class NegativePoint extends OrderException {
+        public NegativePoint() {
+            super("포인트는 양수여야 합니다");
+        }
+    }
 }

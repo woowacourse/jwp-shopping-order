@@ -8,7 +8,7 @@ public class PointPolicy {
         return (long) (accumulationRate * 100);
     }
 
-    public static long getEarnedPoint(final long price) {
-        return (long) (price * accumulationRate);
+    public static Point getEarnedPoint(final long price) {
+        return new Point((long) (price * accumulationRate));
     }
 }
