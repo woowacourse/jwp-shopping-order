@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -25,14 +24,9 @@ import java.util.Objects;
 public class OrderRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
 
     public OrderRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("order")
-                .usingGeneratedKeyColumns("id");
     }
 
     public Long addOrder(final Long memberId, final Order order) {
@@ -67,11 +61,6 @@ public class OrderRepository {
         String sql = "INSERT INTO order_coupon (order_id, coupon_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, orderId, couponId);
     }
-
-//    public Order findOrderByIdAndMemberId(final Long memberId, final Long orderId) {
-//        String sql = "SELECT * FROM `order` WHERE `order`.member_id = ? AND `order`.id = ?";
-//        return jdbcTemplate.queryForObject(sql, Order.class, memberId, orderId);
-//    }
 
     public Order findOrderByIdAndMemberId(final Long memberId, final Long orderId) {
         String sql = "SELECT " +
@@ -117,26 +106,6 @@ public class OrderRepository {
 
             return new Order(orderId, items, coupon, totalPrice, deliveryPrice, orderedAt);
         }, memberId, orderId);
-    }
-
-    public List<Item> findItemsByOrderId(final Long orderId) {
-        String sql = "SELECT product.id, product.name, order_product.ordered_product_price, product.image_url, order_product.quantity FROM order_product JOIN product ON order_product.product_id = product.id WHERE order_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{orderId}, (rs, rowNum) ->
-                new Item(
-                        new Product(
-                                rs.getLong("product.id"),
-                                rs.getString("product.name"),
-                                rs.getInt("order_product.ordered_product_price"),
-                                rs.getString("product.image_url")
-                        ),
-                        rs.getInt("order_product.quantity")
-                )
-        );
-    }
-
-    public Coupon findOrderCouponByOrderId(final Long orderId) {
-        String sql = "SELECT coupon.* FROM order_coupon JOIN coupon ON order_coupon.coupon_id = coupon.id WHERE order_id = ?";
-        return jdbcTemplate.queryForObject(sql, Coupon.class, orderId);
     }
 
     public List<Order> findOrdersByMemberId(final Long memberId) {

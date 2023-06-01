@@ -53,10 +53,7 @@ public class OrderService {
     }
 
     public OrderResponse findOrdersByIdAndMemberId(final Long memberId, final Long orderId) {
-        // order
         Order order = orderRepository.findOrderByIdAndMemberId(memberId, orderId);
-//        Coupon coupon = orderRepository.findOrderCouponByOrderId(orderId);
-//        List<Item> items = orderRepository.findItemsByOrderId(orderId);
         return new OrderResponse(order);
     }
 
