@@ -2,7 +2,7 @@ package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.product.Product;
-import cart.dto.history.ProductHistory;
+import cart.dto.history.OrderedProductHistory;
 import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 import cart.exception.CartItemNotFoundException;
 
@@ -131,13 +131,13 @@ public class CartItems {
         return result;
     }
 
-    public ProductHistory buy(final Long productId, final int quantity) {
+    public OrderedProductHistory buy(final Long productId, final int quantity) {
         CartItem cartItem = getCartItemByProductId(productId);
         int totalPrice = cartItem.getAppliedDiscountOrOriginPrice(quantity);
 
         cartItem.buy(quantity);
 
-        return new ProductHistory(productId, cartItem.getProduct().getName(), cartItem.getProduct().getImageUrl(), quantity, totalPrice);
+        return new OrderedProductHistory(productId, cartItem.getProduct().getName(), cartItem.getProduct().getImageUrl(), quantity, totalPrice);
     }
 
     private CartItem getCartItemByProductId(final Long productId) {

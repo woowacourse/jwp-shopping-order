@@ -1,7 +1,7 @@
 package cart.dto.coupon;
 
 import cart.domain.coupon.Coupon;
-import cart.dto.history.CouponHistory;
+import cart.dto.history.OrderedCouponHistory;
 
 public class CouponResponse {
 
@@ -17,8 +17,8 @@ public class CouponResponse {
         return new CouponResponse(coupon.getId(), coupon.getName());
     }
 
-    public static CouponResponse from(final CouponHistory couponHistory) {
-        return new CouponResponse(couponHistory.getId(), couponHistory.getName());
+    public static CouponResponse from(final OrderedCouponHistory orderedCouponHistory) {
+        return new CouponResponse(orderedCouponHistory.getId(), orderedCouponHistory.getName());
     }
 
     public long getCouponId() {

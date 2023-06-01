@@ -9,11 +9,11 @@ public class OrderHistory {
 
     private final Long id;
     private final String orderTime;
-    private final List<ProductHistory> products;
+    private final List<OrderedProductHistory> products;
     private final DeliveryFee deliveryFee;
-    private final List<CouponHistory> coupons;
+    private final List<OrderedCouponHistory> coupons;
 
-    public OrderHistory(final Long id, final List<ProductHistory> products, final int deliveryFee, final List<CouponHistory> coupons, final String orderTime) {
+    public OrderHistory(final Long id, final List<OrderedProductHistory> products, final int deliveryFee, final List<OrderedCouponHistory> coupons, final String orderTime) {
         this.id = id;
         this.products = products;
         this.deliveryFee = DeliveryFee.from(deliveryFee);
@@ -25,7 +25,7 @@ public class OrderHistory {
         return id;
     }
 
-    public List<ProductHistory> getProducts() {
+    public List<OrderedProductHistory> getProducts() {
         return products;
     }
 
@@ -33,7 +33,7 @@ public class OrderHistory {
         return deliveryFee;
     }
 
-    public List<CouponHistory> getCoupons() {
+    public List<OrderedCouponHistory> getCoupons() {
         return coupons;
     }
 

@@ -2,9 +2,9 @@ package cart.controller.order;
 
 import cart.config.auth.guard.basic.MemberArgumentResolver;
 import cart.domain.member.Member;
-import cart.dto.history.CouponHistory;
 import cart.dto.history.OrderHistory;
-import cart.dto.history.ProductHistory;
+import cart.dto.history.OrderedCouponHistory;
+import cart.dto.history.OrderedProductHistory;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
 import cart.repository.coupon.CouponRepository;
@@ -81,9 +81,9 @@ public class OrderControllerUnitTest {
 
         OrderHistory orderHistory = new OrderHistory(
                 1L,
-                List.of(new ProductHistory(1L, "치킨", "img", 10, 10000)),
+                List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
-                List.of(new CouponHistory(1, "coupon")),
+                List.of(new OrderedCouponHistory(1, "coupon")),
                 "2022-05-29"
         );
 
@@ -131,9 +131,9 @@ public class OrderControllerUnitTest {
 
         OrderHistory orderHistory = new OrderHistory(
                 1L,
-                List.of(new ProductHistory(1L, "치킨", "img", 10, 10000)),
+                List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
-                List.of(new CouponHistory(1, "coupon")),
+                List.of(new OrderedCouponHistory(1, "coupon")),
                 "2022-05-29"
         );
 

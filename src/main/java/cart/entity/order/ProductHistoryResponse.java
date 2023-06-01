@@ -1,6 +1,6 @@
 package cart.entity.order;
 
-import cart.dto.history.ProductHistory;
+import cart.dto.history.OrderedProductHistory;
 
 public class ProductHistoryResponse {
 
@@ -18,8 +18,8 @@ public class ProductHistoryResponse {
         this.price = price;
     }
 
-    public static ProductHistoryResponse from(final ProductHistory productHistory) {
-        return new ProductHistoryResponse(productHistory.getId(), productHistory.getProductName(), productHistory.getImgUrl() , productHistory.getQuantity(), productHistory.getPrice());
+    public static ProductHistoryResponse from(final OrderedProductHistory orderedProductHistory) {
+        return new ProductHistoryResponse(orderedProductHistory.getId(), orderedProductHistory.getProductName(), orderedProductHistory.getImgUrl() , orderedProductHistory.getQuantity(), orderedProductHistory.getPrice());
     }
 
     public long getProductId() {

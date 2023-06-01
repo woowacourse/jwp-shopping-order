@@ -2,7 +2,7 @@ package cart.domain.cart;
 
 import cart.domain.coupon.Coupons;
 import cart.domain.product.Product;
-import cart.dto.history.ProductHistory;
+import cart.dto.history.OrderedProductHistory;
 import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -107,7 +107,7 @@ class CartTest {
         Cart cart = createCart();
 
         // when
-        List<ProductHistory> productHistories = cart.buy(productIds, quantities);
+        List<OrderedProductHistory> productHistories = cart.buy(productIds, quantities);
 
         // then
         assertAll(

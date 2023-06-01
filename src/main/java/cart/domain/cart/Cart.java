@@ -2,7 +2,7 @@ package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.product.Product;
-import cart.dto.history.ProductHistory;
+import cart.dto.history.OrderedProductHistory;
 import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 
 import java.util.List;
@@ -67,7 +67,7 @@ public class Cart {
         cartItems.validateBuyingProduct(productIds, quantities);
     }
 
-    public List<ProductHistory> buy(final List<Long> productIds, final List<Integer> quantities) {
+    public List<OrderedProductHistory> buy(final List<Long> productIds, final List<Integer> quantities) {
         return IntStream.range(0, productIds.size())
                 .mapToObj(index -> cartItems.buy(productIds.get(index), quantities.get(index)))
                 .collect(Collectors.toList());

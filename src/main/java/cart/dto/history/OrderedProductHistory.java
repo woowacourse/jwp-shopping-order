@@ -1,6 +1,6 @@
 package cart.dto.history;
 
-public class ProductHistory {
+public class OrderedProductHistory {
 
     private final Long id;
     private final String productName;
@@ -8,7 +8,7 @@ public class ProductHistory {
     private final int quantity;
     private int price;
 
-    public ProductHistory(final Long id, final String productName, final String imageUrl, final int quantity, final int price) {
+    public OrderedProductHistory(final Long id, final String productName, final String imageUrl, final int quantity, final int price) {
         this.id = id;
         this.productName = productName;
         this.imageUrl = imageUrl;

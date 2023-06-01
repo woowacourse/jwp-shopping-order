@@ -1,9 +1,9 @@
 package cart.service.order;
 
 import cart.domain.member.Member;
-import cart.dto.history.CouponHistory;
 import cart.dto.history.OrderHistory;
-import cart.dto.history.ProductHistory;
+import cart.dto.history.OrderedCouponHistory;
+import cart.dto.history.OrderedProductHistory;
 import cart.dto.order.OrderResponse;
 import cart.dto.order.OrdersResponse;
 import cart.repository.order.OrderRepository;
@@ -37,9 +37,9 @@ public class OrderServiceUnitTest {
         Member member = createMember();
         OrderHistory orderHistory = new OrderHistory(
                 1L,
-                List.of(new ProductHistory(1L, "치킨", "img", 10, 10000)),
+                List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
-                List.of(new CouponHistory(1L, "쿠폰")),
+                List.of(new OrderedCouponHistory(1L, "쿠폰")),
                 "2023"
         );
         List<OrderHistory> expected = List.of(orderHistory);
@@ -63,9 +63,9 @@ public class OrderServiceUnitTest {
         Member member = createMember();
         OrderHistory orderHistory = new OrderHistory(
                 1L,
-                List.of(new ProductHistory(1L, "치킨", "img", 10, 10000)),
+                List.of(new OrderedProductHistory(1L, "치킨", "img", 10, 10000)),
                 3000,
-                List.of(new CouponHistory(1L, "쿠폰")),
+                List.of(new OrderedCouponHistory(1L, "쿠폰")),
                 "2023"
         );
         Long orderId = 1L;

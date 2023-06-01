@@ -4,9 +4,9 @@ import cart.dao.coupon.CouponHistoryDao;
 import cart.dao.order.OrderDao;
 import cart.dao.order.OrderItemHistoryDao;
 import cart.domain.member.Member;
-import cart.dto.history.CouponHistory;
 import cart.dto.history.OrderHistory;
-import cart.dto.history.ProductHistory;
+import cart.dto.history.OrderedCouponHistory;
+import cart.dto.history.OrderedProductHistory;
 import cart.dto.order.OrderResponse;
 import cart.entity.coupon.CouponHistoryEntity;
 import cart.entity.order.OrderItemHistoryEntity;
@@ -61,10 +61,10 @@ public class OrderRepository {
             Long orderId = orderTableEntity.getId();
 
             List<OrderItemHistoryEntity> orderItemHistoryEntities = orderItemHistoryDao.findAllByOrderId(orderId);
-            List<ProductHistory> productHistories = getProductHistories(orderItemHistoryEntities);
+            List<OrderedProductHistory> productHistories = getProductHistories(orderItemHistoryEntities);
 
             List<CouponHistoryEntity> couponHistoryEntities = couponHistoryDao.findAllByOrderId(orderId);
-            List<CouponHistory> couponHistories = getCouponHistories(couponHistoryEntities);
+            List<OrderedCouponHistory> couponHistories = getCouponHistories(couponHistoryEntities);
 
             orders.add(new OrderHistory(orderId, productHistories, orderTableEntity.getDeliveryFee(), couponHistories, orderTableEntity.getCreateAt()));
         }
@@ -72,15 +72,15 @@ public class OrderRepository {
         return orders;
     }
 
-    private List<CouponHistory> getCouponHistories(final List<CouponHistoryEntity> couponHistoryEntities) {
+    private List<OrderedCouponHistory> getCouponHistories(final List<CouponHistoryEntity> couponHistoryEntities) {
         return couponHistoryEntities.stream()
-                .map(history -> new CouponHistory(history.getId(), history.getName()))
+                .map(history -> new OrderedCouponHistory(history.getId(), history.getName()))
                 .collect(Collectors.toList());
     }
 
-    private List<ProductHistory> getProductHistories(final List<OrderItemHistoryEntity> orderItemHistoryEntities) {
+    private List<OrderedProductHistory> getProductHistories(final List<OrderItemHistoryEntity> orderItemHistoryEntities) {
         return orderItemHistoryEntities.stream()
-                .map(history -> new ProductHistory(history.getId(), history.getProductName(), history.getImgUrl(), history.getQuantity(), history.getPrice()))
+                .map(history -> new OrderedProductHistory(history.getId(), history.getProductName(), history.getImgUrl(), history.getQuantity(), history.getPrice()))
                 .collect(Collectors.toList());
     }
 
@@ -88,10 +88,10 @@ public class OrderRepository {
         OrderTableEntity orderTableEntity = orderDao.findById(orderId);
 
         List<OrderItemHistoryEntity> orderItemHistoryEntities = orderItemHistoryDao.findAllByOrderId(orderId);
-        List<ProductHistory> productHistories = getProductHistories(orderItemHistoryEntities);
+        List<OrderedProductHistory> productHistories = getProductHistories(orderItemHistoryEntities);
 
         List<CouponHistoryEntity> couponHistoryEntities = couponHistoryDao.findAllByOrderId(orderId);
-        List<CouponHistory> couponHistories = getCouponHistories(couponHistoryEntities);
+        List<OrderedCouponHistory> couponHistories = getCouponHistories(couponHistoryEntities);
 
         return new OrderHistory(orderId, productHistories, orderTableEntity.getDeliveryFee(), couponHistories, orderTableEntity.getCreateAt());
     }
