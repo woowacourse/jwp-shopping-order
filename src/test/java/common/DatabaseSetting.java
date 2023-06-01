@@ -85,9 +85,8 @@ public class DatabaseSetting {
     }
 
     public void addCartItems() {
-        cartItemDao.save(A_치킨_1);
-        cartItemDao.save(A_샐러드_1);
-        cartItemDao.save(B_피자_1);
+        cartItemDao.save(A_치킨_1.객체);
+        cartItemDao.save(A_샐러드_1.객체);
     }
 
     public void clearDatabase() {

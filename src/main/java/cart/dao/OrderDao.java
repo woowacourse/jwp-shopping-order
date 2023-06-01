@@ -36,7 +36,7 @@ public class OrderDao {
         }, keyHolder);
 
 
-        final long orderId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        final long orderId = (long) Objects.requireNonNull(keyHolder.getKeys().get("id"));
         final List<CartItem> cartItems = order.getCartItems();
 
         jdbcTemplate.batchUpdate("insert into order_items(order_id, product_id, quantity) values(?, ?, ?)", new BatchPreparedStatementSetter() {

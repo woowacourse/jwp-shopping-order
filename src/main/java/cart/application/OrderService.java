@@ -30,8 +30,7 @@ public class OrderService {
         final Order order = Order.of(member, cartItems);
         orderCalculator.checkPaymentAmount(order, orderRequest.getPaymentAmount());
 
-        orderDao.save(order);
         cartItemService.remove(member, orderRequest.getCartItems());
-        return null;
+        return orderDao.save(order);
     }
 }

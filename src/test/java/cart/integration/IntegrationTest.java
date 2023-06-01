@@ -1,5 +1,7 @@
 package cart.integration;
 
+import cart.dao.CartItemDao;
+import cart.dao.OrderDao;
 import common.DatabaseSetting;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,12 @@ public class IntegrationTest {
 
     @Autowired
     public DatabaseSetting databaseSetting;
+
+    @Autowired
+    public CartItemDao cartItemDao;
+
+    @Autowired
+    public OrderDao orderDao;
 
     @BeforeEach
     void setUp() {

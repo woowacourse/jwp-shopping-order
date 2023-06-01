@@ -14,7 +14,7 @@ class OrderCalculatorTest {
     @Test
     void 주문을_받아서_총결제금액을_계산한다() {
         // given
-        Order order = 주문_A_치킨_1;
+        Order order = 주문_A_치킨_1.객체;
         long actual = 치킨.getPrice();
 
         // when

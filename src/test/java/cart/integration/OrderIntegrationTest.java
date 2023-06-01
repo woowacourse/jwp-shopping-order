@@ -1,20 +1,22 @@
 package cart.integration;
 
-import cart.domain.CartItem;
-import cart.domain.Order;
 import cart.domain.OrderCalculator;
+import cart.dto.OrderRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
 import java.util.List;
 
 import static common.Fixtures.*;
 import static common.Steps.상품을_장바구니에_담는다;
 import static common.Steps.장바구니의_상품을_주문한다;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class OrderIntegrationTest extends IntegrationTest {
 
@@ -23,54 +25,59 @@ public class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
-        databaseSetting.clearDatabase();
+        databaseSetting.createTables();
         databaseSetting.addMembers();
         databaseSetting.addProducts();
+    }
+
+    @AfterEach
+    void clear() {
+        databaseSetting.clearDatabase();
     }
 
     @Test
     void 사용자는_장바구니에_담긴_제품들을_주문할수있다() {
         // given
-        상품을_장바구니에_담는다(A_샐러드_1);
-        상품을_장바구니에_담는다(A_치킨_1);
-        final List<Long> cartItems = List.of(A_샐러드_1.getId());
-        final long price = (long) (A_샐러드_1.getProduct().getPrice() * A_샐러드_1.getQuantity());
+        상품을_장바구니에_담는다(A_치킨_1.요청, 멤버_A);
+        상품을_장바구니에_담는다(A_샐러드_1.요청, 멤버_A);
+        final List<Long> cartItems = List.of(1L);
+        final long price = (long) (A_치킨_1.객체.getProduct().getPrice() * A_치킨_1.객체.getQuantity());
 
         // when
-        final ExtractableResponse<Response> response = 장바구니의_상품을_주문한다(주문_A_치킨_1, price);
+        final ExtractableResponse<Response> response = 장바구니의_상품을_주문한다(new OrderRequest(cartItems, price), 멤버_A);
 
         // then
-        // TODO: 2023/06/01 주문이 db에 저장이 잘 되어 있는지, 장바구니 db에서 해당 item이 없는지, 응답으로 온 Location으로 자원을 요청할 수 있는지, 상태코드가 201인지
+//        final ExtractableResponse<Response> 주문_상세_정보 = 주문_상세정보를_가져온다(멤버_A, response.header(HttpHeaders.LOCATION));
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+//                () -> assertThat(주문_상세_정보.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(cartItemDao.findById(1L)).isNull()
+        );
     }
 
     @Test
-    void 장바구니에_없는_제품을_주문하면_404를_응답한다() {
+    void 주문목록이_비어있으면_400를_응답한다() {
         // given
-        상품을_장바구니에_담는다(A_샐러드_1);
-        final List<CartItem> cartItems = List.of(A_치킨_1);
-        final Order order = Order.of(멤버_A, cartItems);
+        상품을_장바구니에_담는다(A_치킨_1.요청, 멤버_A);
 
         // when
-        final ExtractableResponse<Response> response = 장바구니의_상품을_주문한다(order, 치킨.getPrice());
+        final ExtractableResponse<Response> response = 장바구니의_상품을_주문한다(new OrderRequest(Collections.emptyList(), 0L), 멤버_A);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
-        // TODO: 2023/06/01 주문이 db에 없는지
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+//        assertThat(orderDao.findByMember(멤버_A)).isEmpty();
     }
 
     @Test
-    void 총_상품_수량이_100개_이상이면_400을_응답한다() {
+    void 금액이_일치하지_않으면_400을_응답한다() {
         // given
-        final CartItem cartItem = new CartItem(100, 멤버_A, 치킨);
-        상품을_장바구니에_담는다(cartItem);
-        final Order order = Order.of(멤버_A, List.of(cartItem));
-        final long paymentAmount = orderCalculator.calculatePaymentAmount(order);
+        상품을_장바구니에_담는다(A_치킨_1.요청, 멤버_A);
 
         // when
-        final ExtractableResponse<Response> response = 장바구니의_상품을_주문한다(order, paymentAmount);
+        final ExtractableResponse<Response> response = 장바구니의_상품을_주문한다(new OrderRequest(List.of(1L), 100L), 멤버_A);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
-        // TODO: 2023/06/01 주문이 db에 없는지
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+//        assertThat(orderDao.findByMember(멤버_A)).isEmpty();
     }
 }

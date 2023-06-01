@@ -4,6 +4,8 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
+import cart.dto.CartItemQuantityUpdateRequest;
+import cart.dto.CartItemRequest;
 
 import java.util.List;
 
@@ -15,12 +17,30 @@ public class Fixtures {
     public static final Member 멤버_A = new Member(1L, "a@a.com", "1234");
     public static final Member 멤버_B = new Member(2L, "b@b.com", "1234");
 
-    public static final CartItem A_치킨_1 = new CartItem(1L, 1, 치킨, 멤버_A);
-    public static final CartItem A_샐러드_1 = new CartItem(2L, 1, 샐러드, 멤버_A);
-    public static final CartItem A_샐러드_2 = new CartItem(3L, 2, 샐러드, 멤버_A);
-    public static final CartItem B_피자_1 = new CartItem(3L, 1, 피자, 멤버_B);
+    public static class A_치킨_1 {
+        public static final Member 멤버 = 멤버_A;
+        public static final CartItem 객체 = new CartItem(1L, 1, 치킨, 멤버_A);
+        public static final CartItemRequest 요청 = new CartItemRequest(1L);
+    }
 
-    public static final Order 주문_A_치킨_1 = Order.of(멤버_A, List.of(A_치킨_1));
-    public static final Order 주문_A_치킨_1_샐러드_1 = Order.of(멤버_A, List.of(A_치킨_1, A_샐러드_1));
-    public static final Order 주문_A_치킨_1_샐러드_2 = Order.of(멤버_A, List.of(A_치킨_1, A_샐러드_2));
+    public static class A_샐러드_1 {
+        public static final Member 멤버 = 멤버_A;
+        public static final CartItem 객체 = new CartItem(2L, 1, 샐러드, 멤버_A);
+        public static final CartItemRequest 요청 = new CartItemRequest(2L);
+    }
+
+    public static class A_샐러드_2 {
+        public static final Member 멤버 = 멤버_A;
+        public static final CartItem 객체 = new CartItem(3L, 2, 샐러드, 멤버_A);
+        public static final CartItemRequest 요청1 = new CartItemRequest(2L);
+        public static final CartItemQuantityUpdateRequest 요청2 = new CartItemQuantityUpdateRequest(2);
+    }
+
+    public static class 주문_A_치킨_1 {
+        public static final Member 멤버 = 멤버_A;
+        public static final Order 객체 = Order.of(멤버_A, List.of(A_치킨_1.객체));
+    }
+
+    public static final Order 주문_A_치킨_1_샐러드_1 = Order.of(멤버_A, List.of(A_치킨_1.객체, A_샐러드_1.객체));
+    public static final Order 주문_A_치킨_1_샐러드_2 = Order.of(멤버_A, List.of(A_치킨_1.객체, A_샐러드_2.객체));
 }

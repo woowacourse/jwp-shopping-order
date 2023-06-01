@@ -21,25 +21,27 @@ public class ControllerExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({OrderException.InvalidAmount.class})
+    @ExceptionHandler(CartItemException.InvalidQuantity.class)
     public ErrorResponse handleBadRequest(RuntimeException e) {
         return new ErrorResponse(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(OrderException.InvalidAmount.class)
+    public ErrorResponseWithErrorCode handleInvalidAmount(RuntimeException e) {
+        return new ErrorResponseWithErrorCode(4001, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(OrderException.EmptyCart.class)
+    public ErrorResponseWithErrorCode handleEmptyCart(RuntimeException e) {
+        return new ErrorResponseWithErrorCode(4002, e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CartItemException.NoSuchIds.class)
     public ErrorResponse handleNotFound(RuntimeException e) {
         return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler(OrderException.InvalidAmount.class)
-    public ResponseEntity<ErrorResponseWithErrorCode> handleInvalidAmount(RuntimeException e) {
-        return ResponseEntity.status(4001).body(new ErrorResponseWithErrorCode(4001, e.getMessage()));
-    }
-
-    @ExceptionHandler(OrderException.EmptyCart.class)
-    public ResponseEntity<ErrorResponseWithErrorCode> handleEmptyCart(RuntimeException e) {
-        return ResponseEntity.status(4002).body(new ErrorResponseWithErrorCode(4002, e.getMessage()));
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
