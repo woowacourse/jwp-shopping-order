@@ -16,6 +16,10 @@ public class Member {
         return password.equals(otherPassword);
     }
 
+    public boolean isNotSameMember(final Member other) {
+        return !this.id.equals(other.id);
+    }
+
     public Long getId() {
         return id;
     }
