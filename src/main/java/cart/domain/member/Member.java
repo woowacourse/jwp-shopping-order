@@ -9,13 +9,19 @@ import java.util.Objects;
 
 public class Member {
 
-    private final Long id;
+    private Long id;
     private final Email email;
     private final Password password;
     private Coupons coupons;
 
     public Member(final Long id, final String email, final String password) {
         this.id = id;
+        this.email = new Email(email);
+        this.password = new Password(password);
+        this.coupons = null;
+    }
+
+    public Member(final String email, final String password) {
         this.email = new Email(email);
         this.password = new Password(password);
         this.coupons = null;

@@ -20,10 +20,14 @@ public class CartDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public CartDao(final JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<CartEntity> cartRowMapper = (rs, rowNum) ->
@@ -79,9 +83,14 @@ public class CartDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void deleteAllByCartId(final long cartId) {
-        String sql = "DELETE FROM cart_item WHERE cart_id = ?";
-        jdbcTemplate.update(sql, cartId);
+    public long createMemberCart(final long memberId) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put("member_id", memberId);
+
+        Number generatedId = simpleJdbcInsert.executeAndReturnKey(parameters);
+
+        return generatedId.longValue();
     }
 }
 

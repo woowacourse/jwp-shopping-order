@@ -5,6 +5,7 @@ import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponCreateBadRequestException;
 import cart.exception.CouponNotFoundException;
 import cart.exception.EmailInvalidException;
+import cart.exception.MemberAlreadyExistException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.MemberNotOwnerException;
 import cart.exception.PasswordInvalidException;
@@ -76,11 +77,20 @@ public class GlobalExceptionHandler {
         return responseBadRequest(exception.getMessage());
     }
 
+    @ExceptionHandler(MemberAlreadyExistException.class)
+    public ResponseEntity<String> handlerMemberAlreadyExistException(final MemberAlreadyExistException exception) {
+        return responseConflict(exception.getMessage());
+    }
+
     private ResponseEntity<String> responseNotFound(final String message) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     private ResponseEntity<String> responseBadRequest(final String message) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
+
+    private ResponseEntity<String> responseConflict(final String message) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
 }

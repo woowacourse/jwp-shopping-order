@@ -196,7 +196,6 @@ include::{snippets}/coupon-controller-unit-test/delete_coupon/http-request.adoc[
 
 include::{snippets}/coupon-controller-unit-test/delete_coupon/http-response.adoc[]
 
-
 === 유저에게 쿠폰 전송
 
 ==== 요청
@@ -206,3 +205,47 @@ include::{snippets}/coupon-controller-unit-test/give_coupon/http-request.adoc[]
 ==== 응답
 
 include::{snippets}/coupon-controller-unit-test/give_coupon/http-response.adoc[]
+
+== 멤버
+
+=== 멤버 생성
+
+==== 요청
+
+include::{snippets}/member-controller-unit-test/create_member/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/member-controller-unit-test/create_member/http-response.adoc[]
+
+=== 멤버 전체 조회
+
+==== 요청
+
+include::{snippets}/member-controller-unit-test/find_all_members/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/member-controller-unit-test/find_all_members/http-response.adoc[]
+
+=== 멤버 개별 조회
+
+==== 요청
+
+include::{snippets}/member-controller-unit-test/find_member/http-request.adoc[]
+
+;
+
+==== 응답
+
+include::{snippets}/member-controller-unit-test/find_member/http-response.adoc[]
+
+=== 멤버 삭제
+
+==== 요청
+
+include::{snippets}/member-controller-unit-test/delete_member/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/member-controller-unit-test/delete_member/http-response.adoc[]

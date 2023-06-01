@@ -18,22 +18,34 @@ public class MemberRepository {
     }
 
     public Member findByEmail(final String email) {
-        MemberEntity memberEntity = memberDao.getMemberByEmail(email);
+        MemberEntity memberEntity = memberDao.findMemberByEmail(email);
         return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
     }
 
     public List<Member> findAll() {
-        return memberDao.getAllMemberEntities().stream()
+        return memberDao.findAllMembers().stream()
                 .map(entity -> new Member(entity.getId(), entity.getEmail(), entity.getPassword()))
                 .collect(Collectors.toList());
     }
 
-    public Member findMemberById(final long id) {
-        MemberEntity memberEntity = memberDao.getMemberById(id);
+    public Member findMemberById(final long memberId) {
+        MemberEntity memberEntity = memberDao.findMemberById(memberId);
         return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
     }
 
     public boolean isExistMemberById(final Long memberId) {
         return memberDao.isExistMemberById(memberId);
+    }
+
+    public boolean isExistMemberByEmail(final String memberEmail) {
+        return memberDao.isExistMemberByEmail(memberEmail);
+    }
+
+    public long save(final Member member) {
+        return memberDao.save(member.getEmail(), member.getPassword());
+    }
+
+    public void deleteById(final Long memberId) {
+        memberDao.deleteMember(memberId);
     }
 }
