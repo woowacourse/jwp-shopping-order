@@ -41,5 +41,6 @@ CREATE TABLE IF NOT EXISTS order_item
     price           INT          NOT NULL,
     image_url       VARCHAR(255) NOT NULL,
     quantity        INT          NOT NULL,
+    product_id      BIGINT       NOT NULL,
     FOREIGN KEY (cart_order_id) REFERENCES cart_order (id) ON DELETE CASCADE
     );

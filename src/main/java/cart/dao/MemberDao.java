@@ -46,7 +46,6 @@ public class MemberDao {
 
     public void updateMemberCash(Member chargedMember) {
         String sql = "UPDATE member SET cash = ? WHERE id = ?";
-        System.out.println("cash = " + chargedMember.getCash());
         jdbcTemplate.update(sql, chargedMember.getCash(), chargedMember.getId());
     }
 

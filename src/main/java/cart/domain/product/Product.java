@@ -21,6 +21,18 @@ public class Product {
         this.productImageUrl = new ProductImageUrl(imageUrl);
     }
 
+    public boolean isSameName(String name) {
+        return this.productName.equals(new ProductName(name));
+    }
+
+    public boolean isSamePrice(int price) {
+        return this.productPrice.equals(new ProductPrice(price));
+    }
+
+    public boolean isSameImageUrl(String imageUrl) {
+        return this.productImageUrl.equals(new ProductImageUrl(imageUrl));
+    }
+
     public Long getId() {
         return id;
     }

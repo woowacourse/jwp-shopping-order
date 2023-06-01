@@ -27,6 +27,17 @@ public class Member {
         return new Member(this.id, this.email, this.password, cash.charge(cashToCharge).getCash());
     }
 
+    public void checkPayable(int cashToPay) {
+        if (this.cash.isLessThan(cashToPay)) {
+            throw new IllegalArgumentException("사용자의 현재 금액이 주문 금액보다 적습니다.");
+        }
+    }
+
+    public Member pay(int cashToOrder) {
+        Cash cashAfterPay = cash.pay(cashToOrder);
+        return new Member(id, email, password, cashAfterPay.getCash());
+    }
+
     public Long getId() {
         return id;
     }

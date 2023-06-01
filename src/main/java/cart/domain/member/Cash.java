@@ -15,6 +15,14 @@ public class Cash {
         return new Cash(chargedCash);
     }
 
+    public boolean isLessThan(int target) {
+        return this.cash < target;
+    }
+
+    public Cash pay(int cashToPay) {
+        return new Cash(this.cash - cashToPay);
+    }
+
     public int getCash() {
         return cash;
     }
