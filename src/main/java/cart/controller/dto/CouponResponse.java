@@ -6,14 +6,14 @@ public class CouponResponse {
     private final String name;
     private final int discountAmount;
     private final String description;
-    private final boolean used;
+    private final boolean isUsed;
 
-    public CouponResponse(final Long id, final String name, final int discountAmount, final String description, final boolean used) {
+    public CouponResponse(final Long id, final String name, final int discountAmount, final String description, final boolean isUsed) {
         this.id = id;
         this.name = name;
         this.discountAmount = discountAmount;
         this.description = description;
-        this.used = used;
+        this.isUsed = isUsed;
     }
 
     public Long getId() {
@@ -32,7 +32,7 @@ public class CouponResponse {
         return description;
     }
 
-    public boolean isUsed() {
-        return used;
+    public boolean getIsUsed() {
+        return isUsed;
     }
 }
