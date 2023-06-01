@@ -1,10 +1,12 @@
 package cart.dto;
 
+import java.util.List;
+
 public class OrderResponse {
     private final Long orderId;
-    private final OrderProductResponse orderProducts;
+    private final List<OrderProductResponse> orderProducts;
 
-    public OrderResponse(Long orderId, OrderProductResponse orderProducts) {
+    public OrderResponse(Long orderId, List<OrderProductResponse> orderProducts) {
         this.orderId = orderId;
         this.orderProducts = orderProducts;
     }
@@ -13,7 +15,7 @@ public class OrderResponse {
         return orderId;
     }
 
-    public OrderProductResponse getOrderProducts() {
+    public List<OrderProductResponse> getOrderProducts() {
         return orderProducts;
     }
 }
