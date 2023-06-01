@@ -57,11 +57,6 @@ public class MemberDao {
         jdbcTemplate.update(sql, entity.getEmail(), entity.getPassword(), entity.getMoney(), entity.getPoint(), entity.getId());
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
     public List<MemberEntity> getAll() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());

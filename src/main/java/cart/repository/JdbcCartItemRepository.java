@@ -28,7 +28,7 @@ public class JdbcCartItemRepository implements CartItemRepository {
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
     }
-    
+
     @Override
     public Optional<CartItem> findById(Long id) {
         try {

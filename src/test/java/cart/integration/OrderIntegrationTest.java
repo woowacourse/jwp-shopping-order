@@ -34,10 +34,8 @@ class OrderIntegrationTest extends IntegrationTest {
 
     private Long cartId;
     private Long cartId2;
-    private Long cartId3;
 
     private Member member;
-    private Member member2;
 
     @BeforeEach
     void setUp() {
@@ -48,17 +46,15 @@ class OrderIntegrationTest extends IntegrationTest {
         productId3 = createProduct(핫도그.REQUEST);
 
         member = memberRepository.findById(1L).orElseGet(null);
-        member2 = memberRepository.findById(2L).orElseGet(null);
 
         cartId = requestAddCartItem(member, new CartItemRequest(productId));
         cartId2 = requestAddCartItem(member, new CartItemRequest(productId2));
-        cartId3 = requestAddCartItem(member, new CartItemRequest(productId3));
     }
 
     @DisplayName("주문을 한 뒤 장바구니가 삭제된다")
     @Test
     void removeCartItemAfterOrderItem() {
-        ExtractableResponse<Response> response = orderCartItems(member, cartId, cartId2);
+        orderCartItems(member, cartId, cartId2);
         ExtractableResponse<Response> cartItemSelectResponse = requestGetCartItems(member);
 
         CartItemResponse[] cartItemResponses = cartItemSelectResponse.as(CartItemResponse[].class);
@@ -74,8 +70,8 @@ class OrderIntegrationTest extends IntegrationTest {
         int price = 치킨.PRODUCT.getPrice() + 피자.PRODUCT.getPrice();
         int point = (price / 100) * 10;
 
-        ExtractableResponse<Response> response = orderCartItems(member, 0, cartId, cartId2);
-        ExtractableResponse<Response> cartItemSelectResponse = requestGetCartItems(member);
+        orderCartItems(member, 0, cartId, cartId2);
+        requestGetCartItems(member);
 
         Member afterOrder = memberRepository.findById(member.getId()).orElseGet(null);
         assertThat(afterOrder.getPoint()).isEqualTo(prevPoint + point);
@@ -89,7 +85,7 @@ class OrderIntegrationTest extends IntegrationTest {
         int price = 치킨.PRODUCT.getPrice() + 피자.PRODUCT.getPrice() - usePoint;
         int point = (price / 100) * 10;
 
-        ExtractableResponse<Response> response = orderCartItems(member, usePoint, cartId, cartId2);
+        orderCartItems(member, usePoint, cartId, cartId2);
 
         Member afterOrder = memberRepository.findById(member.getId()).orElseGet(null);
         assertThat(afterOrder.getPoint()).isEqualTo(prevPoint + point - usePoint);

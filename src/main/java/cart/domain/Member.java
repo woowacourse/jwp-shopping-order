@@ -17,6 +17,7 @@ public class Member {
     private Integer point;
 
     public Member(Long id, String email, String password, Integer money, Integer point) {
+        validate(id, email, password);
         this.id = id;
         this.email = email;
         this.password = password;
@@ -26,12 +27,18 @@ public class Member {
 
     public Member(Long id, String email, String password) {
         this(id, email, password, 0, 0);
-        validate(id, email);
     }
 
-    private void validate(Long id, String email) {
+    private void validate(Long id, String email, String password) {
         validateId(id);
         validateEmail(email);
+        validatePassword(password);
+    }
+
+    private void validatePassword(String password) {
+        if (Objects.isNull(password) || password.length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new MemberException.InvalidPassword();
+        }
     }
 
     private void validateId(Long id) {

@@ -25,13 +25,6 @@ public class OrderDetailDao {
                 .withTableName("order_detail");
     }
 
-    public List<OrderDetailEntity> getAllByMemberId(Long memberId) {
-        String sql = "SELECT * FROM order_detail " +
-                "INNER JOIN orders ON order_detail.order_id = orders.id " +
-                "WHERE orders.member_id = ?";
-        return jdbcTemplate.query(sql, new OrderDetailRowMapper(), memberId);
-    }
-
     public List<OrderDetailEntity> getAllByOrderId(Long orderId) {
         String sql = "SELECT * FROM order_detail " +
                 "INNER JOIN orders ON order_detail.orders_id = orders.id " +

@@ -12,8 +12,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Objects;
-
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     private static final int DEFAULT_TOKEN_LENGTH = 2;
     private final MemberRepository memberRepository;
@@ -53,7 +51,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(MemberException.InvalidEmail::new);
 
-        if (!Objects.equals(member.getPassword(), password)) {
+        if (!member.checkPassword(password)) {
             throw new AuthenticationException();
         }
         return member;

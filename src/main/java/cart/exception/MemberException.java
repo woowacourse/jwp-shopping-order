@@ -13,13 +13,6 @@ public class MemberException extends RuntimeException {
         }
     }
 
-    public static class InvalidEmailByNull extends MemberException {
-
-        public InvalidEmailByNull() {
-            super("이메일은 빈 값으로 입력할 수 없습니다.");
-        }
-    }
-
     public static class InvalidEmail extends MemberException {
 
         public InvalidEmail() {
@@ -35,7 +28,7 @@ public class MemberException extends RuntimeException {
     }
 
     public static class NotFound extends MemberException {
-        
+
         public NotFound() {
             super("해당 멤버를 찾을 수 없습니다.");
         }

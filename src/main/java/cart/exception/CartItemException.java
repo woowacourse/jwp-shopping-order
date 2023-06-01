@@ -18,13 +18,6 @@ public class CartItemException extends RuntimeException {
         }
     }
 
-    public static class CartItemNotExists extends CartItemException {
-
-        public CartItemNotExists() {
-            super("존재하지 않는 장바구니 상품입니다.");
-        }
-    }
-
     public static class NotFound extends CartItemException {
 
         public NotFound() {

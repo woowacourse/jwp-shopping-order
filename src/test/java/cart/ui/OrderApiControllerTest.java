@@ -52,7 +52,7 @@ class OrderApiControllerTest extends ControllerTestConfig {
     void showOrderedItems() {
         final Product 피자 = 상품_등록(ProductFixture.피자.PRODUCT);
         final Member 회원 = 회원_등록();
-        final CartItem 장바구니_상품 = 장바구니_등록(피자, 회원);
+        장바구니_등록(피자, 회원);
 
         given(spec)
                 .log().all()
