@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.coupon.Coupon;
 import java.util.List;
 import java.util.Objects;
 

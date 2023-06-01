@@ -4,15 +4,15 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import cart.service.request.OrderRequestDto;
-import cart.service.response.OrderProductResponseDto;
-import cart.service.response.OrderResponseDto;
-import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.repository.MemberRepository;
+import cart.service.request.OrderRequestDto;
+import cart.service.response.OrderProductResponseDto;
+import cart.service.response.OrderResponseDto;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -27,14 +27,14 @@ import org.springframework.http.MediaType;
 class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     private Member member;
 
     @BeforeEach
     void setUp() {
         super.setUp();
-        member = memberDao.getMemberById(1L);
+        member = memberRepository.findById(1L);
     }
 
     @DisplayName("장바구니에 있는 품목을 주문한다.")
@@ -42,61 +42,72 @@ class OrderIntegrationTest extends IntegrationTest {
     void orderProducts() {
         // given
         // 물품들이 등록되어 있다.
-        int PRICE = 1_000_000_000;
-        ProductRequest 홍실 = new ProductRequest("홍실", PRICE, "hongsil.com");
-        Long hongSilId = createProduct(홍실);
-        ProductRequest 매튜 = new ProductRequest("매튜", PRICE, "matthew.com");
-        Long matthewId = createProduct(매튜);
+        final ProductRequest product1 = new ProductRequest("치킨", 10_000, "chicken.png");
+        final Long product1Id = createProduct(product1);
+        final ProductRequest product2 = new ProductRequest("사과", 6_000, "apple.png");
+        final Long product2Id = createProduct(product2);
 
         // 장바구니가 있다.
-        Long hongCartItemId = requestAddCartItemAndGetId(member, hongSilId);
-        Long mattCartItemId = requestAddCartItemAndGetId(member, matthewId);
+        final Long cartItem1Id = requestAddCartItemAndGetId(member, product1Id);
+        final Long cartItem2Id = requestAddCartItemAndGetId(member, product2Id);
 
-        OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(hongCartItemId, mattCartItemId));
+        final OrderRequestDto orderRequestDto = new OrderRequestDto(List.of(cartItem1Id, cartItem2Id));
 
         // when
-        // 사용자는 장바구니에 있는 물품들을 선택해서 주문한다. // TODO : 주문하기
-        ExtractableResponse<Response> response = given()
+        // 사용자는 장바구니에 있는 물품들을 선택해서 주문한다.
+        final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(orderRequestDto)
                 .when().post("/cart-items/order")
-                .then().extract();
+                .then().statusCode(HttpStatus.CREATED.value()).extract();
 
-        assertThat(response.statusCode())
-                .isEqualTo(HttpStatus.CREATED.value());
-        OrderResponseDto result = response.as(OrderResponseDto.class);
+        final OrderResponseDto result = response.as(OrderResponseDto.class);
 
         // then
         // 사용자는 결제 결과를 응답받는다 // TODO : 주문하기
         assertThat(result.getTotalPrice())
-                .isEqualTo(PRICE * 2);
+                .isEqualTo(product1.getPrice() + product2.getPrice());
         assertThat(result.getOrderProducts())
                 .extracting(OrderProductResponseDto::getProductResponse)
                 .extracting(ProductResponse::getName, ProductResponse::getPrice, ProductResponse::getImageUrl)
-                .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
+                .containsExactly(
+                        tuple(product1.getName(), product1.getPrice(), product1.getImageUrl()),
+                        tuple(product2.getName(), product2.getPrice(), product2.getImageUrl())
+                );
 
         // 주문한 물품을 장바구니에서 삭제한다. // TODO : 주문하기
-        ExtractableResponse<Response> cartItems = requestGetCartItems(member);
-        List<CartItemResponse> cartItemResponse = cartItems.as(new TypeRef<>() {
+        final ExtractableResponse<Response> cartItems = requestGetCartItems(member);
+        final List<CartItemResponse> cartItemResponse = cartItems.as(new TypeRef<>() {
         });
         assertThat(cartItemResponse).isEmpty();
 
         // 주문내역을 저장한다. // TODO : 주문 내역 확인
-        OrderResponseDto orderResponse = given().log().all()
+        final OrderResponseDto orderResponse = given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().get("/orders/" + result.getId())
                 .then().statusCode(HttpStatus.OK.value())
                 .extract().as(OrderResponseDto.class);
 
-        assertThat(orderResponse.getTotalPrice()).isEqualTo(PRICE * 2);
+        assertThat(orderResponse.getTotalPrice())
+                .isEqualTo(product1.getPrice() + product2.getPrice());
         assertThat(orderResponse.getOrderProducts())
                 .extracting(OrderProductResponseDto::getProductResponse)
                 .extracting(ProductResponse::getName, ProductResponse::getPrice, ProductResponse::getImageUrl)
-                .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
+                .containsExactly(
+                        tuple(product1.getName(), product1.getPrice(), product1.getImageUrl()),
+                        tuple(product2.getName(), product2.getPrice(), product2.getImageUrl())
+                );
     }
+
+    @DisplayName("주문 Id로 주문 내역을 조회한다.")
+    @Test
+    void findOrder() {
+
+    }
+
 
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()

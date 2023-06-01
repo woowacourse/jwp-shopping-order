@@ -10,7 +10,7 @@ CREATE TABLE coupon
 (
     id          BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
-    val         BIGINT       NOT NULL,
+    val         INT          NOT NULL,
     coupon_type VARCHAR(255) NOT NULL
 );
 

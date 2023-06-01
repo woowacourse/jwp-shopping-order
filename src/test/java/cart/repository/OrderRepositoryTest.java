@@ -5,22 +5,16 @@ import static cart.TestDataFixture.PRODUCT_1;
 import static cart.TestDataFixture.PRODUCT_2;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.MemberDao;
-import cart.dao.OrderDao;
-import cart.dao.OrderProductDao;
-import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Order;
-import cart.domain.OrderProduct;
+import cart.RepositoryTest;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
+import cart.domain.product.CartItem;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
 
-@JdbcTest
-@Import({OrderRepository.class, OrderDao.class, OrderProductDao.class, ProductDao.class, MemberDao.class})
+@RepositoryTest
 class OrderRepositoryTest {
 
     @Autowired
