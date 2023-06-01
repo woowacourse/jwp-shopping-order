@@ -7,6 +7,7 @@ import cart.dao.MemberCouponDao;
 import cart.dao.dto.MemberCouponDto;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
+import cart.exception.MemberCouponNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -39,8 +40,13 @@ public class MemberCouponRepository {
     }
 
     public MemberCoupon findById(final Long id) {
-        final MemberCouponDto memberCouponDto = memberCouponDao.findById(id);
+        final MemberCouponDto memberCouponDto = memberCouponDao.findById(id)
+                .orElseThrow(MemberCouponNotFoundException::new);
         final Coupon coupon = couponRepository.findById(memberCouponDto.getCouponId());
         return new MemberCoupon(memberCouponDto.getId(), coupon, memberCouponDto.getMemberId());
+    }
+
+    public void useMemberCoupon(final MemberCoupon memberCoupon) {
+        memberCouponDao.updateUsedTrue(memberCoupon.getId());
     }
 }

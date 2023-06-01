@@ -1,5 +1,7 @@
 package cart.dao.dto;
 
+import cart.domain.coupon.MemberCoupon;
+
 public class MemberCouponDto {
 
     private final Long id;
@@ -10,6 +12,10 @@ public class MemberCouponDto {
         this.id = id;
         this.memberId = memberId;
         this.couponId = couponId;
+    }
+
+    public static MemberCouponDto from(final MemberCoupon memberCoupon) {
+        return new MemberCouponDto(memberCoupon.getId(), memberCoupon.getMemberId(), memberCoupon.getCoupon().getId());
     }
 
     public Long getId() {

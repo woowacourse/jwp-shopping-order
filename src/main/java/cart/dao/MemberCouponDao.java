@@ -3,7 +3,9 @@ package cart.dao;
 import cart.dao.dto.MemberCouponDto;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -13,7 +15,11 @@ import org.springframework.stereotype.Repository;
 public class MemberCouponDao {
 
     private static final RowMapper<MemberCouponDto> MEMBER_COUPON_DTO_ROW_MAPPER = (rs, rn) ->
-            new MemberCouponDto(rs.getLong("id"), rs.getLong("member_id"), rs.getLong("coupon_id"));
+            new MemberCouponDto(
+                    rs.getLong("id"),
+                    rs.getLong("member_id"),
+                    rs.getLong("coupon_id")
+            );
     private final SimpleJdbcInsert jdbcInsert;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -25,17 +31,27 @@ public class MemberCouponDao {
     }
 
     public List<MemberCouponDto> findByMemberId(final Long memberId) {
-        final String sql = "select * from member_coupon where member_id = :memberId";
-        return jdbcTemplate.query(sql, Map.of("memberId", memberId), MEMBER_COUPON_DTO_ROW_MAPPER
-        );
+        final String sql = "select * from member_coupon where member_id = :memberId AND used = false";
+        return jdbcTemplate.query(sql, Map.of("memberId", memberId), MEMBER_COUPON_DTO_ROW_MAPPER);
     }
 
-    public MemberCouponDto findById(final Long id) {
-        final String sql = "select * from member_coupon where id = :id";
-        return jdbcTemplate.queryForObject(sql, Map.of("id", id), MEMBER_COUPON_DTO_ROW_MAPPER);
+    public Optional<MemberCouponDto> findById(final Long id) {
+        final String sql = "select * from member_coupon where id = :id AND used = false";
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(sql, Map.of("id", id), MEMBER_COUPON_DTO_ROW_MAPPER));
+        } catch (final EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public Long insert(final Long memberId, final Long couponId) {
-        return jdbcInsert.executeAndReturnKey(Map.of("member_id", memberId, "coupon_id", couponId)).longValue();
+        return jdbcInsert.executeAndReturnKey(Map.of("member_id", memberId, "coupon_id", couponId, "used", false))
+                .longValue();
+    }
+
+    public void updateUsedTrue(final Long id) {
+        final String sql = "update member_coupon set used = true where id = :id";
+        jdbcTemplate.update(sql, Map.of("id", id));
     }
 }

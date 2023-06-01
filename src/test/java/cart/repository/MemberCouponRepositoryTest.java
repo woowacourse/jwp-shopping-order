@@ -3,10 +3,12 @@ package cart.repository;
 import static cart.TestDataFixture.DISCOUNT_50_PERCENT;
 import static cart.TestDataFixture.MEMBER_1;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.RepositoryTest;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
+import cart.exception.MemberCouponNotFoundException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,5 +59,19 @@ class MemberCouponRepositoryTest {
         assertThat(savedMemberCoupon)
                 .extracting(MemberCoupon::getCoupon, MemberCoupon::getMemberId)
                 .containsExactly(savedCoupon, memberCoupon.getMemberId());
+    }
+
+    @DisplayName("멤버쿠폰을 사용상태로 변경한다.")
+    @Test
+    void useMemberCoupon() {
+        final Coupon savedCoupon = couponRepository.insert(DISCOUNT_50_PERCENT);
+        final MemberCoupon memberCoupon = new MemberCoupon(savedCoupon, MEMBER_1.getId());
+        final MemberCoupon savedMemberCoupon = memberCouponRepository.insert(memberCoupon);
+
+        memberCouponRepository.useMemberCoupon(savedMemberCoupon);
+
+        final Long memberCouponId = savedMemberCoupon.getId();
+        assertThatThrownBy(() -> memberCouponRepository.findById(memberCouponId))
+                .isInstanceOf(MemberCouponNotFoundException.class);
     }
 }
