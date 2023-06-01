@@ -3,19 +3,19 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
@@ -87,17 +87,26 @@ public class CartItemDao {
     }
 
     public boolean isExistBy(Long memberId, Long productId) {
-        final String sql = "SELECT EXISTS (SELECT 1 FROM cart_item WHERE member_id = ? AND product_id = ?)";
+        String sql = "SELECT EXISTS (SELECT 1 FROM cart_item WHERE member_id = ? AND product_id = ?)";
+
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, memberId, productId));
+    }
+
+    public boolean isExistBy(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM cart_item WHERE id = ?)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
+
         jdbcTemplate.update(sql, id);
     }
 }
