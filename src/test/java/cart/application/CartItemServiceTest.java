@@ -42,6 +42,6 @@ public class CartItemServiceTest {
 
         // then
         assertThat(cartItem.getQuantity()).isEqualTo(new Quantity(3));
-        assertThat(cartItems).hasSize(5);
+        assertThat(cartItems).hasSize(6);
     }
 }

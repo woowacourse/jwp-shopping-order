@@ -17,7 +17,6 @@ public class CartItems {
     private static final int SALE_THRESHOLD = 50_000;
     private static final double SALE_RATE = 0.1;
 
-
     private final List<CartItem> cartItems;
     private final int totalPrice;
     private final int deliveryFee;

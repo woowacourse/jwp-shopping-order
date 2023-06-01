@@ -19,6 +19,7 @@ import cart.dto.OrderRequest;
 import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.notfound.OrderNotFoundException;
 import cart.exception.notfound.ProductNotFoundException;
+import cart.exception.point.InvalidPointUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Transactional
@@ -52,6 +54,7 @@ public class OrderServiceTest {
     @Nested
     @DisplayName("상품을 주문할 때에는")
     class DescribeOrderMethodTest1 {
+
         private final Member member = memberDao.findById(1L).orElseThrow(MemberNotFoundException::new);
         private final Product product1 = productDao.findById(1L).orElseThrow(ProductNotFoundException::new);
         private final Product product2 = productDao.findById(2L).orElseThrow(ProductNotFoundException::new);
@@ -128,7 +131,7 @@ public class OrderServiceTest {
 
         @Nested
         @DisplayName("주문이 완료되면 ")
-        class ContextWithOrderProductTest {
+        class ContextWithOrderProductTest1 {
             private Order order;
 
             @BeforeEach
@@ -173,6 +176,40 @@ public class OrderServiceTest {
                         new CartItem(1L, null, null, 0),
                         new CartItem(2L, null, null, 0)
                 );
+            }
+        }
+
+        @Nested
+        @DisplayName("상품의 총 가격이 ")
+        class ContextWithOrderProductTest2 {
+
+            @DisplayName("5만원 미만이라면 배송비를 포함한 가격까지 포인트를 사용할 수 있다.")
+            @Test
+            void pointTest1() {
+                // given
+                final OrderRequest orderRequest = new OrderRequest(List.of(6L), 3500);
+                final Long orderId = orderService.order(member, orderRequest);
+
+                // when
+                final Order order = orderDao.findById(orderId).orElseThrow(OrderNotFoundException::new);
+
+                // then
+                assertAll(
+                        () -> assertThat(order.getDeliveryFee()).isEqualTo(new DeliveryFee(3000)),
+                        () -> assertThat(order.getUsedPoint()).isEqualTo(new MemberPoint(3500)),
+                        () -> assertThat(order.getSavedPoint()).isEqualTo(new MemberPoint(50))
+                );
+            }
+
+            @DisplayName("총 가격과 배송비를 포함한 가격을 초과하는 포인트는 사용할 수 없다.")
+            @Test
+            void pointTest2() {
+                // given
+                final OrderRequest orderRequest = new OrderRequest(List.of(6L), 3501);
+
+                // when, then
+                assertThatThrownBy(() -> orderService.order(member, orderRequest))
+                        .isInstanceOf(InvalidPointUseException.class);
             }
         }
     }

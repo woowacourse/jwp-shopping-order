@@ -41,7 +41,7 @@ public class OrderService {
         final CartItems cartItems = new CartItems(cartItemRepository.findAllByIds(request.getCartItemIds()));
         cartItems.checkOwner(findMember);
         final int totalPrice = cartItems.getTotalPrice();
-        if (totalPrice < request.getPoint()) {
+        if (totalPrice + cartItems.getDeliveryFee() < request.getPoint()) {
             throw new InvalidPointUseException(totalPrice, request.getPoint());
         }
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);

@@ -63,12 +63,13 @@ public class CartItemDaoTest {
 
         // then
         assertAll(
-                () -> assertThat(cartItems).hasSize(5),
+                () -> assertThat(cartItems).hasSize(6),
                 () -> assertThat(cartItems.get(0).getProductId()).isEqualTo(1),
                 () -> assertThat(cartItems.get(1).getProductId()).isEqualTo(2),
                 () -> assertThat(cartItems.get(2).getProductId()).isEqualTo(2),
                 () -> assertThat(cartItems.get(3).getProductId()).isEqualTo(3),
-                () -> assertThat(cartItems.get(4).getProductId()).isEqualTo(4)
+                () -> assertThat(cartItems.get(4).getProductId()).isEqualTo(4),
+                () -> assertThat(cartItems.get(5).getProductId()).isEqualTo(5)
         );
     }
 

@@ -105,7 +105,9 @@ public class Order {
                 "id=" + id +
                 ", member=" + member +
                 ", usedPoint=" + usedPoint +
-                ", createdAt=" + orderedAt +
+                ", savedPoint=" + savedPoint +
+                ", deliveryFee=" + deliveryFee +
+                ", orderedAt=" + orderedAt +
                 '}';
     }
 }
