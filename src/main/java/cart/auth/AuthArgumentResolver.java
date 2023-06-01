@@ -1,8 +1,9 @@
 package cart.auth;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.domain.value.Email;
 import cart.exception.AuthenticationException;
+import cart.repository.MemberRepository;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -14,14 +15,14 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
     private final BasicAuthorizationExtractor basicAuthorizationExtractor;
 
     public AuthArgumentResolver(
-            final MemberDao memberDao,
+            final MemberRepository memberRepository,
             final BasicAuthorizationExtractor basicAuthorizationExtractor
     ) {
-        this.memberDao = memberDao;
+        this.memberRepository = memberRepository;
         this.basicAuthorizationExtractor = basicAuthorizationExtractor;
     }
 
@@ -31,15 +32,17 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(final MethodParameter parameter,
-                                  final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest,
-                                  final WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(
+            final MethodParameter parameter,
+            final ModelAndViewContainer mavContainer,
+            final NativeWebRequest webRequest,
+            final WebDataBinderFactory binderFactory
+    ) {
         String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         AuthInfo authInfo = basicAuthorizationExtractor.extract(header);
 
-        Member member = memberDao.getMemberByEmail(authInfo.getEmail());
-        if (!member.checkPassword(authInfo.getPassword())) {
+        Member member = memberRepository.findByEmail(new Email(authInfo.getEmail()));
+        if (!member.isCorrectPassword(authInfo.getPassword())) {
             throw new AuthenticationException();
         }
         return member;
