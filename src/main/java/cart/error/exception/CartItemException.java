@@ -5,9 +5,10 @@ public class CartItemException extends RuntimeException {
 		super(message);
 	}
 
-	public static class IllegalMember extends CartItemException {
-		public IllegalMember(final Long memberId) {
-			super("Illegal member attempts to cart; memberId=" + memberId);
+	public static class NotFound extends CartItemException {
+		public NotFound() {
+			super("카트에 해당 물품이 존재하지 않습니다.");
 		}
 	}
+
 }

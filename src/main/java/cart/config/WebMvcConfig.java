@@ -6,20 +6,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import cart.persistence.member.MemberJdbcRepository;
-import cart.ui.MemberArgumentResolver;
+import cart.config.auth.LoginMemberArgumentResolver;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-	private final MemberJdbcRepository memberJdbcRepository;
 
-	public WebMvcConfig(MemberJdbcRepository memberJdbcRepository) {
-		this.memberJdbcRepository = memberJdbcRepository;
+	private final LoginMemberArgumentResolver loginMemberArgumentResolver;
+
+	public WebMvcConfig(final LoginMemberArgumentResolver loginMemberArgumentResolver) {
+		this.loginMemberArgumentResolver = loginMemberArgumentResolver;
 	}
 
 	@Override
-	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(new MemberArgumentResolver(memberJdbcRepository));
+	public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
+		resolvers.add(loginMemberArgumentResolver);
 	}
 
 }

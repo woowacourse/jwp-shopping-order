@@ -18,23 +18,20 @@ public class ControllerExceptionHandler {
 		return ResponseEntity.internalServerError().build();
 	}
 
-	@ExceptionHandler(AuthenticationException.class)
-	public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	@ExceptionHandler(AuthenticationException.Unauthorized.class)
+	public ResponseEntity<String> handlerAuthenticationException(final AuthenticationException.Unauthorized e) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 	}
 
-	@ExceptionHandler(CartItemException.IllegalMember.class)
-	public ResponseEntity<Void> handleForbiddenException(CartItemException.IllegalMember e) {
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-	}
-
-	@ExceptionHandler(OrderException.NotFound.class)
-	public ResponseEntity<String> handleNotFoundException(OrderException.NotFound e) {
+	@ExceptionHandler({CartItemException.NotFound.class, OrderException.NotFound.class,
+		AuthenticationException.NotFound.class})
+	public ResponseEntity<String> handleNotFoundException(final Exception e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 
-	@ExceptionHandler({OrderException.BadRequest.class, MethodArgumentNotValidException.class})
-	public ResponseEntity<String> handleBadRequestException(Exception e) {
+	@ExceptionHandler({OrderException.BadRequest.class, AuthenticationException.BadRequest.class,
+		MethodArgumentNotValidException.class})
+	public ResponseEntity<String> handleBadRequestException(final Exception e) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
 

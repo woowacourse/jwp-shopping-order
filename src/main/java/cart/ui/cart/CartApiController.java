@@ -23,7 +23,8 @@ import cart.application.cart.CartQueryService;
 import cart.application.cart.dto.CarItemAddDto;
 import cart.application.cart.dto.CartItemUpdateQuantityDto;
 import cart.application.cart.dto.CartItemsRemoveDto;
-import cart.domain.member.Member;
+import cart.config.auth.LoginMember;
+import cart.config.auth.dto.AuthMember;
 import cart.ui.cart.dto.CartItemQuantityUpdateRequest;
 import cart.ui.cart.dto.CartItemRemoveRequest;
 import cart.ui.cart.dto.CartItemRequest;
@@ -46,7 +47,7 @@ public class CartApiController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
+	public ResponseEntity<List<CartItemResponse>> showCartItems(@LoginMember AuthMember member) {
 		final List<CartItemResponse> cartItemResponses =
 			cartQueryService.findByMemberId(member.getId()).stream()
 				.map(CartItemResponse::from)
@@ -56,21 +57,22 @@ public class CartApiController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> addCartItems(Member member, @Valid @RequestBody CartItemRequest cartItemRequest) {
+	public ResponseEntity<Void> addCartItems(@LoginMember AuthMember member,
+		@Valid @RequestBody CartItemRequest cartItemRequest) {
 		final Long cartItemId = cartCommandService.add(
 			new CarItemAddDto(member.getId(), cartItemRequest.getProductId()));
 		return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,
+	public ResponseEntity<Void> updateCartItemQuantity(@LoginMember AuthMember member, @PathVariable Long id,
 		@RequestBody CartItemQuantityUpdateRequest request) {
 		cartCommandService.updateQuantity(new CartItemUpdateQuantityDto(member.getId(), id, request.getQuantity()));
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Void> removeCartItems(Member member,
+	public ResponseEntity<Void> removeCartItems(@LoginMember AuthMember member,
 		@RequestBody CartItemRemoveRequest cartItemRemoveRequest) {
 		cartCommandService.remove(new CartItemsRemoveDto(member.getId(), cartItemRemoveRequest.getCartItemIds()));
 		return ResponseEntity.noContent().build();

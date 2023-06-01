@@ -4,17 +4,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import cart.application.member.MemberQueryService;
 import cart.application.product.ProductQueryService;
-import cart.domain.member.MemberRepository;
 
 @Controller
 public class PageController {
 	private final ProductQueryService productQueryService;
-	private final MemberRepository memberRepository;
+	private final MemberQueryService memberQueryService;
 
-	public PageController(ProductQueryService productQueryService, MemberRepository memberRepository) {
+	public PageController(ProductQueryService productQueryService, MemberQueryService memberQueryService) {
 		this.productQueryService = productQueryService;
-		this.memberRepository = memberRepository;
+		this.memberQueryService = memberQueryService;
 	}
 
 	@GetMapping("/admin")
@@ -25,7 +25,7 @@ public class PageController {
 
 	@GetMapping("/settings")
 	public String members(Model model) {
-		model.addAttribute("members", memberRepository.findAll());
+		model.addAttribute("members", memberQueryService.findAll());
 		return "settings";
 	}
 }

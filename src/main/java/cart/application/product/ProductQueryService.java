@@ -28,7 +28,7 @@ public class ProductQueryService {
 			.collect(Collectors.toList());
 	}
 
-	public ProductDto getProductById(Long productId) {
+	public ProductDto getProductById(final Long productId) {
 		Product product = productRepository.findById(productId)
 			.orElseThrow();
 		return ProductDto.from(product);

@@ -31,17 +31,17 @@ public class CartCommandService {
 		this.cartItemRepository = cartItemRepository;
 	}
 
-	public Long add(CarItemAddDto cartDto) {
+	public Long add(final CarItemAddDto cartDto) {
 		final Product product = productRepository.findById(cartDto.getProductId())
 			.orElseThrow();
 
 		return cartRepository.save(new Cart(cartDto.getMemberId(), List.of(new CartItem(product))));
 	}
 
-	public void updateQuantity(CartItemUpdateQuantityDto cartDto) {
+	public void updateQuantity(final CartItemUpdateQuantityDto cartDto) {
 		final Cart cart = cartRepository.findByMemberId(cartDto.getMemberId());
 		final CartItem cartItem = cart.getCartItem(cartDto.getCartItemId())
-			.orElseThrow(() -> new CartItemException.IllegalMember(cart.getMemberId()));
+			.orElseThrow(CartItemException.NotFound::new);
 		cartItem.changeQuantity(cartDto.getQuantity());
 
 		if (cartItem.getQuantity() == 0) {
@@ -52,13 +52,13 @@ public class CartCommandService {
 		cartItemRepository.updateQuantity(cartItem);
 	}
 
-	public void remove(CartItemsRemoveDto cartDto) {
+	public void remove(final CartItemsRemoveDto cartDto) {
 		final Cart cart = cartRepository.findByMemberId(cartDto.getMemberId());
 
 		if (cart.contains(cartDto.getCartItemIds())) {
 			cartItemRepository.deleteByIds(cartDto.getCartItemIds());
 			return;
 		}
-		throw new CartItemException.IllegalMember(cartDto.getMemberId());
+		throw new CartItemException.NotFound();
 	}
 }

@@ -11,7 +11,7 @@ public class OrderAddDto {
 	private final Long totalPrice;
 	private final Long deliveryFee;
 
-	public OrderAddDto(final Long memberId, OrderRequest request) {
+	public OrderAddDto(final Long memberId, final OrderRequest request) {
 		this(memberId, request.getCartItemIds(), request.getTotalPrice(), request.getDeliveryFee());
 	}
 

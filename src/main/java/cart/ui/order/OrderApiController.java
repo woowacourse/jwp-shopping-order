@@ -23,7 +23,8 @@ import cart.application.order.dto.OrderAddDto;
 import cart.application.order.dto.OrderDetailDto;
 import cart.application.order.dto.OrderDto;
 import cart.application.order.dto.OrderItemDto;
-import cart.domain.member.Member;
+import cart.config.auth.LoginMember;
+import cart.config.auth.dto.AuthMember;
 import cart.ui.order.dto.OrderDetailResponse;
 import cart.ui.order.dto.OrderItemResponse;
 import cart.ui.order.dto.OrderRequest;
@@ -47,7 +48,7 @@ public class OrderApiController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<OrderResponse>> getOrderList(Member member) {
+	public ResponseEntity<List<OrderResponse>> getOrderList(@LoginMember AuthMember member) {
 		final List<OrderResponse> orderResponses = orderQueryService.findByMemberId(member.getId()).stream()
 			.map(this::convertToOrderResponse)
 			.collect(Collectors.toList());
@@ -56,20 +57,20 @@ public class OrderApiController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<OrderDetailResponse> getOrderDetails(Member member, @PathVariable Long id) {
+	public ResponseEntity<OrderDetailResponse> getOrderDetails(@LoginMember AuthMember member, @PathVariable Long id) {
 		final OrderDetailResponse orderDetailResponse = convertToOrderDetailResponse(
 			orderQueryService.findById(member.getId(), id));
 		return ResponseEntity.ok(orderDetailResponse);
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> placeOrder(Member member, @Valid @RequestBody OrderRequest request) {
+	public ResponseEntity<Void> placeOrder(@LoginMember AuthMember member, @Valid @RequestBody OrderRequest request) {
 		final Long savedId = orderCommandService.addOrder(new OrderAddDto(member.getId(), request));
 		return ResponseEntity.created(URI.create("/orders/" + savedId)).build();
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> cancelOrder(Member member, @PathVariable Long id) {
+	public ResponseEntity<Void> cancelOrder(@LoginMember AuthMember member, @PathVariable Long id) {
 		orderCommandService.remove(member.getId(), id);
 		return ResponseEntity.noContent().build();
 	}

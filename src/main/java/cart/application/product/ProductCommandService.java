@@ -17,18 +17,18 @@ public class ProductCommandService {
 		this.productRepository = productRepository;
 	}
 
-	public Long createProduct(ProductDto productDto) {
+	public Long createProduct(final ProductDto productDto) {
 		Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
 		return productRepository.save(product);
 	}
 
-	public void updateProduct(ProductDto productDto) {
+	public void updateProduct(final ProductDto productDto) {
 		Product product = new Product(productDto.getId(), productDto.getName(), productDto.getPrice(),
 			productDto.getImageUrl());
 		productRepository.update(product);
 	}
 
-	public void deleteProduct(Long productId) {
+	public void deleteProduct(final Long productId) {
 		productRepository.deleteById(productId);
 	}
 }
