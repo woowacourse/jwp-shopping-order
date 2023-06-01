@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.repository;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
@@ -14,13 +14,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class CartItemDao {
+public class DBCartItemRepository implements CartItemRepository {
+
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
+    public DBCartItemRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<CartItem> findByMemberId(Long memberId) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
@@ -41,6 +43,7 @@ public class CartItemDao {
         });
     }
 
+    @Override
     public Long save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -60,6 +63,7 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    @Override
     public CartItem findById(Long id) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
@@ -82,20 +86,21 @@ public class CartItemDao {
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
-
+    @Override
     public void delete(Long memberId, Long productId) {
         String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);
     }
 
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }
-
