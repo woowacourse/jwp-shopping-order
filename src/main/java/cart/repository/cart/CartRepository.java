@@ -1,7 +1,6 @@
 package cart.repository.cart;
 
 import cart.dao.cart.CartDao;
-import cart.dao.policy.PolicyDao;
 import cart.dao.product.ProductDao;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
@@ -21,12 +20,10 @@ public class CartRepository {
 
     private final CartDao cartDao;
     private final ProductDao productDao;
-    private final PolicyDao policyDao;
 
-    public CartRepository(final CartDao cartDao, final ProductDao productDao, final PolicyDao policyDao) {
+    public CartRepository(final CartDao cartDao, final ProductDao productDao) {
         this.cartDao = cartDao;
         this.productDao = productDao;
-        this.policyDao = policyDao;
     }
 
     public Cart findCartByMemberId(final long memberId) {

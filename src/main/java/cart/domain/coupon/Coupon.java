@@ -51,14 +51,6 @@ public class Coupon {
         return Objects.equals(this.id, id);
     }
 
-    public static Coupon from(final String name, final boolean isPercentage, final int value) {
-        if (isPercentage) {
-            return new Coupon(null, name, new PolicyPercentage(value));
-        }
-
-        return new Coupon(null, name, new PolicyDiscount(value));
-    }
-
     public int calculate(final int price) {
         return policy.calculate(price);
     }
@@ -73,10 +65,6 @@ public class Coupon {
 
     public String getName() {
         return name;
-    }
-
-    public Policy getPolicy() {
-        return policy;
     }
 
     @Override
