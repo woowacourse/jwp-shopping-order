@@ -8,7 +8,7 @@ public interface PointPolicy {
 
     long calculateEarnedPoint(Member member, long price);
 
-    Timestamp calculateExpiredAt(Timestamp createAt);
+    Timestamp calculateExpiredAt(Timestamp createdAt);
 
     double getEarningRate(Member member);
 }

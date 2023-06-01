@@ -18,9 +18,9 @@ public class RatePointPolicy implements PointPolicy {
     }
 
     @Override
-    public Timestamp calculateExpiredAt(Timestamp createAt) {
+    public Timestamp calculateExpiredAt(Timestamp createdAt) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(createAt);
+        calendar.setTime(createdAt);
         calendar.add(Calendar.MONTH, DURATION_MONTHS);
         return new Timestamp(calendar.getTimeInMillis());
     }
