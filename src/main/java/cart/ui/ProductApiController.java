@@ -20,16 +20,6 @@ public class ProductApiController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
-    }
-
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
         Long id = productService.createProduct(productRequest);
@@ -46,6 +36,16 @@ public class ProductApiController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
 }

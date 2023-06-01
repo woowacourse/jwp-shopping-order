@@ -1,17 +1,33 @@
 package cart.dao;
 
+import cart.domain.Order;
 import cart.domain.Product;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
+
+    private static final RowMapper<Product> mapper = (rs, rowNum) -> {
+        Long id = rs.getLong("id");
+        String name = rs.getString("name");
+        int price = rs.getInt("price");
+        String imageUrl = rs.getString("image_url");
+        int stock = rs.getInt("stock");
+        return new Product(id, name, price, imageUrl, stock);
+    };
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
@@ -20,25 +36,16 @@ public class ProductDao {
 
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            int stock = rs.getInt("stock");
-            return new Product(productId, name, price, imageUrl, stock);
-        });
+        return jdbcTemplate.query(sql, mapper);
     }
 
-    public Product getProductById(Long productId) {
+    public Optional<Product> getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            int stock = rs.getInt("stock");
-            return new Product(productId, name, price, imageUrl, stock);
-        });
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapper, productId));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Long createProduct(Product product) {
@@ -64,6 +71,25 @@ public class ProductDao {
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ?, stock = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getStock(), productId);
+    }
+
+    public void updateStocks(List<Product> products) {
+        String sql = "UPDATE product SET stock = ? WHERE id = ?";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
+                int stock = products.get(i).getStock();
+                Long id = products.get(i).getId();
+                preparedStatement.setLong(1, stock);
+                preparedStatement.setLong(2, id);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return products.size();
+            }
+        });
     }
 
     public void deleteProduct(Long productId) {

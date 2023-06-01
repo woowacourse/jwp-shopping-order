@@ -73,6 +73,6 @@ CREATE TABLE payment
     total_product_price  BIGINT NOT NULL,
     total_delivery_price BIGINT NOT NULL,
     use_point            BIGINT DEFAULT 0,
-    total_payment        BIGINT NOT NULL,
+    total_price        BIGINT NOT NULL,
     FOREIGN KEY (orders_id) REFERENCES orders (id)
 );
