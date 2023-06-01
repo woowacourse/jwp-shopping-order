@@ -1,7 +1,28 @@
 spring:
   thymeleaf:
     cache: false
+  sql:
+    init:
+      mode: always
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  config:
+    activate:
+      on-profile: production
 
 springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+---
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    driver-class-name: org.h2.Driver
+  config:
+    activate:
+      on-profile: development
