@@ -1,5 +1,10 @@
 package cart.repository;
 
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.MemberFixture.사용자2;
+import static cart.fixture.ProductFixture.상품_18900원;
+import static cart.fixture.ProductFixture.상품_28900원;
+import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.cart.CartItem;
@@ -29,8 +34,8 @@ class CartItemRepositoryTest {
     @Test
     void 장바구니에_상품을_추가한다() {
         // given
-        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
+        final Member member = memberRepository.save(사용자1);
+        final Product product = productRepository.save(상품_8900원);
         final CartItem cartItem = new CartItem(member, product);
 
         // when
@@ -43,11 +48,11 @@ class CartItemRepositoryTest {
     @Test
     void 사용자_아이디를_받아_해당_사용자의_장바구니에_있는_모든_품목을_반환한다() {
         // given
-        final Member member1 = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Member member2 = memberRepository.save(new Member("pizza2@pizza.com", "password2"));
-        final Product product1 = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("치즈피자2", "2.jpg", 18900L));
-        final Product product3 = productRepository.save(new Product("치즈피자3", "3.jpg", 18900L));
+        final Member member1 = memberRepository.save(사용자1);
+        final Member member2 = memberRepository.save(사용자2);
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
+        final Product product3 = productRepository.save(상품_28900원);
 
         cartItemRepository.save(new CartItem(member1, product1));
         cartItemRepository.save(new CartItem(member1, product2));
@@ -63,10 +68,10 @@ class CartItemRepositoryTest {
     @Test
     void 사용자_아이디와_상품_아이디_목록을_받아_조회한다() {
         // given
-        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product1 = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("치즈피자2", "2.jpg", 18900L));
-        final Product product3 = productRepository.save(new Product("치즈피자3", "3.jpg", 18900L));
+        final Member member = memberRepository.save(사용자1);
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
+        final Product product3 = productRepository.save(상품_28900원);
 
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
@@ -85,8 +90,8 @@ class CartItemRepositoryTest {
     @Test
     void 사용자_아이디와_삭제할_장바구니의_상품_아이디를_받아_장바구니_항목을_제거한다() {
         // given
-        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
+        final Member member = memberRepository.save(사용자1);
+        final Product product = productRepository.save(상품_8900원);
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
 
         // when
@@ -99,8 +104,8 @@ class CartItemRepositoryTest {
     @Test
     void 장바구니의_상품의_수량을_변경한다() {
         // given
-        final Member member = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Product product = productRepository.save(new Product("치즈피자1", "1.jpg", 8900L));
+        final Member member = memberRepository.save(사용자1);
+        final Product product = productRepository.save(상품_8900원);
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
 
         final CartItem updatedCartItem = new CartItem(cartItem.getId(), 2, cartItem.getMember(), cartItem.getProduct());

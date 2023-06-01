@@ -1,5 +1,7 @@
 package cart.dao;
 
+import static cart.fixture.MemberFixture.사용자1_엔티티;
+import static cart.fixture.MemberFixture.사용자2_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.MemberEntity;
@@ -22,7 +24,7 @@ class MemberDaoTest {
     @Test
     void 사용자를_저장한다() {
         // given
-        final MemberEntity memberEntity = new MemberEntity("pizza@pizza.com", "password");
+        final MemberEntity memberEntity = new MemberEntity("pizza1@pizza.com", "password");
 
         // when
         memberDao.insert(memberEntity);
@@ -34,10 +36,8 @@ class MemberDaoTest {
     @Test
     void 전체_사용자를_조회한다() {
         // given
-        final MemberEntity memberEntity1 = new MemberEntity("pizza1@pizza.com", "password");
-        final MemberEntity memberEntity2 = new MemberEntity("pizza2@pizza.com", "password");
-        final MemberEntity savedMemberEntity1 = memberDao.insert(memberEntity1);
-        final MemberEntity savedMemberEntity2 = memberDao.insert(memberEntity2);
+        final MemberEntity savedMemberEntity1 = memberDao.insert(사용자1_엔티티);
+        final MemberEntity savedMemberEntity2 = memberDao.insert(사용자2_엔티티);
 
         // when
         final List<MemberEntity> result = memberDao.findAll();
@@ -49,8 +49,7 @@ class MemberDaoTest {
     @Test
     void 단일_사용자를_조회한다() {
         // given
-        final MemberEntity memberEntity = new MemberEntity("pizza1@pizza.com", "password");
-        final MemberEntity savedMemberEntity = memberDao.insert(memberEntity);
+        final MemberEntity savedMemberEntity = memberDao.insert(사용자1_엔티티);
 
         // when
         final Optional<MemberEntity> result = memberDao.findById(savedMemberEntity.getId());

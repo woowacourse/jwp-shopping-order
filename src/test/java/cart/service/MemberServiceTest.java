@@ -1,5 +1,7 @@
 package cart.service;
 
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.MemberFixture.사용자2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.member.Member;
@@ -28,8 +30,8 @@ public class MemberServiceTest {
     @Test
     void 모든_사용자를_조회한다() {
         // given
-        final Member member1 = memberRepository.save(new Member("pizza1@pizza.com", "password"));
-        final Member member2 = memberRepository.save(new Member("pizza2@pizza.com", "password"));
+        final Member member1 = memberRepository.save(사용자1);
+        final Member member2 = memberRepository.save(사용자2);
 
         // when
         final List<MemberDto> result = memberService.findAll();

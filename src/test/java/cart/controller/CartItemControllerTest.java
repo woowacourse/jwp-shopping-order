@@ -1,5 +1,8 @@
 package cart.controller;
 
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.ProductFixture.상품_18900원;
+import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -55,11 +58,11 @@ public class CartItemControllerTest {
     @Test
     void 장바구니에_상품을_추가한다() throws Exception {
         // given
-        final Product savedProduct = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member savedMember = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product savedProduct = productRepository.save(상품_8900원);
+        final Member savedMember = memberRepository.save(사용자1);
         final CartItemSaveRequest cartItemSaveRequest = new CartItemSaveRequest(savedProduct.getId());
         final String request = objectMapper.writeValueAsString(cartItemSaveRequest);
-        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // when
         mockMvc.perform(post("/cart-items")
@@ -78,13 +81,13 @@ public class CartItemControllerTest {
     @Test
     void 사용자의_장바구니에_담겨있는_모든_상품을_조회한다() throws Exception {
         // given
-        final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
+        final Member member = memberRepository.save(사용자1);
 
         cartItemRepository.save(new CartItem(member, product1));
         cartItemRepository.save(new CartItem(member, product2));
-        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect
         mockMvc.perform(get("/cart-items")
@@ -98,10 +101,10 @@ public class CartItemControllerTest {
     @Test
     void 장바구니에_담겨있는_상품을_제거한다() throws Exception {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product = productRepository.save(상품_8900원);
+        final Member member = memberRepository.save(사용자1);
         cartItemRepository.save(new CartItem(member, product));
-        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // when
         mockMvc.perform(delete("/cart-items/" + product.getId())
@@ -117,10 +120,10 @@ public class CartItemControllerTest {
     @Test
     void 장바구니에_담긴_상품의_수량을_변경한다() throws Exception {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product = productRepository.save(상품_8900원);
+        final Member member = memberRepository.save(사용자1);
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
-        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
+        final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
         final CartItemQuantityUpdateRequest updateRequest = new CartItemQuantityUpdateRequest(2);
 
         final String request = objectMapper.writeValueAsString(updateRequest);

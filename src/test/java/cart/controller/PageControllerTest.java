@@ -1,5 +1,9 @@
 package cart.controller;
 
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.MemberFixture.사용자2;
+import static cart.fixture.ProductFixture.상품_18900원;
+import static cart.fixture.ProductFixture.상품_8900원;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
@@ -42,8 +46,8 @@ class PageControllerTest {
     @Test
     void 관리자_페이지에_접근한다() throws Exception {
         // given
-        final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
-        final Product product2 = productRepository.save(new Product("고양이", "cat.jpg", 1000000L));
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
 
         // expect
         mockMvc.perform(get("/admin"))
@@ -51,11 +55,11 @@ class PageControllerTest {
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generateProductPropertiesMatcher(product1.getId(), "허브티", "tea.jpg", 1000L))
+                        hasItem(generateProductPropertiesMatcher(product1.getId(), "pizza1", "pizza1.png", 8900L))
                 ))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generateProductPropertiesMatcher(product2.getId(), "고양이", "cat.jpg", 1000000L))
+                        hasItem(generateProductPropertiesMatcher(product2.getId(), "pizza2", "pizza2.png", 18900))
                 ))
                 .andDo(print());
     }
@@ -77,8 +81,8 @@ class PageControllerTest {
     @Test
     void 세팅_페이지에_접근한다() throws Exception {
         // given
-        final Member member1 = memberRepository.save(new Member("pizza1@pizza.com", "password1"));
-        final Member member2 = memberRepository.save(new Member("pizza2@pizza.com", "password2"));
+        final Member member1 = memberRepository.save(사용자1);
+        final Member member2 = memberRepository.save(사용자2);
 
         // expect
         mockMvc.perform(get("/settings"))
@@ -86,11 +90,11 @@ class PageControllerTest {
                 .andExpect(model().attribute("members", hasSize(2)))
                 .andExpect(model().attribute(
                         "members",
-                        hasItem(generateMemberPropertiesMatcher(member1.getId(), "pizza1@pizza.com", "password1"))
+                        hasItem(generateMemberPropertiesMatcher(member1.getId(), "pizza1@pizza.com", "password"))
                 ))
                 .andExpect(model().attribute(
                         "members",
-                        hasItem(generateMemberPropertiesMatcher(member2.getId(), "pizza2@pizza.com", "password2"))
+                        hasItem(generateMemberPropertiesMatcher(member2.getId(), "pizza2@pizza.com", "password"))
                 ))
                 .andDo(print());
     }

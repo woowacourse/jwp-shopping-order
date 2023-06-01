@@ -1,5 +1,8 @@
 package cart.dao;
 
+import static cart.fixture.ProductFixture.상품_18900원_엔티티;
+import static cart.fixture.ProductFixture.상품_28900원_엔티티;
+import static cart.fixture.ProductFixture.상품_8900원_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -34,10 +37,8 @@ class ProductDaoTest {
     @Test
     void 전체_상품을_조회한다() {
         // given
-        final ProductEntity product1 = new ProductEntity("허브티", "tea.jpg", 1000L);
-        final ProductEntity product2 = new ProductEntity("고양이", "cat.jpg", 1000000L);
-        final ProductEntity savedProduct1 = productDao.insert(product1);
-        final ProductEntity savedProduct2 = productDao.insert(product2);
+        final ProductEntity savedProduct1 = productDao.insert(상품_8900원_엔티티);
+        final ProductEntity savedProduct2 = productDao.insert(상품_18900원_엔티티);
 
         // when
         final List<ProductEntity> result = productDao.findAll();
@@ -50,8 +51,7 @@ class ProductDaoTest {
     @Test
     void 단일_상품을_조회한다() {
         // given
-        final ProductEntity product = new ProductEntity("허브티", "tea.jpg", 1000L);
-        final ProductEntity savedProduct = productDao.insert(product);
+        final ProductEntity savedProduct = productDao.insert(상품_8900원_엔티티);
 
         // when
         final ProductEntity result = productDao.findById(savedProduct.getId()).get();
@@ -63,9 +63,8 @@ class ProductDaoTest {
     @Test
     void 상품을_수정한다() {
         // given
-        final ProductEntity product = new ProductEntity("허브티", "tea.jpg", 1000L);
-        final ProductEntity savedProduct = productDao.insert(product);
-        final ProductEntity updatedProduct = new ProductEntity(savedProduct.getId(), "블랙캣", "cat.jpg", 10000L);
+        final ProductEntity savedProduct = productDao.insert(상품_8900원_엔티티);
+        final ProductEntity updatedProduct = new ProductEntity(savedProduct.getId(), "피자", "pizza.png", 10000L);
 
         // when
         productDao.update(updatedProduct);
@@ -73,8 +72,8 @@ class ProductDaoTest {
         // then
         final ProductEntity result = productDao.findById(updatedProduct.getId()).get();
         assertAll(
-                () -> assertThat(result.getName()).isEqualTo("블랙캣"),
-                () -> assertThat(result.getImageUrl()).isEqualTo("cat.jpg"),
+                () -> assertThat(result.getName()).isEqualTo("피자"),
+                () -> assertThat(result.getImageUrl()).isEqualTo("pizza.png"),
                 () -> assertThat(result.getPrice()).isEqualTo(10000L)
         );
     }
@@ -82,8 +81,7 @@ class ProductDaoTest {
     @Test
     void 상품을_삭제한다() {
         // given
-        final ProductEntity product = new ProductEntity("허브티", "tea.jpg", 1000L);
-        final ProductEntity savedProduct = productDao.insert(product);
+        final ProductEntity savedProduct = productDao.insert(상품_8900원_엔티티);
 
         // when
         productDao.deleteById(savedProduct.getId());
@@ -95,12 +93,9 @@ class ProductDaoTest {
     @Test
     void 입력받은_아이디에_대한_상품을_조회한다() {
         // given
-        final ProductEntity product1 = new ProductEntity("허브티", "tea.jpg", 1000L);
-        final ProductEntity product2 = new ProductEntity("고양이", "cat.jpg", 1000000L);
-        final ProductEntity product3 = new ProductEntity("스프라이트", "sprite.jpg", 1000000L);
-        final ProductEntity savedProduct1 = productDao.insert(product1);
-        final ProductEntity savedProduct2 = productDao.insert(product2);
-        final ProductEntity savedProduct3 = productDao.insert(product3);
+        final ProductEntity savedProduct1 = productDao.insert(상품_8900원_엔티티);
+        final ProductEntity savedProduct2 = productDao.insert(상품_18900원_엔티티);
+        final ProductEntity savedProduct3 = productDao.insert(상품_28900원_엔티티);
 
         // when
         final List<ProductEntity> result = productDao.findByIds(List.of(savedProduct1.getId(), savedProduct2.getId()));

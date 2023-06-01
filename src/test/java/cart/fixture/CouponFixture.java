@@ -1,6 +1,7 @@
 package cart.fixture;
 
 import static cart.domain.coupon.DiscountPolicyType.DELIVERY;
+import static cart.domain.coupon.DiscountPolicyType.PERCENT;
 import static cart.domain.coupon.DiscountPolicyType.PRICE;
 
 import cart.domain.VO.Money;
@@ -28,6 +29,20 @@ public class CouponFixture {
             "배달비 3천원 할인 쿠폰",
             DELIVERY,
             3000L,
+            Money.ZERO
+    );
+
+    public static final Coupon _20프로_할인_쿠폰 = new Coupon(
+            "20% 할인 쿠폰",
+            PERCENT,
+            20L,
+            Money.ZERO
+    );
+
+    public static final Coupon _20만원_할인_쿠폰 = new Coupon(
+            "20만원 할인 쿠폰",
+            PRICE,
+            200000L,
             Money.ZERO
     );
 

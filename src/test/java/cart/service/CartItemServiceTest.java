@@ -1,5 +1,8 @@
 package cart.service;
 
+import static cart.fixture.MemberFixture.사용자1;
+import static cart.fixture.ProductFixture.상품_18900원;
+import static cart.fixture.ProductFixture.상품_8900원;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.cart.CartItem;
@@ -40,8 +43,8 @@ public class CartItemServiceTest {
     @Test
     void 장바구니에_상품을_추가한다() {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product = productRepository.save(상품_8900원);
+        final Member member = memberRepository.save(사용자1);
         final CartItem cartItem = new CartItem(member, product);
 
         // when
@@ -55,9 +58,9 @@ public class CartItemServiceTest {
     @Test
     void 입력받은_사용자의_카트에_담겨있는_모든_상품을_조회한다() {
         // given
-        final Product product1 = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Product product2 = productRepository.save(new Product("pizza2", "pizza2.jpg", 18900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product1 = productRepository.save(상품_8900원);
+        final Product product2 = productRepository.save(상품_18900원);
+        final Member member = memberRepository.save(사용자1);
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
 
@@ -74,8 +77,8 @@ public class CartItemServiceTest {
     @Test
     void 삭제할_품목_아이디와_사용자_아이디를_받아_장바구니_항목을_제거한다() {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product = productRepository.save(상품_8900원);
+        final Member member = memberRepository.save(사용자1);
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
 
         // when
@@ -88,8 +91,8 @@ public class CartItemServiceTest {
     @Test
     void 상품_수량을_변경한다() {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product = productRepository.save(상품_8900원);
+        final Member member = memberRepository.save(사용자1);
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(2);
 
@@ -104,8 +107,8 @@ public class CartItemServiceTest {
     @Test
     void 상품_수량을_0으로_변경하는_경우_장바구니에서_삭제된다() {
         // given
-        final Product product = productRepository.save(new Product("pizza1", "pizza1.jpg", 8900L));
-        final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
+        final Product product = productRepository.save(상품_8900원);
+        final Member member = memberRepository.save(사용자1);
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(0);
 
