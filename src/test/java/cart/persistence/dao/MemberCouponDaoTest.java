@@ -27,22 +27,21 @@ class MemberCouponDaoTest extends DaoTestHelper {
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = 신규_가입_쿠폰_저장();
 
         // when
-        final LocalDateTime 쿠폰_발급_시간 = LocalDateTime.now();
+        final LocalDateTime 쿠폰_발급_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final LocalDateTime 쿠폰_만료_시간 = 쿠폰_발급_시간.plusDays(10);
         final MemberCouponEntity 사용자_쿠폰_저장_엔티티 = new MemberCouponEntity(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디,
             쿠폰_발급_시간, 쿠폰_만료_시간, false);
         memberCouponDao.insert(사용자_쿠폰_저장_엔티티);
 
         // then
-        final List<MemberCouponDto> coupons = memberCouponDao.findMyCouponsByName("journey");
-        assertThat(coupons).hasSize(1);
-        assertThat(coupons)
+        final MemberCouponDto coupon = memberCouponDao.findByMemberIdAndCouponId(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디).get();
+        assertThat(coupon)
             .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getMemberName,
                 MemberCouponDto::getMemberPassword, MemberCouponDto::getCouponId, MemberCouponDto::getCouponName,
-                MemberCouponDto::getCouponPeriod, MemberCouponDto::getDiscountRate, MemberCouponDto::isUsed)
-            .containsExactly(
-                tuple(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰", 10,
-                    20, false));
+                MemberCouponDto::getCouponPeriod, MemberCouponDto::getDiscountRate, MemberCouponDto::isUsed,
+                MemberCouponDto::getExpiredAt, MemberCouponDto::getIssuedAt)
+            .containsExactly(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰", 10,
+                20, false, 쿠폰_만료_시간, 쿠폰_발급_시간);
     }
 
     @Test
@@ -91,9 +90,10 @@ class MemberCouponDaoTest extends DaoTestHelper {
             .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getMemberName,
                 MemberCouponDto::getMemberPassword, MemberCouponDto::getCouponId, MemberCouponDto::getCouponName,
                 MemberCouponDto::getCouponPeriod, MemberCouponDto::getDiscountRate,
-                MemberCouponDto::isUsed)
+                MemberCouponDto::isUsed, MemberCouponDto::getExpiredAt, MemberCouponDto::getIssuedAt)
             .containsExactly(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰",
-                10, 20, false);
+                10, 20, false, LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(10),
+                LocalDateTime.of(2023, 6, 1, 13, 0, 0));
     }
 
     @Test
@@ -108,26 +108,33 @@ class MemberCouponDaoTest extends DaoTestHelper {
     }
 
     @Test
-    @DisplayName("쿠폰 정보를 포함한 사용자 정보를 조회한다.")
+    @DisplayName("사용자 이름으로 사용자의 쿠폰 정보를 조회한다.")
     void findMyCouponsByName() {
         // given
         final long 저장된_져니_아이디 = 져니_저장();
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = 신규_가입_쿠폰_저장();
+        final Long 저장된_행운의_쿠폰_아이디 = 행운의_쿠폰_저장();
         져니_쿠폰_저장(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
+        져니_쿠폰_저장(저장된_져니_아이디, 저장된_행운의_쿠폰_아이디);
 
         // when
         final List<MemberCouponDto> coupons = memberCouponDao.findMyCouponsByName("journey");
 
         // then
-        assertThat(coupons).hasSize(1);
+        assertThat(coupons).hasSize(2);
         assertThat(coupons)
             .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getMemberName,
                 MemberCouponDto::getMemberPassword, MemberCouponDto::getCouponId, MemberCouponDto::getCouponName,
                 MemberCouponDto::getCouponPeriod, MemberCouponDto::getDiscountRate,
-                MemberCouponDto::isUsed)
+                MemberCouponDto::isUsed, MemberCouponDto::getExpiredAt, MemberCouponDto::getIssuedAt)
             .containsExactly(
                 tuple(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰",
-                    10, 20, false));
+                    10, 20, false, LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(10),
+                    LocalDateTime.of(2023, 6, 1, 13, 0, 0)),
+                tuple(저장된_져니_아이디, "journey", "password", 저장된_행운의_쿠폰_아이디, "행운의 쿠폰",
+                    1, 10, false, LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(10),
+                    LocalDateTime.of(2023, 6, 1, 13, 0, 0))
+            );
     }
 
     @Test
@@ -151,8 +158,9 @@ class MemberCouponDaoTest extends DaoTestHelper {
             .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getMemberName,
                 MemberCouponDto::getMemberPassword, MemberCouponDto::getCouponId, MemberCouponDto::getCouponName,
                 MemberCouponDto::getCouponPeriod, MemberCouponDto::getDiscountRate,
-                MemberCouponDto::isUsed)
+                MemberCouponDto::isUsed, MemberCouponDto::getExpiredAt, MemberCouponDto::getIssuedAt)
             .containsExactly(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰",
-                10, 20, true);
+                10, 20, true, LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(10),
+                LocalDateTime.of(2023, 6, 1, 13, 0, 0));
     }
 }

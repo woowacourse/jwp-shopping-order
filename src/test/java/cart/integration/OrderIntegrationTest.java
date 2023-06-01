@@ -458,8 +458,8 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         final String sql = "INSERT INTO member_coupon(member_id, coupon_id, issued_at, expired_at, is_used) "
             + "VALUES (?, ?, ?, ?, ?)";
-        final LocalDateTime issuedAt = LocalDateTime.now().minusDays(10);
-        final LocalDateTime expiredAt = LocalDateTime.now().minusDays(3);
+        final LocalDateTime issuedAt = LocalDateTime.of(2023, 6, 1, 13, 0, 0).minusDays(10);
+        final LocalDateTime expiredAt = LocalDateTime.of(2023, 6, 1, 13, 0, 0).minusDays(3);
         jdbcTemplate.update(sql, 1L, 3L, Timestamp.valueOf(issuedAt), Timestamp.valueOf(expiredAt), 0);
     }
 
@@ -469,8 +469,8 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         final String sql = "INSERT INTO member_coupon(member_id, coupon_id, issued_at, expired_at, is_used) "
             + "VALUES (?, ?, ?, ?, ?)";
-        final LocalDateTime issuedAt = LocalDateTime.now();
-        final LocalDateTime expiredAt = LocalDateTime.now().plusDays(3);
+        final LocalDateTime issuedAt = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
+        final LocalDateTime expiredAt = LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(3);
         jdbcTemplate.update(sql, 1L, 3L, Timestamp.valueOf(issuedAt), Timestamp.valueOf(expiredAt), 1);
     }
 

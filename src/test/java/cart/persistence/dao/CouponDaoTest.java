@@ -24,7 +24,7 @@ class CouponDaoTest extends DaoTest {
     @DisplayName("모든 쿠폰 리스트를 반환한다.")
     void getAllCoupons() {
         // given
-        final LocalDateTime 저장_시간 = LocalDateTime.now();
+        final LocalDateTime 저장_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
         final CouponEntity 첫_주문_감사_쿠폰 = new CouponEntity("첫 주문 감사 쿠폰", 10, 10, 저장_시간.plusDays(10));
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = couponDao.insert(신규_가입_축하_쿠폰);
@@ -47,7 +47,7 @@ class CouponDaoTest extends DaoTest {
     @DisplayName("요청받은 아이디에 해당하는 쿠폰을 반환한다.")
     void findById_success() {
         // given
-        final LocalDateTime 저장_시간 = LocalDateTime.now();
+        final LocalDateTime 저장_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = couponDao.insert(신규_가입_축하_쿠폰);
 
@@ -76,7 +76,7 @@ class CouponDaoTest extends DaoTest {
     @DisplayName("쿠폰을 저장한다.")
     void insert() {
         // given
-        final LocalDateTime 저장_시간 = LocalDateTime.now();
+        final LocalDateTime 저장_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
 
         // when
@@ -94,7 +94,7 @@ class CouponDaoTest extends DaoTest {
     @DisplayName("쿠폰을 제거한다.")
     void deleteById() {
         // given
-        final LocalDateTime 저장_시간 = LocalDateTime.now();
+        final LocalDateTime 저장_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = couponDao.insert(신규_가입_축하_쿠폰);
 
@@ -111,7 +111,7 @@ class CouponDaoTest extends DaoTest {
     @CsvSource(value = {"신규 가입 축하 쿠폰:20:true", "신규 가입 축하 쿠폰:10:false", "첫 주문 감사 쿠폰:20:false"}, delimiter = ':')
     void existByNameAndDiscountRate(final String name, final int discountRate, final boolean expected) {
         // given
-        final LocalDateTime 저장_시간 = LocalDateTime.now();
+        final LocalDateTime 저장_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 365, 저장_시간.plusDays(365));
         couponDao.insert(신규_가입_축하_쿠폰);
 
@@ -127,7 +127,7 @@ class CouponDaoTest extends DaoTest {
     @DisplayName("요청받은 이름과 할인율에 해당하는 쿠폰을 반환한다.")
     void findByNameAndDiscountRate_success() {
         // given
-        final LocalDateTime 저장_시간 = LocalDateTime.now();
+        final LocalDateTime 저장_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final String couponName = "신규 가입 축하 쿠폰";
         final int discountRate = 20;
         final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity(couponName, discountRate, 365, 저장_시간.plusDays(365));

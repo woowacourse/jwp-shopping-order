@@ -14,7 +14,7 @@ class CartItemDaoTest extends DaoTestHelper {
 
     @Autowired
     private CartItemDao cartItemDao;
-    
+
     @Test
     @DisplayName("장바구니 정보를 저장한다.")
     void insert() {
@@ -162,7 +162,7 @@ class CartItemDaoTest extends DaoTestHelper {
         // then
         assertThat(deletedCount).isSameAs(2);
     }
-    
+
     @Test
     @DisplayName("사용자 이름과 상품 아이디로 이미 등록이 되어 있으면 true를 반환한다.")
     void existByMemberNameAndProductId_true() {

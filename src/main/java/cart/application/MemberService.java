@@ -4,10 +4,10 @@ import static cart.application.mapper.MemberMapper.convertMember;
 import static cart.application.mapper.MemberMapper.convertMemberResponse;
 
 import cart.application.dto.member.MemberCouponResponse;
+import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.member.MemberLoginResponse;
 import cart.application.dto.member.MemberResponse;
-import cart.application.dto.member.MemberJoinRequest;
 import cart.application.mapper.MemberMapper;
 import cart.common.auth.BasicTokenProvider;
 import cart.domain.event.JoinMemberCouponEvent;

@@ -55,13 +55,19 @@ public class DaoTestHelper extends DaoTest {
     }
 
     Long 신규_가입_쿠폰_저장() {
-        final LocalDateTime now = LocalDateTime.now();
-        final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 10, now.plusDays(10));
+        final LocalDateTime 쿠폰_발급_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
+        final CouponEntity 신규_가입_축하_쿠폰 = new CouponEntity("신규 가입 축하 쿠폰", 20, 10, 쿠폰_발급_시간.plusDays(10));
         return couponDao.insert(신규_가입_축하_쿠폰);
     }
 
+    Long 행운의_쿠폰_저장() {
+        final LocalDateTime 쿠폰_발급_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
+        final CouponEntity 행운의_쿠폰 = new CouponEntity("행운의 쿠폰", 10, 1, 쿠폰_발급_시간.plusDays(10));
+        return couponDao.insert(행운의_쿠폰);
+    }
+
     Long 져니_쿠폰_저장(final long 저장된_져니_아이디, final Long 저장된_신규_가입_축하_쿠폰_아이디) {
-        final LocalDateTime 쿠폰_발급_시간 = LocalDateTime.now();
+        final LocalDateTime 쿠폰_발급_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final LocalDateTime 쿠폰_만료_시간 = 쿠폰_발급_시간.plusDays(10);
         final MemberCouponEntity 사용자_쿠폰_저장_엔티티 = new MemberCouponEntity(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디,
             쿠폰_발급_시간, 쿠폰_만료_시간, false);
@@ -69,7 +75,8 @@ public class DaoTestHelper extends DaoTest {
     }
 
     Long 주문_저장(final Long 저장된_져니_아이디) {
-        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 10000, 9000, 3000, LocalDateTime.now());
+        final LocalDateTime 주문_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 10000, 9000, 3000, 주문_시간);
         return orderDao.insert(주문_엔티티);
     }
 }

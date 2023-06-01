@@ -1,7 +1,5 @@
 package cart.application;
 
-import static java.util.stream.Collectors.joining;
-
 import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.application.dto.cartitem.CartRequest;
 import cart.application.dto.cartitem.CartResponse;
@@ -64,7 +62,7 @@ public class CartService {
     public void updateQuantity(final String memberName, final Long cartItemId,
                                final CartItemQuantityUpdateRequest updateRequest) {
         final Cart cart = cartRepository.findById(cartItemId);
-        cart.checkOwner(cartItemId, memberName);
+        cart.checkOwner(memberName);
 
         final int quantity = updateRequest.getQuantity();
         if (quantity == EMPTY_CART_ITEM_QUANTITY) {
@@ -79,7 +77,7 @@ public class CartService {
     @Transactional
     public void remove(final String memberName, Long cartItemId) {
         final Cart cart = cartRepository.findById(cartItemId);
-        cart.checkOwner(cartItemId, memberName);
+        cart.checkOwner(memberName);
         cartRepository.deleteById(cartItemId);
     }
 
@@ -87,8 +85,7 @@ public class CartService {
     public void removeItems(final String memberName, final List<Long> cartItemIds) {
         final Long count = cartRepository.countByCartItemIdsAndMemberId(cartItemIds, memberName);
         if (count != cartItemIds.size()) {
-            final String cartItemId = cartItemIds.stream().map(String::valueOf).collect(joining(", "));
-            throw new ForbiddenException(cartItemId, memberName);
+            throw new ForbiddenException(ErrorCode.FORBIDDEN);
         }
         cartRepository.deleteByCartItemIdsAndMemberId(cartItemIds, memberName);
     }

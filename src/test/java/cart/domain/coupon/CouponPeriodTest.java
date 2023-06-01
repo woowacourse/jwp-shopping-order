@@ -1,7 +1,7 @@
 package cart.domain.coupon;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;

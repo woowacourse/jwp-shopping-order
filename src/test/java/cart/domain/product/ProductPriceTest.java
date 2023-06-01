@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class ProductPriceTest {
+
     @ParameterizedTest(name = "1~10,000,000 사이의 금액이 들어오면 정상적으로 생성된다.")
     @ValueSource(ints = {1, 10_000_000})
     void create(final int price) {
