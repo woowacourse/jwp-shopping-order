@@ -2,6 +2,8 @@ package cart.domain;
 
 import cart.exception.NegativeCouponException;
 
+import java.util.Objects;
+
 public class Coupon {
     private final long id;
     private final int discountPrice;
@@ -22,5 +24,26 @@ public class Coupon {
 
     public int calculateDiscount() {
         return discountPrice;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Coupon coupon = (Coupon) o;
+        return id == coupon.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

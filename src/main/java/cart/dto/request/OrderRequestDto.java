@@ -5,12 +5,12 @@ import java.util.List;
 public class OrderRequestDto {
     private List<Long> cartItems;
     private int totalPrice;
-    private int couponId;
+    private Long couponId;
 
     public OrderRequestDto() {
     }
 
-    public OrderRequestDto(final List<Long> cartItems, final int totalPrice, final int couponId) {
+    public OrderRequestDto(final List<Long> cartItems, final int totalPrice, final Long couponId) {
         this.cartItems = cartItems;
         this.totalPrice = totalPrice;
         this.couponId = couponId;
@@ -24,7 +24,7 @@ public class OrderRequestDto {
         return totalPrice;
     }
 
-    public int getCouponId() {
+    public Long getCouponId() {
         return couponId;
     }
 }

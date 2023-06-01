@@ -49,7 +49,7 @@ class OrderApiControllerTest {
         final OrderRequestDto orderRequestDto = new OrderRequestDto(
                 List.of(1L, 2L),
                 10000,
-                1
+                1L
         );
 
         //when, then
