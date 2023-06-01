@@ -19,6 +19,10 @@ public class ProductResponse {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
+    public static ProductResponse deleted() {
+        return new ProductResponse(null, "deleted", 0, "deleted");
+    }
+
     public Long getId() {
         return id;
     }
