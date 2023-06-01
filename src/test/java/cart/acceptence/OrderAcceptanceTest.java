@@ -66,7 +66,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .collect(Collectors.toList());
 
             // when
-            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(28_000L, 장바구니));
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 장바구니));
 
             // then
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -89,7 +89,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             장바구니.add(new OrderItemDto(존재하지_않는_장바구니_아이템_아이디, 1));
 
             // when
-            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(28_000L, 장바구니));
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 장바구니));
 
             // then
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -116,7 +116,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .collect(Collectors.toList());
 
             // when
-            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(29_000L, 장바구니));
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(27_000L, 3_000L, 장바구니));
 
             // then
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -139,7 +139,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .collect(Collectors.toList());
 
             // when
-            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자2, new OrderRequest(28_000L, 장바구니));
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자2, new OrderRequest(25_000L, 3_000L, 장바구니));
 
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
             assertThat(주문_등록_결과.jsonPath().getObject("payload", ExceptionResponse.class))
@@ -164,7 +164,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .stream()
                     .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
                     .collect(Collectors.toList());
-            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(28_000L, 장바구니));
+            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 장바구니));
             System.out.println(주문_아이디);
 
             // when
@@ -174,7 +174,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             // then
             assertThat(주문_목록_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(주문_목록.get(0).getOrderId()).isEqualTo(주문_아이디);
-            assertThat(주문_목록.get(0).getTotalPrice()).isEqualTo(28_000L);
+            assertThat(주문_목록.get(0).getTotalProductsPrice()).isEqualTo(25_000L);
+            assertThat(주문_목록.get(0).getShippingFee()).isEqualTo(3_000L);
             assertThat(주문_목록.get(0).getOrderDetails().size()).isEqualTo(2);
         }
     }
@@ -194,7 +195,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .stream()
                     .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
                     .collect(Collectors.toList());
-            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(28_000L, 장바구니));
+            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 장바구니));
             System.out.println(주문_아이디);
 
             // when
@@ -204,7 +205,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             // then
             assertThat(주문_상세_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(주문_상세.getOrderId()).isEqualTo(주문_아이디);
-            assertThat(주문_상세.getTotalPrice()).isEqualTo(28_000L);
+            assertThat(주문_상세.getTotalProductsPrice()).isEqualTo(25_000L);
+            assertThat(주문_상세.getShippingFee()).isEqualTo(3_000L);
         }
     }
 

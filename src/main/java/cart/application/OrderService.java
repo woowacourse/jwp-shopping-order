@@ -53,7 +53,8 @@ public class OrderService {
         ShippingPolicy shippingPolicy = shippingPolicyRepository.findShippingPolicy();
         List<OrderItem> orderItems = OrderItem.of(cartItems);
         Order order = Order.of(member, shippingPolicy.calculateShippingFee(orderItems), orderItems);
-        order.checkPrice(orderRequest.getTotalPrice());
+        order.checkTotalProductsPrice(orderRequest.getTotalProductsPrice());
+        order.checkShippingFee(orderRequest.getShippingFee());
 
         long orderId = orderRepository.save(order);
         for (CartItem cartItem : cartItems) {
@@ -118,7 +119,7 @@ public class OrderService {
                 .stream()
                 .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
                 collect(Collectors.toUnmodifiableList());
-        return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalProductsPrice() + order.getShippingFee(), orderDetails);
+        return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalProductsPrice(), order.getShippingFee(), orderDetails);
     }
 
     public List<OrderResponse> getOrdersByMember(final Member member) {
@@ -129,7 +130,7 @@ public class OrderService {
                     .stream()
                     .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
                     collect(Collectors.toUnmodifiableList());
-            orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalProductsPrice() + order.getShippingFee(), orderDetails));
+            orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalProductsPrice(), order.getShippingFee(), orderDetails));
         }
         return orderResponses;
     }

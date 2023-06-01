@@ -6,13 +6,15 @@ public class OrderResponse {
 
     private final long orderId;
     private final String orderDate;
-    private final long totalPrice;
+    private final long totalProductsPrice;
+    private final long shippingFee;
     private final List<OrderDetailsDto> orderDetails;
 
-    public OrderResponse(final long orderId, final String orderDate, final long totalPrice, final List<OrderDetailsDto> orderDetails) {
+    public OrderResponse(final long orderId, final String orderDate, final long totalProductsPrice, final long shippingFee, final List<OrderDetailsDto> orderDetails) {
         this.orderId = orderId;
         this.orderDate = orderDate;
-        this.totalPrice = totalPrice;
+        this.totalProductsPrice = totalProductsPrice;
+        this.shippingFee = shippingFee;
         this.orderDetails = orderDetails;
     }
 
@@ -24,11 +26,15 @@ public class OrderResponse {
         return orderDate;
     }
 
-    public long getTotalPrice() {
-        return totalPrice;
+    public long getTotalProductsPrice() {
+        return totalProductsPrice;
     }
 
     public List<OrderDetailsDto> getOrderDetails() {
         return orderDetails;
+    }
+
+    public long getShippingFee() {
+        return shippingFee;
     }
 }

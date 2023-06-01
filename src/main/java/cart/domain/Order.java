@@ -71,4 +71,16 @@ public class Order {
             throw new IllegalMember();
         }
     }
+
+    public void checkTotalProductsPrice(final long totalProductsPrice) {
+        if (this.totalProductsPrice != totalProductsPrice) {
+            throw new TotalPriceNotSame();
+        }
+    }
+
+    public void checkShippingFee(final long shippingFee) {
+        if (this.shippingFee != shippingFee) {
+            throw new TotalPriceNotSame();
+        }
+    }
 }
