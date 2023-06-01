@@ -44,6 +44,7 @@ Content-Type: application/json
 > Expected response:
 > Status: 200 OK
 > Body:
+> {
 >   "id": 1,
 >   "name": "치킨",
 >   "price": 10000,
