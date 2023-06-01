@@ -2,6 +2,8 @@ package cart.dao;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,9 +17,11 @@ import java.util.Objects;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public List<Product> getAllProducts() {
@@ -30,6 +34,20 @@ public class ProductDao {
             return new Product(productId, name, price, imageUrl);
         });
     }
+
+    public List<Product> getProductsByIds(final List<Long> productIds) {
+        String sql = "SELECT * FROM product where id in (:ids)";
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("ids", productIds);
+        return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, (rs, rowNum) -> {
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new Product(productId, name, price, imageUrl);
+        });
+    }
+
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";

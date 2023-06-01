@@ -22,7 +22,25 @@ INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 3, 5);
 
 INSERT INTO coupon (name, discount_rate, `period`, expired_at)
-VALUES ('신규 가입 할인 쿠폰', 20, 14, '2023-05-30 15:30:00');
+VALUES ('신규 가입 할인 쿠폰', 10, 14, '2023-05-30 15:30:00');
 
 INSERT INTO member_coupon (member_id, coupon_id, issued_at, expired_at, is_used)
 VALUES (1, 1, NOW(), '2023-06-01 15:30:00', false);
+
+INSERT INTO `order` (member_id, total_price, discounted_total_price, delivery_price, ordered_at)
+VALUES (1, 40000, 36000, 3000, NOW());
+
+INSERT INTO order_product (order_id, product_id, ordered_product_price, quantity)
+VALUES (1, 1, 10000, 2);
+
+INSERT INTO order_product (order_id, product_id, ordered_product_price, quantity)
+VALUES (1, 2, 20000, 1);
+
+INSERT INTO order_coupon (order_id, coupon_id)
+VALUES (1, 1);
+
+INSERT INTO `order` (member_id, total_price, discounted_total_price, delivery_price, ordered_at)
+VALUES (1, 20000, 20000, 3000, NOW());
+
+INSERT INTO order_product (order_id, product_id, ordered_product_price, quantity)
+VALUES (2, 1, 10000, 2);

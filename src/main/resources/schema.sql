@@ -53,11 +53,12 @@ CREATE TABLE IF NOT EXISTS member_coupon
 
 CREATE TABLE IF NOT EXISTS `order`
 (
-    id                  INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    member_id           INT UNSIGNED NOT NULL,
-    total_product_price INT UNSIGNED NOT NULL,
-    delivery_price      INT UNSIGNED NOT NULL,
-    ordered_at          DATETIME     NOT NULL,
+    id                     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    member_id              INT UNSIGNED NOT NULL,
+    total_price            INT UNSIGNED NOT NULL,
+    discounted_total_price INT UNSIGNED NOT NULL,
+    delivery_price         INT UNSIGNED NOT NULL,
+    ordered_at             DATETIME     NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
