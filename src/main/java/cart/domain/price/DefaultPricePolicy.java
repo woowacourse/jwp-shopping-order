@@ -3,11 +3,14 @@ package cart.domain.price;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import cart.domain.Member;
 import cart.domain.price.discount.DiscountInformation;
 import cart.domain.price.discount.DiscountPolicy;
 import cart.domain.price.discount.grade.Grade;
 
+@Component
 public class DefaultPricePolicy implements PricePolicy {
     private final List<DiscountPolicy> discountPolicies;
 

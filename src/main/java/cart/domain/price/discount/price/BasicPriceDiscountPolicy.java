@@ -1,10 +1,13 @@
 package cart.domain.price.discount.price;
 
+import org.springframework.stereotype.Component;
+
 import cart.domain.Member;
 import cart.domain.price.discount.DiscountInformation;
 import cart.domain.price.discount.DiscountPolicy;
 import cart.domain.price.discount.grade.Grade;
 
+@Component
 public class BasicPriceDiscountPolicy implements DiscountPolicy {
     private static final String NAME = "priceDiscount";
     private static final int STANDARD_PRICE = 10_000;
