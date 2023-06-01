@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.MemberCreateRequest;
+import cart.dto.request.MemberCreateRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)

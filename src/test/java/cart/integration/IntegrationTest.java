@@ -1,6 +1,6 @@
 package cart.integration;
 
-import cart.dto.MemberCreateRequest;
+import cart.dto.request.MemberCreateRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

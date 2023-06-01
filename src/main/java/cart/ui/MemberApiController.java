@@ -2,8 +2,8 @@ package cart.ui;
 
 import cart.application.MemberService;
 import cart.domain.Member;
-import cart.dto.MemberCreateRequest;
-import cart.dto.PointResponse;
+import cart.dto.request.MemberCreateRequest;
+import cart.dto.response.PointResponse;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
