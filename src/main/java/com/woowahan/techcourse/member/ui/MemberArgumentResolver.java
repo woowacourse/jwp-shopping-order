@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.member.ui;
 
 import com.woowahan.techcourse.cart.exception.AuthenticationException;
-import com.woowahan.techcourse.member.dao.MemberDao;
+import com.woowahan.techcourse.member.application.MemberQueryService;
 import com.woowahan.techcourse.member.domain.Member;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -13,10 +13,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberDao memberDao;
+    private final MemberQueryService memberQueryService;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberArgumentResolver(MemberQueryService memberQueryService) {
+        this.memberQueryService = memberQueryService;
     }
 
     @Override
@@ -28,14 +28,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            throw new AuthenticationException();
-        }
 
         String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            throw new AuthenticationException();
-        }
 
         byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
         String decodedString = new String(decodedBytes);
@@ -44,11 +38,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String email = credentials[0];
         String password = credentials[1];
 
-        // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
-        }
-        return member;
+        return memberQueryService.findByEmailAndPassword(email, password)
+                .orElseThrow(AuthenticationException::new);
     }
 }

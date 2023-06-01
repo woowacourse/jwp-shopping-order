@@ -47,7 +47,7 @@ public class OrderStep {
 
     public static ExtractableResponse<Response> 주문_조회_ID로_요청(Long orderId, String email, String password) {
         return RestAssured.given()
-                .auth().basic(email, password)
+                .auth().preemptive().basic(email, password)
                 .when()
                 .get("/orders/" + orderId)
                 .then().log().all()
