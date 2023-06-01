@@ -2,11 +2,11 @@ package cart.integration;
 
 import static cart.TestDataFixture.MEMBER_1_AUTH_HEADER;
 import static cart.TestDataFixture.PRODUCT_1;
+import static cart.TestDataFixture.objectToJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.TestDataFixture;
 import cart.domain.product.CartItem;
 import cart.domain.product.Product;
 import cart.domain.vo.Quantity;
@@ -27,7 +27,7 @@ public class CartItemIntegrationRefactorTest extends IntegrationRefactorTest {
                 .perform(post("/cart-items")
                         .header("Authorization", MEMBER_1_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestDataFixture.objectToJsonString(cartItemRequest)))
+                        .content(objectToJsonString(cartItemRequest)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getHeader("Location");
 
