@@ -25,8 +25,8 @@ public class OrderDto {
 
     public static OrderDto from(final Order order) {
         final Optional<MemberCoupon> coupon = order.getMemberCoupon();
-        return coupon.map(
-                        value -> new OrderDto(order.getId(), order.getMemberId(), value.getId(), order.getTimeStamp()))
+        return coupon
+                .map(value -> new OrderDto(order.getId(), order.getMemberId(), value.getId(), order.getTimeStamp()))
                 .orElseGet(() -> new OrderDto(order.getId(), order.getMemberId(), null, order.getTimeStamp()));
     }
 
@@ -38,8 +38,8 @@ public class OrderDto {
         return memberId;
     }
 
-    public Long getMemberCouponId() {
-        return memberCouponId;
+    public Optional<Long> getMemberCouponId() {
+        return Optional.ofNullable(memberCouponId);
     }
 
     public LocalDateTime getTimeStamp() {

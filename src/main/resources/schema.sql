@@ -46,7 +46,7 @@ CREATE TABLE orders
     id               BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id        BIGINT    NOT NULL,
     time_stamp       TIMESTAMP NOT NULL,
-    member_coupon_id BIGINT    NOT NULL,
+    member_coupon_id BIGINT,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (member_coupon_id) REFERENCES member_coupon (id)
 );

@@ -1,12 +1,12 @@
 package cart.dao;
 
 import cart.dao.dto.OrderDto;
-import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +16,7 @@ public class OrderDao {
     private static final RowMapper<OrderDto> orderDtoRowMapper = (rs, rn) -> new OrderDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
-            rs.getLong("coupon_id"),
+            (Long) rs.getObject("member_coupon_id"),
             rs.getTimestamp("time_stamp").toLocalDateTime()
     );
 
@@ -31,13 +31,11 @@ public class OrderDao {
     }
 
     public Long insert(final OrderDto orderDto) {
-        Map<String, Object> params = Map.of(
-                "time_stamp", orderDto.getTimeStamp(),
-                "coupon_id", orderDto.getMemberCouponId(),
-                "member_id", orderDto.getMemberId()
-        );
-
-        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        final MapSqlParameterSource source = new MapSqlParameterSource()
+                .addValue("time_stamp", orderDto.getTimeStamp().toString())
+                .addValue("member_id", orderDto.getMemberId());
+        orderDto.getMemberCouponId().ifPresent(id -> source.addValue("member_coupon_id", id));
+        return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
     public Optional<OrderDto> findById(final Long orderId) {

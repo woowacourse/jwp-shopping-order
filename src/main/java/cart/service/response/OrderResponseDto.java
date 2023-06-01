@@ -1,21 +1,28 @@
 package cart.service.response;
 
+import static java.util.stream.Collectors.toUnmodifiableList;
+
+import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class OrderResponseDto {
 
     private final Long id;
     private final List<OrderProductResponseDto> orderProducts;
-    private final LocalDateTime timestamp;
+    private final String timestamp;
     private final String couponName;
     private final Integer originPrice;
     private final Integer discountPrice;
     private final Integer totalPrice;
 
+    private OrderResponseDto() {
+        this(null, null, null, null, null, null, null);
+    }
+
     public OrderResponseDto(final Long id, final List<OrderProductResponseDto> orderProducts,
-                            final LocalDateTime timestamp,
+                            final String timestamp,
                             final Integer originPrice, final String couponName, final Integer discountPrice,
                             final Integer totalPrice) {
         this.id = id;
@@ -28,8 +35,29 @@ public class OrderResponseDto {
     }
 
     public static OrderResponseDto from(final Order order) {
-        final Long orderId = order.getId();
-        return null;
+        final List<OrderProductResponseDto> orderProductResponses = order.getOrderProducts().stream()
+                .map(OrderProductResponseDto::from)
+                .collect(toUnmodifiableList());
+
+        final Optional<MemberCoupon> memberCouponOption = order.getMemberCoupon();
+        return memberCouponOption
+                .map(memberCoupon -> new OrderResponseDto(
+                        order.getId()
+                        , orderProductResponses
+                        , order.getTimeStamp().toString()
+                        , order.getOriginPrice().getValue()
+                        , memberCoupon.getCoupon().getName()
+                        , order.getDiscountPrice().getValue()
+                        , order.getTotalPrice().getValue()))
+                .orElseGet(() -> new OrderResponseDto(
+                        order.getId()
+                        , orderProductResponses
+                        , order.getTimeStamp().toString()
+                        , order.getOriginPrice().getValue()
+                        , null
+                        , order.getDiscountPrice().getValue()
+                        , order.getTotalPrice().getValue()
+                ));
     }
 
     public Long getId() {
@@ -40,7 +68,7 @@ public class OrderResponseDto {
         return orderProducts;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 

@@ -6,7 +6,6 @@ import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.dto.OrderDto;
 import cart.dao.dto.OrderProductDto;
-import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.product.Product;
@@ -60,9 +59,11 @@ public class OrderRepository {
     public Order findById(final Long id) {
         final OrderDto orderDto = orderDao.findById(id).orElseThrow(OrderNotFoundException::new);
         final List<OrderProduct> orderProducts = findOrderProductsByOrderId(id);
-        final MemberCoupon coupon = memberCouponRepository.findById(orderDto.getMemberCouponId());
-        return new Order(orderDto.getId(), orderProducts, orderDto.getTimeStamp()
-                , orderDto.getMemberId(), coupon);
+        return orderDto.getMemberCouponId()
+                .map(memberCouponId -> new Order(orderDto.getId(), orderProducts, orderDto.getTimeStamp()
+                        , orderDto.getMemberId(), memberCouponRepository.findById(memberCouponId)))
+                .orElseGet(() -> new Order(orderDto.getId(), orderProducts, orderDto.getTimeStamp(),
+                        orderDto.getMemberId()));
     }
 
     private List<OrderProduct> findOrderProductsByOrderId(final Long id) {
