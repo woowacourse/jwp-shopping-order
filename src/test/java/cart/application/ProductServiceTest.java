@@ -3,11 +3,11 @@ package cart.application;
 import static cart.fixture.DomainFixture.CHICKEN;
 import static cart.fixture.DomainFixture.SALAD;
 import static cart.fixture.DtoFixture.CHICKEN_PRODUCT_REQUEST;
+import static cart.fixture.RepositoryFixture.productRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductResponse;
 import cart.exception.ProductException;
@@ -27,9 +27,8 @@ class ProductServiceTest {
     ProductService productService;
 
     @BeforeEach
-    void setUp(@Autowired JdbcTemplate jdbctemplate) {
-        ProductDao productDao = new ProductDao(jdbctemplate);
-        productRepository = new ProductRepository(productDao);
+    void setUp(@Autowired JdbcTemplate jdbcTemplate) {
+        productRepository = productRepository(jdbcTemplate);
         productService = new ProductService(productRepository);
     }
 
