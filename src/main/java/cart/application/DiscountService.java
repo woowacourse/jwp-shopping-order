@@ -13,7 +13,7 @@ public class DiscountService {
     public List<DiscountResponse> getPrice(final int price, final String gradeName) {
         final List<DiscountResponse> discountResponses = new ArrayList<>();
 
-        final Grade grade = Grade.valueOf(gradeName.toUpperCase());
+        final Grade grade = Grade.from(gradeName);
         final int discountedPriceByGrade = grade.calculateGradeDiscountPrice(price);
 
         final DiscountResponse gradeDiscountResponse = DiscountResponse.of(grade, discountedPriceByGrade);
