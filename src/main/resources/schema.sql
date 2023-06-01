@@ -42,9 +42,10 @@ CREATE TABLE IF NOT EXISTS coupon (
     `name` VARCHAR(255) NOT NULL,
     min_amount INT UNSIGNED DEFAULT 0,
     discount_percent DECIMAL(5, 2) CHECK (discount_percent >= 0 AND discount_percent <= 100),
-    discount_amount INT UNSIGNED NOT NULL CHECK (discount_amount >= min_amount)
---     CONSTRAINT chk_coupon CHECK ((discount_percent = 0 AND discount_amount <> 0) OR (discount_percent <> 0 AND discount_amount = 0))
+    discount_amount INT UNSIGNED NOT NULL,
+    CONSTRAINT chk_coupon CHECK ((discount_percent = 0 AND discount_amount <> 0) OR (discount_percent <> 0 AND discount_amount = 0))
     );
+
 
 
 CREATE TABLE IF NOT EXISTS member_coupon (
