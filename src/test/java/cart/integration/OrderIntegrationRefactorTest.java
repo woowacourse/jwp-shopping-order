@@ -77,5 +77,6 @@ class OrderIntegrationRefactorTest extends IntegrationRefactorTest {
                                 PRODUCT_1.getImageUrl()
                         )
                 );
+        System.out.println(resultJsonString);
     }
 }
