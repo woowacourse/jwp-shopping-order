@@ -2,7 +2,7 @@ package com.woowahan.techcourse.coupon.application;
 
 import com.woowahan.techcourse.coupon.application.dto.CalculateActualPriceRequestDto;
 import com.woowahan.techcourse.coupon.application.dto.CalculateActualPriceResponseDto;
-import com.woowahan.techcourse.coupon.db.dao.CouponQueryDao;
+import com.woowahan.techcourse.coupon.db.dao.CouponDao;
 import com.woowahan.techcourse.coupon.domain.Coupon;
 import com.woowahan.techcourse.coupon.domain.Coupons;
 import com.woowahan.techcourse.coupon.domain.Money;
@@ -16,18 +16,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CouponQueryService {
 
-    private final CouponQueryDao couponQueryDao;
+    private final CouponDao couponDao;
 
-    public CouponQueryService(CouponQueryDao couponQueryDao) {
-        this.couponQueryDao = couponQueryDao;
+    public CouponQueryService(CouponDao couponDao) {
+        this.couponDao = couponDao;
     }
 
     public List<Coupon> findAllCoupons() {
-        return couponQueryDao.findAll();
+        return couponDao.findAll();
     }
 
     public List<Coupon> findAllCouponsByMemberId(Long memberId) {
-        return couponQueryDao.findAllByMemberId(memberId);
+        return couponDao.findAllByMemberId(memberId);
     }
 
     public CalculateActualPriceResponseDto calculateActualPrice(
@@ -42,7 +42,7 @@ public class CouponQueryService {
     }
 
     private Coupons getCoupons(CalculateActualPriceRequestDto calculateActualPriceRequestDto) {
-        List<Coupon> coupons = couponQueryDao.findAllByIds(calculateActualPriceRequestDto.getCouponIds());
+        List<Coupon> coupons = couponDao.findAllByIds(calculateActualPriceRequestDto.getCouponIds());
         if (coupons.size() != calculateActualPriceRequestDto.getCouponIds().size()) {
             throw new CouponNotFoundException();
         }
