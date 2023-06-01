@@ -143,23 +143,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(AuthInfo member, CartItemRequest cartItemRequest) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(cartItemRequest)
-                .when()
-                .post("/cart-items")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private Long requestAddCartItemAndGetId(AuthInfo member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
-        return getIdFromCreatedResponse(response);
-    }
-
     private ExtractableResponse<Response> requestGetCartItems(AuthInfo member) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

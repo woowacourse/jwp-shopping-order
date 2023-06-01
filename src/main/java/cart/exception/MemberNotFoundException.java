@@ -7,8 +7,4 @@ public class MemberNotFoundException extends IllegalArgumentException {
     public MemberNotFoundException() {
         super(MESSAGE);
     }
-
-    public MemberNotFoundException(final String message) {
-        super(message);
-    }
 }

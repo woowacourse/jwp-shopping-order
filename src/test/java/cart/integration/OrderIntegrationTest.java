@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -19,16 +20,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("주문 통합 테스트")
+@Sql({"/truncate.sql", "/member_data.sql"})
 public class OrderIntegrationTest extends IntegrationTest {
 
     private final AuthInfo member = new AuthInfo("a@a.com", "1234");
-    private Long productId1;
-    private Long productId2;
+    private long cartItemId1;
+    private long cartItemId2;
 
     @BeforeEach
     void setUp() {
-        productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        final long productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
+        final long productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
+        cartItemId1 = requestAddCartItemAndGetId(member, productId1);
+        cartItemId2 = requestAddCartItemAndGetId(member, productId2);
     }
     @Nested
     @DisplayName("주문 요청")
@@ -39,7 +43,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         void success_single_product_order() {
             // given
             final int paymentAmount = 10_000;
-            final OrderRequest request = new OrderRequest(List.of(productId1), paymentAmount);
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1), paymentAmount);
 
             // when
             final ExtractableResponse<Response> response = given()
@@ -62,7 +66,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         void success_multi_product_order() {
             // given
             final int paymentAmount = 25_000;
-            final OrderRequest request = new OrderRequest(List.of(productId1, productId2), paymentAmount);
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2), paymentAmount);
 
             // when
             final ExtractableResponse<Response> response = given()
@@ -85,7 +89,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         void fail_wrong_payment_amount() {
             // given
             final int wrongPaymentAmount = 23_000;
-            final OrderRequest request = new OrderRequest(List.of(productId1, productId2), wrongPaymentAmount);
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2), wrongPaymentAmount);
 
             // when
             final ExtractableResponse<Response> response = given()
@@ -105,7 +109,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         void fail_unauthorized() {
             // given
             final int paymentAmount = 25_000;
-            final OrderRequest request = new OrderRequest(List.of(productId1, productId2), paymentAmount);
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2), paymentAmount);
 
             // when
             final ExtractableResponse<Response> response = given()
@@ -126,7 +130,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             // given
             final Long wrongProductId = 77777L;
             final int paymentAmount = 25_000;
-            final OrderRequest request = new OrderRequest(List.of(productId1, wrongProductId), paymentAmount);
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1, wrongProductId), paymentAmount);
 
             // when
             final ExtractableResponse<Response> response = given()
