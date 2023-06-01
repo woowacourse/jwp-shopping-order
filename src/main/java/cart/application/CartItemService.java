@@ -36,7 +36,7 @@ public class CartItemService {
         return cartItemRepository.createCartItem(cartItem);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void update(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
         final CartItem cartItem = cartItemRepository.findCartItemById(id);
         cartItem.checkOwner(member);
@@ -50,7 +50,7 @@ public class CartItemService {
         cartItemRepository.updateCartItemQuantity(cartItem);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void delete(final Member member, final Long id) {
         final CartItem cartItem = cartItemRepository.findCartItemById(id);
         cartItem.checkOwner(member);
