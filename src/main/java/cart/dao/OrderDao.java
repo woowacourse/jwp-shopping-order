@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.entity.OrderEntity;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,6 +34,15 @@ public class OrderDao {
                     .queryForObject(sql, orderEntityMapper(), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
+        }
+    }
+
+    public List<OrderEntity> findByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM shopping_order WHERE member_id = ?";
+        try {
+            return jdbcTemplate.getJdbcTemplate().query(sql, orderEntityMapper(), memberId);
+        } catch (EmptyResultDataAccessException e) {
+            return Collections.emptyList();
         }
     }
 

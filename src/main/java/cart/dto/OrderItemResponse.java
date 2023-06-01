@@ -1,5 +1,9 @@
 package cart.dto;
 
+import cart.domain.OrderItem;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class OrderItemResponse {
 
     private final Long id;
@@ -10,6 +14,16 @@ public class OrderItemResponse {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
+    }
+
+    public static List<OrderItemResponse> from(final List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(orderItem -> new OrderItemResponse(
+                        orderItem.getId(),
+                        orderItem.getQuantity(),
+                        ProductResponse.of(orderItem.getProduct())
+                ))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Long getId() {

@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderDetailResponse;
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,12 @@ public class OrderController {
     ) {
         Long orderId = orderService.createOrder(member, orderCreateRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderDetailResponse>> findOrders(Member member) {
+        final List<OrderDetailResponse> response = orderService.findOrders(member);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")

@@ -19,13 +19,20 @@ public class OrderItemDao {
     public OrderItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("ordered_item")
-                .usingColumns("product_id", "order_id", "quantity");
+                .usingColumns(
+                        "order_id",
+                        "product_id",
+                        "quantity",
+                        "product_name_at_order",
+                        "product_price_at_order",
+                        "product_image_url_at_order"
+                );
     }
 
-    public List<OrderItemEntity> findByOrderId(Long id) {
+    public List<OrderItemEntity> findByOrderId(Long orderId) {
         final String sql = "SELECT * FROM ordered_item WHERE order_id = ?";
         try {
-            return jdbcTemplate.getJdbcTemplate().query(sql, orderItemMapper(), id);
+            return jdbcTemplate.getJdbcTemplate().query(sql, orderItemMapper(), orderId);
         } catch (EmptyResultDataAccessException e) {
             return Collections.emptyList();
         }
@@ -34,8 +41,10 @@ public class OrderItemDao {
     private static RowMapper<OrderItemEntity> orderItemMapper() {
         return (rs, count) -> new OrderItemEntity(
                 rs.getLong("id"),
-                rs.getLong("product_id"),
-                rs.getLong("order_id"),
+                rs.getLong("order_id"), rs.getLong("product_id"),
+                rs.getString("product_name_at_order"),
+                rs.getInt("product_price_at_order"),
+                rs.getString("product_image_url_at_order"),
                 rs.getInt("quantity")
         );
     }

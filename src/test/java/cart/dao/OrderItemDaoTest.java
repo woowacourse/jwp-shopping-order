@@ -42,7 +42,14 @@ class OrderItemDaoTest {
         final Member member = memberDao.findByEmail("kangsj9665@gmail.com");
         final Long orderId = orderDao.create(OrderEntity.toCreate(member.getId(), 300, 400));
         final List<OrderItemEntity> orderItemEntities = products.stream()
-                .map(product -> OrderItemEntity.toCreate(product.getId(), orderId, 2))
+                .map(product -> OrderItemEntity.toCreate(
+                        orderId,
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getImageUrl(),
+                        2
+                ))
                 .collect(Collectors.toUnmodifiableList());
 
         //when

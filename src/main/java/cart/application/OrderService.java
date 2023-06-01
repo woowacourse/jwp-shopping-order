@@ -4,7 +4,6 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.CreditCard;
 import cart.domain.Member;
@@ -32,20 +31,17 @@ public class OrderService {
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
     private final MemberDao memberDao;
-    private final ProductDao productDao;
 
     public OrderService(
             final CartItemDao cartItemDao,
             final OrderDao orderDao,
             final OrderItemDao orderItemDao,
-            final MemberDao memberDao,
-            final ProductDao productDao
+            final MemberDao memberDao
     ) {
         this.cartItemDao = cartItemDao;
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.memberDao = memberDao;
-        this.productDao = productDao;
     }
 
     @Transactional
@@ -88,8 +84,10 @@ public class OrderService {
     private void createOrderItems(final List<CartItem> cartItemsToOrder, final Long orderId) {
         final List<OrderItemEntity> orderItemEntities = cartItemsToOrder.stream()
                 .map(cartItem -> OrderItemEntity.toCreate(
-                        cartItem.getProduct().getId(),
-                        orderId,
+                        orderId, cartItem.getProduct().getId(),
+                        cartItem.getProduct().getName(),
+                        cartItem.getProduct().getPrice(),
+                        cartItem.getProduct().getImageUrl(),
                         cartItem.getQuantity()
                 ))
                 .collect(Collectors.toUnmodifiableList());
@@ -102,14 +100,7 @@ public class OrderService {
         validateOwner(member, orderEntity);
 
         final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(id);
-        final List<OrderItem> orderItems = orderItemEntities.stream()
-                .map(orderItemEntity -> new OrderItem(
-                        orderItemEntity.getId(),
-                        orderItemEntity.getQuantity(),
-                        productDao.findById(orderItemEntity.getProductId()),
-                        member
-                ))
-                .collect(Collectors.toUnmodifiableList());
+        final List<OrderItem> orderItems = OrderItemEntity.toDomain(orderItemEntities, member);
 
         final Order order = new Order(
                 orderEntity.getId(),
@@ -139,5 +130,27 @@ public class OrderService {
             return;
         }
         throw new IllegalMemberException("주문자와 로그인한 사용자의 정보가 일치하지 않습니다.");
+    }
+
+    public List<OrderDetailResponse> findOrders(final Member member) {
+        final List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
+        orderEntities.forEach(orderEntity -> validateOwner(member, orderEntity));
+        final List<Order> orders = orderEntities.stream()
+                .map(orderEntity -> new Order(
+                        orderEntity.getId(),
+                        OrderItemEntity.toDomain(orderItemDao.findByOrderId(orderEntity.getId()), member),
+                        orderEntity.getUsedPoint(),
+                        orderEntity.getSavedPoint(),
+                        orderEntity.getOrderedAt()
+                )).collect(Collectors.toUnmodifiableList());
+        return orders.stream()
+                .map(order -> new OrderDetailResponse(
+                        order.getId(),
+                        order.getUsedPoint().getValue(),
+                        order.getSavedPoint().getValue(),
+                        order.getOrderedAt(),
+                        OrderItemResponse.from(order.getOrderItems())
+                ))
+                .collect(Collectors.toUnmodifiableList());
     }
 }

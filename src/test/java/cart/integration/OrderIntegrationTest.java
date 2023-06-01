@@ -9,15 +9,18 @@ import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Point;
 import cart.domain.Product;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderDetailResponse;
+import cart.dto.OrderItemResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,41 +41,135 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private Member member;
+
+    @Override
+    @BeforeEach
+    void setUp() {
+        super.setUp();
+        member = memberDao.findByEmail("yis092521@gmail.com");
+    }
 
     @Test
     @DisplayName("주문 정보를 저장, 조회한다.")
     void createOrder() throws JsonProcessingException {
-        Member member = memberDao.findByEmail("yis092521@gmail.com");
         final List<Product> products = productDao.findAll();
-        final ArrayList<Long> cartItemIds = new ArrayList<>();
-        products.forEach(product -> cartItemIds.add(cartItemDao.save(new CartItem(member, product))));
-        final OrderCreateRequest request = new OrderCreateRequest(cartItemIds, "1234-1234-1234-1234", 345,
-                300);
-        final String location = given()
+        final List<Long> cartItemIds = products.stream()
+                .map(product -> cartItemDao.save(new CartItem(member, product)))
+                .collect(Collectors.toUnmodifiableList());
+
+        final OrderCreateRequest request = new OrderCreateRequest(
+                cartItemIds,
+                "1234-1234-1234-1234",
+                345,
+                300
+        );
+
+        final String location = requestForCreateOrder(request).header("Location");
+
+        final ExtractableResponse<Response> response = requestForFindOrderDetail(location);
+
+        final OrderDetailResponse orderDetailResponse = response.jsonPath()
+                .getObject(".", OrderDetailResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(orderDetailResponse.getUsedPoint()).isEqualTo(300),
+                () -> assertThat(orderDetailResponse.getSavedPoint()).isEqualTo(calculateExpectedPoint(products)),
+                () -> assertThat(orderDetailResponse.getProducts()).extracting(OrderItemResponse::getProduct)
+                        .usingRecursiveComparison()
+                        .isEqualTo(products)
+        );
+    }
+
+    @Test
+    @DisplayName("사용자의 전체 주문 정보를 불러온다.")
+    void findOrders() throws JsonProcessingException {
+        final List<Product> products = productDao.findAll();
+        final List<Long> cartItemIds = products.stream()
+                .map(product -> cartItemDao.save(new CartItem(member, product)))
+                .collect(Collectors.toUnmodifiableList());
+
+        final List<Product> productsWithoutPizza = products.stream()
+                .filter(product -> !(product.getName().equals("피자")))
+                .collect(Collectors.toUnmodifiableList());
+
+        final List<Long> cartItemsForAnotherOrder = productsWithoutPizza.stream()
+                .map(product -> cartItemDao.save(new CartItem(member, product)))
+                .collect(Collectors.toUnmodifiableList());
+
+        final OrderCreateRequest request = new OrderCreateRequest(
+                cartItemIds,
+                "1234-1234-1234-1234",
+                345,
+                300
+        );
+        final OrderCreateRequest requestForAnotherMember = new OrderCreateRequest(
+                cartItemsForAnotherOrder,
+                "1234-1234-1234-1234",
+                345,
+                500
+        );
+        requestForCreateOrder(request);
+        requestForCreateOrder(requestForAnotherMember);
+
+        final var response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders")
+                .then()
+                .extract();
+
+        final var orderDetailResponses = response.jsonPath().getList(".", OrderDetailResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(orderDetailResponses).hasSize(2),
+
+                () -> assertThat(orderDetailResponses.get(0).getUsedPoint()).isEqualTo(300),
+                () -> assertThat(orderDetailResponses.get(0).getSavedPoint()).isEqualTo(
+                        calculateExpectedPoint(products)),
+                () -> assertThat(orderDetailResponses.get(0).getProducts()).extracting(OrderItemResponse::getProduct)
+                        .usingRecursiveComparison()
+                        .isEqualTo(products),
+
+                () -> assertThat(orderDetailResponses.get(1).getUsedPoint()).isEqualTo(500),
+                () -> assertThat(orderDetailResponses.get(1).getSavedPoint()).isEqualTo(
+                        calculateExpectedPoint(productsWithoutPizza)),
+                () -> assertThat(orderDetailResponses.get(1).getProducts()).extracting(OrderItemResponse::getProduct)
+                        .usingRecursiveComparison()
+                        .isEqualTo(productsWithoutPizza)
+        );
+    }
+
+    private ExtractableResponse<Response> requestForCreateOrder(final OrderCreateRequest request)
+            throws JsonProcessingException {
+        return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(objectMapper.writeValueAsString(request))
                 .when()
                 .post("/orders")
                 .then()
-                .extract().header("Location");
+                .extract();
+    }
 
-        final ExtractableResponse<Response> response = given()
+    private ExtractableResponse<Response> requestForFindOrderDetail(final String location) {
+        return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .get(location)
                 .then()
                 .extract();
+    }
 
-        final OrderDetailResponse orderDetailResponse = response.jsonPath()
-                .getObject(".", OrderDetailResponse.class);
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(orderDetailResponse.getUsedPoint()).isEqualTo(300),
-                () -> assertThat(orderDetailResponse.getSavedPoint()).isEqualTo(
-                        products.stream().mapToInt(Product::getPrice)
-                                .sum() / 10)
-        );
+    private int calculateExpectedPoint(final List<Product> products) {
+        return Point.fromPayment(
+                products.stream()
+                        .mapToInt(Product::getPrice)
+                        .sum()
+        ).getValue();
     }
 }

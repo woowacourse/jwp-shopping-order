@@ -36,10 +36,13 @@ CREATE TABLE IF NOT EXISTS shopping_order
 
 CREATE TABLE IF NOT EXISTS ordered_item
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    product_id BIGINT NOT NULL,
-    order_id   BIGINT NOT NULL,
-    quantity   INT    NOT NULL,
+    id                         BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id                 BIGINT       NOT NULL,
+    order_id                   BIGINT       NOT NULL,
+    product_name_at_order      VARCHAR(255) NOT NULL,
+    product_price_at_order     INT          NOT NULL,
+    product_image_url_at_order VARCHAR(255) NOT NULL,
+    quantity                   INT          NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (order_id) REFERENCES shopping_order (id)
 );
