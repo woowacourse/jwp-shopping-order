@@ -12,22 +12,26 @@ public class Order {
     private Long id;
     private final Member member;
     private final MemberPoint usedPoint;
+    private final MemberPoint savedPoint;
     private final DeliveryFee deliveryFee;
     private LocalDateTime orderedAt;
 
-    public Order(final Member member, final MemberPoint usedPoint, final DeliveryFee deliveryFee) {
+    public Order(final Member member, final MemberPoint usedPoint, final MemberPoint savedPoint, final DeliveryFee deliveryFee) {
         this.member = member;
         this.usedPoint = usedPoint;
+        this.savedPoint = savedPoint;
         this.deliveryFee = deliveryFee;
     }
 
     public Order(final Long id, final Member member,
                  final MemberPoint usedPoint,
+                 final MemberPoint savedPoint,
                  final DeliveryFee deliveryFee,
                  final LocalDateTime orderedAt) {
         this.id = id;
         this.member = member;
         this.usedPoint = usedPoint;
+        this.savedPoint = savedPoint;
         this.deliveryFee = deliveryFee;
         this.orderedAt = orderedAt;
     }
@@ -56,6 +60,14 @@ public class Order {
 
     public Integer getUsedPointValue() {
         return usedPoint.getPoint();
+    }
+
+    public MemberPoint getSavedPoint() {
+        return savedPoint;
+    }
+
+    public Integer getSavedPointValue() {
+        return savedPoint.getPoint();
     }
 
     public DeliveryFee getDeliveryFee() {

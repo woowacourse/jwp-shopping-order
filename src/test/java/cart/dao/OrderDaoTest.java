@@ -28,7 +28,7 @@ public class OrderDaoTest {
     void insertAndFind() {
         // given
         final Member member = new Member(1L, "a@a.com", null);
-        final Order order = new Order(member, new MemberPoint(1000), new DeliveryFee(3000));
+        final Order order = new Order(member, new MemberPoint(1000), new MemberPoint(500), new DeliveryFee(3000));
         final Long orderId = orderDao.insert(order);
 
         // when
@@ -43,9 +43,9 @@ public class OrderDaoTest {
     void findAllByMemberId() {
         // given
         final Member member = new Member(1L, "a@a.com", null);
-        final Order order1 = new Order(member, new MemberPoint(1000), new DeliveryFee(3000));
-        final Order order2 = new Order(member, new MemberPoint(2000), new DeliveryFee(3000));
-        final Order order3 = new Order(member, new MemberPoint(3000), new DeliveryFee(0));
+        final Order order1 = new Order(member, new MemberPoint(1000), new MemberPoint(500), new DeliveryFee(3000));
+        final Order order2 = new Order(member, new MemberPoint(2000), new MemberPoint(500), new DeliveryFee(3000));
+        final Order order3 = new Order(member, new MemberPoint(3000), new MemberPoint(500), new DeliveryFee(0));
         final Long orderId1 = orderDao.insert(order1);
         final Long orderId2 = orderDao.insert(order2);
         final Long orderId3 = orderDao.insert(order3);

@@ -33,7 +33,8 @@ public class OrderRepository {
     }
 
     public Long save(final CartItems cartItems, final Member member, final MemberPoint usedPoint) {
-        final Long orderId = orderDao.insert(new Order(member, usedPoint, new DeliveryFee(cartItems.getDeliveryFee())));
+        final Order order = new Order(member, usedPoint, cartItems.getSavedPoint(), new DeliveryFee(cartItems.getDeliveryFee()));
+        final Long orderId = orderDao.insert(order);
         final Order findOrder = orderDao.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
         final List<Product> products = productDao.findAllByIds(cartItems.getProductIds());

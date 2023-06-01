@@ -1,6 +1,7 @@
 package cart.domain.cartitem;
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberPoint;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.product.Product;
@@ -12,17 +13,25 @@ import java.util.stream.IntStream;
 
 public class CartItems {
 
-    public static final int DELIVERY_FEE = 3000;
-    public static final int SALE_THRESHOLD = 50_000;
+    private static final int DELIVERY_FEE = 3000;
+    private static final int SALE_THRESHOLD = 50_000;
+    private static final double SALE_RATE = 0.1;
+
 
     private final List<CartItem> cartItems;
     private final int totalPrice;
     private final int deliveryFee;
+    private final MemberPoint savedPoint;
 
     public CartItems(final List<CartItem> cartItems) {
         this.cartItems = cartItems;
         this.totalPrice = calculateTotalPrice(cartItems);
         this.deliveryFee = calculateDeliveryFee(totalPrice);
+        this.savedPoint = new MemberPoint(calculateSavedPoint(totalPrice));
+    }
+
+    private int calculateSavedPoint(final int price) {
+        return (int) (price * SALE_RATE);
     }
 
     private int calculateTotalPrice(final List<CartItem> cartItems) {
@@ -77,5 +86,9 @@ public class CartItems {
 
     public int getDeliveryFee() {
         return deliveryFee;
+    }
+
+    public MemberPoint getSavedPoint() {
+        return savedPoint;
     }
 }

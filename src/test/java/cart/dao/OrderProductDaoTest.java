@@ -40,7 +40,7 @@ public class OrderProductDaoTest {
     @BeforeEach
     void setUp() {
         final Member member = new Member(1L, "a@a.com", null);
-        final Order order = new Order(member, new MemberPoint(1000), new DeliveryFee(3000));
+        final Order order = new Order(member, new MemberPoint(1000), new MemberPoint(500), new DeliveryFee(3000));
         final Product product1 = new Product("초콜릿", 500, "초콜릿URL");
         final Product product2 = new Product("사탕", 1000, "사탕URL");
         orderId = orderDao.insert(order);

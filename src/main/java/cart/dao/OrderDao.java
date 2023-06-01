@@ -26,7 +26,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("orders")
-                .usingColumns("member_id", "used_point", "delivery_fee")
+                .usingColumns("member_id", "used_point", "saved_point", "delivery_fee")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -41,6 +41,7 @@ public class OrderDao {
                 result.getLong("order_id"),
                 member,
                 new MemberPoint(result.getInt("used_point")),
+                new MemberPoint(result.getInt("saved_point")),
                 new DeliveryFee(result.getInt("delivery_fee")),
                 result.getTimestamp("created_at").toLocalDateTime());
     };
@@ -49,13 +50,14 @@ public class OrderDao {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", order.getMemberId())
                 .addValue("used_point", order.getUsedPointValue())
+                .addValue("saved_point", order.getSavedPointValue())
                 .addValue("delivery_fee", order.getDeliveryFeeValue());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public Optional<Order> findById(final Long id) {
-        final String sql = "SELECT o.id AS order_id, o.used_point, o.created_at, o.delivery_fee, " +
+        final String sql = "SELECT o.id AS order_id, o.used_point, o.saved_point, o.created_at, o.delivery_fee, " +
                 "m.id AS member_id, m.email, m.point " +
                 "FROM orders o " +
                 "JOIN member m ON m.id = o.member_id " +
@@ -68,7 +70,7 @@ public class OrderDao {
     }
 
     public List<Order> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT o.id AS order_id, o.used_point, o.created_at, o.delivery_fee, " +
+        final String sql = "SELECT o.id AS order_id, o.used_point, o.saved_point, o.created_at, o.delivery_fee, " +
                 "m.id AS member_id, m.email, m.point " +
                 "FROM orders o " +
                 "JOIN member m ON m.id = o.member_id " +
