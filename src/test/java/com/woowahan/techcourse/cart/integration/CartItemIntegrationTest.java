@@ -98,7 +98,7 @@ class CartItemIntegrationTest extends IntegrationTest {
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
                 .getList(".", CartItemResponse.class)
                 .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
+                .filter(cartItemResponse -> cartItemResponse.getId() == cartItemId)
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isTrue();
@@ -118,7 +118,7 @@ class CartItemIntegrationTest extends IntegrationTest {
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
                 .getList(".", CartItemResponse.class)
                 .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
+                .filter(cartItemResponse -> cartItemResponse.getId() == cartItemId)
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
@@ -148,10 +148,10 @@ class CartItemIntegrationTest extends IntegrationTest {
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
                 .getList(".", CartItemResponse.class)
                 .stream()
-                .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
+                .filter(cartItemResponse -> cartItemResponse.getId() == cartItemId)
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        assertThat(selectedCartItemResponse).isEmpty();
     }
 
     private Long createProduct(ProductRequest productRequest) {
