@@ -1,14 +1,10 @@
-package cart.application;
+package cart.application.order;
 
 import cart.domain.CartItems;
-import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.coupon.Coupon;
-import cart.dto.OrderItemResponse;
 import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
-import cart.dto.ProductResponse;
 import cart.exception.AlreadyUsedCouponException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
@@ -17,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -82,20 +76,4 @@ public class OrderService {
         return coupon;
     }
 
-    @Transactional(readOnly = true)
-    public List<OrderResponse> findOrderByMember(final Member member) {
-        final List<Order> orders = orderRepository.findOrderByMemberId(member.getId());
-        return orders.stream()
-                .map(order -> new OrderResponse(
-                        order.getId(),
-                        order.getOrderItems().stream()
-                                .map(orderItem -> new OrderItemResponse(
-                                        orderItem.getId(),
-                                        orderItem.getQuantity(),
-                                        ProductResponse.from(orderItem)))
-                                .collect(toList()),
-                        Date.from(order.getDate().atZone(ZoneId.systemDefault()).toInstant()),
-                        order.getPrice())
-                ).collect(toList());
-    }
 }

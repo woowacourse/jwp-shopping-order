@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.application.OrderService;
+import cart.application.order.OrderProvider;
+import cart.application.order.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -17,9 +18,11 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderProvider orderProvider;
 
-    public OrderController(final OrderService orderService) {
+    public OrderController(final OrderService orderService, final OrderProvider orderProvider) {
         this.orderService = orderService;
+        this.orderProvider = orderProvider;
     }
 
     @PostMapping
@@ -36,7 +39,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getOrder(final Member member) {
-        final List<OrderResponse> orderResponses = orderService.findOrderByMember(member);
+        final List<OrderResponse> orderResponses = orderProvider.findOrderByMember(member);
         return ResponseEntity.ok(orderResponses);
     }
 }
