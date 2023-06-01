@@ -18,10 +18,16 @@ import static cart.acceptance.product.ProductSteps.상품_생성_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.acceptance.AcceptanceTest;
+import cart.coupon.domain.DiscountType;
+import cart.coupon.domain.TargetType;
+import cart.coupon.infrastructure.dao.CouponDao;
+import cart.coupon.infrastructure.entity.CouponEntity;
 import cart.member.domain.Member;
 import cart.member.infrastructure.persistence.dao.MemberDao;
 import cart.order.presentation.dto.OrderResponse;
 import cart.order.presentation.dto.OrderResponses;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -37,6 +43,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Autowired
     private MemberDao memberDao;
 
+    @Autowired
+    private CouponDao couponDao;
+
     private Member 회원;
 
     @BeforeEach
@@ -44,6 +53,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         super.setUp();
         memberDao.addMember(new Member(null, "email", "1234"));
         회원 = memberDao.getMemberById(1L);
+        couponDao.save(new CouponEntity(1L,
+                "전체 비율 할인 쿠폰",
+                회원.getId(),
+                DiscountType.RATE,
+                TargetType.ALL,
+                null,
+                50));
     }
 
     @Test
@@ -58,7 +74,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         장바구니_상품_수량_변경_요청(회원, 장바구니_말랑_ID, 10);
 
         // when
-        var 응답 = 상품_주문_요청(회원, 장바구니_말랑_ID, 장바구니_코코닥_ID);
+        var 응답 = 상품_주문_요청(회원, List.of(장바구니_말랑_ID, 장바구니_코코닥_ID), Collections.emptyList());
 
         // then
         응답을_검증한다(응답, 정상_생성);
@@ -68,6 +84,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void 단일_주문_정보를_조회한다() {
         // given
+
         Long 말랑_ID = 생성된_ID(상품_생성_요청("말랑", 1000, "image"));
         Long 코코닥_ID = 생성된_ID(상품_생성_요청("코코닥", 2000, "image"));
 
@@ -76,15 +93,15 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         장바구니_상품_수량_변경_요청(회원, 장바구니_말랑_ID, 10);
 
-        Long 주문_ID = 생성된_ID(상품_주문_요청(회원, 장바구니_말랑_ID, 장바구니_코코닥_ID));
+        Long 주문_ID = 생성된_ID(상품_주문_요청(회원, List.of(장바구니_말랑_ID, 장바구니_코코닥_ID), List.of(1L)));
 
         // when
         OrderResponse 주문_정보 = 단일_주문_정보_조회_요청(회원, 주문_ID);
 
         // then
-        OrderResponse 예상_주문_정보 = 주문_정보(주문_ID, 12000,
-                주문_상품_정보(null, "말랑", 10000, 10, "image"),
-                주문_상품_정보(null, "코코닥", 2000, 1, "image")
+        OrderResponse 예상_주문_정보 = 주문_정보(주문_ID, 6000,
+                주문_상품_정보(null, "말랑", 10000, 5000, 10, "image"),
+                주문_상품_정보(null, "코코닥", 2000, 1000, 1, "image")
         );
         주문_정보_검증(주문_정보, 예상_주문_정보);
     }
@@ -98,10 +115,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long 장바구니_말랑_ID = 생성된_ID(장바구니_상품_추가_요청(회원, 말랑_ID));
         Long 장바구니_코코닥_ID = 생성된_ID(장바구니_상품_추가_요청(회원, 코코닥_ID));
         장바구니_상품_수량_변경_요청(회원, 장바구니_말랑_ID, 10);
-        Long 주문_ID = 생성된_ID(상품_주문_요청(회원, 장바구니_말랑_ID, 장바구니_코코닥_ID));
+        Long 주문_ID = 생성된_ID(상품_주문_요청(회원, List.of(장바구니_말랑_ID, 장바구니_코코닥_ID), Collections.emptyList()));
 
         Long 장바구니_말랑_ID2 = 생성된_ID(장바구니_상품_추가_요청(회원, 말랑_ID));
-        Long 주문2_ID = 생성된_ID(상품_주문_요청(회원, 장바구니_말랑_ID2));
+        Long 주문2_ID = 생성된_ID(상품_주문_요청(회원, List.of(장바구니_말랑_ID2), Collections.emptyList()));
 
         // when
         OrderResponses 주문들_정보 = 회원의_주문_정보_조회_요청(회원);
@@ -109,11 +126,11 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         // then
         OrderResponses 예상 = 주문들_정보(
                 주문_정보(주문_ID, 12000,
-                        주문_상품_정보(null, "말랑", 10000, 10, "image"),
-                        주문_상품_정보(null, "코코닥", 2000, 1, "image")
+                        주문_상품_정보(null, "말랑", 10000, 10000, 10, "image"),
+                        주문_상품_정보(null, "코코닥", 2000, 2000, 1, "image")
                 ),
                 주문_정보(주문2_ID, 1000,
-                        주문_상품_정보(null, "말랑", 1000, 1, "image")
+                        주문_상품_정보(null, "말랑", 1000, 1000, 1, "image")
                 )
         );
         주문들_정보_검증(주문들_정보, 예상);

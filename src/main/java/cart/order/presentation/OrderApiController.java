@@ -33,7 +33,7 @@ public class OrderApiController {
             Member member,
             @RequestBody PlaceOrderRequest request
     ) {
-        PlaceOrderCommand command = new PlaceOrderCommand(member.getId(), request.getCartItemIds());
+        PlaceOrderCommand command = new PlaceOrderCommand(member.getId(), request.getCartItemIds(), request.getCouponIds());
         Long id = orderService.place(command);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }

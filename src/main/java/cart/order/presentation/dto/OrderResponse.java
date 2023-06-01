@@ -40,13 +40,15 @@ public class OrderResponse {
         private final Long orderItemId;
         private final String name;
         private final int price;
+        private final int orderedPrice;
         private final int quantity;
         private final String imageUrl;
 
-        public OrderItemResponse(Long orderItemId, String name, int price, int quantity, String imageUrl) {
+        public OrderItemResponse(Long orderItemId, String name, int price, int orderedPrice, int quantity, String imageUrl) {
             this.orderItemId = orderItemId;
             this.name = name;
             this.price = price;
+            this.orderedPrice = orderedPrice;
             this.quantity = quantity;
             this.imageUrl = imageUrl;
         }
@@ -56,6 +58,7 @@ public class OrderResponse {
                     orderItem.getId(),
                     orderItem.getName(),
                     orderItem.price(),
+                    orderItem.orderedPrice(),
                     orderItem.getQuantity(),
                     orderItem.getImageUrl());
         }
@@ -76,6 +79,10 @@ public class OrderResponse {
 
         public int getPrice() {
             return price;
+        }
+
+        public int getOrderedPrice() {
+            return orderedPrice;
         }
 
         public int getQuantity() {
