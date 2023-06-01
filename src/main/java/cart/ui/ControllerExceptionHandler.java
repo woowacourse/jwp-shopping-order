@@ -21,8 +21,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @ExceptionHandler(Exception.class) // TODO 서버 에러 클라이언트에게 숨기기
-    public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
-        return ResponseEntity.internalServerError().body(new ErrorResponse(e.getMessage()));
-    }
+//    @ExceptionHandler(Exception.class) // TODO 서버 에러 클라이언트에게 숨기기
+//    public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
+//        return ResponseEntity.internalServerError().body(new ErrorResponse(e.getMessage()));
+//    }
 }
