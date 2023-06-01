@@ -19,7 +19,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.WebMvcConfig;
+import cart.configuration.WebMvcConfig;
 import cart.application.ProductService;
 import cart.domain.Product;
 import cart.dto.ProductRequest;

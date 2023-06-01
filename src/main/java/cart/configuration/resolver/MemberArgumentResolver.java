@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.configuration.resolver;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;

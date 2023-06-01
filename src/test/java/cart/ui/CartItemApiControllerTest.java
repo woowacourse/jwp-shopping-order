@@ -21,8 +21,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.WebMvcConfig;
+import cart.configuration.WebMvcConfig;
 import cart.application.CartItemService;
+import cart.configuration.resolver.MemberArgumentResolver;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
