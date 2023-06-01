@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS orders
 (
     id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT    NOT NULL,
-    product_id BIGINT    NOT NULL,
     used_money INT       NOT NULL,
     used_point INT       NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -37,6 +36,7 @@ CREATE TABLE IF NOT EXISTS order_detail
 (
     id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id        BIGINT NOT NULL,
+    product_id       BIGINT NOT NULL,
     product_name     TEXT   NULL,
     product_image    TEXT   NULL,
     product_quantity INT    NULL,
