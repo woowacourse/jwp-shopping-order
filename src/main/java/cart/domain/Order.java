@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
+import cart.exception.OrderException;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Order {
 
     private Order(Long id, List<CartItem> cartItems, OffsetDateTime orderTime) {
         checkQuantityLimit(cartItems);
+        checkItemExist(cartItems);
         this.id = id;
         this.cartItems = cartItems;
         this.orderTime = orderTime;
@@ -40,6 +42,12 @@ public class Order {
         }
     }
 
+    private void checkItemExist(List<CartItem> cartItems) {
+        if (cartItems.isEmpty()) {
+            throw new OrderException.EmptyCart();
+        }
+    }
+
     private int sumQuantities(List<CartItem> cartItems) {
         return cartItems.stream()
                 .mapToInt(CartItem::getQuantity)
@@ -62,5 +70,9 @@ public class Order {
 
     public OffsetDateTime getOrderTime() {
         return orderTime;
+    }
+
+    public Member getOrderingMember() {
+        return cartItems.get(0).getMember();
     }
 }

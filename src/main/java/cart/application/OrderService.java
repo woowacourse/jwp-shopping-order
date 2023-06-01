@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.dao.OrderDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -14,10 +15,12 @@ import java.util.List;
 public class OrderService {
 
     private final CartItemService cartItemService;
+    private final OrderDao orderDao;
     private final OrderCalculator orderCalculator;
 
-    public OrderService(CartItemService cartItemService, OrderCalculator orderCalculator) {
+    public OrderService(CartItemService cartItemService, OrderDao orderDao, OrderCalculator orderCalculator) {
         this.cartItemService = cartItemService;
+        this.orderDao = orderDao;
         this.orderCalculator = orderCalculator;
     }
 
@@ -27,6 +30,8 @@ public class OrderService {
         final Order order = Order.of(member, cartItems);
         orderCalculator.checkPaymentAmount(order, orderRequest.getPaymentAmount());
 
+        orderDao.save(order);
+        cartItemService.remove(member, orderRequest.getCartItems());
         return null;
     }
 }

@@ -40,7 +40,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         final ExtractableResponse<Response> response = 장바구니의_상품을_주문한다(주문_A_치킨_1, price);
 
         // then
-        // TODO: 2023/06/01 주문이 db에 저장이 잘 되어 있는지, 응답으로 온 Location으로 자원을 요청할 수 있는지, 상태코드가 201인지
+        // TODO: 2023/06/01 주문이 db에 저장이 잘 되어 있는지, 장바구니 db에서 해당 item이 없는지, 응답으로 온 Location으로 자원을 요청할 수 있는지, 상태코드가 201인지
     }
 
     @Test

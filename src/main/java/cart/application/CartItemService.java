@@ -54,6 +54,12 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
+    public void remove(Member member, List<Long> cartItemIds) {
+        for (Long cartItemId : cartItemIds) {
+            remove(member, cartItemId);
+        }
+    }
+
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);

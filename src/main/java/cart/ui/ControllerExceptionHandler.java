@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.dto.ErrorResponse;
+import cart.dto.ErrorResponseWithErrorCode;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.OrderException;
@@ -20,7 +21,7 @@ public class ControllerExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({CartItemException.InvalidQuantity.class, OrderException.InvalidAmount.class})
+    @ExceptionHandler({OrderException.InvalidAmount.class})
     public ErrorResponse handleBadRequest(RuntimeException e) {
         return new ErrorResponse(e.getMessage());
     }
@@ -29,6 +30,16 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(CartItemException.NoSuchIds.class)
     public ErrorResponse handleNotFound(RuntimeException e) {
         return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(OrderException.InvalidAmount.class)
+    public ResponseEntity<ErrorResponseWithErrorCode> handleInvalidAmount(RuntimeException e) {
+        return ResponseEntity.status(4001).body(new ErrorResponseWithErrorCode(4001, e.getMessage()));
+    }
+
+    @ExceptionHandler(OrderException.EmptyCart.class)
+    public ResponseEntity<ErrorResponseWithErrorCode> handleEmptyCart(RuntimeException e) {
+        return ResponseEntity.status(4002).body(new ErrorResponseWithErrorCode(4002, e.getMessage()));
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
