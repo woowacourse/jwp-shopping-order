@@ -14,7 +14,7 @@ import cart.dto.OrderInfo;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.OrderedProduct;
-import cart.dto.SpecificOrderResponse;
+import cart.dto.PaymentDto;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -98,9 +98,11 @@ class OrderServiceTest {
         //then
         assertThat(responses).usingRecursiveComparison()
                 .isEqualTo(List.of(new OrderResponse(
-                        1L,
-                        List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)))
-                ));
+                                1L,
+                                List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
+                                new PaymentDto(20000, 19000, 1000))
+                        )
+                );
     }
 
     @Test
@@ -111,14 +113,15 @@ class OrderServiceTest {
                 .thenReturn(Order.from(orderId, MEMBER_HUCHU, 19000, 1000, List.of(new OrderItem(PRODUCT_CHICKEN, 1))));
 
         //when
-        final SpecificOrderResponse response = orderService.getOrderById(MEMBER_HUCHU, orderId);
+        final OrderResponse response = orderService.getOrderById(MEMBER_HUCHU, orderId);
 
         //then
         assertThat(response).usingRecursiveComparison()
-                .isEqualTo(new SpecificOrderResponse(
-                        List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
-                        19000,
-                        1000)
+                .isEqualTo(new OrderResponse(
+                                1L,
+                                List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
+                                new PaymentDto(20000, 19000, 1000)
+                        )
                 );
     }
 }

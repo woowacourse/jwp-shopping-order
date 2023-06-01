@@ -12,7 +12,6 @@ import cart.domain.product.Product;
 import cart.dto.OrderInfo;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.dto.SpecificOrderResponse;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -76,8 +75,8 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public SpecificOrderResponse getOrderById(final Member member, final Long orderId) {
+    public OrderResponse getOrderById(final Member member, final Long orderId) {
         final Order order = orderRepository.getOrderById(member, orderId);
-        return SpecificOrderResponse.from(order);
+        return OrderResponse.from(order);
     }
 }

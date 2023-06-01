@@ -4,7 +4,6 @@ import cart.auth.Auth;
 import cart.domain.member.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.dto.SpecificOrderResponse;
 import cart.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +39,8 @@ public class OrderApiController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<SpecificOrderResponse> getOrder(@Auth final Member member, @PathVariable final Long orderId) {
-        final SpecificOrderResponse response = orderService.getOrderById(member, orderId);
+    public ResponseEntity<OrderResponse> getOrderById(@Auth final Member member, @PathVariable final Long orderId) {
+        final OrderResponse response = orderService.getOrderById(member, orderId);
         return ResponseEntity.ok(response);
     }
 

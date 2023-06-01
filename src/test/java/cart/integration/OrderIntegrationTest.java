@@ -7,8 +7,8 @@ import cart.dto.OrderInfo;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.OrderedProduct;
+import cart.dto.PaymentDto;
 import cart.dto.ProductRequest;
-import cart.dto.SpecificOrderResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
@@ -96,9 +96,9 @@ class OrderIntegrationTest extends IntegrationTest {
             softly.assertThat(orderResponses).usingRecursiveComparison()
                     .isEqualTo(
                             List.of(new OrderResponse(
-                                            1L,
-                                            List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE))
-                                    )
+                                    1L,
+                                    List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
+                                    new PaymentDto(20000, 19000, 1000))
                             ));
         });
     }
@@ -118,17 +118,15 @@ class OrderIntegrationTest extends IntegrationTest {
                 .log().all().extract();
 
         //then
-        final SpecificOrderResponse orderResponse = response.as(SpecificOrderResponse.class);
+        final OrderResponse orderResponse = response.as(OrderResponse.class);
 
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(orderResponse).usingRecursiveComparison()
-                    .isEqualTo(
-                            new SpecificOrderResponse(
-                                    List.of(
-                                            new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
-                                    19000,
-                                    1000
+                    .isEqualTo(new OrderResponse(
+                                    1L,
+                                    List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
+                                    new PaymentDto(20000, 19000, 1000)
                             )
                     );
         });

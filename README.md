@@ -299,36 +299,45 @@ Response
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-{
-    "orders" : [
+[
+    {
         "orderId" : 1,
         "orderedProducts" : [
             {
                 "name": "치킨",
                 "price": 10000,
-                "quantity" : 3
+                "quantity" : 3,
                 "imageUrl": "http://example.com/chicken.jpg"
             },
             {
                 "name": "피자",
                 "price": 15000,
-                "quantity" : 1
+                "quantity" : 1,
                 "imageUrl": "http://example.com/pizza.jpg"
             },
-            (...)
         ],
+        "payment" : {
+            "originalPayment" : 25000,
+            "finalPayment" : 24000,
+            "point" : 1000
+        }
         "orderId" : 2,
         "orderedProducts" : [
             {
                 "name": "치킨",
                 "price": 10000,
-                "quantity" : 3
+                "quantity" : 3,
                 "imageUrl": "http://example.com/chicken.jpg"
             },
-            (...)
         ],
-    ]
-}
+        "payment" : {
+            "originalPayment" : 10000,
+            "finalPayment" : 10000,
+            "point" : 0
+        }
+    }
+]
+
 ```
 
 ### 특정 주문 조회
@@ -348,6 +357,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
+    "orderId" : 1,
     "orderedProducts" : [
         {
             "name": "치킨",
@@ -361,10 +371,12 @@ Content-Type: application/json
             "quantity" : 1
             "imageUrl": "http://example.com/pizza.jpg"
         }
-        (...)
     ],
-    "totalPayment" : 40000      
-    "point" : 5000
+    "payment" : {
+        "originalPayment" : 25000, 
+        "finalPayment" : 24000,      
+        "point" : 1000
+    }
 }
 ```
 
@@ -403,7 +415,7 @@ CREATE TABLE member if not exists (
      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) NOT NULL UNIQUE,
      password VARCHAR(255) NOT NULL,
-     point BIGINT UNSIGNED NOT NULL
+     point BIGINT NOT NULL
 );
 
 CREATE TABLE cart_item if not exists (
@@ -417,18 +429,18 @@ CREATE TABLE cart_item if not exists (
 
 CREATE TABLE order if not exists (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT UNSIGNED NOT NULL,
-    payment BIGINT UNSIGNED NOT NULL,
-    discount_point BIGINT UNSIGNED NOT NULL,
+    member_id BIGINT NOT NULL,
+    payment BIGINT NOT NULL,
+    discount_point BIGINT NOT NULL,
     order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
 CREATE TABLE order_detail if not exists (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT UNSIGNED NOT NULL,
-    product_id BIGINT UNSIGNED NOT NULL,
-    quantity BIGINT UNSIGNED NOT NULL,
+    order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity BIGINT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES order(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );

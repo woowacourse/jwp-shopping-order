@@ -10,13 +10,15 @@ public class OrderResponse {
 
     private Long orderId;
     private List<OrderedProduct> orderedProducts;
+    private PaymentDto payment;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(final Long orderId, final List<OrderedProduct> orderedProducts) {
+    public OrderResponse(final Long orderId, final List<OrderedProduct> orderedProducts, final PaymentDto payment) {
         this.orderId = orderId;
         this.orderedProducts = orderedProducts;
+        this.payment = payment;
     }
 
     public static OrderResponse from(final Order order) {
@@ -24,8 +26,7 @@ public class OrderResponse {
         final List<OrderedProduct> orderedProducts = orderItems.stream()
                 .map(OrderedProduct::from)
                 .collect(Collectors.toUnmodifiableList());
-
-        return new OrderResponse(order.getId(), orderedProducts);
+        return new OrderResponse(order.getId(), orderedProducts, PaymentDto.from(order));
     }
 
     public Long getOrderId() {
@@ -34,5 +35,9 @@ public class OrderResponse {
 
     public List<OrderedProduct> getOrderedProducts() {
         return orderedProducts;
+    }
+
+    public PaymentDto getPayment() {
+        return payment;
     }
 }
