@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class OrderDao {
 
@@ -29,6 +31,12 @@ public class OrderDao {
                     rs.getInt("discount_price"),
                     rs.getBoolean("confirm_state")
             );
+
+    public List<OrderEntity> findAllByMemberId(Long memberId) {
+        String sql = "select * from orders where member_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
 
     public Long saveOrder(OrderEntity orderEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(orderEntity);

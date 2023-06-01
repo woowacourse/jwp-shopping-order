@@ -36,4 +36,13 @@ class OrderDaoTest {
 
         assertDoesNotThrow(() -> orderDao.saveOrder(orderEntity));
     }
+
+    @Test
+    @DisplayName("주문을 조회한다.")
+    void findAllByMember() {
+        Member member = memberDao.getMemberById(1L);
+        OrderEntity orderEntity = new OrderEntity(member.getId(), member.getId(), 10000, 10000, false);
+
+        assertDoesNotThrow(() -> orderDao.saveOrder(orderEntity));
+    }
 }

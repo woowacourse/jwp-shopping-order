@@ -2,14 +2,13 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.dto.response.OrdersResponse;
 import cart.dto.request.OrderRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -22,5 +21,11 @@ public class OrderController {
     public ResponseEntity<Void> saveOrder(Member member, @RequestBody OrderRequest orderRequest) {
         Long savedId = orderService.save(member, orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + savedId)).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrdersResponse>> getOrders(Member member) {
+        List<OrdersResponse> orders = orderService.findAllByMemberId(member);
+        return ResponseEntity.ok(orders);
     }
 }

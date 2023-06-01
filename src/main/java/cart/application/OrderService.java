@@ -7,13 +7,17 @@ import cart.domain.repository.CartItemRepository;
 import cart.domain.repository.OrderProductRepository;
 import cart.domain.repository.OrderRepository;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.OrdersResponse;
 import cart.exception.OrderException;
 import cart.domain.repository.MemberCouponRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final MemberCouponRepository memberCouponRepository;
@@ -44,4 +48,11 @@ public class OrderService {
         memberCouponRepository.changeUserUsedCouponAvailability(order.getCoupon());
         return orderSavedId;
     }
+
+    @Transactional(readOnly = true)
+    public List<OrdersResponse> findAllByMemberId(Member member) {
+        return orderRepository.findAllByMemberId(member).stream()
+                .map(OrdersResponse::of).collect(Collectors.toList());
+    }
+
 }

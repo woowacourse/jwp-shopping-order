@@ -20,8 +20,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler({CartItemException.class, CouponException.class, OrderException.class, ProductException.class})
-    public ResponseEntity<Void> handleException(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<String> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
-
 }

@@ -60,6 +60,27 @@ public class OrderIntegerationTest extends IntegrationTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @Test
+    @DisplayName("모든 주문 내역을 조회한다.")
+    void getOrders() {
+        saveProduct();
+        saveCartItem();
+        given().log().uri()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + encoded)
+                .body(orderRequest)
+                .when().post("/orders")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
+
+        given().log().uri()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + encoded)
+                .when().get("/orders")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
     private void saveCartItem() {
         given().log().uri()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

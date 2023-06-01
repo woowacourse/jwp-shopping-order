@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.OrderProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -16,6 +17,16 @@ public class OrderProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<OrderProductEntity> rowMapper = (rs, rowNum) ->
+            new OrderProductEntity(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("image_url"),
+                    rs.getInt("price"),
+                    rs.getInt("quantity"),
+                    rs.getLong("order_id")
+            );
+
     public void saveOrderProductsByOrderId(Long orderSavedId, List<OrderProductEntity> orderProducts) {
         String sql = "Insert into order_product (name,image_url,price,quantity,order_id) VALUES (?,?,?,?,?)";
 
@@ -27,5 +38,11 @@ public class OrderProductDao {
                     preparedStatement.setInt(4, entity.getQuantity());
                     preparedStatement.setLong(5, orderSavedId);
                 });
+    }
+
+    public List<OrderProductEntity> findAllByOrderId(Long orderId) {
+        String sql = "Select * from order_product where order_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 }
