@@ -10,7 +10,7 @@ public class OrderItem {
 
     private final Long id;
     private final Name name;
-    private final Money money;
+    private final Money price;
     private final ImageUrl imageUrl;
     private final Quantity quantity;
     private final DiscountRate discountRate;
@@ -24,7 +24,7 @@ public class OrderItem {
     ) {
         this.id = null;
         this.name = new Name(name);
-        this.money = new Money(price);
+        this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.quantity = new Quantity(quantity);
         this.discountRate = new DiscountRate(discountRate);
@@ -40,14 +40,26 @@ public class OrderItem {
     ) {
         this.id = id;
         this.name = new Name(name);
-        this.money = new Money(price);
+        this.price = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.quantity = new Quantity(quantity);
         this.discountRate = new DiscountRate(discountRate);
     }
 
-    public int getDiscountedPrice() {
-        return (int) (money.getValue() * (1 - (double) (discountRate.getValue() / 100)));
+    public boolean isMemberDiscount() {
+        return discountRate.getValue() == 0;
+    }
+
+    public boolean isProductDiscount() {
+        return discountRate.getValue() != 0;
+    }
+
+    public int calculateDiscountedPriceBy(final double discountRate) {
+        return (int) (price.getValue() * (1 - (discountRate / 100.0)));
+    }
+
+    public int calculateDiscountedPrice() {
+        return (int) (price.getValue() * (1 - (discountRate.getValue() / 100.0)));
     }
 
     public Long getId() {
@@ -59,7 +71,7 @@ public class OrderItem {
     }
 
     public int getPrice() {
-        return money.getValue();
+        return price.getValue();
     }
 
     public String getImageUrl() {

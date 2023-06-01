@@ -44,12 +44,23 @@ public class Order {
     public int calculateDiscountedTotalItemPrice() {
         int sum = 0;
         for (final OrderItem orderItem : orderItems) {
-            if (orderItem.getDiscountRate() == 0) {
-                final double discountRate = member.getRank().getDiscountRate();
-                sum += (int) (orderItem.getPrice() * (1 - discountRate));
-                continue;
-            }
-            sum += orderItem.getDiscountedPrice();
+            sum = getMemberDiscount(sum, orderItem);
+            sum = getProductDiscount(sum, orderItem);
+        }
+        return sum;
+    }
+
+    private int getMemberDiscount(int sum, final OrderItem orderItem) {
+        if (orderItem.isMemberDiscount()) {
+            final double discountRate = member.getRank().getDiscountRate();
+            sum += orderItem.calculateDiscountedPriceBy(discountRate);
+        }
+        return sum;
+    }
+
+    private int getProductDiscount(int sum, final OrderItem orderItem) {
+        if (orderItem.isProductDiscount()) {
+            sum += orderItem.calculateDiscountedPrice();
         }
         return sum;
     }
