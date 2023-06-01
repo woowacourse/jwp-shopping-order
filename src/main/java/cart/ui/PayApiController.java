@@ -22,10 +22,10 @@ public class PayApiController {
         this.payService = payService;
     }
 
-    @PostMapping()
-    public ResponseEntity<String> paymentCartItems(final Member member, @Valid @RequestBody final PaymentRequest request) {
-        final Long historyId = payService.payment(member, request);
+    @PostMapping
+    public ResponseEntity<String> payCartItems(final Member member, @Valid @RequestBody final PaymentRequest request) {
+        final Long orderId = payService.pay(member, request);
 
-        return ResponseEntity.created(URI.create("redirect:/orders/histories/" + historyId)).build();
+        return ResponseEntity.created(URI.create("redirect:/members/orders/" + orderId)).build();
     }
 }

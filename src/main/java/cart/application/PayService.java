@@ -29,7 +29,7 @@ public class PayService {
     }
 
     @Transactional
-    public Long payment(final Member member, final PaymentRequest request) {
+    public Long pay(final Member member, final PaymentRequest request) {
         final List<Long> cartIds = extractCartIds(request);
         final List<CartItem> cartItems = getCartItems(member, cartIds);
         member.usePoint(request.getPoint());
