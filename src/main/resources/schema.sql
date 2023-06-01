@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS cart_item
     quantity   INT     NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
-    );
+);
 
 CREATE TABLE IF NOT EXISTS cart_order
 (
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS cart_order
     total_price     BIGINT    NOT NULL,
     created_at      TIMESTAMP NOT NULL DEFAULT now(),
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
-    );
+);
 
 CREATE TABLE IF NOT EXISTS order_item
 (
@@ -42,4 +42,4 @@ CREATE TABLE IF NOT EXISTS order_item
     image_url       VARCHAR(255) NOT NULL,
     quantity        INT          NOT NULL,
     FOREIGN KEY (cart_order_id) REFERENCES cart_order (id) ON DELETE CASCADE
-    );
+);
