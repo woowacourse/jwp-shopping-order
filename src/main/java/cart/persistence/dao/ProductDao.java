@@ -8,9 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,11 +16,9 @@ import org.springframework.stereotype.Repository;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<ProductEntity> findAll() {
@@ -40,13 +35,6 @@ public class ProductDao {
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
         }
-    }
-
-    public List<ProductEntity> findByIds(final List<Long> ids) {
-        String sql = "SELECT * FROM product WHERE id IN (:ids)";
-        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
-        return namedParameterJdbcTemplate.query(sql, parameters, RowMapperHelper.productRowMapper());
-
     }
 
     public Long create(final ProductEntity product) {
