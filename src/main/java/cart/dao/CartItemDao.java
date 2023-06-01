@@ -21,7 +21,7 @@ public class CartItemDao {
 
     public List<CartItem> findByMemberId(Long memberId) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, " +
-                "product.price, product.image_url, product.discount_percent, cart_item.quantity " +
+                "product.price, product.image_url, product.discount_price, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -32,13 +32,20 @@ public class CartItemDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            int discountPercent = rs.getInt("discount_percent");
+            int discountPrice = rs.getInt("discount_price");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl, discountPercent);
+            Product product = getProduct(productId, name, price, imageUrl, discountPrice);
             return new CartItem(cartItemId, quantity, product, member);
         });
+    }
+
+    private Product getProduct(Long productId, String name, int price, String imageUrl, int discountPrice) {
+        if (discountPrice == 0) {
+            return new Product(productId, name, price, imageUrl);
+        }
+        return new Product(productId, name, price, imageUrl, discountPrice);
     }
 
     public Long save(CartItem cartItem) {
@@ -62,7 +69,7 @@ public class CartItemDao {
 
     public CartItem findById(Long id) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, " +
-                "product.price, product.image_url, product.discount_percent, cart_item.quantity " +
+                "product.price, product.image_url, product.discount_price, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -74,11 +81,11 @@ public class CartItemDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            int discountPercent = rs.getInt("discount_percent");
+            int discountPrice = rs.getInt("discount_price");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
             Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl, discountPercent);
+            Product product = getProduct(productId, name, price, imageUrl, discountPrice);
             return new CartItem(cartItemId, quantity, product, member);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);

@@ -1,45 +1,59 @@
 package cart.domain;
 
+import cart.domain.policy.NoDiscountPolicy;
+import cart.domain.policy.DiscountPolicy;
+import cart.domain.policy.PriceDiscountPolicy;
+
 public class Product {
     private Long id;
     private String name;
     private Price price;
     private String imageUrl;
-    private Percent discountPercent;
+    private DiscountPolicy discountPolicy;
 
-    public Product(String name, int price, String imageUrl) {
-        this(null, name, price, imageUrl, 0);
-    }
-
-    public Product(String name, int price, String imageUrl, int discountPercent) {
-        this(null, name, price, imageUrl, discountPercent);
-    }
-
-    public Product(Long id, String name, int price, String imageUrl, int discountPercent) {
+    public Product(Long id, String name, int price, String imageUrl, DiscountPolicy discountPolicy) {
         this.id = id;
         this.name = name;
         this.price = new Price(price);
         this.imageUrl = imageUrl;
-        this.discountPercent = new Percent(discountPercent);
+        this.discountPolicy = discountPolicy;
     }
 
-    public Price gerPriceOnSale() {
+
+    // TODO: 2023/06/01 확장성 or 고정
+    public Product(Long id, String name, int price, String imageUrl, int discountPrice) {
+        this(id, name, price, imageUrl, new PriceDiscountPolicy(discountPrice));
+    }
+
+    public Product(Long id, String name, int price, String imageUrl) {
+        this(id, name, price, imageUrl, new NoDiscountPolicy());
+    }
+
+    public Product(String name, int price, String imageUrl, int discountPrice) {
+        this(null, name, price, imageUrl, new PriceDiscountPolicy(discountPrice));
+    }
+
+    public Product(String name, int price, String imageUrl) {
+        this(null, name, price, imageUrl, new NoDiscountPolicy());
+    }
+
+    public Price getDiscountedPrice() {
         if (isOnSale()) {
-            return price.discount(discountPercent);
+            return discountPolicy.discount(price);
         }
         return price;
     }
 
     public boolean isOnSale() {
-        return !discountPercent.isZero();
+        return !price.equals(discountPolicy.discount(price));
     }
 
     public Price applyCoupon(Coupon coupon) {
-        return coupon.apply(gerPriceOnSale());
+        return coupon.apply(getDiscountedPrice());
     }
 
     public Price getDiscountPrice() {
-        return price.minus(gerPriceOnSale());
+        return price.minus(getDiscountedPrice());
     }
 
     public Long getId() {
@@ -58,7 +72,4 @@ public class Product {
         return imageUrl;
     }
 
-    public Percent getDiscountPercent() {
-        return discountPercent;
-    }
 }

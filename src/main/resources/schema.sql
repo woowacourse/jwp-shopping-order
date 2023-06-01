@@ -3,7 +3,7 @@ CREATE TABLE product (
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
     image_url VARCHAR(255) NOT NULL,
-    discount_percent INT NOT NULL
+    discount_price INT NOT NULL
 );
 
 CREATE TABLE member (
