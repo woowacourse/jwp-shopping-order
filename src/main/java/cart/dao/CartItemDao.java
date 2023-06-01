@@ -100,6 +100,20 @@ public class CartItemDao {
         jdbcTemplate.update(sql, quantity, cartItemId);
     }
 
+    public void deleteByCateItemIds(List<Long> cartItemIds) {
+        String collectCartItemIds = cartItemIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(", "));
+
+        String sql = sqlHelper()
+                .delete()
+                .from().table("cart_item")
+                .where().in("id", collectCartItemIds)
+                .toString();
+
+        jdbcTemplate.update(sql);
+    }
+
     public void deleteByCartItemId(Long cartItemId) {
         String sql = sqlHelper()
                 .delete()

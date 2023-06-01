@@ -41,6 +41,10 @@ public class CartItemRepository {
         cartItemDao.updateQuantity(cartItemId, quantity);
     }
 
+    public void deleteByCartItemIds(List<Long> cartItemIds) {
+        cartItemDao.deleteByCateItemIds(cartItemIds);
+    }
+
     public void deleteByCartItemId(Long cartItemId) {
         cartItemDao.deleteByCartItemId(cartItemId);
     }
