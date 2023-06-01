@@ -29,7 +29,7 @@ CREATE TABLE orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     orders_status_id INT NOT NULL,
-    create_at DATE NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    create_at DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (orders_status_id) REFERENCES orders_status(id)
 );
@@ -50,8 +50,8 @@ CREATE TABLE point (
     orders_id BIGINT NOT NULL,
     earned_point INT NOT NULL,
     comment VARCHAR(255) NOT NULL,
-    create_at DATE NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    expired_at DATE NOT NULL,
+    create_at DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    expired_at DATETIME NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (orders_id) REFERENCES orders(id)
 );
