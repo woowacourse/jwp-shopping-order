@@ -3,11 +3,15 @@ package cart.application;
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.OrderDao;
+import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.request.OrderRequestDto;
+import cart.dto.response.OrderInfo;
+import cart.entity.OrderEntity;
+import cart.entity.OrderItemEntity;
 import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponDiscountOverPriceException;
@@ -21,8 +25,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
@@ -37,6 +44,9 @@ class OrderServiceTest {
 
     @Mock
     private OrderDao orderDao;
+
+    @Mock
+    private ProductDao productDao;
 
     @InjectMocks
     private OrderService orderService;
@@ -178,5 +188,46 @@ class OrderServiceTest {
 
         //when, then
         assertDoesNotThrow(() -> orderService.order(member, orderRequestDto));
+    }
+
+    @DisplayName("사용자의 주문 목록을 가져온다.")
+    @Test
+    void findOrderOf() {
+        //given
+        final Member member = new Member(1L, "email", "password");
+
+        given(orderDao.findOrderByMemberId(anyLong()))
+                .willReturn(List.of(
+                        new OrderEntity(1L, 1L, 3000),
+                        new OrderEntity(2L, 1L, 2000)
+                ));
+
+        given(orderDao.findOrderProductByIds(anyList()))
+                .willReturn(List.of(
+                        new OrderItemEntity(1L, 1L, 1L, 1),
+                        new OrderItemEntity(2L, 1L, 2L, 2),
+                        new OrderItemEntity(3L, 2L, 1L, 3),
+                        new OrderItemEntity(4L, 2L, 2L, 4)
+                ));
+
+        given(productDao.getProductByIds(anyList()))
+                .willReturn(List.of(
+                                new Product(1L, "productA", 1000, "image"),
+                                new Product(2L, "productB", 2000, "image")
+                        )
+                );
+
+        //when
+        final List<OrderInfo> orders = orderService.findOrderOf(member);
+
+        //then
+        assertAll(
+                () -> assertThat(orders).hasSize(2),
+                () -> assertThat(orders.get(0).getOrderId()).isEqualTo(1L),
+                () -> assertThat(orders.get(0).getOrderItems()).hasSize(2),
+                () -> assertThat(orders.get(0).getOrderItems().get(0).getId()).isEqualTo(1L),
+                () -> assertThat(orders.get(0).getOrderItems().get(0).getQuantity()).isEqualTo(1),
+                () -> assertThat(orders.get(0).getOrderItems().get(0).getProduct().getId()).isEqualTo(1L)
+        );
     }
 }

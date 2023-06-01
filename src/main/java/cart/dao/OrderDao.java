@@ -4,7 +4,7 @@ import cart.domain.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.entity.OrderEntity;
-import cart.entity.OrderProductEntity;
+import cart.entity.OrderItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderDao {
@@ -24,7 +25,7 @@ public class OrderDao {
             rs.getLong("member_id"),
             rs.getInt("price")
     );
-    private final RowMapper<OrderProductEntity> orderProductEntityRowMapper = (rs, rowNum) -> new OrderProductEntity(
+    private final RowMapper<OrderItemEntity> orderItemEntityRowMapper = (rs, rowNum) -> new OrderItemEntity(
             rs.getLong("id"),
             rs.getLong("order_id"),
             rs.getLong("product_id"),
@@ -81,11 +82,26 @@ public class OrderDao {
         );
     }
 
-    public List<OrderProductEntity> findByOrderId(final long orderId) {
+    public List<OrderItemEntity> findOrderProductByOrderId(final long orderId) {
         return jdbcTemplate.query(
                 "SELECT * FROM user_order_item WHERE order_id = ? ",
-                orderProductEntityRowMapper,
+                orderItemEntityRowMapper,
                 orderId
         );
+    }
+
+    public List<OrderEntity> findOrderByMemberId(final Long memberId) {
+        return jdbcTemplate.query(
+                "SELECT * FROM user_order WHERE memberId = ? ",
+                orderEntityRowMapper,
+                memberId
+        );
+    }
+
+    public List<OrderItemEntity> findOrderProductByIds(final List<Long> ids) {
+        final StringBuilder sql = new StringBuilder("SELECT * FROM user_order_item WHERE order_id IN ");
+        sql.append(ids.stream().map(String::valueOf)
+                .collect(Collectors.joining(", ", "(", ")")));
+        return jdbcTemplate.query(sql.toString(), orderItemEntityRowMapper);
     }
 }

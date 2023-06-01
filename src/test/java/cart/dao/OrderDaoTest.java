@@ -5,7 +5,7 @@ import cart.domain.Product;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.entity.OrderEntity;
-import cart.entity.OrderProductEntity;
+import cart.entity.OrderItemEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class OrderDaoTest {
         //when
         final long savedOrder = orderDao.save(member, order);
         final OrderEntity orderEntity = orderDao.findById(savedOrder);
-        final List<OrderProductEntity> orderProductEntities = orderDao.findByOrderId(savedOrder);
+        final List<OrderItemEntity> orderProductEntities = orderDao.findOrderProductByOrderId(savedOrder);
 
         //then
         assertAll(
@@ -59,5 +59,28 @@ class OrderDaoTest {
                 () -> assertThat(orderProductEntities.get(1).getProductId()).isEqualTo(2L),
                 () -> assertThat(orderProductEntities.get(1).getQuantity()).isEqualTo(5)
         );
+    }
+
+    @DisplayName("주문 아이디들을 통해 주문 상품들을 가져온다.")
+    @Test
+    void findOrderProductByOrderByIds() {
+        //given
+        final Member member = new Member(1L, "email", "password");
+        final Order firstOrder = new Order(List.of(
+                new OrderProduct(new Product(1L, "productA", 1000, "image1"), 3),
+                new OrderProduct(new Product(2L, "productB", 10000, "image2"), 5)
+        ));
+        final Order secondOrder = new Order(List.of(
+                new OrderProduct(new Product(1L, "productA", 1000, "image1"), 1),
+                new OrderProduct(new Product(2L, "productB", 10000, "image2"), 2)
+        ));
+        final long firstOrderId = orderDao.save(member, firstOrder);
+        final long secondOrderId = orderDao.save(member, secondOrder);
+
+        //when
+        final List<OrderItemEntity> orderProductByOrderByIds = orderDao.findOrderProductByIds(List.of(firstOrderId, secondOrderId));
+
+        //then
+        assertThat(orderProductByOrderByIds).hasSize(4);
     }
 }

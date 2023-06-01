@@ -3,14 +3,21 @@ package cart.application;
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.OrderDao;
+import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.dto.request.OrderRequestDto;
+import cart.dto.response.OrderInfo;
+import cart.dto.response.OrderProductInfo;
 import cart.dto.response.OrderResponseDto;
+import cart.dto.response.ProductResponse;
+import cart.entity.OrderEntity;
+import cart.entity.OrderItemEntity;
 import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponNotFoundException;
@@ -27,11 +34,13 @@ public class OrderService {
     private final CartItemDao cartItemDao;
     private final CouponDao couponDao;
     private final OrderDao orderDao;
+    private final ProductDao productDao;
 
-    public OrderService(final CartItemDao cartItemDao, final CouponDao couponDao, final OrderDao orderDao) {
+    public OrderService(final CartItemDao cartItemDao, final CouponDao couponDao, final OrderDao orderDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.couponDao = couponDao;
         this.orderDao = orderDao;
+        this.productDao = productDao;
     }
 
     @Transactional
@@ -86,7 +95,7 @@ public class OrderService {
 
     private void validateExpectPrice(final Order order, final OrderRequestDto orderRequestDto) {
         if (order.price() != orderRequestDto.getTotalPrice()) {
-            throw new CartItemCalculateException("구매자가 예쌍한 금액과 실 계산 금액이 다릅니다.");
+            throw new CartItemCalculateException("구매자가 예상한 금액과 실 계산 금액이 다릅니다.");
         }
     }
 
@@ -94,4 +103,38 @@ public class OrderService {
         cartItemDao.deleteByIds(orderRequestDto.getCartItems());
         return orderDao.save(member, order);
     }
+
+    public List<OrderInfo> findOrderOf(final Member member) {
+        final List<OrderEntity> orderByMemberId = orderDao.findOrderByMemberId(member.getId());
+        final List<OrderItemEntity> orderProductByOrderByIds = orderDao.findOrderProductByIds(
+                orderByMemberId.stream()
+                        .map(OrderEntity::getId)
+                        .collect(Collectors.toList()));
+        final List<Product> productByIds = productDao.getProductByIds(
+                orderProductByOrderByIds.stream()
+                        .map(OrderItemEntity::getProductId)
+                        .collect(Collectors.toList()));
+        return makeOrderInfo(orderByMemberId, orderProductByOrderByIds, productByIds);
+    }
+
+    private List<OrderInfo> makeOrderInfo(final List<OrderEntity> orderEntities, final List<OrderItemEntity> orderItemEntities, final List<Product> products) {
+        return orderEntities.stream()
+                .map(orderEntity -> new OrderInfo(orderEntity.getId(), orderProductInfoByOrderId(orderEntity.getId(), orderItemEntities, products)))
+                .collect(Collectors.toList());
+    }
+
+    private List<OrderProductInfo> orderProductInfoByOrderId(final long orderId, final List<OrderItemEntity> orderItemEntities, final List<Product> products) {
+        return orderItemEntities.stream()
+                .filter(orderItemEntity -> orderItemEntity.getOrderId() == orderId)
+                .map(orderItemEntity -> new OrderProductInfo(orderItemEntity.getId(), orderItemEntity.getQuantity(), productResponseOf(orderItemEntity.getProductId(), products)))
+                .collect(Collectors.toList());
+    }
+
+    private ProductResponse productResponseOf(final long productId, final List<Product> products) {
+        return ProductResponse.of(products.stream()
+                .filter(product -> productId == product.getId())
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("주문 목록들의 상품 정보를 만드는 과정 중에 장바구니에 존재하는 상품의 Id를 가진 실제 상품 데이터를 읽어오지 못했습니다.")));
+    }
+
 }
