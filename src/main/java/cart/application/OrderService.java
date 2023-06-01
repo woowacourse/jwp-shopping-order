@@ -65,6 +65,8 @@ public class OrderService {
 
         final MemberWithId member = memberRepository.findWithIdByName(memberName);
         final List<CartItemWithId> requestCartItems = getOrderRequestCartItems(orderRequest, cartItems);
+        validateDeletedProductExistence(requestCartItems);
+
         final long savedOrderId = saveOrder(requestCartItems, member, orderRequest.getCouponId());
         cartRepository.deleteByCartItemIdsAndMemberId(requestProductIds, memberName);
         applicationEventPublisher.publishEvent(new FirstOrderCouponEvent(member.getMemberId()));
@@ -123,6 +125,15 @@ public class OrderService {
                 .map(orderProductRequest -> new CartItemWithId(cartItemWithId.getCartId(),
                     orderProductRequest.getQuantity(), cartItemWithId.getProduct())))
             .collect(Collectors.toList());
+    }
+
+    private void validateDeletedProductExistence(final List<CartItemWithId> requestCartItems) {
+        final long deletedProductCount = requestCartItems.stream()
+            .filter(cartItemWithId -> cartItemWithId.getProduct().getProduct().isDeleted())
+            .count();
+        if (deletedProductCount > 0) {
+            throw new BadRequestException(ErrorCode.PRODUCT_DELETED);
+        }
     }
 
     private long saveOrder(final List<CartItemWithId> productWithIds,

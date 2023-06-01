@@ -7,6 +7,7 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND("상품이 존재하지 않습니다."),
     PRODUCT_NAME_LENGTH("상품 이름의 길이는 1 ~ 20자까지 가능합니다."),
     PRODUCT_PRICE_RANGE("상품 가격은 1 ~ 10,000,000원까지 가능합니다."),
+    PRODUCT_DELETED("현재 판매 중이지 않은 상품은 주문할 수 없습니다."),
 
     /**
      * MEMBER

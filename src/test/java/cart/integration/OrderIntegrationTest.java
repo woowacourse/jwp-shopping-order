@@ -5,6 +5,7 @@ import static cart.exception.ErrorCode.COUPON_EXPIRED;
 import static cart.exception.ErrorCode.FORBIDDEN;
 import static cart.exception.ErrorCode.ORDER_INVALID_PRODUCTS;
 import static cart.exception.ErrorCode.ORDER_QUANTITY_EXCEED;
+import static cart.exception.ErrorCode.PRODUCT_DELETED;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -299,6 +300,37 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("제거된 상품을 주문하려고 하면 예외가 발생한다.")
+    void orderProducts_deleted_product() {
+        // given
+        쿠폰을_저장한다();
+        사용자를_저장한다();
+        상품을_저장한다();
+
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        장바구니에_상품을_추가한다(져니_로그인_요청);
+        상품을_제거한다();
+
+        /** 상품 주문 요청 */
+        final List<OrderProductRequest> 주문할_상품들 = List.of(
+            new OrderProductRequest(1L, 10),
+            new OrderProductRequest(2L, 5));
+        final OrderRequest 주문_요청 = new OrderRequest(1L, 주문할_상품들);
+
+        // expected
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(주문_요청)
+            .post("/orders")
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errorCode", equalTo(PRODUCT_DELETED.name()))
+            .body("errorMessage", equalTo("현재 판매 중이지 않은 상품은 주문할 수 없습니다."));
+    }
+
+    @Test
     @DisplayName("특정 주문 정보를 조회한다.")
     void getOrderById() {
         // given
@@ -443,6 +475,14 @@ public class OrderIntegrationTest extends IntegrationTest {
         final ProductRequest 피자_등록_요청 = new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg");
         상품_저장(치킨_등록_요청);
         상품_저장(피자_등록_요청);
+    }
+
+    private void 상품을_제거한다() {
+        given().log().all()
+            .when()
+            .delete("/products/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private void 쿠폰을_저장한다() {
