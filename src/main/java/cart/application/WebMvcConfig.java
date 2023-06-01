@@ -1,4 +1,4 @@
-package cart;
+package cart.application;
 
 import java.util.List;
 
