@@ -5,6 +5,8 @@ import cart.dao.OrderDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.discount.MemberGradeDiscountPolicy;
+import cart.domain.discount.PriceDiscountPolicy;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.stereotype.Service;
@@ -26,25 +28,38 @@ public class OrderService {
         this.orderDao = orderDao;
     }
 
-    public Long order(final Member member, final OrderRequest orderRequest) {
+    @Transactional
+    public Long save(final Member member, final OrderRequest orderRequest) {
         final List<CartItem> cartItems = cartItemDao.findAllByIds(orderRequest.getCartItemIds());
-        validateMember(member, cartItems);
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
 
-        final Order order = new Order(member, 0, cartItems);
+        final int totalPrice = calculateTotalPrice(member, cartItems);
+        final Order order = new Order(member, totalPrice, cartItems);
+
         final Long orderId = orderDao.save(order).getId();
-
         cartItemDao.deleteAllByIds(cartItemsToIds(cartItems));
+
         return orderId;
+    }
+
+    private int calculateTotalPrice(final Member member, List<CartItem> cartItems) {
+        final int price = cartItems.stream()
+                .mapToInt(CartItem::getTotalPrice)
+                .sum();
+
+        final MemberGradeDiscountPolicy gradeDiscount = new MemberGradeDiscountPolicy(member.getGrade());
+        final PriceDiscountPolicy priceDiscount = new PriceDiscountPolicy();
+        final int discountAmount = gradeDiscount
+                .and(priceDiscount)
+                .calculateDiscountAmount(price);
+
+        return price - discountAmount;
     }
 
     private List<Long> cartItemsToIds(final List<CartItem> cartItems) {
         return cartItems.stream()
                 .map(CartItem::getId)
                 .collect(toList());
-    }
-
-    private void validateMember(final Member member, final List<CartItem> cartItems) {
-        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
 
     public List<OrderResponse> findAllByMember(final Member member) {

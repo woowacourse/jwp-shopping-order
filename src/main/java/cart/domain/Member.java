@@ -6,16 +6,25 @@ public class Member {
     private Long id;
     private String email;
     private String password;
+    private MemberGrade grade;
 
-    public Member(Long id, String email, String password) {
+    public Member(final Long id, final String email, final String password, final MemberGrade grade) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.grade = grade;
+    }
+
+    public Member(Long id, String email, String password) {
+        this(id, email, password, MemberGrade.NOTHING);
     }
 
     public Member(final String email, final String password) {
-        this.email = email;
-        this.password = password;
+        this(null, email, password, MemberGrade.NOTHING);
+    }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
     }
 
     public Long getId() {
@@ -30,8 +39,8 @@ public class Member {
         return password;
     }
 
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
+    public MemberGrade getGrade() {
+        return grade;
     }
 
     @Override

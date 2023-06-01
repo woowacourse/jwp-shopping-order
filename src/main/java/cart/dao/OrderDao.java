@@ -18,7 +18,7 @@ import java.util.Objects;
 import static java.util.stream.Collectors.*;
 
 @Component
-public final class OrderDao {
+public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
 

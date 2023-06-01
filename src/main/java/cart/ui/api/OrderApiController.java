@@ -23,7 +23,7 @@ public final class OrderApiController {
     @PostMapping
     public ResponseEntity<Void> order(final Member member,
                                       @RequestBody final OrderRequest request) {
-        final Long orderId = orderService.order(member, request);
+        final Long orderId = orderService.save(member, request);
 
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
