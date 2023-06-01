@@ -4,7 +4,6 @@ import cart.common.annotation.Dao;
 import cart.coupon.infrastructure.entity.CouponEntity;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,6 +51,9 @@ public class CouponDao {
     }
 
     public List<CouponEntity> findAllByIds(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
         String sql = "SELECT * FROM coupon WHERE id IN (:ids)";
         MapSqlParameterSource source = new MapSqlParameterSource();
         source.addValue("ids", ids);
