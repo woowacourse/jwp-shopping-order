@@ -10,25 +10,25 @@ public class CartItem {
     private final Long id;
     private Quantity quantity;
     private final Product product;
-    private final Member member;
+    private final Long memberId;
 
-    public CartItem(final Long id, final Quantity quantity, final Product product, final Member member) {
+    public CartItem(final Long id, final Quantity quantity, final Product product, final Long memberId) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
-        this.member = member;
+        this.memberId = memberId;
     }
 
     public CartItem(final Member member, final Product product) {
-        this(null, new Quantity(1), product, member);
+        this(null, new Quantity(1), product, member.getId());
     }
 
     public Long getId() {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Product getProduct() {
@@ -39,8 +39,8 @@ public class CartItem {
         return quantity;
     }
 
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
+    public void checkOwner(final Member member) {
+        if (!Objects.equals(memberId, member.getId())) {
             throw new CartItemException.IllegalMember(this, member);
         }
     }

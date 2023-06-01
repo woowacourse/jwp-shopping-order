@@ -1,28 +1,23 @@
 package cart.service;
 
 import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
-import cart.domain.product.CartItem;
 import cart.domain.Member;
+import cart.domain.product.CartItem;
+import cart.repository.ProductRepository;
 import cart.service.request.CartItemQuantityUpdateRequest;
 import cart.service.request.CartItemRequest;
 import cart.service.response.CartItemResponse;
-import cart.repository.ProductRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
 
-    private final ProductDao productDao;
     private final CartItemDao cartItemDao;
     private final ProductRepository productRepository;
 
-    public CartItemService(final ProductDao productDao, final CartItemDao cartItemDao,
-                           final ProductRepository productRepository) {
-        this.productDao = productDao;
+    public CartItemService(final CartItemDao cartItemDao, final ProductRepository productRepository) {
         this.cartItemDao = cartItemDao;
         this.productRepository = productRepository;
     }
