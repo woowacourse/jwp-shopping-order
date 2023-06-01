@@ -6,6 +6,7 @@ import com.woowahan.techcourse.coupon.application.dto.CalculateActualPriceReques
 import com.woowahan.techcourse.coupon.application.dto.CalculateActualPriceResponseDto;
 import com.woowahan.techcourse.order.domain.ActualPriceCalculator;
 import com.woowahan.techcourse.order.domain.Order;
+import java.math.BigDecimal;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +19,7 @@ public class CouponPriceCalculator implements ActualPriceCalculator {
     }
 
     @Override
-    public long calculate(Order order) {
+    public BigDecimal calculate(Order order) {
         OrderRequest orderInfo = new OrderRequest(order.calculateOriginalPrice());
         CalculateActualPriceRequestDto requestDto = new CalculateActualPriceRequestDto(orderInfo, order.getCouponIds());
         CalculateActualPriceResponseDto responseDto = couponQueryService.calculateActualPrice(requestDto);

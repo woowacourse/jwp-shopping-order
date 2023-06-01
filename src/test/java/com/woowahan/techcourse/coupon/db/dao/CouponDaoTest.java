@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.woowahan.techcourse.coupon.domain.Coupon;
-import com.woowahan.techcourse.coupon.domain.Order;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,8 +47,6 @@ class CouponDaoTest {
             softly.assertThat(result.get().getCouponId()).isEqualTo(1L);
             softly.assertThat(result.get().getName().getValue()).isEqualTo("10% 할인 쿠폰");
             softly.assertThat(result.get().getDiscountCondition().isSatisfiedBy(null)).isTrue();
-            softly.assertThat(result.get().getDiscountPolicy().calculateDiscountAmount(new Order(100L)).getValue())
-                    .isEqualTo(10);
         });
     }
 

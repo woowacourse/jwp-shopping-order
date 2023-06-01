@@ -1,6 +1,8 @@
 package com.woowahan.techcourse.order.domain;
 
+import java.math.BigDecimal;
+
 public interface ActualPriceCalculator {
 
-    long calculate(Order order);
+    BigDecimal calculate(Order order);
 }

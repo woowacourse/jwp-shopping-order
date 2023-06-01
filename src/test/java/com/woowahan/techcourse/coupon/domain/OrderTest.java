@@ -2,6 +2,7 @@ package com.woowahan.techcourse.coupon.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,6 @@ class OrderTest {
         Money result = order.getOriginalPrice();
 
         // then
-        assertEquals(10000, result.getValue());
+        assertEquals(BigDecimal.valueOf(10000), result.getValue());
     }
 }

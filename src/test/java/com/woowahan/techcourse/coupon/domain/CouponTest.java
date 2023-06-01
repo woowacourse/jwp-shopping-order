@@ -39,7 +39,7 @@ class CouponTest {
         Money result = coupon.calculateDiscountAmount(new Order(10000));
 
         // then
-        assertThat(result).isEqualTo(new Money(3000));
+        assertThat(result.getValue().doubleValue()).isEqualTo(new Money(3000).getValue().doubleValue());
     }
 
     @Test

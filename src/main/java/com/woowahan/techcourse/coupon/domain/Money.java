@@ -1,6 +1,7 @@
 package com.woowahan.techcourse.coupon.domain;
 
 import com.woowahan.techcourse.coupon.exception.CouponException;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public final class Money {
@@ -8,41 +9,46 @@ public final class Money {
     public static final Money ZERO = new Money(0);
     private static final int MIN_VALUE = 0;
 
-    private final long value;
+    private final BigDecimal value;
 
     public Money(long value) {
+        this(BigDecimal.valueOf(value));
+    }
+
+    public Money(BigDecimal value) {
         validateValue(value);
         this.value = value;
     }
 
-    private void validateValue(long value) {
-        if (value < MIN_VALUE) {
+    private void validateValue(BigDecimal value) {
+        if (value.compareTo(new BigDecimal(MIN_VALUE)) < 0) {
             throw new CouponException("금액은 " + MIN_VALUE + "원 이상이어야 합니다.");
         }
     }
 
-    public long getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
     public Money getMoneyByPercentage(int percentage) {
-        return new Money(value * percentage / 100);
+        BigDecimal multiply = value.multiply(new BigDecimal(percentage).divide(new BigDecimal(100)));
+        return new Money(multiply);
     }
 
     public Money subtractAmountByPercentage(int percentage) {
-        return new Money(value - (value * percentage / 100));
+        return new Money(value.subtract(value.divide(new BigDecimal(percentage))));
     }
 
     public Money add(Money money) {
-        return new Money(value + money.value);
+        return new Money(value.add(money.value));
     }
 
     public Money subtract(Money discountAmount) {
-        return new Money(value - discountAmount.value);
+        return new Money(value.subtract(discountAmount.value));
     }
 
     public boolean isBiggerThan(Money money) {
-        return value > money.value;
+        return value.compareTo(money.value) > 0;
     }
 
     @Override
@@ -54,7 +60,7 @@ public final class Money {
             return false;
         }
         Money money = (Money) o;
-        return value == money.value;
+        return Objects.equals(value, money.value);
     }
 
     @Override

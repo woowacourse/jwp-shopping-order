@@ -3,6 +3,7 @@ package com.woowahan.techcourse.order.coupon;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowahan.techcourse.order.domain.OrderFixture;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -48,8 +49,8 @@ class CouponPriceCalculatorTest {
 
     @Test
     void calculate() {
-        long result = couponPriceCalculator.calculate(OrderFixture.firstOrder);
+        BigDecimal result = couponPriceCalculator.calculate(OrderFixture.firstOrder);
 
-        assertThat(result).isEqualTo(900);
+        assertThat(result.doubleValue()).isEqualTo(new BigDecimal(900).doubleValue());
     }
 }

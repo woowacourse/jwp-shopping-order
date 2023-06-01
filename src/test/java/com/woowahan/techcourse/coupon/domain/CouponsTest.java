@@ -35,7 +35,7 @@ class CouponsTest {
         Money result = coupons.calculateActualPrice(new Order(10000));
 
         // then
-        assertThat(result).isEqualTo(new Money(6000));
+        assertThat(result.getValue().doubleValue()).isEqualTo(new Money(6000).getValue().doubleValue());
     }
 
     @Test

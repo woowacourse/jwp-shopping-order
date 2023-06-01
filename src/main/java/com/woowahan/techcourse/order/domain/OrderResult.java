@@ -1,15 +1,21 @@
 package com.woowahan.techcourse.order.domain;
 
+import java.math.BigDecimal;
+
 public class OrderResult {
 
     private final long originalPrice;
-    private final long actualPrice;
+    private final BigDecimal actualPrice;
     private final Order order;
 
-    public OrderResult(long originalPrice, long actualPrice, Order order) {
+    public OrderResult(long originalPrice, BigDecimal actualPrice, Order order) {
         this.originalPrice = originalPrice;
         this.actualPrice = actualPrice;
         this.order = order;
+    }
+
+    public OrderResult(long originalPrice, long actualPrice, Order order) {
+        this(originalPrice, BigDecimal.valueOf(actualPrice), order);
     }
 
     public Long getId() {
@@ -20,7 +26,7 @@ public class OrderResult {
         return originalPrice;
     }
 
-    public long getActualPrice() {
+    public BigDecimal getActualPrice() {
         return actualPrice;
     }
 

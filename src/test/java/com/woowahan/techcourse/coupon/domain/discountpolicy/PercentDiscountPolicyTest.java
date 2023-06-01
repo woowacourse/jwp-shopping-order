@@ -22,6 +22,6 @@ class PercentDiscountPolicyTest {
         Money result = discountPolicy.calculateDiscountAmount(new Order(input));
 
         // then
-        assertThat(result).isEqualTo(new Money(expected));
+        assertThat(result.getValue().doubleValue()).isEqualTo(new Money(expected).getValue().doubleValue());
     }
 }

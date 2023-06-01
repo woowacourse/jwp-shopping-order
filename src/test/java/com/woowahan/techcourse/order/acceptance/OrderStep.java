@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto;
 import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto.CreateOrderCartItem;
 import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto.CreateOrderCartItem.CreateOrderProduct;
-import com.woowahan.techcourse.order.ui.dto.response.OrderResponse;
 import com.woowahan.techcourse.order.ui.dto.response.OrdersResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -53,10 +52,6 @@ public class OrderStep {
                 .get("/orders/" + orderId)
                 .then().log().all()
                 .extract();
-    }
-
-    public static OrderResponse 주문_조회_ID로_결과_추출(ExtractableResponse<Response> 주문_조회_결과) {
-        return 주문_조회_결과.as(OrderResponse.class);
     }
 
     public static Long 주문_생성_결과에서_주문_아이디_추출(ExtractableResponse<Response> 주문_생성_결과) {

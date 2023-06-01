@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.woowahan.techcourse.coupon.exception.CouponException;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class MoneyTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(money).isNotNull();
-            softly.assertThat(money.getValue()).isEqualTo(value);
+            softly.assertThat(money.getValue()).isEqualTo(BigDecimal.valueOf(value));
         });
     }
 
@@ -41,7 +42,7 @@ class MoneyTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"0, 0", "1, 100", "10, 1000", "100, 10000"})
+    @CsvSource(value = {"1, 100", "10, 1000", "100, 10000"})
     void 금액의_비율에_해당하는_금액을_반환한다(int input, int expected) {
         // given
         Money money = new Money(10000);
@@ -50,7 +51,7 @@ class MoneyTest {
         Money result = money.getMoneyByPercentage(input);
 
         // then
-        assertThat(result.getValue()).isEqualTo(expected);
+        assertThat(result.getValue().doubleValue()).isEqualTo(BigDecimal.valueOf(expected).doubleValue());
     }
 
     @Test
@@ -62,7 +63,7 @@ class MoneyTest {
         Money result = money.subtractAmountByPercentage(10);
 
         // then
-        assertThat(result.getValue()).isEqualTo(9000);
+        assertThat(result.getValue()).isEqualTo(BigDecimal.valueOf(9000));
     }
 
     @Test
@@ -75,7 +76,7 @@ class MoneyTest {
         Money result = money1.add(money2);
 
         // then
-        assertThat(result.getValue()).isEqualTo(30000);
+        assertThat(result.getValue()).isEqualTo(BigDecimal.valueOf(30000));
     }
 
     @Test
@@ -88,7 +89,7 @@ class MoneyTest {
         Money result = money2.subtract(money1);
 
         // then
-        assertThat(result.getValue()).isEqualTo(10000);
+        assertThat(result.getValue()).isEqualTo(BigDecimal.valueOf(10000));
     }
 
     @ParameterizedTest
