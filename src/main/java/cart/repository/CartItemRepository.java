@@ -1,10 +1,12 @@
 package cart.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.exception.CartItemNotFoundException;
@@ -33,15 +35,21 @@ public class CartItemRepository {
         return cartItemDao.findByMemberId(member.getId());
     }
 
-    public void updateQuantity(final Member member, final Long id, final int quantity) {
-        final CartItem cartItem = getOwnedCartItem(member, id);
-        updateQuantity(cartItem, quantity);
+    public CartItems findByIds(final Member member, final List<Long> ids) {
+        return CartItems.of(ids.stream()
+                .map(id -> getOwnedCartItem(member, id))
+                .collect(Collectors.toList()));
     }
 
     private CartItem getOwnedCartItem(final Member member, final Long id) {
         final CartItem cartItem = cartItemDao.findById(id).orElseThrow(() -> new CartItemNotFoundException(id));
         cartItem.checkOwner(member);
         return cartItem;
+    }
+
+    public void updateQuantity(final Member member, final Long id, final int quantity) {
+        final CartItem cartItem = getOwnedCartItem(member, id);
+        updateQuantity(cartItem, quantity);
     }
 
     private void updateQuantity(final CartItem cartItem, final int quantity) {

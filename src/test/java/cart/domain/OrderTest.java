@@ -12,7 +12,7 @@ class OrderTest {
 
     @Test
     void construct() {
-        final Order result = new Order(1L, new CartItems(
+        final Order result = new Order(1L, CartItems.of(
                 List.of(
                         new CartItem(1L, null, null, 0),
                         new CartItem(2L, null, null, 0)
@@ -31,7 +31,7 @@ class OrderTest {
 
     @Test
     void constructWithNoId() {
-        final Order result = new Order(new CartItems(
+        final Order result = new Order(CartItems.of(
                 List.of(
                         new CartItem(1L, null, null, 0),
                         new CartItem(2L, null, null, 0)
@@ -50,7 +50,7 @@ class OrderTest {
 
     @Test
     void constructWithOther() {
-        final Order order = new Order(new CartItems(
+        final Order order = new Order(CartItems.of(
                 List.of(
                         new CartItem(1L, null, null, 0),
                         new CartItem(2L, null, null, 0)

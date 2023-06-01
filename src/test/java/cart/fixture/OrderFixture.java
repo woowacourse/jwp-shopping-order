@@ -11,7 +11,7 @@ import cart.domain.Point;
 public class OrderFixture {
 
     public static Order ORDER = new Order(
-            new CartItems(
+            CartItems.of(
                     List.of(
                             CartItemFixture.CHICKEN,
                             CartItemFixture.PIZZA
