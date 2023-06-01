@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -36,11 +36,13 @@ public class MemberDao {
 
     public List<Member> findAll() {
         String sql = "SELECT * from member";
+
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
     public void update(Member member) {
         String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
+
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
     }
 
