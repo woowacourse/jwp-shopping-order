@@ -38,4 +38,9 @@ public class Product {
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public boolean isEqualId(final long productId) {
+        return id == productId;
+    }
+
 }

@@ -3,6 +3,7 @@ package cart.domain;
 import cart.ui.member.dto.MemberRequest;
 
 public class Member {
+
     private final Long id;
     private final String name;
     private final String email;
@@ -41,6 +42,10 @@ public class Member {
 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public boolean isEqualId(final Long memberId) {
+        return memberId == this.id;
     }
 
 }
