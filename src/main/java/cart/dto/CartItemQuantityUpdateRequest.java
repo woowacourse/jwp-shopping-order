@@ -1,10 +1,10 @@
 package cart.dto;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 public class CartItemQuantityUpdateRequest {
 
-    @Positive(message = "수량은 양수여야 합니다.")
+    @PositiveOrZero(message = "수량은 음수일 수 없습니다.")
     private int quantity;
 
     private CartItemQuantityUpdateRequest() {
