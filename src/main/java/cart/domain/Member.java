@@ -1,15 +1,18 @@
 package cart.domain;
 
 import cart.domain.value.Email;
+import cart.domain.value.Money;
 import cart.domain.value.Password;
-import cart.domain.value.TotalPurchaseAmount;
 
 public class Member {
-    private final Long id;
-    private final Email email;
-    private final Password password;
-    private final Rank rank;
-    private final TotalPurchaseAmount totalPurchaseAmount;
+    private Long id;
+    private Email email;
+    private Password password;
+    private Rank rank;
+    private Money totalPurchaseAmount;
+
+    public Member() {
+    }
 
     public Member(
             final Long id,
@@ -20,7 +23,7 @@ public class Member {
         this.email = new Email(email);
         this.password = new Password(password);
         this.rank = Rank.NORMAL;
-        this.totalPurchaseAmount = new TotalPurchaseAmount(0);
+        this.totalPurchaseAmount = new Money(0);
     }
 
     public Member(
@@ -33,7 +36,12 @@ public class Member {
         this.email = new Email(email);
         this.password = new Password(password);
         this.rank = Rank.NORMAL;
-        this.totalPurchaseAmount = new TotalPurchaseAmount(totalPurchaseAmount);
+        this.totalPurchaseAmount = new Money(totalPurchaseAmount);
+    }
+
+    public boolean isCorrectPassword(final String value) {
+        final Password password = new Password(value);
+        return this.password.equals(password);
     }
 
     public Long getId() {
@@ -48,8 +56,11 @@ public class Member {
         return password.getValue();
     }
 
-    public boolean checkPassword(final String value) {
-        final Password password = new Password(value);
-        return this.password.equals(password);
+    public Rank getRank() {
+        return rank;
+    }
+
+    public int getTotalPurchaseAmount() {
+        return totalPurchaseAmount.getValue();
     }
 }

@@ -2,13 +2,13 @@ package cart.domain;
 
 import cart.domain.value.DiscountRate;
 import cart.domain.value.ImageUrl;
+import cart.domain.value.Money;
 import cart.domain.value.Name;
-import cart.domain.value.Price;
 
 public class Product {
     private Long id;
     private Name name;
-    private Price price;
+    private Money money;
     private ImageUrl imageUrl;
     private boolean isDiscounted;
     private DiscountRate discountRate;
@@ -19,7 +19,7 @@ public class Product {
             final String imageUrl
     ) {
         this.name = new Name(name);
-        this.price = new Price(price);
+        this.money = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
     }
 
@@ -31,7 +31,7 @@ public class Product {
     ) {
         this.id = id;
         this.name = new Name(name);
-        this.price = new Price(price);
+        this.money = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
     }
 
@@ -45,7 +45,7 @@ public class Product {
     ) {
         this.id = id;
         this.name = new Name(name);
-        this.price = new Price(price);
+        this.money = new Money(price);
         this.imageUrl = new ImageUrl(imageUrl);
         this.isDiscounted = isDiscounted;
         this.discountRate = new DiscountRate(discountRate);
@@ -60,7 +60,7 @@ public class Product {
     }
 
     public int getPrice() {
-        return price.getValue();
+        return money.getValue();
     }
 
     public String getImageUrl() {

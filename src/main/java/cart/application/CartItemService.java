@@ -47,7 +47,7 @@ public class CartItemService {
         cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(final Member member, final Long id) {
+    public void deleteById(final Member member, final Long id) {
         final CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 

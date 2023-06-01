@@ -6,14 +6,14 @@ public class MemberEntity {
     private final String email;
     private final String password;
     private final String rank;
-    private final long totalPurchaseAmount;
+    private final int totalPurchaseAmount;
 
     public MemberEntity(
             final Long id,
             final String email,
             final String password,
             final String rank,
-            final long totalPurchaseAmount
+            final int totalPurchaseAmount
     ) {
         this.id = id;
         this.email = email;
@@ -38,7 +38,7 @@ public class MemberEntity {
         return rank;
     }
 
-    public long getTotalPurchaseAmount() {
+    public int getTotalPurchaseAmount() {
         return totalPurchaseAmount;
     }
 }

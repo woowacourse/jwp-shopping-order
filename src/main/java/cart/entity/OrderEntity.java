@@ -5,24 +5,24 @@ import java.time.LocalDateTime;
 public class OrderEntity {
 
     private final Long id;
-    private final int totalPrice;
-    private final int discountedTotalPrice;
-    private final int deliveryFee;
+    private final int totalItemPrice;
+    private final int discountedTotalItemPrice;
+    private final int shippingFee;
     private final LocalDateTime orderedAt;
     private final Long memberId;
 
     public OrderEntity(
             final Long id,
-            final int totalPrice,
-            final int discountedTotalPrice,
-            final int deliveryFee,
+            final int totalItemPrice,
+            final int discountedTotalItemPrice,
+            final int shippingFee,
             final LocalDateTime orderedAt,
             final Long memberId
     ) {
         this.id = id;
-        this.totalPrice = totalPrice;
-        this.discountedTotalPrice = discountedTotalPrice;
-        this.deliveryFee = deliveryFee;
+        this.totalItemPrice = totalItemPrice;
+        this.discountedTotalItemPrice = discountedTotalItemPrice;
+        this.shippingFee = shippingFee;
         this.orderedAt = orderedAt;
         this.memberId = memberId;
     }
@@ -31,16 +31,16 @@ public class OrderEntity {
         return id;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public int getTotalItemPrice() {
+        return totalItemPrice;
     }
 
-    public int getDiscountedTotalPrice() {
-        return discountedTotalPrice;
+    public int getDiscountedTotalItemPrice() {
+        return discountedTotalItemPrice;
     }
 
-    public int getDeliveryFee() {
-        return deliveryFee;
+    public int getShippingFee() {
+        return shippingFee;
     }
 
     public LocalDateTime getOrderedAt() {

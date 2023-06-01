@@ -21,7 +21,7 @@ public class MemberDao {
                     rs.getString("email"),
                     rs.getString("password"),
                     rs.getString("rank"),
-                    rs.getLong("total_purchase_amount")
+                    rs.getInt("total_purchase_amount")
             );
 
     public MemberDao(final JdbcTemplate jdbcTemplate) {

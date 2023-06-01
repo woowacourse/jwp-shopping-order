@@ -52,7 +52,7 @@ public class CartItemDao {
 
     public void deleteById(final Long id) {
         final String sql = "delete from cart_item where id = ?";
-        jdbcTemplate.update(sql, cartItemRowMapper);
+        jdbcTemplate.update(sql, id);
     }
 
     public void updateQuantity(final CartItemEntity cartItemEntity) {

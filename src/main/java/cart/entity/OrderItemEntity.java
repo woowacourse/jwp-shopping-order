@@ -1,6 +1,6 @@
 package cart.entity;
 
-public class OrderedItemEntity {
+public class OrderItemEntity {
 
     private final Long id;
     private final String name;
@@ -8,16 +8,16 @@ public class OrderedItemEntity {
     private final String imageUrl;
     private final int quantity;
     private final int discountRate;
-    private final Long orderedId;
+    private final Long orderId;
 
-    public OrderedItemEntity(
+    public OrderItemEntity(
             final Long id,
             final String name,
             final int price,
             final String imageUrl,
             final int quantity,
             final int discountRate,
-            final Long orderedId
+            final Long orderId
     ) {
         this.id = id;
         this.name = name;
@@ -25,7 +25,7 @@ public class OrderedItemEntity {
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.discountRate = discountRate;
-        this.orderedId = orderedId;
+        this.orderId = orderId;
     }
 
     public Long getId() {
@@ -52,7 +52,7 @@ public class OrderedItemEntity {
         return discountRate;
     }
 
-    public Long getOrderedId() {
-        return orderedId;
+    public Long getOrderId() {
+        return orderId;
     }
 }
