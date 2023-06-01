@@ -46,7 +46,7 @@ public class OrderRepository {
     }
 
     private List<OrderProduct> saveOrderProducts(final Long orderId, final List<OrderProduct> orderProducts) {
-        List<OrderProduct> orderProductsAfterSave = new LinkedList<>();
+        final List<OrderProduct> orderProductsAfterSave = new LinkedList<>();
         for (final OrderProduct orderProduct : orderProducts) {
             OrderProductDto orderProductDto = OrderProductDto.of(orderId, orderProduct);
             Long insert = orderProductDao.insert(orderProductDto);
@@ -65,7 +65,7 @@ public class OrderRepository {
 
     private List<OrderProduct> findOrderProductsByOrderId(final Long id) {
         final List<OrderProductDto> orderProductDtos = orderProductDao.findByOrderId(id);
-        final Map<Long, Product> products = orderProductDtos.stream()
+        final Map<Object, Product> products = orderProductDtos.stream()
                 .map(OrderProductDto::getProductId)
                 .map(productDao::getProductById)
                 .collect(toMap(Product::getId, Function.identity()));
