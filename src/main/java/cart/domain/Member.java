@@ -9,22 +9,32 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Member {
 
-    private static final int DEFAULT_POINT_VALUE = 0;
-
     private final Long id;
     private final String email;
     private final String password;
-    private final Integer point;
+    private final Point point;
 
-    public Member(final String email, final String password, final Integer point) {
+    public Member(final Long id, final String email, final String password) {
+        this(id, email, password, new Point(Point.DEFAULT_VALUE));
+    }
+
+    public Member(final String email, final String password, final Point point) {
         this(null, email, password, point);
     }
 
+    public Member(final Long id, final String email, final String password, final int point) {
+        this(id, email, password, new Point(point));
+    }
+
     public Member(final String email, final String password) {
-        this(null, email, password, DEFAULT_POINT_VALUE);
+        this(null, email, password);
     }
 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public int getPointValue() {
+        return point.getValue();
     }
 }
