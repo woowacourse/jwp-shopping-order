@@ -23,7 +23,7 @@ public class OrdersController {
     @PostMapping
     public ResponseEntity<Void> takeOrders(Member member, @RequestBody OrdersRequest ordersRequest) {
         final long ordersId = ordersService.takeOrders(member, ordersRequest);
-        return ResponseEntity.created(URI.create("orders/" + ordersId)).build();
+        return ResponseEntity.created(URI.create("/orders/" + ordersId)).build();
     }
 
     @GetMapping

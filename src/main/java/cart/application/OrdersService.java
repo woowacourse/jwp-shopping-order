@@ -3,7 +3,6 @@ package cart.application;
 import cart.domain.Member;
 import cart.domain.Orders;
 import cart.domain.OrdersTaker;
-import cart.domain.Price;
 import cart.domain.couponissuer.CouponIssuer;
 import cart.domain.couponissuer.Issuer;
 import cart.dto.CouponResponse;
@@ -13,8 +12,8 @@ import cart.repository.CouponRepository;
 import cart.repository.OrdersRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrdersService {
@@ -29,7 +28,10 @@ public class OrdersService {
     }
 
     public Long takeOrders(Member member, final OrdersRequest ordersRequest) {
-        final List<Long> cartIds = ordersRequest.getCartProductIds();
+        final List<Long> cartIds = ordersRequest.getSelectCartIds();
+        if(ordersRequest.isNoCoupon()){
+            return ordersTaker.takeOrder(member.getId(),cartIds, List.of());
+        }
         final List<Long> coupons = List.of(ordersRequest.getCouponId());
         return ordersTaker.takeOrder(member.getId(),cartIds,coupons);
     }
@@ -44,8 +46,7 @@ public class OrdersService {
 
     public CouponResponse confirmOrders(Member member, long id) {
         CouponIssuer couponIssuer = new Issuer(couponRepository);
-        Orders orders =  ordersRepository.confirmOrdersCreateCoupon(member,id);
-        return CouponResponse.of(couponIssuer.issue(member,orders));
+        return CouponResponse.of(couponIssuer.issue(member,ordersRepository.confirmOrdersCreateCoupon(member,id).get()));
     }
 
     public void deleteOrders(final long id) {

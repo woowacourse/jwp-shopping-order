@@ -28,7 +28,7 @@ public class OrdersIntegrationTest extends IntegrationTest{
                 .when().post("/orders")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("location",is("orders/3"));
+                .header("location",is("/orders/3"));
     }
 
     @Test

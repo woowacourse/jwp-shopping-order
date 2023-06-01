@@ -19,7 +19,6 @@ public class CouponRepository {
     private final CouponDao couponDao;
     private final OrdersCouponDao ordersCouponDao;
     private final MemberCouponDao memberCouponDao;
-
     public CouponRepository(CouponDao couponDao, OrdersCouponDao ordersCouponDao, MemberCouponDao memberCouponDao) {
         this.couponDao = couponDao;
         this.ordersCouponDao = ordersCouponDao;
@@ -87,5 +86,10 @@ public class CouponRepository {
         for (Long couponId : couponIds) {
             ordersCouponDao.createOrderCoupon(orderId, couponId);
         }
+    }
+
+    public void withDrawCouponWithId(long memberId, Coupon coupon) {
+        memberCouponDao.delete(memberId, coupon.getId());
+
     }
 }

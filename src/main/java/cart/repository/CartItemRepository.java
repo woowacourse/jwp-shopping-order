@@ -30,8 +30,8 @@ public class CartItemRepository {
         CartItemEntity cartItem;
         for (Long cartId : cartIds) {
             cartItem = cartItemDao.findCartItemEntitiesByCartId(cartId);
-            cartItemDao.deleteById(cartId);
             ordersCartItemDao.createOrdersIdCartItemId(orderId, cartItem.getProductId(), cartItem.getQuantity());
+            cartItemDao.deleteById(cartId);
         }
     }
     public List<Long> findProductItemsByCartItemIds(final List<Long> cartItemIds){
@@ -51,7 +51,7 @@ public class CartItemRepository {
         return productIdQuantityMap;
     }
 
-    public List<CartItem> findCartItemsByOrderId(Member member, final long orderId){
+    public List<CartItem> findOrdersItemsByOrderId(Member member, final long orderId){
         return   ordersCartItemDao.findAllByOrdersId(orderId).stream()
                 .map(ordersCartItem -> findProductWithCartItems(member, ordersCartItem))
                 .collect(Collectors.toList());
@@ -61,5 +61,10 @@ public class CartItemRepository {
                 ordersCartItem.getQuantity(),
                 productDao.findById(ordersCartItem.getProductId()),
                 member);
+    }
+
+    public int findTotalPriceByCartId(final long cartId) {
+        CartItemEntity cartItem = cartItemDao.findCartItemEntitiesByCartId(cartId);
+        return productDao.findPriceById(cartItem.getProductId()) * cartItem.getQuantity();
     }
 }

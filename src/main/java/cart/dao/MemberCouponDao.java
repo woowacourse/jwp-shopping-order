@@ -25,14 +25,21 @@ public class MemberCouponDao {
     }
 
     public void create(final long memberId, final long couponId) {
-        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("member_id", memberId)
-                .addValue("coupon_id", couponId);
-        simpleJdbcInsert.execute(parameterSource);
+        final String sql = "INSERT INTO member_coupon(member_id,coupon_id) values(?,?)";
+        jdbcTemplate.update(sql,memberId,couponId);
+//        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+//                .addValue("member_id", memberId)
+//                .addValue("coupon_id", couponId);
+//        simpleJdbcInsert.execute(parameterSource);
     }
 
     public List<Long> findByMemberId(long memberId) {
         final String sql = "SELECT coupon_id FROM member_coupon WHERE member_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("coupon_id"), memberId);
+    }
+
+    public void delete(long memberId, Long couponId) {
+        final String sql = "DELETE FROM member_coupon WHERE member_id = ? AND coupon_id =?";
+        jdbcTemplate.update(sql,memberId,couponId);
     }
 }

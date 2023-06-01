@@ -8,8 +8,9 @@ import cart.repository.OrdersRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,44 +28,49 @@ public class OrdersTaker {
     }
 
     public long takeOrder(final long memberId, final List<Long> cartIds, final List<Long> coupons){
-        final int originalPrice = calculateOriginalPrice(cartIds);
-        final int discountPrice = calculateDiscountPrice(originalPrice,coupons);
+        final int originalPrice = calculateCartItemsOriginalPrice(cartIds);
+        final int discountPrice = calculateDiscountPrice(memberId,originalPrice,coupons);
         final long orderId = ordersRepository.takeOrders(memberId,discountPrice);
         cartItemRepository.changeCartItemToOrdersItem(orderId,cartIds);
         couponRepository.addOrdersCoupon(orderId,coupons);
         return orderId;
     }
-    private int calculateOriginalPrice(final List<Long> cartIds){
-        return   cartItemRepository.findProductQuantityByCartItemIds(cartIds).entrySet().stream()
-                .map(entry -> productRepository.getPriceById(entry.getKey())*entry.getValue())
+    private int calculateCartItemsOriginalPrice(final List<Long> cartIds){
+        return cartIds.stream()
+                .map(id ->cartItemRepository.findTotalPriceByCartId(id))
                 .reduce(0,Integer::sum);
     }
-    private int calculateDiscountPrice(final int originalPrice, final List<Long> couponIds){
+    private int calculateOrdersItemOriginalPrice(final long orderId){
+        return   productRepository.findProductIdQuantityWithOrdersId(orderId);
+    }
+    private int calculateDiscountPrice(final long memberId,final int originalPrice, final List<Long> couponIds){
         int discountPrice = originalPrice;
         List<Coupon> coupons = couponRepository.findCouponsById(couponIds);
         for(Coupon coupon: coupons){
-            discountPrice = (int) ((1-coupon.getDiscountRate()) * discountPrice) + coupon.getDiscountAmount();
+            couponRepository.withDrawCouponWithId(memberId,coupon);
+            discountPrice = (int) ((1-coupon.getDiscountRate()) * discountPrice) - coupon.getDiscountAmount();
             validateLimit(originalPrice,coupon.getMinimumPrice());
         }
         return discountPrice;
     }
     public List<OrdersResponse> findOrdersWithOriginalPrice(final Member member){
-        return ordersRepository.findAllOrdersByMember(member).stream()
-                .map(orders -> makeResponse(member,orders))
-                .collect(Collectors.toList());
+        return reverse(ordersRepository.findAllOrdersByMember(member).stream()
+                .map(orders -> makeResponse(member,Optional.ofNullable(orders)))
+                .collect(Collectors.toList()));
     }
     public OrdersResponse findOrdersWithId(final Member member,final long id){
-        Orders orders = ordersRepository.findOrdersById(member,id);
-        return makeResponse(member,orders);
+        return makeResponse(member,ordersRepository.findOrdersById(member,id));
     }
-    private OrdersResponse makeResponse(final Member member,final Orders orders){
-        List<CartItem> cartItems = cartItemRepository.findCartItemsByOrderId(member,orders.getId());
-        List<Long> cartItemsId = cartItems.stream().map(CartItem::getId).collect(Collectors.toList());
-        List<Coupon> coupons = couponRepository.findByOrdersId(orders.getId());
+    private OrdersResponse makeResponse(final Member member,final Optional<Orders> orders){
+        if(orders.isEmpty()){
+            return OrdersResponse.noOrdersMembersResponse();
+        }
+        List<CartItem> ordersItem = ordersRepository.findCartItemByOrdersIds(member,orders.get().getId());
+        List<Coupon> coupons = couponRepository.findByOrdersId(orders.get().getId());
         return OrdersResponse.of(
-                orders,
-                cartItems,
-                calculateOriginalPrice(cartItemsId),
+                orders.get(),
+                ordersItem,
+                calculateOrdersItemOriginalPrice(orders.get().getId()),
                 coupons
         );
     }
@@ -72,5 +78,9 @@ public class OrdersTaker {
         if(price<limit){
             throw new OrdersPriceNotMatchException( limit + "이상으로 구매하셔야 합니다. ( 현재금액 : " + price +")");
         }
+    }
+    private List<OrdersResponse> reverse(List<OrdersResponse> responses){
+        Collections.reverse(responses);
+        return responses;
     }
 }

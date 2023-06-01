@@ -32,6 +32,6 @@ class OrdersDaoTest {
     @Test
     @DisplayName("해당 id의 주문 내역을 가져온다")
     void findByIdTest(){
-        Assertions.assertThat(ordersDao.findById(1L).getPrice()).isEqualTo(9000);
+        Assertions.assertThat(ordersDao.findById(1L).get().getPrice()).isEqualTo(9000);
     }
 }

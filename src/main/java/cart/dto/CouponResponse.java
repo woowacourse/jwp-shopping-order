@@ -38,7 +38,7 @@ public class CouponResponse {
     // TODO : null 값 고민해보기
     public static CouponResponse of(Optional<Coupon> coupon) {
         if (coupon.isEmpty()) {
-            return null;
+            return new CouponResponse();
         }
         return new CouponResponse(
                 coupon.get().getId(),

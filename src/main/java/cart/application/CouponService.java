@@ -31,7 +31,7 @@ public class CouponService {
 
     public List<CouponResponse> showMembersCoupons(Member member) {
         return couponRepository.findCouponsByMemberId(member.getId()).stream()
-                .map(coupon -> CouponResponse.of((Optional<Coupon>) Optional.of(coupon)))
+                .map(coupon -> CouponResponse.of(Optional.of(coupon)))
                 .collect(Collectors.toList());
     }
 }
