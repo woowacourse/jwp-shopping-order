@@ -1,7 +1,7 @@
 package cart.fixture;
 
-import cart.domain.Member;
-import cart.domain.Rank;
+import cart.domain.member.Member;
+import cart.domain.member.Rank;
 
 public class MemberFixture {
 
