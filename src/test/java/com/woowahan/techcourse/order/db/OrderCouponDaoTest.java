@@ -17,8 +17,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class OrderCouponDaoTest {
 
-    private OrderCouponDao orderCouponDao;
-    private JdbcTemplate jdbcTemplate;
+    private final OrderCouponDao orderCouponDao;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public OrderCouponDaoTest(JdbcTemplate jdbcTemplate) {

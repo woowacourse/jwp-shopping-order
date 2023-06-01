@@ -4,10 +4,10 @@ import com.woowahan.techcourse.product.domain.Product;
 
 public class ProductResponse {
 
-    private long id;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     private ProductResponse(long id, String name, int price, String imageUrl) {
         this.id = id;

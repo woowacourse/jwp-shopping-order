@@ -5,9 +5,9 @@ import com.woowahan.techcourse.product.ui.dto.ProductResponse;
 
 public class CartItemResponse {
 
-    private long id;
-    private int quantity;
-    private ProductResponse product;
+    private final long id;
+    private final int quantity;
+    private final ProductResponse product;
 
     private CartItemResponse(long id, int quantity, ProductResponse product) {
         this.id = id;

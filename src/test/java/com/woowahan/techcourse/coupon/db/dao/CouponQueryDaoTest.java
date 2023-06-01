@@ -19,8 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class CouponQueryDaoTest {
 
-    private CouponQueryDao couponQueryDao;
-    private JdbcTemplate jdbcTemplate;
+    private final CouponQueryDao couponQueryDao;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public CouponQueryDaoTest(JdbcTemplate jdbcTemplate) {

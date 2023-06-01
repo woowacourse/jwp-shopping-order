@@ -9,7 +9,7 @@ public class CartItem {
 
     private final Product product;
     private final Member member;
-    private Long id;
+    private final Long id;
     private int quantity;
 
     public CartItem(Long id, int quantity, Product product, Member member) {

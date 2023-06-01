@@ -14,11 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+@SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @JdbcTest
 class OrderDaoTest {
 
-    private OrderDao orderDao;
+    private final OrderDao orderDao;
 
     @Autowired
     public OrderDaoTest(JdbcTemplate jdbcTemplate) {
@@ -72,7 +73,7 @@ class OrderDaoTest {
             List<OrderResult> result = orderDao.findAllByMemberId(2L);
 
             // then
-            assertThat(result).hasSize(0);
+            assertThat(result).isEmpty();
         }
     }
 }
