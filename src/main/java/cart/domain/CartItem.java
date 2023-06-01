@@ -48,4 +48,8 @@ public class CartItem {
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public Money getTotalPrice() {
+        return Money.from(product.getPrice()).multiply(this.quantity);
+    }
 }

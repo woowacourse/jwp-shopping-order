@@ -49,7 +49,7 @@ public class Order {
         if (!this.price.equals(calculated)) {
             throw new RuntimeException("주문 금액과 실제 계산예정금액이 불일치합니다.");
         }
-        return new Order(this.cartItems, this.member, this.price, OrderState.PAYED);
+        return new Order(this.cartItems, this.member, this.price, OrderState.CONFIRMED);
     }
 
     public Member getMember() {
@@ -59,9 +59,9 @@ public class Order {
     public Money getPrice() {
         return price;
     }
-    
+
     enum OrderState {
-        ORDERED, PAYED;
+        ORDERED, CONFIRMED
     }
 
 }
