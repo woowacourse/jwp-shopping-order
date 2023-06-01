@@ -1,7 +1,8 @@
-package cart.repository;
+package cart.infrastructure;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.domain.repository.MemberRepository;
 import cart.entity.MemberEntity;
 import cart.exception.MemberException;
 import cart.mapper.MemberMapper;

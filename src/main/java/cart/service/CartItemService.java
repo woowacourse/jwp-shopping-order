@@ -3,14 +3,14 @@ package cart.service;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.ProductRepository;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
 import cart.exception.ProductException;
 import cart.mapper.CartItemMapper;
-import cart.repository.CartItemRepository;
-import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.infrastructure;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderDetailDao;
@@ -6,6 +6,9 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
+import cart.domain.repository.MemberRepository;
+import cart.domain.repository.OrderDetailRepository;
+import cart.domain.repository.OrderRepository;
 import cart.entity.OrderDetailEntity;
 import cart.entity.OrderEntity;
 import cart.exception.MemberException;

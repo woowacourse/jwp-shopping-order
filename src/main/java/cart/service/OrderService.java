@@ -4,13 +4,13 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.MemberRepository;
+import cart.domain.repository.OrderRepository;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.OrderException;
 import cart.mapper.OrderMapper;
-import cart.repository.CartItemRepository;
-import cart.repository.MemberRepository;
-import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

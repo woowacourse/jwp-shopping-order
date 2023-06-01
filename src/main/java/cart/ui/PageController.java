@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.repository.MemberRepository;
+import cart.domain.repository.MemberRepository;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

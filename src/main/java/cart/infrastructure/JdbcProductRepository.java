@@ -1,7 +1,8 @@
-package cart.repository;
+package cart.infrastructure;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import cart.domain.repository.ProductRepository;
 import cart.entity.ProductEntity;
 import cart.exception.ProductException;
 import cart.mapper.ProductMapper;

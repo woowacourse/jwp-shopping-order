@@ -1,8 +1,8 @@
 package cart.config;
 
-import cart.repository.CartItemRepository;
-import cart.repository.MemberRepository;
-import cart.repository.ProductRepository;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.MemberRepository;
+import cart.domain.repository.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;

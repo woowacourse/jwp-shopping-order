@@ -1,7 +1,8 @@
-package cart.repository;
+package cart.infrastructure;
 
 import cart.dao.OrderDetailDao;
 import cart.domain.OrderDetail;
+import cart.domain.repository.OrderDetailRepository;
 import cart.entity.OrderDetailEntity;
 import cart.mapper.OrderDetailMapper;
 import org.springframework.stereotype.Repository;
