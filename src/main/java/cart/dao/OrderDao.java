@@ -28,7 +28,7 @@ public class OrderDao {
     }
 
     public Order findById(Long id) {
-        String sql = "SELECT orders.id, orders.member_id, orders.original_price, original.used_point, original.point_to_add, member.email, member.point " +
+        String sql = "SELECT orders.id, orders.member_id, orders.original_price, orders.used_point, orders.point_to_add, member.email, member.point " +
                 "FROM orders " +
                 "INNER JOIN member ON orders.member_id = member.id " +
                 "WHERE orders.id = ?";
@@ -37,7 +37,7 @@ public class OrderDao {
     }
 
     public List<Order> findByMemberId(Long memberId) {
-        String sql = "SELECT orders.id, orders.member_id, orders.original_price, original.used_point, original.point_to_add, member.email, member.point " +
+        String sql = "SELECT orders.id, orders.member_id, orders.original_price, orders.used_point, orders.point_to_add, member.email, member.point " +
                 "FROM orders " +
                 "INNER JOIN member ON orders.member_id = member.id " +
                 "WHERE orders.member_id = ?";
