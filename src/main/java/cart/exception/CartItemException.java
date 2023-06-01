@@ -27,4 +27,11 @@ public class CartItemException extends RuntimeException {
             super("해당 장바구니 상품을 찾을 수 없습니다.");
         }
     }
+
+    public static class InvalidQuantity extends CartItemException {
+
+        public InvalidQuantity() {
+            super("수량은 음수일 수 없습니다.");
+        }
+    }
 }
