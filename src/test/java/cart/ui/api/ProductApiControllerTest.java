@@ -1,7 +1,7 @@
-package cart.ui;
+package cart.ui.api;
 
 import static cart.fixture.DomainFixture.CHICKEN;
-import static cart.ui.RestDocsConfiguration.field;
+import static cart.ui.api.RestDocsConfiguration.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
+import cart.exception.ControllerExceptionHandler;
 import java.util.List;
 import org.apache.commons.codec.CharEncoding;
 import org.junit.jupiter.api.BeforeEach;

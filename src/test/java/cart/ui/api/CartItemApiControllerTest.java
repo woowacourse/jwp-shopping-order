@@ -1,10 +1,10 @@
-package cart.ui;
+package cart.ui.api;
 
 import static cart.fixture.DomainFixture.FOUR_SALAD;
 import static cart.fixture.DomainFixture.MEMBER_A;
 import static cart.fixture.DomainFixture.TWO_CHICKEN;
 import static cart.fixture.ValueFixture.MEMBER_A_BASIC_TOKEN;
-import static cart.ui.RestDocsConfiguration.field;
+import static cart.ui.api.RestDocsConfiguration.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -37,6 +37,7 @@ import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
 import cart.dto.response.CheckoutResponse;
+import cart.exception.ControllerExceptionHandler;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.codec.CharEncoding;
