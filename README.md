@@ -10,39 +10,40 @@
 - 단일주문조회: GET /orders/{orderId}
 - 상품주문요청: POST /orders
 
-## 도메인 요구사항
+## 기능 요구사항
 
-- Member
-    - name
-    - Cart
-    - List<MemberCoupon>
-    - List<Order>
+- 사용자(Member): name, password
+    - [ ] 사용자 이름은 4글자 이상 10글자 이하만 가능하다.
+    - [ ] 사용자 이름은 중복될 수 없다.
+    - [ ] 사용자 비밀번호는 4글자 이상 10글자 이하만 가능하다.
+    - [ ] DB에 저장할 때는 SHA-256으로 암호화된 값을 저장한다.
 
-- Product
-    - name
-    - price
-    - imageUrl
 
-- Cart
-    - List<Item>
+- 상품(Product): name, price, imageUrl
+    - [ ] 상품 이름은 1글자 이상 20글자 이하만 가능하다.
+    - [ ] 상품 가격은 1원부터 10,000,000원까지 가능하다.
 
-- Item
-    - Product
-    - Quantity
 
-- Order
-    - List<Item>
-    - Coupon
-    - deliveryPrice
-    - totalPrice(?)
+- 쿠폰(Coupon): name, discountRate, period, expiredAt
+    - [ ] 쿠폰 이름은 1글자 이상 50글자 이하만 가능하다.
+    - [ ] 쿠폰 할인율은 5%부터 90%까지 가능하다.
+    - [ ] 쿠폰 기간은 1일부터 365일까지 가능하다.
 
-- Coupon
-    - name
-    - discountRate
-    - period
-    - expiredDate
 
-- MemberCoupon
-    - Coupon
-    - issuedDate
-    - expiredDate
+- 사용자가 발급 받은 쿠폰 (MemberCoupon): Coupon, issuedAt, expiredAt
+    - [ ] 사용자가 처음 가입했을 때, 신규 가입 축하 할인 쿠폰을 지급한다.
+    - [ ] 사용자가 첫 주문을 했을 때, 첫 주문 할인 쿠폰을 지급한다.
+    - [ ] 사용자는 동일한 쿠폰을 중복해서 받을 수 없다.
+    - [ ] 멤버의 쿠폰 만료일은 min(쿠폰의 만료날짜, 멤버의 쿠폰 발급 날짜 + period)이다.
+
+
+- 아이템 (Item): Product, Quantity
+    - [ ] 한 상품의 개수는 최대 1000개까지만 가능하다.
+
+
+- 장바구니 (Cart): Member, Item
+
+
+- 주문정보 (Order): Member, List<Item>, Coupon, deliveryPrice, totalPrice, discountedTotalPrice
+    - [ ] 장바구니에 있는 상품을 주문 했을 경우, 장바구니에서 상품이 삭제된다.
+    - [ ] 주문 시, 총 상품의 개수는 최대 1000개까지만 가능하다.
