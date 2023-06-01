@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.dto.OrderDto;
+import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderDao {
 
-    private static final RowMapper<OrderDto> orderDtoRowMapper = (rs, rn) -> new OrderDto(
+    private static final RowMapper<OrderDto> ORDER_DTO_ROW_MAPPER = (rs, rn) -> new OrderDto(
             rs.getLong("id"),
             rs.getLong("member_id"),
             (Long) rs.getObject("member_coupon_id"),
@@ -42,9 +43,14 @@ public class OrderDao {
         final String sql = "SELECT * FROM orders WHERE id = ?";
 
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, orderDtoRowMapper, orderId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ORDER_DTO_ROW_MAPPER, orderId));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<OrderDto> findByMemberId(final Long id) {
+        final String sql = "SELECT * FROM orders WHERE id = ?";
+        return jdbcTemplate.query(sql, ORDER_DTO_ROW_MAPPER, id);
     }
 }

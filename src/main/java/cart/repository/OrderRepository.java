@@ -1,11 +1,13 @@
 package cart.repository;
 
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.dto.OrderDto;
 import cart.dao.dto.OrderProductDto;
+import cart.domain.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.product.Product;
@@ -15,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -75,6 +76,13 @@ public class OrderRepository {
         return orderProductDtos.stream()
                 .map(dto -> new OrderProduct(dto.getId(), products.get(dto.getProductId()),
                         new Quantity(dto.getQuantity())))
-                .collect(Collectors.toUnmodifiableList());
+                .collect(toUnmodifiableList());
+    }
+
+    public List<Order> findOrders(final Member member) {
+        final List<OrderDto> orderDtos = orderDao.findByMemberId(member.getId());
+        return orderDtos.stream()
+                .map(dto -> findById(dto.getId()))
+                .collect(toUnmodifiableList());
     }
 }

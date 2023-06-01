@@ -15,6 +15,7 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
 import cart.service.response.OrderResponseDto;
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,5 +79,36 @@ class OrderIntegrationRefactorTest extends IntegrationRefactorTest {
         assertThat(response)
                 .usingRecursiveComparison()
                 .isEqualTo(OrderResponseDto.from(savedOrder));
+    }
+
+    @DisplayName("전체 주문내역을 조회한다.")
+    @Test
+    void findOrders() throws Exception {
+        //given
+        //상품이 존재한다.
+        productRepository.insertProduct(PRODUCT_1);
+        cartItemDao.save(CART_ITEM_1);
+        final Coupon coupon = couponRepository.insert(DISCOUNT_5000_CONSTANT);
+        final MemberCoupon memberCoupon = new MemberCoupon(coupon, MEMBER_1.getId());
+        final MemberCoupon savedMemberCoupon = memberCouponRepository.insert(memberCoupon);
+        final Order order = Order.of(MEMBER_1, List.of(CART_ITEM_1), savedMemberCoupon);
+        final Order savedOrder = orderRepository.save(order);
+
+        //when
+        final MvcResult result = mockMvc
+                .perform(get("/order")
+                        .header("Authorization", MEMBER_1_AUTH_HEADER))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        //then
+        final String resultJsonString = result.getResponse().getContentAsString();
+        final List<OrderResponseDto> response = OBJECT_MAPPER.readValue(resultJsonString, new TypeReference<>() {
+        });
+
+        assertThat(response)
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(OrderResponseDto.from(savedOrder)));
     }
 }

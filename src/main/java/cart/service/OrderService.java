@@ -48,4 +48,10 @@ public class OrderService {
 
         return savedOrder.getId();
     }
+
+    public List<OrderResponseDto> findOrders(final Member member) {
+        return orderRepository.findOrders(member).stream()
+                .map(OrderResponseDto::from)
+                .collect(toUnmodifiableList());
+    }
 }
