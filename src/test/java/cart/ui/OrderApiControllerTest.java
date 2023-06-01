@@ -98,7 +98,7 @@ class OrderApiControllerTest {
                                         headerWithName("Authorization").description("사용자 Basic 인증 정보").attributes(field("constraint", "Basic 형식 토큰"))
                                 ),
                                 requestFields(
-                                        fieldWithPath("usedPoints").type(JsonFieldType.NUMBER).description("소모할 포인트").attributes(field("constraint", "양수")),
+                                        fieldWithPath("usedPoints").type(JsonFieldType.NUMBER).description("소모할 포인트").attributes(field("constraint", "0 이상의 수")),
                                         fieldWithPath("cartItemIds").type(JsonFieldType.ARRAY).description("장바구니 상품 ID 목록").attributes(field("constraint", "1개 이상의 양수"))
                                 ),
                                 responseHeaders(
