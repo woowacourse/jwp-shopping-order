@@ -35,7 +35,7 @@ public class CartItemService {
             throw new CartItemException.AlreadyExist(member, cartItemRequest.getProductId());
         }
 
-        Product product = productDao.getProductById(cartItemRequest.getProductId())
+        Product product = productDao.findById(cartItemRequest.getProductId())
                 .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
         return cartItemDao.save(new CartItem(member, product));
     }

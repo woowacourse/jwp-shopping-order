@@ -47,7 +47,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             String email = credentials[EMAIL_INDEX];
             String password = credentials[PASSWORD_INDEX];
 
-            Member member = memberDao.getMemberByEmail(email)
+            Member member = memberDao.findByEmail(email)
                     .orElseThrow(() -> new AuthenticationException("로그인에 실패했습니다."));
             
             if (!member.checkPassword(password)) {

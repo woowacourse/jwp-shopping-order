@@ -20,27 +20,27 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+        List<Product> products = productDao.findAll();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId)
+        Product product = productDao.findById(productId)
                 .orElseThrow(() -> new ProductException.NotFound(productId));
         return ProductResponse.of(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productDao.save(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, product);
+        productDao.update(productId, product);
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        productDao.deleteById(productId);
     }
 }

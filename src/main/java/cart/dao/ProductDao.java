@@ -21,29 +21,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
-    }
-
-    public Optional<Product> getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        Product product = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        }, productId);
-        return Optional.of(product);
-    }
-
-    public Long createProduct(Product product) {
+    public Long save(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -62,12 +40,34 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public List<Product> findAll() {
+        String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new Product(productId, name, price, imageUrl);
+        });
+    }
+
+    public Optional<Product> findById(Long productId) {
+        String sql = "SELECT * FROM product WHERE id = ?";
+        Product product = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new Product(productId, name, price, imageUrl);
+        }, productId);
+        return Optional.of(product);
+    }
+
+    public void update(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
     }
 
-    public void deleteProduct(Long productId) {
+    public void deleteById(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
