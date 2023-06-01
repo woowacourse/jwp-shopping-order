@@ -44,7 +44,7 @@ public class JdbcProductRepository implements ProductRepository {
 
     @Override
     public void update(Product product) {
-        productDao.update(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        productDao.update(new ProductEntity(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()));
     }
 
     @Override

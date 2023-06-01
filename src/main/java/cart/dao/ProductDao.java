@@ -46,9 +46,9 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
-    public void update(Long id, String name, Integer price, String imageUrl) {
+    public void update(ProductEntity entity) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, name, price, imageUrl, id);
+        jdbcTemplate.update(sql, entity.getName(), entity.getPrice(), entity.getImageUrl(), entity.getId());
     }
 
     public void deleteById(Long id) {
