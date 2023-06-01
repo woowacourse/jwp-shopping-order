@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.OrderException;
 import java.util.Objects;
 
 public class Product {
@@ -26,7 +27,7 @@ public class Product {
 
     public void sold(int quantity) {
         if (this.stock < quantity) {
-            throw new IllegalArgumentException("상품 재고가 부족합니다.");
+            throw new OrderException("상품 재고가 부족합니다.");
         }
         this.stock -= quantity;
     }
@@ -67,5 +68,16 @@ public class Product {
 
     public int getStock() {
         return stock;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", stock=" + stock +
+                '}';
     }
 }

@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.PaymentException;
+
 public class Member {
     private Long id;
     private String email;
@@ -20,7 +22,7 @@ public class Member {
 
     public void usePoint(Point usePoint) {
         if (point.isSmallerThan(usePoint)) {
-            throw new IllegalArgumentException("보유한 포인트가 사용하고자 하는 포인트보다 적습니다.");
+            throw new PaymentException("보유한 포인트가 사용하고자 하는 포인트보다 적습니다.");
         }
         this.point = this.point.subtract(usePoint);
     }

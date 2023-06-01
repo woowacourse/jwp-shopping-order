@@ -59,7 +59,7 @@ CREATE TABLE order_item
     orders_id          BIGINT       NOT NULL,
     product_id         BIGINT       NOT NULL,
     quantity           INT          NOT NULL,
-    original_name      INT          NOT NULL,
+    original_name      VARCHAR(255) NOT NULL,
     original_price     INT          NOT NULL,
     original_image_url VARCHAR(255) NOT NULL,
     FOREIGN KEY (orders_id) REFERENCES orders (id),
@@ -73,6 +73,6 @@ CREATE TABLE payment
     total_product_price  BIGINT NOT NULL,
     total_delivery_price BIGINT NOT NULL,
     use_point            BIGINT DEFAULT 0,
-    total_price        BIGINT NOT NULL,
+    total_price          BIGINT NOT NULL,
     FOREIGN KEY (orders_id) REFERENCES orders (id)
 );

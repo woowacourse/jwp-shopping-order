@@ -3,6 +3,8 @@ package cart.ui;
 import cart.dto.ErrorResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.AuthorizationException;
+import cart.exception.OrderException;
+import cart.exception.PaymentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,12 +31,16 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
+    @ExceptionHandler({PaymentException.class, OrderException.class})
+    public ResponseEntity<ErrorResponse> handleBusinessException(Exception e) {
+        log.warn(e.getMessage());
+        ErrorResponse response = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error(e.getMessage());
-        log.error(e.getCause().getMessage());
-        log.error(e.getClass().getName());
-
         ErrorResponse response = new ErrorResponse("알 수 없는 에러가 발생하였습니다.");
         return ResponseEntity.internalServerError().body(response);
     }

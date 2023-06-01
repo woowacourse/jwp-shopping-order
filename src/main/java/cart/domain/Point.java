@@ -20,6 +20,10 @@ public class Point {
         return this.value < other.value;
     }
 
+    public boolean isZero() {
+        return this.value == 0;
+    }
+
     public int getValue() {
         return value;
     }
