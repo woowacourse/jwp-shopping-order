@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.order.Order;
-import cart.dto.ProductResponse;
+import cart.service.response.ProductResponse;
 import cart.service.response.OrderProductResponseDto;
 import cart.service.response.OrderResponseDto;
 import java.util.List;

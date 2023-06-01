@@ -1,7 +1,5 @@
 package cart.service.response;
 
-import cart.dto.ProductResponse;
-
 public class OrderProductResponseDto {
 
     private final ProductResponse productResponse;

@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.domain.product.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.service.request.ProductRequest;
+import cart.service.response.ProductResponse;
 import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,9 +1,9 @@
 package cart.controller;
 
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.service.request.CartItemQuantityUpdateRequest;
+import cart.service.request.CartItemRequest;
+import cart.service.response.CartItemResponse;
 import cart.service.CartItemService;
 import java.net.URI;
 import java.util.List;

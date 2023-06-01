@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import cart.domain.Member;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.service.request.CartItemRequest;
+import cart.service.response.CartItemResponse;
+import cart.service.request.ProductRequest;
+import cart.service.response.ProductResponse;
 import cart.repository.MemberRepository;
 import cart.service.request.OrderRequestDto;
 import cart.service.response.OrderProductResponseDto;
