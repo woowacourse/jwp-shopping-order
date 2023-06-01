@@ -38,7 +38,6 @@ class MemberDaoTest {
     @Test
     @DisplayName("findByEmail은 존재하는 email을 전달하면 해당 Member를 반환한다.")
     void findByEmailSuccessTest() {
-        String memberEmail = "a@a.com";
         Optional<Member> actual = memberDao.findByEmail(MEMBER_A.getEmail());
 
         assertAll(

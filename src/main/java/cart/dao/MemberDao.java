@@ -20,18 +20,16 @@ public class MemberDao {
 
     public Optional<Member> findById(Long id) {
         String sql = "SELECT * FROM tb_member WHERE id = ?";
+        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), id);
 
-        return jdbcTemplate.query(sql, new MemberRowMapper(), id)
-                .stream()
-                .findAny();
+        return Optional.of(members.get(0));
     }
 
     public Optional<Member> findByEmail(String email) {
         String sql = "SELECT * FROM tb_member WHERE email = ?";
+        List<Member> members = jdbcTemplate.query(sql, new MemberRowMapper(), email);
 
-        return jdbcTemplate.query(sql, new MemberRowMapper(), email)
-                .stream()
-                .findAny();
+        return Optional.of(members.get(0));
     }
 
     public List<Member> findAll() {
@@ -41,15 +39,17 @@ public class MemberDao {
     }
 
     public void update(Member member) {
-        String sql = "UPDATE tb_member SET email = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE tb_member SET email = ?, password = ?, point = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint(), member.getId());
     }
+
 
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(rs.getLong("id"), rs.getString("email"),
+                    rs.getString("password"), rs.getInt("point"));
         }
     }
 }

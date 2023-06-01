@@ -17,5 +17,10 @@ public abstract class MemberException extends RuntimeException {
         }
     }
 
-    
+    public static class TooManyUsedPoints extends MemberException {
+
+        public TooManyUsedPoints() {
+            super("사용할 포인트가 소지 포인트보다 많습니다.");
+        }
+    }
 }
