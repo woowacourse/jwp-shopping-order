@@ -1,8 +1,11 @@
 package cart.repository;
 
+import static java.util.stream.Collectors.toUnmodifiableList;
+
 import cart.dao.CouponDao;
 import cart.dao.dto.CouponDto;
 import cart.domain.coupon.Coupon;
+import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,5 +23,11 @@ public class CouponRepository {
 
     public Coupon findById(final Long id) {
         return couponDao.findById(id).toCoupon();
+    }
+
+    public List<Coupon> findByMemberId(final Long id) {
+        return couponDao.findByMemberId(id).stream()
+                .map(CouponDto::toCoupon)
+                .collect(toUnmodifiableList());
     }
 }

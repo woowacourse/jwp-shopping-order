@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.dto.CouponDto;
+import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -32,7 +33,21 @@ public class CouponDao {
     }
 
     public CouponDto findById(final Long id) {
-        final String sql = "select * from Coupon where id = :id";
+        final String sql = "select * from coupon where id = :id";
         return jdbcTemplate.queryForObject(sql, Map.of("id", id), CouponDto.class);
+    }
+
+    public List<CouponDto> findByMemberId(final Long id) {
+        final String sql = "select c.id id, c.name name, c.val value, c.coupon_type coupon_type from member_coupon mc"
+                + "inner join coupon c"
+                + "on mc.member_id = c.id"
+                + "where mc.member_id = " + id;
+        return jdbcTemplate.query(sql, (rs, rn) -> {
+            final Long couponId = rs.getLong("id");
+            final String name = rs.getString("name");
+            final Integer value = rs.getInt("value");
+            final String couponType = rs.getString("coupon_type");
+            return new CouponDto(couponId, name, value, couponType);
+        });
     }
 }
