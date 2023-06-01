@@ -1,6 +1,6 @@
-package cart.fixture;
+package cart.fixture.domain;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.vo.Money;
 
 public abstract class MemberFixture {

@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.member.Member;
 import cart.exception.MemberException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Nested;
@@ -7,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static cart.fixture.MoneyFixture.금액;
-import static cart.fixture.MoneyFixture.포인트;
+import static cart.fixture.domain.MoneyFixture.금액;
+import static cart.fixture.domain.MoneyFixture.포인트;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 

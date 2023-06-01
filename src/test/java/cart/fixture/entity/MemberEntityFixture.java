@@ -1,6 +1,6 @@
-package cart.fixture;
+package cart.fixture.entity;
 
-import cart.entity.MemberEntity;
+import cart.dao.entity.MemberEntity;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.member;
 
 import cart.domain.vo.Money;
 import cart.exception.MemberException;
@@ -35,8 +35,32 @@ public class Member {
         }
     }
 
-    public boolean checkPassword(String password) {
+    public boolean isMoneyAffordable(Money otherMoney) {
+        return money.isEqualOrGreaterThan(otherMoney);
+    }
+
+    public boolean isPointAffordable(Money otherPoint) {
+        return point.isEqualOrGreaterThan(otherPoint);
+    }
+
+    public boolean isSamePassword(String password) {
         return this.password.equals(password);
+    }
+
+    public void spendPoint(Money usePoint) {
+        point = point.minus(usePoint);
+    }
+
+    public void spendMoney(Money totalPrice) {
+        money = money.minus(totalPrice);
+    }
+
+    public void accumulatePoint(Money newPoint) {
+        point = point.plus(newPoint);
+    }
+
+    public boolean isNotSame(Member otherMember) {
+        return !this.equals(otherMember);
     }
 
     public Long getId() {

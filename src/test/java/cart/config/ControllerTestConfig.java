@@ -1,8 +1,6 @@
 package cart.config;
 
-import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
+import cart.dao.*;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
@@ -32,9 +30,13 @@ public abstract class ControllerTestConfig {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    protected String DOCUMENT_IDENTIFIER = "{method-name}";
+
     protected MemberDao memberDao;
     protected ProductDao productDao;
     protected CartItemDao cartItemDao;
+    protected OrderDao orderDao;
+    protected OrderItemDao orderItemDao;
     protected RequestSpecification spec;
 
     @BeforeEach
@@ -42,6 +44,8 @@ public abstract class ControllerTestConfig {
         memberDao = new MemberDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         cartItemDao = new CartItemDao(jdbcTemplate);
+        orderDao = new OrderDao(jdbcTemplate);
+        orderItemDao = new OrderItemDao(jdbcTemplate);
 
         RestAssured.port = port;
 

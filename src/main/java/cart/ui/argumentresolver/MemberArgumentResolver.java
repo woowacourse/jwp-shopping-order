@@ -1,7 +1,7 @@
 package cart.ui.argumentresolver;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import cart.exception.MemberException;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -48,7 +48,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
                 .orElseThrow(MemberException.NotExist::new)
                 .toDomain();
 
-        if (!member.checkPassword(password)) {
+        if (!member.isSamePassword(password)) {
             throw new AuthenticationException();
         }
 

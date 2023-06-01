@@ -2,7 +2,7 @@ package cart.dao;
 
 import cart.dao.rowmapper.MemberRowMapper;
 import cart.domain.vo.Money;
-import cart.entity.MemberEntity;
+import cart.dao.entity.MemberEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -75,27 +75,39 @@ public class MemberDao {
         return jdbcTemplate.query(sql, MemberRowMapper.memberEntity);
     }
 
-    public void updateMember(Long memberId, MemberEntity memberEntity) {
+    public void updateMember(MemberEntity memberEntity) {
         String sql = sqlHelper()
                 .update().table("member")
-                .set("email = ?, password = ?")
+                .set("email = ?, password = ?, money = ?, point = ?")
                 .where().condition("id = ?")
                 .toString();
 
         jdbcTemplate.update(sql,
                 memberEntity.getEmail(),
                 memberEntity.getPassword(),
-                memberId);
+                memberEntity.getMoney().intValue(),
+                memberEntity.getPoint().intValue(),
+                memberEntity.getId());
     }
 
-    public void updateMinusMoney(Long memberId, Money minusMoney) {
+    public void updateMoney(Long memberId, Money money) {
         String sql = sqlHelper()
-                .update().set("money = money - ?")
-                .from().table("member")
+                .update().table("member")
+                .set("money = ?")
                 .where().condition("id = ?")
                 .toString();
 
-        jdbcTemplate.update(sql, minusMoney.getValue(), memberId);
+        jdbcTemplate.update(sql, money.getValue(), memberId);
+    }
+
+    public void updatePoint(Long memberId, Money point) {
+        String sql = sqlHelper()
+                .update().table("member")
+                .set("point = ?")
+                .where().condition("id = ?")
+                .toString();
+
+        jdbcTemplate.update(sql, point.getValue(), memberId);
     }
 
     public void deleteMember(Long id) {
@@ -104,7 +116,7 @@ public class MemberDao {
                 .from().table("member")
                 .where().condition("id = ?")
                 .toString();
-        
+
         jdbcTemplate.update(sql, id);
     }
 }

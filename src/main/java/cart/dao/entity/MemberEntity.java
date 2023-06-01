@@ -1,6 +1,6 @@
-package cart.entity;
+package cart.dao.entity;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.vo.Money;
 
 import java.math.BigDecimal;
@@ -24,6 +24,15 @@ public class MemberEntity {
         this.password = password;
         this.money = money;
         this.point = point;
+    }
+
+    public static MemberEntity toEntity(Member member) {
+        return new MemberEntity(
+                member.getId(),
+                member.getEmail(),
+                member.getPassword(),
+                member.getMoney().getValue(),
+                member.getPoint().getValue());
     }
 
     public Member toDomain() {
