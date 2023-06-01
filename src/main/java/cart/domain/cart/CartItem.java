@@ -7,15 +7,16 @@ import java.util.Objects;
 
 public class CartItem {
 
+    private static final int DEFAULT_QUANTITY = 1;
+
     private Long id;
     private int quantity;
     private final Product product;
     private final Member member;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
+    public CartItem(final Member member, final Product product) {
+        this(null, DEFAULT_QUANTITY, product, member);
+
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
