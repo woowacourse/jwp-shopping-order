@@ -37,4 +37,10 @@ public class OrderDao {
 
         return jdbcTemplate.query(sql, rowMapper(), memberId);
     }
+
+    public Long findAllById(Long id) {
+        String sql = "select * from cart_order where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, rowMapper(), id);
+    }
 }

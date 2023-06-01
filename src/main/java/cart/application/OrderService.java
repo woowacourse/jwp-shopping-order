@@ -90,4 +90,8 @@ public class OrderService {
     public List<Order> findAll(Long memberId) {
         return orderRepository.findAllByMemberId(memberId);
     }
+
+    public Order findById(Long id) {
+        return orderRepository.findById(id);
+    }
 }

@@ -14,6 +14,7 @@ public class OrderItemResponse {
     private Long id;
     private ProductResponse product;
     private int quantity;
+    @JsonProperty("coupons")
     private List<CouponResponse> couponIds;
     private int total;
 

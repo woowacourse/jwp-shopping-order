@@ -31,6 +31,13 @@ public class OrderController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> findById(@PathVariable final String orderId, Member member) {
+        Order orders = orderService.findById(member.getId());
+
+        return ResponseEntity.ok(OrderResponse.from(orders));
+    }
+
     @PostMapping
     public ResponseEntity<Void> addOrder(@RequestBody @Valid OrderRequests request, Member member) {
         orderService.createOrder(request.getOrderRequests(), member);
