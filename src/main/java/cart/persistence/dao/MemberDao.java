@@ -5,20 +5,26 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public MemberDao(JdbcTemplate jdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public void create(final MemberEntity member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+    public long create(final MemberEntity member) {
+        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(member);
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     public Optional<MemberEntity> findMemberById(final long id) {

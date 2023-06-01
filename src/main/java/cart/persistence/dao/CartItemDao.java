@@ -9,6 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,9 +20,12 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
+    public CartItemDao(JdbcTemplate jdbcTemplate,
+            final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public Long create(CartItemEntity cartItem) {
@@ -62,6 +68,16 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, RowMapperHelper.cartDetailRowMapper(), memberId);
     }
 
+    public List<CartDetailDTO> findByIds(final List<Long> ids) {
+        String sql = "SELECT * FROM cart_item "
+                + "INNER JOIN member ON cart_item.member_id = member.id "
+                + "INNER JOIN product ON cart_item.product_id = product.id "
+                + "WHERE cart_item.id IN (:ids)";
+
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+        return namedParameterJdbcTemplate.query(sql, parameters, RowMapperHelper.cartDetailRowMapper());
+    }
+    
     public void deleteById(final long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);

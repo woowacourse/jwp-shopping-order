@@ -41,6 +41,10 @@ public class CartItem {
         return quantity;
     }
 
+    public int getTotalPrice() {
+        return product.getPrice() * quantity;
+    }
+
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new ForbiddenException();

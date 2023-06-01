@@ -1,7 +1,12 @@
 package cart.persistence.dao;
 
+import cart.domain.coupon.CouponType;
 import cart.persistence.dto.CartDetailDTO;
+import cart.persistence.dto.MemberCouponDetailDTO;
+import cart.persistence.dto.MemberCouponDetailWithUserDTO;
 import cart.persistence.entity.CartItemEntity;
+import cart.persistence.entity.CouponEntity;
+import cart.persistence.entity.MemberCouponEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
 import org.springframework.jdbc.core.RowMapper;
@@ -45,7 +50,8 @@ public class RowMapperHelper {
             return new MemberEntity(
                     rs.getLong(prefix + "id"),
                     rs.getString(prefix + "email"),
-                    rs.getString(prefix + "password")
+                    rs.getString(prefix + "password"),
+                    rs.getString(prefix + "nickname")
             );
         };
     }
@@ -76,6 +82,69 @@ public class RowMapperHelper {
             MemberEntity member = memberRowMapperWithTable().mapRow(rs, rowNum);
             ProductEntity product = productRowMapperWithTable().mapRow(rs, rowNum);
             return new CartDetailDTO(cartItem, member, product);
+        };
+    }
+
+
+    public static RowMapper<CouponEntity> couponRowMapper() {
+        return getCouponRowMapper(false);
+    }
+
+    private static RowMapper<CouponEntity> couponRowMapperWithTable() {
+        return getCouponRowMapper(true);
+    }
+
+    private static RowMapper<CouponEntity> getCouponRowMapper(boolean withTable) {
+        return (rs, rowNum) -> {
+            String prefix = withTable ? "coupon." : "";
+            return new CouponEntity(
+                    rs.getLong(prefix + "id"),
+                    rs.getString(prefix + "name"),
+                    rs.getInt(prefix + "min_price"),
+                    rs.getInt(prefix + "max_price"),
+                    CouponType.valueOf(rs.getString(prefix + "type")),
+                    (Integer) rs.getObject("discount_amount"),
+                    (Double) rs.getObject("discount_percentage")
+            );
+        };
+    }
+
+    public static RowMapper<MemberCouponEntity> memberCouponRowMapper() {
+        return getMemberCouponRowMapper(true);
+    }
+
+    private static RowMapper<MemberCouponEntity> memberCouponRowMapperWithTable() {
+        return getMemberCouponRowMapper(false);
+    }
+
+    private static RowMapper<MemberCouponEntity> getMemberCouponRowMapper(boolean withTable) {
+        return (rs, rowNum) -> {
+            String prefix = withTable ? "member_coupon." : "";
+            return new MemberCouponEntity(
+                    rs.getLong(prefix + "id"),
+                    rs.getLong(prefix + "member_id"),
+                    rs.getLong(prefix + "coupon_id"),
+                    rs.getBoolean(prefix + "is_used"),
+                    rs.getTimestamp("expired_at"),
+                    rs.getTimestamp("created_at")
+            );
+        };
+    }
+
+    public static RowMapper<MemberCouponDetailDTO> memberCouponDetailRowMapper() {
+        return (rs, rowNum) -> {
+            MemberCouponEntity memberCoupon = memberCouponRowMapperWithTable().mapRow(rs, rowNum);
+            CouponEntity coupon = couponRowMapperWithTable().mapRow(rs, rowNum);
+            return new MemberCouponDetailDTO(memberCoupon, coupon);
+        };
+    }
+
+    public static RowMapper<MemberCouponDetailWithUserDTO> memberCouponFullDetailDTORowMapper() {
+        return (rs, rowNum) -> {
+            MemberCouponEntity memberCoupon = memberCouponRowMapperWithTable().mapRow(rs, rowNum);
+            CouponEntity coupon = couponRowMapperWithTable().mapRow(rs, rowNum);
+            MemberEntity member = memberRowMapperWithTable().mapRow(rs, rowNum);
+            return new MemberCouponDetailWithUserDTO(memberCoupon, coupon, member);
         };
     }
 }

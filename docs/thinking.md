@@ -27,3 +27,10 @@
 
 - DB에 쿼리 날리는 횟수는 최소화하는게 좋다. -> Join을 사용한다.
 - entity 여러개를 필드로 갖는 DTO를 만들어서 Dao->Repository 넘겨주고, Repository에서 이를 도메인으로 변환하자.
+
+## Coupon 도메인 설계 구조.. enum?
+
+- AmountCoupon은 discountAmount를 가지고, PercentCoupon은 discountPercent 가진다.
+- DTO로 보내줄 땐, type이 AmountCoupond이면 discountPercent가 null이고 그런 구조..
+- Coupon을 추상클래스로 두고 이를 상속하며 각 쿠폰에게 필요한 필드를 추가하는 클래스로 설계를 했다.
+- 이 때, DTO에서 어떻게 넘겨주냐..?! DTO가 받는 타입은 추상클래스인 Coupon이다..
