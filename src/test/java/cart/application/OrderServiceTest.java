@@ -14,9 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Order;
 import cart.domain.PointDiscountPolicy;
 import cart.domain.PointEarnPolicy;
+import cart.dto.response.OrderResponse;
+import cart.dto.response.SortedOrdersResponse;
 import cart.exception.MemberException;
 import cart.exception.OrderException;
 import cart.exception.PointException;
@@ -107,7 +108,7 @@ class OrderServiceTest {
         @Test
         @DisplayName("findByMemberAndOrderId는 회원과 주문 ID를 전달하면 그에 맞는 주문 내역을 반환한다.")
         void findByMemberAndOrderIdSuccessTest() {
-            Order actual = orderService.findByMemberAndOrderId(MEMBER_A, firstOrderId);
+            OrderResponse actual = orderService.findByMemberAndOrderId(MEMBER_A, firstOrderId);
 
             assertThat(actual.getId()).isEqualTo(firstOrderId);
         }
@@ -123,13 +124,15 @@ class OrderServiceTest {
         @Test
         @DisplayName("findByMemberAndOrderId는 회원과 마지막 조회 주문 ID, 페이지 크기를 보여주면 최신 순으로 주문 목록을 반환한다.")
         void findByMemberAndLastOrderIdSuccessTest() {
-            List<Order> actual = orderService.findByMemberAndLastOrderId(MEMBER_A, LAST_ID_OF_FIRST_PAGE, DEFAULT_SIZE);
+            SortedOrdersResponse actual = orderService.findByMemberAndLastOrderId(MEMBER_A, LAST_ID_OF_FIRST_PAGE,
+                    DEFAULT_SIZE);
 
             assertAll(
-                    () -> assertThat(actual).hasSize(3),
-                    () -> assertThat(actual.get(0).getId()).isEqualTo(thirdOrderId),
-                    () -> assertThat(actual.get(1).getId()).isEqualTo(secondOrderId),
-                    () -> assertThat(actual.get(2).getId()).isEqualTo(firstOrderId)
+                    () -> assertThat(actual.getOrders()).hasSize(3),
+                    () -> assertThat(actual.getOrders().get(0).getId()).isEqualTo(thirdOrderId),
+                    () -> assertThat(actual.getOrders().get(1).getId()).isEqualTo(secondOrderId),
+                    () -> assertThat(actual.getOrders().get(2).getId()).isEqualTo(firstOrderId),
+                    () -> assertThat(actual.getLastOrderId()).isEqualTo(firstOrderId)
             );
         }
     }

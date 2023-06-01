@@ -7,6 +7,8 @@ import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.PointDiscountPolicy;
 import cart.domain.PointEarnPolicy;
+import cart.dto.response.OrderResponse;
+import cart.dto.response.SortedOrdersResponse;
 import cart.exception.OrderException.NotFound;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
@@ -55,22 +57,25 @@ public class OrderService {
         return persistOrder.getId();
     }
 
-    public Order findByMemberAndOrderId(Member member, Long orderId) {
+    public OrderResponse findByMemberAndOrderId(Member member, Long orderId) {
         Order order = orderRepository.findByOrderId(orderId)
                 .orElseThrow(NotFound::new);
         order.checkOwner(member);
 
-        return order;
+        return OrderResponse.from(order);
     }
 
-    public List<Order> findByMemberAndLastOrderId(Member member, Long lastOrderId, int size) {
-        return orderRepository.findByMemberAndLastOrderIdAndSize(member, lastOrderId, size);
+    public SortedOrdersResponse findByMemberAndLastOrderId(Member member, Long lastOrderId, int size) {
+        List<Order> sortedOrders = orderRepository.findByMemberAndLastOrderIdAndSize(member, lastOrderId, size);
+
+        return SortedOrdersResponse.from(sortedOrders);
     }
 
     private List<OrderItem> calculateOrderCartItems(List<Long> orderCartItemIds, List<CartItem> memberCartItems) {
         List<OrderItem> orderCartItems = memberCartItems.stream()
                 .filter(memberCartItem -> orderCartItemIds.contains(memberCartItem.getId()))
-                .map(memberCartItem -> new OrderItem(memberCartItem.getId(), memberCartItem.getProduct(), memberCartItem.getQuantity()))
+                .map(memberCartItem -> new OrderItem(memberCartItem.getId(), memberCartItem.getProduct(),
+                        memberCartItem.getQuantity()))
                 .collect(Collectors.toList());
 
         validateOrderCartItems(orderCartItemIds, orderCartItems);
