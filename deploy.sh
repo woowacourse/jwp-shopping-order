@@ -15,9 +15,9 @@ git checkout ${BRANCH_NAME}
 cd ./build/libs
 
 # 실행 중인 Spring Boot 애플리케이션 확인
-PID=$(pgrep -f 'java -jar')
+PID = $(lsof -t -i:8080)
 
-# -z: 문자열이 비여 있지 않은 경우에 참을 반환
+# -z: 문자열이 비어있으면 참
 if [ -z "$PID" ]
 then
   # 애플리케이션 시작 명령어
