@@ -1,6 +1,7 @@
 package cart.domain;
 
-import cart.exception.CartItemException.PointNotPositive;
+import cart.exception.ErrorStatus;
+import cart.exception.ShoppingOrderException;
 
 public class Point {
 
@@ -17,7 +18,7 @@ public class Point {
 
     private static void validatePoint(final int point) {
         if (point < 0) {
-            throw new PointNotPositive();
+            throw new ShoppingOrderException(ErrorStatus.POINT_INVALID_INPUT);
         }
     }
 
