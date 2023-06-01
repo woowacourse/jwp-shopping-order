@@ -9,4 +9,6 @@ public interface CouponRepository {
     Coupon findById(Long id);
 
     List<Coupon> findAllByMemberId(Long memberId);
+
+    List<Coupon> findAllByIds(List<Long> ids);
 }
