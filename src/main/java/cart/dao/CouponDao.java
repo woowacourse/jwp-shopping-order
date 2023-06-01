@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Repository
 public class CouponDao {
 
@@ -50,6 +52,7 @@ public class CouponDao {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<CouponEntity> findByIds(final List<Long> ids) {
         if (ids.isEmpty()) {
             return Collections.emptyList();
@@ -59,6 +62,7 @@ public class CouponDao {
         return namedJdbcTemplate.query(sql, parameters, rowMapper);
     }
 
+    @Transactional(readOnly = true)
     public Optional<CouponEntity> findById(final Long id) {
         final String sql = "SELECT * FROM coupon WHERE id = ?";
         try {

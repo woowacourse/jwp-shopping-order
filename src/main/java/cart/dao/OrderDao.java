@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Repository
 public class OrderDao {
 
@@ -39,11 +41,13 @@ public class OrderDao {
                 orderEntity.getMemberId());
     }
 
+    @Transactional(readOnly = true)
     public List<OrderEntity> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM orders WHERE member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
+    @Transactional(readOnly = true)
     public Optional<OrderEntity> findById(final Long id) {
         final String sql = "SELECT * FROM orders WHERE id = ?";
         try {

@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Repository
 public class MemberDao {
 
@@ -36,11 +38,13 @@ public class MemberDao {
         return new MemberEntity(id, memberEntity.getEmail(), memberEntity.getPassword());
     }
 
+    @Transactional(readOnly = true)
     public List<MemberEntity> findAll() {
         final String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    @Transactional(readOnly = true)
     public Optional<MemberEntity> findById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
         try {

@@ -11,7 +11,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Repository
 public class OrderItemDao {
 
@@ -56,11 +58,13 @@ public class OrderItemDao {
         jdbcInsert.executeBatch(parameterSources);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderItemEntity> findAllByOrderId(final Long orderId) {
         final String sql = "SELECT * FROM order_item WHERE order_id = ?";
         return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderItemEntity> findAllByOrderIds(final List<Long> orderIds) {
         if (orderIds.isEmpty()) {
             return Collections.emptyList();

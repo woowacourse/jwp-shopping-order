@@ -12,7 +12,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Repository
 public class CartItemDao {
 
@@ -47,11 +49,13 @@ public class CartItemDao {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemEntity> findAllByMemberId(final Long memberId) {
         String sql = "SELECT * FROM cart_item WHERE member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
+    @Transactional(readOnly = true)
     public Optional<CartItemEntity> findById(Long id) {
         String sql = "SELECT * FROM cart_item WHERE id = ?";
         try {
@@ -61,6 +65,7 @@ public class CartItemDao {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemEntity> findAllByIdsAndMemberId(final List<Long> ids, final Long memberId) {
         if (ids.isEmpty()) {
             return Collections.emptyList();

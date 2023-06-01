@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Repository
 public class ProductDao {
 
@@ -42,11 +44,6 @@ public class ProductDao {
         return new ProductEntity(id, product.getName(), product.getImageUrl(), product.getPrice());
     }
 
-    public List<ProductEntity> findAll() {
-        final String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, rowMapper);
-    }
-
     public int update(final ProductEntity product) {
         final String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE id = ?";
         return jdbcTemplate.update(
@@ -63,6 +60,13 @@ public class ProductDao {
         return jdbcTemplate.update(sql, id);
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    @Transactional(readOnly = true)
     public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {
@@ -72,6 +76,7 @@ public class ProductDao {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<ProductEntity> findByIds(final List<Long> ids) {
         if (ids.isEmpty()) {
             return Collections.emptyList();

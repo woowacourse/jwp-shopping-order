@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Repository
 public class MemberCouponDao {
 
@@ -49,11 +51,6 @@ public class MemberCouponDao {
         jdbcInsert.executeBatch(parameterSources);
     }
 
-    public List<MemberCouponEntity> findAllByUsedAndMemberId(final boolean used, final Long memberId) {
-        final String sql = "SELECT * FROM member_coupon WHERE used = ? and member_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, used, memberId);
-    }
-
     public void update(final MemberCouponEntity memberCouponEntity) {
         final String sql = "UPDATE member_coupon SET used = ? where coupon_id = ? and member_id = ?";
         jdbcTemplate.update(
@@ -64,6 +61,13 @@ public class MemberCouponDao {
         );
     }
 
+    @Transactional(readOnly = true)
+    public List<MemberCouponEntity> findAllByUsedAndMemberId(final boolean used, final Long memberId) {
+        final String sql = "SELECT * FROM member_coupon WHERE used = ? and member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, used, memberId);
+    }
+
+    @Transactional(readOnly = true)
     public Optional<MemberCouponEntity> findById(final Long id) {
         final String sql = "SELECT * FROM member_coupon WHERE id = ?";
         try {
