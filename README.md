@@ -24,3 +24,97 @@
     - 예) 5만원 이상 주문 시 전체 금액에서 10% 할인이 된다.
 - [ ] 사용자 별로 주문 목록을 확인할 수 있다.
 - [ ] 특정 주문의 상세 정보를 확인할 수 있다.
+
+### 주문하기 - 쿠폰적용 하는 경우
+
+POST http://localhost:8080/order
+Accept: application/json
+Content-Type: application/json
+
+```json
+{
+  "cartItemIds": [
+    1,
+    2
+  ],
+  "couponId": 1
+}
+```
+
+### response
+
+HTTP/1.1 200
+Content-Type: application/json
+
+```json
+{
+  "id": 1,
+  "orderProducts": [
+    {
+      "productResponseDto": {
+        "id": 1,
+        "name": "치킨",
+        "price": 10000,
+        "imageUrl": "http://test.jpg"
+      },
+      "quantity": 1
+    }
+  ],
+  "timestamp": "2023-05-30T17:00:00",
+  "originPrice": 10000,
+  "discountPrice": 5000,
+  "totalPrice": 5000
+}
+```
+
+### 주문하기 - 쿠폰적용 하지 않는 경우
+
+POST http://localhost:8080/order
+Accept: application/json
+Content-Type: application/json
+
+```json
+{
+  "cartItemIds": [
+    1,
+    2
+  ]
+}
+```
+
+### response
+
+HTTP/1.1 200
+Content-Type: application/json
+
+```json
+{
+  "id": 1,
+  "orderProducts": [
+    {
+      "productResponseDto": {
+        "id": 1,
+        "name": "치킨",
+        "price": 10000,
+        "imageUrl": "http://test.jpg"
+      },
+      "quantity": 1
+    }
+  ],
+  "timestamp": "2023-05-30T17:00:00",
+  "originPrice": 10000,
+  "discountPrice": 0,
+  "totalPrice": 10000
+}
+```
+
+- 주문하기에서 해야할 것들 
+- [x] Order 저장
+- [x] OrderProduct 저장
+- [x] Coupon 적용해서 Coupon 까지 저장
+- [ ] cart-item 에서 삭제 
+  - [ ] 결제가 되었을 때 삭제되어야함
+  - [ ] 그렇기 때문에, Order 에 저장하기 이전에 삭제하면 안된다.
+  - [ ] Cart-Item 을 삭제하는 행위는 들어온 Request 를 그대로 활용해서 삭제한다.
+  - [ ] 그대로 OrderResponseDto 에 담아서 반환한다.
+    - [ ] 이 괒어에서 필요한 것, OrderRepository 에 저장, OrderProduct 저장, CartItem 삭제

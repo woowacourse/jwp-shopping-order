@@ -27,7 +27,6 @@ public class CouponRepository {
         this.memberDao = memberDao;
     }
 
-    // TODO: 해당 Member 가 쿠폰을 추가하면, 기존에 있는 쿠폰 다 저장함 (쿠폰들 리스트)
     public List<MemberCoupon> saveCoupon(Member member) {
         Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
         List<CouponDto> couponDtos = couponDao.findAll();
@@ -56,8 +55,39 @@ public class CouponRepository {
         );
     }
 
-    // TODO: Member 에 맞는 쿠폰 전체 조회 (그냥 MemberId 로 Member_Coupon 을 가져오고, 그 다음에 그것들을 가지고 Coupon 을 가져오면 됨)
+    public List<MemberCoupon> findMemberCouponByMember(Member member) {
+        Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
+        List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(memberByEmail.getId());
+        return getMemberCoupons(memberCouponDtos);
+    }
 
-    // TODO: Member 와 CouponId 가 주어졌을 때, 해당 Member에 맞는 Coupon를 가져옴, 즉 MemberCoupon 이 아닌 Coupon 을 가져와야함
+    private List<MemberCoupon> getMemberCoupons(final List<MemberCouponDto> memberCouponDtos) {
+        List<MemberCoupon> memberCoupons = new ArrayList<>();
+
+        for (MemberCouponDto memberCouponDto : memberCouponDtos) {
+            Long couponId = memberCouponDto.getCouponId();
+            CouponDto couponDto = couponDao.findById(couponId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
+            Coupon coupon = couponDtoToCoupon(couponDto);
+            memberCoupons.add(new MemberCoupon(memberCouponDto.getId(), coupon));
+        }
+
+        return memberCoupons;
+    }
+
+    public Coupon findCouponByMemberCouponId(final Long memberCouponId) {
+        MemberCouponDto memberCouponDto = getMemberCouponByMemberCouponId(memberCouponId);
+        CouponDto couponDto = getCouponByCouponId(memberCouponDto.getCouponId());
+        return new Coupon(couponDto.getId(), couponDto.getName(), couponDto.getDiscountRate(), couponDto.getDiscountPrice());
+    }
+
+    private MemberCouponDto getMemberCouponByMemberCouponId(final Long memberCouponId) {
+        return memberCouponDao.findById(memberCouponId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
+    }
+
+    private CouponDto getCouponByCouponId(final Long couponId) {
+        return couponDao.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 쿠폰입니다."));
+    }
 
 }

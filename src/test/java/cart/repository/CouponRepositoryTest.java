@@ -6,7 +6,9 @@ import static org.assertj.core.api.Assertions.tuple;
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
+import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
 import java.util.List;
@@ -25,13 +27,15 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class CouponRepositoryTest {
 
-    private static final Member MEMBER = new Member(1L, "a@a", "1234");
+    private static final Member MEMBER_1 = new Member(1L, "a@a", "1234");
+    private static final Member MEMBER_2 = new Member(2L, "b@b", "1234");
     private static final RowMapper<MemberCouponDto> memberCouponDtoRowMapper = (rs, rn) ->
             new MemberCouponDto(
                     rs.getLong("id"),
                     rs.getLong("member_id"),
                     rs.getLong("coupon_id")
             );
+
     private static final RowMapper<CouponDto> couponDtoRowMapper = (rs, rn) ->
             new CouponDto(
                     rs.getLong("id"),
@@ -47,8 +51,8 @@ class CouponRepositoryTest {
 
     @BeforeEach
     void beforeEach() {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.couponRepository = new CouponRepository(
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        couponRepository = new CouponRepository(
                 new CouponDao(dataSource),
                 new MemberCouponDao(dataSource),
                 new MemberDao(dataSource)
@@ -58,17 +62,18 @@ class CouponRepositoryTest {
         String memberSaveQuery = "INSERT INTO member (id, email, password) VALUES (?, ?, ?)";
         jdbcTemplate.update(couponSaveQuery, 1L, "정액 할인 쿠폰", 0d, 5000);
         jdbcTemplate.update(couponSaveQuery, 2L, "할인율 쿠폰", 10d, 0);
-        jdbcTemplate.update(memberSaveQuery, MEMBER.getId(), MEMBER.getEmail(), MEMBER.getPassword());
+        jdbcTemplate.update(memberSaveQuery, MEMBER_1.getId(), MEMBER_1.getEmail(), MEMBER_1.getPassword());
+        jdbcTemplate.update(memberSaveQuery, MEMBER_2.getId(), MEMBER_2.getEmail(), MEMBER_2.getPassword());
     }
 
     @Test
     @DisplayName("사용자가 쿠폰을 추가하면, 현재 Coupon 테이블에 있는 쿠폰이 모두 추가된다.")
     void addCoupon() {
-        couponRepository.saveCoupon(MEMBER);
+        couponRepository.saveCoupon(MEMBER_1);
 
         String findMemberCouponQuery = "SELECT * FROM member_coupon WHERE member_id = ?";
         String findCouponQuery = "SELECT * FROM coupon WHERE id = ?";
-        List<MemberCouponDto> memberCouponDtos = jdbcTemplate.query(findMemberCouponQuery, memberCouponDtoRowMapper, MEMBER.getId());
+        List<MemberCouponDto> memberCouponDtos = jdbcTemplate.query(findMemberCouponQuery, memberCouponDtoRowMapper, MEMBER_1.getId());
 
         List<CouponDto> couponDtos = memberCouponDtos.stream()
                 .map(memberCouponDto -> jdbcTemplate.queryForObject(findCouponQuery, couponDtoRowMapper,
@@ -77,11 +82,39 @@ class CouponRepositoryTest {
         assertThat(couponDtos)
                 .extracting(CouponDto::getId, CouponDto::getName, CouponDto::getDiscountRate, CouponDto::getDiscountPrice)
                 .containsExactly(tuple(1L, "정액 할인 쿠폰", 0d, 5000), tuple(2L, "할인율 쿠폰", 10d, 0));
-
     }
 
-    // TODO: Member 에 맞는 쿠폰 전체 조회 (그냥 MemberId 로 Member_Coupon 을 가져오고, 그 다음에 그것들을 가지고 Coupon 을 가져오면 됨)
+    @Test
+    @DisplayName("Member 의 정보를 주면, Member 가 가진 Coupon 을 반환받는다.")
+    void findMemberCouponByMember() {
+        initMemberCoupon();
 
-    // TODO: Member 와 CouponId 가 주어졌을 때, 해당 Member에 맞는 Coupon를 가져옴, 즉 MemberCoupon 이 아닌 Coupon 을 가져와야함
+        List<MemberCoupon> memberCoupons = couponRepository.findMemberCouponByMember(MEMBER_2);
+
+        assertThat(memberCoupons)
+                .hasSize(1)
+                .extracting(MemberCoupon::getCoupon)
+                .extracting(Coupon::getId, Coupon::getName, Coupon::getDiscountRate, Coupon::getDiscountPrice)
+                .containsExactly(tuple(1L, "정액 할인 쿠폰", 0d, 5000));
+    }
+
+    private void initMemberCoupon() {
+        String memberCouponSaveQuery = "INSERT INTO member_coupon (id, member_id, coupon_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(memberCouponSaveQuery, 1L, 1L, 1L);
+        jdbcTemplate.update(memberCouponSaveQuery, 2L, 1L, 2L);
+        jdbcTemplate.update(memberCouponSaveQuery, 3L, 2L, 1L);
+    }
+
+    @Test
+    @DisplayName("Member Coupon Id 로 해당하는 Coupon 을 가져온다.")
+    void findByCouponByMemberCouponId() {
+        initMemberCoupon();
+
+        Coupon coupon = couponRepository.findCouponByMemberCouponId(3L);
+
+        assertThat(coupon)
+                .extracting(Coupon::getId, Coupon::getName, Coupon::getDiscountRate, Coupon::getDiscountPrice)
+                .containsExactly(1L, "정액 할인 쿠폰", 0d, 5000);
+    }
 
 }

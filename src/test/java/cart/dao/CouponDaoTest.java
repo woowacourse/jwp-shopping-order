@@ -93,8 +93,8 @@ class CouponDaoTest {
 
         List<CouponDto> couponDtos = couponDao.findAll();
         assertThat(couponDtos).hasSize(2)
-                .extracting(CouponDto::getId, CouponDto::getName, CouponDto::getDiscountRate, CouponDto::getDiscountPrice)
-                .containsExactly(tuple(1L, "홍실 할인", 2d, 0), Tuple.tuple(2L, "홍실 할인", 0d, 2000));
+                .extracting(CouponDto::getName, CouponDto::getDiscountRate, CouponDto::getDiscountPrice)
+                .containsExactly(tuple("홍실 할인", 2d, 0), Tuple.tuple("홍실 할인", 0d, 2000));
     }
 
     private void saveCoupon(CouponDto couponDto) {

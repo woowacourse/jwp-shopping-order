@@ -37,7 +37,7 @@ public class OrderRepository {
                 orderId,
                 order.getTimeStamp(),
                 order.getMember(),
-                order.getCoupon(),
+                order.getCoupon(), // order 는 Coupon 이 채워져있는 상태임, 즉, 외부에서 Coupon 을 주입해줘서 만들어줘야함
                 orderProductsAfterSave
         );
     }
@@ -47,8 +47,8 @@ public class OrderRepository {
         for (OrderProduct orderProduct : orderProducts) {
             OrderProductDto orderProductDto = OrderProductDto.of(orderId, orderProduct);
             Long insert = orderProductDao.insert(orderProductDto);
-            orderProductsAfterSave.add(new OrderProduct(insert, orderProduct.getProduct(),
-                    orderProduct.getQuantity()));
+            OrderProduct orderProductHasId = new OrderProduct(insert, orderProduct.getProduct(), orderProduct.getQuantity());
+            orderProductsAfterSave.add(orderProductHasId);
         }
         return orderProductsAfterSave;
     }
