@@ -44,7 +44,7 @@ class CartItemTest {
         CartItem newCartItem = cartItem.changeQuantity(newQuantity);
 
         // then
-        assertThat(newCartItem.getQuantity()).isEqualTo(2);
+        assertThat(newCartItem.getQuantityValue()).isEqualTo(2);
     }
 
     @Test

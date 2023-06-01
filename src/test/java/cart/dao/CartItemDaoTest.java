@@ -4,16 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.CartItemEntity;
-import cart.domain.Member;
+import cart.domain.MemberEntity;
 import cart.domain.Product;
 import cart.exception.CartItemNotFoundException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.List;
 
 class CartItemDaoTest extends DaoTest {
 
-    private static final Member dummyMember = new Member(1L, "email1", "pw1", 1);
+    private static final MemberEntity dummyMemberEntity = new MemberEntity(1L, "email1", "pw1", 1);
     private static final Product dummyProduct = new Product(1L, "name1", 1, "imageUrl1", 1);
     private static final CartItemEntity dummyCartItemEntity = new CartItemEntity(1L, 1L, 1);
 
@@ -31,7 +31,7 @@ class CartItemDaoTest extends DaoTest {
     }
 
     private void insertDummyMemberAndProduct() {
-        memberDao.insert(dummyMember);
+        memberDao.insert(dummyMemberEntity);
         productDao.insert(dummyProduct);
     }
 
@@ -74,7 +74,7 @@ class CartItemDaoTest extends DaoTest {
         cartItemDao.insert(dummyCartItemEntity);
 
         // when
-        List<CartItemEntity> result = cartItemDao.findByMemberId(dummyMember.getId());
+        List<CartItemEntity> result = cartItemDao.findByMemberId(dummyMemberEntity.getId());
 
         // then
         assertThat(result).hasSize(1);

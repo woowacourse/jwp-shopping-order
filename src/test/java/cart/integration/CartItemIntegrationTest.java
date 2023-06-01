@@ -3,27 +3,28 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.domain.Point;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
+import cart.repository.MemberRepository;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     private Long productId1;
     private Long productId2;
@@ -37,10 +38,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 10));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 20));
 
-        memberDao.insert(new Member("a@a.com", "password1", 0));
-        memberDao.insert(new Member("b@b.com", "password2", 0));
-        member1 = memberDao.findById(1L);
-        member2 = memberDao.findById(2L);
+        memberRepository.save(new Member("a@a.com", "password1", new Point(0)));
+        memberRepository.save(new Member("b@b.com", "password2", new Point(0)));
+        member1 = memberRepository.findById(1L);
+        member2 = memberRepository.findById(2L);
     }
 
     private Long createProduct(final ProductRequest productRequest) {
