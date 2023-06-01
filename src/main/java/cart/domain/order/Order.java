@@ -2,6 +2,8 @@ package cart.domain.order;
 
 import cart.domain.product.Price;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Order {
@@ -21,7 +23,7 @@ public class Order {
     ) {
         this.id = id;
         this.orderTime = orderTime;
-        this.orderItems = orderItemList;
+        this.orderItems = new ArrayList<>(orderItemList);
     }
 
     public Price getTotalPrice() {
@@ -39,6 +41,6 @@ public class Order {
     }
 
     public List<OrderItem> getOrderItems() {
-        return orderItems;
+        return Collections.unmodifiableList(orderItems);
     }
 }

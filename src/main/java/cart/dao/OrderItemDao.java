@@ -2,10 +2,14 @@ package cart.dao;
 
 import cart.entity.OrderItemEntity;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -15,6 +19,7 @@ public class OrderItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<OrderItemEntity> rowMapper = (rs, rowNum) -> new OrderItemEntity(
             rs.getLong("id"),
             rs.getLong("order_id"),
@@ -25,6 +30,9 @@ public class OrderItemDao {
 
     public OrderItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(
+                Objects.requireNonNull(jdbcTemplate.getDataSource())
+        );
         this.insertAction = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_item")
                 .usingGeneratedKeyColumns("id");
@@ -43,5 +51,19 @@ public class OrderItemDao {
         String sql = "SELECT * FROM order_item WHERE order_id = ?";
 
         return jdbcTemplate.query(sql, rowMapper, orderId);
+    }
+
+    public Map<Long, List<OrderItemEntity>> findGroupByOrderId(final List<Long> orderIds) {
+        String sql = "SELECT * FROM order_item WHERE order_id IN (:orderIds)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("orderIds", orderIds);
+
+        final List<OrderItemEntity> orderItemEntities = namedParameterJdbcTemplate.query(sql, params, rowMapper);
+
+        return orderItemEntities.stream().collect(Collectors.groupingBy(
+                OrderItemEntity::getOrderId,
+                Collectors.toList()
+        ));
     }
 }
