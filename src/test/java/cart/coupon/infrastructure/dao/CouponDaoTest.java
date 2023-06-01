@@ -91,4 +91,38 @@ class CouponDaoTest {
         // then
         assertThat(allByMemberId).hasSize(2);
     }
+
+    @Test
+    void ID_리스트로_모든_쿠폰을_조회한다() {
+        // given
+        CouponEntity coupon1 = new CouponEntity(
+                null,
+                "말랑이 멋진쿠폰",
+                1L,
+                DiscountType.RATE,
+                TargetType.ALL,
+                1L,
+                50);
+        Long id1 = couponDao.save(coupon1);
+        CouponEntity coupon2 = new CouponEntity(
+                null,
+                "말랑이 더 멋진쿠폰",
+                1L,
+                DiscountType.RATE,
+                TargetType.ALL,
+                1L,
+                70);
+        Long id2 = couponDao.save(coupon2);
+
+        List<Long> ids = List.of(id1, id2);
+
+        // when
+        List<CouponEntity> actual = couponDao.findAllByIds(ids);
+
+        // then
+        List<CouponEntity> expected = List.of(coupon1, coupon2);
+        assertThat(actual).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(expected);
+    }
 }
