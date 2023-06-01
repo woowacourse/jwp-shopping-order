@@ -39,7 +39,6 @@ CREATE TABLE coupon
     FOREIGN KEY (policy_id) REFERENCES policy (id)
 );
 
--- 추가 테이블
 CREATE TABLE member_coupon
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
