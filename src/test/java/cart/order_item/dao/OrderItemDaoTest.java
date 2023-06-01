@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import cart.order_item.dao.entity.OrderItemEntity;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,5 +62,24 @@ class OrderItemDaoTest {
 
     //then
     assertEquals(3, orderItemEntities.size());
+  }
+
+  @Test
+  @DisplayName("deleteBatch() : 여러 id를 통해서 orderItem 을 삭제할 수 있다.")
+  void test_deleteBatch() throws Exception {
+    //given
+    final long orderId = 1L;
+    final List<Long> 삭제할_주문아이템_아이디 = orderItemDao.findByOrderId(orderId)
+        .stream()
+        .map(OrderItemEntity::getId)
+        .collect(Collectors.toList());
+
+    //when
+    orderItemDao.deleteBatch(삭제할_주문아이템_아이디);
+
+    //then
+    final List<OrderItemEntity> deletedOrderItems = orderItemDao.findByOrderId(orderId);
+
+    assertEquals(0, deletedOrderItems.size());
   }
 }
