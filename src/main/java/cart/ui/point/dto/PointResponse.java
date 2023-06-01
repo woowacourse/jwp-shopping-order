@@ -1,6 +1,9 @@
 package cart.ui.point.dto;
 
+import cart.application.service.point.PointResultDto;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PointResponse {
 
@@ -10,6 +13,12 @@ public class PointResponse {
     public PointResponse(final List<PointHistoryResponse> pointHistories, final int totalPoint) {
         this.pointHistories = pointHistories;
         this.totalPoint = totalPoint;
+    }
+
+    public static PointResponse from(final PointResultDto pointResultDto) {
+        return new PointResponse(pointResultDto.getPointHistoryDtos().stream()
+                .map(PointHistoryResponse::from)
+                .collect(Collectors.toUnmodifiableList()), pointResultDto.getTotalPoint());
     }
 
     public List<PointHistoryResponse> getPointHistories() {

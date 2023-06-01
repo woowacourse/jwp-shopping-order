@@ -1,7 +1,8 @@
 package cart.ui.point;
 
 import cart.application.service.point.PointReadService;
-import cart.domain.Member;
+import cart.application.service.point.PointResultDto;
+import cart.ui.MemberAuth;
 import cart.ui.point.dto.PointResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +20,9 @@ public class PointReadController {
     }
 
     @GetMapping
-    public ResponseEntity<PointResponse> findPointByMember(final Member member) {
-        final PointResponse pointResponse = pointReadService.findPointByMember(member);
-        return ResponseEntity.ok(pointResponse);
+    public ResponseEntity<PointResponse> findPointByMember(final MemberAuth memberAuth) {
+        final PointResultDto pointResultDto = pointReadService.findPointByMember(memberAuth);
+        return ResponseEntity.ok(PointResponse.from(pointResultDto));
     }
+
 }

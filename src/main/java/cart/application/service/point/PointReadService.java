@@ -1,9 +1,8 @@
 package cart.application.service.point;
 
 import cart.application.repository.PointRepository;
-import cart.domain.Member;
 import cart.domain.Point;
-import cart.ui.point.dto.PointResponse;
+import cart.ui.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +16,9 @@ public class PointReadService {
         this.pointRepository = pointRepository;
     }
 
-    public PointResponse findPointByMember(final Member member) {
-        final Point pointByMember = pointRepository.findPointByMember(member);
-
-        return null;
+    public PointResultDto findPointByMember(final MemberAuth memberAuth) {
+        final Point pointByMember = pointRepository.findPointByMemberId(memberAuth.getId());
+        return PointResultDto.of(pointByMember.getPointHistories(), pointByMember.calculateTotalPoint());
     }
+
 }

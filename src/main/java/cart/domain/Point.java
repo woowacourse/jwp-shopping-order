@@ -1,13 +1,23 @@
 package cart.domain;
 
+import java.util.List;
+
 public class Point {
-    private final int point;
 
-    public Point(final int point) {
-        this.point = point;
+    private final List<PointHistory> pointHistories;
+
+    public Point(final List<PointHistory> pointHistories) {
+        this.pointHistories = pointHistories;
     }
 
-    public int getPoint() {
-        return point;
+    public int calculateTotalPoint() {
+        return pointHistories.stream()
+                .mapToInt(PointHistory::calculatePoint)
+                .sum();
     }
+
+    public List<PointHistory> getPointHistories() {
+        return pointHistories;
+    }
+
 }

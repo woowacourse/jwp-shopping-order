@@ -1,38 +1,51 @@
 package cart.persistence.point;
 
 import cart.application.repository.PointRepository;
-import cart.domain.Member;
 import cart.domain.Point;
+import cart.domain.PointHistory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class PointJdbcRepository implements PointRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-//    private final RowMapper<Point> pointRowMapper = (rs, rowNum) ->
-//            new Point(
-//                    rs.getLong("id"),
-//                    rs.getLong("member_id"),
-//                    rs.getInt("point")
-//            );
+    private final RowMapper<PointHistory> pointHistoryRowMapper = (rs, rowNum) ->
+            new PointHistory(
+                    rs.getLong("order_id"),
+                    rs.getInt("used_point"),
+                    rs.getInt("earned_point")
+            );
 
     public PointJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("point")
+                .withTableName("point_history")
                 .usingGeneratedKeyColumns("id");
     }
 
     @Override
-    public Point findPointByMember(final Member member) {
-        return null;
+    public Long createPointHistory(final Long memberId, final PointHistory pointHistory) {
+        final Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put("member_id", memberId);
+        parameters.put("order_id", pointHistory.getOrderId());
+        parameters.put("used_point", pointHistory.getUsedPoint());
+        parameters.put("earned_point", pointHistory.getEarnedPoint());
+
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
-//
-//    public Point findByMemberId(final Long id) {
-//        final String sql = "select * from point where member_id = ?";
-//        return jdbcTemplate.queryForObject(sql, , id);
-//    }
+
+    @Override
+    public Point findPointByMemberId(final Long memberId) {
+        final String sql = "select * from point_history where member_id = ?";
+        return new Point(jdbcTemplate.query(sql, pointHistoryRowMapper, memberId));
+    }
+
 }

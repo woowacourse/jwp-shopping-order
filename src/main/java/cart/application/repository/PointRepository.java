@@ -1,8 +1,12 @@
 package cart.application.repository;
 
-import cart.domain.Member;
 import cart.domain.Point;
+import cart.domain.PointHistory;
 
 public interface PointRepository {
-    Point findPointByMember(Member member);
+
+    Point findPointByMemberId(Long memberId);
+
+    Long createPointHistory(final Long memberId, final PointHistory pointHistory);
+
 }
