@@ -20,7 +20,7 @@ public class OrderItemTest {
         // given
         final Quantity quantity = new Quantity(5);
         final Product product = new Product(1L, new Name("상품"), new ImageUrl("example.com"), new Price(1000));
-        final OrderItem orderItem = new OrderItem(1L, 1L, quantity, product);
+        final OrderItem orderItem = new OrderItem(1L, quantity, product);
 
         //when
         final Price totalPrice = orderItem.getTotalPrice();
