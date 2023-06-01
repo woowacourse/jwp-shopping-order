@@ -3,22 +3,36 @@ package cart.domain;
 import cart.exception.CartItemException;
 
 public class CartItem {
-    private final Product product;
+    private final Long id;
     private final Member member;
-    private Long id;
-    private int quantity;
+    private final Item item;
 
     public CartItem(Product product, Member member) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
+        this(null, member, new Item(product));
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
+        this(id, member, new Item(product, quantity));
+    }
+
+    public CartItem(Long id, Member member, Item item) {
         this.id = id;
-        this.quantity = quantity;
-        this.product = product;
         this.member = member;
+        this.item = item;
+    }
+
+    public void checkOwner(Member member) {
+        if (!this.member.equals(member)) {
+            throw new CartItemException.IllegalMember(this, member);
+        }
+    }
+
+    public void changeQuantity(int quantity) {
+        item.changeQuantity(quantity);
+    }
+
+    public Money calculateCartPrice() {
+        return item.calculateItemPrice();
     }
 
     public Long getId() {
@@ -30,24 +44,14 @@ public class CartItem {
     }
 
     public Product getProduct() {
-        return product;
+        return item.getProduct();
     }
 
     public int getQuantity() {
-        return quantity;
+        return item.getQuantity();
     }
 
-    public void checkOwner(Member member) {
-        if (!this.member.equals(member)) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
-    }
-
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public Money calculateCartPrice() {
-        return product.getPrice().multiply(quantity);
+    public Item getItem() {
+        return item;
     }
 }
