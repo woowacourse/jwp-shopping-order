@@ -13,8 +13,10 @@ import cart.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CartItemService {
 
     private final ProductDao productDao;
@@ -23,6 +25,14 @@ public class CartItemService {
     public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
+    }
+
+    @Transactional
+    public Long create(Member member, CartItemRequest cartItemRequest) {
+        final ProductEntity productEntity = productDao.findById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new ResourceNotFoundException("해당하는 상품이 없습니다."));
+        final CartItem cartItem = new CartItem(member, ProductEntity.toDomain(productEntity));
+        return cartItemDao.create(CartItemEntity.from(cartItem));
     }
 
     public List<CartItemResponse> findByMember(Member member) {
@@ -37,13 +47,7 @@ public class CartItemService {
                 .collect(Collectors.toList());
     }
 
-    public Long create(Member member, CartItemRequest cartItemRequest) {
-        final ProductEntity productEntity = productDao.findById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new ResourceNotFoundException("해당하는 상품이 없습니다."));
-        final CartItem cartItem = new CartItem(member, ProductEntity.toDomain(productEntity));
-        return cartItemDao.create(CartItemEntity.from(cartItem));
-    }
-
+    @Transactional
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItemEntity cartItemEntity = cartItemDao.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("해당하는 장바구니 아이템이 없습니다."));
@@ -59,6 +63,7 @@ public class CartItemService {
         cartItemDao.updateQuantity(CartItemEntity.from(cartItem));
     }
 
+    @Transactional
     public void remove(Member member, Long id) {
         CartItemEntity cartItemEntity = cartItemDao.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("해당하는 장바구니 아이템이 없습니다."));
