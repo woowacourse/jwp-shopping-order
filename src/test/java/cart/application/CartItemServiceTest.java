@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import cart.dto.CartItemResponse;
+import cart.dto.response.CartItemResponse;
 import cart.exception.CartItemException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;

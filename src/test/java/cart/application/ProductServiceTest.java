@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
-import cart.dto.ProductResponse;
+import cart.dto.response.ProductResponse;
 import cart.exception.ProductException;
 import cart.repository.ProductRepository;
 import java.util.List;

@@ -3,9 +3,9 @@ package cart.fixture;
 import static cart.fixture.DomainFixture.CHICKEN;
 import static cart.fixture.DomainFixture.PIZZA;
 
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.ProductRequest;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.request.ProductRequest;
 
 public class DtoFixture {
 

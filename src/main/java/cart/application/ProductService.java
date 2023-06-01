@@ -1,8 +1,8 @@
 package cart.application;
 
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.exception.ProductException;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
