@@ -1,6 +1,7 @@
 package cart.dao.dto;
 
 import cart.domain.product.Product;
+import cart.domain.vo.Price;
 
 public class ProductDto {
 
@@ -21,11 +22,11 @@ public class ProductDto {
     }
 
     public static ProductDto from(final Product product) {
-        return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new ProductDto(product.getId(), product.getName(), product.getPrice().getValue(), product.getImageUrl());
     }
 
     public Product toProduct() {
-        return new Product(id, name, price, imageUrl);
+        return new Product(id, name, new Price(price), imageUrl);
     }
 
     public Long getId() {

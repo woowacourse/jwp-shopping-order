@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.product.CartItem;
 import cart.domain.product.Product;
+import cart.domain.vo.Price;
 import cart.domain.vo.Quantity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -38,7 +39,7 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Product product = new Product(productId, name, price, imageUrl);
+            Product product = new Product(productId, name, new Price(price), imageUrl);
             return new CartItem(cartItemId, new Quantity(quantity), product, memberId);
         });
     }
@@ -59,7 +60,7 @@ public class CartItemDao {
                 String imageUrl = rs.getString("image_url");
                 Long cartItemId = rs.getLong("cart_item.id");
                 int quantity = rs.getInt("cart_item.quantity");
-                Product product = new Product(productId1, name, price, imageUrl);
+                Product product = new Product(productId1, name, new Price(price), imageUrl);
                 return new CartItem(cartItemId, new Quantity(quantity), product, memberId);
             }, memberId, productId));
         } catch (final EmptyResultDataAccessException exception) {
@@ -102,7 +103,7 @@ public class CartItemDao {
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Product product = new Product(productId, name, price, imageUrl);
+            Product product = new Product(productId, name, new Price(price), imageUrl);
             return new CartItem(cartItemId, new Quantity(quantity), product, memberId);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);

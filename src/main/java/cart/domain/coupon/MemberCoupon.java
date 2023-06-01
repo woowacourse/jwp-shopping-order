@@ -27,8 +27,8 @@ public class MemberCoupon {
         }
     }
 
-    public Price discount(final Price totalPrice) {
-        return coupon.calculateDiscountPrice(totalPrice);
+    public Price discount(final Price originPrice) {
+        return coupon.calculateDiscountPrice(originPrice);
     }
 
     public Long getId() {
