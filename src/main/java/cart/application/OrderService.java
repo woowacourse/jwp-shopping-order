@@ -8,6 +8,7 @@ import cart.domain.Product;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.dto.ProductResponse;
 import cart.exception.ErrorMessage;
 import cart.exception.OrderException;
 import cart.repository.CartItemRepository;
@@ -131,11 +132,15 @@ public class OrderService {
     private OrderProductResponse toProductResponse(OrderProduct orderProduct) {
         Product product = orderProduct.getProduct();
 
-        return new OrderProductResponse(
+        ProductResponse productResponse = new ProductResponse(
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
-                product.getImageUrl(),
+                product.getImageUrl()
+        );
+
+        return new OrderProductResponse(
+                productResponse,
                 orderProduct.getQuantity()
         );
     }

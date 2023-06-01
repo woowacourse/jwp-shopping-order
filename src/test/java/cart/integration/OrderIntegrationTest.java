@@ -15,6 +15,7 @@ import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderResponse;
+import cart.dto.ProductResponse;
 import cart.exception.ErrorMessage;
 import cart.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -142,11 +143,11 @@ public class OrderIntegrationTest extends IntegrationTest {
         Long 주문_ID = 주문_추가_후_주문_ID를_리턴한다(멤버, List.of(첫번째_장바구니_상품_ID, 두번째_장바구니_상품_ID), 1000);
 
         OrderProductResponse 치킨_상품_응답 = new OrderProductResponse(
-                치킨_ID, "치킨", 10_000, "http://example.com/chicken.jpg", 1
+                new ProductResponse(치킨_ID, "치킨", 10_000, "http://example.com/chicken.jpg"), 1
         );
 
         OrderProductResponse 피자_상품_응답 = new OrderProductResponse(
-                피자_ID, "피자", 30_000, "http://example.com/pizza.jpg", 1
+                new ProductResponse(피자_ID, "피자", 30_000, "http://example.com/pizza.jpg"), 1
         );
 
         OrderResponse 맞는_응답 = new OrderResponse(
@@ -189,11 +190,11 @@ public class OrderIntegrationTest extends IntegrationTest {
         Long 두번째_주문_ID = 주문_추가_후_주문_ID를_리턴한다(멤버, List.of(두번째로_추가한_장바구니_상품_ID), 10000);
 
         OrderProductResponse 치킨_상품_응답 = new OrderProductResponse(
-                치킨_ID, "치킨", 10_000, "http://example.com/chicken.jpg", 1
+                new ProductResponse(치킨_ID, "치킨", 10_000, "http://example.com/chicken.jpg"), 1
         );
 
         OrderProductResponse 피자_상품_응답 = new OrderProductResponse(
-                피자_ID, "피자", 30_000, "http://example.com/pizza.jpg", 1
+                new ProductResponse(피자_ID, "피자", 30_000, "http://example.com/pizza.jpg"), 1
         );
 
         OrderResponse 맞는_첫번째_응답 = new OrderResponse(

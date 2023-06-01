@@ -1,38 +1,16 @@
 package cart.dto;
 
 public class OrderProductResponse {
-    private final Long productId;
-    private final String name;
-    private final int price;
-    private final String imageUrl;
+    private final ProductResponse product;
     private final int quantity;
 
-    public OrderProductResponse(final Long productId,
-                                final String name,
-                                final int price,
-                                final String imageUrl,
-                                final int quantity) {
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public OrderProductResponse(final ProductResponse product, final int quantity) {
+        this.product = product;
         this.quantity = quantity;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public ProductResponse getProduct() {
+        return product;
     }
 
     public int getQuantity() {
