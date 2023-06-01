@@ -11,8 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,17 +37,6 @@ class CouponDaoTest {
         jdbcTemplate.update(
                 "INSERT INTO coupon(id, name, discount_type_id, discount_condition_id) VALUES (1, '10% 할인 쿠폰', 1, 1)");
         jdbcTemplate.execute("INSERT INTO coupon_member(id, coupon_id, member_id) VALUES (1, 1, 1)");
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {"1, true", "2, false"})
-    void 쿠폰_존재_여부를_반환한다(long couponId, boolean expected) {
-        // given
-        // when
-        boolean result = couponDao.exists(couponId);
-
-        // then
-        assertThat(result).isEqualTo(expected);
     }
 
     @Test

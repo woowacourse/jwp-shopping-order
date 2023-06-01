@@ -20,9 +20,7 @@ public class CouponCommandService {
     }
 
     public void addCoupon(Long couponId, Long memberId) {
-        if (!couponDao.exists(couponId)) {
-            throw new CouponException("존재하지 않는 쿠폰입니다.");
-        }
+        couponDao.findById(couponId).orElseThrow(() -> new CouponException("존재하지 않는 쿠폰입니다."));
         if (couponMemberDao.exists(couponId, memberId)) {
             throw new CouponException("멤버가 이미 쿠폰을 가지고 있습니다");
         }

@@ -36,12 +36,6 @@ public class CouponDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public boolean exists(Long couponId) {
-        return jdbcTemplate.queryForObject(
-                "SELECT EXISTS (SELECT * FROM coupon WHERE id = ?)", Boolean.class,
-                couponId);
-    }
-
     public Optional<Coupon> findById(Long id) {
         try {
             return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID_SQL, rowMapper, id));
