@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.ui.order.dto;
 
 public class OrderItemResponse {
     private final Long id;
