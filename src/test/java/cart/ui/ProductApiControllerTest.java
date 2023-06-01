@@ -1,5 +1,6 @@
 package cart.ui;
 
+import cart.Fixture;
 import cart.WebMvcConfig;
 import cart.application.ProductService;
 import cart.domain.Product;
@@ -76,7 +77,7 @@ class ProductApiControllerTest {
 
     @Test
     void getAllProducts() throws Exception {
-        final ProductResponse response = ProductResponse.of(new Product(1L, "A", 1000, "http://image.com"));
+        final ProductResponse response = ProductResponse.of(Fixture.productA);
         given(productService.getAllProducts()).willReturn(List.of(response));
 
         mockMvc.perform(get("/products"))
@@ -95,11 +96,10 @@ class ProductApiControllerTest {
 
     @Test
     void getProductById() throws Exception {
-        final Product product = new Product(1L, "A", 1000, "http://image.com");
-        final ProductResponse response = ProductResponse.of(product);
+        final ProductResponse response = ProductResponse.of(Fixture.productA);
         given(productService.getProductById(anyLong())).willReturn(response);
 
-        mockMvc.perform(get("/products/{id}", product.getId()))
+        mockMvc.perform(get("/products/{id}", Fixture.productA.getId()))
                 .andExpect(status().isOk())
                 .andDo(
                         restDocs.document(
@@ -118,7 +118,8 @@ class ProductApiControllerTest {
 
     @Test
     void createProduct() throws Exception {
-        final ProductRequest request = new ProductRequest("A", 1000, "http://image.com");
+        final Product p = Fixture.productA;
+        final ProductRequest request = new ProductRequest(p.getName(), p.getPrice(), p.getImageUrl());
         given(productService.createProduct(any(ProductRequest.class))).willReturn(1L);
 
         mockMvc.perform(post("/products")
@@ -141,7 +142,8 @@ class ProductApiControllerTest {
 
     @Test
     void updateProduct() throws Exception {
-        final ProductRequest request = new ProductRequest("A", 1000, "http://image.com");
+        final Product p = Fixture.productA;
+        final ProductRequest request = new ProductRequest(p.getName(), p.getPrice(), p.getImageUrl());
         willDoNothing().given(productService).updateProduct(anyLong(), any(ProductRequest.class));
 
         mockMvc.perform(put("/products/{id}", 1L)

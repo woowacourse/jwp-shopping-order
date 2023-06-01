@@ -1,11 +1,9 @@
 package cart.ui;
 
+import cart.Fixture;
 import cart.WebMvcConfig;
 import cart.application.CartItemService;
-import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.OrderCheckout;
-import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -69,7 +67,6 @@ class CartItemApiControllerTest {
     ObjectMapper objectMapper;
 
     MockMvc mockMvc;
-    Member member;
 
     @BeforeEach
     void setUp(@Autowired final RestDocumentationContextProvider provider) throws Exception {
@@ -82,16 +79,14 @@ class CartItemApiControllerTest {
                 .alwaysDo(restDocs)
                 .build();
 
-        final Member member = new Member(1L, "a@a.com", "1234");
+
         given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
+        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(Fixture.memberA);
     }
 
     @Test
     void showCartItems() throws Exception {
-        final Product product = new Product(1L, "A", 1000, "http://image.com");
-        final CartItem cartItem = new CartItem(1L, 3, product, member);
-        final CartItemResponse response = CartItemResponse.of(cartItem);
+        final CartItemResponse response = CartItemResponse.of(Fixture.cartItem1);
         given(cartItemService.findByMember(any(Member.class))).willReturn(List.of(response));
 
         mockMvc.perform(get("/cart-items")
@@ -186,10 +181,7 @@ class CartItemApiControllerTest {
 
     @Test
     void checkoutOrder() throws Exception {
-        final Product product = new Product(1L, "A", 1000, "http://image.com");
-        final CartItem cartItem = new CartItem(1L, 3, product, member);
-        final OrderCheckout orderCheckout = OrderCheckout.generate(1000, List.of(cartItem));
-        final CheckoutResponse response = CheckoutResponse.of(orderCheckout);
+        final CheckoutResponse response = CheckoutResponse.of(Fixture.orderCheckout1);
 
         given(cartItemService.makeCheckout(any(Member.class), any())).willReturn(response);
 

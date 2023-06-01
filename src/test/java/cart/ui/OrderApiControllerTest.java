@@ -1,10 +1,9 @@
 package cart.ui;
 
+import cart.Fixture;
 import cart.WebMvcConfig;
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
 import cart.dto.OrderListResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -67,7 +66,6 @@ class OrderApiControllerTest {
     ObjectMapper objectMapper;
 
     MockMvc mockMvc;
-    Member member;
 
     @BeforeEach
     void setUp(@Autowired final RestDocumentationContextProvider provider) throws Exception {
@@ -80,9 +78,8 @@ class OrderApiControllerTest {
                 .alwaysDo(restDocs)
                 .build();
 
-        final Member member = new Member(1L, "a@a.com", "1234");
         given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
+        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(Fixture.memberA);
     }
 
     @Test
@@ -113,12 +110,10 @@ class OrderApiControllerTest {
 
     @Test
     void showOrderById() throws Exception {
-        final OrderItem orderItem = new OrderItem(1L, "A", 1000, "http://image.com", 1);
-        final Order order = new Order(1L, List.of(orderItem), 1000, 1000, 100, 0, "2023-05-31 06:49:14");
-        final OrderResponse response = OrderResponse.of(order);
+        final OrderResponse response = OrderResponse.of(Fixture.order1);
         given(orderService.findById(any(Member.class), anyLong())).willReturn(response);
 
-        mockMvc.perform(get("/orders/{id}", order.getId())
+        mockMvc.perform(get("/orders/{id}", Fixture.order1.getId())
                         .header(HttpHeaders.AUTHORIZATION, "Basic ababababaababab"))
                 .andExpect(status().isOk())
                 .andDo(
@@ -148,10 +143,7 @@ class OrderApiControllerTest {
 
     @Test
     void showOrdersFirst() throws Exception {
-        final OrderItem orderItem = new OrderItem(1L, "A", 1000, "http://image.com", 1);
-        final Order order1 = new Order(1L, List.of(orderItem), 1000, 900, 100, 100, "2023-05-29 08:55:03");
-        final Order order2 = new Order(2L, List.of(orderItem), 1000, 1000, 100, 0, "2023-05-31 06:49:14");
-        final OrderListResponse response = OrderListResponse.of(List.of(order2, order1));
+        final OrderListResponse response = OrderListResponse.of(List.of(Fixture.order2, Fixture.order1));
         given(orderService.findPageByIndex(any(Member.class), anyLong())).willReturn(response);
 
         mockMvc.perform(get("/orders")
@@ -161,10 +153,7 @@ class OrderApiControllerTest {
 
     @Test
     void showOrders() throws Exception {
-        final OrderItem orderItem = new OrderItem(1L, "A", 1000, "http://image.com", 1);
-        final Order order1 = new Order(1L, List.of(orderItem), 1000, 900, 100, 100, "2023-05-29 08:55:03");
-        final Order order2 = new Order(2L, List.of(orderItem), 1000, 1000, 100, 0, "2023-05-31 06:49:14");
-        final OrderListResponse response = OrderListResponse.of(List.of(order2, order1));
+        final OrderListResponse response = OrderListResponse.of(List.of(Fixture.order2, Fixture.order1));
         given(orderService.findPageByIndex(any(Member.class), anyLong())).willReturn(response);
 
         mockMvc.perform(get("/orders?last-id={idx}", 20L)
