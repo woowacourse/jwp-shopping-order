@@ -7,7 +7,6 @@ import cart.domain.vo.Quantity;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,7 +67,7 @@ public class CartItemDao {
         }
     }
 
-    public Long save(CartItem cartItem) {
+    public CartItem save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -84,7 +83,8 @@ public class CartItemDao {
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new CartItem(keyHolder.getKey().longValue(), cartItem.getQuantity(), cartItem.getProduct(),
+                cartItem.getMemberId());
     }
 
     public CartItem findById(Long id) {

@@ -36,7 +36,7 @@ public class CartItemService {
         }
         final CartItem cartItem = new CartItem(cartItemRequest.getQuantity(), member,
                 productRepository.findById(cartItemRequest.getProductId()));
-        return cartItemDao.save(cartItem);
+        return cartItemDao.save(cartItem).getId();
     }
 
     private Long plusQuantity(final Member member, final CartItemRequest cartItemRequest,
