@@ -1,7 +1,7 @@
 === 주문 API
 특정 유저의 주문 요청 / 전체 주문 목록 조회 / 특정 주문 조회를 할 수 있습니다.
 
-==== 1. 특정 유저의 모든 주문 목록 조회
+==== 1. 모든 주문 목록 조회
 
 [discrete]
 ====== 응답
@@ -13,7 +13,7 @@ include::{snippets}/orders/getOrders/request-headers.adoc[]
 include::{snippets}/orders/getOrders/http-response.adoc[]
 include::{snippets}/orders/getOrders/response-fields.adoc[]
 
-==== 2. 특정 유저의 특정 주문 목록 조회
+==== 2. 특정 주문 목록 조회
 
 [discrete]
 ====== 응답
@@ -25,7 +25,7 @@ include::{snippets}/orders/getOrder/request-headers.adoc[]
 include::{snippets}/orders/getOrder/http-response.adoc[]
 include::{snippets}/orders/getOrder/response-fields.adoc[]
 
-==== 3. 특정 유저의 주문하기
+==== 3. 주문하기
 
 [discrete]
 ====== 응답
