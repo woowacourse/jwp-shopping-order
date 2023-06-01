@@ -12,10 +12,10 @@ public class StorePaymentAmountPolicy {
         this.paymentDiscountPolicies = List.of(new CouponDiscountPolicy(), new PointDiscountPolicy());
     }
 
-    public int calculateFare(final Coupon coupon, final Point point, final int totalAmount) {
+    public int calculateFare(final int totalAmount, final List<Coupon> coupons, final Point point) {
         int calculatedFare = totalAmount;
         for (PaymentDiscountPolicy paymentDiscountPolicy : paymentDiscountPolicies) {
-            calculatedFare = paymentDiscountPolicy.calculatePaymentAmount(coupon, point, totalAmount);
+            calculatedFare = paymentDiscountPolicy.calculatePaymentAmount(totalAmount, coupons, point);
         }
         return calculatedFare;
     }
