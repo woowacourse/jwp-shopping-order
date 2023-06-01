@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.auth.Auth;
 import cart.controller.dto.request.CartItemQuantityUpdateRequest;
@@ -21,11 +21,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cart-items")
-public class CartItemApiController {
+public class CartItemController {
 
     private final CartItemService cartItemService;
 
-    public CartItemApiController(final CartItemService cartItemService) {
+    public CartItemController(final CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 

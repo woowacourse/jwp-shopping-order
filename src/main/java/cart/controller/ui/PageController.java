@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.ui;
 
 import cart.dao.MemberDao;
 import cart.service.ProductService;
