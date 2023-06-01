@@ -27,7 +27,7 @@ public class CartItems {
                 .findAny();
 
         if (cartItem.isPresent()) {
-            CartItem insertItem = cartItem.orElseThrow(IllegalArgumentException::new);
+            CartItem insertItem = cartItem.get();
             insertItem.addQuantity();
             return insertItem;
         }
