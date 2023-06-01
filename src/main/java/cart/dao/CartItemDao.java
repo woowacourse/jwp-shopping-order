@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +27,7 @@ public class CartItemDao {
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
+                "WHERE cart_item.deleted = false AND cart_item.member_id = ?";
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             String email = rs.getString("email");
             Long productId = rs.getLong("product.id");
@@ -65,7 +66,7 @@ public class CartItemDao {
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id = ?";
+                "WHERE cart_item.deleted = false AND cart_item.id = ?";
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
             String email = rs.getString("email");
@@ -88,7 +89,7 @@ public class CartItemDao {
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id IN (" + StringUtils.collectionToDelimitedString(itemIds, ",") + ")";
+                "WHERE cart_item.deleted = false AND cart_item.id IN (" + StringUtils.collectionToDelimitedString(itemIds, ",") + ")";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
@@ -112,13 +113,25 @@ public class CartItemDao {
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
+        String sql = "UPDATE cart_item SET deleted = true WHERE id = ?;";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByIds(List<Long> cartItemIds) {
+        String sql = "UPDATE cart_item SET deleted = true WHERE id = ?;";
+        List<Object[]> deleteIds = new ArrayList<>();
+
+        for (Long id : cartItemIds) {
+            deleteIds.add(new Object[]{id});
+        }
+
+        jdbcTemplate.batchUpdate(sql, deleteIds);
     }
 
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
+
 }
 

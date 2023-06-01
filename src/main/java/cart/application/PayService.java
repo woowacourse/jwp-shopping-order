@@ -15,10 +15,11 @@ public class PayService {
         this.memberDao = memberDao;
     }
 
-    public void pay(Order order, Money deliveryFee, Money discounting, Long id) {
-        Order payed = order.confirmOrder(deliveryFee, discounting);
+    public Order pay(Order order, Money deliveryFee, Money discounting, Long id) {
+        Order confirmed = order.confirmOrder(deliveryFee, discounting);
         Member member = memberDao.getMemberById(id);
-        member.payMoney(payed);
+        member.payMoney(confirmed);
         memberDao.updateMember(member);
+        return confirmed;
     }
 }

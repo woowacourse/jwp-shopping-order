@@ -24,7 +24,7 @@ public class Member {
 
     public void payMoney(Order payingOrder) {
         try {
-            this.money.minus(payingOrder.getPrice());
+            this.money = this.money.minus(payingOrder.getPrice());
         } catch (IllegalArgumentException e) {
             throw new CannotPayException();
         }

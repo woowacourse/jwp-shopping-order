@@ -17,6 +17,7 @@ CREATE TABLE if not exists cart_item (
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
+    deleted BOOLEAN NOT NULL DEFAULT false,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp on update current_timestamp,
     FOREIGN KEY (member_id) REFERENCES member(id),
@@ -42,7 +43,7 @@ CREATE TABLE if not exists orders (
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
-CREATE TABLE if not exists orders_item (
+CREATE TABLE if not exists order_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
     cart_item_id BIGINT NOT NULL,

@@ -1,6 +1,7 @@
 package cart.domain;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Order {
 
@@ -8,7 +9,6 @@ public class Order {
     private final Member member;
     private final Money price;
     private final OrderState state;
-
 
     private Order(List<CartItem> cartItems, Member member, Money price) {
         validateOwner(cartItems, member);
@@ -52,6 +52,14 @@ public class Order {
         return new Order(this.cartItems, this.member, this.price, OrderState.CONFIRMED);
     }
 
+    public List<Long> getCartItemIds() {
+        return this.cartItems.stream().map(CartItem::getId).collect(Collectors.toList());
+    }
+
+    public OrderState getState() {
+        return state;
+    }
+
     public Member getMember() {
         return member;
     }
@@ -63,5 +71,6 @@ public class Order {
     enum OrderState {
         ORDERED, CONFIRMED
     }
+
 
 }

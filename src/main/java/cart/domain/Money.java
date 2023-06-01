@@ -32,6 +32,10 @@ public class Money {
         return new Money(this.money - other.money);
     }
 
+    public int toInt() {
+        return this.money;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
