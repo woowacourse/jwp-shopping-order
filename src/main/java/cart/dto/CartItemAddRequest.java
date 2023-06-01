@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CartItemRequest {
+public class CartItemAddRequest {
 
     private final Long productId;
 
-    private CartItemRequest() {
+    private CartItemAddRequest() {
         this.productId = null;
     }
 }
