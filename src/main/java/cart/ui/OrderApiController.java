@@ -28,7 +28,7 @@ public class OrderApiController {
             @RequestBody OrderRequest request,
             Member member
     ) {
-        Long orderId = orderService.order(member, request);
+        Long orderId = orderService.createOrder(member, request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(URI.create("/orders/" + orderId))

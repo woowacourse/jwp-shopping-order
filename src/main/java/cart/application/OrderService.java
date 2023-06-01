@@ -25,22 +25,13 @@ public class OrderService {
     }
 
     @Transactional
-    public Long order(final Member member, final OrderRequest request) {
-        Coupon coupon = couponRepository.findById(request.getCouponId());
-        List<Long> currentCartIds = request.getProducts().stream()
-                .map(OrderCartItemRequest::getCartItemId)
-                .collect(Collectors.toList());
-        List<CartItem> currentCartItems = cartItemRepository.findByIds(currentCartIds);
+    public Long createOrder(final Member member, final OrderRequest request) {
+        Coupon coupon = findCouponIfExist(request.getCouponId());
 
-        List<CartItem> selectedCartItems = request.getProducts().stream()
-                .map(orderCartItemRequest -> convertToCartItem(orderCartItemRequest, member))
-                .collect(Collectors.toList());
+        List<CartItem> currentCartItems = findCartItemsRequest(request);
+        List<CartItem> selectedCartItems = convertToCartItems(member, request);
 
-        for (CartItem cartItem : currentCartItems) {
-            cartItem.checkOwner(member);
-            // TODO: 6/1/23 2중 포문 해결
-            validateValue(cartItem, selectedCartItems);
-        }
+        validateOrder(member, currentCartItems, selectedCartItems);
 
         List<OrderItem> orderItems = currentCartItems.stream()
                 .map(CartItem::toOrderItem)
@@ -51,25 +42,6 @@ public class OrderService {
         couponRepository.delete(coupon);
 
         return savedId;
-    }
-
-    private void validateValue(final CartItem currentCartItem, final List<CartItem> selectedCartItems) {
-        CartItem selectedCartItem = selectedCartItems.stream()
-                .filter(cartItem -> cartItem.equals(currentCartItem))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품은 선택되지 않았습니다."));
-
-        currentCartItem.checkValue(selectedCartItem);
-    }
-
-    // TODO: 6/1/23 request에 id 받아와야 될지 고민해보기
-    private CartItem convertToCartItem(final OrderCartItemRequest orderCartItemRequest, final Member member) {
-        return new CartItem(
-                orderCartItemRequest.getCartItemId(),
-                orderCartItemRequest.getQuantity(),
-                new Product(null, orderCartItemRequest.getName(), orderCartItemRequest.getPrice(), orderCartItemRequest.getImageUrl()),
-                member
-        );
     }
 
     @Transactional(readOnly = true)
@@ -93,6 +65,54 @@ public class OrderService {
         order.checkOwner(member);
 
         return convertToOrderDetailResponse(order);
+    }
+
+    private Coupon findCouponIfExist(final Long couponId) {
+        if (couponId== null) {
+            return Coupon.EMPTY_COUPON;
+        }
+        return couponRepository.findById(couponId);
+    }
+
+    private List<CartItem> findCartItemsRequest(final OrderRequest request) {
+        List<Long> currentCartIds = request.getProducts().stream()
+                .map(OrderCartItemRequest::getCartItemId)
+                .collect(Collectors.toList());
+        return cartItemRepository.findByIds(currentCartIds);
+    }
+
+    private List<CartItem> convertToCartItems(final Member member, final OrderRequest request) {
+        List<CartItem> selectedCartItems = request.getProducts().stream()
+                .map(orderCartItemRequest -> convertToCartItem(orderCartItemRequest, member))
+                .collect(Collectors.toList());
+        return selectedCartItems;
+    }
+
+    private void validateOrder(final Member member, final List<CartItem> currentCartItems, final List<CartItem> selectedCartItems) {
+        for (CartItem cartItem : currentCartItems) {
+            cartItem.checkOwner(member);
+            // TODO: 6/1/23 2중 포문 해결
+            validateValue(cartItem, selectedCartItems);
+        }
+    }
+
+    private void validateValue(final CartItem currentCartItem, final List<CartItem> selectedCartItems) {
+        CartItem selectedCartItem = selectedCartItems.stream()
+                .filter(cartItem -> cartItem.equals(currentCartItem))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품은 선택되지 않았습니다."));
+
+        currentCartItem.checkValue(selectedCartItem);
+    }
+
+    // TODO: 6/1/23 request에 id 받아와야 될지 고민해보기
+    private CartItem convertToCartItem(final OrderCartItemRequest orderCartItemRequest, final Member member) {
+        return new CartItem(
+                orderCartItemRequest.getCartItemId(),
+                orderCartItemRequest.getQuantity(),
+                new Product(null, orderCartItemRequest.getName(), orderCartItemRequest.getPrice(), orderCartItemRequest.getImageUrl()),
+                member
+        );
     }
 
     private OrderDetailResponse convertToOrderDetailResponse(final Order order) {
