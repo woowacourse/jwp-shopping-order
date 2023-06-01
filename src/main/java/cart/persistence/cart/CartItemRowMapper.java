@@ -17,7 +17,7 @@ public class CartItemRowMapper implements RowMapper<CartItem> {
 	}
 
 	private Product mapProduct(ResultSet rs) throws SQLException {
-		Long productId = rs.getLong("id");
+		Long productId = rs.getLong("product.id");
 		String name = rs.getString("name");
 		Long price = rs.getLong("price");
 		String imageUrl = rs.getString("image_url");
