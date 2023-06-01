@@ -4,6 +4,7 @@ import cart.exception.AuthenticationException;
 import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponNotFoundException;
+import cart.exception.OrderAuthorizationException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CartItemCalculateException.class)
     public ResponseEntity<String> handle(final CartItemCalculateException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(OrderAuthorizationException.class)
+    public ResponseEntity<String> handle(final OrderAuthorizationException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

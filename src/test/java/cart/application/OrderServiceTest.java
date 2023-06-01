@@ -9,6 +9,7 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.request.OrderRequestDto;
+import cart.dto.response.OrderDetail;
 import cart.dto.response.OrderInfo;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
@@ -16,6 +17,7 @@ import cart.exception.CartItemCalculateException;
 import cart.exception.CartItemNotFoundException;
 import cart.exception.CouponDiscountOverPriceException;
 import cart.exception.CouponNotFoundException;
+import cart.exception.OrderAuthorizationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -228,6 +230,56 @@ class OrderServiceTest {
                 () -> assertThat(orders.get(0).getOrderItems().get(0).getId()).isEqualTo(1L),
                 () -> assertThat(orders.get(0).getOrderItems().get(0).getQuantity()).isEqualTo(1),
                 () -> assertThat(orders.get(0).getOrderItems().get(0).getProduct().getId()).isEqualTo(1L)
+        );
+    }
+
+    @DisplayName("자신의 주문이 아닌 것의 상세정보를 가져올 수 없다.")
+    @Test
+    void findOrderDetail_invalid_unAuthorization() {
+        //given
+        final long memberId = 5L;
+        final Member member = new Member(memberId, "email", "password");
+
+
+        final long orderOwnerId = 1L;
+        given(orderDao.findById(anyLong()))
+                .willReturn(new OrderEntity(1L, orderOwnerId, 10000));
+
+        //when, then
+        assertThatThrownBy(() -> orderService.findOrderDetail(member, 1L))
+                .isInstanceOf(OrderAuthorizationException.class);
+    }
+
+    @DisplayName("주문 내역 디테일을 가져온다.")
+    @Test
+    void findOrderDetail() {
+        //given
+        final Member member = new Member(1L, "email", "password");
+        given(orderDao.findById(anyLong()))
+                .willReturn(new OrderEntity(1L, 1L, 10000));
+        given(orderDao.findOrderProductByOrderId(1L))
+                .willReturn(List.of(
+                        new OrderItemEntity(1L, 1L, 1L, 3),
+                        new OrderItemEntity(2L, 1L, 2L, 4)
+                ));
+        given(productDao.getProductByIds(anyList()))
+                .willReturn(List.of(
+                        new Product(1L, "productA", 1000, "imageA"),
+                        new Product(2L, "productB", 2000, "imageB")
+                ));
+
+        //when
+        final OrderDetail orderDetail = orderService.findOrderDetail(member, 1L);
+
+        //then
+        assertAll(
+                () -> assertThat(orderDetail.getTotalPrice()).isEqualTo(10000),
+                () -> assertThat(orderDetail.getOrder().getOrderItems()).hasSize(2),
+                () -> assertThat(orderDetail.getOrder().getOrderId()).isEqualTo(1L),
+                () -> assertThat(orderDetail.getOrder().getOrderItems()).hasSize(2),
+                () -> assertThat(orderDetail.getOrder().getOrderItems().get(0).getQuantity()).isEqualTo(3),
+                () -> assertThat(orderDetail.getOrder().getOrderItems().get(0).getId()).isEqualTo(1L),
+                () -> assertThat(orderDetail.getOrder().getOrderItems().get(0).getProduct().getId()).isEqualTo(1L)
         );
     }
 }

@@ -12,6 +12,7 @@ import cart.domain.order.DeliveryFee;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.dto.request.OrderRequestDto;
+import cart.dto.response.OrderDetail;
 import cart.dto.response.OrderInfo;
 import cart.dto.response.OrderProductInfo;
 import cart.dto.response.OrderResponseDto;
@@ -135,6 +136,16 @@ public class OrderService {
                 .filter(product -> productId == product.getId())
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("주문 목록들의 상품 정보를 만드는 과정 중에 장바구니에 존재하는 상품의 Id를 가진 실제 상품 데이터를 읽어오지 못했습니다.")));
+    }
+
+    public OrderDetail findOrderDetail(final Member member, final long orderId) {
+        final OrderEntity orderEntity = orderDao.findById(orderId);
+        orderEntity.checkOwner(member);
+        final List<OrderItemEntity> orderItemEntities = orderDao.findOrderProductByOrderId(orderId);
+        final List<Product> productByIds = productDao.getProductByIds(orderItemEntities.stream()
+                .map(OrderItemEntity::getProductId)
+                .collect(Collectors.toList()));
+        return new OrderDetail(new OrderInfo(orderId, orderProductInfoByOrderId(orderId, orderItemEntities, productByIds)), orderEntity.getPrice());
     }
 
 }
