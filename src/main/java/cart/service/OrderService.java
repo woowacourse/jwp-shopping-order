@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.controller.dto.request.OrderRequest;
+import cart.controller.dto.response.OrderThumbnailResponse;
 import cart.domain.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -14,6 +15,7 @@ import cart.exception.PaymentAmountNotEqualException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.dto.CartItemWithProductDto;
+import cart.repository.dto.OrderAndMainProductDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +41,13 @@ public class OrderService {
         final Order order = createOrder(member, cartItemWithProductDtos);
         validatePaymentAmount(order, request.getPaymentAmount());
         return orderRepository.save(order);
+    }
+
+    public List<OrderThumbnailResponse> findByMember(final Member member) {
+        final List<OrderAndMainProductDto> dtos = orderRepository.findByMember(member);
+        return dtos.stream()
+                .map(OrderThumbnailResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     private void checkOwner(final Member member, final List<CartItemWithProductDto> dtos) {

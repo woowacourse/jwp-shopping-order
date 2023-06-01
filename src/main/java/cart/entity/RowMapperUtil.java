@@ -56,6 +56,7 @@ public class RowMapperUtil {
                     rs.getString("product.name"),
                     rs.getInt("product.price"),
                     rs.getString("product.image_url"),
-                    rs.getInt("order_item.quantity")
+                    rs.getInt("order_item.quantity"),
+                    rs.getTimestamp("created_at").toLocalDateTime()
             );
 }

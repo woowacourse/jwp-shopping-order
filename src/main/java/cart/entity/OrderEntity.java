@@ -23,10 +23,6 @@ public class OrderEntity {
         this(null, memberId, originalPrice, discountPrice, null);
     }
 
-//    public static OrderEntity of(final long id, final OrderEntity orderEntity) {
-//        return new OrderEntity(id, orderEntity.memberId, orderEntity.originalPrice, orderEntity.discountPrice);
-//    }
-
     public Long getId() {
         return id;
     }
@@ -41,5 +37,9 @@ public class OrderEntity {
 
     public int getDiscountPrice() {
         return discountPrice;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
