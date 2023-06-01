@@ -1,12 +1,9 @@
 package cart.cart.application;
 
 import cart.cart.Cart;
-import cart.cart.domain.cartitem.CartItem;
-import cart.cart.domain.cartitem.application.CartItemRepository;
-import cart.cart.domain.cartitem.application.CartItemService;
+import cart.cart.domain.deliveryprice.DeliveryPrice;
 import cart.cart.presentation.DeliveryResponse;
 import cart.cart.presentation.dto.CartItemResponse;
-import cart.cart.presentation.dto.CartResponse;
 import cart.cart.presentation.dto.DiscountResponse;
 import cart.coupon.application.CouponService;
 import cart.member.Member;
@@ -18,20 +15,19 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
-    private final CartRepository cartItemRepository;
-    private final CartItemService cartItemService;
-    private final CouponService couponService;
+    private final CartRepository cartRepository;
     private final SaleService saleService;
+    private final CouponService couponService;
 
-    public CartService(CartRepository cartItemRepository, CartItemService cartItemService, CouponService couponService, SaleService saleService) {
-        this.cartItemRepository = cartItemRepository;
-        this.cartItemService = cartItemService;
-        this.couponService = couponService;
+    public CartService(CartRepository cartRepository, SaleService saleService, CouponService couponService) {
+        this.cartRepository = cartRepository;
         this.saleService = saleService;
+        this.couponService = couponService;
     }
 
     public List<CartItemResponse> findCartItemsByMember(Member member) {
-        final Cart cart = findCart(member);
+        final Cart cart = cartRepository.findCart(member);
+        saleService.applySale(cart);
 
         return cart.getCartItems()
                 .stream().map(CartItemResponse::from)
@@ -39,7 +35,8 @@ public class CartService {
     }
 
     public DiscountResponse discountWithCoupons(Member member, List<Long> couponIds) {
-        final var cart = findCart(member);
+        final Cart cart = cartRepository.findCart(member);
+        saleService.applySale(cart);
         for (Long couponId : couponIds) {
             couponService.applyCoupon(couponId, cart);
         }
@@ -48,14 +45,9 @@ public class CartService {
     }
 
     public DeliveryResponse findDeliveryPrice(Member member) {
-        final var cart = findCart(member);
-        final var deliveryPrice = cart.getDeliveryPrice();
-        return new DeliveryResponse(deliveryPrice, Cart.FREE_DELIVERY_PRICE_LIMIT);
-    }
-
-    private Cart findCart(Member member) {
-        final Cart cart = cartItemRepository.findCart(member);
+        final Cart cart = cartRepository.findCart(member);
         saleService.applySale(cart);
-        return cart;
+        final var deliveryPrice = cart.getDeliveryPrice();
+        return new DeliveryResponse(deliveryPrice.getPrice(), DeliveryPrice.FREE_LIMIT);
     }
 }

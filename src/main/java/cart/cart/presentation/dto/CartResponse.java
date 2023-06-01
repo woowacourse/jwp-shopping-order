@@ -18,17 +18,6 @@ public class CartResponse {
         this.coupons = couponResponses;
     }
 
-    public static CartResponse from(Cart cart) {
-        final var cartItemResponses = cart.getCartItems()
-                .stream().map(CartItemResponse::from)
-                .collect(Collectors.toList());
-        final var couponResponses = cart.getCoupons()
-                .stream().map(CouponResponse::from)
-                .collect(Collectors.toList());
-
-        return new CartResponse(cartItemResponses, cart.getDeliveryPrice(), couponResponses);
-    }
-
     public List<CartItemResponse> getProducts() {
         return products;
     }

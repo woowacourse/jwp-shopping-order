@@ -2,6 +2,7 @@ package cart.coupon.application;
 
 import cart.cart.Cart;
 import cart.cart.domain.cartitem.CartItem;
+import cart.cart.domain.deliveryprice.DeliveryPrice;
 import cart.discountpolicy.application.DiscountPolicyRepository;
 import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
@@ -48,7 +49,7 @@ class SaleServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(0, 0);
-        assertThat(cart.getDeliveryPrice())
+        assertThat(cart.getDeliveryPrice().getPrice())
                 .isEqualTo(1500);
     }
 
@@ -69,7 +70,7 @@ class SaleServiceTest {
 
         return new Cart(
                 List.of(백여우가담은피자, 백여우가담은치킨),
-                List.of()
+                new DeliveryPrice()
         );
     }
 }

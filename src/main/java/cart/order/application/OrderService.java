@@ -62,7 +62,7 @@ public class OrderService {
         final var order = new Order(
                 orderItems,
                 orderCoupons,
-                cart.getDeliveryPrice(),
+                cart.getDeliveryPrice().getPrice(),
                 Timestamp.valueOf(LocalDateTime.now()),
                 member.getId()
         );

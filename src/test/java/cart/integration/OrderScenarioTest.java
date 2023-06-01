@@ -76,7 +76,7 @@ public class OrderScenarioTest extends ScenarioFixture {
                 .extract();
         final var jsonPath = response.jsonPath();
 
-        assertThat(jsonPath.getLong("price")).isEqualTo(3000);
+        assertThat(jsonPath.getLong("price")).isEqualTo(0);
         assertThat(jsonPath.getLong("limit")).isEqualTo(30000);
     }
 

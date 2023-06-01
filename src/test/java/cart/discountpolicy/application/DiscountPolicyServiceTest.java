@@ -2,6 +2,7 @@ package cart.discountpolicy.application;
 
 import cart.cart.Cart;
 import cart.cart.domain.cartitem.CartItem;
+import cart.cart.domain.deliveryprice.DeliveryPrice;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.discountpolicy.discountcondition.DiscountUnit;
@@ -65,7 +66,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(10_000, 0);
-        assertThat(cart.getDeliveryPrice())
+        assertThat(cart.getDeliveryPrice().getPrice())
                 .isEqualTo(3_000);
     }
 
@@ -83,7 +84,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(0, 0);
-        assertThat(cart.getDeliveryPrice())
+        assertThat(cart.getDeliveryPrice().getPrice())
                 .isEqualTo(1500);
     }
 
@@ -101,7 +102,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(12_000, 18_000);
-        assertThat(cart.getDeliveryPrice())
+        assertThat(cart.getDeliveryPrice().getPrice())
                 .isEqualTo(3_000);
     }
 
@@ -115,7 +116,7 @@ class DiscountPolicyServiceTest {
 
         return new Cart(
                 List.of(백여우가담은피자, 백여우가담은치킨),
-                List.of()
+                new DeliveryPrice()
         );
     }
 }

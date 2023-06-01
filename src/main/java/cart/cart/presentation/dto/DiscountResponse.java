@@ -23,7 +23,7 @@ public class DiscountResponse {
         final var cartItemDiscountResponses = cart.getCartItems()
                 .stream().map(CartItemDiscountResponse::from)
                 .collect(Collectors.toList());
-        final var deliveryDiscountResponse = DeliveryDiscountResponse.from(cart.getDeliveryPrice());
+        final var deliveryDiscountResponse = DeliveryDiscountResponse.from(cart.getDeliveryPrice().getPrice());
         final var discountFromTotalPrice = new DiscountFromTotalPrice(discountPriceFromTotalPrice);
         return new DiscountResponse(cartItemDiscountResponses, deliveryDiscountResponse, discountFromTotalPrice);
     }
