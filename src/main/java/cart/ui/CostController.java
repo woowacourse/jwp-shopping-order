@@ -1,8 +1,6 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.application.OrderService;
-import cart.dao.OrderDao;
 import cart.domain.Member;
 import cart.dto.CostResponse;
 import org.springframework.beans.factory.annotation.Autowired;

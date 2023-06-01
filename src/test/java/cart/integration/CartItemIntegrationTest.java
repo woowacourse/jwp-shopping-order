@@ -27,7 +27,6 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
-
     private Long productId;
     private Long productId2;
     private Member member;

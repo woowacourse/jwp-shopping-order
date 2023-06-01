@@ -9,6 +9,6 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 3, 5);
 
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 1, 0);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 2, 0);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 1, 1);
+INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 2, 1);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 1);

@@ -6,6 +6,7 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -59,74 +60,16 @@ public class CartItemService {
         cartItemDao.deleteById(id);
     }
 
-    //TODO: 여기서 개발 이어서~~
     public CostResponse getCosts(Long memberId) {
-        int totalItemPrice = findTotalItemPrice(memberId);
-        int discountedTotalItemPrice = findDiscountedTotalItemPrice(memberId);
-        int shippingFee = findShippingFee(totalItemPrice);
-        int totalPrice = discountedTotalItemPrice + shippingFee;
-        int totalItemDiscountAmount = findTotalItemDiscountAmount(memberId);
-        int totalMemberDiscountAmount = findTotalMemberDiscountAmount(memberId);
-
-        return new CostResponse(totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, totalPrice);
-    }
-
-    private int findTotalMemberDiscountAmount(Long memberId) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
-        List<Integer> discountedPrice = new ArrayList<>();
-        int discountedPercentage = memberDao.getMemberById(memberId).findDiscountedPercentage();
-
-        for (CartItem cartItem : cartItems) {
-            Product product = cartItem.getProduct();
-            int price = product.getPrice() - product.calculateMemberDiscountedPrice(discountedPercentage);
-            discountedPrice.add(price);
-        }
-
-        return Order.calculatePriceSum(discountedPrice);
-    }
-
-    private int findTotalItemPrice(Long memberId) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
-        List<Integer> prices = new ArrayList<>();
-        for (CartItem cartItem : cartItems) {
-            prices.add(cartItem.getProduct().getPrice());
-        }
-
-        return Order.calculatePriceSum(prices);
-    }
-
-    private int findDiscountedTotalItemPrice(Long memberId) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
-        List<Integer> discountedPrice = new ArrayList<>();
         int memberDiscount = memberDao.getMemberById(memberId).findDiscountedPercentage();
 
-        for (CartItem cartItem : cartItems) {
-            Product product = cartItem.getProduct();
-            int price = product.calculateDiscountedPrice(memberDiscount);
-            discountedPrice.add(price);
-        }
+        int totalItemPrice = Price.findTotalItemPrice(cartItemDao.findByMemberId(memberId));
+        int discountedTotalItemPrice = Price.findDiscountedTotalItemPrice(cartItemDao.findByMemberId(memberId), memberDiscount);
+        int shippingFee = Price.findShippingFee(totalItemPrice);
+        int totalPrice = discountedTotalItemPrice + shippingFee;
+        int totalItemDiscountAmount = Price.findTotalItemDiscountAmount(cartItemDao.findByMemberId(memberId));
+        int totalMemberDiscountAmount = Price.findTotalMemberDiscountAmount(cartItemDao.findByMemberId(memberId), memberDiscount);
 
-        return Order.calculatePriceSum(discountedPrice);
+        return new CostResponse(totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
     }
-
-    private int findShippingFee(int totalItemPrice) {
-        if (totalItemPrice >= 50000) {
-            return 0;
-        }
-        return 3000;
-    }
-
-    private int findTotalItemDiscountAmount(Long memberId) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
-        List<Integer> discountedPrice = new ArrayList<>();
-
-        for (CartItem cartItem : cartItems) {
-            Product product = cartItem.getProduct();
-            int price = product.getPrice() - product.calculateDiscountedPrice();
-            discountedPrice.add(price);
-        }
-
-        return Order.calculatePriceSum(discountedPrice);
-    }
-
 }
