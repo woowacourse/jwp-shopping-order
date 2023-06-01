@@ -19,10 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql("/dummy-data.sql")
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
