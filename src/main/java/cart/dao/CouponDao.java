@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.dto.CouponDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -46,6 +47,12 @@ public class CouponDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<CouponDto> findAll() {
+        String sql = "SELECT * FROM coupon";
+
+        return jdbcTemplate.query(sql, couponDtoRowMapper);
     }
 
 }

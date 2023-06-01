@@ -33,4 +33,14 @@ public class CouponDto {
         return discountPrice;
     }
 
+    @Override
+    public String toString() {
+        return "CouponDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", discountRate=" + discountRate +
+                ", discountPrice=" + discountPrice +
+                '}';
+    }
+
 }

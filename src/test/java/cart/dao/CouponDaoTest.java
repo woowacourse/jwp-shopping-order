@@ -2,10 +2,14 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
 
 import cart.dto.CouponDto;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 @JdbcTest
 class CouponDaoTest {
@@ -21,18 +26,22 @@ class CouponDaoTest {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getDouble("discount_rate"),
-            rs.getInt("discount_price"));
+            rs.getInt("discount_price")
+    );
 
     @Autowired
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleJdbcInsert;
     private CouponDao couponDao;
 
     @BeforeEach
     void beforeEach() {
         couponDao = new CouponDao(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
-//        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
+        simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("coupon")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Test
@@ -72,6 +81,31 @@ class CouponDaoTest {
     void findById_returnEmpty() {
         Optional<CouponDto> couponDto = couponDao.findById(1L);
         assertThat(couponDto).isNotPresent();
+    }
+
+    @Test
+    @DisplayName("쿠폰 전체 조회")
+    void findAll() {
+        CouponDto rateCoupon = new CouponDto(1L, "홍실 할인", 2d, 0);
+        CouponDto priceCoupon = new CouponDto(2L, "홍실 할인", 0d, 2000);
+        saveCoupon(rateCoupon);
+        saveCoupon(priceCoupon);
+
+        List<CouponDto> couponDtos = couponDao.findAll();
+        assertThat(couponDtos).hasSize(2)
+                .extracting(CouponDto::getId, CouponDto::getName, CouponDto::getDiscountRate, CouponDto::getDiscountPrice)
+                .containsExactly(tuple(1L, "홍실 할인", 2d, 0), Tuple.tuple(2L, "홍실 할인", 0d, 2000));
+    }
+
+    private void saveCoupon(CouponDto couponDto) {
+        Map<String, Object> params = Map.of(
+            "id", couponDto.getId(),
+            "name", couponDto.getName(),
+            "discount_rate", couponDto.getDiscountRate(),
+            "discount_price", couponDto.getDiscountPrice()
+        );
+
+        simpleJdbcInsert.executeAndReturnKey(params);
     }
 
 }
