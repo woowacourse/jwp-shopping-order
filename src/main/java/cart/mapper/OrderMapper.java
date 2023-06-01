@@ -17,6 +17,6 @@ public class OrderMapper {
                 .map(OrderDetailMapper::toResponse)
                 .collect(Collectors.toList());
 
-        return new OrderResponse(order.getId(), detailResponse);
+        return new OrderResponse(order.getId(), detailResponse, order.getCreatedAt());
     }
 }
