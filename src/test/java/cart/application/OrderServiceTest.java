@@ -66,7 +66,7 @@ class OrderServiceTest {
         Long productId = productDao.createProduct(productEntity);
         productEntity = productEntity.assignId(productId);
 
-        orderEntity = new OrderEntity(memberEntity, 0, 0);
+        orderEntity = new OrderEntity(memberEntity, 0, 0, 0);
         Long orderId = orderDao.save(orderEntity);
         orderEntity = orderDao.findById(orderId).get();
 
@@ -79,7 +79,7 @@ class OrderServiceTest {
     @Test
     @DisplayName("getOrders 메서드는 주문 정보 목록을 응답한다.")
     void getOrders() {
-        OrderEntity newOrderEntity = new OrderEntity(memberEntity, 0, 0);
+        OrderEntity newOrderEntity = new OrderEntity(memberEntity, 0, 0, 0);
         Long newOrderId = orderDao.save(newOrderEntity);
         OrderEntity findNewOrderEntity = orderDao.findById(newOrderId).get();
 
@@ -148,6 +148,23 @@ class OrderServiceTest {
         }
 
         @Test
+        @DisplayName("사용하는 포인트가 총 주문 금액보다 크다면 예외를 던진다.")
+        void overPointUse() {
+            MemberEntity otherMember = new MemberEntity("b@b.com", "1234", 1000);
+            Long otherMemberId = memberDao.addMember(otherMember);
+            MemberEntity savedMember = otherMember.assignId(otherMemberId);
+            CartItemEntity cartItemEntityA = new CartItemEntity(savedMember, productEntity, 5);
+            Long cartItemA = cartItemDao.save(cartItemEntityA);
+            CartItemEntity cartItemEntityB = new CartItemEntity(savedMember, productEntity, 7);
+            Long cartItemB = cartItemDao.save(cartItemEntityB);
+            OrderRequest request = new OrderRequest(List.of(cartItemA, cartItemB), 120001);
+
+            assertThatThrownBy(() -> orderService.processOrder(MemberMapper.toDomain(savedMember), request))
+                    .isInstanceOf(OrderException.class)
+                    .hasMessage("사용하려는 포인트가 총 결제 금액보다 큽니다. 총 결제 금액: " + 120000 + ", 사용 포인트: " + 120001);
+        }
+
+        @Test
         @DisplayName("장바구니 목록을 주문하고 멤버 포인트는 감소하고 남은 장바구니 목록을 응답한다.")
         void processOrder() {
             MemberEntity otherMember = new MemberEntity("b@b.com", "1234", 1000);
@@ -177,7 +194,7 @@ class OrderServiceTest {
                                     savedMember.getId(),
                                     savedMember.getEmail(),
                                     savedMember.getPassword(),
-                                    500)
+                                    12500)
                             )
             );
         }

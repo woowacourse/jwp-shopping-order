@@ -38,6 +38,7 @@ CREATE TABLE orders
     id           BIGINT    NOT NULL AUTO_INCREMENT,
     member_id    BIGINT    NOT NULL,
     used_point   INT       NOT NULL,
+    saved_point  INT       NOT NULL,
     delivery_fee INT       NOT NULL,
     created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

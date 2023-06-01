@@ -30,6 +30,19 @@ class OrderTest {
         assertThat(result).isEqualTo(59000);
     }
 
+    @Test
+    @DisplayName("getSavedPoint 메서드는 총 주문 금액의 10%를 적립한 금액을 반환한다.")
+    void getSavedPoint() {
+        Member member = new Member(1L, "a@a.com", "password1", 0);
+        Product product = new Product("치킨", 10000, "http://chicken.com");
+        OrderProduct orderProduct = new OrderProduct(product, 5);
+        Order order = new Order(member, List.of(orderProduct), 0);
+
+        int result = order.getSavedPoint();
+
+        assertThat(result).isEqualTo(5000);
+    }
+
     @Nested
     @DisplayName("주문 생성 시 ")
     class Create {
@@ -97,6 +110,37 @@ class OrderTest {
             assertThatThrownBy(() -> order.checkOwner(memberB))
                     .isInstanceOf(OrderException.class)
                     .hasMessage("해당 주문을 관리할 수 있는 멤버가 아닙니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("GetTotalPrice 메서드는 ")
+    class GetTotalPrice {
+
+        @Test
+        @DisplayName("주문 상품 가격 합이 50000원 이상인 경우 배송료없이 전체 금액을 반환한다.")
+        void freeDeliveryFee() {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
+            Product product = new Product("치킨", 10000, "http://chicken.com");
+            OrderProduct orderProduct = new OrderProduct(product, 5);
+            Order order = new Order(member, List.of(orderProduct), 0);
+
+            int result = order.getTotalPrice();
+
+            assertThat(result).isEqualTo(50000);
+        }
+
+        @Test
+        @DisplayName("주문 상품 가격 합이 50000원 미만인 경우 배송료 3000원을 포함한 전체 금액을 반환한다.")
+        void applyDeliveryFee() {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
+            Product product = new Product("치킨", 10000, "http://chicken.com");
+            OrderProduct orderProduct = new OrderProduct(product, 3);
+            Order order = new Order(member, List.of(orderProduct), 0);
+
+            int result = order.getTotalPrice();
+
+            assertThat(result).isEqualTo(33000);
         }
     }
 }

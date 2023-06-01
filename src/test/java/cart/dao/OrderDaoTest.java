@@ -28,8 +28,8 @@ class OrderDaoTest {
         MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
         Long memberId = memberDao.addMember(memberEntity);
 
-        OrderEntity orderEntityA = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
-        OrderEntity orderEntityB = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
+        OrderEntity orderEntityA = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
+        OrderEntity orderEntityB = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
         Long orderIdA = orderDao.save(orderEntityA);
         Long orderIdB = orderDao.save(orderEntityB);
 
@@ -64,7 +64,7 @@ class OrderDaoTest {
             MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 10);
             Long memberId = memberDao.addMember(memberEntity);
 
-            OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
+            OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
             Long orderId = orderDao.save(orderEntity);
 
             Optional<OrderEntity> result = orderDao.findById(orderId);

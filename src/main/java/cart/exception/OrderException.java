@@ -40,4 +40,11 @@ public class OrderException extends ShoppingException {
             super("배송료는 0원 이상만 가능합니다.");
         }
     }
+
+    public static class IllegalPointUse extends OrderException {
+
+        public IllegalPointUse(int totalPrice, int usePoint) {
+            super("사용하려는 포인트가 총 결제 금액보다 큽니다. 총 결제 금액: " + totalPrice + ", 사용 포인트: " + usePoint);
+        }
+    }
 }

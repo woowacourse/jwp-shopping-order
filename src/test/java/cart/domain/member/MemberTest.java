@@ -103,4 +103,30 @@ class MemberTest {
             assertThat(member.getPoint()).isEqualTo(1000 - point);
         }
     }
+
+    @Nested
+    @DisplayName("addPoint 메서드는 ")
+    class AddPoint {
+
+        @Test
+        @DisplayName("추가된 포인트가 음수인 경우 예외를 던진다.")
+        void negativePoint() {
+            Member member = new Member("a@a.com", "password1", 1000);
+
+            assertThatThrownBy(() -> member.addPoint(-1))
+                    .isInstanceOf(MemberException.class)
+                    .hasMessage("멤버의 포인트는 0보다 작을 수 없습니다.");
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {0, 500, 1000})
+        @DisplayName("포인트를 추가한다.")
+        void addPoint(int point) {
+            Member member = new Member("a@a.com", "password1", 1000);
+
+            member.addPoint(point);
+
+            assertThat(member.getPoint()).isEqualTo(1000 + point);
+        }
+    }
 }

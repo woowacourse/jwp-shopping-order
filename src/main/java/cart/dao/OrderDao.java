@@ -21,6 +21,7 @@ public class OrderDao {
             rs.getLong("orders.id"),
             extractMember(rs),
             rs.getInt("orders.used_point"),
+            rs.getInt("orders.saved_point"),
             rs.getInt("orders.delivery_fee"),
             rs.getTimestamp("orders.created_at").toLocalDateTime(),
             rs.getTimestamp("orders.updated_at").toLocalDateTime()
@@ -34,7 +35,7 @@ public class OrderDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id", "used_point", "delivery_fee");
+                .usingColumns("member_id", "used_point", "saved_point", "delivery_fee");
     }
 
     private static MemberEntity extractMember(ResultSet rs) throws SQLException {
@@ -49,20 +50,22 @@ public class OrderDao {
     }
 
     public List<OrderEntity> findAllByMemberId(Long memberId) {
-        String sql = "SELECT orders.id, orders.used_point, orders.created_at, orders.delivery_fee, orders.updated_at,"
-                + " member.id, member.email, member.password, member.point, member.created_at, member.updated_at"
-                + " FROM orders"
-                + " INNER JOIN member ON orders.member_id = member.id"
-                + " WHERE orders.member_id = ?";
+        String sql =
+                "SELECT orders.id, orders.used_point, orders.saved_point, orders.created_at, orders.delivery_fee, orders.updated_at,"
+                        + " member.id, member.email, member.password, member.point, member.created_at, member.updated_at"
+                        + " FROM orders"
+                        + " INNER JOIN member ON orders.member_id = member.id"
+                        + " WHERE orders.member_id = ?";
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 
     public Optional<OrderEntity> findById(Long id) {
-        String sql = "SELECT orders.id, orders.used_point, orders.created_at, orders.delivery_fee, orders.updated_at,"
-                + " member.id, member.email, member.password, member.point, member.created_at, member.updated_at"
-                + " FROM orders"
-                + " INNER JOIN member ON orders.member_id = member.id"
-                + " WHERE orders.id = ?";
+        String sql =
+                "SELECT orders.id, orders.used_point, orders.saved_point, orders.created_at, orders.delivery_fee, orders.updated_at,"
+                        + " member.id, member.email, member.password, member.point, member.created_at, member.updated_at"
+                        + " FROM orders"
+                        + " INNER JOIN member ON orders.member_id = member.id"
+                        + " WHERE orders.id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {

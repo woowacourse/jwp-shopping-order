@@ -50,8 +50,8 @@ class OrderRepositoryTest {
         ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
         Long productId = productDao.createProduct(productEntity);
 
-        OrderEntity orderEntityA = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
-        OrderEntity orderEntityB = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
+        OrderEntity orderEntityA = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
+        OrderEntity orderEntityB = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
         Long orderIdA = orderDao.save(orderEntityA);
         Long orderIdB = orderDao.save(orderEntityB);
 
@@ -88,7 +88,7 @@ class OrderRepositoryTest {
         ProductEntity productEntity = new ProductEntity("치킨", 10000, "http://chicken.com");
         Long productId = productDao.createProduct(productEntity);
 
-        OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0, 0);
+        OrderEntity orderEntity = new OrderEntity(memberEntity.assignId(memberId), 0, 0, 0);
         Long orderId = orderDao.save(orderEntity);
 
         OrderProductEntity orderProductEntity =

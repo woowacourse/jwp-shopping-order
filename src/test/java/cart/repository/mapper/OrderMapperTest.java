@@ -22,7 +22,7 @@ class OrderMapperTest {
     @DisplayName("toDomain 메서드는 엔티티를 도메인으로 변환한다.")
     void convertFromEntityToDomain() {
         MemberEntity memberEntity = new MemberEntity(1L, "a@a.com", "password1", 10);
-        OrderEntity orderEntity = new OrderEntity(1L, memberEntity, 0, 0);
+        OrderEntity orderEntity = new OrderEntity(1L, memberEntity, 0, 0, 0);
         ProductEntity productEntityA = new ProductEntity(1L, "치킨", 10000, "http://chicken.com");
         ProductEntity productEntityB = new ProductEntity(2L, "피자", 20000, "http://pizza.com");
         OrderProductEntity orderProductEntityA =

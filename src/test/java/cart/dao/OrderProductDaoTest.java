@@ -46,7 +46,7 @@ class OrderProductDaoTest {
         Long productId = productDao.createProduct(product);
         product = product.assignId(productId);
 
-        order = new OrderEntity(member, 10, 0);
+        order = new OrderEntity(member, 10, 0, 0);
         Long orderId = orderDao.save(order);
         order = order.assignId(orderId);
 

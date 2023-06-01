@@ -32,6 +32,10 @@ public class Member {
         this.point = this.point.decrease(point);
     }
 
+    public void addPoint(int point) {
+        this.point = this.point.increase(point);
+    }
+
     public Long getId() {
         return id;
     }

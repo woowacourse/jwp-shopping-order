@@ -1,5 +1,7 @@
 package cart.application;
 
+import static cart.exception.OrderException.IllegalPointUse;
+
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
@@ -52,8 +54,12 @@ public class OrderService {
         for (CartItem cartItem : cartItems) {
             cartItem.checkOwner(member);
         }
-        member.usePoint(orderRequest.getPoint());
         Order order = new Order(member, orderInCart(cartItems), orderRequest.getPoint());
+        if (order.getTotalPrice() < orderRequest.getPoint()) {
+            throw new IllegalPointUse(order.getTotalPrice(), orderRequest.getPoint());
+        }
+        member.usePoint(orderRequest.getPoint());
+        member.addPoint(order.getSavedPoint());
 
         orderRepository.save(order);
         memberRepository.update(member);

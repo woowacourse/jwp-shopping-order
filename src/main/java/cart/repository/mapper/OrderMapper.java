@@ -30,6 +30,7 @@ public class OrderMapper {
                 order.getId(),
                 MemberMapper.toEntity(order.getMember()),
                 order.getUsedPoint(),
+                order.getSavedPoint(),
                 order.getDeliveryFee()
         );
     }
