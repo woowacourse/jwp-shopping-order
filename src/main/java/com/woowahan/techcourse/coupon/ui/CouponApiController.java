@@ -4,8 +4,7 @@ import com.woowahan.techcourse.coupon.application.CouponCommandService;
 import com.woowahan.techcourse.coupon.application.CouponQueryService;
 import com.woowahan.techcourse.coupon.ui.request.AddMemberCouponRequest;
 import com.woowahan.techcourse.coupon.ui.response.CouponsResponse;
-import com.woowahan.techcourse.member.ui.resolver.Authentication;
-import com.woowahan.techcourse.member.ui.resolver.MemberId;
+import com.woowahan.techcourse.member.domain.Member;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,15 +32,15 @@ public class CouponApiController {
     }
 
     @GetMapping("/members/coupons")
-    public ResponseEntity<CouponsResponse> findAllByMemberId(@Authentication MemberId memberId) {
-        CouponsResponse response = new CouponsResponse(couponQueryService.findAllCouponsByMemberId(memberId.getId()));
+    public ResponseEntity<CouponsResponse> findAllByMemberId(Member member) {
+        CouponsResponse response = new CouponsResponse(couponQueryService.findAllCouponsByMemberId(member.getId()));
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/members/coupon")
-    public ResponseEntity<Void> addCoupon(@Authentication MemberId memberId,
+    public ResponseEntity<Void> addCoupon(Member member,
             @RequestBody @Valid AddMemberCouponRequest request) {
-        couponCommandService.addCoupon(request.getCouponId(), memberId.getId());
+        couponCommandService.addCoupon(request.getCouponId(), member.getId());
         return ResponseEntity.ok().build();
     }
 }

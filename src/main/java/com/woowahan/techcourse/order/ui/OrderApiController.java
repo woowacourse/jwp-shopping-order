@@ -1,7 +1,6 @@
 package com.woowahan.techcourse.order.ui;
 
-import com.woowahan.techcourse.member.ui.resolver.Authentication;
-import com.woowahan.techcourse.member.ui.resolver.MemberId;
+import com.woowahan.techcourse.member.domain.Member;
 import com.woowahan.techcourse.order.domain.OrderResult;
 import com.woowahan.techcourse.order.service.OrderCommandService;
 import com.woowahan.techcourse.order.service.OrderQueryService;
@@ -38,8 +37,8 @@ public class OrderApiController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<OrdersResponse> findAllByMemberId(@Authentication MemberId memberId) {
-        List<OrderResult> result = orderQueryService.findAllByMemberId(memberId.getId());
+    public ResponseEntity<OrdersResponse> findAllByMemberId(Member member) {
+        List<OrderResult> result = orderQueryService.findAllByMemberId(member.getId());
         List<OrderResponse> orders = result.stream()
                 .map(OrderResponse::from)
                 .collect(Collectors.toList());
@@ -47,9 +46,9 @@ public class OrderApiController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<OrderIdResponse> create(@Authentication MemberId memberId,
+    public ResponseEntity<OrderIdResponse> create(Member member,
             @RequestBody @Valid CreateOrderRequestDto requestDto) {
-        Long orderId = orderCommandService.createOrder(memberId.getId(), requestDto);
+        Long orderId = orderCommandService.createOrder(member.getId(), requestDto);
         return ResponseEntity.created(URI.create("/orders/" + orderId))
                 .body(new OrderIdResponse(orderId));
     }
