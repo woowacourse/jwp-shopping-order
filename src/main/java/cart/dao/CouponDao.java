@@ -38,7 +38,7 @@ public class CouponDao {
 
 
     public void deleteUserCoupon(final Member member, final Long couponId) {
-        final String sql = "delete from user_coupon where coupon_id = ?";
-        jdbcTemplate.update(sql, couponId);
+        final String sql = "delete from user_coupon where coupon_id = ? AND member_id = ?";
+        jdbcTemplate.update(sql, couponId, member.getId());
     }
 }
