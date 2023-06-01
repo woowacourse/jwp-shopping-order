@@ -7,6 +7,7 @@ public class OrderItemEntity {
     private Long productId;
     private String name;
     private int productPrice;
+    private int orderedProductPrice;
     private String imageUrl;
     private Long orderId;
 
@@ -19,6 +20,7 @@ public class OrderItemEntity {
             Long productId,
             String name,
             int productPrice,
+            int orderedProductPrice,
             String imageUrl,
             Long orderId
     ) {
@@ -27,6 +29,7 @@ public class OrderItemEntity {
         this.productId = productId;
         this.name = name;
         this.productPrice = productPrice;
+        this.orderedProductPrice = orderedProductPrice;
         this.imageUrl = imageUrl;
         this.orderId = orderId;
     }
@@ -85,5 +88,13 @@ public class OrderItemEntity {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public int getOrderedProductPrice() {
+        return orderedProductPrice;
+    }
+
+    public void setOrderedProductPrice(int orderedProductPrice) {
+        this.orderedProductPrice = orderedProductPrice;
     }
 }

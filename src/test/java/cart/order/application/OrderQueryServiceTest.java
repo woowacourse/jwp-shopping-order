@@ -39,11 +39,11 @@ class OrderQueryServiceTest {
     void 회원의_모든_주문을_조회한다() {
         // given
         List<Order> orders = List.of(new Order(1L, 1L,
-                        new OrderItem(1L, 10, 1L, "말랑", 1000, "image"),
-                        new OrderItem(2L, 20, 2L, "코코닥", 2000, "image")),
+                        new OrderItem(1L, 10, 1L, "말랑", 1000, 1000, "image"),
+                        new OrderItem(2L, 20, 2L, "코코닥", 2000, 2000, "image")),
                 new Order(2L, 1L,
-                        new OrderItem(3L, 10, 1L, "말랑", 1000, "image"),
-                        new OrderItem(4L, 20, 2L, "코코닥", 2000, "image")));
+                        new OrderItem(3L, 10, 1L, "말랑", 1000, 1000, "image"),
+                        new OrderItem(4L, 20, 2L, "코코닥", 2000, 2000, "image")));
         given(orderRepository.findAllByMemberId(1L))
                 .willReturn(orders);
 
@@ -53,13 +53,13 @@ class OrderQueryServiceTest {
         // then
         OrderResponses expected = new OrderResponses(List.of(
                 new OrderResponse(1L,
-                        List.of(new OrderItemResponse(1L, "말랑", 10000, 10, "image"),
-                                new OrderItemResponse(2L, "코코닥", 40000, 20, "image")),
+                        List.of(new OrderItemResponse(1L, "말랑", 10000, 10000, 10, "image"),
+                                new OrderItemResponse(2L, "코코닥", 40000, 40000, 20, "image")),
                         50000
                 ),
                 new OrderResponse(2L,
-                        List.of(new OrderItemResponse(3L, "말랑", 10000, 10, "image"),
-                                new OrderItemResponse(4L, "코코닥", 40000, 20, "image")),
+                        List.of(new OrderItemResponse(3L, "말랑", 10000, 10000, 10, "image"),
+                                new OrderItemResponse(4L, "코코닥", 40000, 40000, 20, "image")),
                         50000
                 )
         ));
@@ -72,16 +72,16 @@ class OrderQueryServiceTest {
         // given
         given(orderRepository.findById(1L))
                 .willReturn(new Order(1L, 2L,
-                        new OrderItem(1L, 10, 1L, "말랑", 1000, "image"),
-                        new OrderItem(2L, 20, 2L, "코코닥", 2000, "image")));
+                        new OrderItem(1L, 10, 1L, "말랑", 1000, 1000, "image"),
+                        new OrderItem(2L, 20, 2L, "코코닥", 2000, 2000, "image")));
 
         // when
         OrderResponse orderResponse = orderQueryService.findByIdAndMemberId(1L, 2L);
 
         // then
         OrderResponse expected = new OrderResponse(1L,
-                List.of(new OrderItemResponse(1L, "말랑", 10000, 10, "image"),
-                        new OrderItemResponse(2L, "코코닥", 40000, 20, "image")),
+                List.of(new OrderItemResponse(1L, "말랑", 10000, 10000, 10, "image"),
+                        new OrderItemResponse(2L, "코코닥", 40000, 40000, 20, "image")),
                 50000
         );
         assertThat(orderResponse).usingRecursiveComparison()
@@ -93,8 +93,8 @@ class OrderQueryServiceTest {
         // given
         given(orderRepository.findById(1L))
                 .willReturn(new Order(1L, 2L,
-                        new OrderItem(1L, 10, 1L, "말랑", 1000, "image"),
-                        new OrderItem(2L, 20, 2L, "코코닥", 2000, "image")));
+                        new OrderItem(1L, 10, 1L, "말랑", 1000, 1000, "image"),
+                        new OrderItem(2L, 20, 2L, "코코닥", 2000, 1000, "image")));
 
         // when
         BaseExceptionType baseExceptionType = assertThrows(OrderException.class, () ->

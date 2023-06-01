@@ -20,6 +20,7 @@ public class OrderItemEntityMapper {
                 orderItem.getProductId(),
                 orderItem.getName(),
                 orderItem.getProductPrice(),
+                orderItem.getOrderedProductPrice(),
                 orderItem.getImageUrl(),
                 orderId);
     }
@@ -31,7 +32,9 @@ public class OrderItemEntityMapper {
                         it.getQuantity(),
                         it.getProductId(),
                         it.getName(),
-                        it.getProductPrice(), it.getImageUrl())
+                        it.getProductPrice(),
+                        it.getOrderedProductPrice(),
+                        it.getImageUrl())
                 ).collect(Collectors.toList());
     }
 }

@@ -46,6 +46,7 @@ CREATE TABLE order_item
     product_id    BIGINT       NOT NULL,
     name          VARCHAR(255) NOT NULL,
     product_price INT          NOT NULL,
+    ordered_product_price INT          NOT NULL,
     image_url     VARCHAR(255) NOT NULL,
     order_id      BIGINT       NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id)
