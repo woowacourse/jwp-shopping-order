@@ -1,3 +1,11 @@
+DROP TABLE IF EXISTS order_member_point;
+DROP TABLE IF EXISTS member_point;
+DROP TABLE IF EXISTS purchase_order_item;
+DROP TABLE IF EXISTS purchase_order;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -36,13 +44,13 @@ CREATE TABLE purchase_order
 
 CREATE TABLE purchase_order_item
 (
-    id                BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT       NOT NULL,
-    product_id        BIGINT       NOT NULL,
-    name              VARCHAR(255) NOT NULL,
-    price             INT          NOT NULL,
-    image_url         VARCHAR(255) NOT NULL,
-    quantity          INT          NOT NULL,
+    id         BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id   BIGINT       NOT NULL,
+    product_id BIGINT       NOT NULL,
+    name       VARCHAR(255) NOT NULL,
+    price      INT          NOT NULL,
+    image_url  VARCHAR(255) NOT NULL,
+    quantity   INT          NOT NULL,
     FOREIGN KEY (order_id) REFERENCES purchase_order (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
@@ -55,15 +63,14 @@ CREATE TABLE member_point
     created_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expired_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status     VARCHAR(50) NOT NULL,
-    purchase_order_id  BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-CREATE TABLE order_used_member_point
+CREATE TABLE order_member_point
 (
-    id                BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT NOT NULL,
-    member_point_id   BIGINT NOT NULL,
+    id              BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id        BIGINT NOT NULL,
+    member_point_id BIGINT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES purchase_order (id),
     FOREIGN KEY (member_point_id) REFERENCES member (id)
 );
