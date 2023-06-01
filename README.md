@@ -26,7 +26,7 @@
 
 ### Point API
 
-- [ ] 사용자 포인트 조회 GET `/point` 200
+- [x] 사용자 포인트 조회 GET `/point` 200
 
 ### 할인 정책 정보 API
 
