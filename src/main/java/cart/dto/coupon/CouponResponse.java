@@ -1,6 +1,6 @@
-package cart.dto;
+package cart.dto.coupon;
 
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import cart.domain.Item;
 import cart.domain.Order;
 import cart.domain.Product;

@@ -2,9 +2,9 @@ package cart.application;
 
 import cart.dao.CouponRepository;
 import cart.dao.MemberCouponRepository;
-import cart.domain.Coupon;
-import cart.domain.MemberCoupon;
-import cart.dto.MemberCouponResponse;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
+import cart.dto.coupon.MemberCouponResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

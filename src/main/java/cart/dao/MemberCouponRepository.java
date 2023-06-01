@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.domain.Coupon;
-import cart.domain.MemberCoupon;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

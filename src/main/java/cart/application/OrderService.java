@@ -3,7 +3,7 @@ package cart.application;
 import cart.dao.CouponRepository;
 import cart.dao.OrderRepository;
 import cart.dao.ProductDao;
-import cart.domain.Coupon;
+import cart.domain.coupon.Coupon;
 import cart.domain.Item;
 import cart.domain.Order;
 import cart.domain.Product;

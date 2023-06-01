@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.domain.coupon.Coupon;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
