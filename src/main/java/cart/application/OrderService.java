@@ -32,7 +32,10 @@ public class OrderService {
 
     public Long orderItems(Long memberId, OrderRequest orderRequest) {
         Order order = new Order(memberDao.getMemberById(memberId),
-                cartItemDao.findByMemberId(memberId),
+                orderRequest.getOrder()
+                        .stream()
+                        .map(cartItemDao::findById)
+                        .collect(Collectors.toList()),
                 orderRequest.getOriginalPrice(),
                 orderRequest.getUsedPoint(),
                 orderRequest.getPointToAdd());
@@ -46,7 +49,9 @@ public class OrderService {
 
         memberDao.updateMember(order.getMember());
 
-        cartItemDao.deleteByMemberId(memberId);
+        for (Long cartItemId : orderRequest.getOrder()) {
+            cartItemDao.deleteById(cartItemId);
+        }
 
         return orderId;
     }
