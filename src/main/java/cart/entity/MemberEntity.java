@@ -1,12 +1,12 @@
 package cart.entity;
 
-public class Member {
+public class MemberEntity {
     private final Long id;
     private final String email;
     private final String password;
     private final Integer gradeId;
 
-    public Member(Long id, String email, String password, Integer gradeId) {
+    public MemberEntity(Long id, String email, String password, Integer gradeId) {
         this.id = id;
         this.email = email;
         this.password = password;
