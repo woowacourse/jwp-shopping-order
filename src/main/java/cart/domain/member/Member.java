@@ -1,7 +1,5 @@
 package cart.domain.member;
 
-import cart.domain.coupon.Coupon;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -10,9 +8,9 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
-    private final List<Coupon> coupons;
+    private final List<MemberCoupon> coupons;
 
-    private Member(Long id, String email, String password, List<Coupon> coupons) {
+    private Member(Long id, String email, String password, List<MemberCoupon> coupons) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -35,11 +33,11 @@ public class Member {
         return password;
     }
 
-    public List<Coupon> getCoupons() {
+    public List<MemberCoupon> getCoupons() {
         return coupons;
     }
 
-    public Member setCoupons(final List<Coupon> coupons) {
+    public Member setCoupons(final List<MemberCoupon> coupons) {
         return new Member(id, email, password, coupons);
     }
 

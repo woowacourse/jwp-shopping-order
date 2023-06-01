@@ -2,8 +2,8 @@ package cart.repository;
 
 import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
-import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
+import cart.domain.member.MemberCoupon;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,13 +22,13 @@ public class MemberRepository {
 
     public Member getMemberById(Long id) {
         Member member = memberDao.getMemberById(id);
-        List<Coupon> coupons = memberCouponDao.findByMemberId(id);
+        List<MemberCoupon> coupons = memberCouponDao.findByMemberId(id);
         return member.setCoupons(coupons);
     }
 
     public Member getMemberByEmail(String email) {
         Member member = memberDao.getMemberByEmail(email);
-        List<Coupon> coupons = memberCouponDao.findByMemberId(member.getId());
+        List<MemberCoupon> coupons = memberCouponDao.findByMemberId(member.getId());
         return member.setCoupons(coupons);
     }
 
