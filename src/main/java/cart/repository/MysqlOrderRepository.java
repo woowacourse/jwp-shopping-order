@@ -29,7 +29,7 @@ public class MysqlOrderRepository implements OrderRepository {
 
     @Override
     public Order save(final Order order) {
-        final OrderEntity savedOrderEntity = orderDao.createOrder(new OrderEntity(order.getId(), order.getPrice()));
+        final OrderEntity savedOrderEntity = orderDao.createOrder(new OrderEntity(order.getMemberId(), order.getPrice()));
         final List<OrderItemEntity> orderItemEntities = order.getCartItems().stream()
                 .map(cartItem -> new OrderItemEntity(savedOrderEntity.getId(), cartItem.getProductId(), cartItem.getQuantity()))
                 .collect(Collectors.toList());
@@ -61,5 +61,4 @@ public class MysqlOrderRepository implements OrderRepository {
                 .map(orderEntity -> findById(orderEntity.getId(), member))
                 .collect(Collectors.toList());
     }
-
 }
