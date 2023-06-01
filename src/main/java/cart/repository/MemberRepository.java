@@ -13,4 +13,6 @@ public interface MemberRepository {
     List<Member> findAll();
 
     Long create(Member member);
+
+    void update(Member member);
 }

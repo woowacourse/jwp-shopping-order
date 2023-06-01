@@ -13,8 +13,8 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
-    private final Integer money;
-    private final Integer point;
+    private Integer money;
+    private Integer point;
 
     public Member(Long id, String email, String password, Integer money, Integer point) {
         this.id = id;
@@ -68,5 +68,26 @@ public class Member {
 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public void addPoint(Integer point) {
+        if (point < 0) {
+            throw new IllegalArgumentException("적립하는 포인트는 양수여야합니다.");
+        }
+        this.point += point;
+    }
+
+    public void usePoint(Integer usePoint) {
+        if (point < usePoint) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        this.point -= usePoint;
+    }
+
+    public void useMoney(Integer useMoney) {
+        if (money < useMoney) {
+            throw new IllegalArgumentException("금액이 부족합니다.");
+        }
+        this.money -= useMoney;
     }
 }

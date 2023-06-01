@@ -49,4 +49,9 @@ public class JdbcMemberRepository implements MemberRepository {
     public Long create(Member member) {
         return memberDao.insert(new MemberEntity(member.getEmail(), member.getPassword(), member.getMoney(), member.getPoint()));
     }
+
+    @Override
+    public void update(Member member) {
+        memberDao.update(MemberMapper.toEntity(member));
+    }
 }
