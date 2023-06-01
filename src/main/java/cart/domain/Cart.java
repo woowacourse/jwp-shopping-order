@@ -16,8 +16,14 @@ public class Cart {
         this.cartItems = new ArrayList<>(cartItems);
     }
 
+    public void applyCouponsOn(CartItem item, List<MemberCoupon> coupons) {
+        validateContains(item);
+        int index = cartItems.indexOf(item);
+        cartItems.get(index).apply(coupons);
+    }
+
     public Order order(List<CartItem> itemsToOrder) {
-        validateContainsAllOf(itemsToOrder);
+        validateContains(itemsToOrder);
         cartItems.removeAll(itemsToOrder);
         List<OrderItem> orderItems = itemsToOrder.stream()
                 .map(OrderItem::new)
@@ -25,10 +31,14 @@ public class Cart {
         return new Order(owner, orderItems);
     }
 
-    private void validateContainsAllOf(List<CartItem> items) {
-        boolean anyAbsence = items.stream()
-                .anyMatch(that -> !cartItems.contains(that));
-        if (anyAbsence) {
+    private void validateContains(List<CartItem> items) {
+        for (CartItem item : items) {
+            validateContains(item);
+        }
+    }
+
+    private void validateContains(CartItem item) {
+        if (!cartItems.contains(item)) {
             throw new NotContainedItemException();
         }
     }

@@ -49,4 +49,17 @@ class CartTest {
 
         assertThat(cart.getItems()).doesNotContain(CART_ITEM_치킨_MEMBER_A());
     }
+
+    @Test
+    void 항목에_쿠폰들을_적용한다() {
+        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A);
+        List<MemberCoupon> coupons = List.of(MEMBER_A_COUPON_PERCENTAGE_50(), MEMBER_A_COUPON_FIXED_2000());
+        cart.applyCouponsOn(CART_ITEM_치킨_MEMBER_A(), coupons);
+
+        assertThat(cart.getItems()).anySatisfy(cartItem ->
+                assertThat(cartItem.getCoupons())
+                        .usingRecursiveFieldByFieldElementComparatorOnFields("owner", "coupon")
+                        .containsExactlyInAnyOrderElementsOf(coupons)
+        );
+    }
 }
