@@ -4,6 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.Rank;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
@@ -121,6 +123,22 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public void deleteByIds(List<Long> cartItemIds) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, cartItemIds.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return cartItemIds.size();
+            }
+        });
     }
 }
 

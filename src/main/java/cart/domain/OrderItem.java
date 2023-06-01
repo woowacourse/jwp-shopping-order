@@ -28,6 +28,23 @@ public class OrderItem {
     }
 
     public OrderItem(
+            final String name,
+            final int price,
+            final String imageUrl,
+            final int quantity,
+            final int discountRate
+    ) {
+        this(
+                null,
+                new Name(name),
+                new Money(price),
+                new ImageUrl(imageUrl),
+                new Quantity(quantity),
+                new DiscountRate(discountRate)
+        );
+    }
+
+    public OrderItem(
             final Long id,
             final String name,
             final int price,

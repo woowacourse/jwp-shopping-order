@@ -38,14 +38,14 @@ CREATE TABLE IF NOT EXISTS orders
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-CREATE TABLE IF NOT EXISTS ordered_item
+CREATE TABLE IF NOT EXISTS order_item
 (
     id                    BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    product_name          VARCHAR(255) NOT NULL,
-    product_price         INT          NOT NULL,
-    product_image         VARCHAR(255) NOT NULL,
-    product_quantity      INT          NOT NULL,
-    product_discount_rate INT          NOT NULL,
+    name          VARCHAR(255) NOT NULL,
+    price         INT          NOT NULL,
+    image_url         VARCHAR(255) NOT NULL,
+    quantity      INT          NOT NULL,
+    discount_rate INT          NOT NULL,
     order_id              BIGINT       NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (id)
 )
