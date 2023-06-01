@@ -57,6 +57,7 @@ public class OrderService {
         Long totalPrice = orderRequest.getTotalPrice();
         Long usePoint = orderRequest.getPoint();
         List<Long> cartIds = orderRequest.getCartIds();
+
         // 2. 포인트 조회[남은 포인트가 0초과 && 만료기한이 지나지 않음] 후 [보유 포인트가 사용포인트 보다 적거나 같다면 예외] 남은 포인트 업데이트
         usePoint(member, createdAt, usePoint);
 
