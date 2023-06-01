@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('github clone') {
+            steps {
+                git branch: 'step2',
+                    url: 'https://github.com/apptie/jwp-shopping-order'
+            }
+        }
+
+        stage('build'){
+            steps{
+                sh'''
+                    ./gradlew clean bootJar
+                '''
+            }
+        }
+
+        stage('publish') {
+            steps {
+               sshagent(credentials: ['zeeto-aws']) {
+                   sh "scp build/libs/jwp-shopping-order.jar ubuntu@${env.EC2_IP}:${env.EC2_DIR}"
+                   sh "scp script/deploy-script.sh ubuntu@${env.EC2_IP}:${env.EC2_DIR}"
+                   sh "ssh ubuntu@${env.EC2_IP} 'sh ${env.EC2_DIR}/deploy-script.sh' "
+               }
+           }
+        }
+    }
+
+    post {
+        always {
+            cleanWs(cleanWhenNotBuilt: true,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true)
+        }
+    }
+}
