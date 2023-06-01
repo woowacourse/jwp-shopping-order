@@ -22,7 +22,11 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ExceptionResponse("예상치 못한 문제가 발생했습니다."));
     }
 
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler({
+            AuthenticationException.InvalidTokenFormat.class,
+            AuthenticationException.ForbiddenMember.class,
+            AuthenticationException.InvalidMember.class,
+    })
     public ResponseEntity<ExceptionResponse> handlerAuthenticationException(AuthenticationException ex) {
         logger.info("", ex);
 
@@ -30,26 +34,41 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<ExceptionResponse> handleException(CartItemException.IllegalMember ex) {
+    @ExceptionHandler({
+            CartItemException.IllegalMember.class,
+            OrderException.IllegalMember.class
+    })
+    public ResponseEntity<ExceptionResponse> handleForbiddenException(RuntimeException ex) {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse("잘못된 사용자입니다."));
     }
 
-    @ExceptionHandler(CartItemException.AlreadyExist.class)
-    public ResponseEntity<ExceptionResponse> handleException(CartItemException.AlreadyExist ex) {
+    @ExceptionHandler({
+            CartItemException.AlreadyExist.class,
+            CartItemException.InvalidQuantity.class,
+            CartItemException.InvalidIdsFormat.class,
+            CartItemException.DuplicateIds.class,
+            MemberException.TooManyUsedPoints.class,
+            MoneyException.Negative.class,
+            MoneyException.MultiplyZeroOrNegative.class,
+            OrderException.InvalidQuantity.class,
+            PointException.InvalidPolicy.class,
+    })
+    public ResponseEntity<ExceptionResponse> handleBadRequestException(RuntimeException ex) {
         logger.info("", ex);
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler({CartItemException.NotFound.class,
             ProductException.NotFound.class,
-            MemberException.NotFound.class})
-    public ResponseEntity<ExceptionResponse> handleException(RuntimeException ex) {
+            MemberException.NotFound.class,
+            OrderException.NotFound.class
+    })
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex) {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
