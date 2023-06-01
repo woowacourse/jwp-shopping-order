@@ -70,7 +70,7 @@ public class CouponDao {
 
     public void changeStatus(final Long couponId, final Long memberId, final Boolean toChange) {
         final String sql = "UPDATE coupon SET usage_status = :toChange " +
-                "AND id = :couponId AND member_id = :memberId";
+                "WHERE id = :couponId AND member_id = :memberId";
 
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("toChange", toChange)
