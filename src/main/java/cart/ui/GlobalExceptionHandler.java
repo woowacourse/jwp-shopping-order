@@ -15,20 +15,21 @@ public class GlobalExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<String> handlerAuthenticationException(AuthenticationException e) {
         logger.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
+    public ResponseEntity<String> handleException(CartItemException.IllegalMember e) {
         logger.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity<Void> handleException1(Exception e) {
+    public ResponseEntity<String> handleException1(Exception e) {
+        e.printStackTrace();
         logger.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 서버 오류가 발생하였습니다.");
     }
 }
