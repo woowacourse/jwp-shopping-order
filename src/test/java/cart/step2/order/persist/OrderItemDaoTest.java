@@ -1,21 +1,19 @@
 package cart.step2.order.persist;
 
-import cart.step2.order.domain.Order;
 import cart.step2.order.domain.OrderEntity;
 import cart.step2.order.domain.OrderItem;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class OrderItemDaoTest {
@@ -39,11 +37,9 @@ class OrderItemDaoTest {
         final OrderEntity orderEntity = OrderEntity.createNonePkOrder(1000, 1L, 1L);
         orderDao.insert(orderEntity);
 
-        final List<OrderItem> orderItems = List.of(
-                OrderItem.createNonePkOrder(1L, 1L, 1),
-                OrderItem.createNonePkOrder(2L, 1L, 1),
-                OrderItem.createNonePkOrder(3L, 1L, 1)
-        );
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(OrderItem.createNonePkOrder(1L, 1L, 2));
+        orderItems.add(OrderItem.createNonePkOrder(2L, 1L, 3));
 
         // when
         orderItemDao.batchInsert(orderItems);
@@ -52,11 +48,11 @@ class OrderItemDaoTest {
         // then
         assertAll(
                 () -> assertThat(responses).extracting(OrderItem::getProductId)
-                        .contains(1L, 2L, 3L),
+                        .contains(1L, 2L),
                 () -> assertThat(responses).extracting(OrderItem::getOrderId)
-                        .contains(1L, 1L, 1L),
+                        .contains(1L, 1L),
                 () -> assertThat(responses).extracting(OrderItem::getQuantity)
-                        .contains(1, 1, 1)
+                        .contains(2, 3)
         );
     }
 
