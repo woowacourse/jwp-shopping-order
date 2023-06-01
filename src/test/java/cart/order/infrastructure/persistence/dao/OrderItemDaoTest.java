@@ -42,8 +42,8 @@ class OrderItemDaoTest {
         Long productId1 = productDao.save(new ProductEntity(1L, "말랑", 100, "image"));
         Long productId2 = productDao.save(new ProductEntity(2L, "코코닥", 300, "image"));
         Long orderId = 주문_저장(member.getId());
-        OrderItemEntity orderItemEntity1 = new OrderItemEntity(null, 10, productId1, "말랑", 100, "image", orderId);
-        OrderItemEntity orderItemEntity2 = new OrderItemEntity(null, 20, productId2, "코코닥", 300, "image", orderId);
+        OrderItemEntity orderItemEntity1 = new OrderItemEntity(null, 10, productId1, "말랑", 100, 1000, "image", orderId);
+        OrderItemEntity orderItemEntity2 = new OrderItemEntity(null, 20, productId2, "코코닥", 300, 1000, "image", orderId);
 
         // when
         List<OrderItemEntity> orderItemEntities = List.of(orderItemEntity1, orderItemEntity2);

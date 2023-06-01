@@ -41,8 +41,8 @@ class JdbcOrderRepositoryTest {
     void 주문을_저장한다() {
         // given
         Order order = new Order(1L,
-                new OrderItem(10, 1L, "말랑", 1000, "image"),
-                new OrderItem(20, 2L, "코코닥", 2000, "image")
+                new OrderItem(10, 1L, "말랑", 1000, 1000, "image"),
+                new OrderItem(20, 2L, "코코닥", 2000, 1000, "image")
         );
         given(orderDao.save(any()))
                 .willReturn(1L);
@@ -60,11 +60,11 @@ class JdbcOrderRepositoryTest {
     void 특정_회원의_주문을_조회한다() {
         // given
         OrderEntity orderEntity1 = new OrderEntity(1L, 1L);
-        OrderItemEntity orderItemEntity1 = new OrderItemEntity(1L, 10, 1L, "말랑", 1000, "image", 1L);
-        OrderItemEntity orderItemEntity2 = new OrderItemEntity(2L, 20, 2L, "코코닥", 2000, "image", 1L);
+        OrderItemEntity orderItemEntity1 = new OrderItemEntity(1L, 10, 1L, "말랑", 1000, 1000, "image", 1L);
+        OrderItemEntity orderItemEntity2 = new OrderItemEntity(2L, 20, 2L, "코코닥", 2000, 1000, "image", 1L);
         OrderEntity orderEntity2 = new OrderEntity(2L, 1L);
-        OrderItemEntity orderItemEntity3 = new OrderItemEntity(3L, 10, 1L, "말랑", 1000, "image", 2L);
-        OrderItemEntity orderItemEntity4 = new OrderItemEntity(4L, 20, 2L, "코코닥", 2000, "image", 2L);
+        OrderItemEntity orderItemEntity3 = new OrderItemEntity(3L, 10, 1L, "말랑", 1000, 1000, "image", 2L);
+        OrderItemEntity orderItemEntity4 = new OrderItemEntity(4L, 20, 2L, "코코닥", 2000, 1000, "image", 2L);
 
         given(orderDao.findAllByMemberId(1L))
                 .willReturn(List.of(orderEntity1, orderEntity2));
@@ -78,12 +78,12 @@ class JdbcOrderRepositoryTest {
 
         // then
         Order order1 = new Order(1L, 1L,
-                new OrderItem(1L, 10, 1L, "말랑", 1000, "image"),
-                new OrderItem(2L, 20, 2L, "코코닥", 2000, "image")
+                new OrderItem(1L, 10, 1L, "말랑", 1000, 1000, "image"),
+                new OrderItem(2L, 20, 2L, "코코닥", 2000, 1000, "image")
         );
         Order order2 = new Order(2L, 1L,
-                new OrderItem(3L, 10, 1L, "말랑", 1000, "image"),
-                new OrderItem(4L, 20, 2L, "코코닥", 2000, "image")
+                new OrderItem(3L, 10, 1L, "말랑", 1000, 1000, "image"),
+                new OrderItem(4L, 20, 2L, "코코닥", 2000, 1000, "image")
         );
         List<Order> expected = List.of(order1, order2);
         assertThat(orders).usingRecursiveComparison()

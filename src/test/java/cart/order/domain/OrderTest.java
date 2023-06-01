@@ -31,8 +31,8 @@ class OrderTest {
     void 주문의_총액은_주문상품들의_가격의_합이다() {
         // given
         Order order = new Order(1L, 1L,
-                new OrderItem(3L, 10, 1L, "말랑", 1000, "image"),  // 1000 * 10
-                new OrderItem(4L, 20, 2L, "코코닥", 2000, "image")  // 2000 *  20
+                new OrderItem(3L, 10, 1L, "말랑", 1000, 1000, "image"),  // 1000 * 10
+                new OrderItem(4L, 20, 2L, "코코닥", 2000, 1000, "image")  // 2000 *  20
         );
 
         // when & then
