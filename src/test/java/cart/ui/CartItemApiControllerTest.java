@@ -1,8 +1,14 @@
 package cart.ui;
 
+import static cart.fixture.DomainFixture.FOUR_SALAD;
+import static cart.fixture.DomainFixture.MEMBER_A;
+import static cart.fixture.DomainFixture.TWO_CHICKEN;
+import static cart.fixture.ValueFixture.MEMBER_A_BASIC_TOKEN;
 import static cart.ui.RestDocsConfiguration.field;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -18,69 +24,42 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.configuration.WebMvcConfig;
-import cart.application.CartItemService;
+import cart.configuration.resolver.CheckoutArgumentResolver;
 import cart.configuration.resolver.MemberArgumentResolver;
-import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.PointDiscountPolicy;
+import cart.domain.PointEarnPolicy;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cart.dto.response.CheckoutResponse;
 import java.util.List;
+import java.util.Optional;
+import org.apache.commons.codec.CharEncoding;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-@WebMvcTest(
-        controllers = CartItemApiController.class,
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class)
-        }
-)
-@AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class)
-class CartItemApiControllerTest {
-
-    @MockBean
-    MemberArgumentResolver memberArgumentResolver;
-
-    @MockBean
-    CartItemService cartItemService;
-
-    @Autowired
-    CartItemApiController cartItemApiController;
-    @Autowired
-    RestDocumentationResultHandler restDocs;
-    @Autowired
-    ObjectMapper objectMapper;
-    MockMvc mockMvc;
+class CartItemApiControllerTest extends DocsTest {
 
     @BeforeEach
-    void setUp(@Autowired final RestDocumentationContextProvider provider) {
+    void setUp() {
+        MemberArgumentResolver memberArgumentResolver = new MemberArgumentResolver(memberDao);
+        CheckoutArgumentResolver checkoutArgumentResolver = new CheckoutArgumentResolver();
+
         mockMvc = MockMvcBuilders.standaloneSetup(cartItemApiController)
                 .setControllerAdvice(new ControllerExceptionHandler())
-                .setCustomArgumentResolvers(memberArgumentResolver)
-                .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .setCustomArgumentResolvers(memberArgumentResolver, checkoutArgumentResolver)
+                .addFilters(new CharacterEncodingFilter(CharEncoding.UTF_8, true))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
                 .alwaysDo(print())
                 .alwaysDo(restDocs)
@@ -89,16 +68,12 @@ class CartItemApiControllerTest {
 
     @Test
     void showCartItems() throws Exception {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
-        final Product product = new Product(1L, "A", 1000, "http://image.com");
-        final CartItem cartItem = new CartItem(1L, 3, member, product);
-        final CartItemResponse response = CartItemResponse.of(cartItem);
+        CartItemResponse response = CartItemResponse.of(TWO_CHICKEN);
+        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(cartItemService.findByMember(any(Member.class))).willReturn(List.of(response));
 
         mockMvc.perform(get("/cart-items")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic ababababaababab"))
+                        .header(HttpHeaders.AUTHORIZATION, MEMBER_A_BASIC_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(
                         restDocs.document(
@@ -106,12 +81,12 @@ class CartItemApiControllerTest {
                                         headerWithName("Authorization").description("사용자 Basic 인증 정보").attributes(field("constraint", "Basic 형식 토큰"))
                                 ),
                                 responseFields(
-                                        fieldWithPath("[0].id").type(JsonFieldType.NUMBER).description("장바구니 상품 ID"),
-                                        fieldWithPath("[0].quantity").type(JsonFieldType.NUMBER).description("장바구니 상품 수량"),
-                                        fieldWithPath("[0].product.id").type(JsonFieldType.NUMBER).description("상품 ID"),
-                                        fieldWithPath("[0].product.name").type(JsonFieldType.STRING).description("상품 이름"),
-                                        fieldWithPath("[0].product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                        fieldWithPath("[0].product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소")
+                                        fieldWithPath("[*].id").type(JsonFieldType.NUMBER).description("장바구니 상품 ID"),
+                                        fieldWithPath("[*].quantity").type(JsonFieldType.NUMBER).description("장바구니 상품 수량"),
+                                        fieldWithPath("[*].product.id").type(JsonFieldType.NUMBER).description("상품 ID"),
+                                        fieldWithPath("[*].product.name").type(JsonFieldType.STRING).description("상품 이름"),
+                                        fieldWithPath("[*].product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                        fieldWithPath("[*].product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소")
                                 )
                         )
                 );
@@ -119,15 +94,12 @@ class CartItemApiControllerTest {
 
     @Test
     void addCartItems() throws Exception {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
-
-        final CartItemRequest request = new CartItemRequest(1L);
+        CartItemRequest request = new CartItemRequest(1L);
+        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(cartItemService.add(any(Member.class), any(CartItemRequest.class))).willReturn(1L);
 
         mockMvc.perform(post("/cart-items")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic ababababaababab")
+                        .header(HttpHeaders.AUTHORIZATION, MEMBER_A_BASIC_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -149,15 +121,12 @@ class CartItemApiControllerTest {
 
     @Test
     void updateCartItemQuantity() throws Exception {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
-
-        final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(3);
+        CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(3);
+        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         willDoNothing().given(cartItemService).updateQuantity(any(Member.class), anyLong(), any(CartItemQuantityUpdateRequest.class));
 
         mockMvc.perform(patch("/cart-items/{id}", 1L)
-                        .header(HttpHeaders.AUTHORIZATION, "Basic ababababaababab")
+                        .header(HttpHeaders.AUTHORIZATION, MEMBER_A_BASIC_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -174,19 +143,15 @@ class CartItemApiControllerTest {
                                 )
                         )
                 );
-
     }
 
     @Test
     void removeCartItems() throws Exception {
-        final Member member = new Member(1L, "a@a.com", "1234");
-        given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
-
+        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         willDoNothing().given(cartItemService).remove(any(Member.class), anyLong());
 
         mockMvc.perform(delete("/cart-items/{id}", 1L)
-                        .header(HttpHeaders.AUTHORIZATION, "Basic ababababaababab"))
+                        .header(HttpHeaders.AUTHORIZATION, MEMBER_A_BASIC_TOKEN))
                 .andExpect(status().isNoContent())
                 .andDo(
                         restDocs.document(
@@ -195,6 +160,43 @@ class CartItemApiControllerTest {
                                 ),
                                 pathParameters(
                                         parameterWithName("id").description("장바구니 상품 ID")
+                                )
+                        )
+                );
+    }
+    
+    @Test
+    void checkout() throws Exception {
+        CheckoutResponse checkoutResponse = CheckoutResponse.of(List.of(TWO_CHICKEN, FOUR_SALAD), MEMBER_A,
+                PointDiscountPolicy.DEFAULT, PointEarnPolicy.DEFAULT);
+        given(memberDao.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
+        given(cartItemService.checkout(any(Member.class), anyList())).willReturn(checkoutResponse);
+
+        mockMvc.perform(
+                get("/cart-items/checkout")
+                        .header(HttpHeaders.AUTHORIZATION, MEMBER_A_BASIC_TOKEN)
+                        .queryParam("ids", "1,2,3")
+                )
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("사용자 Basic 인증 정보").attributes(field("constraint", "Basic 형식 토큰"))
+                                ),
+                                requestParameters(
+                                        parameterWithName("ids").description("장바구니에서 주문할 상품 ID").attributes(field("optional", "true")).attributes(field("constraint", "구분자 ','를 사용한 숫자"))
+                                ),
+                                responseFields(
+                                        fieldWithPath("cartItems.[*].id").type(JsonFieldType.NUMBER).description("장바구니 상품 ID"),
+                                        fieldWithPath("cartItems.[*].quantity").type(JsonFieldType.NUMBER).description("장바구니 상품 수량"),
+                                        fieldWithPath("cartItems.[*].product.id").type(JsonFieldType.NUMBER).description("상품 ID"),
+                                        fieldWithPath("cartItems.[*].product.name").type(JsonFieldType.STRING).description("상품 이름"),
+                                        fieldWithPath("cartItems.[*].product.imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL"),
+                                        fieldWithPath("cartItems.[*].product.price").type(JsonFieldType.NUMBER).description("상품 단일 금액"),
+                                        fieldWithPath("totalPrice").type(JsonFieldType.NUMBER).description("주문 총 금액"),
+                                        fieldWithPath("currentPoints").type(JsonFieldType.NUMBER).description("현재 소유 포인트"),
+                                        fieldWithPath("earnedPoints").type(JsonFieldType.NUMBER).description("적립 예정 포인트"),
+                                        fieldWithPath("availablePoints").type(JsonFieldType.NUMBER).description("적립 에정 포인트")
                                 )
                         )
                 );

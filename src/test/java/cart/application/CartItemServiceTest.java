@@ -122,11 +122,14 @@ class CartItemServiceTest {
         int expectedTotalPrice = 30_000;
         int expectedEarnedPoints = 3_000;
         int expectedAvailablePoints = 3_000;
+        int expectedChickenQuantity = 2;
+        int expectedSaladQuantity = 4;
+
         assertAll(
                 () -> assertThat(actual.getCartItems()).hasSize(2),
-                () -> assertThat(actual.getCartItems().get(0).getQuantity()).isEqualTo(TWO_CHICKEN.getQuantity()),
+                () -> assertThat(actual.getCartItems().get(0).getQuantity()).isEqualTo(expectedChickenQuantity),
                 () -> assertThat(actual.getCartItems().get(0).getProduct().getName()).isEqualTo(TWO_CHICKEN.getProduct().getName()),
-                () -> assertThat(actual.getCartItems().get(1).getQuantity()).isEqualTo(FOUR_SALAD.getQuantity()),
+                () -> assertThat(actual.getCartItems().get(1).getQuantity()).isEqualTo(expectedSaladQuantity),
                 () -> assertThat(actual.getCartItems().get(1).getProduct().getName()).isEqualTo(FOUR_SALAD.getProduct().getName()),
                 () -> assertThat(actual.getTotalPrice()).isEqualTo(expectedTotalPrice),
                 () -> assertThat(actual.getCurrentPoints()).isEqualTo(MEMBER_A.getPoint()),

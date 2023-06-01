@@ -1,5 +1,6 @@
 package cart.ui;
 
+import static cart.fixture.DomainFixture.CHICKEN;
 import static cart.ui.RestDocsConfiguration.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -19,59 +20,26 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.configuration.WebMvcConfig;
-import cart.application.ProductService;
-import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import org.apache.commons.codec.CharEncoding;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-@WebMvcTest(
-        controllers = ProductApiController.class,
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class)
-        }
-)
-@AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class)
-class ProductApiControllerTest {
-
-    @MockBean
-    ProductService productService;
-
-    @Autowired
-    ProductApiController productApiController;
-    @Autowired
-    RestDocumentationResultHandler restDocs;
-    @Autowired
-    ObjectMapper objectMapper;
-    MockMvc mockMvc;
-
+class ProductApiControllerTest extends DocsTest {
 
     @BeforeEach
-    void setUp(@Autowired final RestDocumentationContextProvider provider) {
+    void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(productApiController)
                 .setControllerAdvice(new ControllerExceptionHandler())
-                .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .addFilters(new CharacterEncodingFilter(CharEncoding.UTF_8, true))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
                 .alwaysDo(print())
                 .alwaysDo(restDocs)
@@ -80,7 +48,7 @@ class ProductApiControllerTest {
 
     @Test
     void getAllProducts() throws Exception {
-        final ProductResponse response = ProductResponse.of(new Product(1L, "A", 1000, "http://image.com"));
+        ProductResponse response = ProductResponse.of(CHICKEN);
         given(productService.findAll()).willReturn(List.of(response));
 
         mockMvc.perform(get("/products"))
@@ -88,10 +56,10 @@ class ProductApiControllerTest {
                 .andDo(
                         restDocs.document(
                                 responseFields(
-                                        fieldWithPath("[0].id").type(JsonFieldType.NUMBER).description("상품 ID"),
-                                        fieldWithPath("[0].name").type(JsonFieldType.STRING).description("상품 이름"),
-                                        fieldWithPath("[0].price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                        fieldWithPath("[0].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소")
+                                        fieldWithPath("[*].id").type(JsonFieldType.NUMBER).description("상품 ID"),
+                                        fieldWithPath("[*].name").type(JsonFieldType.STRING).description("상품 이름"),
+                                        fieldWithPath("[*].price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                        fieldWithPath("[*].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 주소")
                                 )
                         )
                 );
@@ -99,11 +67,10 @@ class ProductApiControllerTest {
 
     @Test
     void getProductById() throws Exception {
-        final Product product = new Product(1L, "A", 1000, "http://image.com");
-        final ProductResponse response = ProductResponse.of(product);
+        ProductResponse response = ProductResponse.of(CHICKEN);
         given(productService.findById(anyLong())).willReturn(response);
 
-        mockMvc.perform(get("/products/{id}", product.getId()))
+        mockMvc.perform(get("/products/{id}", CHICKEN.getId()))
                 .andExpect(status().isOk())
                 .andDo(
                         restDocs.document(
@@ -122,7 +89,7 @@ class ProductApiControllerTest {
 
     @Test
     void createProduct() throws Exception {
-        final ProductRequest request = new ProductRequest("A", 1000, "http://image.com");
+        ProductRequest request = new ProductRequest(CHICKEN.getName(), CHICKEN.getPrice(), CHICKEN.getImageUrl());
         given(productService.save(any(ProductRequest.class))).willReturn(1L);
 
         mockMvc.perform(post("/products")
@@ -145,7 +112,7 @@ class ProductApiControllerTest {
 
     @Test
     void updateProduct() throws Exception {
-        final ProductRequest request = new ProductRequest("A", 1000, "http://image.com");
+        ProductRequest request = new ProductRequest("A", 1000, "http://image.com");
         willDoNothing().given(productService).update(anyLong(), any(ProductRequest.class));
 
         mockMvc.perform(put("/products/{id}", 1L)

@@ -1,17 +1,16 @@
 package cart.ui;
 
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.snippet.Attributes.Attribute;
 
-
-@Configuration
+@TestConfiguration
 public class RestDocsConfiguration {
 
-    public static final Attribute field(final String key, final String value) {
+    public static Attribute field(String key, String value) {
         return new Attribute(key, value);
     }
 
