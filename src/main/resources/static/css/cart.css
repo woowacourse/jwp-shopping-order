@@ -59,6 +59,20 @@
     transition: all 0.3s ease-in-out;
 }
 
+.coupon-btn {
+    margin-left: 10px;
+    background-color: #c0392b;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
 .cart-item-delete:hover {
     background-color: #e74c3c;
 }
