@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class OrderDao {
@@ -25,5 +26,9 @@ public class OrderDao {
     public long insert(final OrderEntity source) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(source);
         return insertAction.executeAndReturnKey(params).longValue();
+    }
+
+    public List<OrderEntity> findByMemberId(final long memberId) {
+        return null;
     }
 }

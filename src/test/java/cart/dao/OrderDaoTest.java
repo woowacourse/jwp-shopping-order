@@ -12,7 +12,11 @@ import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @DisplayName("Order Dao 테스트")
@@ -40,5 +44,24 @@ class OrderDaoTest {
         // when, then
         assertThatCode(() -> orderDao.insert(orderEntity))
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("맴버의 주문 목록 조회 성공")
+    void findByMemberId_success() {
+        // given
+        final long memberId = 1L;
+
+        // when
+        final List<OrderEntity> orderEntities = orderDao.findByMemberId(memberId);
+
+        // then
+        assert orderEntities != null;
+        assertAll(
+                () -> assertThat(orderEntities).hasSize(3),
+                () -> assertThat(orderEntities.get(0).getMemberId()).isEqualTo(1),
+                () -> assertThat(orderEntities.get(0).getOriginalPrice()).isEqualTo(23000),
+                () -> assertThat(orderEntities.get(0).getDiscountPrice()).isEqualTo(2000)
+        );
     }
 }
