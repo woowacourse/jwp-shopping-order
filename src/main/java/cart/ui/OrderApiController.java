@@ -44,6 +44,36 @@ public class OrderApiController {
                 .body(allOrderResponse);
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderDetailResponse> findOrderDetail(
+            Member member,
+            @PathVariable Long orderId
+    ) {
+        OrderDetailResponse orderDetailResponse = new OrderDetailResponse(
+                1L,
+                List.of(
+                        new OrderItemResponse(
+                                1L,
+                                "지구별",
+                                1000,
+                                "https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg",
+                                2
+                        ),
+                        new OrderItemResponse(
+                                2L,
+                                "화성",
+                                200000,
+                                "https://cdn.pixabay.com/photo/2011/12/13/14/30/mars-11012__480.jpg",
+                                4
+                        )
+                ),
+                804000
+        );
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(orderDetailResponse);
+    }
+
     @GetMapping("/coupons")
     public ResponseEntity<List<OrderCouponResponse>> findCoupons(
             @RequestParam final List<Long> cartItemId,

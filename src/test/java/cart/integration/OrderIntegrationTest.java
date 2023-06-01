@@ -9,6 +9,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("ALL")
 public class OrderIntegrationTest extends IntegrationTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -97,5 +100,42 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         AllOrderResponse allOrderResponse = objectMapper.readValue(jsonResponse, AllOrderResponse.class);
         assertThat(allOrderResponse).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @DisplayName("주문 정보를 조회한다")
+    @Test
+    void 주문_정보를_조회한다() throws JsonProcessingException {
+        OrderDetailResponse expected = new OrderDetailResponse(
+                1L,
+                List.of(
+                        new OrderItemResponse(
+                                1L,
+                                "지구별",
+                                1000,
+                                "https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg",
+                                2
+                        ),
+                        new OrderItemResponse(
+                                2L,
+                                "화성",
+                                200000,
+                                "https://cdn.pixabay.com/photo/2011/12/13/14/30/mars-11012__480.jpg",
+                                4
+                        )
+                ),
+                804000
+        );
+        String jsonResponse = given().log().all()
+                .auth().preemptive().basic("a@a.com", "1234")
+                .pathParam("orderId", 1)
+                .when()
+                .get("/orders/{orderId}")
+                .then()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract().body().asString();
+
+        OrderDetailResponse orderDetailResponse = objectMapper.readValue(jsonResponse, OrderDetailResponse.class);
+        assertThat(orderDetailResponse).usingRecursiveComparison().isEqualTo(expected);
     }
 }
