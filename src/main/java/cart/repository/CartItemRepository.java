@@ -5,6 +5,7 @@ import cart.dao.dto.CartItemProductDto;
 import cart.dao.entity.CartItemEntity;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.exception.IllegalCartException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,7 @@ public class CartItemRepository {
 
     public CartItem findById(long cartItemId) {
         CartItemProductDto foundCartItem = cartItemDao.findById(cartItemId)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 장바구니 id 입니다."));
+            .orElseThrow(() -> new IllegalCartException("존재하지 않는 장바구니 id 입니다."));
 
         return foundCartItem.toDomain();
     }
@@ -49,7 +50,7 @@ public class CartItemRepository {
 
     private void validateCartItemExistence(long cartItemId) {
         if (cartItemDao.isNonExistingId(cartItemId)) {
-            throw new IllegalArgumentException("존재하지 않는 장바구니 id 입니다.");
+            throw new IllegalCartException("존재하지 않는 장바구니 id 입니다.");
         }
     }
 

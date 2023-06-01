@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
+import cart.exception.IllegalMemberException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -18,14 +19,14 @@ public class MemberRepository {
 
     public Member findById(long id) {
         MemberEntity memberEntity = memberDao.getMemberById(id)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품 id 입니다."));
+            .orElseThrow(() -> new IllegalMemberException("존재하지 않는 사용자 id 입니다."));
 
         return memberEntity.toDomain();
     }
 
     public Member findByEmail(String email) {
         MemberEntity memberEntity = memberDao.getMemberByEmail(email)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+            .orElseThrow(() -> new IllegalMemberException("존재하지 않는 이메일입니다."));
 
         return memberEntity.toDomain();
     }
