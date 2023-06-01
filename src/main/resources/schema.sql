@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS  cart_item
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
+CREATE INDEX IF NOT EXISTS  cart_item_member_id_index ON cart_item (member_id);
+CREATE INDEX IF NOT EXISTS  cart_item_product_id_index ON cart_item (product_id);
 
 CREATE TABLE IF NOT EXISTS  orders
 (
@@ -90,3 +92,5 @@ CREATE TABLE IF NOT EXISTS  coupon_member
     member_id BIGINT  NOT NULL,
     FOREIGN KEY (coupon_id) REFERENCES coupon (id)
 );
+CREATE INDEX IF NOT EXISTS  coupon_member_coupon_id_index ON coupon_member (coupon_id);
+CREATE INDEX IF NOT EXISTS  coupon_member_member_id_index ON coupon_member (member_id);
