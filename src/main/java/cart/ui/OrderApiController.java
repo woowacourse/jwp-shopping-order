@@ -8,6 +8,7 @@ import cart.dto.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 
@@ -23,7 +24,7 @@ public class OrderApiController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(final Member member,
-                                         @RequestBody final OrderRequest orderRequest) {
+                                         @RequestBody @Valid final OrderRequest orderRequest) {
         final Long orderId = orderService.add(member, orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
