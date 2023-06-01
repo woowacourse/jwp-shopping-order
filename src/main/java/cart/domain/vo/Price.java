@@ -11,7 +11,7 @@ public class Price {
     }
 
     public Price sum(final Price price) {
-        return new Price(value * price.value);
+        return new Price(value + price.value);
     }
 
     public Price subtract(final Price other) {

@@ -53,7 +53,7 @@ public class Order {
 
     public Price getOriginPrice() {
         return orderProducts.stream()
-                .map(OrderProduct::getTotalPrice)
+                .map(OrderProduct::calculateTotalPrice)
                 .reduce(new Price(0), Price::sum);
     }
 

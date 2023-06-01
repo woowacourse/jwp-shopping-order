@@ -20,7 +20,7 @@ public class OrderProduct {
         this(null, product, quantity);
     }
 
-    public Price getTotalPrice() {
+    public Price calculateTotalPrice() {
         return product.calculatePrice(quantity);
     }
 
