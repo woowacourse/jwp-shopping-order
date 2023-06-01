@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,6 +42,7 @@ public class OrderDao {
     public Order findByIds(Long memberId, Long orderId) {
         String sql = "SELECT * FROM orders WHERE id = ? AND member_id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{orderId, memberId}, (rs, rowNum) -> {
+            LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
             int totalItemDiscountAmount = rs.getInt("total_item_discount_amount");
             int totalMemberDiscountAmount = rs.getInt("total_member_discount_amount");
             int totalItemPrice = rs.getInt(("total_item_price"));
@@ -48,7 +50,7 @@ public class OrderDao {
             int shippingFee = rs.getInt("shipping_fee");
             int totalPrice = rs.getInt("total_price");
 
-            return new Order(orderId, memberId, null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
+            return new Order(orderId, memberId, orderedAt, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
         });
     }
 
@@ -56,6 +58,7 @@ public class OrderDao {
         String sql = "SELECT * FROM orders WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
+            LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
             int totalItemDiscountAmount = rs.getInt("total_item_discount_amount");
             int totalMemberDiscountAmount = rs.getInt("total_member_discount_amount");
             int totalItemPrice = rs.getInt(("total_item_price"));
@@ -63,7 +66,7 @@ public class OrderDao {
             int shippingFee = rs.getInt("shipping_fee");
             int totalPrice = rs.getInt("total_price");
 
-            return new Order(id, memberId, null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
+            return new Order(id, memberId, orderedAt, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
         });
     }
 
@@ -71,6 +74,7 @@ public class OrderDao {
         String sql = "SELECT * FROM orders WHERE member_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long id = rs.getLong("id");
+            LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
             int totalItemDiscountAmount = rs.getInt("total_item_discount_amount");
             int totalMemberDiscountAmount = rs.getInt("total_member_discount_amount");
             int totalItemPrice = rs.getInt(("total_item_price"));
@@ -78,7 +82,7 @@ public class OrderDao {
             int shippingFee = rs.getInt("shipping_fee");
             int totalPrice = rs.getInt("total_price");
 
-            return new Order(id, memberId, null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
+            return new Order(id, memberId, orderedAt, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
         },memberId);
     }
 }
