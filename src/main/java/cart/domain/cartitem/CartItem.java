@@ -19,6 +19,10 @@ public class CartItem {
         this(null, 1, member, product);
     }
 
+    public CartItem(int quantity, Member member, Product product) {
+        this(null, quantity, member, product);
+    }
+
     public CartItem(Long id, int quantity, Member member, Product product) {
         this.id = id;
         this.quantity = new Quantity(quantity);
@@ -28,6 +32,10 @@ public class CartItem {
 
     public void assignId(Long id) {
         this.id = id;
+    }
+
+    public int getTotalPrice() {
+        return product.getPrice() * quantity.getValue();
     }
 
     public Long getId() {

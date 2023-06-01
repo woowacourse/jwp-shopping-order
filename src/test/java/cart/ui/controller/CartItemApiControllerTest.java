@@ -1,6 +1,7 @@
 package cart.ui.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -21,11 +22,14 @@ import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.test.ControllerTest;
 import cart.ui.controller.dto.request.CartItemQuantityUpdateRequest;
+import cart.ui.controller.dto.request.CartItemRemoveRequest;
 import cart.ui.controller.dto.request.CartItemRequest;
+import cart.ui.controller.dto.response.CartItemPriceResponse;
 import cart.ui.controller.dto.response.CartItemResponse;
 import cart.ui.controller.dto.response.MemberResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -68,6 +72,39 @@ class CartItemApiControllerTest extends ControllerTest {
         List<CartItemResponse> result = objectMapper.readValue(jsonResponse, new TypeReference<List<CartItemResponse>>() {
         });
         assertThat(result).usingRecursiveComparison().isEqualTo(response);
+    }
+
+    @Nested
+    @DisplayName("getTotalPriceWithDeliveryFee 메서드는 ")
+    class GetTotalPriceWithDeliveryFee {
+
+        @Test
+        @DisplayName("인증 정보가 존재하지 않으면 401 상태를 반환한다.")
+        void notAuthentication() throws Exception {
+            mockMvc.perform(get("/cart-items/price?item=1&item=2"))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.message").value("인증 정보가 존재하지 않습니다."));
+        }
+
+        @Test
+        @DisplayName("유효한 요청이라면 장바구니 상품 목록 금액을 응답한다.")
+        void getTotalPriceWithDeliveryFee() throws Exception {
+            Member member = new Member(1L, "a@a.com", "password1", 10);
+            CartItemPriceResponse response = new CartItemPriceResponse(49000, 3000);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+            given(cartItemService.getTotalPriceWithDeliveryFee(any(Member.class), any(List.class))).willReturn(response);
+
+            MvcResult mvcResult = mockMvc.perform(get("/cart-items/price?item=1&item=2")
+                            .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes())))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            String jsonResponse = mvcResult.getResponse().getContentAsString();
+            CartItemPriceResponse result = objectMapper.readValue(jsonResponse, CartItemPriceResponse.class);
+            assertThat(result).usingRecursiveComparison().isEqualTo(response);
+        }
     }
 
     @Nested
@@ -205,6 +242,73 @@ class CartItemApiControllerTest extends ControllerTest {
         @Test
         @DisplayName("인증 정보가 존재하지 않으면 401 상태를 반환한다.")
         void notAuthentication() throws Exception {
+            mockMvc.perform(delete("/cart-items"))
+                    .andDo(print())
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.message").value("인증 정보가 존재하지 않습니다."));
+        }
+
+        @Test
+        @DisplayName("장바구니 상품 ID 목록이 존재하지 않으면 400 상태를 반환한다.")
+        void nullCartItems() throws Exception {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
+            CartItemRemoveRequest request = new CartItemRemoveRequest(null);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+
+            mockMvc.perform(delete("/cart-items")
+                            .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
+                            .content(objectMapper.writeValueAsString(request))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value(containsString("장바구니 상품 ID 목록은 필수로 존재해야 합니다.")));
+        }
+
+        @Test
+        @DisplayName("장바구니 상품 ID 목록이 비어있으면 400 상태를 반환한다.")
+        void emptyCartItems() throws Exception {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
+            CartItemRemoveRequest request = new CartItemRemoveRequest(Collections.emptyList());
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+
+            mockMvc.perform(delete("/cart-items")
+                            .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
+                            .content(objectMapper.writeValueAsString(request))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value(containsString("장바구니 상품 ID 목록은 비어있어서는 안됩니다.")));
+        }
+
+        @Test
+        @DisplayName("유효한 요청이라면 장바구니 상품 목록을 삭제한다.")
+        void removeCartItems() throws Exception {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
+            CartItemRemoveRequest request = new CartItemRemoveRequest(List.of(1L));
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+
+            mockMvc.perform(delete("/cart-items")
+                            .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
+                            .content(objectMapper.writeValueAsString(request))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isNoContent());
+        }
+    }
+
+    @Nested
+    @DisplayName("removeCartItem 메서드는 ")
+    class RemoveCartItem {
+
+        @Test
+        @DisplayName("인증 정보가 존재하지 않으면 401 상태를 반환한다.")
+        void notAuthentication() throws Exception {
             mockMvc.perform(delete("/cart-items/{id}", 1))
                     .andDo(print())
                     .andExpect(status().isUnauthorized())
@@ -228,7 +332,7 @@ class CartItemApiControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("유효한 요청이라면 장바구니 상품을 삭제한다.")
-        void removeCartItems() throws Exception {
+        void removeCartItem() throws Exception {
             Member member = new Member(1L, "a@a.com", "password1", 0);
             given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
             willDoNothing().given(cartItemService).remove(any(Member.class), anyLong());

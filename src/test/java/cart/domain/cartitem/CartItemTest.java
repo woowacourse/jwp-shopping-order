@@ -15,6 +15,17 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class CartItemTest {
 
+    @Test
+    @DisplayName("getTotalPrice 메서드는 장바구니 상품의 총 가격을 계산한다.")
+    void getTotalPrice() {
+        Member member = new Member(1L, "a@a.com", "password1", 10);
+        CartItem cartItem = new CartItem(5, member, new Product("치킨", 10000, "http://chicken.com"));
+
+        int result = cartItem.getTotalPrice();
+
+        assertThat(result).isEqualTo(50000);
+    }
+
     @Nested
     @DisplayName("장바구니 상품 생성 시 ")
     class CreateCartItem {

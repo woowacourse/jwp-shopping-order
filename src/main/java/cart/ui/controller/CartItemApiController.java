@@ -3,7 +3,9 @@ package cart.ui.controller;
 import cart.application.CartItemService;
 import cart.domain.member.Member;
 import cart.ui.controller.dto.request.CartItemQuantityUpdateRequest;
+import cart.ui.controller.dto.request.CartItemRemoveRequest;
 import cart.ui.controller.dto.request.CartItemRequest;
+import cart.ui.controller.dto.response.CartItemPriceResponse;
 import cart.ui.controller.dto.response.CartItemResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @SecurityRequirement(name = "basic")
@@ -42,6 +45,21 @@ public class CartItemApiController {
         return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
+    @Operation(summary = "장바구니 상품 목록 금액 조회", description = "장바구니 상품 목록 금액을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "장바구니 상품 목록 금액 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "장바구니 상품 목록 금액 조회 실패"),
+            @ApiResponse(responseCode = "404", description = "등록되지 않은 데이터(장바구니 상품) 요청")
+    })
+    @GetMapping("/price")
+    public ResponseEntity<CartItemPriceResponse> getTotalPriceWithDeliveryFee(
+            Member member,
+            @RequestParam("item") List<Long> cartItemIds
+    ) {
+        CartItemPriceResponse response = cartItemService.getTotalPriceWithDeliveryFee(member, cartItemIds);
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "장바구니 상품 추가", description = "장바구니에 상품을 추가한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "장바구니 상품 추가 성공"),
@@ -58,7 +76,7 @@ public class CartItemApiController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "장바구니 상품 수량 수정 성공"),
             @ApiResponse(responseCode = "400", description = "장바구니 상품 수량 수정 실패"),
-            @ApiResponse(responseCode = "404", description = "등록되지 않은 데이터(장바구니) 요청")
+            @ApiResponse(responseCode = "404", description = "등록되지 않은 데이터(장바구니 상품) 요청")
     })
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(
@@ -70,14 +88,26 @@ public class CartItemApiController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "장바구니 상품 목록 삭제", description = "장바구니 상품 목록을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "장바구니 상품 목록 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "장바구니 상품 목록 삭제 실패"),
+            @ApiResponse(responseCode = "404", description = "등록되지 않은 데이터(장바구니 상품) 요청")
+    })
+    @DeleteMapping
+    public ResponseEntity<Void> removeCartItems(Member member, @RequestBody @Valid CartItemRemoveRequest cartItemRemoveRequest) {
+        cartItemService.removeCartItems(member, cartItemRemoveRequest);
+        return ResponseEntity.noContent().build();
+    }
+
     @Operation(summary = "장바구니 상품 삭제", description = "장바구니에 있는 상품을 삭제한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "장바구니 상품 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "장바구니 상품 삭제 실패"),
-            @ApiResponse(responseCode = "404", description = "등록되지 않은 데이터(장바구니) 요청")
+            @ApiResponse(responseCode = "404", description = "등록되지 않은 데이터(장바구니 상품) 요청")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
+    public ResponseEntity<Void> removeCartItem(Member member, @PathVariable Long id) {
         cartItemService.remove(member, id);
         return ResponseEntity.noContent().build();
     }

@@ -2,7 +2,7 @@ package cart.domain.order;
 
 import cart.exception.badrequest.order.OrderDeliveryFeeException;
 
-class Fee {
+public class Fee {
 
     private static final int MINIMUM_VALUE = 0;
     private static final int BASIC_DELIVERY_FEE = 3000;

@@ -2,6 +2,7 @@ package cart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
@@ -14,13 +15,17 @@ import cart.repository.ProductRepository;
 import cart.repository.mapper.MemberMapper;
 import cart.test.ServiceTest;
 import cart.ui.controller.dto.request.CartItemQuantityUpdateRequest;
+import cart.ui.controller.dto.request.CartItemRemoveRequest;
 import cart.ui.controller.dto.request.CartItemRequest;
+import cart.ui.controller.dto.response.CartItemPriceResponse;
 import cart.ui.controller.dto.response.CartItemResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @ServiceTest
@@ -77,6 +82,40 @@ class CartItemServiceTest {
                         CartItemResponse.from(newCartItem)
                 )
         );
+    }
+
+    @Nested
+    @DisplayName("getTotalPriceWithDeliveryFee 메서드는 ")
+    class GetTotalPriceWithDeliveryFee {
+
+        @Test
+        @DisplayName("멤버 장바구니 상품이 아니라면 예외를 던진다.")
+        void notOwner() {
+            MemberEntity otherMemberEntity = new MemberEntity("b@b.com", "password2", 10);
+            Long otherMemberId = memberDao.addMember(otherMemberEntity);
+            Member otherMember = MemberMapper.toDomain(otherMemberEntity);
+            otherMember.assignId(otherMemberId);
+
+            assertThatThrownBy(() -> cartItemService.getTotalPriceWithDeliveryFee(otherMember, List.of(cartItem.getId())))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
+        }
+
+        @ParameterizedTest
+        @CsvSource(value = {"2,39000,3000", "3,52000,0"})
+        @DisplayName("장바구니 상품 목록의 총 가격과 배송료를 응답한다.")
+        void getTotalPriceWithDeliveryFee(int quantity, int totalPrice, int deliveryFee) {
+            CartItem newCartItem = new CartItem(quantity, member, product);
+            Long newCartItemId = cartItemRepository.save(newCartItem);
+
+            CartItemPriceResponse result =
+                    cartItemService.getTotalPriceWithDeliveryFee(member, List.of(cartItem.getId(), newCartItemId));
+
+            assertAll(
+                    () -> assertThat(result.getTotalPrice()).isEqualTo(totalPrice),
+                    () -> assertThat(result.getDeliveryFee()).isEqualTo(deliveryFee)
+            );
+        }
     }
 
     @Nested
@@ -148,6 +187,37 @@ class CartItemServiceTest {
 
             CartItem result = cartItemRepository.findById(cartItem.getId());
             assertThat(result.getQuantity()).isEqualTo(100);
+        }
+    }
+
+    @Nested
+    @DisplayName("removeCartItems 메서드는 ")
+    class RemoveCartItems {
+
+        @Test
+        @DisplayName("멤버 장바구니 상품이 아니라면 예외를 던진다.")
+        void notOwner() {
+            MemberEntity newMemberEntity = new MemberEntity("b@b.com", "password2", 0);
+            Long newMemberId = memberDao.addMember(newMemberEntity);
+            Member newMember = MemberMapper.toDomain(newMemberEntity);
+            newMember.assignId(newMemberId);
+
+            assertThatThrownBy(
+                    () -> cartItemService.removeCartItems(newMember, new CartItemRemoveRequest(List.of(cartItem.getId()))))
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage("장바구니 상품을 관리할 수 있는 멤버가 아닙니다.");
+        }
+
+        @Test
+        @DisplayName("장바구니 상품 목록을 삭제한다.")
+        void removeCartItems() {
+            CartItem newCartItem = new CartItem(member, product);
+            Long newCartItemId = cartItemRepository.save(newCartItem);
+
+            cartItemService.removeCartItems(member, new CartItemRemoveRequest(List.of(cartItem.getId(), newCartItemId)));
+
+            List<CartItemResponse> result = cartItemService.findByMember(member);
+            assertThat(result).isEmpty();
         }
     }
 

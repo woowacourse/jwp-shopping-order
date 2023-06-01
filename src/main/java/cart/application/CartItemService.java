@@ -2,11 +2,14 @@ package cart.application;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
+import cart.domain.order.Fee;
 import cart.domain.product.Product;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import cart.ui.controller.dto.request.CartItemQuantityUpdateRequest;
+import cart.ui.controller.dto.request.CartItemRemoveRequest;
 import cart.ui.controller.dto.request.CartItemRequest;
+import cart.ui.controller.dto.response.CartItemPriceResponse;
 import cart.ui.controller.dto.response.CartItemResponse;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +34,22 @@ public class CartItemService {
         return cartItems.stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    public CartItemPriceResponse getTotalPriceWithDeliveryFee(Member member, List<Long> cartItemIds) {
+        List<CartItem> cartItems = cartItemRepository.findAllInIds(cartItemIds);
+        for (CartItem cartItem : cartItems) {
+            cartItem.checkOwner(member);
+        }
+        int totalPrice = calculateTotalPrice(cartItems);
+        Fee deliveryFee = Fee.from(totalPrice);
+        return new CartItemPriceResponse(totalPrice, deliveryFee.getValue());
+    }
+
+    private int calculateTotalPrice(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .mapToInt(CartItem::getTotalPrice)
+                .sum();
     }
 
     @Transactional
@@ -59,6 +78,15 @@ public class CartItemService {
         }
         CartItem updateCartItem = cartItem.changeQuantity(request.getQuantity());
         cartItemRepository.updateQuantity(updateCartItem);
+    }
+
+    @Transactional
+    public void removeCartItems(Member member, CartItemRemoveRequest request) {
+        List<CartItem> cartItems = cartItemRepository.findAllInIds(request.getCartItemIds());
+        for (CartItem cartItem : cartItems) {
+            cartItem.checkOwner(member);
+        }
+        cartItemRepository.deleteAll(cartItems);
     }
 
     @Transactional
