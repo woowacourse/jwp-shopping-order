@@ -67,8 +67,8 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .body("deliveryFee", is(0))
                 .body("usedPoint", is(1_000))
                 .body("products", hasSize(2))
-                .body("products[0].productId", is(1))
-                .body("products[1].productId", is(2));
+                .body("products[0].product.id", is(1))
+                .body("products[1].product.id", is(2));
     }
 
     @DisplayName("사용자가 주문한 모든 주문 내역을 확인할 수 있다.")
@@ -96,8 +96,8 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .body("[0].usedPoint", is(1_000))
                 .body("[0].orderedAt", notNullValue())
                 .body("[0].products", hasSize(2))
-                .body("[0].products[0].productId", is(1))
-                .body("[0].products[1].productId", is(2))
+                .body("[0].products[0].product.id", is(1))
+                .body("[0].products[1].product.id", is(2))
 
                 .body("[1].orderId", is(2))
                 .body("[1].totalPrice", is(82_000))
@@ -105,8 +105,8 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .body("[1].usedPoint", is(0))
                 .body("[1].orderedAt", notNullValue())
                 .body("[1].products", hasSize(3))
-                .body("[1].products[0].productId", is(2))
-                .body("[1].products[1].productId", is(3))
-                .body("[1].products[2].productId", is(4));
+                .body("[1].products[0].product.id", is(2))
+                .body("[1].products[1].product.id", is(3))
+                .body("[1].products[2].product.id", is(4));
     }
 }
