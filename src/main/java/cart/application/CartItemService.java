@@ -3,6 +3,7 @@ package cart.application;
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
@@ -24,8 +25,8 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        CartItems cartItems = cartItemDao.findByMemberId(member.getId());
+        return cartItems.getItems().stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
@@ -42,8 +43,8 @@ public class CartItemService {
     }
 
     private Optional<CartItem> getCartItem(final Member member, final Long productId) {
-        final List<CartItem> memberCart = cartItemDao.findByMemberId(member.getId());
-        return memberCart.stream()
+        final CartItems memberCart = cartItemDao.findByMemberId(member.getId());
+        return memberCart.getItems().stream()
                 .filter(cartItem -> cartItem.equalsProductId(productId))
                 .findFirst();
     }
