@@ -11,11 +11,10 @@ public class OrderItemWithProductEntity {
     private final int productPrice;
     private final String productImageUrl;
     private final int quantity;
-    private final LocalDateTime createdAt;
 
     public OrderItemWithProductEntity(final long id, final long orderId, final long productId,
                                       final String productName, final int productPrice, final String productImageUrl,
-                                      final int quantity, final LocalDateTime createdAt) {
+                                      final int quantity) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
@@ -23,7 +22,6 @@ public class OrderItemWithProductEntity {
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
         this.quantity = quantity;
-        this.createdAt = createdAt;
     }
 
     public long getId() {
@@ -52,9 +50,5 @@ public class OrderItemWithProductEntity {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
     }
 }

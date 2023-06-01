@@ -142,7 +142,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             // when
             final ExtractableResponse<Response> response = given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .auth().preemptive().basic(member.getEmail(), member.getEmail())
+                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
                     .when().get("/orders")
                     .then()
                     .extract();
@@ -152,8 +152,9 @@ public class OrderIntegrationTest extends IntegrationTest {
             final DocumentContext documentContext = JsonPath.using(conf).parse(response.asString());
 
             assertAll(
-                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                     () -> assertThat(documentContext.read("$.size()", Integer.class)).isEqualTo(1),
+                    () -> assertThat(documentContext.read("$[0].id", Long.class)).isEqualTo(id),
                     () -> assertThat(documentContext.read("$[0].mainProductName", String.class))
                             .isEqualTo(mainProductRequest.getName()),
                     () -> assertThat(documentContext.read("$[0].mainProductImage", String.class))
