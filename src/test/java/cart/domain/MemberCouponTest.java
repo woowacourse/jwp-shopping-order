@@ -15,19 +15,21 @@ import cart.exception.UsedCouponException;
 class MemberCouponTest {
 
     @Test
-    void 쿠폰을_사용해_할인한다() {
-        var memberCoupon = MEMBER_A_COUPON_FIXED_2000;
+    void 사용자_쿠폰을_사용해_할인한다() {
+        var memberCoupon = MEMBER_A_COUPON_FIXED_2000();
 
-        assertThat(memberCoupon.discount(new Money(12000))).isEqualTo(new Money(2000));
+        Money price = new Money(12000);
+
+        assertThat(memberCoupon.getDiscounted(price)).isEqualTo(new Money(10000));
     }
 
     @Test
-    void 사용자의_쿠폰은_다시_사용할_수_없다() {
-        var memberCoupon = MEMBER_A_COUPON_FIXED_2000;
+    void 사용자_쿠폰은_다시_사용할_수_없다() {
+        var memberCoupon = MEMBER_A_COUPON_FIXED_2000();
 
-        memberCoupon.discount(new Money(12000));
+        memberCoupon.use();
 
-        assertThatThrownBy(() -> memberCoupon.discount(new Money(13000)))
+        assertThatThrownBy(() -> memberCoupon.use())
                 .isInstanceOf(UsedCouponException.class);
     }
 }

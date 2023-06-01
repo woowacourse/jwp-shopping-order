@@ -27,10 +27,13 @@ public class MemberCoupon {
         this.isUsed = isUsed;
     }
 
-    public Money discount(Money money) {
+    public Money getDiscounted(Money money) {
+        return coupon.discount(money);
+    }
+
+    public void use() {
         validateUnused();
         this.isUsed = true;
-        return coupon.discount(money);
     }
 
     public void checkOwnerIs(Member member) {
