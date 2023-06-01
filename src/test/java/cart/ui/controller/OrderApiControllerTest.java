@@ -70,6 +70,7 @@ class OrderApiControllerTest extends ControllerTest {
             Order orderA = new Order(1L, member, List.of(orderProductA, orderProductB), 100, now);
             Order orderB = new Order(2L, member, List.of(orderProductA, orderProductB), 500, now);
             List<OrderResponse> response = List.of(OrderResponse.from(orderA), OrderResponse.from(orderB));
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
             given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
             given(orderService.getOrders(any(Member.class))).willReturn(response);
 
@@ -106,6 +107,9 @@ class OrderApiControllerTest extends ControllerTest {
         @ValueSource(strings = {"@", "1.2"})
         @DisplayName("ID로 변환할 수 없는 타입이라면 400 상태를 반환한다.")
         void invalidIDType(String id) throws Exception {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
+
             mockMvc.perform(get("/orders/{id}", id)
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes())))
                     .andDo(print())
@@ -124,6 +128,7 @@ class OrderApiControllerTest extends ControllerTest {
             LocalDateTime now = LocalDateTime.now();
             Order order = new Order(1L, member, List.of(orderProductA, orderProductB), 0, now);
             OrderResponse response = OrderResponse.from(order);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
             given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
             given(orderService.getOrderDetail(anyLong(), any(Member.class))).willReturn(response);
 
@@ -161,7 +166,9 @@ class OrderApiControllerTest extends ControllerTest {
         @NullAndEmptySource
         @DisplayName("장바구니 상품 ID 목록이 존재하지 않거나 비어있으면 400 상태를 반환한다.")
         void emptyIds(List<Long> ids) throws Exception {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(ids, 500);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -176,7 +183,9 @@ class OrderApiControllerTest extends ControllerTest {
         @Test
         @DisplayName("포인트가 존재하지 않으면 400 상태를 반환한다.")
         void emptyPoint() throws Exception {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(List.of(1L), null);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -191,7 +200,9 @@ class OrderApiControllerTest extends ControllerTest {
         @Test
         @DisplayName("포인트가 음수라면 400 상태를 반환한다.")
         void negativePoint() throws Exception {
+            Member member = new Member(1L, "a@a.com", "password1", 0);
             OrderRequest request = new OrderRequest(List.of(1L), -1);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
 
             mockMvc.perform(post("/orders")
                             .header("Authorization", "Basic " + Base64Utils.encodeToUrlSafeString("a@a.com:password1".getBytes()))
@@ -211,6 +222,7 @@ class OrderApiControllerTest extends ControllerTest {
             Product product = new Product(1L, "치킨", 10000, "http://chicken.com");
             CartItemResponse cartItemResponse = CartItemResponse.from(new CartItem(member, product));
             List<CartItemResponse> response = List.of(cartItemResponse);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
             given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
             given(orderService.processOrder(any(Member.class), any(OrderRequest.class))).willReturn(response);
 

@@ -47,4 +47,11 @@ public class MemberException extends ShoppingException {
             super("멤버의 포인트는 0보다 작을 수 없습니다.");
         }
     }
+
+    public static class PasswordNotMatch extends MemberException {
+
+        public PasswordNotMatch() {
+            super("멤버의 비밀번호가 올바르지 않습니다.");
+        }
+    }
 }

@@ -89,6 +89,35 @@ class MemberRepositoryTest {
     }
 
     @Nested
+    @DisplayName("getMemberByEmail 메서드는 ")
+    class GetMemberByEmail {
+
+        @Test
+        @DisplayName("조회 시 이메일과 일치하는 멤버가 존재하면 해당 멤버를 반환한다.")
+        void getMember() {
+            MemberEntity memberEntity = new MemberEntity("a@a.com", "password1", 0);
+            Long savedMemberId = memberDao.addMember(memberEntity);
+            memberEntity = memberEntity.assignId(savedMemberId);
+
+            Member result = memberRepository.getMemberByEmail("a@a.com");
+
+            Member member = MemberMapper.toDomain(memberEntity);
+            assertAll(
+                    () -> assertThat(result.getId()).isEqualTo(savedMemberId),
+                    () -> assertThat(result).usingRecursiveComparison().isEqualTo(member)
+            );
+        }
+
+        @Test
+        @DisplayName("조회 시 이메일과 일치하는 멤버가 존재하지 않으면 빈 값을 반환한다.")
+        void getEmpty() {
+            assertThatThrownBy(() -> memberRepository.getMemberByEmail("a@a.com"))
+                    .isInstanceOf(MemberException.class)
+                    .hasMessage("해당 멤버가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
     @DisplayName("getMemberByEmailAndPassword 메서드는 ")
     class GetMemberByEmailAndPassword {
 
@@ -106,7 +135,6 @@ class MemberRepositoryTest {
                     () -> assertThat(result.getId()).isEqualTo(savedMemberId),
                     () -> assertThat(result).usingRecursiveComparison().isEqualTo(member)
             );
-
         }
 
         @Test

@@ -86,6 +86,39 @@ class MemberDaoTest {
     }
 
     @Nested
+    @DisplayName("getMemberByEmail 메서드는 ")
+    class GetMemberByEmail {
+
+        @Test
+        @DisplayName("조회 시 이메일과 일치하는 멤버가 존재하지 않으면 빈 값을 반환한다.")
+        void getEmpty() {
+            String email = "a@a.com";
+            String password = "password1";
+            memberDao.addMember(new MemberEntity(email, password, 0));
+
+            Optional<MemberEntity> result = memberDao.getMemberByEmail("b@b.com");
+
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("조회 시 이메일과 일치하는 멤버가 존재하면 해당 멤버 데이터를 반환한다.")
+        void getMember() {
+            String email = "a@a.com";
+            String password = "password1";
+            Long savedMemberId = memberDao.addMember(new MemberEntity(email, password, 0));
+
+            Optional<MemberEntity> result = memberDao.getMemberByEmail(email);
+
+            MemberEntity findMember = memberDao.getMemberById(savedMemberId).get();
+            assertAll(
+                    () -> assertThat(result).isNotEmpty(),
+                    () -> assertThat(result.get()).usingRecursiveComparison().isEqualTo(findMember)
+            );
+        }
+    }
+
+    @Nested
     @DisplayName("getMemberByEmailAndPassword 메서드는 ")
     class GetMemberByEmailAndPassword {
 

@@ -1,6 +1,9 @@
 package cart.ui.common;
 
+import static cart.exception.MemberException.PasswordNotMatch;
+
 import cart.application.MemberService;
+import cart.ui.controller.dto.response.MemberResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +23,10 @@ public class BasicAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         MemberAuth memberAuth = basicAuthenticationExtractor.extract(authorization);
-        memberService.getMemberByEmailAndPassword(memberAuth.getEmail(), memberAuth.getPassword());
+        MemberResponse member = memberService.getMemberByEmail(memberAuth.getEmail());
+        if (!member.getPassword().equals(memberAuth.getPassword())) {
+            throw new PasswordNotMatch();
+        }
         return true;
     }
 }

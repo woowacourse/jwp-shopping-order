@@ -25,6 +25,12 @@ public class MemberRepository {
                 .collect(Collectors.toList());
     }
 
+    public Member getMemberByEmail(String email) {
+        return memberDao.getMemberByEmail(email)
+                .map(MemberMapper::toDomain)
+                .orElseThrow(NotFound::new);
+    }
+
     public Member getMemberById(Long id) {
         return memberDao.getMemberById(id)
                 .map(MemberMapper::toDomain)

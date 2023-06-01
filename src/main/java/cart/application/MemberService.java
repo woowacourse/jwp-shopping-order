@@ -26,6 +26,11 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
+    public MemberResponse getMemberByEmail(String email) {
+        Member member = memberRepository.getMemberByEmail(email);
+        return MemberResponse.from(member);
+    }
+
     public MemberResponse getMemberByEmailAndPassword(String email, String password) {
         Member member = memberRepository.getMemberByEmailAndPassword(email, password);
         return MemberResponse.from(member);

@@ -44,8 +44,9 @@ class MemberApiControllerTest extends ControllerTest {
         @Test
         @DisplayName("유효한 요청이라면 멤버 포인트를 응답한다.")
         void getMemberPoint() throws Exception {
-            Member member = new Member(1L, "a@a.com", "password1", 100);
+            Member member = new Member(1L, "a@a.com", "password1", 0);
             MemberPointResponse response = new MemberPointResponse(100);
+            given(memberService.getMemberByEmail(anyString())).willReturn(MemberResponse.from(member));
             given(memberService.getMemberByEmailAndPassword(anyString(), anyString())).willReturn(MemberResponse.from(member));
             given(memberService.getMemberPoint(any(Member.class))).willReturn(response);
 

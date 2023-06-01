@@ -43,6 +43,19 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("getMemberByEmail 메서드는 이메일을 통해 멤버를 응답한다.")
+    void GetMemberByEmail() {
+        Member member = new Member("a@a.com", "password1", 0);
+        Long memberId = memberDao.addMember(MemberMapper.toEntity(member));
+        member.assignId(memberId);
+
+        MemberResponse response = memberService.getMemberByEmail("a@a.com");
+
+        MemberResponse expected = MemberResponse.from(member);
+        assertThat(response).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
     @DisplayName("getMemberByEmailAndPassword 메서드는 이메일, 비밀번호를 통해 멤버를 응답한다.")
     void GetMemberByEmailAndPassword() {
         Member member = new Member("a@a.com", "password1", 0);

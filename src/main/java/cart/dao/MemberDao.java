@@ -48,6 +48,15 @@ public class MemberDao {
         }
     }
 
+    public Optional<MemberEntity> getMemberByEmail(String email) {
+        String sql = "SELECT id, email, password, point, created_at, updated_at FROM member WHERE email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<MemberEntity> getMemberByEmailAndPassword(String email, String password) {
         String sql = "SELECT id, email, password, point, created_at, updated_at FROM member WHERE email = ? and password = ?";
         try {
