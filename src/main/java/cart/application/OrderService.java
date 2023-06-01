@@ -5,17 +5,18 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.domain.ShippingPolicy;
 import cart.dto.request.OrderItemDto;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderDetailsDto;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.ProductResponse;
-import cart.exception.CartItemException;
 import cart.exception.CartItemException.IllegalMember;
 import cart.exception.CartItemException.InvalidCartItem;
 import cart.exception.CartItemException.QuantityNotSame;
 import cart.exception.CartItemException.UnknownCartItem;
 import cart.repository.OrderRepository;
+import cart.repository.ShippingPolicyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +31,16 @@ public class OrderService {
 
     private final CartItemDao cartItemDao;
     private final OrderRepository orderRepository;
+    private final ShippingPolicyRepository shippingPolicyRepository;
 
-    public OrderService(final CartItemDao cartItemDao, final OrderRepository orderRepository) {
+    public OrderService(
+            final CartItemDao cartItemDao,
+            final OrderRepository orderRepository,
+            final ShippingPolicyRepository shippingPolicyRepository
+    ) {
         this.cartItemDao = cartItemDao;
         this.orderRepository = orderRepository;
+        this.shippingPolicyRepository = shippingPolicyRepository;
     }
 
     public long saveOrder(final Member member, final OrderRequest orderRequest) {
@@ -43,7 +50,9 @@ public class OrderService {
         checkUnknownCartItemIds(extractOrderCartItemIds(orderRequest), cartItems);
         checkQuantity(orderRequest.getOrder(), cartItems);
 
-        Order order = Order.of(member, 3000, OrderItem.of(cartItems), 30000);
+        ShippingPolicy shippingPolicy = shippingPolicyRepository.findShippingPolicy();
+        List<OrderItem> orderItems = OrderItem.of(cartItems);
+        Order order = Order.of(member, shippingPolicy.calculateShippingFee(orderItems), orderItems);
         order.checkPrice(orderRequest.getTotalPrice());
 
         long orderId = orderRepository.save(order);
@@ -109,7 +118,7 @@ public class OrderService {
                 .stream()
                 .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
                 collect(Collectors.toUnmodifiableList());
-        return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails);
+        return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalProductsPrice()+order.getShippingFee(), orderDetails);
     }
 
     public List<OrderResponse> getOrdersByMember(final Member member) {
@@ -120,7 +129,7 @@ public class OrderService {
                     .stream()
                     .map(item -> new OrderDetailsDto(item.getQuantity(), ProductResponse.of(item.getProduct()))).
                     collect(Collectors.toUnmodifiableList());
-            orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalPrice()+order.getShippingFee(), orderDetails));
+            orderResponses.add(new OrderResponse(order.getId(), order.getCreatedAt(), order.getTotalProductsPrice()+order.getShippingFee(), orderDetails));
         }
         return orderResponses;
     }
