@@ -1,8 +1,9 @@
 package cart.persistence;
 
 import cart.application.repository.CartItemRepository;
-import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dto.CartDetailDTO;
 import cart.persistence.entity.CartItemEntity;
@@ -41,6 +42,15 @@ public class CartItemJdbcRepository implements CartItemRepository {
             return Optional.empty();
         }
         return Optional.of(optionalCartDetail.get().toDomain());
+    }
+
+    @Override
+    public CartItems findByIds(final List<Long> ids) {
+        List<CartDetailDTO> cartDetails = cartItemDao.findByIds(ids);
+        List<CartItem> cartItems = cartDetails.stream()
+                .map(CartDetailDTO::toDomain)
+                .collect(Collectors.toList());
+        return new CartItems(cartItems);
     }
 
     @Override

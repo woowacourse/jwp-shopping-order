@@ -1,7 +1,8 @@
 package cart.application.repository;
 
-import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.cartitem.CartItem;
+import cart.domain.cartitem.CartItems;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,9 +10,12 @@ public interface CartItemRepository {
 
     long create(CartItem cartItem);
 
+    // TODO: CartItems(일급 컬렉션) 활용하도록 수정
     List<CartItem> findByMember(Member member);
 
     Optional<CartItem> findById(long id);
+
+    CartItems findByIds(List<Long> ids);
 
     void deleteById(long id);
 
