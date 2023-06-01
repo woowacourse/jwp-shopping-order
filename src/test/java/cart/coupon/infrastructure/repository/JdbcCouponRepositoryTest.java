@@ -124,4 +124,47 @@ class JdbcCouponRepositoryTest {
         assertThat(allByMemberId).usingRecursiveComparison()
                 .isEqualTo(expected);
     }
+
+    @Test
+    void ID_리스트로_모든_쿠폰을_조회한다() {
+        // given
+        CouponEntity couponEntity1 = new CouponEntity(
+                1L,
+                "말랑이 멋진쿠폰",
+                1L,
+                DiscountType.RATE,
+                TargetType.ALL,
+                null,
+                50);
+        CouponEntity couponEntity2 = new CouponEntity(
+                2L,
+                "코코닥 멋진쿠폰",
+                1L,
+                DiscountType.FIX,
+                TargetType.SPECIFIC,
+                1L,
+                5000000);
+        given(couponDao.findAllByIds(any()))
+                .willReturn(List.of(couponEntity1, couponEntity2));
+
+        // when
+        List<Coupon> actual = jdbcCouponRepository.findAllByIds(List.of(1L, 2L));
+
+        // then
+        Coupon expected1 = new Coupon(
+                1L,
+                "말랑이 멋진쿠폰",
+                new RateDiscountPolicy(50),
+                new GeneralCouponType(),
+                1L);
+        Coupon expected2 = new Coupon(
+                2L,
+                "코코닥 멋진쿠폰",
+                new FixDiscountPolicy(5000000),
+                new SpecificCouponType(1L),
+                1L);
+        List<Coupon> expected = List.of(expected1, expected2);
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
 }

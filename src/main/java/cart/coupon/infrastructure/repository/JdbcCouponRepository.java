@@ -40,4 +40,11 @@ public class JdbcCouponRepository implements CouponRepository {
                 .map(CouponEntityMapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Coupon> findAllByIds(final List<Long> ids) {
+        return couponDao.findAllByIds(ids).stream()
+                .map(CouponEntityMapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }
