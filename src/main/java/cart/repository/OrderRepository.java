@@ -6,12 +6,10 @@ import cart.dao.OrderProductDao;
 import cart.dao.dto.OrderDto;
 import cart.dao.dto.OrderProductDto;
 import cart.domain.CartItem;
-import cart.domain.Coupon;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 

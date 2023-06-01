@@ -52,8 +52,8 @@ class OrderRepositoryTest {
                 new OrderProductDao(dataSource),
                 new CartItemDao(dataSource)
         );
-        memberDao = new MemberDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+        memberDao = new MemberDao(dataSource);
+        productDao = new ProductDao(dataSource);
     }
 
     @DisplayName("Order 를 저장한다.")
