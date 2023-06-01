@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cart.persistence.repository.Mapper.productEntityToProductMapper;
-import static cart.persistence.repository.Mapper.productToProductEntityMapper;
+import static cart.persistence.repository.Mapper.productEntityMapper;
+import static cart.persistence.repository.Mapper.productMapper;
 
 @Component
 public class ProductRepository {
@@ -23,22 +23,22 @@ public class ProductRepository {
     public List<Product> getAllProducts() {
         final List<ProductEntity> productEntities = productDao.getAllProducts();
         return productEntities.stream()
-                .map(Mapper::productEntityToProductMapper)
+                .map(Mapper::productMapper)
                 .collect(Collectors.toList());
     }
 
     public Product getProductById(final Long productId) {
         final ProductEntity productEntity = productDao.getProductById(productId);
-        return productEntityToProductMapper(productEntity);
+        return productMapper(productEntity);
     }
 
     public Long createProduct(final Product product) {
-        final ProductEntity productEntity = productToProductEntityMapper(product);
+        final ProductEntity productEntity = productEntityMapper(product);
         return productDao.createProduct(productEntity);
     }
 
     public void updateProduct(final Product product) {
-        final ProductEntity productEntity = productToProductEntityMapper(product);
+        final ProductEntity productEntity = productEntityMapper(product);
         productDao.updateProduct(productEntity);
     }
 

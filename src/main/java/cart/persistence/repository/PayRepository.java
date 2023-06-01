@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static cart.persistence.repository.Mapper.memberToMemberEntityMapper;
+import static cart.persistence.repository.Mapper.memberEntityMapper;
 
 @Component
 public class PayRepository {
@@ -32,7 +32,7 @@ public class PayRepository {
     }
 
     public void updatePoint(final Member member) {
-        final MemberEntity memberEntity = memberToMemberEntityMapper(member);
+        final MemberEntity memberEntity = memberEntityMapper(member);
         memberDao.updatePoint(memberEntity);
     }
 

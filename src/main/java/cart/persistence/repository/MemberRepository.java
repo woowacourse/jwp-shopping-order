@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cart.persistence.repository.Mapper.memberEntityToMember;
+import static cart.persistence.repository.Mapper.memberMapper;
 
 @Component
 public class MemberRepository {
@@ -22,12 +22,12 @@ public class MemberRepository {
     public List<Member> getAllMembers() {
         final List<MemberEntity> members = memberDao.getAllMembers();
         return members.stream()
-                .map(Mapper::memberEntityToMember)
+                .map(Mapper::memberMapper)
                 .collect(Collectors.toList());
     }
 
     public Member getMemberById(final Long memberId) {
         final MemberEntity memberEntity = memberDao.getMemberById(memberId);
-        return memberEntityToMember(memberEntity);
+        return memberMapper(memberEntity);
     }
 }

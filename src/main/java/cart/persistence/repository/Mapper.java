@@ -9,7 +9,7 @@ import cart.persistence.entity.ProductEntity;
 
 class Mapper {
 
-    public static Product productEntityToProductMapper(final ProductEntity entity) {
+    public static Product productMapper(final ProductEntity entity) {
         return new Product(
                 entity.getId(),
                 entity.getName(),
@@ -18,7 +18,7 @@ class Mapper {
         );
     }
 
-    public static ProductEntity productToProductEntityMapper(final Product product) {
+    public static ProductEntity productEntityMapper(final Product product) {
         return new ProductEntity(
                 product.getId(),
                 product.getName(),
@@ -28,7 +28,7 @@ class Mapper {
         );
     }
 
-    public static Member memberEntityToMember(final MemberEntity memberEntity) {
+    public static Member memberMapper(final MemberEntity memberEntity) {
         return new Member(
                 memberEntity.getId(),
                 memberEntity.getEmail(),
@@ -37,7 +37,7 @@ class Mapper {
         );
     }
 
-    public static MemberEntity memberToMemberEntityMapper(final Member member) {
+    public static MemberEntity memberEntityMapper(final Member member) {
         return new MemberEntity(
                 member.getId(),
                 member.getEmail(),
@@ -50,8 +50,8 @@ class Mapper {
     public static CartItem cartItemMapper(final CartItemEntity cartItemEntity, final MemberEntity memberEntity, final ProductEntity productEntity) {
         return new CartItem(
                 cartItemEntity.getId(),
-                memberEntityToMember(memberEntity),
-                productEntityToProductMapper(productEntity),
+                memberMapper(memberEntity),
+                productMapper(productEntity),
                 cartItemEntity.getQuantity()
         );
     }

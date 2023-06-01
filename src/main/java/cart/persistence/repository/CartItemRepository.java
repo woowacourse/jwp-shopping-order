@@ -31,7 +31,7 @@ public class CartItemRepository {
 
     public Product getProductById(final Long productId) {
         final ProductEntity productEntity = productDao.getProductById(productId);
-        return productEntityToProductMapper(productEntity);
+        return productMapper(productEntity);
     }
 
     public List<CartItem> findCartItemsByMemberId(final Long memberId) {
