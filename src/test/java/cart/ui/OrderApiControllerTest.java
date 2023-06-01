@@ -2,6 +2,8 @@ package cart.ui;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -10,8 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import cart.application.OrderService;
 import cart.dao.MemberDao;
 import cart.dto.OrderRequest;
+import cart.fixture.OrderResponseFixture;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +32,36 @@ class OrderApiControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
+    private OrderService orderService;
+    @MockBean
     private MemberDao memberDao;
 
     @Test
     void createOrder() throws Exception {
         final String request = objectMapper.writeValueAsString(new OrderRequest(List.of(1L, 2L, 3L), 1_000, 15_000));
+        given(orderService.createOrder(any(), any())).willReturn(OrderResponseFixture.ORDER_RESPONSE);
 
         mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/orders/1"));
+                .andExpect(header().string("Location", "/orders/10"))
+                .andExpect(jsonPath("$.orderId", is(10)))
+                .andExpect(jsonPath("$.createAt", is("2023-05-31 10:00:00.0")))
+                .andExpect(jsonPath("$.orderItems", hasSize(2)))
+                .andExpect(jsonPath("$.orderItems[0].productId", is(1)))
+                .andExpect(jsonPath("$.orderItems[0].productName", is("치킨")))
+                .andExpect(jsonPath("$.orderItems[0].quantity", is(1)))
+                .andExpect(jsonPath("$.orderItems[0].price", is(10000)))
+                .andExpect(jsonPath("$.orderItems[0].imageUrl", is("http://example.com/chicken.jpg")))
+                .andExpect(jsonPath("$.orderItems[1].productId", is(2)))
+                .andExpect(jsonPath("$.orderItems[1].productName", is("피자")))
+                .andExpect(jsonPath("$.orderItems[1].quantity", is(1)))
+                .andExpect(jsonPath("$.orderItems[1].price", is(15000)))
+                .andExpect(jsonPath("$.orderItems[1].imageUrl", is("http://example.com/pizza.jpg")))
+                .andExpect(jsonPath("$.totalPrice", is(25000)))
+                .andExpect(jsonPath("$.usedPoint", is(100)))
+                .andExpect(jsonPath("$.earnedPoint", is(50)));
     }
 
     @Test
