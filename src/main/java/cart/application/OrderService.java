@@ -58,11 +58,6 @@ public class OrderService {
         cartService.save(cart);
     }
 
-    private void save(Order order) {
-        Long orderId = orderDao.insert(OrderDto.of(order));
-        orderItemDao.insertAll(orderId, order.getOrderItems());
-    }
-
     public List<Order> getBy(Member owner) {
         return orderDao.selectAllBy(owner.getId()).stream()
                 .map(OrderDto::getId)
@@ -78,6 +73,11 @@ public class OrderService {
                 toOrderItems(owner, orderItemDao.selectAllOf(id)),
                 orderDto.getCreatedAt()
         );
+    }
+
+    private void save(Order order) {
+        Long orderId = orderDao.insert(OrderDto.of(order));
+        orderItemDao.insertAll(orderId, order.getOrderItems());
     }
 
     private List<OrderItem> toOrderItems(Member owner, List<OrderItemDto> orderItemDtos) {
