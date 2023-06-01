@@ -30,6 +30,19 @@ public class OrderItemMapper {
         .collect(Collectors.toList());
   }
 
+  public static List<OrderItem> mapToSavedOrderItems(
+      final List<OrderItemEntity> orderItemEntities,
+      final Order order
+  ) {
+    return orderItemEntities.stream()
+        .map(orderItemEntity -> new OrderItem(
+            orderItemEntity.getId(), order,
+            orderItemEntity.getName(), new Money(orderItemEntity.getPrice()),
+            orderItemEntity.getImageUrl(), orderItemEntity.getQuantity()
+        ))
+        .collect(Collectors.toList());
+  }
+
   public static List<OrderItemEntity> mapToOrderItemEntities(
       final List<CartItem> cartItems,
       final Order order

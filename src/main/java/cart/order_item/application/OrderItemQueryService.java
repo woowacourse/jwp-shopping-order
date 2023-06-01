@@ -21,7 +21,6 @@ public class OrderItemQueryService {
 
   public List<OrderItem> searchOrderItemsByOrderId(final Order order) {
     final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(order.getId());
-
-    return OrderItemMapper.mapToOrderItems(orderItemEntities, order);
+    return OrderItemMapper.mapToSavedOrderItems(orderItemEntities, order);
   }
 }
