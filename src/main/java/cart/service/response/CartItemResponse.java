@@ -21,7 +21,7 @@ public class CartItemResponse {
         return new CartItemResponse(
                 cartItem.getId(),
                 cartItem.getQuantity().getValue(),
-                ProductResponse.of(cartItem.getProduct())
+                ProductResponse.from(cartItem.getProduct())
         );
     }
 
