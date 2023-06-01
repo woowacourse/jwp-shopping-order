@@ -8,7 +8,6 @@ import cart.service.coupon.CouponService;
 import cart.service.dto.CouponReissueRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -29,11 +28,8 @@ public class CouponController {
     @PostMapping("/{couponId}")
     public ResponseEntity<Void> issueCoupon(final Member member, @PathVariable Long couponId) {
         final Long memberCouponId = couponService.issueCoupon(member, couponId);
-        final URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path("/{couponId}")
-                .buildAndExpand(memberCouponId)
-                .toUri();
-        return ResponseEntity.created(uri).build();
+
+        return ResponseEntity.created(URI.create(String.format("/coupons/%s", memberCouponId))).build();
     }
 
     @PatchMapping("/{couponId}")
