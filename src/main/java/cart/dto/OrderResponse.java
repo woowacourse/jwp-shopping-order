@@ -6,13 +6,13 @@ import java.util.List;
 public class OrderResponse {
 
     private final Long id;
-    private final List<OrderItemResponse> cartItems;
+    private final List<OrderItemResponse> orderItems;
     private final Date date;
     private final int price;
 
-    public OrderResponse(final Long id, final List<OrderItemResponse> cartItems, final Date date, final int price) {
+    public OrderResponse(final Long id, final List<OrderItemResponse> orderItems, final Date date, final int price) {
         this.id = id;
-        this.cartItems = cartItems;
+        this.orderItems = orderItems;
         this.date = date;
         this.price = price;
     }
@@ -21,8 +21,8 @@ public class OrderResponse {
         return id;
     }
 
-    public List<OrderItemResponse> getCartItems() {
-        return cartItems;
+    public List<OrderItemResponse> getOrderItems() {
+        return orderItems;
     }
 
     public Date getDate() {

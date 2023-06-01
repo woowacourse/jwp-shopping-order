@@ -49,7 +49,7 @@ public class OrderProviderTest {
         // then
         final OrderResponse result = orderResponses.get(0);
         assertAll(
-                () -> assertThat(result.getCartItems()).hasSize(2),
+                () -> assertThat(result.getOrderItems()).hasSize(2),
                 () -> assertThat(result.getDate()).isNotNull(),
                 () -> assertThat(result.getPrice()).isEqualTo(15000)
         );
