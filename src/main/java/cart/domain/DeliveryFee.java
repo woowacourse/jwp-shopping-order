@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class DeliveryFee {
 
+    private static final int DEFAULT_FEE_THRESHOLD = 50000;
     private static final int DEFAULT_FEE = 3000;
     public static final DeliveryFee DEFAULT = new DeliveryFee(DEFAULT_FEE);
     private static final int FREE_FEE = 0;
@@ -15,6 +16,14 @@ public class DeliveryFee {
     public DeliveryFee(final int value) {
         validate(value);
         this.value = value;
+    }
+
+    public static DeliveryFee calculate(final Price totalPrice) {
+        if (totalPrice.isLessThan(DEFAULT_FEE_THRESHOLD)) {
+            return DEFAULT;
+        }
+
+        return FREE;
     }
 
     private void validate(int value) {

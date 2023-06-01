@@ -12,7 +12,11 @@ public class OrderEntity {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public OrderEntity(final Long id, final Long memberId, final int usedPoint, final int savedPoint, final int deliveryFee,
+    public OrderEntity(final Long id,
+                       final Long memberId,
+                       final int usedPoint,
+                       final int savedPoint,
+                       final int deliveryFee,
                        final LocalDateTime createdAt,
                        final LocalDateTime updatedAt) {
         this.id = id;

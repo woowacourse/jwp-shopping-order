@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Order {
     private final Long id;
-    private final List<OrderProduct> orderProducts;
+    private final OrderProducts orderProducts;
     private final Member member;
     private final DeliveryFee deliveryFee;
     private final Point savedPoint;
@@ -14,13 +14,13 @@ public class Order {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public Order(final Long id, final List<OrderProduct> orderProducts, final Member member,
-                 final DeliveryFee deliveryFee, final Point usedPoint,
+    public Order(final Long id, final OrderProducts orderProducts, final Member member,
+                 final Point usedPoint,
                  final LocalDateTime createdAt, final LocalDateTime updatedAt) {
         this.id = id;
         this.orderProducts = orderProducts;
         this.member = member;
-        this.deliveryFee = deliveryFee;
+        this.deliveryFee = DeliveryFee.calculate(orderProducts.getTotalPrice());
         this.savedPoint = Point.fromTotalPrice(getTotalPrice());
         this.usedPoint = usedPoint;
         this.createdAt = createdAt;
@@ -28,24 +28,15 @@ public class Order {
     }
 
     public Order(final Long id, final List<OrderProduct> orderProducts, final Member member, final int usedPoint) {
-        this(id, orderProducts, member, calculateDeliveryFee(orderProducts), new Point(usedPoint), null, null);
-    }
-
-    private static DeliveryFee calculateDeliveryFee(List<OrderProduct> orderProducts) {
-        int totalPrice = orderProducts.stream()
-                .mapToInt(orderProduct -> orderProduct.getProduct().getPrice() * orderProduct.getQuantity())
-                .sum();
-
-        if (totalPrice < 50000) {
-            return DeliveryFee.DEFAULT;
-        }
-        return DeliveryFee.FREE;
+        this(id,
+                new OrderProducts(orderProducts),
+                member,
+                new Point(usedPoint),
+                null, null);
     }
 
     public int getTotalPrice() {
-        return orderProducts.stream()
-                .mapToInt(orderProduct -> orderProduct.getProduct().getPrice() * orderProduct.getQuantity())
-                .sum();
+        return orderProducts.getTotalPrice().getValue();
     }
 
     public boolean isOwner(Member member) {
@@ -61,7 +52,7 @@ public class Order {
     }
 
     public List<OrderProduct> getOrderProducts() {
-        return orderProducts;
+        return orderProducts.getOrderProducts();
     }
 
     public Member getMember() {

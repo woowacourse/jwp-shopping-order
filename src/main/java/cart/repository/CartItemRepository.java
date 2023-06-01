@@ -8,6 +8,7 @@ import cart.dao.entity.CartItemWithMemberAndProductEntity;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.ProductEntity;
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.exception.CartItemException;
@@ -29,12 +30,14 @@ public class CartItemRepository {
         return cartItemDao.save(cartItemEntity);
     }
 
-    public List<CartItem> findByMemberId(Member member) {
+    public CartItems findByMemberId(Member member) {
         List<CartItemWithMemberAndProductEntity> cartItemEntities = cartItemDao.findByMemberId(member.getId());
 
-        return cartItemEntities.stream()
+        List<CartItem> cartItems = cartItemEntities.stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
+
+        return new CartItems(cartItems);
     }
 
     public CartItem findById(Long id) {
@@ -42,6 +45,12 @@ public class CartItemRepository {
                 .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
 
         return toDomain(cartItemWithMemberAndProductEntity);
+    }
+
+    public CartItems findByIds(Member member, List<Long> cartItemIds) {
+        CartItems cartItems = findByMemberId(member);
+
+        return cartItems.getContainedCartItems(cartItemIds);
     }
 
     public void updateQuantity(CartItem cartItem) {

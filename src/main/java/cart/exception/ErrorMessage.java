@@ -7,6 +7,7 @@ public enum ErrorMessage {
     INVALID_AUTHORIZATION_INFORMATION(HttpStatus.BAD_REQUEST, "이메일과 비밀번호를 모두 입력해야 합니다."),
     INVALID_POINT(HttpStatus.BAD_REQUEST, "포인트는 0 이상이어야 합니다."),
     INVALID_DELIVERY_FEE(HttpStatus.BAD_REQUEST, "배송비는 0 이상이어야 합니다."),
+    INVALID_PRICE(HttpStatus.BAD_REQUEST, "가격은 0 이상이어야 합니다."),
     INVALID_MEMBER_POINT_LESS_THAN_USED_POINT(HttpStatus.BAD_REQUEST, "사용한 포인트는 사용자의 포인트보다 적어야 합니다."),
     INVALID_POINT_MORE_THAN_PRICE(HttpStatus.BAD_REQUEST, "사용할 포인트는 주문 금액보다 클 수 없습니다."),
     UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "비밀번호가 다릅니다."),

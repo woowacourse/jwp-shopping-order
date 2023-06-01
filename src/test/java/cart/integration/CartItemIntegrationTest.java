@@ -218,4 +218,38 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 () -> assertThat(cartItemRepository.findById(세번째_장바구니_상품)).isNotNull()
         );
     }
+
+    @Test
+    void 선택된_상품들의_총_가격과_배송비를_조회한다() throws Exception {
+        // given
+        Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
+
+        Long 치킨_ID = 상품_생성_요청후_상품_ID를_리턴한다(상품_생성_요청_생성("치킨", 10_000, "http://example.com/chicken.jpg"));
+        Long 피자_ID = 상품_생성_요청후_상품_ID를_리턴한다(상품_생성_요청_생성("피자", 20_000, "http://example.com/pizza.jpg"));
+        Long 샐러드_ID = 상품_생성_요청후_상품_ID를_리턴한다(상품_생성_요청_생성("샐러드", 5_000, "http://example.com/salad.jpg"));
+
+        Long 첫번째_장바구니_상품 = 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(멤버, 치킨_ID);
+        Long 두번째_장바구니_상품 = 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(멤버, 피자_ID);
+        Long 세번째_장바구니_상품 = 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(멤버, 샐러드_ID);
+
+        var 요청 = new CartItemsDeleteRequest(List.of(첫번째_장바구니_상품, 두번째_장바구니_상품));
+
+        // when
+        var 응답 = 장바구니_상품들_삭제_요청(멤버, 요청, objectMapper);
+
+        // then
+        assertAll(
+                () -> assertThat(응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+
+                () -> assertThatThrownBy(() -> cartItemRepository.findById(첫번째_장바구니_상품))
+                        .isInstanceOf(CartItemException.class)
+                        .hasMessage(ErrorMessage.NOT_FOUND_CART_ITEM.getMessage()),
+
+                () -> assertThatThrownBy(() -> cartItemRepository.findById(두번째_장바구니_상품))
+                        .isInstanceOf(CartItemException.class)
+                        .hasMessage(ErrorMessage.NOT_FOUND_CART_ITEM.getMessage()),
+
+                () -> assertThat(cartItemRepository.findById(세번째_장바구니_상품)).isNotNull()
+        );
+    }
 }

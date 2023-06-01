@@ -3,12 +3,16 @@ package cart.application;
 import static cart.exception.ErrorMessage.INVALID_CART_ITEM_OWNER;
 
 import cart.domain.CartItem;
+import cart.domain.CartItems;
+import cart.domain.DeliveryFee;
 import cart.domain.Member;
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.CartItemsDeleteRequest;
+import cart.dto.TotalPriceAndDeliveryFeeResponse;
 import cart.exception.CartItemException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
@@ -29,9 +33,9 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(member);
+        CartItems cartItems = cartItemRepository.findByMemberId(member);
 
-        return cartItems.stream()
+        return cartItems.getCartItems().stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
     }
@@ -80,5 +84,13 @@ public class CartItemService {
         }
 
         cartItemRepository.deleteOrderedCartItem(cartItemIds);
+    }
+
+    public TotalPriceAndDeliveryFeeResponse getTotalPriceAndDeliveryFee(Member member, List<Long> cartItemIds) {
+        CartItems cartItems = cartItemRepository.findByIds(member, cartItemIds);
+        Price totalPrice = cartItems.getTotalPrice();
+        DeliveryFee deliveryFee = DeliveryFee.calculate(totalPrice);
+
+        return new TotalPriceAndDeliveryFeeResponse(totalPrice.getValue(), deliveryFee.getValue());
     }
 }
