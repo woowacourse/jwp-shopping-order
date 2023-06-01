@@ -1,9 +1,13 @@
 package cart.dao.entity;
 
+import cart.domain.Coupon;
+import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderItem;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class OrderEntity {
@@ -31,6 +35,15 @@ public class OrderEntity {
                 order.getShippingFee().getCharge(),
                 order.calculatePaymentPrice(),
                 null
+        );
+    }
+
+    public Order toOrder(final Member member, final Map<Long, List<OrderItem>> orderItemByOrderId, final Map<Long, Coupon> couponById) {
+
+        return Order.of(
+                orderItemByOrderId.get(id),
+                member,
+                couponById.getOrDefault(couponId, Coupon.EMPTY_COUPON)
         );
     }
 

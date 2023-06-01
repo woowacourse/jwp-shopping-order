@@ -1,15 +1,14 @@
 package cart.dao;
 
 import cart.dao.entity.OrderItemEntity;
-import cart.domain.OrderItem;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -19,6 +18,16 @@ public class OrderItemDao {
     public OrderItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<OrderItemEntity> rowMapper = (rs, rowNum) -> new OrderItemEntity(
+            rs.getLong("id"),
+            rs.getLong("order_id"),
+            rs.getLong("product_id"),
+            rs.getString("name"),
+            rs.getInt("price"),
+            rs.getString("image_url"),
+            rs.getInt("quantity")
+    );
 
     public void saveAll(final List<OrderItemEntity> orderItemEntities) {
         final String sql = "INSERT INTO order_item (order_id, product_id, name, price, image_url, quantity) VALUES (?,?,?,?,?,?) ";
@@ -39,5 +48,16 @@ public class OrderItemDao {
                 return orderItemEntities.size();
             }
         });
+    }
+
+    public List<OrderItemEntity> findByOrderIds(final List<Long> orderIds) {
+        final String sql = "SELECT * FROM order_item WHERE id IN (%s) ";
+
+        String inSql = String.join(",", Collections.nCopies(orderIds.size(), "?"));
+        return jdbcTemplate.query(
+                String.format(sql, inSql),
+                orderIds.toArray(),
+                rowMapper
+        );
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,5 +43,17 @@ public class MemberCouponDao {
     public void updateUsedById(final Long id) {
         final String sql = "UPDATE member_coupon SET is_used = ? WHERE id = ?";
         jdbcTemplate.update(sql, true, id);
+    }
+
+
+    public List<MemberCouponEntity> findByIds(final List<Long> ids) {
+        final String sql = "SELECT * FROM coupon_member WHERE id IN (%s) ";
+
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        return jdbcTemplate.query(
+                String.format(sql, inSql),
+                ids.toArray(),
+                rowMapper
+        );
     }
 }

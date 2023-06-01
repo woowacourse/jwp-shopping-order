@@ -37,6 +37,15 @@ public class OrderItemEntity {
         );
     }
 
+    // TODO: 5/31/23 new Product 말고 다른 방법 생각해보기 
+    public OrderItem toOrderItem() {
+        return new OrderItem(
+                id,
+                new Product(productId, name, price, imageUrl),
+                quantity
+        );
+    }
+
     public Long getId() {
         return id;
     }

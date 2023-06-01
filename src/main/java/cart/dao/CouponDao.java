@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +40,16 @@ public class CouponDao {
         } catch(EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<CouponEntity> findByIds(final List<Long> ids) {
+        final String sql = "SELECT * FROM coupon WHERE id IN (%s) ";
+
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        return jdbcTemplate.query(
+                String.format(sql, inSql),
+                ids.toArray(),
+                rowMapper
+        );
     }
 }

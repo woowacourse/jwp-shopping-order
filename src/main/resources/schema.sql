@@ -45,7 +45,7 @@ CREATE TABLE member_coupon (
 CREATE TABLE `order` (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    coupon_id BIGINT NOT NULL,
+    coupon_id BIGINT,
     shipping_fee INT NOT NULL,
     total_price INT NOT NULL,
     created_at DATETIME DEFAULT current_timestamp NOT NULL,
