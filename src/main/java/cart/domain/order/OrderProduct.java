@@ -1,4 +1,7 @@
-package cart.domain;
+package cart.domain.order;
+
+import cart.domain.product.Product;
+import cart.domain.vo.Quantity;
 
 public class OrderProduct {
 

@@ -1,6 +1,6 @@
 package cart.dao.dto;
 
-import cart.domain.OrderProduct;
+import cart.domain.order.OrderProduct;
 
 public class OrderProductDto {
 

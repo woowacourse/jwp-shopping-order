@@ -3,7 +3,7 @@ package cart;
 import static java.util.Base64.getEncoder;
 
 import cart.domain.Member;
-import cart.domain.Quantity;
+import cart.domain.vo.Quantity;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponType;
 import cart.domain.order.Order;

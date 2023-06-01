@@ -1,6 +1,6 @@
 package cart.domain.coupon;
 
-import cart.domain.Price;
+import cart.domain.vo.Price;
 
 public class Coupon {
 

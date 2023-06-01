@@ -6,17 +6,16 @@ import static cart.TestDataFixture.MEMBER_3;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import cart.service.request.OrderRequestDto;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Order;
-import cart.domain.OrderProduct;
-import cart.domain.Quantity;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
+import cart.domain.product.CartItem;
 import cart.repository.OrderRepository;
+import cart.service.request.OrderRequestDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,8 +56,8 @@ class OrderServiceTest {
         assertThat(orderHistory.getOrderProducts())
                 .extracting(OrderProduct::getProduct, OrderProduct::getQuantity)
                 .containsExactlyInAnyOrder(
-                        tuple(CART_ITEM_1.getProduct(), new Quantity(CART_ITEM_1.getQuantity())),
-                        tuple(CART_ITEM_2.getProduct(), new Quantity(CART_ITEM_2.getQuantity()))
+                        tuple(CART_ITEM_1.getProduct(), CART_ITEM_1.getQuantity()),
+                        tuple(CART_ITEM_2.getProduct(), CART_ITEM_2.getQuantity())
                 );
     }
 }

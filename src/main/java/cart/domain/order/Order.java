@@ -28,7 +28,7 @@ public class Order {
 
     public static Order of(final Member member, final List<CartItem> cartItems, final Coupon coupon) {
         validateSameMember(member, cartItems);
-        List<OrderProduct> orderProducts = cartItems.stream()
+        final List<OrderProduct> orderProducts = cartItems.stream()
                 .map(cartItem -> new OrderProduct(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(toList());
         return new Order(null, orderProducts, LocalDateTime.now().withNano(0), member, coupon);

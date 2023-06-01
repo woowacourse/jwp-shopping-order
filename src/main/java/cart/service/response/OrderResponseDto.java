@@ -1,6 +1,6 @@
 package cart.service.response;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,8 +9,8 @@ public class OrderResponseDto {
     private final Long id;
     private final List<OrderProductResponseDto> orderProducts;
     private final LocalDateTime timestamp;
-    private final Integer originPrice;
     private final String couponName;
+    private final Integer originPrice;
     private final Integer discountPrice;
     private final Integer totalPrice;
 

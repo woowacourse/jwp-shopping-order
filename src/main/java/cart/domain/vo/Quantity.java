@@ -1,20 +1,16 @@
-package cart.domain;
+package cart.domain.vo;
 
 import java.util.Objects;
 
-public class Price {
+public class Quantity {
 
-    private final Integer value;
+    private final int value;
 
-    public Price(final Integer value) {
+    public Quantity(final int value) {
         this.value = value;
     }
 
-    public Price divide(final Integer divider) {
-        return new Price(value / divider);
-    }
-
-    public Integer getValue() {
+    public int getValue() {
         return value;
     }
 
@@ -26,12 +22,13 @@ public class Price {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Price price = (Price) o;
-        return Objects.equals(value, price.value);
+        final Quantity quantity = (Quantity) o;
+        return value == quantity.value;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(value);
     }
+
 }

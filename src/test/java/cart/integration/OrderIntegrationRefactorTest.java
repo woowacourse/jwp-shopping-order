@@ -28,7 +28,7 @@ class OrderIntegrationRefactorTest extends IntegrationRefactorTest {
     void findOrderWithoutCoupon() throws Exception {
         //given
         //상품이 존재한다.
-        productDao.createProduct(PRODUCT_1);
+        productRepository.insertProduct(PRODUCT_1);
         //주문 내역에 값이 담겨있다.
         final Order order = Order.of(MEMBER_1, List.of(CART_ITEM_1));
         final Long savedOrderId = orderRepository.save(order).getId();

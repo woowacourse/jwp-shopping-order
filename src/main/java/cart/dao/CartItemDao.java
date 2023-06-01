@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.Member;
-import cart.domain.Quantity;
+import cart.domain.vo.Quantity;
 import cart.domain.product.CartItem;
 import cart.domain.product.Product;
 import java.sql.PreparedStatement;
