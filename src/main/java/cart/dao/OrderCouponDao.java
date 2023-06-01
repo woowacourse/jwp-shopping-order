@@ -31,7 +31,9 @@ public class OrderCouponDao {
                         rs.getLong("coupon.id"),
                         rs.getString("coupon.name"),
                         new Discount(rs.getString("coupon.discount_type"), rs.getInt("amount"))
-                ));
+                ),
+                rs.getBoolean("used")
+        );
     }
 
     public void create(Long orderItemId, Long couponId) {

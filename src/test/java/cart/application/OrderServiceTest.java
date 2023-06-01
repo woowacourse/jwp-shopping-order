@@ -64,8 +64,8 @@ class OrderServiceTest {
         );
 
 
-        given(memberCouponRepository.findByIds(anyList())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(1L, new Coupon(2L, "쿠폰", new Discount("rate", 10)))))));
-        given(memberCouponRepository.findByMemberId(anyLong())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(2L, "쿠폰", new Discount("rate", 10)))))));
+        given(memberCouponRepository.findByIds(anyList())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(1L, new Coupon(2L, "쿠폰", new Discount("rate", 10)), false)))));
+        given(memberCouponRepository.findByMemberId(anyLong())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(2L, "쿠폰", new Discount("rate", 10)), false)))));
         given(cartItemDao.findByMemberId(anyLong())).willReturn(List.of(new CartItem(1L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(1L, "a@a.com", "1234"))));
 
         assertThatThrownBy(() -> orderService.createOrder(List.of(request), new Member(1L, "a@a.com", "1234")))
@@ -81,8 +81,8 @@ class OrderServiceTest {
                 List.of(1L)
         );
 
-        given(memberCouponRepository.findByIds(anyList())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(1L, new Coupon(2L, "쿠폰", new Discount("rate", 10)))))));
-        given(memberCouponRepository.findByMemberId(anyLong())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(1L, new Coupon(2L, "쿠폰", new Discount("rate", 10)))))));
+        given(memberCouponRepository.findByIds(anyList())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(1L, new Coupon(2L, "쿠폰", new Discount("rate", 10)), false)))));
+        given(memberCouponRepository.findByMemberId(anyLong())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(1L, new Coupon(2L, "쿠폰", new Discount("rate", 10)), false)))));
         given(cartItemDao.findByMemberId(anyLong())).willReturn(List.of(new CartItem(1L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(1L, "a@a.com", "1234"))));
 
         // when

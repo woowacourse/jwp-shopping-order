@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS order_coupon;
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS cart_order;
+DROP TABLE IF EXISTS member_coupon;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS coupon;
+DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS product;
+
 CREATE TABLE if not exists product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -36,6 +45,7 @@ CREATE TABLE if not exists member_coupon
     id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
+    used      boolean default false,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (coupon_id) REFERENCES coupon (id)
 );
@@ -65,6 +75,7 @@ CREATE TABLE if not exists order_coupon
     order_item_id    BIGINT NOT NULL,
     member_coupon_id BIGINT NOT NULL,
     FOREIGN KEY (order_item_id) REFERENCES order_item (id),
-    PRIMARY KEY (order_item_id)
+    FOREIGN KEY (member_coupon_id) REFERENCES order_item (id),
+    PRIMARY KEY (order_item_id, member_coupon_id)
 );
 

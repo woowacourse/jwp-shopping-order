@@ -38,7 +38,8 @@ public class MemberCouponDao {
                         rs.getLong("coupon.id"),
                         rs.getString("name"),
                         new Discount(rs.getString("discount_type"), rs.getInt("amount"))
-                ));
+                ),
+                rs.getBoolean("used"));
     }
 
     public List<MemberCoupon> findByMemberId(Long memberId) {
@@ -73,20 +74,8 @@ public class MemberCouponDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void delete(List<Long> ids) {
-        final String sql = "delete from member_coupon where id IN (:ids)";
-        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
-        namedJdbcTemplate.update(sql, parameters);
-    }
-
-    public void deleteByMemberId(Long memberId) {
-        final String sql = "delete from member_coupon where member_id = ?";
-        jdbcTemplate.update(sql, memberId);
-    }
-
-    public void saveAll(MemberCoupons memberCoupons, Long memberId) {
-        String sql = "INSERT INTO member_coupon (member_id, coupon_id) " +
-                "VALUES (?, ?)";
+    public void updateCoupon(MemberCoupons memberCoupons, Long memberId) {
+        String sql = "UPDATE member_coupon SET member_id = ?, coupon_id = ?, used = ? where id = ?";
 
         List<MemberCoupon> coupons = memberCoupons.getCoupons();
 
@@ -96,6 +85,14 @@ public class MemberCouponDao {
                 (PreparedStatement ps, MemberCoupon memberCoupon) -> {
                     ps.setLong(1, memberId);
                     ps.setLong(2, memberCoupon.getCoupon().getId());
+                    ps.setBoolean(3, memberCoupon.isUsed());
+                    ps.setLong(4, memberCoupon.getId());
+
                 });
+    }
+
+    public void deleteByMemberId(Long memberId) {
+        final String sql = "delete from member_coupon where member_id = ?";
+        jdbcTemplate.update(sql, memberId);
     }
 }

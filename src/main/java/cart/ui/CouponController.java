@@ -28,7 +28,7 @@ public class CouponController {
 
     @GetMapping("/coupons")
     public ResponseEntity<List<CouponResponse>> showAllCoupons(Member member) {
-        MemberCoupons coupons = memberCouponRepository.findByMemberId(member.getId());
+        MemberCoupons coupons = memberCouponRepository.findByMemberId(member.getId()).getUnUsedCoupons();
         List<CouponResponse> couponResponses = coupons.getCoupons().stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());

@@ -1,6 +1,7 @@
 package cart.domain.member;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MemberCoupons {
 
@@ -15,11 +16,32 @@ public class MemberCoupons {
     }
 
     public boolean isNotContains(MemberCoupons memberCoupons) {
+        if (memberCoupons.isEmpty()){
+            return false;
+        }
         return !this.coupons.containsAll(memberCoupons.coupons);
     }
 
-    public MemberCoupons useCoupons(MemberCoupons memberCoupons){
-        this.coupons.removeAll(memberCoupons.coupons);
-        return new MemberCoupons(this.coupons);
+    public boolean isEmpty(){
+        return coupons.isEmpty();
+    }
+
+    public MemberCoupons useCoupons() {
+        return new MemberCoupons(coupons.stream()
+                .map(MemberCoupon::use)
+                .collect(Collectors.toList()));
+    }
+
+    public MemberCoupons getUnUsedCoupons() {
+        return new MemberCoupons(coupons.stream()
+                .filter(MemberCoupon::isUnUsed)
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public String toString() {
+        return "MemberCoupons{" +
+                "coupons=" + coupons +
+                '}';
     }
 }

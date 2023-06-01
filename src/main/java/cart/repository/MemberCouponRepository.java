@@ -24,12 +24,11 @@ public class MemberCouponRepository {
         return new MemberCoupons(memberCouponDao.findByIds(ids));
     }
 
-    public void updateCoupons(MemberCoupons memberCoupons, Member member){
-        memberCouponDao.deleteByMemberId(member.getId());
-        memberCouponDao.saveAll(memberCoupons, member.getId());
+    public void updateCoupons(MemberCoupons memberCoupons, Member member) {
+        memberCouponDao.updateCoupon(memberCoupons, member.getId());
     }
 
-    public Long create(Long memberId, Long couponId){
-        return memberCouponDao.create(memberId,couponId);
+    public Long create(Long memberId, Long couponId) {
+        return memberCouponDao.create(memberId, couponId);
     }
 }

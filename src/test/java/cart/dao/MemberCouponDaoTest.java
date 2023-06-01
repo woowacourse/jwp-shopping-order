@@ -30,13 +30,4 @@ class MemberCouponDaoTest {
 
         Assertions.assertThat(memberCoupons).hasSize(2);
     }
-
-    @Test
-    void delete() {
-        Long memberCouponId1 = memberCouponDao.create(1L, 1L);
-        Long memberCouponId2 = memberCouponDao.create(1L, 3L);
-        memberCouponDao.delete(List.of(memberCouponId1, memberCouponId2));
-        List<MemberCoupon> memberCoupons2 = memberCouponDao.findByIds(List.of(memberCouponId1, memberCouponId2));
-        Assertions.assertThat(memberCoupons2).isEmpty();
-    }
 }

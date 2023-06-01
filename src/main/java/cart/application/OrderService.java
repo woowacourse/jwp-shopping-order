@@ -52,15 +52,17 @@ public class OrderService {
     }
 
     private MemberCoupons usedCoupon(final Member member, final OrderRequest orderRequest) {
-        MemberCoupons memberCoupons = memberCouponRepository.findByIds(orderRequest.getMemberCouponIds());
-        MemberCoupons requestCoupons = memberCouponRepository.findByMemberId(member.getId());
+        MemberCoupons requestCoupons = memberCouponRepository.findByIds(orderRequest.getMemberCouponIds());
+        MemberCoupons memberCoupons = memberCouponRepository.findByMemberId(member.getId()).getUnUsedCoupons();
+
+        System.out.println(requestCoupons);
+        System.out.println(memberCoupons);
 
         if (memberCoupons.isNotContains(requestCoupons)) {
             throw new MemberCouponNotFoundException();
         }
 
-        MemberCoupons unUsedmemberCoupons = memberCoupons.useCoupons(requestCoupons);
-        memberCouponRepository.updateCoupons(unUsedmemberCoupons, member);
+        memberCouponRepository.updateCoupons(requestCoupons.useCoupons(), member);
         return requestCoupons;
     }
 
