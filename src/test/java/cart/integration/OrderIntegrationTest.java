@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
@@ -69,7 +70,25 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니 아이디와 쿠폰 정보를 통해 주문한다")
     @Test
     void 장바구니_아이디와_쿠폰_정보를_통해_주문한다() {
-        OrderRequest orderRequest = new OrderRequest(List.of(1L, 2L), 1L);
+        OrderRequest orderRequest = new OrderRequest(
+                List.of(
+                        new OrderCartItemRequest(
+                                1L,
+                                2,
+                                "지구",
+                                1000,
+                                "https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg"
+                        ),
+                        new OrderCartItemRequest(
+                                2L,
+                                4,
+                                "화성",
+                                200000,
+                                "https://cdn.pixabay.com/photo/2011/12/13/14/30/mars-11012__480.jpg"
+                        )
+                ),
+                1L
+        );
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic("a@a.com", "1234")

@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class Product {
     private Long id;
     private String name;
@@ -17,6 +19,12 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public void checkValue(final Product other) {
+        if (!Objects.equals(this.price, other.price)) {
+            throw new IllegalArgumentException("제품 가격이 변경되었습니다.");
+        }
     }
 
     public Long getId() {

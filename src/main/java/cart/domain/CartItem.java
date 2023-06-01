@@ -27,6 +27,14 @@ public class CartItem {
     public OrderItem toOrderItem() {
         return new OrderItem(null, product, quantity);
     }
+
+    public void checkValue(final CartItem other) {
+        if (!Objects.equals(this.quantity, other.quantity)) {
+            throw new IllegalArgumentException("카드 수량이 변경되었습니다.");
+        }
+        this.product.checkValue(other.product);
+    }
+
     public Long getId() {
         return id;
     }
@@ -51,5 +59,28 @@ public class CartItem {
 
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                ", member=" + member +
+                '}';
     }
 }
