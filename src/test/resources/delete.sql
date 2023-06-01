@@ -4,3 +4,7 @@ DELETE
 FROM member;
 DELETE
 FROM product;
+DELETE
+FROM orders_product;
+DELETE
+FROM orders;

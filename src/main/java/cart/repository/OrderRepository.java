@@ -99,8 +99,14 @@ public class OrderRepository {
                 .collect(Collectors.toList());
     }
 
-    private Item toItem(OrderProductEntity it) {
+    private Item toItem(OrderProductEntity orderProduct) {
         return new Item(
-                new Product(it.getId(), it.getProductName(), it.getProductPrice(), it.getProductImageUrl()));
+                new Product(
+                        orderProduct.getProductId(),
+                        orderProduct.getProductName(),
+                        orderProduct.getProductPrice(),
+                        orderProduct.getProductImageUrl()
+                )
+        );
     }
 }

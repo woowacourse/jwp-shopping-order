@@ -4,8 +4,8 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
+import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
 import cart.exception.IncorrectPriceException;
 import cart.exception.NonExistCartItemException;
 import cart.exception.NonExistOrderException;
@@ -56,10 +56,10 @@ public class OrderService {
                 .orElseThrow(NonExistCartItemException::new);
     }
 
-    public OrderResponse findById(Long id, Member member) {
+    public OrderDetailResponse findById(Long id, Member member) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(NonExistOrderException::new);
         order.checkOwner(member);
-        return OrderResponse.from(order);
+        return OrderDetailResponse.from(order);
     }
 }

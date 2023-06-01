@@ -1,26 +1,23 @@
 package cart.integration;
 
+import static cart.integration.IntegrationTestFixture.아이디를_반환한다;
 import static cart.integration.IntegrationTestFixture.응답_코드_검증;
+import static cart.integration.OrderIntegrationTestFixture.주문_상세_조회_요청;
+import static cart.integration.OrderIntegrationTestFixture.주문_상품_응답;
+import static cart.integration.OrderIntegrationTestFixture.주문_요청;
+import static cart.integration.OrderIntegrationTestFixture.주문_조회_응답_검증;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.OrderRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderIntegrationTest extends IntegrationTest {
@@ -36,7 +33,6 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     private Member 밀리;
     private Member 박스터;
-    private Member 잘못된_사용자;
 
     private Product 상품_치킨;
     private Product 상품_피자;
@@ -50,22 +46,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         박스터 = memberRepository.save(new Member("boxster@email.com", "boxster"));
         상품_치킨 = productRepository.save(new Product("치킨", 10000, "http://chicken.com"));
         상품_피자 = productRepository.save(new Product("피자", 20000, "http://pizza.com"));
-        잘못된_사용자 = new Member(밀리.getId(), 밀리.getEmail(), 밀리.getPassword() + "asdf");
         장바구니_밀리_치킨 = cartItemRepository.save(new CartItem(상품_치킨, 밀리));
         장바구니_밀리_피자 = cartItemRepository.save(new CartItem(상품_피자, 밀리));
-    }
-
-    private ExtractableResponse<Response> 주문_요청(Member 사용자, int 배송비, int 총_가격, Long... 장바구니_ID) {
-        List<Long> ids = Arrays.asList(장바구니_ID);
-        OrderRequest request = new OrderRequest(ids, 배송비, BigDecimal.valueOf(총_가격));
-        return RestAssured.given()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .post("/orders")
-                .then()
-                .extract();
-
     }
 
     @Nested
@@ -90,6 +72,29 @@ public class OrderIntegrationTest extends IntegrationTest {
             var 응답 = 주문_요청(밀리, 3000, 33001, 장바구니_밀리_치킨.getId(), 장바구니_밀리_피자.getId());
 
             응답_코드_검증(응답, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Nested
+    class 주문을_상세_조회_할_때 {
+
+        @Test
+        void 정상_조회한다() {
+            Long 주문_ID = 아이디를_반환한다(주문_요청(밀리, 3000, 33000, 장바구니_밀리_치킨.getId(), 장바구니_밀리_피자.getId()));
+
+            var 응답 = 주문_상세_조회_요청(밀리, 주문_ID);
+
+            응답_코드_검증(응답, HttpStatus.OK);
+            주문_조회_응답_검증(응답, 주문_ID, 3000, 33000, 주문_상품_응답(장바구니_밀리_치킨), 주문_상품_응답(장바구니_밀리_피자));
+        }
+
+        @Test
+        void 다른_사용자가_요청_시_실패한다() {
+            Long 주문_ID = 아이디를_반환한다(주문_요청(밀리, 3000, 33000, 장바구니_밀리_치킨.getId(), 장바구니_밀리_피자.getId()));
+
+            var 응답 = 주문_상세_조회_요청(박스터, 주문_ID);
+
+            응답_코드_검증(응답, HttpStatus.FORBIDDEN);
         }
     }
 }

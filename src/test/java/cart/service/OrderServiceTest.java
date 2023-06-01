@@ -16,8 +16,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
 import cart.exception.IllegalMemberException;
 import cart.exception.IncorrectPriceException;
 import cart.repository.CartItemRepository;
@@ -74,7 +74,7 @@ class OrderServiceTest {
         given(orderRepository.findById(anyLong()))
                 .willReturn(Optional.of(주문_밀리_치킨_피자_3000원));
 
-        OrderResponse response = orderService.findById(1L, 밀리);
+        OrderDetailResponse response = orderService.findById(1L, 밀리);
 
         assertThat(response.getId()).isEqualTo(1L);
     }

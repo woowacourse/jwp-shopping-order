@@ -8,21 +8,24 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OrderResponse {
+public class OrderDetailResponse {
 
-    private final Long id;
-    private final String orderNumber;
-    private final LocalDate date;
-    private final int deliveryFee;
-    private final BigDecimal totalOrderPrice;
-    private final List<OrderProductResponse> products;
+    private Long id;
+    private String orderNumber;
+    private LocalDate date;
+    private int deliveryFee;
+    private BigDecimal totalOrderPrice;
+    private List<OrderProductResponse> products;
 
-    public OrderResponse(Long id,
-                         String orderNumber,
-                         LocalDate date,
-                         int deliveryFee,
-                         BigDecimal totalOrderPrice,
-                         List<OrderProductResponse> products
+    public OrderDetailResponse() {
+    }
+
+    public OrderDetailResponse(Long id,
+                               String orderNumber,
+                               LocalDate date,
+                               int deliveryFee,
+                               BigDecimal totalOrderPrice,
+                               List<OrderProductResponse> products
     ) {
         this.id = id;
         this.orderNumber = orderNumber;
@@ -32,12 +35,12 @@ public class OrderResponse {
         this.products = products;
     }
 
-    public static OrderResponse from(Order order) {
+    public static OrderDetailResponse from(Order order) {
         BigDecimal totalPrice = order.calculateTotalPrice().getValue();
         List<OrderProductResponse> orderProducts = order.getItems().stream()
                 .map(OrderProductResponse::from)
                 .collect(Collectors.toList());
-        return new OrderResponse(order.getId(), order.getOrderNumber(), order.getOrderDate().toLocalDate(),
+        return new OrderDetailResponse(order.getId(), order.getOrderNumber(), order.getOrderDate().toLocalDate(),
                 order.getDeliveryFee().getValue().intValue(), totalPrice, orderProducts);
     }
 
@@ -65,14 +68,17 @@ public class OrderResponse {
         return products;
     }
 
-    static class OrderProductResponse {
-        private final Long id;
-        private final BigDecimal price;
-        private final String name;
-        private final String imageUrl;
-        private final int quantity;
+    public static class OrderProductResponse {
+        private Long id;
+        private BigDecimal price;
+        private String name;
+        private String imageUrl;
+        private int quantity;
 
-        OrderProductResponse(Long id, BigDecimal price, String name, String imageUrl, int quantity) {
+        public OrderProductResponse() {
+        }
+
+        public OrderProductResponse(Long id, BigDecimal price, String name, String imageUrl, int quantity) {
             this.id = id;
             this.price = price;
             this.name = name;
