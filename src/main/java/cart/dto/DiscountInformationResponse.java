@@ -10,4 +10,16 @@ public final class DiscountInformationResponse {
         this.discountRate = discountRate;
         this.discountPrice = discountPrice;
     }
+
+    public String getPolicyName() {
+        return policyName;
+    }
+
+    public double getDiscountRate() {
+        return discountRate;
+    }
+
+    public int getDiscountPrice() {
+        return discountPrice;
+    }
 }
