@@ -15,6 +15,16 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
+    public static OrderItem generate(final CartItem cartItem) {
+        return new OrderItem(
+                cartItem.getProduct().getId(),
+                cartItem.getProduct().getName(),
+                cartItem.getProduct().getPrice(),
+                cartItem.getProduct().getImageUrl(),
+                cartItem.getQuantity()
+        );
+    }
+
     public Long getProductId() {
         return productId;
     }
