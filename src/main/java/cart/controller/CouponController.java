@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class CouponController {
     }
 
     @PatchMapping("/{couponId}")
-    public ResponseEntity<Void> reissueCoupon(@PathVariable final Long couponId, @RequestBody final CouponReissueRequest request) {
+    public ResponseEntity<Void> reissueCoupon(@PathVariable final Long couponId, @Valid @RequestBody final CouponReissueRequest request) {
         couponService.reissueCoupon(couponId, request);
         return ResponseEntity.ok().build();
     }
@@ -58,5 +59,4 @@ public class CouponController {
         couponService.deleteCoupon(couponId, member.getId());
         return ResponseEntity.noContent().build();
     }
-
 }

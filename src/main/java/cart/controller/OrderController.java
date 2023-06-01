@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(@RequestBody OrderRequest orderItemRequest) {
+    public ResponseEntity<Void> order(@Valid @RequestBody final OrderRequest orderItemRequest) {
         final Long orderId = orderService.order(orderItemRequest);
 
         final URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()

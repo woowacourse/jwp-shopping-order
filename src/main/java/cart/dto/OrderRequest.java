@@ -1,15 +1,18 @@
 package cart.dto;
 
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 public class OrderRequest {
 
-    @NonNull
-    private final List<Long> cartItemIds;
-    @NonNull
+    @NotEmpty(message = "상품 아이디를 입력해주세요.")
+    private final List<@NotNull Long> cartItemIds;
+    @NotNull(message = "가격은 필수값 입니다.")
+    @Positive(message = "가격은 양수 값이어야 합니다.")
     private final Integer price;
     @Nullable
     private final Long couponId;
