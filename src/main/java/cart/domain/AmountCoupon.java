@@ -13,7 +13,8 @@ public class AmountCoupon implements Coupon {
 
     @Override
     public boolean isAvailable(final Integer totalPrice) {
-        return couponInfo.getMinPrice() <= totalPrice;
+        return couponInfo.isNotExpired()
+                && couponInfo.getMinPrice() <= totalPrice;
     }
 
     @Override

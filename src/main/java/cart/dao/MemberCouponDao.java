@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
@@ -28,8 +29,11 @@ public class MemberCouponDao {
     );
 
     public List<MemberCouponEntity> findUsableByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM member_coupon WHERE is_used = false AND member_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
+        final String sql = "SELECT * FROM member_coupon " +
+                "WHERE is_used = false " +
+                "AND expired_at > ?" +
+                "AND member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, LocalDateTime.now(), memberId);
     }
 
     public Optional<MemberCouponEntity> findById(final Long id) {
@@ -46,7 +50,6 @@ public class MemberCouponDao {
         final String sql = "UPDATE member_coupon SET is_used = ? WHERE id = ?";
         jdbcTemplate.update(sql, true, id);
     }
-
 
     public List<MemberCouponEntity> findByIds(final List<Long> ids) {
         final String sql = "SELECT * FROM member_coupon WHERE id IN (%s) ";

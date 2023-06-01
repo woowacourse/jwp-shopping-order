@@ -18,6 +18,10 @@ public class CouponInfo {
         this.expiredAt = expiredAt;
     }
 
+    public boolean isNotExpired() {
+        return expiredAt.isAfter(LocalDateTime.now());
+    }
+
     public Long getId() {
         return id;
     }
@@ -46,7 +50,8 @@ public class CouponInfo {
         return Objects.equals(id, that.id)
                 && Objects.equals(name, that.name)
                 && Objects.equals(minPrice, that.minPrice)
-                && Objects.equals(maxPrice, that.maxPrice) && Objects.equals(expiredAt, that.expiredAt);
+                && Objects.equals(maxPrice, that.maxPrice)
+                && Objects.equals(expiredAt, that.expiredAt);
     }
 
     @Override
