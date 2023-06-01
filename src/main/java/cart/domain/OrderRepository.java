@@ -10,4 +10,6 @@ public interface OrderRepository {
     Long add(Order order);
 
     void delete(Long id);
+
+    Long update(Order order);
 }

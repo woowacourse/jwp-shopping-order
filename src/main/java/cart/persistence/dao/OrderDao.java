@@ -46,6 +46,12 @@ public class OrderDao {
         jdbcTemplate.update(sql, id);
     }
 
+    public Long update(OrderEntity orderEntity) {
+        String sql = "UPDATE purchase_order SET original_price = ?, discount_price = ?, used_coupon_id = ?, confirm_state = ?, member_id = ?  WHERE id = ?";
+        jdbcTemplate.update(sql, orderEntity.getOriginalPrice(), orderEntity.getDiscountPrice(), orderEntity.getUsedCouponId(), orderEntity.getConfirmState(), orderEntity.getMemberId(), orderEntity.getId());
+        return orderEntity.getId();
+    }
+
     private static class OrderEntityRowMapper implements RowMapper<OrderEntity> {
         @Override
         public OrderEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
