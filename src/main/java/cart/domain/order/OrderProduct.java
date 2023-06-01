@@ -19,4 +19,12 @@ public class OrderProduct {
     public int price() {
         return product.getPrice() * quantity;
     }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }

@@ -100,8 +100,8 @@ public class CartItemDao {
     }
 
     public void deleteByIds(final List<Long> ids) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.batchUpdate(sql,
+        jdbcTemplate.batchUpdate(
+                "DELETE FROM cart_item WHERE id = ?",
                 ids,
                 100,
                 (PreparedStatement ps, Long id) -> ps.setLong(1, id));

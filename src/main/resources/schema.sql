@@ -36,3 +36,18 @@ CREATE TABLE user_coupon
     member_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL
 );
+
+CREATE TABLE user_order
+(
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    price     BIGINT NOT NULL
+);
+
+CREATE TABLE user_order_item
+(
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id   BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity   BIGINT NOT NULL
+);

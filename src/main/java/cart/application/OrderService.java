@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
+import cart.dao.OrderDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.Member;
@@ -25,10 +26,12 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final CartItemDao cartItemDao;
     private final CouponDao couponDao;
+    private final OrderDao orderDao;
 
-    public OrderService(final CartItemDao cartItemDao, final CouponDao couponDao) {
+    public OrderService(final CartItemDao cartItemDao, final CouponDao couponDao, final OrderDao orderDao) {
         this.cartItemDao = cartItemDao;
         this.couponDao = couponDao;
+        this.orderDao = orderDao;
     }
 
     @Transactional
@@ -39,7 +42,7 @@ public class OrderService {
         order.applyDeliveryFee(new DeliveryFee(3000));
         applyCoupon(member, orderRequestDto, order);
         validateExpectPrice(order, orderRequestDto);
-        return new OrderResponseDto(completeOrder(member, orderRequestDto));
+        return new OrderResponseDto(completeOrder(member, orderRequestDto, order));
     }
 
     private List<CartItem> findCartItem(final Member member, final OrderRequestDto orderRequestDto) {
@@ -87,8 +90,8 @@ public class OrderService {
         }
     }
 
-    private long completeOrder(final Member member, final OrderRequestDto orderRequestDto) {
+    private long completeOrder(final Member member, final OrderRequestDto orderRequestDto, final Order order) {
         cartItemDao.deleteByIds(orderRequestDto.getCartItems());
-        return 1;
+        return orderDao.save(member, order);
     }
 }

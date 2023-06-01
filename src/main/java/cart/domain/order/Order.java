@@ -24,4 +24,8 @@ public class Order {
     public int price() {
         return orderPrice.calculatePrice();
     }
+
+    public List<OrderProduct> getProducts() {
+        return products;
+    }
 }
