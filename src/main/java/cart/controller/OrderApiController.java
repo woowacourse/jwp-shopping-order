@@ -1,10 +1,12 @@
 package cart.controller;
 
 import cart.domain.Member;
+import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.service.OrderService;
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,8 +34,14 @@ public class OrderApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrder(@PathVariable Long id, @AuthPrincipal Member member) {
-        OrderResponse response = orderService.findById(id, member);
+    public ResponseEntity<OrderDetailResponse> getOrder(@PathVariable Long id, @AuthPrincipal Member member) {
+        OrderDetailResponse response = orderService.findById(id, member);
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getOrders(@AuthPrincipal Member member) {
+        List<OrderResponse> responses = orderService.findAll(member);
+        return ResponseEntity.ok().body(responses);
     }
 }

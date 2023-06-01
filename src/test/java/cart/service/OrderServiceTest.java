@@ -5,6 +5,7 @@ import static cart.fixture.TestFixture.박스터;
 import static cart.fixture.TestFixture.장바구니_밀리_치킨_10개;
 import static cart.fixture.TestFixture.장바구니_밀리_피자_1개;
 import static cart.fixture.TestFixture.주문_밀리_치킨_피자_3000원;
+import static cart.fixture.TestFixture.주문_밀리_치킨_햄버거_3000원;
 import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,10 +19,12 @@ import static org.mockito.Mockito.verify;
 
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.exception.IllegalMemberException;
 import cart.exception.IncorrectPriceException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -86,5 +89,16 @@ class OrderServiceTest {
 
         assertThatThrownBy(() -> orderService.findById(1L, 박스터))
                 .isInstanceOf(IllegalMemberException.class);
+    }
+
+    @Test
+    void 사용자의_주문을_전체_조회한다() {
+        given(orderRepository.findAllByMember(밀리))
+                .willReturn(List.of(주문_밀리_치킨_피자_3000원, 주문_밀리_치킨_햄버거_3000원));
+
+        List<OrderResponse> responses = orderService.findAll(밀리);
+
+        assertThat(responses).map(OrderResponse::getId)
+                .containsExactly(1L, 2L);
     }
 }

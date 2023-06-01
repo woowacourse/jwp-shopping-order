@@ -6,6 +6,7 @@ import cart.domain.Money;
 import cart.domain.Order;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.exception.IncorrectPriceException;
 import cart.exception.NonExistCartItemException;
 import cart.exception.NonExistOrderException;
@@ -61,5 +62,13 @@ public class OrderService {
                 .orElseThrow(NonExistOrderException::new);
         order.checkOwner(member);
         return OrderDetailResponse.from(order);
+    }
+
+    public List<OrderResponse> findAll(Member member) {
+        List<Order> orders = orderRepository.findAllByMember(member);
+
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
     }
 }

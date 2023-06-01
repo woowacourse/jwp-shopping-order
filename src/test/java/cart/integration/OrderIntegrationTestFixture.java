@@ -9,6 +9,7 @@ import cart.domain.Product;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -66,6 +67,27 @@ public class OrderIntegrationTestFixture {
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .get("/orders/{id}", 주문_ID)
+                .then()
+                .extract();
+    }
+
+    public static OrderResponse 사용자_주문_목록_응답(Long 주문_ID, OrderProductResponse... 응답) {
+        List<OrderProductResponse> responses = Arrays.asList(응답);
+        return new OrderResponse(주문_ID, null, null, responses);
+    }
+
+    public static void 주문_전체_조회_응답_검증(ExtractableResponse<Response> 응답, OrderResponse... orderResponses) {
+        List<OrderResponse> responses = Arrays.asList(orderResponses);
+        assertThat(응답.jsonPath().getList(".", OrderResponse.class)).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(responses);
+    }
+
+    public static ExtractableResponse<Response> 사용자_주문_전체_조회_요청(Member 사용자) {
+        return RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
+                .get("/orders")
                 .then()
                 .extract();
     }
