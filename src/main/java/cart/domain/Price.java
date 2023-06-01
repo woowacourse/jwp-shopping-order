@@ -1,16 +1,16 @@
 package cart.domain;
 
 public class Price implements Money {
-    private Long value;
+    private Integer value;
 
     public Price() {
     }
 
-    public Price(Long value) {
+    public Price(Integer value) {
         this.value = value;
     }
 
-    public Long getValue() {
+    public Integer getValue() {
         return value;
     }
 }

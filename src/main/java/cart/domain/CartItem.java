@@ -8,15 +8,15 @@ public class CartItem {
     private final Product product;
     private final Member member;
     private Long id;
-    private Long quantity;
+    private Integer quantity;
 
     public CartItem(Member member, Product product) {
-        this.quantity = 1L;
+        this.quantity = 1;
         this.member = member;
         this.product = product;
     }
 
-    public CartItem(Long id, Long quantity, Product product, Member member) {
+    public CartItem(Long id, Integer quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -35,7 +35,7 @@ public class CartItem {
         return product;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -45,7 +45,7 @@ public class CartItem {
         }
     }
 
-    public void changeQuantity(Long quantity) {
+    public void changeQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

@@ -5,10 +5,10 @@ import cart.domain.Product;
 public class ProductResponse {
     private Long id;
     private String name;
-    private Long price;
+    private Integer price;
     private String imageUrl;
 
-    public ProductResponse(Long id, String name, Long price, String imageUrl) {
+    public ProductResponse(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -27,7 +27,7 @@ public class ProductResponse {
         return name;
     }
 
-    public Long getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

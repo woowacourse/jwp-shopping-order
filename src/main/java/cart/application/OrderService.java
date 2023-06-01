@@ -40,7 +40,7 @@ public class OrderService {
         for (Long cartItemId : cartItemIds) {
             CartItem cartItem = cartItemDao.findById(cartItemId);
             cartItem.checkOwner(member);
-            Long quantity = cartItem.getQuantity();
+            Integer quantity = cartItem.getQuantity();
             Product product = cartItem.getProduct();
             totalOrderPrice += quantity * product.getPrice().getValue();
             orderedItemDao.save(product.getId(), orderId, quantity);
@@ -70,10 +70,10 @@ public class OrderService {
         for (OrderResponseEntity entity : orderResponseEntities) {
             Long orderId = entity.getOrderId();
             Long orderItemId = entity.getOrderItemId();
-            Long quantity = entity.getQuantity();
+            Integer quantity = entity.getQuantity();
             Long productId = entity.getProductId();
             String productName = entity.getProductName();
-            Long productPrice = entity.getProductPrice();
+            Integer productPrice = entity.getProductPrice();
             String productImageUrl = entity.getProductImageUrl();
 
             ProductResponse productResponse = new ProductResponse(productId, productName, productPrice, productImageUrl);
@@ -103,10 +103,10 @@ public class OrderService {
 
         for (DetailOrderResponseEntity detailOrder : detailOrders) {
             Long orderItemId = detailOrder.getOrderItemId();
-            Long quantity = detailOrder.getQuantity();
+            Integer quantity = detailOrder.getQuantity();
             Long productId = detailOrder.getProductId();
             String productName = detailOrder.getProductName();
-            Long productPrice = detailOrder.getProductPrice();
+            Integer productPrice = detailOrder.getProductPrice();
             String productImageUrl = detailOrder.getProductImageUrl();
 
             OrderItemResponse orderItem = new OrderItemResponse(orderItemId, quantity, new ProductResponse(productId, productName, productPrice, productImageUrl));

@@ -7,13 +7,13 @@ public class DetailOrderResponseEntity {
     private LocalDateTime orderedAt;
     private Long usedPoint;
     private Long orderItemId;
-    private Long quantity;
+    private Integer quantity;
     private Long productId;
     private String productName;
-    private Long productPrice;
+    private Integer productPrice;
     private String productImageUrl;
 
-    public DetailOrderResponseEntity(Long orderId, LocalDateTime orderedAt, Long usedPoint, Long orderItemId, Long quantity, Long productId, String productName, Long productPrice, String productImageUrl) {
+    public DetailOrderResponseEntity(Long orderId, LocalDateTime orderedAt, Long usedPoint, Long orderItemId, Integer quantity, Long productId, String productName, Integer productPrice, String productImageUrl) {
         this.orderId = orderId;
         this.orderedAt = orderedAt;
         this.usedPoint = usedPoint;
@@ -41,7 +41,7 @@ public class DetailOrderResponseEntity {
         return orderItemId;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -53,7 +53,7 @@ public class DetailOrderResponseEntity {
         return productName;
     }
 
-    public Long getProductPrice() {
+    public Integer getProductPrice() {
         return productPrice;
     }
 

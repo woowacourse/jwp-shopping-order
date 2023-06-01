@@ -4,10 +4,10 @@ import cart.domain.CartItem;
 
 public class CartItemResponse {
     private Long id;
-    private Long quantity;
+    private Integer quantity;
     private ProductResponse product;
 
-    private CartItemResponse(Long id, Long quantity, ProductResponse product) {
+    private CartItemResponse(Long id, Integer quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -25,7 +25,7 @@ public class CartItemResponse {
         return id;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 

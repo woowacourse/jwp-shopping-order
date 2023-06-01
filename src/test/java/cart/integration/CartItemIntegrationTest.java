@@ -83,7 +83,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void increaseCartItemQuantity() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10L);
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 10);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
@@ -103,7 +103,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void decreaseCartItemQuantityToZero() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0L);
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, 0);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
@@ -122,7 +122,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void updateOtherMembersCartItem() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10L);
+        ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
@@ -192,7 +192,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, Long quantity) {
+    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, Integer quantity) {
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

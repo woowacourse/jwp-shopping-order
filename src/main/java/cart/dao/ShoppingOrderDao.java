@@ -21,10 +21,10 @@ public class ShoppingOrderDao {
         Long orderId = rs.getLong("id");
         LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
         Long orderItemId = rs.getLong("orderitem_id");
-        Long quantity = rs.getLong("quantity");
+        Integer quantity = rs.getInt("quantity");
         Long productId = rs.getLong("product_id");
         String productName = rs.getString("name");
-        Long productPrice = rs.getLong("price");
+        Integer productPrice = rs.getInt("price");
         String productImageUrl = rs.getString("image_url");
 
         return new OrderResponseEntity(orderId, orderedAt, orderItemId, quantity, productId, productName, productPrice, productImageUrl);
@@ -35,10 +35,10 @@ public class ShoppingOrderDao {
         LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
         Long usedPoint = rs.getLong("used_point");
         Long orderItemId = rs.getLong("orderitem_id");
-        Long quantity = rs.getLong("quantity");
+        Integer quantity = rs.getInt("quantity");
         Long productId = rs.getLong("product_id");
         String productName = rs.getString("name");
-        Long productPrice = rs.getLong("price");
+        Integer productPrice = rs.getInt("price");
         String productImageUrl = rs.getString("image_url");
 
         return new DetailOrderResponseEntity(orderId, orderedAt, usedPoint, orderItemId, quantity, productId, productName, productPrice, productImageUrl);

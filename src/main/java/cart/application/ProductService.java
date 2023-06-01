@@ -30,12 +30,12 @@ public class ProductService {
     }
 
     public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), new Price((long) productRequest.getPrice()), productRequest.getImageUrl());
+        Product product = new Product(productRequest.getName(), new Price(productRequest.getPrice()), productRequest.getImageUrl());
         return productDao.createProduct(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), new Price((long) productRequest.getPrice()), productRequest.getImageUrl());
+        Product product = new Product(productRequest.getName(), new Price(productRequest.getPrice()), productRequest.getImageUrl());
         productDao.updateProduct(productId, product);
     }
 

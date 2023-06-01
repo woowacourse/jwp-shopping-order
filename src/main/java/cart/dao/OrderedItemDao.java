@@ -21,7 +21,7 @@ public class OrderedItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(Long productId, Long orderId, Long quantity) {
+    public Long save(Long productId, Long orderId, Integer quantity) {
         Map<String, Object> params = new HashMap<>();
         params.put("product_id", productId);
         params.put("order_id", orderId);

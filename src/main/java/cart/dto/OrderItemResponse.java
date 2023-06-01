@@ -2,10 +2,10 @@ package cart.dto;
 
 public class OrderItemResponse {
     private Long id;
-    private Long quantity;
+    private Integer quantity;
     private ProductResponse productResponse;
 
-    public OrderItemResponse(Long id, Long quantity, ProductResponse productResponse) {
+    public OrderItemResponse(Long id, Integer quantity, ProductResponse productResponse) {
         this.id = id;
         this.quantity = quantity;
         this.productResponse = productResponse;
@@ -15,7 +15,7 @@ public class OrderItemResponse {
         return id;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 

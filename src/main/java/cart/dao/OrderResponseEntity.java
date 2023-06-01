@@ -6,13 +6,13 @@ public class OrderResponseEntity {
     private Long orderId;
     private LocalDateTime orderedAt;
     private Long orderItemId;
-    private Long quantity;
+    private Integer quantity;
     private Long productId;
     private String productName;
-    private Long productPrice;
+    private Integer productPrice;
     private String productImageUrl;
 
-    public OrderResponseEntity(Long orderId, LocalDateTime orderedAt, Long orderItemId, Long quantity, Long productId, String productName, Long productPrice, String productImageUrl) {
+    public OrderResponseEntity(Long orderId, LocalDateTime orderedAt, Long orderItemId, Integer quantity, Long productId, String productName, Integer productPrice, String productImageUrl) {
         this.orderId = orderId;
         this.orderedAt = orderedAt;
         this.orderItemId = orderItemId;
@@ -35,7 +35,7 @@ public class OrderResponseEntity {
         return orderItemId;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -47,7 +47,7 @@ public class OrderResponseEntity {
         return productName;
     }
 
-    public Long getProductPrice() {
+    public Integer getProductPrice() {
         return productPrice;
     }
 
