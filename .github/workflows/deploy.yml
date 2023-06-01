@@ -68,7 +68,7 @@ jobs:
 
       - name: docker run
         run: |
-          sudo docker run -d -p 80:8080 --name shopping-order presentsong/shopping-order:step2
+          sudo docker run -d -p 80:8080 -e DB_URL=${DB_URL} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} --name shopping-order presentsong/shopping-order:step2
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USER: ${{ secrets.DB_USER }}
