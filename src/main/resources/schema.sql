@@ -30,3 +30,14 @@ CREATE TABLE IF NOT EXISTS tb_order (
     order_date TIMESTAMP NOT NULL,
     FOREIGN KEY (member_id) REFERENCES tb_member(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS tb_order_item (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    product_price INT NOT NULL,
+    product_image_url TEXT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES tb_order(id) ON DELETE CASCADE
+);
