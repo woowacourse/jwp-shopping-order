@@ -1,4 +1,4 @@
-package cart.fixture;
+package cart.fixture.domain;
 
 import cart.domain.vo.Money;
 

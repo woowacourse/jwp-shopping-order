@@ -49,6 +49,15 @@ public class Money {
         return new Money(multiplyMoney);
     }
 
+    public Money times(BigDecimal other) {
+        BigDecimal multiplyMoney = value.multiply(other);
+        return new Money(multiplyMoney);
+    }
+
+    public boolean isEqualOrGreaterThan(Money other) {
+        return value.compareTo(other.value) >= 0;
+    }
+
     public BigDecimal getValue() {
         return value;
     }
