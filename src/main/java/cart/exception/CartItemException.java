@@ -13,4 +13,10 @@ public class CartItemException extends RuntimeException {
             super("Illegal member attempts to cart; cartItemId=" + cartItem.getId() + ", memberId=" + member.getId());
         }
     }
+
+    public static class PointNotPositive extends CartItemException {
+        public PointNotPositive() {
+            super("포인트는 음수가 될 수 없습니다.");
+        }
+    }
 }

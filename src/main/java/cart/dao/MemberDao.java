@@ -32,13 +32,13 @@ public class MemberDao {
     }
 
     public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+        String sql = "INSERT INTO member (email, password, point) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPointAsInt());
     }
 
     public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
+        String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPointAsInt(), member.getId());
     }
 
     public void deleteMember(Long id) {
@@ -54,7 +54,7 @@ public class MemberDao {
     private static class MemberRowMapper implements RowMapper<Member> {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
+            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"), rs.getInt("point"));
         }
     }
 }

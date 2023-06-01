@@ -1,21 +1,47 @@
-CREATE TABLE product (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    price INT NOT NULL,
+CREATE TABLE IF NOT EXISTS product
+(
+    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name      VARCHAR(255) NOT NULL,
+    price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE member (
-     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-     email VARCHAR(255) NOT NULL UNIQUE,
-     password VARCHAR(255) NOT NULL
+CREATE TABLE IF NOT EXISTS member
+(
+    id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email    VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    point    INT          NOT NULL
 );
 
-CREATE TABLE cart_item (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT NOT NULL,
+CREATE TABLE IF NOT EXISTS cart_item
+(
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    quantity   INT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (product_id) REFERENCES product (id)
+);
+
+CREATE TABLE IF NOT EXISTS order_history
+(
+    id             BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id      BIGINT NOT NULL,
+    original_price INT    NOT NULL,
+    used_point     INT    NOT NULL,
+    order_price    INT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE IF NOT EXISTS order_product
+(
+    id               BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_history_id BIGINT       NOT NULL,
+    product_id       BIGINT       NOT NULL,
+    name             VARCHAR(255) NOT NULL,
+    price            INT          NOT NULL,
+    image_url        VARCHAR(255) NOT NULL,
+    quantity         INT          NOT NULL,
+    FOREIGN KEY (order_history_id) REFERENCES order_history (id)
 );
