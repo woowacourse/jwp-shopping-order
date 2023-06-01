@@ -31,11 +31,21 @@ public class OrderStep {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_조회_요청(Member 멤버, Long 주문_ID) {
+    public static ExtractableResponse<Response> 단일_주문_조회_요청(Member 멤버, Long 주문_ID) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(멤버.getEmail(), 멤버.getPassword())
                 .when().get("/orders/" + 주문_ID)
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 멤버_전체_주문_조회_요청(Member 멤버) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(멤버.getEmail(), 멤버.getPassword())
+                .when().get("/orders")
                 .then()
                 .log().all()
                 .extract();

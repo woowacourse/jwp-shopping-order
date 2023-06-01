@@ -2,7 +2,8 @@ package cart.integration;
 
 import static cart.integration.steps.CartItemStep.장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다;
 import static cart.integration.steps.CommonStep.헤더_ID_값_파싱;
-import static cart.integration.steps.OrderStep.주문_조회_요청;
+import static cart.integration.steps.OrderStep.단일_주문_조회_요청;
+import static cart.integration.steps.OrderStep.멤버_전체_주문_조회_요청;
 import static cart.integration.steps.OrderStep.주문_추가_요청;
 import static cart.integration.steps.ProductStep.상품_생성_요청_생성;
 import static cart.integration.steps.ProductStep.상품_생성_요청후_상품_ID를_리턴한다;
@@ -76,7 +77,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 멤버가_갖는_포인트보다_많이_사용하면_예외를_응답한다() throws Exception {
+    void 멤버가_가진_포인트보다_많은_포인트를_사용하면_예외를_응답한다() throws Exception {
         // given
         Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
         Long 치킨_ID = 상품_생성_요청후_상품_ID를_리턴한다(상품_생성_요청_생성("치킨", 10_000, "http://example.com/chicken.jpg"));
@@ -131,7 +132,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 단일_주문을_조회한다() throws Exception {
+    void 단일_주문내역을_조회한다() throws Exception {
         // given
         Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
         Long 치킨_ID = 상품_생성_요청후_상품_ID를_리턴한다(상품_생성_요청_생성("치킨", 10_000, "http://example.com/chicken.jpg"));
@@ -158,7 +159,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         );
 
         // when
-        var 주문_조회_요청값 = 주문_조회_요청(멤버, 주문_ID);
+        var 주문_조회_요청값 = 단일_주문_조회_요청(멤버, 주문_ID);
 
         // then
         assertAll(
@@ -173,5 +174,56 @@ public class OrderIntegrationTest extends IntegrationTest {
     private Long 주문_추가_후_주문_ID를_리턴한다(Member 멤버, List<Long> 장바구니_상품_ID들, int 사용한_포인트) throws Exception {
         var 요청값 = 주문_추가_요청(멤버, 장바구니_상품_ID들, 사용한_포인트, objectMapper);
         return 헤더_ID_값_파싱(요청값);
+    }
+
+    @Test
+    void 멤버의_전체_주문내역을_조회한다() throws Exception {
+        // given
+        Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
+        Long 치킨_ID = 상품_생성_요청후_상품_ID를_리턴한다(상품_생성_요청_생성("치킨", 10_000, "http://example.com/chicken.jpg"));
+        Long 첫번째_장바구니_상품_ID = 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(멤버, 치킨_ID);
+        Long 피자_ID = 상품_생성_요청후_상품_ID를_리턴한다(상품_생성_요청_생성("피자", 30_000, "http://example.com/pizza.jpg"));
+        Long 두번째_장바구니_상품_ID = 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(멤버, 피자_ID);
+        Long 주문_ID = 주문_추가_후_주문_ID를_리턴한다(멤버, List.of(첫번째_장바구니_상품_ID, 두번째_장바구니_상품_ID), 1000);
+        Long 두번째로_추가한_장바구니_상품_ID = 장바구니_상품_추가_후_장바구니_상품_ID를_리턴한다(멤버, 치킨_ID);
+        Long 두번째_주문_ID = 주문_추가_후_주문_ID를_리턴한다(멤버, List.of(두번째로_추가한_장바구니_상품_ID), 10000);
+
+        OrderProductResponse 치킨_상품_응답 = new OrderProductResponse(
+                치킨_ID, "치킨", 10_000, "http://example.com/chicken.jpg", 1
+        );
+
+        OrderProductResponse 피자_상품_응답 = new OrderProductResponse(
+                피자_ID, "피자", 30_000, "http://example.com/pizza.jpg", 1
+        );
+
+        OrderResponse 맞는_첫번째_응답 = new OrderResponse(
+                주문_ID,
+                List.of(치킨_상품_응답, 피자_상품_응답),
+                40_000,
+                1000,
+                3000,
+                null
+        );
+
+        OrderResponse 맞는_두번째_응답 = new OrderResponse(
+                두번째_주문_ID,
+                List.of(치킨_상품_응답),
+                10_000,
+                10_000,
+                3000,
+                null
+        );
+
+        // when
+        var 주문_조회_요청값 = 멤버_전체_주문_조회_요청(멤버);
+
+        // then
+        assertAll(
+                () -> assertThat(주문_조회_요청값.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(주문_조회_요청값.jsonPath().getList(".", OrderResponse.class))
+                        .usingRecursiveComparison()
+                        .ignoringFields("orderedAt")
+                        .isEqualTo(List.of(맞는_첫번째_응답, 맞는_두번째_응답))
+        );
     }
 }

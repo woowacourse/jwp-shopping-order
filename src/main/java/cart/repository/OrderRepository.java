@@ -50,7 +50,7 @@ public class OrderRepository {
         return toDomain(orderEntity, member);
     }
 
-    public List<Order> findOrdersByMemberId(Member member) {
+    public List<Order> findOrdersByMember(Member member) {
         List<OrderWithOrderProductEntities> orderEntities = orderDao.findOrdersByMemberId(member.getId());
 
         return orderEntities.stream()

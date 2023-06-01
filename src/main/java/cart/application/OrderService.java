@@ -54,7 +54,7 @@ public class OrderService {
 
         validateMemberIsSameCartItemOwner(cartItems, member);
         validateMemberPointIsGreaterThanUsedPoint(member, orderRequest.getPoint());
-        validateUsedPointIsLessThanPrice(orderRequest.getPoint(), order.getTotalPrice());
+        validateUsedPointIsLessThanPrice(orderRequest.getPoint(), order.getTotalPrice(), order.getDeliveryFee());
 
         accumulatePoint(member, orderRequest, order);
 
@@ -84,8 +84,8 @@ public class OrderService {
         }
     }
 
-    private void validateUsedPointIsLessThanPrice(int point, int totalPrice) {
-        if (totalPrice < point) {
+    private void validateUsedPointIsLessThanPrice(int point, int totalPrice, int deliveryFee) {
+        if (totalPrice + deliveryFee < point) {
             throw new OrderException(ErrorMessage.INVALID_POINT_MORE_THAN_PRICE);
         }
     }
@@ -138,5 +138,13 @@ public class OrderService {
                 product.getImageUrl(),
                 orderProduct.getQuantity()
         );
+    }
+
+    public List<OrderResponse> findByMember(final Member member) {
+        List<Order> orders = orderRepository.findOrdersByMember(member);
+
+        return orders.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 }

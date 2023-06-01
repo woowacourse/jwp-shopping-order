@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +32,16 @@ public class OrderApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> findById(Member member, @PathVariable("id") Long orderId) {
+    public ResponseEntity<OrderResponse> getOrder(Member member, @PathVariable("id") Long orderId) {
         OrderResponse orderResponse = orderService.findById(member, orderId);
 
         return ResponseEntity.ok(orderResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getMemberOrders(Member member) {
+        List<OrderResponse> orderResponses = orderService.findByMember(member);
+
+        return ResponseEntity.ok(orderResponses);
     }
 }
