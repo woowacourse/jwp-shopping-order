@@ -2,9 +2,9 @@ package cart.repository;
 
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
 import cart.entity.CartItemEntity;
+import cart.exception.MemberException;
+import cart.exception.ProductException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,21 +19,20 @@ public class JdbcCartItemRepository implements CartItemRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final CartItemDao cartItemDao;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-    public JdbcCartItemRepository(JdbcTemplate jdbcTemplate, CartItemDao cartItemDao) {
+    public JdbcCartItemRepository(JdbcTemplate jdbcTemplate, CartItemDao cartItemDao, MemberRepository memberRepository, ProductRepository productRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.cartItemDao = cartItemDao;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
     
     @Override
     public Optional<CartItem> findById(Long id) {
         try {
-            String sql = "SELECT ci.id, ci.quantity, " +
-                    "pd.id, pd.name ,pd.price, pd.image_url, " +
-                    "mb.id, mb.email, mb.password, mb.money, mb.point FROM cart_item AS ci " +
-                    "INNER JOIN product AS pd ON pd.id = ci.product_id " +
-                    "INNER JOIN member AS mb ON mb.id = ci.member_id " +
-                    "WHERE ci.id = ?";
+            String sql = "SELECT * FROM cart_item WHERE id = ?";
             CartItem cartItem = jdbcTemplate.queryForObject(sql, new CartItemRowMapper(), id);
             return Optional.ofNullable(cartItem);
         } catch (Exception e) {
@@ -43,13 +42,7 @@ public class JdbcCartItemRepository implements CartItemRepository {
 
     @Override
     public List<CartItem> findAllByMemberId(Long memberId) {
-        String sql = "SELECT ci.id, ci.quantity, " +
-                "pd.id, pd.name ,pd.price, pd.image_url, " +
-                "mb.id, mb.email, mb.password, mb.money, mb.point FROM cart_item AS ci " +
-                "INNER JOIN product AS pd ON pd.id = ci.product_id " +
-                "INNER JOIN member AS mb ON mb.id = ci.member_id " +
-                "WHERE ci.member_id = ?";
-
+        String sql = "SELECT * FROM cart_item WHERE member_id = ?";
         return jdbcTemplate.query(sql, new CartItemRowMapper(), memberId);
     }
 
@@ -68,25 +61,16 @@ public class JdbcCartItemRepository implements CartItemRepository {
         cartItemDao.deleteById(id);
     }
 
-    private static class CartItemRowMapper implements RowMapper<CartItem> {
+    private class CartItemRowMapper implements RowMapper<CartItem> {
         @Override
         public CartItem mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new CartItem(
-                    rs.getLong(1),
-                    rs.getInt(2),
-                    new Product(
-                            rs.getLong(3),
-                            rs.getString(4),
-                            rs.getInt(5),
-                            rs.getString(6)
-                    ),
-                    new Member(
-                            rs.getLong(7),
-                            rs.getString(8),
-                            rs.getString(9),
-                            rs.getInt(10),
-                            rs.getInt(11)
-                    )
+                    rs.getLong("id"),
+                    rs.getInt("quantity"),
+                    productRepository.findById(rs.getLong("product_id"))
+                            .orElseThrow(ProductException.NotFound::new),
+                    memberRepository.findById(rs.getLong("member_id"))
+                            .orElseThrow(MemberException.NotFound::new)
             );
         }
     }
