@@ -20,7 +20,7 @@ public class ProductResponse {
     }
 
     public static ProductResponse deleted() {
-        return new ProductResponse(null, "deleted", 0, "deleted");
+        return new ProductResponse(0L, "deleted", 0, "deleted");
     }
 
     public Long getId() {

@@ -92,7 +92,7 @@ public class OrderDao {
 
     public List<OrderEntity> findOrderByMemberId(final Long memberId) {
         return jdbcTemplate.query(
-                "SELECT * FROM user_order WHERE memberId = ? ",
+                "SELECT * FROM user_order WHERE member_Id = ? ",
                 orderEntityRowMapper,
                 memberId
         );
