@@ -1,7 +1,7 @@
 package cart.integration;
 
-import cart.domain.Member;
-import cart.repository.MemberRepository;
+import cart.member.domain.Member;
+import cart.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package cart.integration;
 
-import cart.domain.Member;
-import cart.dto.CartItemOrderRequest;
-import cart.dto.OrderRequest;
-import cart.repository.MemberRepository;
+import cart.member.domain.Member;
+import cart.cartitem.dto.CartItemOrderRequest;
+import cart.order.dto.OrderRequest;
+import cart.member.repository.MemberRepository;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
