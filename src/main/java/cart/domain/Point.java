@@ -6,6 +6,7 @@ import cart.exception.NegativePointException;
 
 public class Point {
 
+    public static final Point ZERO = Point.valueOf(0);
     private static final int MINIMUM_POINT = 0;
 
     private final int value;
@@ -23,6 +24,14 @@ public class Point {
         if (value < MINIMUM_POINT) {
             throw new NegativePointException();
         }
+    }
+
+    public boolean isLessThan(final Point other) {
+        return value < other.value;
+    }
+
+    public Point subtract(final Point other) {
+        return new Point(value - other.value);
     }
 
     public int getValue() {
