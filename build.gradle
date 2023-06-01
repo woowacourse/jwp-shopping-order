@@ -61,7 +61,7 @@ tasks.withType(GenerateSwaggerUI) {
 }
 
 openapi3 {
-    setServer("http://54.180.102.84:8080")
+    setServer("http://13.209.69.80:8080")
     title = "restdocs-swagger API Documentation"
     description = "Spring REST Docs with SwaggerUI."
     version = "0.0.1"
