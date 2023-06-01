@@ -42,7 +42,7 @@ public class OrderRepository {
 
     public Long save(Order order) {
         final OrderEntity orderEntity = new OrderEntity(order.getPrice(), order.getMember().getId());
-        final Long orderId = orderDao.addOrder(orderEntity);
+        final Long orderId = orderDao.save(orderEntity);
         orderedItemDao.saveAll(order.getOrderedItems(), orderId);
         cartItemDao.deleteByIds(order.getOrderedItemIds());
         return orderId;
@@ -51,7 +51,7 @@ public class OrderRepository {
     public Order findByIdWithMember(Long orderId, Member member) {
         final OrderEntity orderEntity = orderDao.findById(orderId)
                 .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
-        List<OrderedItemEntity> orderedItems = orderedItemDao.findItemsByOrderId(orderId);
+        List<OrderedItemEntity> orderedItems = orderedItemDao.findByOrderId(orderId);
         final CartItems cartItems = orderedItemsToCartItems(member, orderedItems);
         return new Order(orderEntity.getId(), orderEntity.getPrice(), member, cartItems);
     }
@@ -86,7 +86,7 @@ public class OrderRepository {
         final List<OrderEntity> orders = orderDao.findByMember(member);
         List<Order> result = new ArrayList<>();
         for (OrderEntity order : orders) {
-            final List<OrderedItemEntity> items = orderedItemDao.findItemsByOrderId(order.getId());
+            final List<OrderedItemEntity> items = orderedItemDao.findByOrderId(order.getId());
             final CartItems cartItems = orderedItemsToCartItems(member, items);
             result.add(new Order(order.getId(), order.getPrice(), member, cartItems));
         }

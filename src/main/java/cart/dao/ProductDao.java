@@ -30,17 +30,17 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> findAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Product getProductById(Long productId) {
+    public Product findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, productId);
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public Long createProduct(Product product) {
+    public Long save(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -59,14 +59,14 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void update(Long id, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 
-    public void deleteProduct(Long productId) {
+    public void deleteById(Long id) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        jdbcTemplate.update(sql, id);
     }
 
     public List<Product> findByIds(List<Long> ids) {

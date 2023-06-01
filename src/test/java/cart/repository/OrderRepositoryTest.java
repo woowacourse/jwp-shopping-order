@@ -49,7 +49,7 @@ class OrderRepositoryTest {
     void findOrderById() {
         //given
         final List<CartItem> items = List.of(Fixture.CART_ITEM1, Fixture.CART_ITEM2);
-        final Long orderId = orderDao.addOrder(new OrderEntity(10000, 1L));
+        final Long orderId = orderDao.save(new OrderEntity(10000, 1L));
         orderedItemDao.saveAll(items, orderId);
 
         //when
@@ -81,8 +81,8 @@ class OrderRepositoryTest {
         final List<CartItem> item1 = List.of(Fixture.CART_ITEM1);
         final List<CartItem> item2 = List.of(Fixture.CART_ITEM2);
 
-        final Long orderId1 = orderDao.addOrder(new OrderEntity(10000, member.getId()));
-        final Long orderId2 = orderDao.addOrder(new OrderEntity(20000, member.getId()));
+        final Long orderId1 = orderDao.save(new OrderEntity(10000, member.getId()));
+        final Long orderId2 = orderDao.save(new OrderEntity(20000, member.getId()));
 
         orderedItemDao.saveAll(item1, orderId1);
         orderedItemDao.saveAll(item2, orderId2);

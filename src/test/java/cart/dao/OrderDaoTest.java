@@ -41,7 +41,7 @@ class OrderDaoTest extends DaoTest {
 
     private Long createOrder(int price, Member member, List<CartItem> cartItems) {
         final OrderEntity order = new OrderEntity(price, member.getId());
-        return orderDao.addOrder(order);
+        return orderDao.save(order);
     }
 
     @Test

@@ -16,22 +16,22 @@ public class ProductRepository {
     }
 
     public Product findById(Long id) {
-        return productDao.getProductById(id);
+        return productDao.findById(id);
     }
 
     public List<Product> findAll() {
-        return productDao.getAllProducts();
+        return productDao.findAll();
     }
 
     public Long add(Product product) {
-        return productDao.createProduct(product);
+        return productDao.save(product);
     }
 
     public void update(Product product) {
-        productDao.updateProduct(product.getId(), product);
+        productDao.update(product.getId(), product);
     }
 
     public void remove(Long id) {
-        productDao.deleteProduct(id);
+        productDao.deleteById(id);
     }
 }

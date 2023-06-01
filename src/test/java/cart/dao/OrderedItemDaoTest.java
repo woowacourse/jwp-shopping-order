@@ -34,7 +34,7 @@ class OrderedItemDaoTest extends DaoTest {
     void saveAll() {
         //given
         final List<CartItem> items = List.of(Fixture.CART_ITEM1, Fixture.CART_ITEM2);
-        final Long orderId = orderDao.addOrder(new OrderEntity(10000, 1L));
+        final Long orderId = orderDao.save(new OrderEntity(10000, 1L));
 
         //when
         final int[] rows = orderedItemDao.saveAll(items, orderId);
@@ -49,12 +49,12 @@ class OrderedItemDaoTest extends DaoTest {
     @DisplayName("orderId로 orderedItems를 조회한다.")
     void findItemsByOrderId() {
         //given
-        final Long orderId = orderDao.addOrder(new OrderEntity(10000, 1L));
+        final Long orderId = orderDao.save(new OrderEntity(10000, 1L));
         final List<CartItem> items = List.of(Fixture.CART_ITEM1, Fixture.CART_ITEM2);
         orderedItemDao.saveAll(items, orderId);
 
         //when
-        final List<OrderedItemEntity> result = orderedItemDao.findItemsByOrderId(orderId);
+        final List<OrderedItemEntity> result = orderedItemDao.findByOrderId(orderId);
 
         //then
         Assertions.assertAll(

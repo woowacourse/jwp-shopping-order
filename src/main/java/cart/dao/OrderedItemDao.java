@@ -22,13 +22,12 @@ public class OrderedItemDao {
         int quantity = rs.getInt("quantity");
         return new OrderedItemEntity(id, orderId, productId, quantity);
     };
-    ;
 
     public OrderedItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int[] saveAll(List<CartItem> cartItems, Long orderId) {
+    public int[] saveAll(List<CartItem> cartItems, Long id) {
         final String sql = "INSERT INTO ordered_item (order_id, product_id, quantity) VALUES (?, ?, ?)";
         return jdbcTemplate.batchUpdate(
                 sql,
@@ -36,7 +35,7 @@ public class OrderedItemDao {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         final CartItem cartItem = cartItems.get(i);
-                        ps.setLong(1, orderId);
+                        ps.setLong(1, id);
                         ps.setLong(2, cartItem.getProduct().getId());
                         ps.setInt(3, cartItem.getQuantity());
                     }
@@ -49,8 +48,8 @@ public class OrderedItemDao {
         );
     }
 
-    public List<OrderedItemEntity> findItemsByOrderId(Long orderId) {
+    public List<OrderedItemEntity> findByOrderId(Long id) {
         final String sql = "SELECT * FROM ordered_item WHERE order_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, orderId);
+        return jdbcTemplate.query(sql, rowMapper, id);
     }
 }

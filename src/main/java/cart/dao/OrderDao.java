@@ -29,7 +29,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrder(OrderEntity order) {
+    public Long save(OrderEntity order) {
         final String sql = "INSERT INTO `order` (member_id, price) VALUES (?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -45,10 +45,10 @@ public class OrderDao {
         return keyHolder.getKey().longValue();
     }
 
-    public Optional<OrderEntity> findById(Long orderId) {
+    public Optional<OrderEntity> findById(Long id) {
         try {
             final String sql = "SELECT * FROM `order` WHERE id = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, orderId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
