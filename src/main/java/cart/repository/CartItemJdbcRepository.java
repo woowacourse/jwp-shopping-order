@@ -59,6 +59,11 @@ public class CartItemJdbcRepository implements CartItemRepository {
         return cartItemDao.findMemberIdById(id);
     }
 
+    @Override
+    public void deleteAll(final List<Long> ids) {
+        cartItemDao.deleteAllByIds(ids);
+    }
+
     private List<CartItem> mapToDomains(final List<CartItemWithMemberAndProductEntity> entities) {
         return entities.stream()
                 .map(this::toDomain)
