@@ -3,13 +3,10 @@ package cart.application;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.repository.CartItemRepository;
-import cart.domain.repository.OrderProductRepository;
-import cart.domain.repository.OrderRepository;
+import cart.domain.repository.*;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrdersResponse;
 import cart.exception.OrderException;
-import cart.domain.repository.MemberCouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +20,14 @@ public class OrderService {
     private final MemberCouponRepository memberCouponRepository;
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
+    private final OrderCouponRepository orderCouponRepository;
 
-    public OrderService(CartItemRepository cartItemRepository, MemberCouponRepository memberCouponRepository, OrderRepository orderRepository, OrderProductRepository orderProductRepository) {
+    public OrderService(CartItemRepository cartItemRepository, MemberCouponRepository memberCouponRepository, OrderRepository orderRepository, OrderProductRepository orderProductRepository, CouponRepository couponRepository, OrderCouponRepository orderCouponRepository) {
         this.cartItemRepository = cartItemRepository;
         this.memberCouponRepository = memberCouponRepository;
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
+        this.orderCouponRepository = orderCouponRepository;
     }
 
     public Long save(Member member, OrderRequest orderRequest) {
@@ -46,6 +45,7 @@ public class OrderService {
         cartItemRepository.deleteByMemberCartItemIds(member.getId(), cartItems);
         orderProductRepository.saveOrderProductsByOrderId(orderSavedId,order);
         memberCouponRepository.changeUserUsedCouponAvailability(order.getCoupon());
+        orderCouponRepository.saveOrderCoupon(orderSavedId,order);
         return orderSavedId;
     }
 

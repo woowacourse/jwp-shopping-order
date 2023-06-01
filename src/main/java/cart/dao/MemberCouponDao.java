@@ -1,9 +1,12 @@
 package cart.dao;
 
 import cart.entity.CouponEntity;
+import cart.entity.MemberCouponEntity;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +27,7 @@ public class MemberCouponDao {
 
     private final RowMapper<CouponEntity> rowMapper = (rs, rowNum) ->
             new CouponEntity(
-                    rs.getLong("id"),
+                    rs.getLong("member_coupon.id"),
                     rs.getString("name"),
                     rs.getString("discount_type"),
                     rs.getInt("minimum_price"),
@@ -37,7 +40,7 @@ public class MemberCouponDao {
             String sql = "SELECT * " +
                     "FROM member_coupon " +
                     "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
-                    "WHERE member_coupon.member_id = ? and member_coupon.coupon_id = ? and availability = ?";
+                    "WHERE member_coupon.member_id = ? and member_coupon.id = ? and availability = ?";
 
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId, couponId, true));
         } catch (DataAccessException e){
@@ -46,8 +49,19 @@ public class MemberCouponDao {
     }
 
     public void changeUserUsedCouponAvailability(Long couponId) {
-        String sql = "UPDATE member_coupon SET availability = ? WHERE coupon_id = ? and availability = ?";
+        String sql = "UPDATE member_coupon SET availability = ? WHERE id = ? and availability = ?";
 
-        jdbcTemplate.update(sql, false, couponId, false);
+        jdbcTemplate.update(sql, false, couponId, true);
+    }
+
+    public boolean checkMemberCouponById(Long memberId, Long couponId) {
+        String sql = "select exists(select * from member_coupon where coupon_id = ? and availability = ? and member_id = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, couponId, true, memberId);
+    }
+
+    public Long createUserCoupon(MemberCouponEntity memberCouponEntity) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(memberCouponEntity);
+        return insertAction.executeAndReturnKey(params).longValue();
     }
 }
