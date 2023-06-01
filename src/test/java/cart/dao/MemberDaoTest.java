@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Member;
+import cart.domain.MemberEntity;
 import cart.exception.MemberNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MemberDaoTest extends DaoTest {
 
-    private static final Member dummyMember1 = new Member("email@email.com", "password");
+    private static final MemberEntity dummyMemberEntity = new MemberEntity("email@email.com", "password", 0);
 
     private MemberDao memberDao;
 
@@ -24,7 +24,7 @@ public class MemberDaoTest extends DaoTest {
     @Test
     void 회원_데이터를_삽입한다() {
         // when
-        long id = memberDao.insert(dummyMember1);
+        long id = memberDao.insert(dummyMemberEntity);
 
         // then
         assertThat(id).isNotZero();
@@ -33,20 +33,20 @@ public class MemberDaoTest extends DaoTest {
     @Test
     void ID로_단일_회원_데이터를_조회한다() {
         // when
-        long savedId = memberDao.insert(dummyMember1);
+        long savedId = memberDao.insert(dummyMemberEntity);
 
         // then
-        Member foundMember = memberDao.findById(savedId);
+        MemberEntity foundMember = memberDao.findById(savedId);
         assertThat(foundMember).isNotNull();
     }
 
     @Test
     void email로_단일_회원_데이터를_조회한다() {
         // when
-        memberDao.insert(dummyMember1);
+        memberDao.insert(dummyMemberEntity);
 
         // then
-        Member foundMember = memberDao.findByEmail(dummyMember1.getEmail());
+        MemberEntity foundMember = memberDao.findByEmail(dummyMemberEntity.getEmail());
         assertThat(foundMember).isNotNull();
     }
 
@@ -73,10 +73,10 @@ public class MemberDaoTest extends DaoTest {
     @Test
     void 모든_회원_데이터를_조회한다() {
         // given
-        memberDao.insert(dummyMember1);
+        memberDao.insert(dummyMemberEntity);
 
         // when
-        List<Member> result = memberDao.findAll();
+        List<MemberEntity> result = memberDao.findAll();
 
         // then
         assertThat(result).hasSize(1);
@@ -85,18 +85,18 @@ public class MemberDaoTest extends DaoTest {
     @Test
     void 회원_데이터를_수정한다() {
         // given
-        memberDao.insert(dummyMember1);
+        memberDao.insert(dummyMemberEntity);
 
         String email = "doggy@naver.com";
         String password = "q1w2e3!";
         int point = 500;
-        Member newMember = new Member(1L, email, password, point);
+        MemberEntity newMember = new MemberEntity(1L, email, password, point);
 
         // when
         memberDao.update(newMember);
 
         // then
-        Member foundMember = memberDao.findByEmail(email);
+        MemberEntity foundMember = memberDao.findByEmail(email);
         assertAll(
                 () -> assertThat(foundMember.getEmail()).isEqualTo(email),
                 () -> assertThat(foundMember.getPassword()).isEqualTo(password),
@@ -107,13 +107,13 @@ public class MemberDaoTest extends DaoTest {
     @Test
     void ID로_회원_데이터를_삭제한다() {
         // given
-        long savedId = memberDao.insert(dummyMember1);
+        long savedId = memberDao.insert(dummyMemberEntity);
 
         // when
         memberDao.delete(savedId);
 
         // then
-        List<Member> allMember = memberDao.findAll();
+        List<MemberEntity> allMember = memberDao.findAll();
         assertThat(allMember).isEmpty();
     }
 }

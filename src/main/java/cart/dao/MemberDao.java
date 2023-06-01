@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.domain.MemberEntity;
 import cart.exception.MemberNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,8 +20,8 @@ public class MemberDao {
     private static final String ALL_COLUMN = String.join(", ", ID, EMAIL, PASSWORD, POINT);
     private static final String TABLE = "member";
 
-    private static final RowMapper<Member> rowMapper = (resultSet, rowNum) ->
-            new Member(
+    private static final RowMapper<MemberEntity> rowMapper = (resultSet, rowNum) ->
+            new MemberEntity(
                     resultSet.getLong(ID),
                     resultSet.getString(EMAIL),
                     resultSet.getString(PASSWORD),
@@ -38,13 +38,13 @@ public class MemberDao {
                 .usingGeneratedKeyColumns(ID);
     }
 
-    public long insert(final Member member) {
-        BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(member);
+    public long insert(final MemberEntity memberEntity) {
+        BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(memberEntity);
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public Member findById(final Long id) {
+    public MemberEntity findById(final Long id) {
         String sql = "SELECT " + ALL_COLUMN + " FROM " + TABLE + " WHERE id = ?";
 
         try {
@@ -54,7 +54,7 @@ public class MemberDao {
         }
     }
 
-    public Member findByEmail(final String email) {
+    public MemberEntity findByEmail(final String email) {
         String sql = "SELECT " + ALL_COLUMN + " FROM " + TABLE + " WHERE email = ?";
 
         try {
@@ -64,16 +64,16 @@ public class MemberDao {
         }
     }
 
-    public List<Member> findAll() {
+    public List<MemberEntity> findAll() {
         String sql = "SELECT " + ALL_COLUMN + " from " + TABLE;
 
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void update(final Member member) {
+    public void update(final MemberEntity memberEntity) {
         String sql = "UPDATE " + TABLE + " SET email = ?, password = ?, point = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint(), member.getId());
+        jdbcTemplate.update(sql, memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getPoint(), memberEntity.getId());
     }
 
     public void delete(final Long id) {
