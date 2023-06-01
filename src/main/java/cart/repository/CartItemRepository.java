@@ -25,7 +25,7 @@ public class CartItemRepository {
         return cartItemDao.save(cartItem);
     }
 
-    public List<CartItem> findByMemberId(Member member) {
+    public List<CartItem> findByMember(Member member) {
         return cartItemDao.findByMemberId(member.getId());
     }
 

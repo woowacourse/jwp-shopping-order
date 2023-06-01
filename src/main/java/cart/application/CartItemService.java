@@ -38,7 +38,7 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(member);
+        List<CartItem> cartItems = cartItemRepository.findByMember(member);
 
         return cartItems.stream()
                 .map(CartItemResponse::of)
