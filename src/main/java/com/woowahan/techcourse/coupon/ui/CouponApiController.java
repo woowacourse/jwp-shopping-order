@@ -39,7 +39,7 @@ public class CouponApiController {
     }
 
     @PostMapping("/members/coupon")
-    public ResponseEntity<Void> useCoupon(@Authentication MemberId memberId,
+    public ResponseEntity<Void> addCoupon(@Authentication MemberId memberId,
             @RequestBody @Valid AddMemberCouponRequest request) {
         couponCommandService.addCoupon(request.getCouponId(), memberId.getId());
         return ResponseEntity.ok().build();
