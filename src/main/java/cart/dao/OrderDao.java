@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
 public class OrderDao {
 
+    public static final int PAGE_UNIT = 20;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
 
@@ -49,5 +51,10 @@ public class OrderDao {
     public OrderEntity findById(final Long id) {
         final String sql = "select id, member_id, earned_points, used_points, total_price, pay_price, order_date from orders WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
+    public List<OrderEntity> findByIndexRange(final Long memberId, final int index) {
+        final String sql = "select id, member_id, earned_points, used_points, total_price, pay_price, order_date from orders WHERE member_id = ? ORDER BY order_date, id DESC LIMIT ?, " + PAGE_UNIT;
+        return jdbcTemplate.query(sql, rowMapper, memberId, index);
     }
 }
