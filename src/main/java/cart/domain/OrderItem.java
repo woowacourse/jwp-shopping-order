@@ -1,5 +1,8 @@
 package cart.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class OrderItem {
@@ -7,19 +10,26 @@ public class OrderItem {
     private final Long id;
     private final Product orderedProduct;
     private final int quantity;
+    private final List<MemberCoupon> memberCoupons;
 
     public OrderItem(CartItem cartItem) {
         this(
                 null,
                 cartItem.getProduct(),
-                cartItem.getQuantity()
+                cartItem.getQuantity(),
+                cartItem.getCoupons()
         );
     }
 
     public OrderItem(Long id, Product orderedProduct, int quantity) {
+        this(id, orderedProduct, quantity, Collections.emptyList());
+    }
+
+    public OrderItem(Long id, Product orderedProduct, int quantity, List<MemberCoupon> memberCoupons) {
         this.id = id;
         this.orderedProduct = orderedProduct;
         this.quantity = quantity;
+        this.memberCoupons = new ArrayList<>(memberCoupons);
     }
 
     public Long getId() {
@@ -35,7 +45,15 @@ public class OrderItem {
     }
 
     public Money getTotal() {
-        return orderedProduct.getPrice().multiply(quantity);
+        Money price = orderedProduct.getPrice().multiply(quantity);
+        for (MemberCoupon memberCoupon : memberCoupons) {
+            price = memberCoupon.getDiscounted(price);
+        }
+        return price;
+    }
+
+    public List<MemberCoupon> getUsedCoupons() {
+        return memberCoupons;
     }
 
     @Override

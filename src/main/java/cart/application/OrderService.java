@@ -13,6 +13,7 @@ import cart.dao.dto.OrderDto;
 import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.dto.OrderRequest;
 
@@ -24,25 +25,30 @@ public class OrderService {
     private final OrderItemDao orderItemDao;
     private final OrderDao orderDao;
     private final MemberService memberService;
+    private final CouponService couponService;
 
     public OrderService(CartService cartService, CartItemService cartItemService, OrderItemDao orderItemDao,
-            OrderDao orderDao, MemberService memberService) {
+            OrderDao orderDao, MemberService memberService, CouponService couponService) {
         this.cartService = cartService;
         this.cartItemService = cartItemService;
         this.orderItemDao = orderItemDao;
         this.orderDao = orderDao;
         this.memberService = memberService;
+        this.couponService = couponService;
     }
 
     @Transactional
     public void order(Member member, List<OrderRequest> requests) {
         Cart cart = cartService.getCartOf(member);
+
         List<CartItem> itemsToOrder = new ArrayList<>();
         for (OrderRequest request : requests) {
             CartItem item = cartItemService.getItemBy(request.getCartItemId());
+            List<MemberCoupon> coupons = couponService.getMemberCouponsBy(member, request.getCouponIds());
+            cart.applyCouponsOn(item, coupons);
+
             itemsToOrder.add(item);
         }
-
         Order order = cart.order(itemsToOrder);
 
         save(order);
