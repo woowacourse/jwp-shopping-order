@@ -1,73 +1,68 @@
 package cart.dao;
 
-import cart.domain.Product;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import cart.entity.ProductEntity;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcTemplate;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcTemplate = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("name", "price", "image_url");
     }
 
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        try {
+            return jdbcTemplate.getJdbcTemplate().query(sql, productMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
     }
 
-    public Product findById(Long productId) {
+    public Optional<ProductEntity> findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                new Product(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        rs.getString("image_url")
-                ),
-                productId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.getJdbcTemplate().queryForObject(sql, productMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public Long create(Product product) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    public Long create(ProductEntity productEntity) {
+        return jdbcTemplate.executeAndReturnKey(new BeanPropertySqlParameterSource(productEntity)).longValue();
     }
 
-    public void update(Long productId, Product product) {
+    public void update(Long productId, ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.getJdbcTemplate()
+                .update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productId);
     }
 
     public void deleteById(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        jdbcTemplate.getJdbcTemplate().update(sql, productId);
+    }
+
+    private static RowMapper<ProductEntity> productMapper() {
+        return (rs, rowNum) ->
+                new ProductEntity(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("image_url")
+                );
     }
 }

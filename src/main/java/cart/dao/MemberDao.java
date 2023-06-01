@@ -1,9 +1,9 @@
 package cart.dao;
 
-import cart.domain.Member;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import cart.entity.MemberEntity;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,43 +17,45 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Member findById(Long id) {
+    public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
-    } // TODO: 2023/05/30 optional로 수정해보기
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    sql,
+                    memberMapper(),
+                    id
+            ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
 
-    public Member findByEmail(String email) {
+    public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberMapper(), email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public void create(Member member) {
-        String sql = "INSERT INTO member (email, password, point) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint());
+    public List<MemberEntity> findAll() {
+        String sql = "SELECT * from member";
+        return jdbcTemplate.query(sql, memberMapper());
     }
 
-    public void update(Member member) {
+    public void update(MemberEntity member) {
         String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint(), member.getId());
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    public List<Member> findAll() {
-        String sql = "SELECT * from member";
-        return jdbcTemplate.query(sql, new MemberRowMapper());
-    }
-
-    private static class MemberRowMapper implements RowMapper<Member> {
-        @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"), rs.getInt("point"));
-        }
+    private static RowMapper<MemberEntity> memberMapper() {
+        return (rs, rowNum) -> new MemberEntity(
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getInt("point")
+        );
     }
 }
 

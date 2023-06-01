@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.entity.MemberEntity;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,7 @@ public class PointIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("멤버가 가진 포인트를 조회한다.")
     void findPointOfMember() {
-        Member member = memberDao.findByEmail("yis092521@gmail.com");
+        MemberEntity member = memberDao.findByEmail("yis092521@gmail.com").get();
         final ExtractableResponse<Response> response = findPointOfMember(member);
 
         assertAll(
@@ -32,7 +33,7 @@ public class PointIntegrationTest extends IntegrationTest {
 
     }
 
-    private static ExtractableResponse<Response> findPointOfMember(final Member member) {
+    private static ExtractableResponse<Response> findPointOfMember(final MemberEntity member) {
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())

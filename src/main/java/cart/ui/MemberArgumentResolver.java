@@ -2,7 +2,9 @@ package cart.ui;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.entity.MemberEntity;
 import cart.exception.AuthenticationException;
+import cart.exception.ResourceNotFoundException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -43,8 +45,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String email = credentials[0];
         String password = credentials[1];
 
-        // 본인 여부 확인
-        Member member = memberDao.findByEmail(email);
+        Member member = MemberEntity.toDomain(memberDao.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("해당하는 이메일을 가진 사용자가 없습니다.")));
         if (!member.checkPassword(password)) {
             throw new AuthenticationException("비밀번호가 잘못되었습니다.");
         }

@@ -7,6 +7,9 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.entity.CartItemEntity;
+import cart.entity.ProductEntity;
+import cart.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -23,18 +26,28 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+
+        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId())
+                .stream()
+                .map(CartItemEntity::toDomain)
+                .collect(Collectors.toUnmodifiableList());
+
         return cartItems.stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.findById(cartItemRequest.getProductId())));
+    public Long create(Member member, CartItemRequest cartItemRequest) {
+        final ProductEntity productEntity = productDao.findById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new ResourceNotFoundException("해당하는 상품이 없습니다."));
+        final CartItem cartItem = new CartItem(member, ProductEntity.toDomain(productEntity));
+        return cartItemDao.create(CartItemEntity.from(cartItem));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItemEntity cartItemEntity = cartItemDao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("해당하는 장바구니 아이템이 없습니다."));
+        final CartItem cartItem = CartItemEntity.toDomain(cartItemEntity);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -43,13 +56,14 @@ public class CartItemService {
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemDao.updateQuantity(CartItemEntity.from(cartItem));
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItemEntity cartItemEntity = cartItemDao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("해당하는 장바구니 아이템이 없습니다."));
+        final CartItem cartItem = CartItemEntity.toDomain(cartItemEntity);
         cartItem.checkOwner(member);
-
         cartItemDao.deleteById(id);
     }
 }

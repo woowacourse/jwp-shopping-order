@@ -7,13 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Point;
-import cart.domain.Product;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderItemResponse;
+import cart.entity.CartItemEntity;
+import cart.entity.MemberEntity;
+import cart.entity.ProductEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
@@ -47,15 +48,15 @@ public class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
-        member = memberDao.findByEmail("yis092521@gmail.com");
+        member = MemberEntity.toDomain(memberDao.findByEmail("yis092521@gmail.com").get());
     }
 
     @Test
     @DisplayName("주문 정보를 저장, 조회한다.")
     void createOrder() throws JsonProcessingException {
-        final List<Product> products = productDao.findAll();
+        final List<ProductEntity> products = productDao.findAll();
         final List<Long> cartItemIds = products.stream()
-                .map(product -> cartItemDao.save(new CartItem(member, product)))
+                .map(product -> cartItemDao.create(new CartItemEntity(member.getId(), product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
         final OrderCreateRequest request = new OrderCreateRequest(
@@ -83,19 +84,20 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("사용자의 전체 주문 정보를 불러온다.")
+    @DisplayName("사용자의 전체 주문 정보를 조회한다.")
     void findOrders() throws JsonProcessingException {
-        final List<Product> products = productDao.findAll();
+        final List<ProductEntity> products = productDao.findAll();
+
         final List<Long> cartItemIds = products.stream()
-                .map(product -> cartItemDao.save(new CartItem(member, product)))
+                .map(product -> cartItemDao.create(new CartItemEntity(member.getId(), product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
-        final List<Product> productsWithoutPizza = products.stream()
+        final List<ProductEntity> productsWithoutPizza = products.stream()
                 .filter(product -> !(product.getName().equals("피자")))
                 .collect(Collectors.toUnmodifiableList());
 
         final List<Long> cartItemsForAnotherOrder = productsWithoutPizza.stream()
-                .map(product -> cartItemDao.save(new CartItem(member, product)))
+                .map(product -> cartItemDao.create(new CartItemEntity(member.getId(), product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
         final OrderCreateRequest request = new OrderCreateRequest(
@@ -165,10 +167,10 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private int calculateExpectedPoint(final List<Product> products) {
+    private int calculateExpectedPoint(final List<ProductEntity> products) {
         return Point.fromPayment(
                 products.stream()
-                        .mapToInt(Product::getPrice)
+                        .mapToInt(ProductEntity::getPrice)
                         .sum()
         ).getValue();
     }

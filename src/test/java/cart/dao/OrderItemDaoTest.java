@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
+import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,8 +40,8 @@ class OrderItemDaoTest {
     @DisplayName("주문 상품 정보를 저장한다.")
     void create() {
         //given
-        final List<Product> products = productDao.findAll();
-        final Member member = memberDao.findByEmail("kangsj9665@gmail.com");
+        final List<ProductEntity> products = productDao.findAll();
+        final Member member = MemberEntity.toDomain(memberDao.findByEmail("kangsj9665@gmail.com").get());
         final Long orderId = orderDao.create(OrderEntity.toCreate(member.getId(), 300, 400));
         final List<OrderItemEntity> orderItemEntities = products.stream()
                 .map(product -> OrderItemEntity.toCreate(
@@ -58,7 +60,7 @@ class OrderItemDaoTest {
         //then
         final List<OrderItemEntity> savedOrderEntities = orderItemDao.findByOrderId(orderId);
         final Long[] productIds = products.stream()
-                .map(Product::getId)
+                .map(ProductEntity::getId)
                 .toArray(Long[]::new);
 
         assertThat(savedOrderEntities).extracting(OrderItemEntity::getProductId)

@@ -4,6 +4,8 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.entity.ProductEntity;
+import cart.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -18,27 +20,33 @@ public class ProductService {
     }
 
     public List<ProductResponse> findAllProducts() {
-        List<Product> products = productDao.findAll();
+        final List<Product> products = productDao.findAll().stream()
+                .map(ProductEntity::toDomain)
+                .collect(Collectors.toUnmodifiableList());
         return products.stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public ProductResponse findProductById(Long productId) {
-        Product product = productDao.findById(productId);
+        Product product = ProductEntity.toDomain(productDao.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("아이디에 해당하는 상품이 없습니다.")));
         return ProductResponse.of(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl());
-        return productDao.create(product);
+        return productDao.create(ProductEntity.from(product));
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-                productRequest.getImageUrl());
-        productDao.update(productId, product);
+        ProductEntity productEntity = new ProductEntity(
+                productRequest.getName(),
+                productRequest.getPrice(),
+                productRequest.getImageUrl()
+        );
+        productDao.update(productId, productEntity);
     }
 
     public void deleteProduct(Long productId) {

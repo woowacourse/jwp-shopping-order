@@ -14,6 +14,8 @@ import cart.dto.OrderCreateRequest;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderItemResponse;
 import cart.dto.ProductResponse;
+import cart.entity.CartItemEntity;
+import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.exception.IllegalMemberException;
@@ -48,6 +50,7 @@ public class OrderService {
     public Long createOrder(final Member member, final OrderCreateRequest orderCreateRequest) {
         final List<Long> cartItemIds = orderCreateRequest.getCartItemIds();
         final List<CartItem> cartItemsToOrder = findCartItemsById(cartItemIds);
+        validateOwner(member, cartItemsToOrder);
         final int usingPoint = orderCreateRequest.getPoint();
         final CreditCard creditCard = new CreditCard(
                 orderCreateRequest.getCardNumber(),
@@ -59,7 +62,7 @@ public class OrderService {
         creditCard.payWithPoint(totalPrice, usingPoint);
         final Point savingPoint = Point.fromPayment(totalPrice);
         member.addPoint(savingPoint);
-        memberDao.update(member);
+        memberDao.update(MemberEntity.from(member));
 
         final Long orderId = orderDao.create(OrderEntity.toCreate(member.getId(), usingPoint, savingPoint.getValue()));
         createOrderItems(cartItemsToOrder, orderId);
@@ -68,10 +71,16 @@ public class OrderService {
         return orderId;
     }
 
+    private void validateOwner(final Member member, final List<CartItem> cartItemsToOrder) {
+        cartItemsToOrder.forEach(cartItem -> cartItem.checkOwner(member));
+    }
+
     private List<CartItem> findCartItemsById(final List<Long> cartItemIds) {
         return cartItemIds
                 .stream()
-                .map(cartItemDao::findById)
+                .map(cartItemId -> cartItemDao.findById(cartItemId)
+                        .orElseThrow(() -> new ResourceNotFoundException("해당하는 장바구니 아이템이 없습니다.")))
+                .map(CartItemEntity::toDomain)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -125,8 +134,9 @@ public class OrderService {
     }
 
     private void validateOwner(final Member member, final OrderEntity orderEntity) {
-        final Member orderedMember = memberDao.findById(orderEntity.getMemberId());
-        if (member.equals(orderedMember)) {
+        final MemberEntity orderedMember = memberDao.findById(orderEntity.getMemberId())
+                .orElseThrow(() -> new ResourceNotFoundException("주문 정보와 일치하는 사용자 정보가 없습니다."));
+        if (member.getId().equals(orderedMember.getId())) {
             return;
         }
         throw new IllegalMemberException("주문자와 로그인한 사용자의 정보가 일치하지 않습니다.");

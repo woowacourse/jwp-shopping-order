@@ -1,7 +1,6 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
@@ -29,7 +28,7 @@ public class CartItemApiController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+        Long cartItemId = cartItemService.create(member, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }

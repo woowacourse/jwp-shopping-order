@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Member;
+import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +32,7 @@ class OrderDaoTest {
     @DisplayName("주문 정보를 저장한다.")
     void create() {
         //given
-        final Member member = memberDao.findByEmail("kangsj9665@gmail.com");
+        final Member member = MemberEntity.toDomain(memberDao.findByEmail("kangsj9665@gmail.com").get());
         final OrderEntity orderEntity = OrderEntity.toCreate(member.getId(), 300, 400);
 
         //when
