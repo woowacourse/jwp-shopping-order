@@ -1,11 +1,31 @@
 package cart.ui;
 
+import static cart.ui.RestDocsConfiguration.field;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import cart.WebMvcConfig;
 import cart.application.ProductService;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +44,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
-import java.util.List;
-
-import static cart.ui.RestDocsConfiguration.field;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(
         controllers = ProductApiController.class,
@@ -77,7 +81,7 @@ class ProductApiControllerTest {
     @Test
     void getAllProducts() throws Exception {
         final ProductResponse response = ProductResponse.of(new Product(1L, "A", 1000, "http://image.com"));
-        given(productService.getAllProducts()).willReturn(List.of(response));
+        given(productService.findAll()).willReturn(List.of(response));
 
         mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
@@ -97,7 +101,7 @@ class ProductApiControllerTest {
     void getProductById() throws Exception {
         final Product product = new Product(1L, "A", 1000, "http://image.com");
         final ProductResponse response = ProductResponse.of(product);
-        given(productService.getProductById(anyLong())).willReturn(response);
+        given(productService.findById(anyLong())).willReturn(response);
 
         mockMvc.perform(get("/products/{id}", product.getId()))
                 .andExpect(status().isOk())
@@ -119,7 +123,7 @@ class ProductApiControllerTest {
     @Test
     void createProduct() throws Exception {
         final ProductRequest request = new ProductRequest("A", 1000, "http://image.com");
-        given(productService.createProduct(any(ProductRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductRequest.class))).willReturn(1L);
 
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -142,7 +146,7 @@ class ProductApiControllerTest {
     @Test
     void updateProduct() throws Exception {
         final ProductRequest request = new ProductRequest("A", 1000, "http://image.com");
-        willDoNothing().given(productService).updateProduct(anyLong(), any(ProductRequest.class));
+        willDoNothing().given(productService).update(anyLong(), any(ProductRequest.class));
 
         mockMvc.perform(put("/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -164,7 +168,7 @@ class ProductApiControllerTest {
 
     @Test
     void deleteProduct() throws Exception {
-        willDoNothing().given(productService).deleteProduct(anyLong());
+        willDoNothing().given(productService).deleteById(anyLong());
 
         mockMvc.perform(delete("/products/{id}", 1L))
                 .andExpect(status().isNoContent())
