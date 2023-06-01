@@ -6,6 +6,7 @@ import cart.domain.coupon.MemberCoupon;
 import cart.persistence.dao.MemberCouponDao;
 import cart.persistence.dto.MemberCouponDetailDTO;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -24,5 +25,19 @@ public class MemberCouponJdbcRepository implements MemberCouponRepository {
         return memberCouponDetails.stream()
                 .map(MemberCouponDetailDTO::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<MemberCoupon> findById(final long id) {
+        Optional<MemberCouponDetailDTO> optionalMemberCoupon = memberCouponDao.findById(id);
+        if (optionalMemberCoupon.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(optionalMemberCoupon.get().toDomain());
+    }
+
+    @Override
+    public void use(final MemberCoupon memberCoupon) {
+        memberCouponDao.changeCouponStatus(memberCoupon.getId(), true);
     }
 }

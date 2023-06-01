@@ -51,4 +51,9 @@ public class MemberCouponDao {
                 + "AND expired_at > CURRENT_TIMESTAMP ";
         return jdbcTemplate.query(sql, RowMapperHelper.memberCouponDetailRowMapper(), memberId);
     }
+
+    public void changeCouponStatus(final long id, final boolean isUsed) {
+        String sql = "UPDATE member_coupon SET is_used = ? WHERE id = ?";
+        jdbcTemplate.update(sql, isUsed, id);
+    }
 }
