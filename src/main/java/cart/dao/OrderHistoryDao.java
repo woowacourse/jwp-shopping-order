@@ -18,9 +18,9 @@ public class OrderHistoryDao {
     private static final RowMapper<OrderHistoryEntity> ORDER_HISTORY_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new OrderHistoryEntity(
             resultSet.getLong("id"),
             resultSet.getLong("member_id"),
-            resultSet.getInt("total_price"),
+            resultSet.getInt("original_price"),
             resultSet.getInt("used_point"),
-            resultSet.getInt("order_price")
+            resultSet.getInt("total_price")
     );
     private final SimpleJdbcInsert insertOrderHistory;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;

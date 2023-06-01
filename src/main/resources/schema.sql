@@ -28,9 +28,9 @@ CREATE TABLE order_history
 (
     id          BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id   BIGINT NOT NULL,
-    total_price INT    NOT NULL,
+    original_price INT    NOT NULL,
     used_point  INT    NOT NULL,
-    order_price INT    NOT NULL,
+    total_price INT    NOT NULL,
 
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
