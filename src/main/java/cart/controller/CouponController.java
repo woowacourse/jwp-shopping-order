@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/coupon")
+@RequestMapping("/coupons")
 public class CouponController {
 
     private final CouponService couponService;
@@ -29,7 +29,7 @@ public class CouponController {
 
     @GetMapping("/discount")
     public ResponseEntity<DiscountPriceResponse> discountPriceCoupon(final Member member,
-                                                                     @RequestParam(value = "total-price") final Integer originPrice,
+                                                                     @RequestParam(value = "origin-price") final Integer originPrice,
                                                                      @RequestParam(value = "coupon-id") final Long memberCouponId) {
         final DiscountPriceResponse discount = couponService.discount(member, originPrice, memberCouponId);
         return ResponseEntity.ok(discount);

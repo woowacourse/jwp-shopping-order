@@ -10,10 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/order")
+@RequestMapping("/orders")
 @RestController
 public class OrderController {
 
@@ -36,8 +37,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponseDto> order(final Member member, final OrderRequestDto requestDto) {
+    public ResponseEntity<OrderResponseDto> order(final Member member, @RequestBody final OrderRequestDto requestDto) {
         final Long orderId = orderService.order(member, requestDto);
-        return ResponseEntity.created(URI.create("/order/" + orderId)).build();
+        return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 }

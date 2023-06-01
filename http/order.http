@@ -1,5 +1,5 @@
 ### 주문내역 상세 조회
-GET http://localhost:8080/order/1
+GET http://localhost:8080/orders/1
 Accept: application/json
 
 ### response
@@ -26,7 +26,7 @@ content-type: application/json
 }
 
 ### 전체 주문내역 조회하기
-GET http://localhost:8080/order
+GET http://localhost:8080/orders
 Accept: application/json
 
 ### response
@@ -73,7 +73,7 @@ Content-type: application/json
 ]
 
 ### 주문하기 - 쿠폰적용 하는 경우
-POST http://localhost:8080/order
+POST http://localhost:8080/orders
 Accept: application/json
 Content-Type: application/json
 
@@ -109,7 +109,7 @@ Content-Type: application/json
 }
 
 ### 주문하기 - 쿠폰적용 하지 않는 경우
-POST http://localhost:8080/order
+POST http://localhost:8080/orders
 Accept: application/json
 Content-Type: application/json
 
