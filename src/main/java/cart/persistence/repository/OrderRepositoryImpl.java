@@ -1,16 +1,12 @@
 package cart.persistence.repository;
 
-import static cart.persistence.mapper.CartMapper.convertCartItems;
-import static cart.persistence.mapper.CouponMapper.convertCouponWithId;
-import static cart.persistence.mapper.MemberMapper.convertMemberWithId;
 import static cart.persistence.mapper.OrderMapper.convertOrderEntity;
 import static cart.persistence.mapper.OrderMapper.convertOrderProductEntities;
+import static cart.persistence.mapper.OrderMapper.convertOrderWithId;
 
 import cart.domain.cartitem.CartItemWithId;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.dto.MemberWithId;
-import cart.domain.order.BasicOrder;
-import cart.domain.order.CouponOrder;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.domain.order.OrderWithId;
@@ -23,7 +19,10 @@ import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.OrderCouponEntity;
 import cart.persistence.entity.OrderEntity;
 import cart.persistence.entity.OrderProductEntity;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -68,19 +67,21 @@ public class OrderRepositoryImpl implements OrderRepository {
         if (orderDto.size() == 0) {
             throw new NotFoundException(ErrorCode.ORDER_NOT_FOUND);
         }
+        return convertOrderWithId(orderDto);
+    }
 
-        final OrderDto order = orderDto.get(0);
-        final MemberWithId member = convertMemberWithId(order);
-        final List<CartItemWithId> cartItems = convertCartItems(orderDto);
+    @Override
+    public List<OrderWithId> findByMemberName(final String memberName) {
+        final List<OrderDto> orderDto = orderDao.findByMemberName(memberName);
+        final Map<Long, List<OrderDto>> ordersById = orderDto.stream()
+            .collect(Collectors.groupingBy(OrderDto::getOrderId));
 
-        if (order.getCouponId() == 0) {
-            final Order basicOrder = new BasicOrder(member, order.getDeliveryPrice(), order.getOrderedAt(), cartItems);
-            return new OrderWithId(order.getOrderId(), basicOrder);
+        final List<OrderWithId> orderWithIds = new ArrayList<>();
+        for (final Long orderId : ordersById.keySet()) {
+            final List<OrderDto> detailOrder = ordersById.get(orderId);
+            orderWithIds.add(convertOrderWithId(detailOrder));
         }
-        final CouponWithId coupon = convertCouponWithId(order);
-        final Order couponOrder = new CouponOrder(member, coupon, order.getDeliveryPrice(),
-            order.getOrderedAt(), cartItems);
-        return new OrderWithId(order.getOrderId(), couponOrder);
+        return orderWithIds;
     }
 
     private Long saveOrder(final Order order) {

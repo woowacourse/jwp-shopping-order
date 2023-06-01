@@ -199,12 +199,13 @@ public class CartIntegrationTest extends IntegrationTest {
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
         final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
+        final MemberLoginRequest 라온_로그인_요청 = new MemberLoginRequest(라온_등록_요청.getName(), 라온_등록_요청.getPassword());
 
         // expected
         final CartItemQuantityUpdateRequest 장바구니_수량_수정_요청 = new CartItemQuantityUpdateRequest(10);
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().preemptive().basic(라온_등록_요청.getName(), 라온_등록_요청.getPassword())
+            .auth().preemptive().basic(라온_로그인_요청.getName(), 라온_로그인_요청.getPassword())
             .when()
             .body(장바구니_수량_수정_요청)
             .patch("/cart-items/{cartItemId}", 1)
@@ -259,11 +260,12 @@ public class CartIntegrationTest extends IntegrationTest {
         final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest(져니_등록_요청.getName(), 져니_등록_요청.getPassword());
         final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         장바구니_상품_저장(져니_로그인_요청, 치킨_장바구니_저장_요청);
+        final MemberLoginRequest 라온_로그인_요청 = new MemberLoginRequest(라온_등록_요청.getName(), 라온_등록_요청.getPassword());
 
         // expected
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .auth().preemptive().basic(라온_등록_요청.getName(), 라온_등록_요청.getPassword())
+            .auth().preemptive().basic(라온_로그인_요청.getName(), 라온_로그인_요청.getPassword())
             .when()
             .delete("/cart-items/{cartItemId}", 1)
             .then()

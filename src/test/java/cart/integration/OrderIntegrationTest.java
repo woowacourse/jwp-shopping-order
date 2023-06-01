@@ -2,6 +2,7 @@ package cart.integration;
 
 import static cart.exception.ErrorCode.COUPON_ALREADY_USED;
 import static cart.exception.ErrorCode.COUPON_EXPIRED;
+import static cart.exception.ErrorCode.FORBIDDEN;
 import static cart.exception.ErrorCode.ORDER_INVALID_PRODUCTS;
 import static cart.exception.ErrorCode.ORDER_QUANTITY_EXCEED;
 import static io.restassured.RestAssured.given;
@@ -336,6 +337,95 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
     }
 
+    @Test
+    @DisplayName("특정 주문 정보가 요청받은 사용자의 소유가 아니라면 예외가 발생한다.")
+    void getOrderById_forbidden() {
+        // given
+        쿠폰을_저장한다();
+        상품을_저장한다();
+        사용자를_저장한다();
+        final MemberJoinRequest 라온_등록_요청 = new MemberJoinRequest("raon", "jourzura2");
+        사용자_저장(라온_등록_요청);
+
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        장바구니에_상품을_추가한다(져니_로그인_요청);
+        쿠폰과_함께_상품을_주문한다(져니_로그인_요청);
+        final MemberLoginRequest 라온_로그인_요청 = new MemberLoginRequest(라온_등록_요청.getName(), 라온_등록_요청.getPassword());
+
+        // expected
+        given()
+            .auth().preemptive().basic(라온_로그인_요청.getName(), 라온_로그인_요청.getPassword())
+            .when()
+            .get("/orders/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.FORBIDDEN.value())
+            .body("errorCode", equalTo(FORBIDDEN.name()))
+            .body("errorMessage", equalTo("권한이 없습니다."));
+    }
+
+    @Test
+    @DisplayName("사용자의 전체 주문 정보를 조회한다.")
+    void getOrders() {
+        // given
+        쿠폰을_저장한다();
+        상품을_저장한다();
+        사용자를_저장한다();
+
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        장바구니에_상품을_추가한다(져니_로그인_요청);
+        쿠폰과_함께_상품을_주문한다(져니_로그인_요청);
+
+        장바구니에_상품을_추가한다(져니_로그인_요청);
+        쿠폰없이_상품을_주문한다(져니_로그인_요청);
+
+        // expected
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/orders")
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.OK.value())
+            /** 첫 번째 주문 검증 */
+            .body("[0].orderId", equalTo(1))
+            .body("[0].totalPrice", equalTo(175_000))
+            .body("[0].discountedTotalPrice", equalTo(140_000))
+            .body("[0].couponDiscountPrice", equalTo(35_000))
+            .body("[0].deliveryPrice", equalTo(3_000))
+            .body("[0].coupon.id", equalTo(1))
+            .body("[0].coupon.name", equalTo("신규 가입 축하 쿠폰"))
+            .body("[0].coupon.discountRate", equalTo(20))
+            .body("[0].items[0].quantity", equalTo(10))
+            .body("[0].items[0].product.id", equalTo(1))
+            .body("[0].items[0].product.name", equalTo("치킨"))
+            .body("[0].items[0].product.price", equalTo(10_000))
+            .body("[0].items[0].product.imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("[0].items[1].quantity", equalTo(5))
+            .body("[0].items[1].product.id", equalTo(2))
+            .body("[0].items[1].product.name", equalTo("피자"))
+            .body("[0].items[1].product.price", equalTo(15_000))
+            .body("[1].items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"))
+            /** 두 번째 주문 검증 */
+            .body("[1].orderId", equalTo(2))
+            .body("[1].totalPrice", equalTo(175_000))
+            .body("[1].discountedTotalPrice", equalTo(175_000))
+            .body("[1].couponDiscountPrice", equalTo(0))
+            .body("[1].deliveryPrice", equalTo(3_000))
+            .body("[1].coupon.id", equalTo(null))
+            .body("[1].coupon.name", equalTo(null))
+            .body("[1].coupon.discountRate", equalTo(null))
+            .body("[1].items[0].quantity", equalTo(10))
+            .body("[1].items[0].product.id", equalTo(1))
+            .body("[1].items[0].product.name", equalTo("치킨"))
+            .body("[1].items[0].product.price", equalTo(10_000))
+            .body("[1].items[0].product.imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("[1].items[1].quantity", equalTo(5))
+            .body("[1].items[1].product.id", equalTo(2))
+            .body("[1].items[1].product.name", equalTo("피자"))
+            .body("[1].items[1].product.price", equalTo(15_000))
+            .body("[1].items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+    }
+
     private void 장바구니에_상품을_추가한다(final MemberLoginRequest 져니_로그인_요청) {
         final CartRequest 치킨_장바구니_저장_요청 = new CartRequest(1L);
         final CartRequest 피자_장바구니_저장_요청 = new CartRequest(2L);
@@ -389,6 +479,14 @@ public class OrderIntegrationTest extends IntegrationTest {
             new OrderProductRequest(1L, 10),
             new OrderProductRequest(2L, 5));
         final OrderRequest 주문_요청 = new OrderRequest(1L, 주문할_상품들);
+        주문_저장(져니_로그인_요청, 주문_요청);
+    }
+
+    private void 쿠폰없이_상품을_주문한다(final MemberLoginRequest 져니_로그인_요청) {
+        final List<OrderProductRequest> 주문할_상품들 = List.of(
+            new OrderProductRequest(1L, 10),
+            new OrderProductRequest(2L, 5));
+        final OrderRequest 주문_요청 = new OrderRequest(null, 주문할_상품들);
         주문_저장(져니_로그인_요청, 주문_요청);
     }
 }

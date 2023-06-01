@@ -79,4 +79,22 @@ public class OrderDao {
             + "WHERE o.id = ?";
         return jdbcTemplate.query(sql, orderDtoRowMapper, id);
     }
+
+    public List<OrderDto> findByMemberName(final String memberName) {
+        final String sql = "SELECT m.id AS memberId, m.name AS memberName, m.password AS memberPassword, "
+            + "o.id AS orderId, o.total_price AS totalPrice, o.discounted_total_price AS discountedTotalPrice, "
+            + "o.delivery_price AS deliveryPrice, o.ordered_at AS orderedAt, "
+            + "c.id AS couponId, c.name AS couponName, c.discount_rate AS couponDiscountRate, "
+            + "c.period AS couponPeriod, c.expired_at AS couponExpiredAt, "
+            + "op.ordered_product_price AS orderedProductPrice, op.quantity as orderQuantity, "
+            + "p.id AS productId, p.name AS productName, p.image_url AS productImageUrl "
+            + "FROM `order` o "
+            + "LEFT JOIN member m on o.member_id = m.id "
+            + "LEFT JOIN order_coupon oc on o.id = oc.order_id "
+            + "LEFT JOIN coupon c on c.id = oc.coupon_id "
+            + "LEFT JOIN order_product op on o.id = op.order_id "
+            + "LEFT JOIN product p on op.product_id = p.id "
+            + "WHERE m.name = ?";
+        return jdbcTemplate.query(sql, orderDtoRowMapper, memberName);
+    }
 }

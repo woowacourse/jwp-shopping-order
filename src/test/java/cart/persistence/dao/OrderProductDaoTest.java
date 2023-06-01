@@ -27,8 +27,6 @@ class OrderProductDaoTest extends DaoTestHelper {
         final Long 저장된_치킨_아이디 = 치킨_저장();
         final Long 저장된_피자_아이디 = 피자_저장();
         final Long 저장된_져니_아이디 = 져니_저장();
-        final Long 저장된_신규_가입_축하_쿠폰_아이디 = 신규_가입_쿠폰_저장();
-        져니_쿠폰_저장(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
         final Long 저장된_주문_아이디 = 주문_저장(저장된_져니_아이디);
 
         final List<OrderProductEntity> 주문_상품_엔티티들 = List.of(

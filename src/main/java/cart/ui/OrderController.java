@@ -5,6 +5,7 @@ import cart.application.dto.order.OrderRequest;
 import cart.application.dto.order.OrderResponse;
 import cart.common.auth.MemberName;
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,5 +36,11 @@ public class OrderController {
                                                   @PathVariable final Long id) {
         final OrderResponse orderResponse = orderService.getOrderById(memberName, id);
         return ResponseEntity.ok(orderResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getOrders(@MemberName final String memberName) {
+        final List<OrderResponse> orderResponses = orderService.getOrders(memberName);
+        return ResponseEntity.ok(orderResponses);
     }
 }

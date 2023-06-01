@@ -41,14 +41,20 @@ public class OrderMapper {
     public static OrderResponse convertOrderResponse(final OrderWithId orderWithId) {
         final Order order = orderWithId.getOrder();
         final List<OrderProductResponse> orderProductResponses = convertOrderProductResponses(order);
+
+        final Long orderId = orderWithId.getOrderId();
+        final Integer orderPrice = order.getTotalPrice();
+        final Integer discountedTotalPrice = order.getDiscountedTotalPrice();
+        final int couponDiscountPrice = orderPrice - discountedTotalPrice;
+        final Integer deliveryPrice = order.getDeliveryPrice();
+        final LocalDateTime orderedAt = order.getOrderedAt();
+
         if (order.getCoupon().isPresent()) {
             final CouponResponse couponResponse = convertCouponResponse(order.getCoupon().get());
-            return new OrderResponse(orderWithId.getOrderId(), order.getTotalPrice(), order.getDiscountedTotalPrice(),
-                order.getTotalPrice() - order.getDiscountedTotalPrice(),
-                order.getDeliveryPrice(), order.getOrderedAt(), couponResponse, orderProductResponses);
+            return new OrderResponse(orderId, orderPrice, discountedTotalPrice, couponDiscountPrice, deliveryPrice,
+                orderedAt, couponResponse, orderProductResponses);
         }
-        return new OrderResponse(orderWithId.getOrderId(), order.getTotalPrice(), order.getDiscountedTotalPrice(),
-            order.getTotalPrice() - order.getDiscountedTotalPrice(),
-            order.getDeliveryPrice(), order.getOrderedAt(), null, orderProductResponses);
+        return new OrderResponse(orderId, orderPrice, discountedTotalPrice, couponDiscountPrice, deliveryPrice,
+            orderedAt, null, orderProductResponses);
     }
 }

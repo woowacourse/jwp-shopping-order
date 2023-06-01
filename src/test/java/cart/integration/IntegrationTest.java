@@ -95,7 +95,6 @@ public class IntegrationTest {
             .body(주문_등록_요청)
             .post("/orders")
             .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .header(LOCATION, "/orders/" + 1);
+            .statusCode(HttpStatus.CREATED.value());
     }
 }

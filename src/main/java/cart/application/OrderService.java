@@ -7,6 +7,7 @@ import static cart.application.mapper.OrderMapper.convertOrderResponse;
 import cart.application.dto.order.OrderProductRequest;
 import cart.application.dto.order.OrderRequest;
 import cart.application.dto.order.OrderResponse;
+import cart.application.mapper.OrderMapper;
 import cart.domain.cartitem.Cart;
 import cart.domain.cartitem.CartItemWithId;
 import cart.domain.cartitem.CartRepository;
@@ -76,6 +77,13 @@ public class OrderService {
             throw new ForbiddenException(ErrorCode.FORBIDDEN);
         }
         return convertOrderResponse(orderWithId);
+    }
+
+    public List<OrderResponse> getOrders(final String memberName) {
+        final List<OrderWithId> ordersWithId = orderRepository.findByMemberName(memberName);
+        return ordersWithId.stream()
+            .map(OrderMapper::convertOrderResponse)
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private void validateOrderQuantity(final OrderRequest orderRequest) {
