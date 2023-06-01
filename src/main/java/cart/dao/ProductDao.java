@@ -1,72 +1,71 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
+import cart.exception.ProductNotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.sql.DataSource;
 import java.util.List;
-import java.util.Objects;
+
+import static cart.entity.RowMapperUtil.productEntityRowMapper;
 
 @Repository
 public class ProductDao {
 
+    private static final int SINGLE_AFFECTED_ROW_NUMBER = 1;
+
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertAction;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ProductDao(final DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.insertAction = new SimpleJdbcInsert(dataSource)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public List<ProductEntity> getAllProducts() {
-        String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new ProductEntity(productId, name, price, imageUrl);
-        });
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
-    public ProductEntity getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new ProductEntity(productId, name, price, imageUrl);
-        });
+    public ProductEntity findById(final long id) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ProductNotFoundException();
+        }
     }
 
-    public Long createProduct(ProductEntity productEntity) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setString(1, productEntity.getName());
-            ps.setInt(2, productEntity.getPrice());
-            ps.setString(3, productEntity.getImageUrl());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    public long insert(final ProductEntity source) {
+        final SqlParameterSource params = new BeanPropertySqlParameterSource(source);
+        return insertAction.executeAndReturnKey(params).longValue();
     }
 
-    public void updateProduct(Long productId, ProductEntity productEntity) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productId);
+    // TODO: 업데이트 사항이 없는 경우에 다른 예외로 처리 필요.
+    public void update(final ProductEntity productEntity) {
+        final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        final int affectedRowNumber = jdbcTemplate.update(sql,
+                productEntity.getName(), productEntity.getPrice(),
+                productEntity.getImageUrl(), productEntity.getId());
+        validateSingleAffectedRow(affectedRowNumber);
     }
 
-    public void deleteProduct(Long productId) {
+    public void deleteById(final long id) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        final int affectedRowNumber = jdbcTemplate.update(sql, id);
+        validateSingleAffectedRow(affectedRowNumber);
+    }
+
+    private void validateSingleAffectedRow(final int affectedRowNumber) {
+        if (affectedRowNumber != SINGLE_AFFECTED_ROW_NUMBER) {
+            throw new ProductNotFoundException();
+        }
     }
 }

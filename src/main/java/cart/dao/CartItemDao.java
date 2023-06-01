@@ -31,7 +31,7 @@ public class CartItemDao {
     }
 
     public List<CartItemDetailEntity> findByMemberId(final long memberId) {
-        final String sql = "SELECT id, member.id, member.email, product.id, product.name, product.price, product.image_url, quantity " +
+        final String sql = "SELECT cart_item.id, member.id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
@@ -64,7 +64,7 @@ public class CartItemDao {
     }
 
     public Long findMemberIdById(final long id) {
-        final String sql = "SELECT id FROM cart_item WHERE id = ?";
+        final String sql = "SELECT member_id FROM cart_item WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, Long.class, id);
         } catch (EmptyResultDataAccessException e) {

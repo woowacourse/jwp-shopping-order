@@ -2,8 +2,9 @@ package cart.service;
 
 import cart.controller.dto.request.ProductRequest;
 import cart.controller.dto.response.ProductResponse;
-import cart.dao.ProductDao;
-import cart.entity.ProductEntity;
+import cart.domain.Price;
+import cart.domain.Product;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,33 +13,37 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<ProductEntity> productEntities = productDao.getAllProducts();
-        return productEntities.stream().map(ProductResponse::of).collect(Collectors.toList());
+    public List<ProductResponse> findAll() {
+        final List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        ProductEntity productEntity = productDao.getProductById(productId);
-        return ProductResponse.of(productEntity);
+    public ProductResponse findById(final long id) {
+        final Product product = productRepository.findById(id);
+        return ProductResponse.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
-        ProductEntity productEntity = new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(productEntity);
+    public long save(final ProductRequest productRequest) {
+        final Product product = new Product(productRequest.getName(),
+                new Price(productRequest.getPrice()), productRequest.getImageUrl());
+        return productRepository.save(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
-        ProductEntity productEntity = new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        productDao.updateProduct(productId, productEntity);
+    public void update(final long id, final ProductRequest productRequest) {
+        final Product product = new Product(productRequest.getName(),
+                new Price(productRequest.getPrice()), productRequest.getImageUrl());
+        productRepository.update(product);
     }
 
-    public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+    public void delete(final long id) {
+        productRepository.delete(id);
     }
 }

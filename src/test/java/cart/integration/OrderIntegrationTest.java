@@ -2,15 +2,13 @@ package cart.integration;
 
 import cart.controller.dto.request.OrderRequest;
 import cart.controller.dto.request.ProductRequest;
-import cart.domain.Member;
-import cart.repository.MemberRepository;
+import cart.integration.common.AuthInfo;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -23,16 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisplayName("주문 통합 테스트")
 public class OrderIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    private Member member;
+    private final AuthInfo member = new AuthInfo("a@a.com", "1234");
     private Long productId1;
     private Long productId2;
 
     @BeforeEach
     void setUp() {
-        member = memberRepository.findById(1L);
         productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
     }

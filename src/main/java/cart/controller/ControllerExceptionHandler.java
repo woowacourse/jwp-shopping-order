@@ -1,7 +1,8 @@
 package cart.controller;
 
-import cart.exception.CartItemException;
+import cart.exception.AuthorizationException;
 import cart.exception.MemberNotFoundException;
+import cart.exception.NotOwnerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,14 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(MemberNotFoundException e) {
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<Void> handlerAuthorization(AuthorizationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
+    @ExceptionHandler(NotOwnerException.class)
+    public ResponseEntity<Void> handleNotOwner(NotOwnerException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-
 }

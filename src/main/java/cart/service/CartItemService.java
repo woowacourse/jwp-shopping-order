@@ -3,13 +3,8 @@ package cart.service;
 import cart.controller.dto.request.CartItemQuantityUpdateRequest;
 import cart.controller.dto.request.CartItemRequest;
 import cart.controller.dto.response.CartItemResponse;
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.entity.CartItemDetailEntity;
-import cart.entity.CartItemEntity;
-import cart.exception.CartItemException;
 import cart.exception.NotOwnerException;
 import cart.repository.CartItemRepository;
 import org.springframework.stereotype.Service;
@@ -21,6 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class CartItemService {
 
+    private static final int CART_ITEM_REMOVABLE_QUANTITY = 0;
     private static final int CART_ITEM_INITIAL_QUANTITY = 1;
 
     private final CartItemRepository cartItemRepository;
@@ -41,12 +37,15 @@ public class CartItemService {
         return cartItemRepository.save(member, cartItemRequest.getProductId(), CART_ITEM_INITIAL_QUANTITY);
     }
 
-    public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(final Member member, final long id, final CartItemQuantityUpdateRequest request) {
         checkOwner(member, id);
         cartItemRepository.updateQuantity(id, request.getQuantity());
+        if (request.getQuantity() == CART_ITEM_REMOVABLE_QUANTITY) {
+            cartItemRepository.delete(id);
+        }
     }
 
-    public void remove(Member member, Long id) {
+    public void remove(Member member, long id) {
         checkOwner(member, id);
         cartItemRepository.delete(id);
     }

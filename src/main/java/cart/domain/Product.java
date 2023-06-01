@@ -14,6 +14,10 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public Product(final String name, final Price price, final String imageUrl) {
+        this(null, name, price, imageUrl);
+    }
+
     public Long getId() {
         return id;
     }

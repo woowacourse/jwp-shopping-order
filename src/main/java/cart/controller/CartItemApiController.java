@@ -48,7 +48,7 @@ public class CartItemApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(@Auth final Member member, @PathVariable final Long id) {
+    public ResponseEntity<Void> remove(@Auth final Member member, @PathVariable final Long id) {
         cartItemService.remove(member, id);
         return ResponseEntity.noContent().build();
     }
