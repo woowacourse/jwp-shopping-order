@@ -62,6 +62,7 @@ public class OrderService {
         for (OrderCartItemDto orderCartItemDto : orderCartItemDtos) {
             cartItemDao.deleteById(orderCartItemDto.getCartItemId());
         }
+        member.withdraw(totalPrice);
 
         return cartOrderId;
     }
