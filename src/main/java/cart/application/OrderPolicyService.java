@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.domain.PointPolicy;
 import cart.domain.ShippingPolicy;
 import cart.dto.response.OrderPolicyResponse;
 import cart.repository.ShippingPolicyRepository;
@@ -16,6 +17,6 @@ public class OrderPolicyService {
 
     public OrderPolicyResponse find() {
         ShippingPolicy shippingPolicy = shippingPolicyRepository.findShippingPolicy();
-        return new OrderPolicyResponse(shippingPolicy.getThreshold(), shippingPolicy.getBasicShippingFee());
+        return new OrderPolicyResponse(shippingPolicy.getThreshold(), shippingPolicy.getBasicShippingFee(), PointPolicy.getPointPercentage());
     }
 }

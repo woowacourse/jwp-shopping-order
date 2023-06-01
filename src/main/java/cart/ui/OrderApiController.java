@@ -28,8 +28,8 @@ public class OrderApiController {
 
     @PostMapping
     public ResponseEntity<OrderAdditionResponse> saveOrder(Member member, @RequestBody OrderRequest orderRequest) {
-        long orderId = orderService.saveOrder(member, orderRequest);
-        return ResponseEntity.created(URI.create("/orders/" + orderId)).body(new OrderAdditionResponse(orderId));
+        OrderAdditionResponse response = orderService.saveOrder(member, orderRequest);
+        return ResponseEntity.created(URI.create("/orders/" + response.getOrderId())).body(response);
     }
 
     @GetMapping("/{orderId}")

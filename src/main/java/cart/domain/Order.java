@@ -13,27 +13,37 @@ public class Order {
     private final Member member;
     private final long shippingFee;
     private final long totalProductsPrice;
+    private final long usedPoint;
     private final List<OrderItem> orderItems;
     private final String createdAt;
 
-    public Order(final Long id, final Member member, final long shippingFee, final long totalProductsPrice, final List<OrderItem> orderItems, final String createdAt) {
+    public Order(
+            final Long id,
+            final Member member,
+            final long shippingFee,
+            final long totalProductsPrice,
+            final long usedPoint,
+            final List<OrderItem> orderItems,
+            final String createdAt
+    ) {
         this.id = id;
         this.member = member;
         this.shippingFee = shippingFee;
         this.totalProductsPrice = totalProductsPrice;
+        this.usedPoint = usedPoint;
         this.orderItems = orderItems;
         this.createdAt = createdAt;
     }
 
-    public static Order of(final Member member, long shippingFee, final List<OrderItem> orderItems) {
+    public static Order of(final Member member, long shippingFee, long usedPoint, final List<OrderItem> orderItems) {
         long totalProductPrice = orderItems.stream()
                 .mapToLong(item -> item.getQuantity() * item.getProduct().getPrice())
                 .sum();
-        return new Order(null, member, shippingFee, totalProductPrice, orderItems, null);
+        return new Order(null, member, shippingFee, totalProductPrice, usedPoint, orderItems, null);
     }
 
     public OrderEntity toEntity() {
-        return OrderEntity.of(member.getId(), shippingFee, totalProductsPrice);
+        return OrderEntity.of(member.getId(), shippingFee, totalProductsPrice, usedPoint);
     }
 
     public Long getId() {
@@ -82,5 +92,13 @@ public class Order {
         if (this.shippingFee != shippingFee) {
             throw new TotalPriceNotSame();
         }
+    }
+
+    public long getUsedPoint() {
+        return usedPoint;
+    }
+
+    public long getPayment() {
+        return totalProductsPrice + shippingFee - usedPoint;
     }
 }

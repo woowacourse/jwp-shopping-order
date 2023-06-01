@@ -28,19 +28,21 @@ public class OrderDao {
                 rs.getLong("id"),
                 rs.getLong("member_id"),
                 rs.getLong("shipping_fee"),
-                rs.getLong("total_price"),
+                rs.getLong("total_products_price"),
+                rs.getLong("used_point"),
                 rs.getTimestamp("created_at").toString()
         );
     };
 
     public long save(final OrderEntity orderEntity) {
-        String sql = "INSERT INTO orders (member_id, shipping_fee, total_price) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO orders (member_id, shipping_fee, total_products_price, used_point) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pst.setLong(1, orderEntity.getMemberId());
             pst.setLong(2, orderEntity.getShippingFee());
-            pst.setLong(3, orderEntity.getTotalPrice());
+            pst.setLong(3, orderEntity.getTotalProductsPrice());
+            pst.setLong(4, orderEntity.getUsedPoint());
             return pst;
         }, keyHolder);
         Map<String, Object> keys = keyHolder.getKeys();

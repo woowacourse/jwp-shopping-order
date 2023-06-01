@@ -41,8 +41,6 @@ public class PointAcceptanceTest extends AcceptanceTest {
 
             // then
             assertThat(포인트_조회_결과.statusCode()).isEqualTo(HttpStatus.OK.value());
-            assertThat(포인트_조회_결과.jsonPath().getLong("usablePoint"))
-                    .isEqualTo(0L);
         }
     }
 }

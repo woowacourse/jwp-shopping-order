@@ -8,13 +8,15 @@ public class OrderResponse {
     private final String orderDate;
     private final long totalProductsPrice;
     private final long shippingFee;
+    private final long usedPoint;
     private final List<OrderDetailsDto> orderDetails;
 
-    public OrderResponse(final long orderId, final String orderDate, final long totalProductsPrice, final long shippingFee, final List<OrderDetailsDto> orderDetails) {
+    public OrderResponse(final long orderId, final String orderDate, final long totalProductsPrice, final long shippingFee, final long usedPoint, final List<OrderDetailsDto> orderDetails) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.totalProductsPrice = totalProductsPrice;
         this.shippingFee = shippingFee;
+        this.usedPoint = usedPoint;
         this.orderDetails = orderDetails;
     }
 
@@ -36,5 +38,9 @@ public class OrderResponse {
 
     public long getShippingFee() {
         return shippingFee;
+    }
+
+    public long getUsedPoint() {
+        return usedPoint;
     }
 }

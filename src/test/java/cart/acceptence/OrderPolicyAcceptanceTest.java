@@ -29,7 +29,8 @@ public class OrderPolicyAcceptanceTest extends AcceptanceTest {
             assertThat(할인_정책).usingRecursiveComparison()
                     .isEqualTo(new OrderPolicyResponse(
                             30000L,
-                            3000L
+                            3000L,
+                            10L
                     ));
         }
     }

@@ -66,11 +66,12 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .collect(Collectors.toList());
 
             // when
-            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 장바구니));
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 0L, 장바구니));
 
             // then
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
             assertThat(주문_등록_결과.header("Location")).isNotBlank();
+            assertThat(주문_등록_결과.jsonPath().getLong("newEarnedPoint")).isEqualTo((long)(2_8000 * 0.1));
         }
 
         @Test
@@ -89,7 +90,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             장바구니.add(new OrderItemDto(존재하지_않는_장바구니_아이템_아이디, 1));
 
             // when
-            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 장바구니));
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 0L, 장바구니));
 
             // then
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -116,7 +117,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .collect(Collectors.toList());
 
             // when
-            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(27_000L, 3_000L, 장바구니));
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(27_000L, 3_000L, 0L, 장바구니));
 
             // then
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -139,7 +140,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .collect(Collectors.toList());
 
             // when
-            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자2, new OrderRequest(25_000L, 3_000L, 장바구니));
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자2, new OrderRequest(25_000L, 3_000L, 0L, 장바구니));
 
             assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
             assertThat(주문_등록_결과.jsonPath().getObject("payload", ExceptionResponse.class))
@@ -164,7 +165,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .stream()
                     .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
                     .collect(Collectors.toList());
-            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 장바구니));
+            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 0L, 장바구니));
             System.out.println(주문_아이디);
 
             // when
@@ -195,7 +196,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     .stream()
                     .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
                     .collect(Collectors.toList());
-            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 장바구니));
+            long 주문_아이디 = 주문_등록하고_아이디_반환(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 0L, 장바구니));
             System.out.println(주문_아이디);
 
             // when

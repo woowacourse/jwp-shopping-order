@@ -17,4 +17,10 @@ public class OrderException extends RuntimeException {
             super("잘못된 요청입니다");
         }
     }
+
+    public static class LackOfPoint extends OrderException {
+        public LackOfPoint() {
+            super("포인트가 부족합니다");
+        }
+    }
 }

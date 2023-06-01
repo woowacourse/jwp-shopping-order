@@ -33,7 +33,8 @@ create table if not exists orders
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     shipping_fee BIGINT NOT NULL,
-    total_price BIGINT NOT NULL,
+    total_products_price BIGINT NOT NULL,
+    used_point BIGINT NOT NULL,
     created_at timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
 
