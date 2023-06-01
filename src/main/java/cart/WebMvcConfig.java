@@ -6,12 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
 
 @Configuration
-public class WebMvcConfig extends ResponseEntityExceptionHandler implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
     private final MemberRepository memberRepository;
 
     public WebMvcConfig(MemberRepository memberRepository) {

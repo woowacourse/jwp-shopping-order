@@ -53,7 +53,7 @@ public class ProductApiControllerTest {
     @Test
     void 상품_생성_테스트() throws Exception {
         //given
-        ProductRequest request = new ProductRequest("치킨", 10000, "a");
+        ProductRequest request = new ProductRequest("치킨", 10000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80");
         when(productService.createProduct(any(ProductRequest.class))).thenReturn(1L);
 
         //when
@@ -141,7 +141,7 @@ public class ProductApiControllerTest {
     @Test
     void 상품_수정() throws Exception {
         //given
-        ProductRequest request = new ProductRequest("바뀐김치", 2000, "www.kakao.com");
+        ProductRequest request = new ProductRequest("바뀐김치", 2000, "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80");
 
         //when
         ResultActions result = mockMvc.perform(put(API_URL + "/{id}", 1L)

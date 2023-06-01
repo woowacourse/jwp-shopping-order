@@ -20,6 +20,10 @@ public class ErrorResponse {
         this(exception.status().value(), exception.getMessage(), LocalDateTime.now());
     }
 
+    public ErrorResponse(int status, String message) {
+        this(status, message, LocalDateTime.now());
+    }
+
     public int getStatus() {
         return status;
     }

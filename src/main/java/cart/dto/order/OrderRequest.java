@@ -2,13 +2,17 @@ package cart.dto.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class OrderRequest {
 
     @JsonProperty("product")
     private OrderProductRequest productRequest;
+    @Min(value = 0, message = "상품 개수는 음수일 수 없습니다.")
     private int quantity;
+    @NotNull
     @JsonProperty("couponId")
     private List<Long> memberCouponIds;
 

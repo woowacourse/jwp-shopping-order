@@ -3,11 +3,12 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderRequests;
 import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +32,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@RequestBody List<OrderRequest> request, Member member) {
-        orderService.createOrder(request, member);
+    public ResponseEntity<Void> addOrder(@RequestBody @Valid OrderRequests request, Member member) {
+        orderService.createOrder(request.getOrderRequests(), member);
         return ResponseEntity.noContent().build();
     }
 }

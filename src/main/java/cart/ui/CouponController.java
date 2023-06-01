@@ -10,6 +10,7 @@ import cart.domain.member.MemberCoupon;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class CouponController {
     }
 
     @PostMapping("/coupon")
-    public ResponseEntity<Void> addCoupon(@RequestBody Long couponId, Member member) {
+    public ResponseEntity<Void> addCoupon(@Valid @RequestBody Long couponId, Member member) {
         memberCouponDao.create(couponId, member.getId());
         return ResponseEntity.noContent().build();
     }
@@ -50,7 +51,7 @@ public class CouponController {
     }
 
     @PostMapping("/admin/coupon")
-    public ResponseEntity<Void> addCoupon(@RequestBody CouponRequest request) {
+    public ResponseEntity<Void> addCoupon(@Valid @RequestBody CouponRequest request) {
         Long couponId = couponService.create(request);
         return ResponseEntity.created(URI.create("/coupon/" + couponId)).build();
     }
