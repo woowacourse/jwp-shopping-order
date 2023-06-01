@@ -1,6 +1,8 @@
 package cart.dto.response;
 
+import cart.domain.order.Order;
 import cart.domain.order.OrderPrice;
+import cart.dto.OrderDto;
 import java.util.List;
 
 public class OrderResponse {
@@ -23,16 +25,14 @@ public class OrderResponse {
         this.totalPrice = totalPrice;
     }
 
-    public static OrderResponse of(final Long orderId, final List<OrderItemResponse> items, final Long productPrice,
-        final Long discountPrice,
-        final Long deliveryFee, final Long totalPrice) {
+    public static OrderResponse of(final Order order, final OrderDto orderDto) {
         return new OrderResponse(
-            orderId,
-            items,
-            productPrice,
-            discountPrice,
-            deliveryFee,
-            totalPrice
+            order.getId(),
+            OrderItemResponse.of(order.getOrderItems()),
+            orderDto.getOrderProductPrice(),
+            orderDto.getOrderDiscountPrice(),
+            orderDto.getOrderDeliveryFee(),
+            orderDto.getOrderTotalPrice()
         );
     }
 
