@@ -34,12 +34,12 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<CartItemEntity> findByMemberId(final Long memberId) {
+    public List<CartItemEntity> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT id, member_id, product_id, quantity FROM cart_item where member_id = ?";
         return jdbcTemplate.query(sql, CART_ITEM_ENTITY_MAPPER, memberId);
     }
 
-    public Long save(final CartItemEntity cartItemEntity) {
+    public Long create(final CartItemEntity cartItemEntity) {
         final BeanPropertySqlParameterSource source = new BeanPropertySqlParameterSource(cartItemEntity);
         return jdbcInsert.executeAndReturnKey(source).longValue();
     }

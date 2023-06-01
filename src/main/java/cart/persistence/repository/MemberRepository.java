@@ -19,15 +19,15 @@ public class MemberRepository {
         this.memberDao = memberDao;
     }
 
-    public List<Member> getAllMembers() {
+    public List<Member> findAllMembers() {
         final List<MemberEntity> members = memberDao.getAllMembers();
         return members.stream()
                 .map(Mapper::memberMapper)
                 .collect(Collectors.toList());
     }
 
-    public Member getMemberById(final Long memberId) {
-        final MemberEntity memberEntity = memberDao.getMemberById(memberId);
+    public Member findMemberById(final Long memberId) {
+        final MemberEntity memberEntity = memberDao.findByMemberId(memberId);
         return memberMapper(memberEntity);
     }
 }

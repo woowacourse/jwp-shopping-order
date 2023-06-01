@@ -23,21 +23,21 @@ public class CartItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartItemResponse> findByMember(final Member member) {
+    public List<CartItemResponse> findAllByMember(final Member member) {
         return cartItemRepository.findCartItemsByMemberId(member.getId()).stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public Long add(final Member member, final CartItemRequest cartItemRequest) {
-        final Product product = cartItemRepository.getProductById(cartItemRequest.getProductId());
+    @Transactional
+    public Long create(final Member member, final CartItemRequest cartItemRequest) {
+        final Product product = cartItemRepository.findProductById(cartItemRequest.getProductId());
         final CartItem cartItem = new CartItem(member, product, cartItemRequest.getQuantity());
-        return cartItemRepository.saveCartItem(cartItem);
+        return cartItemRepository.createCartItem(cartItem);
     }
 
     @Transactional(readOnly = true)
-    public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
+    public void update(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
         final CartItem cartItem = cartItemRepository.findCartItemById(id);
         cartItem.checkOwner(member);
 
@@ -51,7 +51,7 @@ public class CartItemService {
     }
 
     @Transactional(readOnly = true)
-    public void remove(final Member member, final Long id) {
+    public void delete(final Member member, final Long id) {
         final CartItem cartItem = cartItemRepository.findCartItemById(id);
         cartItem.checkOwner(member);
 

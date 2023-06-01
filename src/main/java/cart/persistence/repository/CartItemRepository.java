@@ -29,15 +29,18 @@ public class CartItemRepository {
         this.memberDao = memberDao;
     }
 
-    public Product getProductById(final Long productId) {
-        final ProductEntity productEntity = productDao.getProductById(productId);
+    public Product findProductById(final Long productId) {
+        final ProductEntity productEntity = productDao.findById(productId);
         return productMapper(productEntity);
     }
 
     public List<CartItem> findCartItemsByMemberId(final Long memberId) {
-        final MemberEntity memberEntity = memberDao.getMemberById(memberId);
-        final List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
-        final List<ProductEntity> productEntities = getProductEntitiesFromCartItemEntities(cartItemEntities);
+        final MemberEntity memberEntity = memberDao.findByMemberId(memberId);
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberId(memberId);
+        final List<Long> productIds = cartItemEntities.stream()
+                .map(CartItemEntity::getProductId)
+                .collect(Collectors.toList());
+        final List<ProductEntity> productEntities = productDao.findByIds(productIds);
 
         final List<CartItem> cartItems = new ArrayList<>();
         for (int i = 0; i < cartItemEntities.size(); i++) {
@@ -48,27 +51,20 @@ public class CartItemRepository {
         return cartItems;
     }
 
-    private List<ProductEntity> getProductEntitiesFromCartItemEntities(final List<CartItemEntity> cartItemEntities) {
-        final List<Long> productIds = cartItemEntities.stream()
-                .map(CartItemEntity::getProductId)
-                .collect(Collectors.toList());
-        return productDao.getProductsByIds(productIds);
-    }
-
-    public Long saveCartItem(final CartItem cartItem) {
+    public Long createCartItem(final CartItem cartItem) {
         final CartItemEntity cartItemEntity = Mapper.cartItemEntityMapper(cartItem);
-        return cartItemDao.save(cartItemEntity);
+        return cartItemDao.create(cartItemEntity);
     }
 
-    public CartItem findCartItemById(final Long id) {
-        final CartItemEntity cartItemEntity = cartItemDao.findById(id);
-        final MemberEntity memberEntity = memberDao.getMemberById(cartItemEntity.getMemberId());
-        final ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
+    public CartItem findCartItemById(final Long cartItemId) {
+        final CartItemEntity cartItemEntity = cartItemDao.findById(cartItemId);
+        final MemberEntity memberEntity = memberDao.findByMemberId(cartItemEntity.getMemberId());
+        final ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId());
         return cartItemMapper(cartItemEntity, memberEntity, productEntity);
     }
 
-    public void deleteCartItemById(final Long id) {
-        cartItemDao.deleteById(id);
+    public void deleteCartItemById(final Long cartItemId) {
+        cartItemDao.deleteById(cartItemId);
     }
 
     public void updateCartItemQuantity(final CartItem cartItem) {

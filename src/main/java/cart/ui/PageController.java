@@ -19,13 +19,13 @@ public class PageController {
 
     @GetMapping("/admin")
     public String admin(final Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.findAll());
         return "admin";
     }
 
     @GetMapping("/settings")
     public String members(final Model model) {
-        model.addAttribute("members", memberService.getAllMembers());
+        model.addAttribute("members", memberService.findAll());
         return "settings";
     }
 }

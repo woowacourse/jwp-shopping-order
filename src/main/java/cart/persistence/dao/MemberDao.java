@@ -42,7 +42,7 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public MemberEntity getMemberById(final Long id) {
+    public MemberEntity findByMemberId(final Long id) {
         final String sql = "SELECT id, email, password, point FROM member WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_MAPPER, id);
     }

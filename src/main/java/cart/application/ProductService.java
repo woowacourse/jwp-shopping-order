@@ -20,20 +20,20 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getAllProducts() {
-        return productRepository.getAllProducts().stream()
+    public List<ProductResponse> findAll() {
+        return productRepository.findAllProducts().stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProductById(final Long productId) {
-        final Product product = productRepository.getProductById(productId);
+    public ProductResponse findById(final Long productId) {
+        final Product product = productRepository.findProductById(productId);
         return ProductResponse.of(product);
     }
 
     @Transactional
-    public Long createProduct(final ProductRequest productRequest) {
+    public Long create(final ProductRequest productRequest) {
         final Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
@@ -43,7 +43,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(final Long productId, final ProductRequest productRequest) {
+    public void update(final Long productId, final ProductRequest productRequest) {
         final Product product = new Product(
                 productId,
                 productRequest.getName(),
@@ -54,7 +54,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(final Long productId) {
+    public void delete(final Long productId) {
         productRepository.deleteProduct(productId);
     }
 }

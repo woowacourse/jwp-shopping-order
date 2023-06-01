@@ -20,6 +20,6 @@ public class MemberApiController {
 
     @GetMapping("/points")
     public ResponseEntity<PointResponse> showPoint(final Member member) {
-        return ResponseEntity.ok().body(memberService.checkPoint(member));
+        return ResponseEntity.ok().body(memberService.findPointByMember(member));
     }
 }

@@ -23,26 +23,26 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(final Member member) {
-        return ResponseEntity.ok(cartItemService.findByMember(member));
+        return ResponseEntity.ok(cartItemService.findAllByMember(member));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(final Member member, @RequestBody final CartItemRequest cartItemRequest) {
-        final Long cartItemId = cartItemService.add(member, cartItemRequest);
+    public ResponseEntity<Void> addCartItem(final Member member, @RequestBody final CartItemRequest cartItemRequest) {
+        final Long cartItemId = cartItemService.create(member, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateCartItemQuantity(final Member member, @PathVariable final Long id, @RequestBody final CartItemQuantityUpdateRequest request) {
-        cartItemService.updateQuantity(member, id, request);
+    @PatchMapping("/{productId}")
+    public ResponseEntity<Void> updateCartItemQuantity(final Member member, @PathVariable final Long productId, @RequestBody final CartItemQuantityUpdateRequest request) {
+        cartItemService.update(member, productId, request);
 
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(final Member member, @PathVariable final Long id) {
-        cartItemService.remove(member, id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> removeCartItem(final Member member, @PathVariable final Long productId) {
+        cartItemService.delete(member, productId);
 
         return ResponseEntity.noContent().build();
     }

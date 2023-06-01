@@ -57,7 +57,7 @@ public class PayRepository {
         final List<Long> productIds = cartItemEntities.stream()
                 .map(CartItemEntity::getProductId)
                 .collect(Collectors.toList());
-        return productDao.getProductsByIds(productIds);
+        return productDao.findByIds(productIds);
     }
 
     public Long createOrder(final Order order) {

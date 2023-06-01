@@ -20,15 +20,15 @@ public class ProductRepository {
         this.productDao = productDao;
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> findAllProducts() {
         final List<ProductEntity> productEntities = productDao.getAllProducts();
         return productEntities.stream()
                 .map(Mapper::productMapper)
                 .collect(Collectors.toList());
     }
 
-    public Product getProductById(final Long productId) {
-        final ProductEntity productEntity = productDao.getProductById(productId);
+    public Product findProductById(final Long productId) {
+        final ProductEntity productEntity = productDao.findById(productId);
         return productMapper(productEntity);
     }
 

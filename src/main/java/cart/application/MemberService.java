@@ -20,16 +20,16 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberResponse> getAllMembers() {
-        return memberRepository.getAllMembers().stream()
+    public List<MemberResponse> findAll() {
+        return memberRepository.findAllMembers().stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public PointResponse checkPoint(final Member member) {
+    public PointResponse findPointByMember(final Member member) {
         return new PointResponse(
-                memberRepository.getMemberById(member.getId()).getPoint()
+                memberRepository.findMemberById(member.getId()).getPoint()
         );
     }
 }

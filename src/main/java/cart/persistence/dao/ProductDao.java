@@ -40,12 +40,12 @@ public class ProductDao {
         return jdbcTemplate.query(sql, PRODUCT_MAPPER);
     }
 
-    public ProductEntity getProductById(final Long productId) {
+    public ProductEntity findById(final Long productId) {
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, PRODUCT_MAPPER, productId);
     }
 
-    public List<ProductEntity> getProductsByIds(final List<Long> productIds) {
+    public List<ProductEntity> findByIds(final List<Long> productIds) {
         if (productIds.isEmpty()) {
             return new ArrayList<>();
         }

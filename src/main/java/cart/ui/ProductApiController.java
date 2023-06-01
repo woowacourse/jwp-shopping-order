@@ -21,30 +21,30 @@ public class ProductApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> showAllProducts() {
+        return ResponseEntity.ok(productService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable final Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> showProduct(@PathVariable final Long productId) {
+        return ResponseEntity.ok(productService.findById(productId));
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
-        final Long id = productService.createProduct(productRequest);
-        return ResponseEntity.created(URI.create("/products/" + id)).build();
+    public ResponseEntity<Void> addProduct(@RequestBody final ProductRequest productRequest) {
+        final Long productId = productService.create(productRequest);
+        return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable final Long id, @RequestBody final ProductRequest productRequest) {
-        productService.updateProduct(id, productRequest);
+    @PutMapping("/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable final Long productId, @RequestBody final ProductRequest productRequest) {
+        productService.update(productId, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
-        productService.deleteProduct(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId) {
+        productService.delete(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
