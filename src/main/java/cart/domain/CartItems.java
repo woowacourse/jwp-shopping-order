@@ -39,7 +39,7 @@ public class CartItems {
 
     public List<Long> getProductIds() {
         return cartItems.stream()
-                .map(cartItem -> cartItem.getProductId())
+                .map(CartItem::getProductId)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

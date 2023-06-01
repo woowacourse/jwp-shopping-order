@@ -1,7 +1,5 @@
 package cart.domain;
 
-import java.util.Objects;
-
 import cart.exception.CartItemException;
 
 public class CartItem {
@@ -42,7 +40,7 @@ public class CartItem {
     }
 
     public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
+        if (!this.member.equals(member)) {
             throw new CartItemException.IllegalMember(this, member);
         }
     }
