@@ -13,8 +13,10 @@ import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CartItemService {
 
     private final ProductRepository productRepository;
@@ -25,14 +27,7 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(member);
-
-        return cartItems.stream()
-                .map(CartItemResponse::of)
-                .collect(Collectors.toList());
-    }
-
+    @Transactional
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
                 .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
@@ -42,6 +37,15 @@ public class CartItemService {
         return cartItemRepository.save(member, cartItem);
     }
 
+    public List<CartItemResponse> findByMember(Member member) {
+        List<CartItem> cartItems = cartItemRepository.findByMemberId(member);
+
+        return cartItems.stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public void updateQuantity(Member member, Long cartItemId, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(NotFound::new);
@@ -57,6 +61,7 @@ public class CartItemService {
         cartItemRepository.updateQuantity(cartItem);
     }
 
+    @Transactional
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id)
                 .orElseThrow(NotFound::new);
