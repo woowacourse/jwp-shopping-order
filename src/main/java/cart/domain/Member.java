@@ -44,4 +44,14 @@ public class Member {
     public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", point=" + point +
+                '}';
+    }
 }

@@ -27,13 +27,6 @@ public class CartItemApiController {
         this.cartItemService = cartItemService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CartItemDto>> showCart(Member member) {
-        List<CartItemDto> cartItems = cartItemService.findByMember(member);
-
-        return ResponseEntity.ok(cartItems);
-    }
-
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
@@ -54,5 +47,12 @@ public class CartItemApiController {
         cartItemService.remove(member, id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CartItemDto>> showCart(Member member) {
+        List<CartItemDto> cartItems = cartItemService.findByMember(member);
+
+        return ResponseEntity.ok(cartItems);
     }
 }

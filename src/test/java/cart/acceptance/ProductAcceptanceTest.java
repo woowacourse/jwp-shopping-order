@@ -1,15 +1,11 @@
 package cart.acceptance;
 
-import static cart.acceptance.ProductSteps.LOCATION_헤더를_검증한다;
-import static cart.acceptance.ProductSteps.STATUS_CODE를_검증한다;
+import static cart.acceptance.CommonSteps.*;
 import static cart.acceptance.ProductSteps.모든_상품_조회_요청;
 import static cart.acceptance.ProductSteps.상품_삭제_요청;
 import static cart.acceptance.ProductSteps.상품_생성_요청;
 import static cart.acceptance.ProductSteps.상품_생성하고_아이디_반환;
 import static cart.acceptance.ProductSteps.상품_수정_요청;
-import static cart.acceptance.ProductSteps.정상_삭제;
-import static cart.acceptance.ProductSteps.정상_생성;
-import static cart.acceptance.ProductSteps.정상_처리;
 import static cart.acceptance.ProductSteps.특정_상품_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -97,7 +93,7 @@ public class ProductAcceptanceTest {
     }
 
     @Test
-    void 특정_상품을_가져온다() {
+    void 특정_상품을_조회한다() {
         // given
         var createRequest1 = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         var createRequest2 = new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg", 50);
@@ -113,7 +109,7 @@ public class ProductAcceptanceTest {
     }
 
     @Test
-    void 모든_상품을_가져온다() {
+    void 모든_상품을_조회한다() {
         // given
         var createRequest1 = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         var createRequest2 = new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg", 50);
@@ -155,11 +151,11 @@ public class ProductAcceptanceTest {
                                    List<ProductRequest> requests) {
         List<ProductResponse> expectedResponses = new ArrayList<>();
         for (int i = 0; i < productIds.size(); i++) {
-            expectedResponses.add(makeResponse(productIds.get(i), requests.get(i)));
+            ProductResponse productResponse = makeResponse(productIds.get(i), requests.get(i));
+            expectedResponses.add(productResponse);
         }
 
-        List<ProductResponse> actualResponses = response.as(new TypeRef<>() {
-        });
+        List<ProductResponse> actualResponses = response.as(new TypeRef<>() {});
         assertThat(actualResponses).usingRecursiveComparison()
                 .isEqualTo(expectedResponses);
     }

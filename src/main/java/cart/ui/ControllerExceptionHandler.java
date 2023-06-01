@@ -32,6 +32,9 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error(e.getMessage());
+        log.error(e.getCause().getMessage());
+        log.error(e.getClass().getName());
+
         ErrorResponse response = new ErrorResponse("알 수 없는 에러가 발생하였습니다.");
         return ResponseEntity.internalServerError().body(response);
     }
