@@ -13,7 +13,7 @@ public enum Grade {
         this.discountRate = discountRate;
     }
 
-    public String getGrade() {
+    public String getName() {
         return name();
     }
 

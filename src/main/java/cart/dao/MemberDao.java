@@ -45,7 +45,7 @@ public class MemberDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<MemberEntity> getAllMembers() {
+    public List<MemberEntity> findAll() {
         final String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberEntityRowMapper());
     }
