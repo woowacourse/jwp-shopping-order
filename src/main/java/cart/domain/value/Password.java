@@ -1,5 +1,6 @@
 package cart.domain.value;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Password {
@@ -22,5 +23,22 @@ public class Password {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Password password = (Password) o;
+        return Objects.equals(getValue(), password.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getValue());
     }
 }

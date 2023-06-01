@@ -2,18 +2,18 @@ package cart.domain.value;
 
 import java.util.Objects;
 
-public class DiscountRate {
+public class Money {
 
     private final int value;
 
-    public DiscountRate(final int value) {
+    public Money(final int value) {
         validateRange(value);
         this.value = value;
     }
 
     private void validateRange(final int value) {
-        if (value < 0 || value > 100) {
-            throw new IllegalArgumentException("허용되지 않는 할인율입니다.");
+        if (value < 0) {
+            throw new IllegalArgumentException("금액은 0보다 작을 수 없습니다.");
         }
     }
 
@@ -29,8 +29,8 @@ public class DiscountRate {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final DiscountRate that = (DiscountRate) o;
-        return getValue() == that.getValue();
+        final Money money = (Money) o;
+        return getValue() == money.getValue();
     }
 
     @Override
