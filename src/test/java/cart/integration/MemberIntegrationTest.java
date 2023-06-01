@@ -5,18 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
+@Sql("/clean-up.sql")
 public class MemberIntegrationTest extends IntegrationTest {
-
-    @BeforeEach
-    @Sql("/clean-up.sql")
-    void init() {
-    }
 
     @DisplayName("초기 멤버를 생성하면 기본 포인트는 5,000원이다.")
     @Test
