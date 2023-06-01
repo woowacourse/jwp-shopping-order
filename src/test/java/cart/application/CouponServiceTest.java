@@ -42,7 +42,7 @@ class CouponServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(couponDao.selectBy(eq(COUPON_FIXED_2000.getId()))).thenReturn(COUPON_FIXED_2000);
+        when(couponDao.selectBy(eq(COUPON_FIXED_2000().getId()))).thenReturn(COUPON_FIXED_2000());
     }
 
     @Test
@@ -79,7 +79,7 @@ class CouponServiceTest {
 
     @Test
     void id로_쿠폰을_가져온다() {
-        assertThat(couponService.getCouponBy(COUPON_FIXED_2000.getId()))
-                .isEqualTo(COUPON_FIXED_2000);
+        assertThat(couponService.getCouponBy(COUPON_FIXED_2000().getId()))
+                .isEqualTo(COUPON_FIXED_2000());
     }
 }

@@ -36,7 +36,7 @@ class MemberCouponDaoTest {
 
     @Test
     void 사용자_쿠폰을_삽입한다() {
-        MemberCoupon memberCoupon = new MemberCoupon(MEMBER_A, COUPON_FIXED_2000);
+        MemberCoupon memberCoupon = new MemberCoupon(MEMBER_A, COUPON_FIXED_2000());
 
         Long id = memberCouponDao.insert(memberCoupon);
 
@@ -57,7 +57,7 @@ class MemberCouponDaoTest {
 
     @Test
     void 사용자_쿠폰을_불러온다() {
-        MemberCoupon memberCoupon = new MemberCoupon(MEMBER_A, COUPON_FIXED_2000);
+        MemberCoupon memberCoupon = new MemberCoupon(MEMBER_A, COUPON_FIXED_2000());
 
         Long id = memberCouponDao.insert(memberCoupon);
 
@@ -70,9 +70,9 @@ class MemberCouponDaoTest {
     @Test
     void 사용자_쿠폰을_모두_불러온다() {
         List<MemberCoupon> memberCoupons = List.of(
-                new MemberCoupon(MEMBER_A, COUPON_FIXED_2000),
-                new MemberCoupon(MEMBER_A, COUPON_PERCENTAGE_50),
-                new MemberCoupon(MEMBER_A, COUPON_PERCENTAGE_50)
+                new MemberCoupon(MEMBER_A, COUPON_FIXED_2000()),
+                new MemberCoupon(MEMBER_A, COUPON_PERCENTAGE_50()),
+                new MemberCoupon(MEMBER_A, COUPON_PERCENTAGE_50())
         );
         List<Long> ids = memberCoupons.stream()
                 .map(it -> memberCouponDao.insert(it))

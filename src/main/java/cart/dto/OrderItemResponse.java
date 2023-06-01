@@ -11,12 +11,15 @@ public class OrderItemResponse {
     private final ProductResponse product;
     private final Integer total;
     private final Integer quantity;
+    private final List<MemberCouponResponse> coupons;
 
-    public OrderItemResponse(Long orderItemId, ProductResponse product, Integer total, Integer quantity) {
+    public OrderItemResponse(Long orderItemId, ProductResponse product, Integer total, Integer quantity,
+            List<MemberCouponResponse> coupons) {
         this.orderItemId = orderItemId;
         this.product = product;
         this.total = total;
         this.quantity = quantity;
+        this.coupons = coupons;
     }
 
     public static OrderItemResponse of(OrderItem orderItem) {
@@ -24,7 +27,8 @@ public class OrderItemResponse {
                 orderItem.getId(),
                 ProductResponse.of(orderItem.getOrderedProduct()),
                 orderItem.getTotal().getValue(),
-                orderItem.getQuantity()
+                orderItem.getQuantity(),
+                MemberCouponResponse.of(orderItem.getUsedCoupons())
         );
     }
 
@@ -48,5 +52,9 @@ public class OrderItemResponse {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public List<MemberCouponResponse> getCoupons() {
+        return coupons;
     }
 }

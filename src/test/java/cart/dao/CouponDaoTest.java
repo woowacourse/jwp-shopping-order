@@ -30,29 +30,29 @@ class CouponDaoTest {
 
     @Test
     void 쿠폰을_삽입한다() {
-        Long id = couponDao.insert(COUPON_FIXED_2000);
+        Long id = couponDao.insert(COUPON_FIXED_2000());
 
         assertThat(id).isNotNull();
     }
 
     @Test
     void 쿠폰을_id로_조회한다() {
-        Long id = couponDao.insert(COUPON_FIXED_2000);
+        Long id = couponDao.insert(COUPON_FIXED_2000());
 
         Coupon coupon = couponDao.selectBy(id);
 
         assertThat(coupon)
                 .usingRecursiveComparison()
-                .isEqualTo(COUPON_FIXED_2000);
+                .isEqualTo(COUPON_FIXED_2000());
     }
 
     @Test
     void 모든_쿠폰을_조회한다() {
-        couponDao.insert(COUPON_FIXED_2000);
-        couponDao.insert(COUPON_PERCENTAGE_50);
+        couponDao.insert(COUPON_FIXED_2000());
+        couponDao.insert(COUPON_PERCENTAGE_50());
 
         assertThat(couponDao.selectAll())
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
-                .contains(COUPON_FIXED_2000, COUPON_PERCENTAGE_50);
+                .contains(COUPON_FIXED_2000(), COUPON_PERCENTAGE_50());
     }
 }

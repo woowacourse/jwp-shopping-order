@@ -21,27 +21,38 @@ public enum ResponseSnippets {
             "price", "제품 가격",
             "imageUrl", "제품 이미지 url"
     )),
-    CART_ITEM(CartItemResponse.class, () -> join(
-            Map.of(
+    CART_ITEM(CartItemResponse.class, () -> join(Map.of(
                     "id", "카트 id",
                     "quantity", "수량",
                     "product", "제품 정보"
             ),
             withPrefix("product.", PRODUCT.fieldsSupplier.get())
     )),
-    ORDER_ITEM(OrderItemResponse.class, () -> Map.of(
-            "orderItemId", "주문 항목 id",
-            "product", "주문 시점의 상품",
-            "total", "주문 항목의 총 금액",
-            "quantity", "주문 항목의 수량"
+    DISCOUNT_POLICY(DiscountPolicyResponse.class, () -> Map.of(
+            "type", "할인 종류",
+            "amount", "할인량"
     )),
-    ORDER(OrderResponse.class, () -> join(join(
-                    Map.of(
-                            "orderId", "주문 id",
-                            "orderItems", "주문한 항목들"
-                    ),
-                    withPrefix("orderItems[].", ORDER_ITEM.fieldsSupplier.get())),
-            withPrefix("orderItems[].product.", PRODUCT.fieldsSupplier.get())
+    MEMBER_COUPON(MemberCouponResponse.class, () -> join(Map.of(
+                    "couponId", "쿠폰 id",
+                    "name", "쿠폰 이름",
+                    "discount", "할인 정보"
+            ),
+            withPrefix("discount.", DISCOUNT_POLICY.fieldsSupplier.get())
+    )),
+    ORDER_ITEM(OrderItemResponse.class, () -> join(join(Map.of(
+                            "orderItemId", "주문 항목 id",
+                            "product", "주문 시점의 상품 정보",
+                            "total", "쿠폰이 적용된 총 금액",
+                            "quantity", "주문 수량",
+                            "coupons", "사용한 쿠폰들"),
+                    withPrefix("product.", PRODUCT.fieldsSupplier.get())),
+            withPrefix("coupons[].", MEMBER_COUPON.fieldsSupplier.get())
+    )),
+    ORDER(OrderResponse.class, () -> join(Map.of(
+                    "orderId", "주문 id",
+                    "orderItems", "주문한 항목들"
+            ),
+            withPrefix("orderItems[].", ORDER_ITEM.fieldsSupplier.get())
     ));
 
     private static final String EMPTY = "";

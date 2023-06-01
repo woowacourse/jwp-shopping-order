@@ -104,7 +104,7 @@ public class OrderControllerTest extends ControllerTestWithDocs {
                                 샐러드.getImageUrl()
                         ),
                         10,
-                        List.of(COUPON_FIXED_2000.getId())
+                        List.of(COUPON_FIXED_2000().getId())
                 )
         );
         String body = objectMapper.writeValueAsString(orderRequest);

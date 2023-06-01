@@ -1,9 +1,5 @@
 package cart.dao;
 
-import static cart.fixture.TestFixture.CART_ITEM_치킨_MEMBER_A;
-import static cart.fixture.TestFixture.MEMBER_A_COUPON_FIXED_2000;
-import static cart.fixture.TestFixture.MEMBER_A_COUPON_PERCENTAGE_50;
-import static cart.fixture.TestFixture.ORDERED_샐러드;
 import static cart.fixture.TestFixture.ORDER_ITEMS_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -20,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.dao.dto.OrderItemDto;
-import cart.domain.CartItem;
 import cart.domain.MemberCoupon;
 import cart.domain.OrderItem;
 
@@ -48,16 +43,11 @@ class OrderItemDaoTest {
 
     @Test
     void 쿠폰도_함께_저장된다() {
-        CartItem cartItem = CART_ITEM_치킨_MEMBER_A();
-        cartItem.apply(List.of(MEMBER_A_COUPON_PERCENTAGE_50(), MEMBER_A_COUPON_FIXED_2000()));
-        OrderItem orderItemWithCoupons = new OrderItem(cartItem);
-        List<OrderItem> orderItems = List.of(orderItemWithCoupons, ORDERED_샐러드);
-
-        orderItemDao.insertAll(ORDER_ID_2, orderItems);
+        orderItemDao.insertAll(ORDER_ID_2, ORDER_ITEMS_ONE);
 
         assertThat(orderItemDao.selectAllOf(ORDER_ID_2))
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
-                .isEqualTo(toDtos(orderItems));
+                .isEqualTo(toDtos(ORDER_ITEMS_ONE));
     }
 
     @Test
