@@ -16,6 +16,10 @@ public class Order {
         this(null, member, orderItems);
     }
 
+    public boolean isPaymentAmountEqual(final int amount) {
+        return orderItems.isPaymentAmountEqual(new Price(amount));
+    }
+
     public int getOriginalPrice() {
         return orderItems.calculateOriginalPrice().getAmount();
     }

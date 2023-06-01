@@ -10,6 +10,7 @@ import cart.domain.Price;
 import cart.domain.Product;
 import cart.domain.Quantity;
 import cart.exception.NotOwnerException;
+import cart.exception.PaymentAmountNotEqualException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.dto.CartItemWithProductDto;
@@ -36,6 +37,7 @@ public class OrderService {
         checkOwner(member, cartItemWithProductDtos);
         cartItemRepository.deleteAll(request.getCartItems());
         final Order order = createOrder(member, cartItemWithProductDtos);
+        validatePaymentAmount(order, request.getPaymentAmount());
         return orderRepository.save(order);
     }
 
@@ -47,6 +49,13 @@ public class OrderService {
             return;
         }
         throw new NotOwnerException();
+    }
+
+    private void validatePaymentAmount(final Order order, final int requestPayment) {
+        if (order.isPaymentAmountEqual(requestPayment)) {
+            return;
+        }
+        throw new PaymentAmountNotEqualException();
     }
 
     private Order createOrder(final Member member, final List<CartItemWithProductDto> dtos) {

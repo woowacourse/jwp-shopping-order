@@ -7,6 +7,7 @@ import cart.exception.InvalidPriceException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.NotEnoughQuantityException;
 import cart.exception.NotOwnerException;
+import cart.exception.PaymentAmountNotEqualException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(e.getMessage());
     }
 
-    @ExceptionHandler({InvalidPriceException.class, NotEnoughQuantityException.class})
+    @ExceptionHandler({PaymentAmountNotEqualException.class, NotEnoughQuantityException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleBadRequest(IllegalArgumentException e) {
         return new ExceptionResponse(e.getMessage());

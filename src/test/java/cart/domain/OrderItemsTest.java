@@ -46,4 +46,30 @@ class OrderItemsTest {
         final Price expected = new Price(5000);
         assertThat(price).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("지불 금액이 일치 여부 확인 테스트 - true")
+    void payment_amount_is_equal() {
+        // given
+        final Price price = new Price(135000);
+
+        // when
+        final boolean result = orderItems.isPaymentAmountEqual(price);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("지불 금액이 일치 여부 확인 테스트 - false")
+    void payment_amount_is_not_equal() {
+        // given
+        final Price invalidPrice = new Price(138000);
+
+        // when
+        final boolean result = orderItems.isPaymentAmountEqual(invalidPrice);
+
+        // then
+        assertThat(result).isFalse();
+    }
 }
