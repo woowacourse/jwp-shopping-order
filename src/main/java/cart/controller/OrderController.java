@@ -1,10 +1,10 @@
 package cart.controller;
 
-import cart.application.order.OrderProvider;
-import cart.application.order.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.service.order.OrderProvider;
+import cart.service.order.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

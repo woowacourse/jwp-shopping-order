@@ -1,6 +1,5 @@
-package cart.application;
+package cart.service;
 
-import cart.application.order.OrderProvider;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -8,6 +7,7 @@ import cart.domain.Product;
 import cart.domain.coupon.Coupon;
 import cart.dto.OrderResponse;
 import cart.repository.OrderRepository;
+import cart.service.order.OrderProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

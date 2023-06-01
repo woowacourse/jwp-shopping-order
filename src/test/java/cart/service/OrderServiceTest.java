@@ -1,6 +1,5 @@
-package cart.application;
+package cart.service;
 
-import cart.application.order.OrderService;
 import cart.domain.*;
 import cart.domain.coupon.Coupon;
 import cart.dto.OrderRequest;
@@ -8,6 +7,7 @@ import cart.exception.AlreadyUsedCouponException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.coupon.CouponRepository;
+import cart.service.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
