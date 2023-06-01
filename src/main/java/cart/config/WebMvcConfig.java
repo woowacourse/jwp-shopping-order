@@ -25,7 +25,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 "http://218.39.176.142:3000",
                 "https://woowasplit.shop/",
                 "https://react-shopping-cart-woowa.netlify.app/",
-                "https://react-shopping-cart-prod-6izahtdpl-shackstack.vercel.app/"
+                "https://react-shopping-cart-prod-6izahtdpl-shackstack.vercel.app/",
+                "https://shackstack-tiffany.vercel.app/"
             )
             .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTION")
             .allowedHeaders("*")
