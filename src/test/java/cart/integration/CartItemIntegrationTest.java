@@ -124,7 +124,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
         ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10L);
-
+        
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
@@ -188,8 +188,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .get("/cart-items")
-                .then()
-                .log().all()
+                .then().log().all()
                 .extract();
     }
 

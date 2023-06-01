@@ -26,4 +26,15 @@ public class OrderInfos {
                 .mapToLong(OrderInfo::calculateAvailablePoint)
                 .sum();
     }
+    
+    public List<OrderInfo> getOrderInfos() {
+        return orderInfos;
+    }
+    
+    @Override
+    public String toString() {
+        return "OrderInfos{" +
+                "orderInfos=" + orderInfos +
+                '}';
+    }
 }

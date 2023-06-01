@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -38,5 +39,10 @@ public class OrderDao {
         params.put("point_to_add", orderEntity.getPointToAdd());
         
         return insertAction.executeAndReturnKey(params).longValue();
+    }
+    
+    public List<OrderEntity> findByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

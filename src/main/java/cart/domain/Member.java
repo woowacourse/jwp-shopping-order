@@ -58,4 +58,14 @@ public class Member {
     public int hashCode() {
         return Objects.hash(id, email, password, point);
     }
+    
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", point=" + point +
+                '}';
+    }
 }

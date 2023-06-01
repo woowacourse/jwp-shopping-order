@@ -60,4 +60,16 @@ public class Product {
     public Boolean getPointAvailable() {
         return pointAvailable;
     }
+    
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", pointRatio=" + pointRatio +
+                ", pointAvailable=" + pointAvailable +
+                '}';
+    }
 }

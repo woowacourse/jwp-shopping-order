@@ -4,7 +4,9 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.domain.*;
 import cart.dto.CartItemOrderRequest;
+import cart.dto.OrderInfoResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +34,8 @@ public class OrderService {
         
         final Order order =
                 new Order(memberByEmail, orderInfos, orderRequest.getOriginalPrice(), orderRequest.getUsedPoint(), orderRequest.getPointToAdd());
-        return orderRepository.order(member, order);
+        order.order();
+        return orderRepository.insertOrder(memberByEmail, order);
     }
     
     private Set<CartItem> getCartItems(final OrderRequest orderRequest) {
@@ -52,6 +55,18 @@ public class OrderService {
                     final Product product = cartItem.getProduct();
                     return new OrderInfo(product, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity());
                 })
+                .collect(Collectors.toUnmodifiableList());
+    }
+    
+    public List<OrderResponse> findByMember(final Member member) {
+        return orderRepository.findByMember(member).stream()
+                .map(order -> new OrderResponse(order.getId(), getOrderInfoResponses(order)))
+                .collect(Collectors.toUnmodifiableList());
+    }
+    
+    private List<OrderInfoResponse> getOrderInfoResponses(final Order order) {
+        return order.getOrderInfos().getOrderInfos().stream()
+                .map(OrderInfoResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

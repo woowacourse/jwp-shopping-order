@@ -2,14 +2,14 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.dto.CartItemResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -18,6 +18,11 @@ public class OrderApiController {
     
     public OrderApiController(final OrderService orderService) {
         this.orderService = orderService;
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> addCartItems(Member member) {
+        return ResponseEntity.ok(orderService.findByMember(member));
     }
     
     @PostMapping

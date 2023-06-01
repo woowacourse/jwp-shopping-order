@@ -49,4 +49,15 @@ public class OrderEntity {
     public Long getPointToAdd() {
         return pointToAdd;
     }
+    
+    @Override
+    public String toString() {
+        return "OrderEntity{" +
+                "id=" + id +
+                ", memberId=" + memberId +
+                ", originalPrice=" + originalPrice +
+                ", usedPoint=" + usedPoint +
+                ", pointToAdd=" + pointToAdd +
+                '}';
+    }
 }

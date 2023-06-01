@@ -11,6 +11,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Objects;
+
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     private final MemberDao memberDao;
 
@@ -44,7 +46,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         // 본인 여부 확인
         Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
+        if (Objects.isNull(member) || !member.checkPassword(password)) {
             throw new AuthenticationException();
         }
         return member;

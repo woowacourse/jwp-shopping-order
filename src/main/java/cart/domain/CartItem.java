@@ -48,4 +48,14 @@ public class CartItem {
     public Long getQuantity() {
         return quantity;
     }
+    
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                ", member=" + member +
+                '}';
+    }
 }

@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.dto.OrderInfoEntity;
+
 public class OrderInfo {
     private final Long id;
     private final Product product;
@@ -32,6 +34,17 @@ public class OrderInfo {
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
         this.quantity = quantity;
+    }
+    
+    public static OrderInfo of(final OrderInfoEntity orderInfoEntity, final Product product) {
+        return new OrderInfo(
+                orderInfoEntity.getId(),
+                product,
+                orderInfoEntity.getName(),
+                orderInfoEntity.getPrice(),
+                orderInfoEntity.getImageUrl(),
+                orderInfoEntity.getQuantity()
+        );
     }
     
     public Long calculateProductPriceWithQuantity() {
@@ -68,5 +81,17 @@ public class OrderInfo {
     
     public Long getQuantity() {
         return quantity;
+    }
+    
+    @Override
+    public String toString() {
+        return "OrderInfo{" +
+                "id=" + id +
+                ", product=" + product +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                ", productImageUrl='" + productImageUrl + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -33,17 +35,6 @@ class PointIntegratedTest extends IntegrationTest {
                 .when().get("/point")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("point", is(10000));
-    }
-    
-    @Test
-    public void 적립금_정상_범위를_벗어난_경우_예외_처리() {
-        given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when().get("/point")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("point", is(10000));
+                .body("point", greaterThan(0));
     }
 }

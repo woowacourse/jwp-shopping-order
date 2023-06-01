@@ -1,13 +1,13 @@
 package cart.domain;
 
+import cart.exception.DiscordException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderTest {
@@ -55,8 +55,8 @@ public class OrderTest {
         final OrderInfo orderInfo2 = new OrderInfo(product2, "사과", 10000L, "bb", 10L);
         
         // expect
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Order(member, List.of(orderInfo1, orderInfo2), 476000L, 600L, 47500L));
+        assertThatThrownBy(() -> new Order(member, List.of(orderInfo1, orderInfo2), 476000L, 600L, 47500L))
+                .isInstanceOf(DiscordException.class);
     }
     
     @Test
@@ -69,8 +69,8 @@ public class OrderTest {
         final OrderInfo orderInfo2 = new OrderInfo(product2, "사과", 10000L, "bb", 10L);
         
         // expect
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Order(member, List.of(orderInfo1, orderInfo2), 475000L, 600L, 47600L));
+        assertThatThrownBy(() -> new Order(member, List.of(orderInfo1, orderInfo2), 475000L, 600L, 47600L))
+                .isInstanceOf(DiscordException.class);
     }
     
     @ParameterizedTest(name = "{displayName} : usedPoint = {0}")
@@ -86,7 +86,7 @@ public class OrderTest {
         final OrderInfo orderInfo3 = new OrderInfo(product3, "귤", 30000L, "cc", 30L);
         
         // expect
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Order(member, List.of(orderInfo1, orderInfo2, orderInfo3), 1375000L, usedPoint, 227500L));
+        assertThatThrownBy(() -> new Order(member, List.of(orderInfo1, orderInfo2, orderInfo3), 1375000L, usedPoint, 227500L))
+                .isInstanceOf(DiscordException.class);
     }
 }

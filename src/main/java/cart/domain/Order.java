@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.DiscordException;
+
 import java.util.List;
 
 public class Order {
@@ -43,7 +45,7 @@ public class Order {
         final Long calculatedOriginalPrice = this.orderInfos.calculateAllProductPriceWithQuantity();
         if (calculatedOriginalPrice != originalPrice) {
             final String errorMessage = String.format("클라이언트와 서버의 originalPrice가 다릅니다. Client : %d, Server : %d", originalPrice, calculatedOriginalPrice);
-            throw new IllegalArgumentException(errorMessage);
+            throw new DiscordException(errorMessage);
         }
     }
     
@@ -51,14 +53,14 @@ public class Order {
         final Long calculatedPointToAdd = this.orderInfos.calculatePointToAdd();
         if (calculatedPointToAdd != pointToAdd) {
             final String errorMessage = String.format("클라이언트와 서버의 pointToAdd가 다릅니다. Client : %d, Server : %d", pointToAdd, calculatedPointToAdd);
-            throw new IllegalArgumentException(errorMessage);
+            throw new DiscordException(errorMessage);
         }
     }
     
     private void validateUsedPoint(final long usedPoint) {
         final Long availablePoint = orderInfos.calculateAvailablePoint();
         if (usedPoint < 0 || usedPoint > availablePoint) {
-            throw new IllegalArgumentException("사용할 수 있는 적립금은 0 ~ " + availablePoint + " 입니다. 입력된 사용 적립금 : " + usedPoint);
+            throw new DiscordException("사용할 수 있는 적립금은 0 ~ " + availablePoint + " 입니다. 입력된 사용 적립금 : " + usedPoint);
         }
     }
     
