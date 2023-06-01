@@ -14,6 +14,10 @@ public class Order {
     private final int deliveryPrice;
     private final LocalDateTime orderedAt;
 
+    public Order(final List<Item> items, final Coupon coupon, final int totalPrice, final int deliveryPrice) {
+        this(null, items, coupon, totalPrice, deliveryPrice, LocalDateTime.now());
+    }
+
     public Order(final Long id, final List<Item> items, final Coupon coupon, final int totalPrice, final int deliveryPrice, final LocalDateTime orderedAt) {
         this.id = id;
         this.items = new Items(items);
@@ -21,15 +25,6 @@ public class Order {
         this.totalPrice = totalPrice;
         this.deliveryPrice = deliveryPrice;
         this.orderedAt = orderedAt;
-    }
-
-    public Order(final List<Item> items, final Coupon coupon, final int totalPrice, final int deliveryPrice) {
-        this.id = null;
-        this.items = new Items(items);
-        this.coupon = coupon;
-        this.totalPrice = totalPrice;
-        this.deliveryPrice = deliveryPrice;
-        this.orderedAt = LocalDateTime.now();
     }
 
     public int getDiscountedTotalPrice() {

@@ -7,7 +7,17 @@ public class Items {
     private final List<Item> items;
 
     public Items(final List<Item> items) {
+        validateItemsSize(items);
         this.items = items;
+    }
+
+    private void validateItemsSize(final List<Item> items) {
+        int totalQuantity = items.stream()
+                .mapToInt(Item::getQuantity)
+                .sum();
+        if (totalQuantity < 1 || totalQuantity > 1000) {
+            throw new IllegalArgumentException("상품 총 수량은 1개 이상 1000개 이하까지 가능합니다.");
+        }
     }
 
     public List<Item> getItems() {
