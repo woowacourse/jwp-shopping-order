@@ -1,6 +1,7 @@
 package cart.dto;
 
 import cart.domain.Product;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProductResponse {
     private Long id;

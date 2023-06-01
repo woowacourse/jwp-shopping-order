@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class OrderResponseEntity {
     private Long orderId;
     private LocalDateTime orderedAt;
+    private Long usedPoint;
     private Long orderItemId;
     private Integer quantity;
     private Long productId;
@@ -12,9 +13,10 @@ public class OrderResponseEntity {
     private Integer productPrice;
     private String productImageUrl;
 
-    public OrderResponseEntity(Long orderId, LocalDateTime orderedAt, Long orderItemId, Integer quantity, Long productId, String productName, Integer productPrice, String productImageUrl) {
+    public OrderResponseEntity(Long orderId, LocalDateTime orderedAt, Long usedPoint, Long orderItemId, Integer quantity, Long productId, String productName, Integer productPrice, String productImageUrl) {
         this.orderId = orderId;
         this.orderedAt = orderedAt;
+        this.usedPoint = usedPoint;
         this.orderItemId = orderItemId;
         this.quantity = quantity;
         this.productId = productId;
@@ -29,6 +31,10 @@ public class OrderResponseEntity {
 
     public LocalDateTime getOrderedAt() {
         return orderedAt;
+    }
+
+    public Long getUsedPoint() {
+        return usedPoint;
     }
 
     public Long getOrderItemId() {

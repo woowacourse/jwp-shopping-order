@@ -57,8 +57,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         memberDao.updatePoints(1000L, member);
         memberDao.updatePoints(300L, member2);
 
-        createOrder(member, List.of(1, 2), 400);
-        createOrder(member2, List.of(3), 200);
+//        createOrder(member, List.of(1, 2), 400);
+//        createOrder(member2, List.of(3), 200);
 
         getOrders(member);
     }

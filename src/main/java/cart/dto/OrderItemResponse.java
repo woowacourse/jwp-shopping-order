@@ -1,14 +1,16 @@
 package cart.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class OrderItemResponse {
     private Long id;
     private Integer quantity;
-    private ProductResponse productResponse;
+    private ProductResponse product;
 
-    public OrderItemResponse(Long id, Integer quantity, ProductResponse productResponse) {
+    public OrderItemResponse(Long id, Integer quantity, ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
-        this.productResponse = productResponse;
+        this.product = product;
     }
 
     public Long getId() {
@@ -19,7 +21,8 @@ public class OrderItemResponse {
         return quantity;
     }
 
+    @JsonProperty("product")
     public ProductResponse getProductResponse() {
-        return productResponse;
+        return product;
     }
 }

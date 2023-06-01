@@ -17,20 +17,7 @@ public class ShoppingOrderDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
 
-    private RowMapper<OrderResponseEntity> orderResponseRowMapper = (rs, rowNum) -> {
-        Long orderId = rs.getLong("id");
-        LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
-        Long orderItemId = rs.getLong("orderitem_id");
-        Integer quantity = rs.getInt("quantity");
-        Long productId = rs.getLong("product_id");
-        String productName = rs.getString("name");
-        Integer productPrice = rs.getInt("price");
-        String productImageUrl = rs.getString("image_url");
-
-        return new OrderResponseEntity(orderId, orderedAt, orderItemId, quantity, productId, productName, productPrice, productImageUrl);
-    };
-
-    private RowMapper<DetailOrderResponseEntity> detailOrderResponseEntityRowMapper = (rs, rowNum) -> {
+    private RowMapper<OrderResponseEntity> detailOrderResponseEntityRowMapper = (rs, rowNum) -> {
         Long orderId = rs.getLong("id");
         LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();
         Long usedPoint = rs.getLong("used_point");
@@ -41,7 +28,7 @@ public class ShoppingOrderDao {
         Integer productPrice = rs.getInt("price");
         String productImageUrl = rs.getString("image_url");
 
-        return new DetailOrderResponseEntity(orderId, orderedAt, usedPoint, orderItemId, quantity, productId, productName, productPrice, productImageUrl);
+        return new OrderResponseEntity(orderId, orderedAt, usedPoint, orderItemId, quantity, productId, productName, productPrice, productImageUrl);
     };
 
     public ShoppingOrderDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
@@ -61,12 +48,12 @@ public class ShoppingOrderDao {
     }
 
     public List<OrderResponseEntity> findAll(Long id) {
-        String sql = "SELECT so.id, so.ordered_at, oi.id as orderitem_id, oi.quantity, oi.product_id, p.name, p.price, p.image_url\n" +
+        String sql = "SELECT so.id, so.ordered_at, so.used_point, oi.id as orderitem_id, oi.quantity, oi.product_id, p.name, p.price, p.image_url\n" +
                 "FROM ordered_item oi\n" +
                 "JOIN shopping_order so ON oi.order_id = so.id\n" +
                 "JOIN product p ON oi.product_id = p.id\n" +
                 "WHERE member_id = ?";
-        return jdbcTemplate.query(sql, orderResponseRowMapper, id);
+        return jdbcTemplate.query(sql, detailOrderResponseEntityRowMapper, id);
     }
 
     public Long getSize() {
@@ -74,7 +61,7 @@ public class ShoppingOrderDao {
         return jdbcTemplate.queryForObject(sql, Long.class);
     }
 
-    public List<DetailOrderResponseEntity> findById(Long orderId) {
+    public List<OrderResponseEntity> findById(Long orderId) {
         String sql = "SELECT so.id, so.ordered_at, so.used_point, oi.id as orderitem_id, oi.quantity, oi.product_id, p.name, p.price, p.image_url\n" +
                 "FROM ordered_item oi\n" +
                 "JOIN shopping_order so ON oi.order_id = so.id\n" +
