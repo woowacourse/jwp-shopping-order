@@ -27,6 +27,8 @@ CREATE TABLE if not exists cart_item (
 CREATE TABLE if not exists coupon (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
+    coupon_name varchar(30) NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
     discount_price BIGINT NOT NULL,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp on update current_timestamp,
