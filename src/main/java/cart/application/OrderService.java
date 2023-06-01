@@ -44,7 +44,7 @@ public class OrderService {
     }
 
     public OrderResponse findById(final Member member, final Long id) {
-        final Order order = new Order(1L, 1L, List.of(), 0, 0, 0, 0, "");
+        final Order order = orderRepository.findById(id);
         return OrderResponse.of(order);
     }
 
