@@ -1,6 +1,7 @@
 package cart.application;
 
 import static cart.fixture.DomainFixture.CHICKEN;
+import static cart.fixture.DomainFixture.FOUR_SALAD;
 import static cart.fixture.DomainFixture.MEMBER_A;
 import static cart.fixture.DomainFixture.MEMBER_B;
 import static cart.fixture.DomainFixture.PIZZA;
@@ -11,9 +12,13 @@ import static cart.fixture.RepositoryFixture.cartItemRepository;
 import static cart.fixture.RepositoryFixture.productRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.domain.PointDiscountPolicy;
+import cart.domain.PointEarnPolicy;
 import cart.dto.response.CartItemResponse;
+import cart.dto.response.CheckoutResponse;
 import cart.exception.CartItemException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
@@ -36,7 +41,8 @@ class CartItemServiceTest {
     void setUp(@Autowired JdbcTemplate jdbcTemplate) {
         productRepository = productRepository(jdbcTemplate);
         cartItemRepository = cartItemRepository(jdbcTemplate);
-        cartItemService = new CartItemService(productRepository, cartItemRepository);
+        cartItemService = new CartItemService(productRepository, cartItemRepository, PointDiscountPolicy.DEFAULT,
+                PointEarnPolicy.DEFAULT);
     }
 
     @Test
@@ -105,5 +111,27 @@ class CartItemServiceTest {
         assertThatThrownBy(() -> cartItemService.remove(MEMBER_A, -999L))
                 .isInstanceOf(CartItemException.NotFound.class)
                 .hasMessage("해당 장바구니 상품을 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("checkout은 회원의 장바구니 상품 중 선택한 장바구니 상품 ID들을 전달하면 선택한 상품들을 구매할 경우의 정보를 반환한다.")
+    void checkoutSuccessTest() {
+        List<Long> checkoutIds = List.of(TWO_CHICKEN.getId(), FOUR_SALAD.getId());
+        CheckoutResponse actual = cartItemService.checkout(MEMBER_A, checkoutIds);
+
+        int expectedTotalPrice = 30_000;
+        int expectedEarnedPoints = 3_000;
+        int expectedAvailablePoints = 3_000;
+        assertAll(
+                () -> assertThat(actual.getCartItems()).hasSize(2),
+                () -> assertThat(actual.getCartItems().get(0).getQuantity()).isEqualTo(TWO_CHICKEN.getQuantity()),
+                () -> assertThat(actual.getCartItems().get(0).getProduct().getName()).isEqualTo(TWO_CHICKEN.getProduct().getName()),
+                () -> assertThat(actual.getCartItems().get(1).getQuantity()).isEqualTo(FOUR_SALAD.getQuantity()),
+                () -> assertThat(actual.getCartItems().get(1).getProduct().getName()).isEqualTo(FOUR_SALAD.getProduct().getName()),
+                () -> assertThat(actual.getTotalPrice()).isEqualTo(expectedTotalPrice),
+                () -> assertThat(actual.getCurrentPoints()).isEqualTo(MEMBER_A.getPoint()),
+                () -> assertThat(actual.getEarnedPoints()).isEqualTo(expectedEarnedPoints),
+                () -> assertThat(actual.getAvailablePoints()).isEqualTo(expectedAvailablePoints)
+        );
     }
 }

@@ -2,10 +2,14 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.PointDiscountPolicy;
+import cart.domain.PointEarnPolicy;
 import cart.domain.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
+import cart.dto.response.CheckoutResponse;
+import cart.exception.CartItemException;
 import cart.exception.CartItemException.NotFound;
 import cart.exception.ProductException;
 import cart.repository.CartItemRepository;
@@ -21,10 +25,15 @@ public class CartItemService {
 
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
+    private final PointDiscountPolicy pointDiscountPolicy;
+    private final PointEarnPolicy pointEarnPolicy;
 
-    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
+    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository,
+            PointDiscountPolicy pointDiscountPolicy, PointEarnPolicy pointEarnPolicy) {
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
+        this.pointDiscountPolicy = pointDiscountPolicy;
+        this.pointEarnPolicy = pointEarnPolicy;
     }
 
     @Transactional
@@ -68,5 +77,28 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemRepository.deleteById(id);
+    }
+
+    public CheckoutResponse checkout(Member member, List<Long> checkedCartItemIds) {
+        List<CartItem> memberCartItems = cartItemRepository.findByMember(member);
+        List<CartItem> checkedCartItems = calculateCheckedCartItems(checkedCartItemIds, memberCartItems);
+
+        return CheckoutResponse.of(checkedCartItems, member, pointDiscountPolicy, pointEarnPolicy);
+    }
+
+    private List<CartItem> calculateCheckedCartItems(List<Long> checkedCartItemIds, List<CartItem> memberCartItems) {
+        List<CartItem> checkedCartItems = memberCartItems.stream()
+                .filter(memberCartItem -> checkedCartItemIds.contains(memberCartItem.getId()))
+                .collect(Collectors.toList());
+
+        validateCheckedCartItems(checkedCartItemIds, checkedCartItems);
+
+        return checkedCartItems;
+    }
+
+    private void validateCheckedCartItems(List<Long> checkedCartItemIds, List<CartItem> checkedCartItems) {
+        if (checkedCartItemIds.size() != checkedCartItems.size()) {
+            throw new CartItemException.NotFound();
+        }
     }
 }
