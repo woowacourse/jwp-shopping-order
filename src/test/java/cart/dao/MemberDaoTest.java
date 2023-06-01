@@ -28,7 +28,7 @@ class MemberDaoTest extends DaoTest {
     @DisplayName("id를 통해 member를 조회한다.")
     void getMemberById() {
         //when
-        final Member result = memberDao.getMemberById(1L);
+        final Member result = memberDao.findById(1L);
 
         //then
         Assertions.assertAll(
@@ -43,7 +43,7 @@ class MemberDaoTest extends DaoTest {
     void getMemberByEmail() {
         final String email = "a@a.com";
         //when
-        final Member result = memberDao.getMemberByEmail(email);
+        final Member result = memberDao.findByEmail(email);
 
         //then
         Assertions.assertAll(
@@ -57,7 +57,7 @@ class MemberDaoTest extends DaoTest {
     @DisplayName("전체 멤버를 조회한다.")
     void getAllMembers() {
         //when
-        final List<Member> result = memberDao.getAllMembers();
+        final List<Member> result = memberDao.findAll();
 
         //then
         assertThat(result.size()).isEqualTo(3);

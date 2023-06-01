@@ -19,7 +19,7 @@ import cart.domain.Product;
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<CartItem> defaultRowMapper = (rs, rowNum) -> {
+    private final RowMapper<CartItem> memberProductCartItemRowMapper = (rs, rowNum) -> {
         Long memberId = rs.getLong("member_id");
         String email = rs.getString("email");
         Long productId = rs.getLong("product.id");
@@ -45,18 +45,7 @@ public class CartItemDao {
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        return jdbcTemplate.query(sql, memberProductCartItemRowMapper, memberId);
     }
 
     public Long save(CartItem cartItem) {
@@ -86,7 +75,7 @@ public class CartItemDao {
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, defaultRowMapper, id);
+        List<CartItem> cartItems = jdbcTemplate.query(sql, memberProductCartItemRowMapper, id);
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
@@ -101,10 +90,10 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 
-    public int deleteByIds(List<Long> cartIds) {
-        String inClause = String.join(",", Collections.nCopies(cartIds.size(), "?"));
+    public int deleteByIds(List<Long> ids) {
+        String inClause = String.join(",", Collections.nCopies(ids.size(), "?"));
         String sql = "DELETE FROM cart_item WHERE id IN (" + inClause + ")";
-        return jdbcTemplate.update(sql, cartIds.toArray());
+        return jdbcTemplate.update(sql, ids.toArray());
     }
 
     public List<CartItem> findByIds(List<Long> ids) {
@@ -117,6 +106,6 @@ public class CartItemDao {
                         + "INNER JOIN product "
                         + "ON cart_item.product_id = product.id "
                         + "WHERE cart_item.id IN (" + inClause + ")";
-        return jdbcTemplate.query(sql, defaultRowMapper, ids.toArray());
+        return jdbcTemplate.query(sql, memberProductCartItemRowMapper, ids.toArray());
     }
 }

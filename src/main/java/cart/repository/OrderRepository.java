@@ -43,7 +43,7 @@ public class OrderRepository {
     }
 
     @Transactional
-    public Long saveOrder(Order order) {
+    public Long save(Order order) {
         final OrderEntity orderEntity = new OrderEntity(order.getPrice(), order.getMember().getId());
         final Long orderId = orderDao.addOrder(orderEntity);
         orderedItemDao.saveAll(order.getOrderedItems(), orderId);
@@ -51,7 +51,7 @@ public class OrderRepository {
         return orderId;
     }
 
-    public Order findOrderById(Long orderId, Member member) {
+    public Order findByIdWithMember(Long orderId, Member member) {
         final OrderEntity orderEntity = orderDao.findById(orderId)
                 .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
         List<OrderedItemEntity> orderedItems = orderedItemDao.findItemsByOrderId(orderId);

@@ -30,19 +30,19 @@ public class OrderController {
             @RequestBody OrderRequest orderRequest,
             Member member
     ) {
-        final Long orderId = orderService.order(orderRequest, member);
+        final Long orderId = orderService.add(orderRequest, member);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> findOrderById(@PathVariable Long id, Member member) {
-        final OrderResponse orderResponse = orderService.findOrderById(id, member);
+        final OrderResponse orderResponse = orderService.findById(id, member);
         return ResponseEntity.ok(orderResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findOrderByMember(Member member) {
-        final List<OrderResponse> orderResponses = orderService.findOrdersByMember(member);
+        final List<OrderResponse> orderResponses = orderService.findByMember(member);
         return ResponseEntity.ok(orderResponses);
     }
 }

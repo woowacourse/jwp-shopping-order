@@ -1,7 +1,5 @@
 package cart.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,7 +24,7 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Member getMemberById(Long id) {
+    public Member findById(Long id) {
         String sql = "SELECT * FROM member AS m "
                 + "JOIN grade AS g "
                 + "ON m.id = g.id "
@@ -35,7 +33,7 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public Member getMemberByEmail(String email) {
+    public Member findByEmail(String email) {
         String sql = "SELECT * FROM member AS m "
                 + "JOIN grade AS g "
                 + "ON m.id = g.id "
@@ -44,7 +42,7 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public List<Member> getAllMembers() {
+    public List<Member> findAll() {
         String sql = "SELECT * FROM member AS m "
                 + "JOIN grade AS g "
                 + "ON m.id = g.id";

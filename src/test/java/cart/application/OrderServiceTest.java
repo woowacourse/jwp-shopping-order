@@ -40,7 +40,7 @@ class OrderServiceTest {
         OrderRequest orderRequest = new OrderRequest(cartItemIds);
 
         // when
-        Long result = orderService.order(orderRequest, member);
+        Long result = orderService.add(orderRequest, member);
 
         // then
         assertThat(result).isEqualTo(1L);
@@ -55,7 +55,7 @@ class OrderServiceTest {
         OrderRequest orderRequest = new OrderRequest(cartItemIds);
 
         // then
-        assertThatThrownBy(() -> orderService.order(orderRequest, member))
+        assertThatThrownBy(() -> orderService.add(orderRequest, member))
                 .isInstanceOf(CartItemException.IllegalMember.class)
                 .hasMessageContaining("Illegal member attempts to cart;");
     }
@@ -72,10 +72,10 @@ class OrderServiceTest {
 
         List<Long> cartItemIds = Arrays.asList(cartItem1.getId(), cartItem2.getId());
         OrderRequest orderRequest = new OrderRequest(cartItemIds);
-        Long orderId = orderService.order(orderRequest, member);
+        Long orderId = orderService.add(orderRequest, member);
 
         //when
-        final OrderResponse result = orderService.findOrderById(orderId, member);
+        final OrderResponse result = orderService.findById(orderId, member);
 
         //then
         Assertions.assertAll(
@@ -101,7 +101,7 @@ class OrderServiceTest {
                 member);
 
         //when
-        final List<OrderResponse> result = orderService.findOrdersByMember(member);
+        final List<OrderResponse> result = orderService.findByMember(member);
         final List<Long> idCollection = result.stream()
                 .map(OrderResponse::getId)
                 .collect(Collectors.toUnmodifiableList());
@@ -120,6 +120,6 @@ class OrderServiceTest {
     private Long addOrder(Member member, CartItem cartItem) {
         List<Long> cartItemId = List.of(cartItem.getId());
         OrderRequest orderRequest1 = new OrderRequest(cartItemId);
-        return orderService.order(orderRequest1, member);
+        return orderService.add(orderRequest1, member);
     }
 }

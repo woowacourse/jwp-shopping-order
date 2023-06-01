@@ -53,7 +53,7 @@ class OrderRepositoryTest {
         orderedItemDao.saveAll(items, orderId);
 
         //when
-        final Order result = orderRepository.findOrderById(orderId, GOLD_MEMBER);
+        final Order result = orderRepository.findByIdWithMember(orderId, GOLD_MEMBER);
 
         //then
         Assertions.assertAll(
@@ -68,7 +68,7 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("존재하지 않는 orderId를 통해 조회를 하는 경우 예외를 던진다.")
     void findOrderByIdFailByUnExistedOrderId() {
-        assertThatThrownBy(() -> orderRepository.findOrderById(30000L, GOLD_MEMBER))
+        assertThatThrownBy(() -> orderRepository.findByIdWithMember(30000L, GOLD_MEMBER))
                 .isInstanceOf(InvalidOrderException.class)
                 .hasMessageContaining("OrderId is not existed;");
     }

@@ -19,29 +19,29 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<ProductResponse> getAllProducts() {
+    public List<ProductResponse> findAll() {
         List<Product> products = productDao.getAllProducts();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
+    public ProductResponse findById(Long productId) {
         Product product = productDao.getProductById(productId);
         return ProductResponse.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
+    public Long add(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl());
         return productDao.createProduct(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
+    public void update(Long productId, ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl());
         productDao.updateProduct(productId, product);
     }
 
-    public void deleteProduct(Long productId) {
+    public void remove(Long productId) {
         productDao.deleteProduct(productId);
     }
 }

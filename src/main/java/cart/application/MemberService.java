@@ -18,8 +18,8 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public List<MemberResponse> getAllMembers() {
-        final List<Member> members = memberDao.getAllMembers();
+    public List<MemberResponse> findAll() {
+        final List<Member> members = memberDao.findAll();
         return members.stream()
                 .map(MemberResponse::of)
                 .collect(Collectors.toUnmodifiableList());

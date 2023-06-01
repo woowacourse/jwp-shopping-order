@@ -18,7 +18,7 @@ import cart.domain.Product;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Product> defaultRowMapper = (rs, rowNum) -> {
+    private final RowMapper<Product> rowMapper = (rs, rowNum) -> {
         Long productId = rs.getLong("id");
         String name = rs.getString("name");
         int price = rs.getInt("price");
@@ -32,17 +32,12 @@ public class ProductDao {
 
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, defaultRowMapper);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        }, productId);
+        return jdbcTemplate.queryForObject(sql, rowMapper, productId);
     }
 
     public Long createProduct(Product product) {
@@ -77,6 +72,6 @@ public class ProductDao {
     public List<Product> findByIds(List<Long> ids) {
         String inClause = String.join(",", Collections.nCopies(ids.size(), "?"));
         final String sql = "SELECT * FROM product WHERE id IN (" + inClause + ")";
-        return jdbcTemplate.query(sql, defaultRowMapper, ids.toArray());
+        return jdbcTemplate.query(sql, rowMapper, ids.toArray());
     }
 }

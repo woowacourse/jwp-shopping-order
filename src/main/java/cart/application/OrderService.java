@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
-import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.price.PriceCalculator;
@@ -35,12 +34,12 @@ public class OrderService {
     }
 
     @Transactional
-    public Long order(OrderRequest orderRequest, Member member) {
+    public Long add(OrderRequest orderRequest, Member member) {
         final List<Long> cartItemIds = orderRequest.getCartItemIds();
         final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
         validateExistentCartItems(cartItemIds, cartItems);
         Order order = Order.from(cartItems, member, priceCalculator);
-        return orderRepository.saveOrder(order);
+        return orderRepository.save(order);
     }
 
     private void validateExistentCartItems(List<Long> cartItemIds, List<CartItem> cartItems) {
@@ -49,12 +48,12 @@ public class OrderService {
         }
     }
 
-    public OrderResponse findOrderById(Long orderId, Member member) {
-        final Order order = orderRepository.findOrderById(orderId, member);
+    public OrderResponse findById(Long orderId, Member member) {
+        final Order order = orderRepository.findByIdWithMember(orderId, member);
         return OrderResponse.of(order);
     }
 
-    public List<OrderResponse> findOrdersByMember(Member member) {
+    public List<OrderResponse> findByMember(Member member) {
         final List<Order> orders = orderRepository.findOrdersByMember(member);
         return orders.stream()
                 .map(OrderResponse::of)
