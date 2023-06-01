@@ -24,9 +24,9 @@
     - [x] 404 - 없는 cart_item id 이다.
 - [x] 주문 dao 테스트 작성
 - [x] 주문 dao 코드 작성
-- [ ] 주문 repository 코드 작성
-- [ ] 주문 service 코드 작성
-- [ ] 주문 controller 코드 작성
+- [x] 주문 repository 코드 작성
+- [x] 주문 service 코드 작성
+- [x] 주문 controller 코드 작성
 
 ### 주문 목록 조회
 - [ ] 주문 목록 조회 통합 테스트 작성
