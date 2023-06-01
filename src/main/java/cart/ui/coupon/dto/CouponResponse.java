@@ -1,5 +1,7 @@
 package cart.ui.coupon.dto;
 
+import cart.application.service.coupon.CouponResultDto;
+
 public class CouponResponse {
 
     private final Long id;
@@ -14,6 +16,16 @@ public class CouponResponse {
         this.discountPercent = discountPercent;
         this.discountAmount = discountAmount;
         this.minAmount = minAmount;
+    }
+
+    public static CouponResponse from(final CouponResultDto couponResultDto) {
+        return new CouponResponse(
+                couponResultDto.getId(),
+                couponResultDto.getCouponName(),
+                couponResultDto.getDiscountPercent(),
+                couponResultDto.getDiscountAmount(),
+                couponResultDto.getMinAmount()
+        );
     }
 
     public Long getId() {

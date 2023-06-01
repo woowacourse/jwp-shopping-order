@@ -1,19 +1,30 @@
-package cart.domain;
+package cart.application.service.coupon;
 
-public class Coupon {
+import cart.domain.Coupon;
 
+public class CouponResultDto {
     private final long id;
     private final String couponName;
     private final int discountPercent;
     private final int discountAmount;
     private final int minAmount;
 
-    public Coupon(final Long id, final String couponName, final Integer discountPercent, final int discountAmount, final Integer minAmount) {
+    private CouponResultDto(final Long id, final String couponName, final Integer discountPercent, final int discountAmount, final Integer minAmount) {
         this.id = id;
         this.couponName = couponName;
         this.discountPercent = discountPercent;
         this.discountAmount = discountAmount;
         this.minAmount = minAmount;
+    }
+
+    public static CouponResultDto from(final Coupon coupon) {
+        return new CouponResultDto(
+                coupon.getId(),
+                coupon.getCouponName(),
+                coupon.getDiscountPercent(),
+                coupon.getDiscountAmount(),
+                coupon.getMinAmount()
+        );
     }
 
     public Long getId() {

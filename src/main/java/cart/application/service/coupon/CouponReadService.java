@@ -3,11 +3,11 @@ package cart.application.service.coupon;
 import cart.application.repository.CouponRepository;
 import cart.domain.Coupon;
 import cart.ui.MemberAuth;
-import cart.ui.coupon.dto.CouponResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,16 +19,12 @@ public class CouponReadService {
         this.couponRepository = couponRepository;
     }
 
-    public List<CouponResponse> findByMember(final MemberAuth memberAuth) {
+    public List<CouponResultDto> findByMember(final MemberAuth memberAuth) {
         final List<Coupon> coupons = couponRepository.findByMemberId(memberAuth.getId());
-//        coupons.stream()
-//                .map(coupon -> new CouponResponse(
-//                        coupon.getId(),
-//                        coupon.getCouponName(),
-//                        coupon.getDiscountPercent(),
-//                        discountAmount, coupon.getMinAmount())
-//                )
-//                .collect(Collectors.toList());
-        return null;
+
+        return coupons.stream()
+                .map(CouponResultDto::from)
+                .collect(Collectors.toUnmodifiableList());
     }
+
 }
