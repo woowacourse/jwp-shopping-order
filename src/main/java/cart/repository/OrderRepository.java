@@ -37,9 +37,13 @@ public class OrderRepository {
     private final OrderItemDao orderItemDao;
     private final MemberCouponDao memberCouponDao;
 
-    public OrderRepository(final OrderDao orderDao, final CouponDao couponDao, final CartItemDao cartItemDao,
-                           final OrderItemDao orderItemDao,
-                           final MemberCouponDao memberCouponDao) {
+    public OrderRepository(
+            final OrderDao orderDao,
+            final CouponDao couponDao,
+            final CartItemDao cartItemDao,
+            final OrderItemDao orderItemDao,
+            final MemberCouponDao memberCouponDao
+    ) {
         this.orderDao = orderDao;
         this.couponDao = couponDao;
         this.cartItemDao = cartItemDao;

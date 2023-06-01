@@ -30,7 +30,7 @@ public class PageController {
     }
 
     @GetMapping("/coupon")
-    public String coupon(final Model model) {
+    public String coupon() {
         return "coupon";
     }
 }

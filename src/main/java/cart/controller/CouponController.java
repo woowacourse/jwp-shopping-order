@@ -36,8 +36,8 @@ public class CouponController {
     )
     @GetMapping
     public ResponseEntity<List<MemberCouponResponse>> findAll(@Auth final Credential credential) {
-        final List<MemberCouponResponse> memberCouponRespons = couponService.findAllByMemberId(
+        final List<MemberCouponResponse> memberCouponResponses = couponService.findAllByMemberId(
                 credential.getMemberId());
-        return ResponseEntity.ok(memberCouponRespons);
+        return ResponseEntity.ok(memberCouponResponses);
     }
 }

@@ -16,11 +16,13 @@ public class CouponEntity {
         this(null, name, policyType, discountValue, minimumPrice);
     }
 
-    public CouponEntity(final Long id,
-                        final String name,
-                        final String policyType,
-                        final long discountValue,
-                        final long minimumPrice) {
+    public CouponEntity(
+            final Long id,
+            final String name,
+            final String policyType,
+            final long discountValue,
+            final long minimumPrice
+    ) {
         this.id = id;
         this.name = name;
         this.policyType = policyType;

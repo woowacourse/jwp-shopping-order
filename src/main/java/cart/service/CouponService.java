@@ -22,9 +22,11 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final MemberRepository memberRepository;
 
-    public CouponService(final MemberCouponRepository memberCouponRepository,
-                         final CouponRepository couponRepository,
-                         final MemberRepository memberRepository) {
+    public CouponService(
+            final MemberCouponRepository memberCouponRepository,
+            final CouponRepository couponRepository,
+            final MemberRepository memberRepository
+    ) {
         this.memberCouponRepository = memberCouponRepository;
         this.couponRepository = couponRepository;
         this.memberRepository = memberRepository;
