@@ -1,26 +1,26 @@
-package cart.domain;
+package cart.domain.product;
 
+import cart.domain.Member;
+import cart.domain.Quantity;
 import cart.exception.CartItemException;
-
 import java.util.Objects;
 
 public class CartItem {
-    private Long id;
-    private int quantity;
+
+    private final Long id;
+    private Quantity quantity;
     private final Product product;
     private final Member member;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
-    }
-
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(final Long id, final Quantity quantity, final Product product, final Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
+    }
+
+    public CartItem(final Member member, final Product product) {
+        this(null, new Quantity(1), product, member);
     }
 
     public Long getId() {
@@ -35,7 +35,7 @@ public class CartItem {
         return product;
     }
 
-    public int getQuantity() {
+    public Quantity getQuantity() {
         return quantity;
     }
 
@@ -46,6 +46,6 @@ public class CartItem {
     }
 
     public void changeQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 }
