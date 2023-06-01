@@ -151,7 +151,7 @@ public class PayIntegrationTest extends IntegrationTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(response.header("Location")).isEqualTo("redirect:/orders/histories/1"),
+                () -> assertThat(response.header("Location")).isEqualTo("redirect:/members/orders/1"),
                 // point = price * quantity * point_rate
                 () -> assertThat(memberDao.getMemberById(member1.getId()).getPoint()).isEqualTo(expectPoint)
         );
@@ -177,7 +177,7 @@ public class PayIntegrationTest extends IntegrationTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(response.header("Location")).isEqualTo("redirect:/orders/histories/1"),
+                () -> assertThat(response.header("Location")).isEqualTo("redirect:/members/orders/1"),
                 () -> assertThat(memberDao.getMemberById(member1.getId()).getPoint()).isEqualTo(expectPoint)
         );
     }
