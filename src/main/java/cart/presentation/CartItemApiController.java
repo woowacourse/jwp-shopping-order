@@ -2,7 +2,7 @@ package cart.presentation;
 
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
+import cart.dto.CartItemAddRequest;
 import cart.dto.CartItemResponse;
 import cart.service.CartItemService;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +28,8 @@ public class CartItemApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(final Member member, final @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.add(member, cartItemRequest);
+    public ResponseEntity<Void> addCartItems(final Member member, final @RequestBody CartItemAddRequest cartItemAddRequest) {
+        Long cartItemId = cartItemService.add(member, cartItemAddRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }

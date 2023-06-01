@@ -5,14 +5,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ProductRequest {
+public class ProductAddRequest {
 
     private final String name;
     private final Integer price;
     private final String imageUrl;
     private final Integer stock;
 
-    private ProductRequest() {
+    private ProductAddRequest() {
         this(null, null, null, null);
     }
 }

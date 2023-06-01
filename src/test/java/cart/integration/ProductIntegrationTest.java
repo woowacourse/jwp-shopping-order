@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.ProductRequest;
+import cart.dto.ProductAddRequest;
 import cart.dto.ProductResponse;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
-    private static final ProductRequest dummyRequest = new ProductRequest("name", 1_000, "imageUrl", 10);
+    private static final ProductAddRequest dummyRequest = new ProductAddRequest("name", 1_000, "imageUrl", 10);
     private static final String URI = "/products";
 
     private ExtractableResponse<Response> postDummyProduct() {
@@ -92,7 +92,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         String id = location.substring(location.length() - 1);
 
         // when
-        ProductRequest newRequest = new ProductRequest("newName", 9_999, "newImageUrl", 99);
+        ProductAddRequest newRequest = new ProductAddRequest("newName", 9_999, "newImageUrl", 99);
         var result = given()
                 .contentType(ContentType.JSON)
                 .body(newRequest)

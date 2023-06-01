@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.dto.ProductRequest;
+import cart.dto.ProductAddRequest;
 import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import lombok.AllArgsConstructor;
@@ -35,15 +35,15 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        Long productId = productService.createProduct(productRequest);
+    public ResponseEntity<Void> createProduct(@RequestBody ProductAddRequest productAddRequest) {
+        Long productId = productService.createProduct(productAddRequest);
 
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @RequestBody ProductRequest productRequest) {
-        productService.updateProduct(productId, productRequest);
+    public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @RequestBody ProductAddRequest productAddRequest) {
+        productService.updateProduct(productId, productAddRequest);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

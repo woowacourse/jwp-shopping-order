@@ -6,10 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.domain.Member;
 import cart.domain.Point;
 import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
+import cart.dto.CartItemAddRequest;
 import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
-import cart.repository.MemberRepository;
+import cart.dto.ProductAddRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -32,8 +30,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId1 = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 10));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 20));
+        productId1 = createProduct(new ProductAddRequest("치킨", 10_000, "http://example.com/chicken.jpg", 10));
+        productId2 = createProduct(new ProductAddRequest("피자", 15_000, "http://example.com/pizza.jpg", 20));
 
         memberRepository.save(new Member("a@a.com", "password1", new Point(0)));
         memberRepository.save(new Member("b@b.com", "password2", new Point(0)));
@@ -41,10 +39,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
         member2 = memberRepository.findById(2L);
     }
 
-    private Long createProduct(final ProductRequest productRequest) {
+    private Long createProduct(final ProductAddRequest productAddRequest) {
         var response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
+                .body(productAddRequest)
                 .when()
                 .post("/products")
                 .then()
@@ -61,21 +59,21 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Test
     void 장바구니에_아이템을_추가한다() {
         // given
-        CartItemRequest cartItemRequest = new CartItemRequest(productId1);
+        CartItemAddRequest cartItemAddRequest = new CartItemAddRequest(productId1);
 
         // when
-        var response = requestAddCartItem(member1, cartItemRequest);
+        var response = requestAddCartItem(member1, cartItemAddRequest);
         long savedId = getIdFromCreatedResponse(response);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isEqualTo("/cart-items/" + savedId);
     }
 
-    private ExtractableResponse<Response> requestAddCartItem(final Member member, final CartItemRequest cartItemRequest) {
+    private ExtractableResponse<Response> requestAddCartItem(final Member member, final CartItemAddRequest cartItemAddRequest) {
         return given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(cartItemRequest)
+                .body(cartItemAddRequest)
                 .when()
                 .post("/cart-items")
                 .then()
@@ -101,7 +99,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private Long requestAddCartItemAndGetId(final Member member, final Long productId) {
-        var response = requestAddCartItem(member, new CartItemRequest(productId));
+        var response = requestAddCartItem(member, new CartItemAddRequest(productId));
 
         return getIdFromCreatedResponse(response);
     }
@@ -120,10 +118,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void 틀린_비밀번호로_장바구니에_아이템을_추가_요청시_실패한다() {
         // given
         Member illegalMember = new Member(member1.getId(), member1.getEmail(), member1.getPassword() + "asdf");
-        CartItemRequest cartItemRequest = new CartItemRequest(productId1);
+        CartItemAddRequest cartItemAddRequest = new CartItemAddRequest(productId1);
 
         // when
-        var response = requestAddCartItem(illegalMember, cartItemRequest);
+        var response = requestAddCartItem(illegalMember, cartItemAddRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
