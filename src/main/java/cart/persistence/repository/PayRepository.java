@@ -35,14 +35,23 @@ public class PayRepository {
 
     public List<CartItem> getCartItemsByIds(final List<Long> ids) {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(ids);
+        final Map<Long, MemberEntity> memberEntityMap = findMemberEntityMapByCartItemEntities(cartItemEntities);
+        final List<ProductEntity> productEntities = getProductEntitiesFromCartItemEntities(cartItemEntities);
+        return combineToCartItems(cartItemEntities, memberEntityMap, productEntities);
+    }
+
+    private Map<Long, MemberEntity> findMemberEntityMapByCartItemEntities(final List<CartItemEntity> cartItemEntities) {
         final List<Long> memberIds = cartItemEntities.stream()
                 .map(CartItemEntity::getMemberId)
                 .collect(Collectors.toList());
         final List<MemberEntity> memberEntities = memberDao.getMembersByIds(memberIds);
-        final Map<Long, MemberEntity> memberEntityMap = memberEntities.stream()
+        return memberEntities.stream()
                 .collect(Collectors.toMap(MemberEntity::getId, Function.identity()));
-        final List<ProductEntity> productEntities = getProductEntitiesFromCartItemEntities(cartItemEntities);
+    }
 
+    private List<CartItem> combineToCartItems(final List<CartItemEntity> cartItemEntities,
+                                              final Map<Long, MemberEntity> memberEntityMap,
+                                              final List<ProductEntity> productEntities) {
         final List<CartItem> cartItems = new ArrayList<>();
         for (int i = 0; i < cartItemEntities.size(); i++) {
             final CartItemEntity cartItemEntity = cartItemEntities.get(i);

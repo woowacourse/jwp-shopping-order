@@ -36,12 +36,23 @@ public class CartItemRepository {
 
     public List<CartItem> findCartItemsByMemberId(final Long memberId) {
         final MemberEntity memberEntity = memberDao.findByMemberId(memberId);
+
         final List<CartItemEntity> cartItemEntities = cartItemDao.findAllByMemberId(memberId);
+        final List<ProductEntity> productEntities = findAllProductEntitiesByCartItemEntities(cartItemEntities);
+
+        return combineToCartItems(memberEntity, cartItemEntities, productEntities);
+    }
+
+    private List<ProductEntity> findAllProductEntitiesByCartItemEntities(final List<CartItemEntity> cartItemEntities) {
         final List<Long> productIds = cartItemEntities.stream()
                 .map(CartItemEntity::getProductId)
                 .collect(Collectors.toList());
-        final List<ProductEntity> productEntities = productDao.findByIds(productIds);
+        return productDao.findByIds(productIds);
+    }
 
+    private List<CartItem> combineToCartItems(final MemberEntity memberEntity,
+                                              final List<CartItemEntity> cartItemEntities,
+                                              final List<ProductEntity> productEntities) {
         final List<CartItem> cartItems = new ArrayList<>();
         for (int i = 0; i < cartItemEntities.size(); i++) {
             final CartItemEntity cartItemEntity = cartItemEntities.get(i);
