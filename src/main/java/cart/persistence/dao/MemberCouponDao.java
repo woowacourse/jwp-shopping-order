@@ -1,7 +1,6 @@
 package cart.persistence.dao;
 
 import cart.persistence.dto.MemberCouponDetailDTO;
-import cart.persistence.dto.MemberCouponDetailWithUserDTO;
 import cart.persistence.entity.MemberCouponEntity;
 import java.util.List;
 import java.util.Optional;
@@ -29,14 +28,14 @@ public class MemberCouponDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Optional<MemberCouponDetailWithUserDTO> findById(final long id) {
+    public Optional<MemberCouponDetailDTO> findById(final long id) {
         String sql = "SELECT * FROM member_coupon "
-                + "INNER JOIN member ON member_coupon.member_id = member.id "
                 + "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id "
+                + "INNER JOIN member ON member_coupon.member_id = member.id "
                 + "WHERE member_coupon.id = ? ";
         try {
-            MemberCouponDetailWithUserDTO memberCoupon = jdbcTemplate.queryForObject(sql,
-                    RowMapperHelper.memberCouponFullDetailDTORowMapper(), id);
+            MemberCouponDetailDTO memberCoupon = jdbcTemplate.queryForObject(sql,
+                    RowMapperHelper.memberCouponDetailRowMapper(), id);
             return Optional.of(memberCoupon);
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
@@ -46,6 +45,7 @@ public class MemberCouponDao {
     public List<MemberCouponDetailDTO> findValidCouponByMemberId(final long memberId) {
         String sql = "SELECT * FROM member_coupon "
                 + "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id "
+                + "INNER JOIN member ON member_coupon.member_id = member.id "
                 + "WHERE member_id = ? "
                 + "AND is_used = FALSE "
                 + "AND expired_at > CURRENT_TIMESTAMP ";

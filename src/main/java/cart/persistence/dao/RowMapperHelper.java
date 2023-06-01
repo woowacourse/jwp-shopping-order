@@ -3,7 +3,6 @@ package cart.persistence.dao;
 import cart.domain.coupon.CouponType;
 import cart.persistence.dto.CartDetailDTO;
 import cart.persistence.dto.MemberCouponDetailDTO;
-import cart.persistence.dto.MemberCouponDetailWithUserDTO;
 import cart.persistence.entity.CartItemEntity;
 import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberCouponEntity;
@@ -135,16 +134,8 @@ public class RowMapperHelper {
         return (rs, rowNum) -> {
             MemberCouponEntity memberCoupon = memberCouponRowMapperWithTable().mapRow(rs, rowNum);
             CouponEntity coupon = couponRowMapperWithTable().mapRow(rs, rowNum);
-            return new MemberCouponDetailDTO(memberCoupon, coupon);
-        };
-    }
-
-    public static RowMapper<MemberCouponDetailWithUserDTO> memberCouponFullDetailDTORowMapper() {
-        return (rs, rowNum) -> {
-            MemberCouponEntity memberCoupon = memberCouponRowMapperWithTable().mapRow(rs, rowNum);
-            CouponEntity coupon = couponRowMapperWithTable().mapRow(rs, rowNum);
             MemberEntity member = memberRowMapperWithTable().mapRow(rs, rowNum);
-            return new MemberCouponDetailWithUserDTO(memberCoupon, coupon, member);
+            return new MemberCouponDetailDTO(memberCoupon, coupon, member);
         };
     }
 }

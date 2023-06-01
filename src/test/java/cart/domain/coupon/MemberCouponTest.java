@@ -1,5 +1,6 @@
 package cart.domain.coupon;
 
+import static cart.fixture.MemberFixture.멤버_test1_도메인;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
@@ -24,7 +25,8 @@ class MemberCouponTest {
         void 만료되었으면_거짓() {
             // given
             CartItems cartItems = new CartItems(Collections.emptyList());
-            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, false, LocalDateTime.MIN,
+            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, 멤버_test1_도메인, false,
+                    LocalDateTime.MIN,
                     LocalDateTime.now());
 
             // when
@@ -38,7 +40,8 @@ class MemberCouponTest {
         void 이미_사용된_쿠폰이면_거짓() {
             // given
             CartItems cartItems = new CartItems(Collections.emptyList());
-            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, true, LocalDateTime.MAX,
+            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, 멤버_test1_도메인, true,
+                    LocalDateTime.MAX,
                     LocalDateTime.now());
 
             // when
@@ -51,7 +54,8 @@ class MemberCouponTest {
         @Test
         void 쿠폰_조건과_맞지않으면_거짓() {
             // given
-            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, false, LocalDateTime.MAX,
+            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, 멤버_test1_도메인, false,
+                    LocalDateTime.MAX,
                     LocalDateTime.now());
             CartItems cartItems = Mockito.mock(CartItems.class);
             given(cartItems.getTotalProductPrice()).willReturn(2000);
@@ -66,7 +70,8 @@ class MemberCouponTest {
         @Test
         void 조건을_만족하면_참() {
             // given
-            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, false, LocalDateTime.MAX,
+            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, 멤버_test1_도메인, false,
+                    LocalDateTime.MAX,
                     LocalDateTime.now());
             CartItems cartItems = Mockito.mock(CartItems.class);
             given(cartItems.getTotalProductPrice()).willReturn(10000);

@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.fixture.CouponFixture.금액_10000원이상_1000원할인;
 import cart.persistence.dto.MemberCouponDetailDTO;
-import cart.persistence.dto.MemberCouponDetailWithUserDTO;
 import cart.persistence.entity.MemberCouponEntity;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +51,7 @@ class MemberCouponDaoTest {
 
         // when
         long id = memberCouponDao.create(memberCoupon);
-        Optional<MemberCouponDetailWithUserDTO> result = memberCouponDao.findById(id);
+        Optional<MemberCouponDetailDTO> result = memberCouponDao.findById(id);
 
         // then
         assertAll(
