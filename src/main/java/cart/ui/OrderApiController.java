@@ -37,29 +37,8 @@ public class OrderApiController {
 
     @GetMapping
     public ResponseEntity<AllOrderResponse> findAllOrders(Member member) {
-        AllOrderResponse allOrderResponse = new AllOrderResponse(
-                List.of(
-                        new OrderResponse(
-                                1L,
-                                List.of(
-                                        new OrderItemResponse(
-                                                1L,
-                                                "지구별",
-                                                1000,
-                                                "https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg",
-                                                2
-                                        ),
-                                        new OrderItemResponse(
-                                                2L,
-                                                "화성",
-                                                200000,
-                                                "https://cdn.pixabay.com/photo/2011/12/13/14/30/mars-11012__480.jpg",
-                                                4
-                                        )
-                                )
-                        )
-                )
-        );
+        AllOrderResponse allOrderResponse = orderService.findAllOrderByMember(member);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(allOrderResponse);

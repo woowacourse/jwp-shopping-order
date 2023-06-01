@@ -47,7 +47,7 @@ public class MemberCouponDao {
 
 
     public List<MemberCouponEntity> findByIds(final List<Long> ids) {
-        final String sql = "SELECT * FROM coupon_member WHERE id IN (%s) ";
+        final String sql = "SELECT * FROM member_coupon WHERE id IN (%s) ";
 
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
         return jdbcTemplate.query(
