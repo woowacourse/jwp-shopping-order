@@ -1,7 +1,6 @@
 package cart.order.application.mapper;
 
 import cart.member.domain.Member;
-import cart.order.application.dto.OrderResponse;
 import cart.order.application.dto.RegisterOrderRequest;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
@@ -10,6 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderMapper {
+
+  private OrderMapper() {
+  }
 
   public static OrderEntity mapToOrderEntity(
       final Member member,
