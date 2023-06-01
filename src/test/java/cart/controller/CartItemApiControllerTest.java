@@ -132,7 +132,7 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(10);
         String request = objectMapper.writeValueAsString(quantityUpdateRequest);
 
-        ResultActions result = mockMvc.perform(patch("/cart-items/{id}", CART_ITEM_치킨_MEMBER_A.getId())
+        ResultActions result = mockMvc.perform(patch("/cart-items/{id}", CART_ITEM_치킨_MEMBER_A().getId())
                 .header(HttpHeaders.AUTHORIZATION, TestFixture.AUTHORIZATION_HEADER_MEMBER_A)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
@@ -149,7 +149,7 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
 
     @Test
     void 장바구니_항목_제거() throws Exception {
-        ResultActions result = mockMvc.perform(delete("/cart-items/{id}", CART_ITEM_치킨_MEMBER_A.getId())
+        ResultActions result = mockMvc.perform(delete("/cart-items/{id}", CART_ITEM_치킨_MEMBER_A().getId())
                 .header(HttpHeaders.AUTHORIZATION, TestFixture.AUTHORIZATION_HEADER_MEMBER_A)
                 .contentType(MediaType.APPLICATION_JSON)
         );

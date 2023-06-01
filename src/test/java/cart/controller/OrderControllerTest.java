@@ -67,7 +67,7 @@ public class OrderControllerTest extends ControllerTestWithDocs {
     void 주문요청() throws Exception {
         List<OrderRequest> orderRequest = List.of(
                 new OrderRequest(
-                        CART_ITEM_샐러드_MEMBER_A.getId(),
+                        CART_ITEM_샐러드_MEMBER_A().getId(),
                         new ProductRequest.WithId(
                                 샐러드.getId(),
                                 샐러드.getName(),
@@ -96,7 +96,7 @@ public class OrderControllerTest extends ControllerTestWithDocs {
     void 주문요청_쿠폰사용() throws Exception {
         List<OrderRequest> orderRequest = List.of(
                 new OrderRequest(
-                        CART_ITEM_샐러드_MEMBER_A.getId(),
+                        CART_ITEM_샐러드_MEMBER_A().getId(),
                         new ProductRequest.WithId(
                                 샐러드.getId(),
                                 샐러드.getName(),

@@ -45,7 +45,7 @@ class MemberCouponDaoTest {
 
     @Test
     void 사용자_쿠폰을_업데이트한다() {
-        MemberCoupon fixture = MEMBER_A_COUPON_FIXED_2000;
+        MemberCoupon fixture = MEMBER_A_COUPON_FIXED_2000();
         MemberCoupon memberCoupon = new MemberCoupon(fixture.getId(), fixture.getOwner(), fixture.getCoupon(), true);
         Long id = memberCouponDao.insert(memberCoupon);
 
@@ -64,7 +64,7 @@ class MemberCouponDaoTest {
         MemberCouponDto selected = memberCouponDao.selectBy(id);
         assertThat(selected)
                 .usingRecursiveComparison()
-                .isEqualTo(MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000));
+                .isEqualTo(MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000()));
     }
 
     @Test

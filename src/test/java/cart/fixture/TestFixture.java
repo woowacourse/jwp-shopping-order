@@ -34,10 +34,15 @@ public class TestFixture {
     public static Product 감자튀김 = new Product(6L, "감자튀김", 4000,
             "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8JUVBJUIwJTkwJUVDJTlFJTkwJUVEJThBJTgwJUVBJUI5JTgwfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60");
 
-    public static CartItem CART_ITEM_치킨_MEMBER_A = new CartItem(1L, 1, 치킨, MEMBER_A);
-    public static CartItem CART_ITEM_샐러드_MEMBER_A = new CartItem(2L, 10, 샐러드, MEMBER_A);
+    public static CartItem CART_ITEM_치킨_MEMBER_A() {
+        return new CartItem(1L, MEMBER_A, 치킨, 1);
+    }
 
-    public static List<CartItem> CART_ITEMS_MEMBER_A = List.of(CART_ITEM_치킨_MEMBER_A, CART_ITEM_샐러드_MEMBER_A);
+    public static CartItem CART_ITEM_샐러드_MEMBER_A() {
+        return new CartItem(2L, MEMBER_A, 샐러드, 10);
+    }
+
+    public static List<CartItem> CART_ITEMS_MEMBER_A = List.of(CART_ITEM_치킨_MEMBER_A(), CART_ITEM_샐러드_MEMBER_A());
 
     public static OrderItem ORDERED_치킨 = new OrderItem(1L, 치킨, 1);
     public static OrderItem ORDERED_샐러드 = new OrderItem(2L, 샐러드, 10);
@@ -55,7 +60,12 @@ public class TestFixture {
 
     public static Coupon COUPON_FIXED_2000 = new Coupon(1L, 2000, DiscountPolicy.FIXED);
     public static Coupon COUPON_PERCENTAGE_50 = new Coupon(2L, 50, DiscountPolicy.PERCENTAGE);
-    public static MemberCoupon MEMBER_A_COUPON_FIXED_2000 = new MemberCoupon(1L, MEMBER_A, COUPON_FIXED_2000);
-    public static MemberCoupon MEMBER_A_COUPON_PERCENTAGE_50 = new MemberCoupon(2L, MEMBER_A, COUPON_PERCENTAGE_50);
 
+    public static MemberCoupon MEMBER_A_COUPON_FIXED_2000() {
+        return new MemberCoupon(1L, MEMBER_A, COUPON_FIXED_2000);
+    }
+
+    public static MemberCoupon MEMBER_A_COUPON_PERCENTAGE_50() {
+        return new MemberCoupon(2L, MEMBER_A, COUPON_PERCENTAGE_50);
+    }
 }

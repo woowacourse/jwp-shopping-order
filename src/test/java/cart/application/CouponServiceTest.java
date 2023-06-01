@@ -49,31 +49,31 @@ class CouponServiceTest {
     void 멤버의_쿠폰을_모두_조회한다() {
         when(memberService.getMemberBy(MEMBER_A.getId())).thenReturn(MEMBER_A);
         when(memberCouponDao.selectAllBy(MEMBER_A.getId())).thenReturn(List.of(
-                MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000),
-                MemberCouponDto.of(MEMBER_A_COUPON_PERCENTAGE_50)
+                MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000()),
+                MemberCouponDto.of(MEMBER_A_COUPON_PERCENTAGE_50())
         ));
 
         assertThat(couponService.getMemberCouponsOf(MEMBER_A))
-                .containsExactlyInAnyOrder(MEMBER_A_COUPON_FIXED_2000, MEMBER_A_COUPON_PERCENTAGE_50);
+                .containsExactlyInAnyOrder(MEMBER_A_COUPON_FIXED_2000(), MEMBER_A_COUPON_PERCENTAGE_50());
     }
 
     @Test
     void id로_사용자_쿠폰을_가져온다() {
         when(memberService.getMemberBy(MEMBER_A.getId())).thenReturn(MEMBER_A);
-        when(memberCouponDao.selectBy(eq(MEMBER_A_COUPON_FIXED_2000.getId()))).thenReturn(
-                MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000));
+        when(memberCouponDao.selectBy(eq(MEMBER_A_COUPON_FIXED_2000().getId()))).thenReturn(
+                MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000()));
 
-        assertThat(couponService.getMemberCouponBy(MEMBER_A, MEMBER_A_COUPON_FIXED_2000.getId()))
-                .isEqualTo(MEMBER_A_COUPON_FIXED_2000);
+        assertThat(couponService.getMemberCouponBy(MEMBER_A, MEMBER_A_COUPON_FIXED_2000().getId()))
+                .isEqualTo(MEMBER_A_COUPON_FIXED_2000());
     }
 
     @Test
     void 다른_사용자의_쿠폰을_가져올_수_없다() {
         when(memberService.getMemberBy(MEMBER_A.getId())).thenReturn(MEMBER_A);
-        when(memberCouponDao.selectBy(eq(MEMBER_A_COUPON_FIXED_2000.getId()))).thenReturn(
-                MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000));
+        when(memberCouponDao.selectBy(eq(MEMBER_A_COUPON_FIXED_2000().getId()))).thenReturn(
+                MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000()));
 
-        assertThatThrownBy(() -> couponService.getMemberCouponBy(MEMBER_B, MEMBER_A_COUPON_FIXED_2000.getId()))
+        assertThatThrownBy(() -> couponService.getMemberCouponBy(MEMBER_B, MEMBER_A_COUPON_FIXED_2000().getId()))
                 .isInstanceOf(InaccessibleCouponException.class);
     }
 
