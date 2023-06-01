@@ -11,7 +11,7 @@ public class OrderCreateRequest {
     private Long couponId;
 
     public Order toDomain(final Long memberId) {
-        return Order.createNonePkOrder(price, couponId, memberId);
+        return Order.createNonePkAndOrderItemsOrder(price, couponId, memberId);
     }
 
     public List<Long> getCartItemIds() {

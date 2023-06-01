@@ -3,20 +3,24 @@ package cart.domain;
 public class Product {
     private Long id;
     private String name;
-    private int price;
+    private Integer price;
     private String imageUrl;
 
-    public Product(String name, int price, String imageUrl) {
+    public Product(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public static Product createHasOnlyPkProduct(final Long productId) {
+        return new Product(productId, null, null, null);
     }
 
     public Long getId() {
@@ -27,7 +31,7 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

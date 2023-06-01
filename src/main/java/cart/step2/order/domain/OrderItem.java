@@ -1,37 +1,33 @@
 package cart.step2.order.domain;
 
+import cart.domain.Product;
+
 public class OrderItem {
 
     private final Long id;
-    private final Long productId;
-    private final Long orderId;
+    private final Product product;
     private final int quantity;
 
-    private OrderItem(final Long id, final Long productId, final Long orderId, final int quantity) {
+    private OrderItem(final Long id, final Product product, final int quantity) {
         this.id = id;
-        this.productId = productId;
-        this.orderId = orderId;
+        this.product = product;
         this.quantity = quantity;
     }
 
-    public static OrderItem createNonePkOrder(final Long productId, final Long orderId, final int quantity) {
-        return new OrderItem(null, productId, orderId, quantity);
+    public static OrderItem createNonePkOrder(final Product product, final int quantity) {
+        return new OrderItem(null, product, quantity);
     }
 
-    public static OrderItem of(final Long id, final Long productId, final Long orderId, final int quantity) {
-        return new OrderItem(id, productId, orderId, quantity);
+    public static OrderItem of(final Long id, final Product product, final int quantity) {
+        return new OrderItem(id, product, quantity);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public Long getOrderId() {
-        return orderId;
+    public Product getProduct() {
+        return product;
     }
 
     public int getQuantity() {

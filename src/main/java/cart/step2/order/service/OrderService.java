@@ -1,23 +1,23 @@
 package cart.step2.order.service;
 
-import cart.step2.coupon.domain.repository.CouponRepository;
 import cart.step2.order.domain.Order;
-import cart.step2.order.domain.repository.OrderItemRepository;
 import cart.step2.order.domain.repository.OrderRepository;
 import cart.step2.order.presentation.dto.OrderCreateRequest;
+import cart.step2.order.presentation.dto.OrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final CouponRepository couponRepository;
 
-    public OrderService(final OrderRepository orderRepository, final OrderItemRepository orderItemRepository, final CouponRepository couponRepository) {
+    public OrderService(final OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.couponRepository = couponRepository;
     }
 
     @Transactional
@@ -25,4 +25,11 @@ public class OrderService {
         Order order = request.toDomain(memberId);
         return orderRepository.save(order);
     }
+
+    public List<OrderResponse> findAllByMemberId(final Long memberId) {
+        return orderRepository.findAllByMemberId(memberId).stream()
+                .map(order -> new OrderResponse(order.getId(), order.getOrderItems(), order.getDate(), order.getPrice()))
+                .collect(Collectors.toList());
+    }
+
 }

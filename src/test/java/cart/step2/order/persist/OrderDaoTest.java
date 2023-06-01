@@ -33,7 +33,7 @@ class OrderDaoTest {
         
         // when
         orderDao.insert(orderEntity);
-        List<OrderEntity> orderEntities = orderDao.findAll(1L);
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(1L);
 
         // then
         assertThat(orderEntities).hasSize(1);

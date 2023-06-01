@@ -2,7 +2,7 @@ package cart.step2.order.service;
 
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
-import cart.step2.order.domain.OrderItem;
+import cart.step2.order.domain.OrderItemEntity;
 import cart.step2.order.domain.repository.OrderItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +24,17 @@ public class OrderItemService {
 
     @Transactional
     public void create(final Long memberId, final List<Long> cartItemIds, final Long orderId) {
-        List<OrderItem> orderItems = new ArrayList<>();
+        List<OrderItemEntity> orderItemEntities = new ArrayList<>();
         List<CartItem> removalCartItems= new ArrayList<>();
 
         for (Long cartItemId : cartItemIds) {
             CartItem cartItem = cartItemDao.findById(cartItemId);
-            orderItems.add(OrderItem.createNonePkOrder(cartItem.getProduct().getId(), orderId, cartItem.getQuantity()));
+            orderItemEntities.add(OrderItemEntity.createNonePkOrderItemEntity(cartItem.getProduct().getId(), orderId, cartItem.getQuantity()));
             removalCartItems.add(cartItem);
         }
 
         cartItemDao.batchDelete(memberId, removalCartItems);
-        orderItemRepository.createAllOrderItems(orderItems);
+        orderItemRepository.createAllOrderItems(orderItemEntities);
     }
 
 }

@@ -1,6 +1,6 @@
 package cart.step2.order.persist;
 
-import cart.step2.order.domain.OrderItem;
+import cart.step2.order.domain.OrderItemEntity;
 import cart.step2.order.domain.repository.OrderItemRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +16,8 @@ public class OrderItemRepositoryMapper implements OrderItemRepository {
     }
 
     @Override
-    public void createAllOrderItems(final List<OrderItem> orderItems) {
-        orderItemDao.batchInsert(orderItems);
+    public void createAllOrderItems(final List<OrderItemEntity> orderItemEntities) {
+        orderItemDao.batchInsert(orderItemEntities);
     }
 
 }

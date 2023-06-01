@@ -15,7 +15,8 @@ public class OrderDao {
                 rs.getLong("id"),
                 rs.getInt("price"),
                 rs.getLong("coupon_id"),
-                rs.getLong("member_id")
+                rs.getLong("member_id"),
+                rs.getTimestamp("date").toLocalDateTime()
         );
 
     private final JdbcTemplate jdbcTemplate;
@@ -30,7 +31,7 @@ public class OrderDao {
         return (long) jdbcTemplate.update(sql, orderEntity.getPrice(), orderEntity.getCouponId(), orderEntity.getMemberId());
     }
 
-    public List<OrderEntity> findAll(final Long memberId) {
+    public List<OrderEntity> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM orders WHERE member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
