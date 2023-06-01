@@ -16,7 +16,7 @@ public enum CouponType {
             .collect(Collectors.toMap(CouponType::toString, Function.identity()));
 
     public static CouponType from(final String name) {
-        if (COUPON_TYPE_MAP.containsKey(name)) {
+        if (!COUPON_TYPE_MAP.containsKey(name)) {
             throw new CouponTypeNotFoundException();
         }
         return COUPON_TYPE_MAP.get(name);
