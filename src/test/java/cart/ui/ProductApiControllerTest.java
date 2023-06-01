@@ -72,10 +72,10 @@ class ProductApiControllerTest {
     @Test
     public void getAllProducts() throws Exception {
         List<ProductResponse> products = List.of(
-                ProductResponse.of(유자_민트_티_5900원_ID_1),
-                ProductResponse.of(자몽_허니_블랙티_5700원_ID_2),
-                ProductResponse.of(아메리카노_4500원_ID_3),
-                ProductResponse.of(바닐라_크림_콜드브루_5800원_ID_4)
+                ProductResponse.from(유자_민트_티_5900원_ID_1),
+                ProductResponse.from(자몽_허니_블랙티_5700원_ID_2),
+                ProductResponse.from(아메리카노_4500원_ID_3),
+                ProductResponse.from(바닐라_크림_콜드브루_5800원_ID_4)
         );
         willReturn(products).given(productService).getAllProducts();
 
@@ -94,7 +94,7 @@ class ProductApiControllerTest {
 
     @Test
     public void getProductById() throws Exception {
-        willReturn(ProductResponse.of(자몽_허니_블랙티_5700원_ID_2)).given(productService).getProductById(2L);
+        willReturn(ProductResponse.from(자몽_허니_블랙티_5700원_ID_2)).given(productService).getProductById(2L);
 
         this.mockMvc.perform(get("/products/{id}", 2L))
                 .andExpect(status().isOk())

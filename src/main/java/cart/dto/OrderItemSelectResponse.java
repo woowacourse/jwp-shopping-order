@@ -20,7 +20,7 @@ public class OrderItemSelectResponse {
                 .map(orderItem -> new OrderItemSelectResponse(
                         orderItem.getId(),
                         orderItem.getQuantity(),
-                        ProductResponse.of(orderItem.getProduct())))
+                        ProductResponse.from(orderItem.getProduct())))
                 .collect(Collectors.toUnmodifiableList());
     }
 

@@ -20,12 +20,12 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+        return products.stream().map(ProductResponse::from).collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
-        return ProductResponse.of(product);
+        return ProductResponse.from(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
