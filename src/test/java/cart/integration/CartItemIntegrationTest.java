@@ -2,11 +2,11 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
-import cart.dto.CartItemIdsRequest;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductRequest;
+import cart.dto.cartitem.CartItemIdsRequest;
+import cart.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.dto.cartitem.CartItemRequest;
+import cart.dto.cartitem.CartItemResponse;
+import cart.dto.product.ProductRequest;
 import cart.exception.notfound.MemberNotFoundException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
@@ -160,6 +161,21 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
+    }
+
+    @DisplayName("장바구니에 담긴 상품들의 총 합과 배송비를 구한다.")
+    @Test
+    void getPaymentInfo() {
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("item", 1, 2)
+                .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
+                .when()
+                .get("/cart-items/price")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("totalPrice", is(100_000))
+                .body("deliveryFee", is(0));
     }
 
     @DisplayName("장바구니에 담긴 다수의 아이템들을 삭제한다.")

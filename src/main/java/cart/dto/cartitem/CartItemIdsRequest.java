@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.cartitem;
 
 import java.util.List;
 

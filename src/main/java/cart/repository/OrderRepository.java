@@ -1,6 +1,5 @@
 package cart.repository;
 
-import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.ProductDao;
@@ -22,14 +21,12 @@ public class OrderRepository {
     private final OrderDao orderDao;
     private final ProductDao productDao;
     private final OrderProductDao orderProductDao;
-    private final CartItemDao cartItemDao;
 
     public OrderRepository(final OrderDao orderDao, final ProductDao productDao,
-                           final OrderProductDao orderProductDao, final CartItemDao cartItemDao) {
+                           final OrderProductDao orderProductDao) {
         this.orderDao = orderDao;
         this.productDao = productDao;
         this.orderProductDao = orderProductDao;
-        this.cartItemDao = cartItemDao;
     }
 
     public Long save(final CartItems cartItems, final Member member, final MemberPoint usedPoint) {
@@ -40,8 +37,6 @@ public class OrderRepository {
         final List<Product> products = productDao.findAllByIds(cartItems.getProductIds());
         final List<OrderProduct> orderProducts = cartItems.toOrderProducts(findOrder, products);
         orderProductDao.insertAll(orderProducts);
-        cartItemDao.deleteByIds(cartItems.getCartItemIds());
-
         return orderId;
     }
 

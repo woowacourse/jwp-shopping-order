@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.order;
 
 public class PointResponse {
 

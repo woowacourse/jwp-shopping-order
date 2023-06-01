@@ -2,7 +2,7 @@ package cart.ui;
 
 import cart.application.ProductService;
 import cart.dao.MemberDao;
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

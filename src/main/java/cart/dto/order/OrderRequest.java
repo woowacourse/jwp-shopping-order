@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.order;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PositiveOrZero;

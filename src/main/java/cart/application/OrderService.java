@@ -5,9 +5,9 @@ import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
-import cart.dto.OrderDetailResponse;
-import cart.dto.OrderProductDto;
-import cart.dto.OrderRequest;
+import cart.dto.order.OrderDetailResponse;
+import cart.dto.order.OrderProductDto;
+import cart.dto.order.OrderRequest;
 import cart.exception.global.point.InvalidPointUseException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
@@ -46,14 +46,15 @@ public class OrderService {
         }
         final Member updatedMember = findMember.updatePoint(new MemberPoint(request.getPoint()), totalPrice);
         memberRepository.save(updatedMember);
-        return orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
+        final Long orderId = orderRepository.save(cartItems, updatedMember, new MemberPoint(request.getPoint()));
+        cartItemRepository.deleteByIds(cartItems.getCartItemIds());
+        return orderId;
     }
 
     public OrderDetailResponse getOrderDetail(final Member member, final Long orderId) {
         final Order order = orderRepository.findById(orderId);
         order.checkOwner(member);
         final List<OrderProduct> orderProducts = orderRepository.findAllByOrderId(orderId);
-
         return getOrderDetailResponse(order, orderProducts);
     }
 

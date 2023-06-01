@@ -71,7 +71,7 @@ public class MemberDao {
     }
 
     public List<Member> findAll() {
-        final String sql = "SELECT id, email, password, point from member";
+        final String sql = "SELECT id, email, password, point FROM member";
         return jdbcTemplate.query(sql, memberRowMapper);
     }
 }

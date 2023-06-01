@@ -21,7 +21,6 @@ public class ProductDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-
     public ProductDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource,
                       final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

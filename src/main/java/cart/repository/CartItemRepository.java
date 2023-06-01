@@ -53,4 +53,8 @@ public class CartItemRepository {
                 .collect(Collectors.toList());
         cartItemDao.deleteByIds(ids);
     }
+
+    public void deleteByIds(final List<Long> ids) {
+        cartItemDao.deleteByIds(ids);
+    }
 }

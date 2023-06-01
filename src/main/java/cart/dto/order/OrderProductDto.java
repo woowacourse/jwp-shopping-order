@@ -1,4 +1,6 @@
-package cart.dto;
+package cart.dto.order;
+
+import cart.dto.product.ProductResponse;
 
 public class OrderProductDto {
 

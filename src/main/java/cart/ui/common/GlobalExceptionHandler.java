@@ -49,14 +49,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
         log.warn("Exception from handleHttpRequestMethodNotSupportedException = ", e);
-        final ErrorResponse errorResponse = new ErrorResponse(String.format("잘못된 요청입니다. HTTP 메서드를 다시 확인해주세요. 입력한 HTTP 메서드 :%s", e.getMethod()));
+        final ErrorResponse errorResponse = new ErrorResponse("잘못된 요청입니다. HTTP 메서드를 다시 확인해주세요. 입력한 HTTP 메서드: "+ e.getMethod());
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(final Exception e) {
         log.error("Exception from handleUnexpectedException = ", e);
-        final ErrorResponse errorResponse = new ErrorResponse("서버에 예상치 못한 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.");
+        final ErrorResponse errorResponse = new ErrorResponse("서버에 예상치 못한 문제가 발생하였습니다. 연락주세요 ㅎㅎㅎ.");
         return ResponseEntity.internalServerError().body(errorResponse);
     }
 }

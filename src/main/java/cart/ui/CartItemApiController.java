@@ -2,11 +2,11 @@ package cart.ui;
 
 import cart.application.CartItemService;
 import cart.domain.member.Member;
-import cart.dto.CartItemIdsRequest;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.PaymentInfoResponse;
+import cart.dto.cartitem.CartItemIdsRequest;
+import cart.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.dto.cartitem.CartItemRequest;
+import cart.dto.cartitem.CartItemResponse;
+import cart.dto.order.PaymentInfoResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
