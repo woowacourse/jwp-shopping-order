@@ -1,8 +1,17 @@
 package cart.dto;
 
-public class ExceptionResponse extends RuntimeException {
+public class ExceptionResponse {
+
+    private String message;
+
+    public ExceptionResponse() {
+    }
 
     public ExceptionResponse(String message) {
-        super(message);
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
