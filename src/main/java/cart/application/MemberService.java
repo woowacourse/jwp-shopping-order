@@ -2,8 +2,8 @@ package cart.application;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
-import cart.dto.MemberRequest;
-import cart.dto.TokenResponse;
+import cart.dto.login.MemberRequest;
+import cart.dto.login.TokenResponse;
 import cart.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

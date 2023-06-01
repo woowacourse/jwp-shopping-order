@@ -1,4 +1,6 @@
-package cart.dto;
+package cart.dto.order;
+
+import cart.dto.ItemRequest;
 
 import java.util.List;
 

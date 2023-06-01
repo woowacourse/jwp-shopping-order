@@ -5,11 +5,11 @@ import cart.dao.OrderRepository;
 import cart.dao.ProductDao;
 import cart.domain.coupon.Coupon;
 import cart.domain.Item;
-import cart.domain.Order;
+import cart.domain.order.Order;
 import cart.domain.Product;
 import cart.dto.ItemRequest;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

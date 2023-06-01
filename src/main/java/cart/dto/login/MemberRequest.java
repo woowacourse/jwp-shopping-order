@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.login;
 
 public class MemberRequest {
 

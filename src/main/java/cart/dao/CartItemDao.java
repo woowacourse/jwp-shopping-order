@@ -65,14 +65,14 @@ public class CartItemDao {
     }
 
     public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+        String sql = "SELECT cart_item.id, cart_item.member_id, member.name, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
+            String email = rs.getString("member.name");
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");

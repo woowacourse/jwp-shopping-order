@@ -2,7 +2,7 @@ package cart.dao;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.Item;
-import cart.domain.Order;
+import cart.domain.order.Order;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

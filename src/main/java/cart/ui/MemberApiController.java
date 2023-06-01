@@ -1,8 +1,8 @@
 package cart.ui;
 
 import cart.application.MemberService;
-import cart.dto.TokenResponse;
-import cart.dto.MemberRequest;
+import cart.dto.login.TokenResponse;
+import cart.dto.login.MemberRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

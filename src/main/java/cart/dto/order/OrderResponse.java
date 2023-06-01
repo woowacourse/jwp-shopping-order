@@ -1,6 +1,6 @@
-package cart.dto;
+package cart.dto.order;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 import cart.dto.cart.CartItemResponse;
 import cart.dto.coupon.CouponResponse;
 

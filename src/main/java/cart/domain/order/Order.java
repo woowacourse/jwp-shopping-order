@@ -1,5 +1,7 @@
-package cart.domain;
+package cart.domain.order;
 
+import cart.domain.Item;
+import cart.domain.Items;
 import cart.domain.coupon.Coupon;
 
 import java.time.LocalDateTime;
