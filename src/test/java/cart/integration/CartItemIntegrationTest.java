@@ -1,11 +1,12 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
-import cart.domain.Member;
+import cart.dao.member.MemberDao;
+import cart.dao.product.ProductDao;
+import cart.domain.member.Member;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
+import cart.dto.product.ProductResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.SoftAssertions;
@@ -100,7 +101,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         // when
         ExtractableResponse<Response> response = 회원의_전체_장바구니_조회(멤버_현구막);
         List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
-                .map(CartItemResponse::getId)
+                .map(CartItemResponse::getProduct)
+                .map(ProductResponse::getId)
                 .collect(Collectors.toList());
 
         // then
@@ -161,7 +163,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 장바구니_아이템_수량_변경(멤버_하디, cartItemId, updateQuantity);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -192,7 +194,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = 장바구니_아이템_삭제(멤버_하디, cartItemId);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     private ExtractableResponse<Response> 장바구니에_아이템_추가(Member member, CartItemRequest cartItemRequest) {
