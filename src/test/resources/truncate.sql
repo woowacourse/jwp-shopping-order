@@ -1,6 +1,5 @@
-set foreign_key_checks = 0;
-TRUNCATE TABLE order_item;
-TRUNCATE TABLE cart_item;
-TRUNCATE TABLE orders;
-TRUNCATE TABLE product;
-set foreign_key_checks = 1;
+DELETE FROM order_item;
+DELETE FROM cart_item;
+DELETE FROM orders;
+DELETE FROM member;
+DELETE FROM product;

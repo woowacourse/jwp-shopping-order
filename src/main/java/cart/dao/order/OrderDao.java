@@ -1,7 +1,9 @@
 package cart.dao.order;
 
 import cart.domain.order.Order;
+import cart.entity.OrderEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -9,12 +11,20 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) -> new OrderEntity(
+            rs.getLong("id"),
+            rs.getInt("total_item_price"),
+            rs.getInt("discounted_total_item_price"),
+            rs.getInt("shipping_fee"),
+            rs.getTimestamp("ordered_at").toLocalDateTime()
+    );
 
     public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -41,5 +51,12 @@ public class OrderDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public List<OrderEntity> findByMemberId(final Long memberId) {
+        String sql = "SELECT id, total_item_price, discounted_total_item_price, shipping_fee, ordered_at FROM orders " +
+                "WHERE member_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

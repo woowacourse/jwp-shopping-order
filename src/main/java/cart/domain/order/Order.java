@@ -88,8 +88,8 @@ public class Order {
         return member;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems.getOrderItems();
+    public OrderItems getOrderItems() {
+        return orderItems;
     }
 
     public LocalDateTime getGenerateTime() {

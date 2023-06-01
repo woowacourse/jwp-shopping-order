@@ -7,8 +7,12 @@ import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.domain.order.OrderItems;
+import cart.domain.value.Money;
+import cart.entity.OrderEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +39,7 @@ public class OrderRepository {
     public Long save(final Order order, final List<Long> cartItemIds) {
         cartItemDao.deleteByIds(cartItemIds);
         Long orderId = orderDao.insertOrder(order);
-        orderItemDao.insert(order.getOrderItems(), orderId);
+        orderItemDao.insert(order.getOrderItems().getOrderItems(), orderId);
         return orderId;
     }
 
@@ -48,4 +52,26 @@ public class OrderRepository {
                         cartItem.getProduct().getDiscountRate()))
                 .collect(Collectors.toList());
     }
+
+    public List<Order> findByMember(final Member member) {
+        List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
+        List<Order> orders = new ArrayList<>();
+        for (OrderEntity orderEntity : orderEntities) {
+            List<OrderItem> orderItems = orderItemDao.findByOrderId(orderEntity.getId());
+            orders.add(orderEntityToOrder(member, orderEntity, orderItems));
+        }
+        return orders;
+    }
+
+    private static Order orderEntityToOrder(Member member, OrderEntity orderEntity, List<OrderItem> orderItems) {
+        return new Order(
+                orderEntity.getId(),
+                member,
+                new OrderItems(orderItems),
+                new Money(orderEntity.getShippingFee()),
+                new Money(orderEntity.getTotalItemPrice()),
+                new Money(orderEntity.getDiscountedTotalItemPrice())
+        );
+    }
+
 }

@@ -4,8 +4,12 @@ import cart.application.member.MemberService;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -29,5 +33,12 @@ public class OrderService {
 
         memberService.update(member, orderRequest.getTotalPrice());
         return orderRepository.save(order, orderRequest.getCartItemIds());
+    }
+
+    public List<OrderResponse> findByMember(final Member member) {
+        List<Order> orders = orderRepository.findByMember(member);
+        return orders.stream()
+                .map(order -> OrderResponse.from(order, member))
+                .collect(Collectors.toUnmodifiableList());
     }
 }
