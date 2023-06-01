@@ -23,15 +23,16 @@ public class OrderItemDao {
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                for(OrderItem orderItem : orderItems) {
-                    Product product = orderItem.getProduct();
-                    ps.setLong(1, orderId);
-                    ps.setString(2, product.getName());
-                    ps.setInt(3, product.getPrice());
-                    ps.setString(4, product.getImageUrl());
-                    ps.setInt(5, orderItem.getQuantity());
-                }
+                OrderItem orderItem = orderItems.get(i);
+                Product product = orderItem.getProduct();
+                ps.setLong(1, orderId);
+                ps.setString(2, product.getName());
+                ps.setInt(3, product.getPrice());
+                ps.setString(4, product.getImageUrl());
+                ps.setInt(5, orderItem.getQuantity());
+                
             }
+            
             @Override
             public int getBatchSize() {
                 return orderItems.size();

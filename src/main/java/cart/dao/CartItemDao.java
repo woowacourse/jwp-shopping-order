@@ -111,10 +111,9 @@ public class CartItemDao {
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                for(CartItem cartItem : cartItemsToRemove) {
-                    ps.setLong(1, cartItem.getMember().getId());
-                    ps.setLong(2, cartItem.getProduct().getId());
-                }
+                CartItem cartItem = cartItemsToRemove.get(i);
+                ps.setLong(1, cartItem.getMember().getId());
+                ps.setLong(2, cartItem.getProduct().getId());
             }
             @Override
             public int getBatchSize() {
