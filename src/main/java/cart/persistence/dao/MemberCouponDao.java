@@ -41,6 +41,12 @@ public class MemberCouponDao {
         return memberCoupons.isEmpty() ? null : memberCoupons.get(0);
     }
 
+    public MemberCouponEntity findOneByCouponId(Long couponId) {
+        String sql = "SELECT * FROM member_coupon WHERE coupon_id = ?";
+        List<MemberCouponEntity> memberCoupons = jdbcTemplate.query(sql, new Object[]{couponId}, new MemberCouponEntityRowMapper());
+        return memberCoupons.isEmpty() ? null : memberCoupons.get(0);
+    }
+
     public Long add(MemberCouponEntity memberCouponEntity) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(memberCouponEntity);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();

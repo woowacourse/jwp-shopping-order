@@ -43,6 +43,12 @@ public class DbMemberCouponRepository implements MemberCouponRepository {
     }
 
     @Override
+    public MemberCoupon findByCouponId(Long couponId) { // TODO findOne null 예외 처리 추가
+        MemberCouponEntity memberCouponEntity = memberCouponDao.findOneByCouponId(couponId);
+        return mapToMemberCoupon(memberCouponEntity);
+    }
+
+    @Override
     public MemberCoupon findById(Long id) {
         MemberCouponEntity memberCouponEntity = memberCouponDao.findById(id);
         return mapToMemberCoupon(memberCouponEntity);
