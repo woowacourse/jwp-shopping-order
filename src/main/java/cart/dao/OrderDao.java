@@ -46,7 +46,7 @@ public class OrderDao {
     }
 
     public List<OrderResultMap> findByMemberId(final Long memberId) {
-        final String sql = "SELECT o.id orderId, o.price orderPrice, o.date date, oi.quantity quantinty, p.id productId, p.price price, p.name name, p.image_url imageUrl " +
+        final String sql = "SELECT o.id orderId, o.price orderPrice, o.date date, oi.quantity quantity, p.id productId, p.price price, p.name name, p.image_url imageUrl " +
                 "FROM order_item oi " +
                 "LEFT JOIN orders o ON o.id = oi.order_id " +
                 "LEFT JOIN product p ON p.id = oi.product_id " +
