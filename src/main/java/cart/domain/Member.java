@@ -45,7 +45,7 @@ public class Member {
         return grade;
     }
 
-    public String getGradeValue() {
+    public String getGradeName() {
         return grade.getName();
     }
 }

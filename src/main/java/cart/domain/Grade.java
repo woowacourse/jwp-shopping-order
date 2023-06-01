@@ -2,22 +2,27 @@ package cart.domain;
 
 public enum Grade {
 
-    GOLD(5),
-    SILVER(3),
-    BRONZE(1),
+    GOLD(0.05),
+    SILVER(0.03),
+    BRONZE(0.01),
     ;
 
-    private final int discountRate;
+    private final double discountRate;
 
-    Grade(final int discountRate) {
+    Grade(final double discountRate) {
         this.discountRate = discountRate;
+    }
+
+    public int calculateGradeDiscountPrice(final int price) {
+        return (int) (price * discountRate);
     }
 
     public String getName() {
         return name();
     }
 
-    public int getDiscountRate() {
+    public double getDiscountRate() {
         return discountRate;
     }
+
 }
