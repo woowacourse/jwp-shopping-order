@@ -1,27 +1,18 @@
-package cart.domain;
+package cart.dao.entity;
 
-import cart.dao.entity.MemberEntity;
-
-public class Member {
+public class MemberEntity {
     private final Long id;
     private final String email;
     private final String password;
 
-    public Member(final Long id, final String email, final String password) {
+    public MemberEntity(final Long id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public Member(final long id) {
+    public MemberEntity(final long id) {
         this(id, null, null);
-    }
-
-    public static Member from(final MemberEntity member) {
-        return new Member(
-                member.getId(),
-                member.getEmail(),
-                member.getPassword());
     }
 
     public Long getId() {

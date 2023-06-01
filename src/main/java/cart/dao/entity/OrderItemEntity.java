@@ -7,21 +7,25 @@ import java.util.stream.Collectors;
 
 public class OrderItemEntity {
 
+    private final Long id;
     private final long orderId;
     private final String name;
     private final long price;
     private final String imageUrl;
     private final int quantity;
-    private Long id;
 
-    public OrderItemEntity(final long id,
+    public OrderItemEntity(final Long id,
                            final long orderId,
                            final String name,
                            final long price,
                            final String imageUrl,
                            final int quantity) {
-        this(orderId, name, price, imageUrl, quantity);
         this.id = id;
+        this.orderId = orderId;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
     }
 
     public OrderItemEntity(final long orderId,
@@ -29,11 +33,7 @@ public class OrderItemEntity {
                            final long price,
                            final String imageUrl,
                            final int quantity) {
-        this.orderId = orderId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.quantity = quantity;
+        this(null, orderId, name, price, imageUrl, quantity);
     }
 
     public static OrderItemEntity of(final long orderId, final OrderItem orderItem) {
@@ -49,6 +49,10 @@ public class OrderItemEntity {
         return orderItems.stream()
                 .map(orderItem -> OrderItemEntity.of(orderId, orderItem))
                 .collect(Collectors.toList());
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public long getOrderId() {
@@ -69,10 +73,6 @@ public class OrderItemEntity {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     @Override

@@ -39,7 +39,8 @@ public class OrderApiController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDetailResponse> showOrderDetail(final Member member, @PathVariable final Long orderId) {
+    public ResponseEntity<OrderDetailResponse> showOrderDetail(final Member member,
+                                                               @PathVariable final Long orderId) {
         final OrderDetailResponse order = orderService.findOrderDetailById(member, orderId);
         return ResponseEntity.ok().body(order);
     }

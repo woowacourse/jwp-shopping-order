@@ -25,4 +25,10 @@ public class CartItemException extends RuntimeException {
             super("Illegal cart item id; id=" + id);
         }
     }
+
+    public static class ExistingProductId extends CartItemException {
+        public ExistingProductId(final Long productId) {
+            super("already existing product in cart; product id =" + productId);
+        }
+    }
 }

@@ -8,12 +8,12 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.OrderItem;
-import cart.exception.OrderException;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
-@Transactional
+@Repository
 public class OrderRepository {
 
     private final OrderDao orderDao;
@@ -36,21 +36,27 @@ public class OrderRepository {
         final List<Order> orders = new ArrayList<>();
         for (final OrderEntity order : foundOrders) {
             final List<OrderItemEntity> foundOrderItems = orderItemDao.findByOrderId(order.getId());
-            orders.add(new Order(order.getId(), OrderItem.from(foundOrderItems)));
+            orders.add(
+                    new Order(order.getId(), new Member(order.getMemberId()), OrderItem.from(foundOrderItems)));
         }
         return orders;
     }
 
-    public Order findById(final Member member, final Long orderId) {
-        final OrderEntity foundOrder = orderDao.find(member.getId(), orderId)
-                .orElseThrow(() -> new OrderException.IllegalId(orderId));
+    public Optional<Order> findById(final Long orderId) {
+        final Optional<OrderEntity> foundResult = orderDao.find(orderId);
+        if (foundResult.isEmpty()) {
+            return Optional.empty();
+        }
+        final OrderEntity foundOrder = foundResult.get();
         final List<OrderItemEntity> foundOrderItems = orderItemDao.findByOrderId(orderId);
-        return new Order(foundOrder.getId(), OrderItem.from(foundOrderItems), new Money(foundOrder.getDeliveryFee()));
+        return Optional.of(new Order(
+                foundOrder.getId(),
+                new Member(foundOrder.getMemberId()), new Money(foundOrder.getDeliveryFee()),
+                OrderItem.from(foundOrderItems)
+        ));
     }
 
-    public void remove(final Member member, final Long orderId) {
-        final OrderEntity order = orderDao.find(member.getId(), orderId)
-                .orElseThrow(() -> new OrderException.IllegalId(orderId));
+    public void remove(final Long orderId) {
         orderDao.deleteById(orderId);
         orderItemDao.deleteByOrderId(orderId);
     }

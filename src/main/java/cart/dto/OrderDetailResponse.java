@@ -27,7 +27,7 @@ public class OrderDetailResponse {
         return new OrderDetailResponse(
                 order.getId(),
                 OrderItemResponse.from(order.getOrderItems()),
-                order.totalPrice(),
+                order.totalProductPrice(),
                 order.getDeliveryFee().getValue()
         );
     }

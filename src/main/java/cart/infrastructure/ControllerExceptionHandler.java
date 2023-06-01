@@ -49,6 +49,9 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         if (exception.getClass() == OrderException.OutOfDatedProductPrice.class) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(exception.getMessage()));
         }
+        if (exception.getClass() == OrderException.IllegalMember.class) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(exception.getMessage()));
+        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }
 

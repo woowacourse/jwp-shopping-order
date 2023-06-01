@@ -43,21 +43,29 @@ public class OrderDao {
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 
-    public Optional<OrderEntity> find(final Long memberId, final Long orderId) {
+    public Optional<OrderEntity> find(final Long id) {
         final String sql = "SELECT id, member_id, delivery_fee "
                 + "FROM orders "
                 + "WHERE id = ? "
-                + "AND member_id = ? "
                 + "ORDER BY created_at DESC";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, orderId, memberId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (final EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }
 
-    public void deleteById(final Long orderId) {
+    public void deleteById(final Long id) {
         final String sql = "DELETE FROM orders WHERE id = ? ";
-        jdbcTemplate.update(sql, orderId);
+        jdbcTemplate.update(sql, id);
+    }
+
+    public boolean isExist(final Long memberId, final Long id) {
+        final String sql = "SELECT EXISTS ( " +
+                "SELECT * FROM orders " +
+                "WHERE member_id = ? " +
+                "AND id = ? " +
+                ") AS SUCCESS";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, memberId, id));
     }
 }

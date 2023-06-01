@@ -2,34 +2,33 @@ package cart.domain;
 
 import cart.dao.entity.OrderItemEntity;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrderItem {
 
+    private final Long id;
     private final String name;
     private final Money price;
     private final String imageUrl;
     private final Integer quantity;
-    private Long id;
 
     private OrderItem(final String name,
                       final Money price,
                       final String imageUrl,
                       final Integer quantity) {
+        this(null, name, price, imageUrl, quantity);
+    }
+
+    public OrderItem(final Long id,
+                     final String name,
+                     final Money price,
+                     final String imageUrl,
+                     final Integer quantity) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
-    }
-
-    private OrderItem(final long id,
-                      final String name,
-                      final Money price,
-                      final String imageUrl,
-                      final Integer quantity) {
-        this(name, price, imageUrl, quantity);
-        this.id = id;
     }
 
     public static OrderItem convert(final CartItem cartItem) {
@@ -79,24 +78,5 @@ public class OrderItem {
 
     public Integer getQuantity() {
         return quantity;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(name, orderItem.name) && Objects.equals(price, orderItem.price)
-                && Objects.equals(imageUrl, orderItem.imageUrl) && Objects.equals(quantity,
-                orderItem.quantity);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, price, imageUrl, quantity);
     }
 }

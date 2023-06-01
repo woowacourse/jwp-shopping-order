@@ -4,19 +4,18 @@ import java.util.Objects;
 
 public class OrderEntity {
 
+    private final Long id;
     private final long memberId;
-    private final Long deliveryFee;
-    private Long id;
+    private final long deliveryFee;
 
-    public OrderEntity(final long memberId, final long deliveryFee) {
+    public OrderEntity(final Long id, final long memberId, final long deliveryFee) {
+        this.id = id;
         this.memberId = memberId;
         this.deliveryFee = deliveryFee;
     }
 
-    public OrderEntity(final long id, final long memberId, final long deliveryFee) {
-        this.id = id;
-        this.memberId = memberId;
-        this.deliveryFee = deliveryFee;
+    public OrderEntity(final long memberId, final long deliveryFee) {
+        this(null, memberId, deliveryFee);
     }
 
     public Long getId() {

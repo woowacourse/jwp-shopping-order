@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Member;
+import cart.dao.entity.MemberEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberDao {
 
-    private static final RowMapper<Member> MEMBER_ROW_MAPPER = (resultSet, rowNum) ->
-            new Member(resultSet.getLong("id"),
+    private static final RowMapper<MemberEntity> MEMBER_ROW_MAPPER = (resultSet, rowNum) ->
+            new MemberEntity(resultSet.getLong("id"),
                     resultSet.getString("email"),
                     resultSet.getString("password"));
 
@@ -22,7 +22,7 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Member> getMemberById(final Long id) {
+    public Optional<MemberEntity> getMemberById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, MEMBER_ROW_MAPPER, id));
@@ -31,7 +31,7 @@ public class MemberDao {
         }
     }
 
-    public Optional<Member> getMemberByEmail(final String email) {
+    public Optional<MemberEntity> getMemberByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, MEMBER_ROW_MAPPER, email));
@@ -40,7 +40,7 @@ public class MemberDao {
         }
     }
 
-    public List<Member> getAllMembers() {
+    public List<MemberEntity> getAllMembers() {
         final String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, MEMBER_ROW_MAPPER);
     }

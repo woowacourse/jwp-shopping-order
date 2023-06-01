@@ -3,10 +3,10 @@ package cart.integration;
 import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.repository.MemberRepository;
 import io.restassured.response.*;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +22,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     private static final Long DUMMY_MEMBER1_CART_ITEM_ID2 = 2L;
     private static final Long DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE = 380_400L;
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
     private Member member;
     private Member member2;
 
@@ -30,8 +30,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        member = memberDao.getMemberById(1L).get();
-        member2 = memberDao.getMemberById(2L).get();
+        member = memberRepository.findById(1L).get();
+        member2 = memberRepository.findById(2L).get();
     }
 
     @DisplayName("주문을 추가한다.")
@@ -52,7 +52,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void addOrderByIllegalMember() {
         // given
-        final Member illegalMember = new Member(member.getId(), member.getEmail(), member.getPassword() + "asdf");
+        final Member illegalMember = new Member(member.getId(), member.getEmail(),
+                member.getPassword() + "asdf");
 
         // when
         final ExtractableResponse<Response> response = 주문_정보_추가(illegalMember, new OrderRequest(
@@ -184,7 +185,6 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    // TODO cartItem에서는 id 유효성 vs 사용자 권한을 다른 예외로 처리하는데, 여기서는 잘못된 id라는 하나의 예외로 처리한다. 통일하자
     @DisplayName("잘못된 사용자가 주문 취소를 요청하면 실패한다.")
     @Test
     void deleteOrderByIllegalMemberId() {
@@ -198,7 +198,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         final ExtractableResponse<Response> response = 주문_취소(member2, 1L);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     private ExtractableResponse<Response> 주문_정보_추가(final Member member, final OrderRequest orderRequest) {

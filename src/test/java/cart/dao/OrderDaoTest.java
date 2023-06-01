@@ -58,7 +58,7 @@ class OrderDaoTest {
         final Long createdId = orderDao.save(new OrderEntity(memberId, deliveryFee));
 
         // when
-        final OrderEntity order = orderDao.find(memberId, createdId).get();
+        final OrderEntity order = orderDao.find(createdId).get();
 
         // then
         assertThat(order).isEqualTo(new OrderEntity(createdId, memberId, deliveryFee));
@@ -75,6 +75,6 @@ class OrderDaoTest {
         orderDao.deleteById(createdId);
 
         // then
-        assertThat(orderDao.find(1L, createdId).isEmpty()).isTrue();
+        assertThat(orderDao.find(createdId).isEmpty()).isTrue();
     }
 }
