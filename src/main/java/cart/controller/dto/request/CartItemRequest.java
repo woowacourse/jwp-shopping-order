@@ -1,6 +1,7 @@
 package cart.controller.dto.request;
 
 public class CartItemRequest {
+
     private Long productId;
 
     public CartItemRequest() {

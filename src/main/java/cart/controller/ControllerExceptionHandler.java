@@ -1,7 +1,6 @@
 package cart.controller;
 
 import cart.exception.AuthorizationException;
-import cart.exception.MemberNotFoundException;
 import cart.exception.NotOwnerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

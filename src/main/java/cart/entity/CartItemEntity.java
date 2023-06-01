@@ -1,6 +1,7 @@
 package cart.entity;
 
 public class CartItemEntity {
+
     private final Long id;
     private final long memberId;
     private final long productId;

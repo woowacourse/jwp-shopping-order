@@ -1,6 +1,7 @@
 package cart.controller.dto.request;
 
 public class CartItemQuantityUpdateRequest {
+
     private int quantity;
 
     public CartItemQuantityUpdateRequest() {
