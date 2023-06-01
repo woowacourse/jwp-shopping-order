@@ -19,7 +19,7 @@ public class Coupon {
 
     public Price calculateDiscountPrice(final Price price) {
         if (couponType == CouponType.RATE_DISCOUNT) {
-            return price.divide(value);
+            return price.multi(value).divide(100);
         }
         return new Price(value);
     }

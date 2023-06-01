@@ -10,12 +10,20 @@ public class Price {
         this.value = value;
     }
 
-    public Price divide(final Integer divider) {
-        return new Price(value / divider);
+    public Price multi(final Integer value) {
+        return new Price(value * this.value);
+    }
+
+    public Price divide(final Integer value) {
+        return new Price(this.value / value);
     }
 
     public Integer getValue() {
         return value;
+    }
+
+    public Price subtract(final Price other) {
+        return new Price(value - other.value);
     }
 
     @Override

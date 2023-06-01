@@ -1,5 +1,8 @@
 package cart.domain.coupon;
 
+import cart.domain.Member;
+import cart.domain.vo.Price;
+import cart.exception.MemberCouponNotOwnerException;
 import java.util.Objects;
 
 public class MemberCoupon {
@@ -16,6 +19,16 @@ public class MemberCoupon {
 
     public MemberCoupon(final Coupon coupon, final Long memberId) {
         this(null, coupon, memberId);
+    }
+
+    public void checkOwner(final Member member) {
+        if (!member.getId().equals(memberId)) {
+            throw new MemberCouponNotOwnerException();
+        }
+    }
+
+    public Price discount(final Price totalPrice) {
+        return coupon.calculateDiscountPrice(totalPrice);
     }
 
     public Long getId() {
