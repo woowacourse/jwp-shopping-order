@@ -43,11 +43,11 @@ public class OrderRepository {
     }
 
     @Transactional
-    public Long saveOrder(List<Long> cartItemIds, Member member, Integer price, CartItems cartItems) {
-        final OrderEntity orderEntity = new OrderEntity(price, member.getId());
+    public Long saveOrder(Order order) {
+        final OrderEntity orderEntity = new OrderEntity(order.getPrice(), order.getMember().getId());
         final Long orderId = orderDao.addOrder(orderEntity);
-        orderedItemDao.saveAll(cartItems.getCartItems(), orderId);
-        cartItemDao.deleteByIds(cartItemIds);
+        orderedItemDao.saveAll(order.getOrderedItems(), orderId);
+        cartItemDao.deleteByIds(order.getOrderedItemIds());
         return orderId;
     }
 
@@ -55,22 +55,23 @@ public class OrderRepository {
         final OrderEntity orderEntity = orderDao.findById(orderId)
                 .orElseThrow(() -> new InvalidOrderException("OrderId is not existed; orderId = " + orderId));
         List<OrderedItemEntity> orderedItems = orderedItemDao.findItemsByOrderId(orderId);
-        final List<CartItem> items = orderedItemToCartItem(member, orderedItems);
-        return new Order(orderEntity.getId(), orderEntity.getPrice(), member, items);
+        final CartItems cartItems = orderedItemsToCartItems(member, orderedItems);
+        return new Order(orderEntity.getId(), orderEntity.getPrice(), member, cartItems);
     }
 
-    private List<CartItem> orderedItemToCartItem(Member member, List<OrderedItemEntity> orderedItems) {
+    private CartItems orderedItemsToCartItems(Member member, List<OrderedItemEntity> orderedItems) {
         final List<Long> productIds = collectIds(orderedItems);
         List<Product> products = productDao.findByIds(productIds);
         final Map<Long, Product> idToProduct = createTable(products);
 
-        return orderedItems.stream()
+        final List<CartItem> cartItems = orderedItems.stream()
                 .map(orderedItemEntity -> new CartItem(
                         orderedItemEntity.getQuantity(),
                         idToProduct.get(orderedItemEntity.getProductId()),
                         member
                 ))
                 .collect(Collectors.toUnmodifiableList());
+        return CartItems.from(cartItems, member);
     }
 
     private Map<Long, Product> createTable(List<Product> products) {
@@ -89,7 +90,7 @@ public class OrderRepository {
         List<Order> result = new ArrayList<>();
         for (OrderEntity order : orders) {
             final List<OrderedItemEntity> items = orderedItemDao.findItemsByOrderId(order.getId());
-            final List<CartItem> cartItems = orderedItemToCartItem(member, items);
+            final CartItems cartItems = orderedItemsToCartItems(member, items);
             result.add(new Order(order.getId(), order.getPrice(), member, cartItems));
         }
         return result;

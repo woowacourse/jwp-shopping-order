@@ -59,9 +59,9 @@ class OrderRepositoryTest {
         Assertions.assertAll(
                 () -> assertThat(result.getId()).isEqualTo(orderId),
                 () -> assertThat(result.getPrice()).isEqualTo(10000),
-                () -> assertThat(result.getProducts().size()).isEqualTo(2),
-                () -> assertThat(result.getProducts().get(0).getQuantity()).isEqualTo(Fixture.CART_ITEM1.getQuantity()),
-                () -> assertThat(result.getProducts().get(1).getQuantity()).isEqualTo(Fixture.CART_ITEM2.getQuantity())
+                () -> assertThat(result.getOrderedItems().size()).isEqualTo(2),
+                () -> assertThat(result.getOrderedItems().get(0).getQuantity()).isEqualTo(Fixture.CART_ITEM1.getQuantity()),
+                () -> assertThat(result.getOrderedItems().get(1).getQuantity()).isEqualTo(Fixture.CART_ITEM2.getQuantity())
         );
     }
 

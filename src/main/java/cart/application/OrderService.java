@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.dao.CartItemDao;
+import cart.domain.CartItem;
 import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.price.PriceCalculator;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.exception.CartItemException;
 import cart.repository.OrderRepository;
 
 @Service
@@ -35,14 +37,16 @@ public class OrderService {
     @Transactional
     public Long order(OrderRequest orderRequest, Member member) {
         final List<Long> cartItemIds = orderRequest.getCartItemIds();
-        final CartItems cartItems = new CartItems(cartItemDao.findByIds(cartItemIds));
-        cartItems.validateAllCartItemsBelongsToMember(member);
-        cartItems.validateExistentCartItems(cartItemIds);
+        final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
+        validateExistentCartItems(cartItemIds, cartItems);
+        Order order = Order.from(cartItems, member, priceCalculator);
+        return orderRepository.saveOrder(order);
+    }
 
-        final Integer totalPrice = cartItems.calculatePriceSum();
-        final Integer finalPrice = priceCalculator.calculateFinalPrice(totalPrice, member);
-
-        return orderRepository.saveOrder(cartItemIds, member, finalPrice, cartItems);
+    private void validateExistentCartItems(List<Long> cartItemIds, List<CartItem> cartItems) {
+        if(cartItemIds.size() != cartItems.size()) {
+            throw new CartItemException("존재하지 않는 cartItemId가 포함되어 있습니다.");
+        }
     }
 
     public OrderResponse findOrderById(Long orderId, Member member) {

@@ -17,7 +17,7 @@ public class OrderResponse {
     }
 
     public static OrderResponse of(Order order) {
-        final List<CartItemResponse> cartItemResponses = order.getProducts()
+        final List<CartItemResponse> cartItemResponses = order.getOrderedItems()
                 .stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toUnmodifiableList());

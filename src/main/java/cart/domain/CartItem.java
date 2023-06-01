@@ -58,4 +58,8 @@ public class CartItem {
     public boolean isSameProduct(Long productId) {
         return this.product.getId().equals(productId);
     }
+
+    public Long getProductId() {
+        return this.product.getId();
+    }
 }
