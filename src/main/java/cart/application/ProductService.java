@@ -7,10 +7,12 @@ import cart.dto.response.ProductResponse;
 import cart.exception.ProductException.DuplicatedProduct;
 import cart.exception.ProductException.InvalidProduct;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -20,11 +22,13 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId)
                 .orElseThrow(InvalidProduct::new);
@@ -50,7 +54,6 @@ public class ProductService {
         }
     }
 
-    // todo: delete할 때 cartItem은 삭제 안해주고 있네
     public void deleteProduct(Long productId) {
         int deletedProductCount = productDao.deleteProduct(productId);
         if (deletedProductCount == 0) {

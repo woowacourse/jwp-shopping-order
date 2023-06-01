@@ -12,11 +12,13 @@ import cart.exception.CartItemException.DuplicatedCartItem;
 import cart.exception.CartItemException.InvalidCartItem;
 import cart.exception.ProductException.InvalidProduct;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class CartItemService {
     private final ProductDao productDao;
@@ -27,6 +29,7 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         Collections.reverse(cartItems);

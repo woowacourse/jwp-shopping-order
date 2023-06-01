@@ -128,6 +128,7 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse getOrderByOrderId(final Member member, final long orderId) {
         Order order = orderRepository.findByOrderId(orderId);
         order.checkOwner(member);
@@ -138,6 +139,7 @@ public class OrderService {
         return new OrderResponse(orderId, order.getCreatedAt(), order.getTotalProductsPrice(), order.getShippingFee(), order.getUsedPoint(), orderDetails);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> getOrdersByMember(final Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         List<OrderResponse> orderResponses = new ArrayList<>();
