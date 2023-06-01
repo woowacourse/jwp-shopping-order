@@ -19,10 +19,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public static Product createHasOnlyPkProduct(final Long productId) {
-        return new Product(productId, null, null, null);
-    }
-
     public Long getId() {
         return id;
     }
