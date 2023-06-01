@@ -1,7 +1,9 @@
 package cart.dao;
 
 import cart.domain.Order;
+import cart.entity.OrderEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +15,17 @@ public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
+
+    private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) ->
+            new OrderEntity(
+                    rs.getLong("id"),
+                    rs.getLong("member_id"),
+                    rs.getInt("total_price"),
+                    rs.getInt("pay_price"),
+                    rs.getInt("earned_points"),
+                    rs.getInt("used_points"),
+                    rs.getString("order_date")
+            );
 
     public OrderDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -31,5 +44,10 @@ public class OrderDao {
         params.put("pay_price", order.getPayPrice());
 
         return insertAction.executeAndReturnKey(params).longValue();
+    }
+
+    public OrderEntity findById(final Long id) {
+        final String sql = "select id, member_id, earned_points, used_points, total_price, pay_price, order_date from orders WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 }
