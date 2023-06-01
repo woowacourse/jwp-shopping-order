@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import cart.domain.CartItem;
@@ -14,6 +15,14 @@ import cart.entity.OrderedItemEntity;
 @Repository
 public class OrderedItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<OrderedItemEntity> rowMapper = (rs, rowNum) -> {
+        Long id = rs.getLong("id");
+        Long productId = rs.getLong("product_id");
+        Long orderId = rs.getLong("order_id");
+        int quantity = rs.getInt("quantity");
+        return new OrderedItemEntity(id, orderId, productId, quantity);
+    };
+    ;
 
     public OrderedItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -42,11 +51,6 @@ public class OrderedItemDao {
 
     public List<OrderedItemEntity> findItemsByOrderId(Long orderId) {
         final String sql = "SELECT * FROM ordered_item WHERE order_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{orderId}, (rs, rowNum) -> {
-            Long id = rs.getLong("id");
-            Long productId = rs.getLong("product_id");
-            int quantity = rs.getInt("quantity");
-            return new OrderedItemEntity(id, orderId, productId, quantity);
-        });
+        return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 }

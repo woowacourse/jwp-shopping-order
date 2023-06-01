@@ -14,6 +14,13 @@ import cart.domain.Member;
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Member> rowMapper = (rs, rowNum) -> {
+        final long id = rs.getLong("id");
+        final String email = rs.getString("email");
+        final String password = rs.getString("password");
+        final int grade = rs.getInt("grade");
+        return new Member(id, email, password, grade);
+    };
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -24,7 +31,7 @@ public class MemberDao {
                 + "JOIN grade AS g "
                 + "ON m.id = g.id "
                 + "WHERE m.id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
+        List<Member> members = jdbcTemplate.query(sql, rowMapper, id);
         return members.isEmpty() ? null : members.get(0);
     }
 
@@ -33,7 +40,7 @@ public class MemberDao {
                 + "JOIN grade AS g "
                 + "ON m.id = g.id "
                 + "WHERE m.email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
+        List<Member> members = jdbcTemplate.query(sql, rowMapper, email);
         return members.isEmpty() ? null : members.get(0);
     }
 
@@ -41,17 +48,6 @@ public class MemberDao {
         String sql = "SELECT * FROM member AS m "
                 + "JOIN grade AS g "
                 + "ON m.id = g.id";
-        return jdbcTemplate.query(sql, new MemberRowMapper());
-    }
-
-    private static class MemberRowMapper implements RowMapper<Member> {
-        @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(
-                    rs.getLong("id"),
-                    rs.getString("email"),
-                    rs.getString("password"),
-                    rs.getInt("grade"));
-        }
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

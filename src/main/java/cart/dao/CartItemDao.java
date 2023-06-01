@@ -86,7 +86,7 @@ public class CartItemDao {
                         "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, defaultRowMapper);
+        List<CartItem> cartItems = jdbcTemplate.query(sql, defaultRowMapper, id);
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
@@ -117,6 +117,6 @@ public class CartItemDao {
                         + "INNER JOIN product "
                         + "ON cart_item.product_id = product.id "
                         + "WHERE cart_item.id IN (" + inClause + ")";
-        return jdbcTemplate.query(sql, ids.toArray(), defaultRowMapper);
+        return jdbcTemplate.query(sql, defaultRowMapper, ids.toArray());
     }
 }
