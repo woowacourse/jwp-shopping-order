@@ -7,6 +7,7 @@ import cart.domain.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartItemService {
@@ -26,7 +27,21 @@ public class CartItemService {
     }
 
     public Long add(final CartItem cartItem) {
+        final Member member = cartItem.getMember();
+        final Product product = cartItem.getProduct();
+        final Optional<CartItem> nullableCartItem = Optional.ofNullable(
+                cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId()));
+
+        if (nullableCartItem.isPresent()) {
+            return addQuantity(nullableCartItem.get());
+        }
         return cartItemDao.save(cartItem);
+    }
+
+    private Long addQuantity(final CartItem cartItem) {
+        cartItem.addQuantity(cartItem.getQuantity());
+        cartItemDao.updateQuantity(cartItem);
+        return cartItem.getId();
     }
 
     public void updateQuantity(final Member member, final Long id, final int quantity) {
