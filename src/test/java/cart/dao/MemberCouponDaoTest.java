@@ -3,11 +3,12 @@ package cart.dao;
 import static cart.fixture.CouponFixture.천원_할인_쿠폰;
 import static cart.fixture.JdbcTemplateFixture.insertCoupon;
 import static cart.fixture.JdbcTemplateFixture.insertMember;
-import static cart.fixture.JdbcTemplateFixture.insertMemberCoupon;
 import static cart.fixture.MemberFixture.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import cart.entity.MemberCouponEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,20 +51,46 @@ class MemberCouponDaoTest {
     }
 
     @Test
-    void 멤버_아이디로_쿠폰을_모두_찾는다() {
+    void 멤버_아이디로_사용하지_않은_쿠폰을_모두_찾는다() {
         // given
         insertMember(MEMBER, jdbcTemplate);
         insertCoupon(천원_할인_쿠폰, jdbcTemplate);
-        insertMemberCoupon(MEMBER, 천원_할인_쿠폰, jdbcTemplate);
-        insertMemberCoupon(MEMBER, 천원_할인_쿠폰, jdbcTemplate);
+        memberCouponDao.save(new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), false));
+        memberCouponDao.save(new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), false));
+        memberCouponDao.save(new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), true));
 
         Member otherMember = new Member(2L, "aaa@knu.ac.kr", "password");
         insertMember(otherMember, jdbcTemplate);
-        insertMemberCoupon(otherMember, 천원_할인_쿠폰, jdbcTemplate);
-        insertMemberCoupon(otherMember, 천원_할인_쿠폰, jdbcTemplate);
+        memberCouponDao.save(new MemberCouponEntity(2L, 천원_할인_쿠폰.getId(), false));
+
 
         // when
-        List<MemberCouponEntity> actual = memberCouponDao.findAllByMemberId(MEMBER.getId());
+        List<MemberCoupon> actual = memberCouponDao.findUnusedByMemberId(MEMBER.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(actual.size()).isEqualTo(2),
+                () -> assertThat(actual.get(0).getCoupon()).usingRecursiveComparison()
+                        .ignoringFields("id")
+                        .isEqualTo(천원_할인_쿠폰),
+                () -> assertThat(actual.get(1).getCoupon()).usingRecursiveComparison()
+                        .ignoringFields("id")
+                        .isEqualTo(천원_할인_쿠폰));
+    }
+
+    @Test
+    void 아이디를_통해_모든_쿠폰을_조회한다() {
+        // given
+        insertMember(MEMBER, jdbcTemplate);
+        insertCoupon(천원_할인_쿠폰, jdbcTemplate);
+        List<Long> ids = List.of(
+                memberCouponDao.save(new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), false)),
+                memberCouponDao.save(new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), false))
+                );
+        memberCouponDao.save(new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), false));
+
+        // when
+        List<MemberCoupon> actual = memberCouponDao.findAllByIds(ids);
 
         // then
         assertThat(actual.size()).isEqualTo(2);

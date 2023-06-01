@@ -1,10 +1,15 @@
 package cart.dao;
 
+import cart.domain.Coupon;
+import cart.domain.CouponType;
+import cart.domain.MemberCoupon;
 import cart.entity.MemberCouponEntity;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -17,12 +22,18 @@ public class MemberCouponDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static final RowMapper<MemberCouponEntity> rowMapper = (rs, rowNum) -> new MemberCouponEntity(
-            rs.getLong("id"),
-            rs.getLong("member_id"),
-            rs.getLong("coupon_id"),
-            rs.getBoolean("used"));
-
+    private static final RowMapper<MemberCoupon> memberCouponRowMapper = ((rs, rowNum) ->
+            new MemberCoupon(
+                    rs.getLong("member_coupon.id"),
+                    rs.getLong("member_coupon.member_id"),
+                    new Coupon(
+                            rs.getLong("coupon.id"),
+                            rs.getString("coupon.name"),
+                            CouponType.from(rs.getString("type")),
+                            rs.getInt("discount_amount")
+                    ),
+                    rs.getBoolean("member_coupon.used")
+            ));
 
     public MemberCouponDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -37,8 +48,25 @@ public class MemberCouponDao {
         return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
-    public List<MemberCouponEntity> findAllByMemberId(Long memberId) {
-        String sql = "select * from member_coupon where member_id = ? and used = ?";
-        return jdbcTemplate.query(sql, rowMapper, memberId, false);
+    public List<MemberCoupon> findUnusedByMemberId(Long memberId) {
+        String sql = "SELECT mc.id, mc.member_id, mc.used, c.id, c.name, c.type, c.discount_amount " +
+                "FROM member_coupon mc " +
+                "JOIN coupon c ON mc.coupon_id = c.id " +
+                "WHERE mc.member_id = ? and mc.used = ?";
+        return jdbcTemplate.query(sql, memberCouponRowMapper, memberId, false);
+    }
+
+    public List<MemberCoupon> findAllByIds(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        String sql = "SELECT mc.id, mc.member_id, mc.used, c.id, c.name, c.type, c.discount_amount " +
+                "FROM member_coupon mc " +
+                "JOIN coupon c ON mc.coupon_id = c.id " +
+                "WHERE mc.id IN (:ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", ids);
+        return namedParameterJdbcTemplate.query(sql, parameters, memberCouponRowMapper);
     }
 }
