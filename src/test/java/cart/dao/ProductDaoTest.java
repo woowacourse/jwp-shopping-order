@@ -1,6 +1,8 @@
 package cart.dao;
 
-import cart.domain.Product;
+import cart.dao.product.JdbcTemplateProductDao;
+import cart.dao.product.ProductDao;
+import cart.domain.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 import static cart.fixture.ProductFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 public class ProductDaoTest {
@@ -88,6 +91,29 @@ public class ProductDaoTest {
         // then
         assertThat(productDao.findProductById(productId).get().getName())
                 .isEqualTo(피자.getName());
+    }
+
+    @Test
+    void 상품의_수량을_변경한다() {
+        // given
+        Long productId = productDao.createProduct(치킨);
+
+        // when
+        productDao.updateStock(productId, 치킨.getStock() - 3L);
+
+        // then
+        assertThat(productDao.findProductById(productId).get().getStock())
+                .isEqualTo(치킨.getStock() - 3L);
+    }
+
+    @Test
+    void 상품의_수량을_0미만으로_변경하면_예외가_발생한다() {
+        // given
+        Long productId = productDao.createProduct(치킨);
+
+        // when, then
+
+        assertThatThrownBy(() -> productDao.updateStock(productId, 치킨.getStock() - 11L));
     }
 
     @Test

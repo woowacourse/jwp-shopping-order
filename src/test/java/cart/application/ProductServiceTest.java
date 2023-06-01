@@ -1,8 +1,8 @@
 package cart.application;
 
-import cart.dao.ProductDao;
+import cart.dao.product.ProductDao;
 import cart.dto.product.ProductResponse;
-import cart.exception.ProductNotFoundException;
+import cart.exception.customexception.ProductNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

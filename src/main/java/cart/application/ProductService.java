@@ -1,10 +1,10 @@
 package cart.application;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.dao.product.ProductDao;
+import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
-import cart.exception.ProductNotFoundException;
+import cart.exception.customexception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +42,6 @@ public class ProductService {
                 productRequest.getPrice(),
                 productRequest.getImageUrl(),
                 productRequest.getStock());
-
         return productDao.createProduct(product);
     }
 
@@ -53,7 +52,6 @@ public class ProductService {
                 productRequest.getPrice(),
                 productRequest.getImageUrl(),
                 productRequest.getStock());
-
         productDao.updateProduct(productId, product);
     }
 
