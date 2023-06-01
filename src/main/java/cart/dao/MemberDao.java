@@ -19,7 +19,7 @@ public class MemberDao {
     }
 
     public Optional<Member> findById(Long id) {
-        String sql = "SELECT * FROM member WHERE id = ?";
+        String sql = "SELECT * FROM tb_member WHERE id = ?";
 
         return jdbcTemplate.query(sql, new MemberRowMapper(), id)
                 .stream()
@@ -27,7 +27,7 @@ public class MemberDao {
     }
 
     public Optional<Member> findByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
+        String sql = "SELECT * FROM tb_member WHERE email = ?";
 
         return jdbcTemplate.query(sql, new MemberRowMapper(), email)
                 .stream()
@@ -35,13 +35,13 @@ public class MemberDao {
     }
 
     public List<Member> findAll() {
-        String sql = "SELECT * from member";
+        String sql = "SELECT * from tb_member";
 
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
 
     public void update(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE tb_member SET email = ?, password = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
     }
