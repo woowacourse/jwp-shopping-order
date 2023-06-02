@@ -57,7 +57,7 @@ class OrderServiceTest {
         final OrderResponse result = orderService.createOrder(MemberFixture.MEMBER, new OrderRequest(List.of(1L, 2L), 100, 25_000));
         assertAll(
                 () -> assertThat(result.getOrderId()).isEqualTo(10L),
-                () -> assertThat(result.getCreateAt()).isEqualTo("2023-05-31 10:00:00.0"),
+                () -> assertThat(result.getCreatedAt()).isEqualTo("2023-05-31 10:00:00.0"),
                 () -> assertThat(result.getOrderItems().get(0).getProductId()).isEqualTo(1L),
                 () -> assertThat(result.getOrderItems().get(0).getProductName()).isEqualTo("치킨"),
                 () -> assertThat(result.getOrderItems().get(0).getQuantity()).isEqualTo(1),

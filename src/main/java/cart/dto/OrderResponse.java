@@ -8,15 +8,15 @@ import cart.domain.Order;
 public class OrderResponse {
 
     private final Long orderId;
-    private final String createAt;
+    private final String createdAt;
     private final List<OrderItemResponse> orderItems;
     private final int totalPrice;
     private final int usedPoint;
     private final int earnedPoint;
 
-    public OrderResponse(final Long orderId, final String createAt, final List<OrderItemResponse> orderItems, final int totalPrice, final int usedPoint, final int earnedPoint) {
+    public OrderResponse(final Long orderId, final String createdAt, final List<OrderItemResponse> orderItems, final int totalPrice, final int usedPoint, final int earnedPoint) {
         this.orderId = orderId;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
         this.orderItems = orderItems;
         this.totalPrice = totalPrice;
         this.usedPoint = usedPoint;
@@ -38,8 +38,8 @@ public class OrderResponse {
         return orderId;
     }
 
-    public String getCreateAt() {
-        return createAt;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
     public List<OrderItemResponse> getOrderItems() {
