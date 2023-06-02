@@ -19,7 +19,7 @@ public class CartItemDao {
         int quantity = rs.getInt("cart_item.quantity");
         return new CartItem(cartItemId, quantity, productId, memberId);
     };
-    
+
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -44,12 +44,6 @@ public class CartItemDao {
         String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE cart_item.id = ?";
         List<CartItem> cartItems = jdbcTemplate.query(sql, ROW_MAPPER, id);
         return cartItems.isEmpty() ? null : cartItems.get(0);
-    }
-
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
     }
 
     public void deleteById(Long id) {
