@@ -38,7 +38,8 @@ public class OrderService {
             throw new NoSuchElementException("존재하지 않는 상품이 포함되어 있습니다.");
         }
 
-        Coupon coupon = checkCoupon(request, cartItems.getMemberId());
+        Coupon coupon = checkCoupon(request);
+
 
         cartItemRepository.deleteAllByIds(request.getCartItemIds());
 
@@ -50,10 +51,10 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    private Coupon checkCoupon(final OrderRequest request, final Long memberId) {
+    private Coupon checkCoupon(final OrderRequest request) {
         Coupon coupon = Coupon.empty();
         if (hasCoupon(request.getCouponId())) {
-            coupon = findCouponAndUse(request.getCouponId(), memberId);
+            coupon = findCouponAndUse(request.getCouponId());
         }
 
         return coupon;
@@ -63,14 +64,14 @@ public class OrderService {
         return !ObjectUtils.isEmpty(couponId);
     }
 
-    private Coupon findCouponAndUse(final Long couponId, final Long memberId) {
+    private Coupon findCouponAndUse(final Long couponId) {
         final Coupon coupon = couponRepository.findCouponById(couponId);
 
         if (coupon.isUsed()) {
             throw new AlreadyUsedCouponException();
         }
 
-        couponRepository.changeStatusTo(couponId, memberId, Boolean.TRUE);
+        couponRepository.changeStatusTo(couponId, Boolean.TRUE);
 
         return coupon;
     }

@@ -47,7 +47,7 @@ class OrderJdbcRepositoryTest {
 
         productDao = new ProductDao(new JdbcTemplate(dataSource));
         noneCouponOrder = createOrderWithCoupon(null);
-        couponOrder = createOrderWithCoupon(new Coupon(1L, "3000원 할인 쿠폰", "3000원이 할인 됩니다.", 3000, false));
+        couponOrder = createOrderWithCoupon(new Coupon(1L, 1L, "3000원 할인 쿠폰", "3000원이 할인 됩니다.", 3000, false));
         orderRepository = new OrderJdbcRepository(orderDao, orderItemDao);
     }
 

@@ -55,8 +55,8 @@ class OrderServiceTest {
             final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
             final Product dessert = new Product(2L, "디저트", 5000, "imgUrl");
             sizeOneCarItems = new CartItems(List.of(new CartItem(1L, 1, chicken, member), new CartItem(2L, 1, dessert, member)));
-            unusedCoupon = new Coupon(1L, "3000원 할인", "오늘만 드리는 선물", 3000, false);
-            usedCoupon = new Coupon(1L, "3000원 할인", "오늘만 드리는 선물", 3000, true);
+            unusedCoupon = new Coupon(1L, 1L, "3000원 할인", "오늘만 드리는 선물", 3000, false);
+            usedCoupon = new Coupon(1L, 1L, "3000원 할인", "오늘만 드리는 선물", 3000, true);
         }
 
         @Test

@@ -35,8 +35,8 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
-    public void changeStatusTo(final Long couponId, final Long memberId, final Boolean toChange) {
-        couponDao.changeStatus(couponId, memberId, toChange);
+    public void changeStatusTo(final Long couponId, final Boolean toChange) {
+        couponDao.changeStatus(couponId, toChange);
     }
 
     @Override
@@ -49,16 +49,6 @@ public class CouponJdbcRepository implements CouponRepository {
         return new Coupons(coupons);
     }
 
-    private static Coupon toDomain(final CouponTypeCouponEntity entity) {
-        return new Coupon(
-                entity.getCouponId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getDiscountAmount(),
-                entity.getUsageStatus()
-        );
-    }
-
     @Override
     public Coupons findCouponAll() {
         final List<CouponTypeEntity> couponTypeEntities = couponDao.findAll();
@@ -69,32 +59,25 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
-    public Coupon findCouponByCouponIdAndMemberId(final Long couponId, final Long memberId) {
-        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findByCouponIdAndMemberId(couponId, memberId)
-                .orElseThrow(() -> new NoSuchElementException("쿠폰을 찾을 수 없습니다."));
-        return toDomain(couponTypeCouponEntity);
-    }
-
-    @Override
     public void deleteCoupon(final Long id) {
         couponDao.deleteCoupon(id);
     }
 
     @Override
     public Coupon findCouponById(final Long couponId) {
-        final CouponTypeEntity entity = couponDao.findById(couponId)
+        final CouponTypeCouponEntity entity = couponDao.findById(couponId)
                 .orElseThrow(() -> new NoSuchElementException("쿠폰을 찾을 수 없습니다."));
         return toDomain(entity);
     }
 
-    private Coupon toDomain(final CouponTypeEntity entity) {
+    private static Coupon toDomain(final CouponTypeCouponEntity entity) {
         return new Coupon(
-                entity.getId(),
+                entity.getCouponId(),
+                entity.getCouponTypeId(),
                 entity.getName(),
                 entity.getDescription(),
                 entity.getDiscountAmount(),
-                false
+                entity.getUsageStatus()
         );
     }
-
 }

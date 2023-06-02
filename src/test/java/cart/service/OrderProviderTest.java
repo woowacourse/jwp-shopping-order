@@ -43,7 +43,7 @@ public class OrderProviderTest {
         final Product dessert = new Product(1L, "desert", 5000, "imgUrl");
         final OrderItem chickenOrderItem = new OrderItem(chicken, 1);
         final OrderItem desertOrderItem = new OrderItem(dessert, 1);
-        final Coupon coupon = new Coupon(1L, "1000원 할인 쿠폰", "1000원이 할인 됩니다.", 1000, false);
+        final Coupon coupon = new Coupon(1L, 1L, "1000원 할인 쿠폰", "1000원이 할인 됩니다.", 1000, false);
 
         final Order order = new Order(List.of(chickenOrderItem, desertOrderItem), member, coupon, chicken.getPrice() + dessert.getPrice());
         given(orderRepository.findOrderByMemberId(anyLong())).willReturn(List.of(order));

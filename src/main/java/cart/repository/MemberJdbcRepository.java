@@ -49,6 +49,7 @@ public class MemberJdbcRepository implements MemberRepository {
         return couponTypeCouponEntities.stream()
                 .map(entity -> new Coupon(
                         entity.getCouponId(),
+                        entity.getCouponTypeId(),
                         entity.getName(),
                         entity.getDescription(),
                         entity.getDiscountAmount(),

@@ -52,7 +52,7 @@ public class CouponController {
 
     @DeleteMapping("/{couponId}")
     public ResponseEntity<Void> deleteCoupon(@PathVariable final Long couponId, final Member member) {
-        couponService.deleteCoupon(couponId, member.getId());
+        couponService.deleteCoupon(couponId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -32,13 +32,6 @@ public class CouponDao {
                     rs.getInt("discountAmount"),
                     rs.getBoolean("usageStatus")
             );
-    private final RowMapper<CouponTypeEntity> couponTypeEntityRowMapper = (rs, num) ->
-            new CouponTypeEntity(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    rs.getInt("discount_amount")
-            );
 
     public CouponDao(final NamedParameterJdbcOperations jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -68,20 +61,24 @@ public class CouponDao {
         return jdbcTemplate.query(sql, params, couponTypeCouponEntityRowMapper);
     }
 
-    public void changeStatus(final Long couponId, final Long memberId, final Boolean toChange) {
+    public void changeStatus(final Long couponId, final Boolean toChange) {
         final String sql = "UPDATE coupon SET usage_status = :toChange " +
-                "WHERE id = :couponId AND member_id = :memberId";
+                "WHERE id = :couponId";
 
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("toChange", toChange)
-                .addValue("couponId", couponId)
-                .addValue("memberId", memberId);
+                .addValue("couponId", couponId);
 
         jdbcTemplate.update(sql, params);
     }
 
-    public Optional<CouponTypeEntity> findById(final Long couponId) {
-        final String sql = "SELECT ct.id id, ct.name name, ct.description description, ct.discount_amount discount_amount " +
+    public Optional<CouponTypeCouponEntity> findById(final Long couponId) {
+        final String sql = "SELECT c.id couponId, " +
+                "ct.id couponTypeId, " +
+                "ct.name name, " +
+                "ct.description description, " +
+                "ct.discount_amount discountAmount, " +
+                "c.usage_status usageStatus " +
                 "FROM coupon_type ct " +
                 "JOIN coupon c ON c.coupon_type_id = ct.id " +
                 "WHERE c.id = :couponId";
@@ -89,7 +86,7 @@ public class CouponDao {
         final Map<String, Long> params = Collections.singletonMap("couponId", couponId);
 
         try {
-            final CouponTypeEntity couponTypeEntity = jdbcTemplate.queryForObject(sql, params, couponTypeEntityRowMapper);
+            final CouponTypeCouponEntity couponTypeEntity = jdbcTemplate.queryForObject(sql, params, couponTypeCouponEntityRowMapper);
             return Optional.ofNullable(couponTypeEntity);
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -97,33 +94,18 @@ public class CouponDao {
     }
 
     public List<CouponTypeEntity> findAll() {
-        final String sql = "SELECT id, name, description, discount_amount FROM coupon_type";
-
-        return jdbcTemplate.query(sql, couponTypeEntityRowMapper);
-    }
-
-    public Optional<CouponTypeCouponEntity> findByCouponIdAndMemberId(final Long couponId, final Long memberId) {
-        final String sql = "SELECT c.id couponId, " +
-                "ct.id couponTypeId, " +
+        final String sql = "SELECT ct.id couponTypeId, " +
                 "ct.name name, " +
                 "ct.description description, " +
-                "ct.discount_amount discountAmount, " +
-                "c.usage_status usageStatus " +
-                "FROM coupon c " +
-                "JOIN coupon_type ct ON c.coupon_type_id = ct.id " +
-                "WHERE c.member_id = :memberId " +
-                "AND c.coupon_type_id = :couponId";
+                "ct.discount_amount discountAmount " +
+                "FROM coupon_type ct";
 
-        final SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("memberId", memberId)
-                .addValue("couponId", couponId);
-
-        try {
-            final CouponTypeCouponEntity couponTypeCouponEntity = jdbcTemplate.queryForObject(sql, params, couponTypeCouponEntityRowMapper);
-            return Optional.ofNullable(couponTypeCouponEntity);
-        } catch (final EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new CouponTypeEntity(
+                rs.getLong("couponTypeId"),
+                rs.getString("name"),
+                rs.getString("description"),
+                rs.getInt("discountAmount")
+        ));
     }
 
     public void deleteCoupon(final Long id) {

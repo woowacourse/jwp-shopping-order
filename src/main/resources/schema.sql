@@ -53,10 +53,10 @@ CREATE TABLE orders
 (
     id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     price     INT    NOT NULL,
-    coupon_id BIGINT NULL,
+    coupon_type_id BIGINT NULL,
     member_id BIGINT NOT NULL,
     date      DATETIME DEFAULT CURRENT_TIMESTAMP(),
-    FOREIGN KEY (coupon_id) REFERENCES coupon (id),
+    FOREIGN KEY (coupon_type_id) REFERENCES coupon_type (id),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 

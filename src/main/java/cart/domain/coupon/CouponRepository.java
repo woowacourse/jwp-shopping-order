@@ -8,13 +8,11 @@ public interface CouponRepository {
 
     Long issue(final Member member, final Long couponId);
 
-    void changeStatusTo(final Long couponId, final Long memberId, final Boolean toChange);
+    void changeStatusTo(final Long couponId, final Boolean toChange);
 
     Coupons findCouponsByMemberId(final Long memberId);
 
     Coupons findCouponAll();
-
-    Coupon findCouponByCouponIdAndMemberId(final Long couponId, final Long memberId);
 
     void deleteCoupon(final Long id);
 

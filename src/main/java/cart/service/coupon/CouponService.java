@@ -35,11 +35,11 @@ public class CouponService {
             throw new CannotChangeCouponStatusException();
         }
 
-        couponRepository.changeStatusTo(couponId, member.getId(), Boolean.FALSE);
+        couponRepository.changeStatusTo(couponId, Boolean.FALSE);
     }
 
-    public void deleteCoupon(final Long couponId, final Long memberId) {
-        final Coupon coupon = couponRepository.findCouponByCouponIdAndMemberId(couponId, memberId);
+    public void deleteCoupon(final Long couponId) {
+        final Coupon coupon = couponRepository.findCouponById(couponId);
 
         if (coupon.isNotUsed()) {
             throw new CannotDeleteCouponException();

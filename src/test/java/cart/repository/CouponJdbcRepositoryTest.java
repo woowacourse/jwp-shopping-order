@@ -39,7 +39,7 @@ class CouponJdbcRepositoryTest {
     @Test
     void 쿠폰_상태를_변경한다 () {
         // when, then
-        assertThatCode(() -> couponJdbcRepository.changeStatusTo(1L, 1L, false))
+        assertThatCode(() -> couponJdbcRepository.changeStatusTo(1L, false))
                 .doesNotThrowAnyException();
     }
 
@@ -85,7 +85,7 @@ class CouponJdbcRepositoryTest {
         couponJdbcRepository.deleteCoupon(2L);
 
         // then
-        assertThatThrownBy(() -> couponJdbcRepository.findCouponByCouponIdAndMemberId(2L, 1L))
+        assertThatThrownBy(() -> couponJdbcRepository.findCouponById(2L))
                 .isInstanceOf(NoSuchElementException.class);
     }
 }

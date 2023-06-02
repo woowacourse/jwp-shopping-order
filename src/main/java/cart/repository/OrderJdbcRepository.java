@@ -49,7 +49,7 @@ public class OrderJdbcRepository implements OrderRepository {
             return new OrderEntity(order.getPrice(), null, order.getMember().getId());
         }
 
-        return new OrderEntity(order.getPrice(), order.getCoupon().getId(), order.getMember().getId());
+        return new OrderEntity(order.getPrice(), order.getCoupon().getCouponTypeId(), order.getMember().getId());
     }
 
     @Override

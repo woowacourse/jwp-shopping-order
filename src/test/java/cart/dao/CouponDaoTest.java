@@ -57,7 +57,7 @@ class CouponDaoTest {
     @Test
     void 쿠폰의_상태를_변경한다() {
         // when
-        couponDao.changeStatus(1L, 1L, true);
+        couponDao.changeStatus(1L, true);
 
         // then
         final List<CouponTypeCouponEntity> results = couponDao.findByMemberId(1L);
@@ -82,9 +82,9 @@ class CouponDaoTest {
     }
 
     @Test
-    void 쿠폰을_회원아이디와_쿠폰아이디로_조회한다() {
+    void 쿠폰을_쿠폰아이디로_조회한다() {
         // when
-        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findByCouponIdAndMemberId(1L, 1L).get();
+        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findById(1L).get();
 
         // then
         assertThat(couponTypeCouponEntity.getCouponId()).isNotNull();
@@ -93,12 +93,12 @@ class CouponDaoTest {
     @Test
     void 쿠폰을_삭제한다() {
         // given
-        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findByCouponIdAndMemberId(1L, 1L).get();
+        final CouponTypeCouponEntity couponTypeCouponEntity = couponDao.findById(1L).get();
 
         // when
         couponDao.deleteCoupon(couponTypeCouponEntity.getCouponId());
 
         // then
-        assertThat(couponDao.findByCouponIdAndMemberId(1L, 1L)).isNotPresent();
+        assertThat(couponDao.findById(1L)).isNotPresent();
     }
 }

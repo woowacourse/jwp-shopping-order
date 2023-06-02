@@ -25,7 +25,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void 주문_한다() {
         // given
-        final OrderRequest request = new OrderRequest(List.of(1L, 2L), 15000, 1L);
+        final OrderRequest request = new OrderRequest(List.of(1L, 2L), 15000, 2L);
 
         // when
         final ExtractableResponse<Response> response = 주문_한다(request);

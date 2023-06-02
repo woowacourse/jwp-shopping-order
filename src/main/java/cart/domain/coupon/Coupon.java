@@ -2,20 +2,22 @@ package cart.domain.coupon;
 
 public class Coupon {
 
-    private static final Coupon EMPTY_COUPON = new Coupon(null, "empty", "empty", 1, true);
+    private static final Coupon EMPTY_COUPON = new Coupon(null, null, "empty", "empty", 1, true);
 
     private final Long id;
+    private final Long couponTypeId;
     private final Name name;
     private final Description description;
     private final DiscountAmount discountAmount;
     private final UsageStatus usageStatus;
 
-    public Coupon(final Long id, final String name, final String description, final int discountAmount, final Boolean usageStatus) {
-        this(id, Name.from(name), Description.from(description), DiscountAmount.from(discountAmount), UsageStatus.from(usageStatus));
+    public Coupon(final Long id, final Long couponTypeId, final String name, final String description, final int discountAmount, final Boolean usageStatus) {
+        this(id, couponTypeId, Name.from(name), Description.from(description), DiscountAmount.from(discountAmount), UsageStatus.from(usageStatus));
     }
 
-    public Coupon(final Long id, final Name name, final Description description, final DiscountAmount discountAmount, final UsageStatus usageStatus) {
+    public Coupon(final Long id, final Long couponTypeId, final Name name, final Description description, final DiscountAmount discountAmount, final UsageStatus usageStatus) {
         this.id = id;
+        this.couponTypeId = couponTypeId;
         this.name = name;
         this.description = description;
         this.discountAmount = discountAmount;
@@ -23,12 +25,12 @@ public class Coupon {
     }
 
     public static Coupon createCouponType(
-            final Long id,
+            final Long couponTypeId,
             final String name,
             final String description,
             final int discountAmount
     ) {
-        return new Coupon(id, name, description, discountAmount, true);
+        return new Coupon(null, couponTypeId, name, description, discountAmount, true);
     }
 
     public static Coupon empty() {
@@ -45,6 +47,10 @@ public class Coupon {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getCouponTypeId() {
+        return couponTypeId;
     }
 
     public Name getName() {

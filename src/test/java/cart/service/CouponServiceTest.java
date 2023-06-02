@@ -41,11 +41,21 @@ class CouponServiceTest {
     @Mock
     private MemberJdbcRepository memberJdbcRepository;
 
+    private Coupon unUsedCoupon;
+    private Coupon usedCoupon;
+    private long couponId;
+
+    @BeforeEach
+    void setUp() {
+        couponId = 1L;
+        usedCoupon = new Coupon(couponId, 1L, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, true);
+        unUsedCoupon = new Coupon(couponId, 1L, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, false);
+    }
+
     @Test
     void 쿠폰을_발급한다() {
         // given
         final Member member = new Member(1L, "a@a.com", "1234");
-        final long couponId = 1L;
         given(couponRepository.issue(member, 1L)).willReturn(1L);
 
         // when
@@ -70,21 +80,19 @@ class CouponServiceTest {
         @Test
         void 성공한다() {
             // given
-            final Coupon coupon = new Coupon(couponId, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, true);
-            given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(coupon))));
+            given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(usedCoupon))));
 
             // when
             couponService.reissueCoupon(couponId, request);
 
             // then
-            then(couponRepository).should(only()).changeStatusTo(any(), any(), any());
+            then(couponRepository).should(only()).changeStatusTo(any(), any());
         }
 
         @Test
         void 사용하지_않은_쿠폰이면_실패한다() {
             // given
-            final Coupon coupon = new Coupon(couponId, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, false);
-            given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(coupon))));
+            given(memberJdbcRepository.findMemberByMemberIdWithCoupons(request.getId())).willReturn(new Member(1L, "a@a.com", "1234", new Coupons(List.of(unUsedCoupon))));
 
             // when, then
             assertThatThrownBy(() -> couponService.reissueCoupon(couponId, request))
@@ -96,22 +104,19 @@ class CouponServiceTest {
     class 쿠폰_삭제할_때 {
 
         private long couponId;
-        private long memberId;
 
         @BeforeEach
         void setUp() {
             couponId = 1L;
-            memberId = 1L;
         }
 
         @Test
         void 성공한다() {
             // given
-            final Coupon coupon = new Coupon(couponId, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, true);
-            given(couponRepository.findCouponByCouponIdAndMemberId(anyLong(), anyLong())).willReturn(coupon);
+            given(couponRepository.findCouponById(anyLong())).willReturn(usedCoupon);
 
             // when
-            couponService.deleteCoupon(couponId, memberId);
+            couponService.deleteCoupon(couponId);
 
             // then
             then(couponRepository).should(times(1)).deleteCoupon(anyLong());
@@ -120,11 +125,10 @@ class CouponServiceTest {
         @Test
         void 사용하지_않은_쿠폰이면_실패한다() {
             // given
-            final Coupon coupon = new Coupon(couponId, "3000원 할인 쿠폰", "상품이 3000원 할인 됩니다.", 3000, false);
-            given(couponRepository.findCouponByCouponIdAndMemberId(anyLong(), anyLong())).willReturn(coupon);
+            given(couponRepository.findCouponById(anyLong())).willReturn(unUsedCoupon);
 
             // when, then
-            assertThatThrownBy(() -> couponService.deleteCoupon(couponId, memberId))
+            assertThatThrownBy(() -> couponService.deleteCoupon(couponId))
                     .isInstanceOf(CannotDeleteCouponException.class);
         }
     }

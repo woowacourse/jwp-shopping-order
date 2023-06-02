@@ -7,7 +7,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-public class OrderRequest {
+public class
+OrderRequest {
 
     @NotEmpty(message = "상품 아이디를 입력해주세요.")
     private final List<@NotNull Long> cartItemIds;
