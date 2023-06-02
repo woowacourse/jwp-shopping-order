@@ -1,12 +1,10 @@
 package cart.persistence.dto;
 
-import cart.domain.Member;
-import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberCouponEntity;
 import cart.persistence.entity.MemberEntity;
-import java.time.LocalDateTime;
+import cart.persistence.mapper.MemberCouponMapper;
 
 public class MemberCouponDetailDTO {
 
@@ -22,11 +20,7 @@ public class MemberCouponDetailDTO {
     }
 
     public MemberCoupon toDomain() {
-        Coupon coupon = couponEntity.toDomain();
-        Member member = memberEntity.toDomain();
-        return new MemberCoupon(memberCouponEntity.getId(), coupon, member, false,
-                memberCouponEntity.getExpiredAt().toLocalDateTime(),
-                LocalDateTime.now());
+        return MemberCouponMapper.toDomain(memberCouponEntity, couponEntity, memberEntity);
     }
 
     public MemberCouponEntity getMemberCouponEntity() {

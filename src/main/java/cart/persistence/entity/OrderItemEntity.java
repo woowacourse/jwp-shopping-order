@@ -35,6 +35,11 @@ public class OrderItemEntity {
                 product.getImageUrl(), orderItem.getQuantity());
     }
 
+    public OrderItem toDomain() {
+        Product product = new Product(productId, name, price, imageUrl);
+        return new OrderItem(id, product, quantity);
+    }
+
     public Long getId() {
         return id;
     }
