@@ -25,9 +25,9 @@ CREATE TABLE if not exists cart_item
 
 CREATE TABLE if not exists orders
 (
-    id         BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT   NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT NOW(),
+    id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT    NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
@@ -63,6 +63,6 @@ CREATE TABLE if not exists member_coupon
     id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     owner_id  BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
-    is_used   BOOL   NOT NULL,
+    is_used   BOOL   NOT NULL default FALSE,
     FOREIGN KEY (owner_id) REFERENCES member (id)
 );

@@ -1,6 +1,5 @@
 package cart.dao;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,7 +35,7 @@ public class OrderDao {
                 (rs, rowNum) -> new OrderDto(
                         rs.getLong("id"),
                         rs.getLong("member_id"),
-                        rs.getObject("created_at", LocalDateTime.class)
+                        rs.getTimestamp("created_at").toLocalDateTime()
                 ),
                 id
         );
@@ -49,7 +48,7 @@ public class OrderDao {
                 (rs, rowNum) -> new OrderDto(
                         rs.getLong("id"),
                         rs.getLong("member_id"),
-                        rs.getObject("created_at", LocalDateTime.class)
+                        rs.getTimestamp("created_at").toLocalDateTime()
                 ),
                 memberId
         );

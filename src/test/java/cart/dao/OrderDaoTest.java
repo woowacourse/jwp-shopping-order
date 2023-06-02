@@ -32,9 +32,17 @@ class OrderDaoTest {
     @Test
     void 주문을_저장한다() {
         Order order = new Order(MEMBER_A, ORDER_ITEMS_ONE);
-        Long id = orderDao.insert(OrderDto.of(order));
+        OrderDto orderDto = OrderDto.of(order);
+        Long id = orderDao.insert(orderDto);
 
-        assertThat(orderDao.selectBy(id)).isNotNull();
+        OrderDto actual = orderDao.selectBy(id);
+        System.out.println("actual = " + actual);
+        assertThat(actual)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(orderDto);
+
+
     }
 
     @Test
