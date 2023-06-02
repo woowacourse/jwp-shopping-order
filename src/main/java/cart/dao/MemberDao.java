@@ -33,7 +33,7 @@ public class MemberDao {
 
     public void addMember(Member member) {
         String sql = "INSERT INTO member (email, password, grade) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getGrade());
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getGrade().toString());
     }
 
     public void updateMember(Member member) {

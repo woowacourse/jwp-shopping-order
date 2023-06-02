@@ -1,5 +1,6 @@
 package cart.ui.api;
 
+import cart.application.DiscountService;
 import cart.dao.MemberDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ class DiscountApiControllerTest {
 
     @MockBean
     private MemberDao memberDao;
+    @MockBean
+    private DiscountService discountService;
 
     @DisplayName("금액과 회원 등급으로 할인율을 조회할 수 있다")
     @Test
@@ -28,5 +31,14 @@ class DiscountApiControllerTest {
                         get("/discount").queryParam("price", "1000").queryParam("memberGrade", "gold"))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("없는 회원 등급을 입력하면 400이 리턴된다")
+    @Test
+    void getDiscountInfo_fail() throws Exception {
+        mockMvc.perform(
+                        get("/discount").param("price", "1000").param("memberGrade", "gold2"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

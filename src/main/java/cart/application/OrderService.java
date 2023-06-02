@@ -5,8 +5,6 @@ import cart.dao.OrderDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.discount.MemberGradeDiscountPolicy;
-import cart.domain.discount.PriceDiscountPolicy;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.stereotype.Service;
@@ -22,10 +20,12 @@ public class OrderService {
 
     private final CartItemDao cartItemDao;
     private final OrderDao orderDao;
+    private final DiscountService discountService;
 
-    public OrderService(final CartItemDao cartItemDao, final OrderDao orderDao) {
+    public OrderService(final CartItemDao cartItemDao, final OrderDao orderDao, final DiscountService discountService) {
         this.cartItemDao = cartItemDao;
         this.orderDao = orderDao;
+        this.discountService = discountService;
     }
 
     @Transactional
@@ -33,7 +33,7 @@ public class OrderService {
         final List<CartItem> cartItems = cartItemDao.findAllByIds(orderRequest.getCartItemIds());
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
 
-        final int totalPrice = calculateTotalPrice(member, cartItems);
+        final int totalPrice = discountService.calculateTotalPrice(member.getGrade(), sumPrices(cartItems));
         final Order order = new Order(member, totalPrice, cartItems);
 
         final Long orderId = orderDao.save(order).getId();
@@ -42,18 +42,10 @@ public class OrderService {
         return orderId;
     }
 
-    private int calculateTotalPrice(final Member member, List<CartItem> cartItems) {
-        final int price = cartItems.stream()
+    private int sumPrices(final List<CartItem> cartItems) {
+        return cartItems.stream()
                 .mapToInt(CartItem::getTotalPrice)
                 .sum();
-
-        final MemberGradeDiscountPolicy gradeDiscount = new MemberGradeDiscountPolicy(member.getGrade());
-        final PriceDiscountPolicy priceDiscount = new PriceDiscountPolicy();
-        final int discountAmount = gradeDiscount
-                .and(priceDiscount)
-                .calculateDiscountAmount(price);
-
-        return price - discountAmount;
     }
 
     private List<Long> cartItemsToIds(final List<CartItem> cartItems) {

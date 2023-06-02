@@ -1,5 +1,6 @@
 package cart.ui.api;
 
+import cart.application.DiscountService;
 import cart.dto.DiscountInformationRequest;
 import cart.dto.DiscountInformationResponse;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,16 @@ import java.util.List;
 @RequestMapping("/discount")
 public final class DiscountApiController {
 
+    private final DiscountService discountService;
+
+    public DiscountApiController(final DiscountService discountService) {
+        this.discountService = discountService;
+    }
+
     @GetMapping
     public ResponseEntity<List<DiscountInformationResponse>> getDiscountRate(final DiscountInformationRequest request) {
-        return ResponseEntity.ok().build();
+        final List<DiscountInformationResponse> result = discountService.getDiscountInfo(request.getMemberGrade(), request.getPrice());
+
+        return ResponseEntity.ok(result);
     }
 }

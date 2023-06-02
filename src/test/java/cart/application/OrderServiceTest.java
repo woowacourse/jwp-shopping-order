@@ -25,6 +25,8 @@ class OrderServiceTest {
     private CartItemDao cartItemDao;
     @Mock
     private OrderDao orderDao;
+    @Mock
+    private DiscountService discountService;
 
     @DisplayName("주문할 수 있다")
     @Test
