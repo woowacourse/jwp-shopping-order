@@ -12,11 +12,8 @@ public class CouponDiscountCalculator implements DiscountCalculator{
                 .mapToInt(orderItem -> orderItem.getProduct().getPrice()* orderItem.getQuantity())
                 .sum();
         
-        if(totalPrice> 30000) {
-            return 3000;
-        }
-        if (totalPrice > 50000) {
-            return 5000;
+        if(totalPrice > 100000) {
+            return (int) (totalPrice * 0.1) ;
         }
         
         return 0;

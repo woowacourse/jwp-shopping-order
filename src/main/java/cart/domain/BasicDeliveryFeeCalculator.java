@@ -10,6 +10,12 @@ public class BasicDeliveryFeeCalculator implements DeliveryFeeCalculator{
     
     @Override
     public int calculate(Member member, List<OrderItem> itemsToOrder) {
+        int totalPrice = itemsToOrder.stream()
+                .mapToInt(orderItem -> orderItem.getProduct().getPrice()* orderItem.getQuantity())
+                .sum();
+        if(totalPrice > 50000) {
+            return 0;
+        }
         return BASIC_FEE;
     }
 }
