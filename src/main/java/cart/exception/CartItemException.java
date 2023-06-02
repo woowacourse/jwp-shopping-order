@@ -1,9 +1,8 @@
 package cart.exception;
 
-import org.springframework.http.HttpStatus;
-
 import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
+import org.springframework.http.HttpStatus;
 
 public class CartItemException extends ApplicationException {
 

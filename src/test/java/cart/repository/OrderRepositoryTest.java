@@ -1,6 +1,5 @@
 package cart.repository;
 
-import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
