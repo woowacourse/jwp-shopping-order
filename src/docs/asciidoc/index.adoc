@@ -1,5 +1,5 @@
-= REST Docs 문서 만들기 (글의 제목)
-backtony.github.io(부제)
+= REST Docs API 명세
+Shopping Order
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs // 문서에 표기되는 코드들의 하이라이팅을 highlightjs를 사용
@@ -7,10 +7,40 @@ backtony.github.io(부제)
 :toclevels: 2
 :sectlinks:
 
-[[Member-API]]
-== Member AP
+[[Order-API]]
+== Order API
 
-[[Member-단일-조회]]
-=== Member 단일 조
+[[Fail-카트-아이템이-없으면-실패한다]]
+=== Fail-카트-아이템이-없으면-실패한다
 
-operation::order[snippets='http-request,path-parameters,http-response,response-fields']
+operation::order-cartItemNotExist[snippets='http-request,http-response']
+
+[[Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다]]
+=== Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다
+
+operation::order-couponDoesNotFound[snippets='http-request,http-response']
+
+[[Fail-서버측과-상품-계산이-다르면-실패한다]]
+=== Fail-서버측과-상품-계산이-다르면-실패한다
+
+operation::order-unMatchCalculate[snippets='http-request,http-response']
+
+[[Success-쿠폰과-함께-요청]]
+=== Success-쿠폰과-함께-요청
+
+operation::order-withCoupon[snippets='http-request,http-response']
+
+[[Success-쿠폰-없이-요청]]
+=== Success-쿠폰-없이-요청
+
+operation::order-withoutCoupon[snippets='http-request,http-response']
+
+[[Success-주문-목록-검색]]
+=== Success-주문-목록-검색
+
+operation::orderList[snippets='http-request,http-response']
+
+[[Success-주문-상세-요청]]
+=== Success-주문-상세-요청
+
+operation::orderDetail[snippets='http-request,http-response']

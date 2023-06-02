@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="backtony.github.io(부제)">
-<title>REST Docs 문서 만들기 (글의 제목)</title>
+<meta name="author" content="Shopping Order">
+<title>REST Docs API 명세</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -440,16 +440,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book">
 <div id="header">
-<h1>REST Docs 문서 만들기 (글의 제목)</h1>
+<h1>REST Docs API 명세</h1>
 <div class="details">
-<span id="author" class="author">backtony.github.io(부제)</span><br>
+<span id="author" class="author">Shopping Order</span><br>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#Member-API">Member AP</a>
+<li><a href="#Order-API">Order API</a>
 <ul class="sectlevel2">
-<li><a href="#Member-단일-조회">Member 단일 조</a></li>
+<li><a href="#Fail-카트-아이템이-없으면-실패한다">Fail-카트-아이템이-없으면-실패한다</a></li>
+<li><a href="#Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다">Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다</a></li>
+<li><a href="#Fail-서버측과-상품-계산이-다르면-실패한다">Fail-서버측과-상품-계산이-다르면-실패한다</a></li>
+<li><a href="#Success-쿠폰과-함께-요청">Success-쿠폰과-함께-요청</a></li>
+<li><a href="#Success-쿠폰-없이-요청">Success-쿠폰-없이-요청</a></li>
+<li><a href="#Success-주문-목록-검색">Success-주문-목록-검색</a></li>
+<li><a href="#Success-주문-상세-요청">Success-주문-상세-요청</a></li>
 </ul>
 </li>
 </ul>
@@ -457,36 +463,138 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="Member-API"><a class="link" href="#Member-API">Member AP</a></h2>
+<h2 id="Order-API"><a class="link" href="#Order-API">Order API</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="Member-단일-조회"><a class="link" href="#Member-단일-조회">Member 단일 조</a></h3>
+<h3 id="Fail-카트-아이템이-없으면-실패한다"><a class="link" href="#Fail-카트-아이템이-없으면-실패한다">Fail-카트-아이템이-없으면-실패한다</a></h3>
 <div class="sect3">
-<h4 id="Member-단일-조회_http_request"><a class="link" href="#Member-단일-조회_http_request">HTTP request</a></h4>
+<h4 id="Fail-카트-아이템이-없으면-실패한다_http_request"><a class="link" href="#Fail-카트-아이템이-없으면-실패한다_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /orders HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Basic ZW1haWw6cGFzc3dvcmQ=
-Content-Length: 70
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Length: 73
 Host: localhost:8080
 
 {
-  "cartItems" : [ 1, 2 ],
-  "totalPrice" : 10000,
+  "cartItemIds" : [ 1, 3 ],
+  "totalPrice" : 103000,
   "couponId" : 1
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="Member-단일-조회_path_parameters"><a class="link" href="#Member-단일-조회_path_parameters">Path parameters</a></h4>
-<div class="paragraph">
-<p>Snippet path-parameters not found for operation::order</p>
+<h4 id="Fail-카트-아이템이-없으면-실패한다_http_response"><a class="link" href="#Fail-카트-아이템이-없으면-실패한다_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 83
+
+주문 요청에 존재하지 않는 카트 아이템이 포함되어 있습니다.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다"><a class="link" href="#Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다">Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다</a></h3>
+<div class="sect3">
+<h4 id="Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다_http_request"><a class="link" href="#Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /orders HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Length: 73
+Host: localhost:8080
+
+{
+  "cartItemIds" : [ 1, 3 ],
+  "totalPrice" : 103000,
+  "couponId" : 3
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="Member-단일-조회_http_response"><a class="link" href="#Member-단일-조회_http_response">HTTP response</a></h4>
+<h4 id="Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다_http_response"><a class="link" href="#Fail-가지고있지-않은-쿠폰과-함께-요청을-보내면-실패한다_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 83
+
+주문 요청에 존재하지 않는 카트 아이템이 포함되어 있습니다.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Fail-서버측과-상품-계산이-다르면-실패한다"><a class="link" href="#Fail-서버측과-상품-계산이-다르면-실패한다">Fail-서버측과-상품-계산이-다르면-실패한다</a></h3>
+<div class="sect3">
+<h4 id="Fail-서버측과-상품-계산이-다르면-실패한다_http_request"><a class="link" href="#Fail-서버측과-상품-계산이-다르면-실패한다_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /orders HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Length: 73
+Host: localhost:8080
+
+{
+  "cartItemIds" : [ 1, 2 ],
+  "totalPrice" : 100000,
+  "couponId" : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Fail-서버측과-상품-계산이-다르면-실패한다_http_response"><a class="link" href="#Fail-서버측과-상품-계산이-다르면-실패한다_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 67
+
+구매자가 예상한 금액과 실 계산 금액이 다릅니다.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Success-쿠폰과-함께-요청"><a class="link" href="#Success-쿠폰과-함께-요청">Success-쿠폰과-함께-요청</a></h3>
+<div class="sect3">
+<h4 id="Success-쿠폰과-함께-요청_http_request"><a class="link" href="#Success-쿠폰과-함께-요청_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /orders HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Length: 73
+Host: localhost:8080
+
+{
+  "cartItemIds" : [ 1, 2 ],
+  "totalPrice" : 101000,
+  "couponId" : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Success-쿠폰과-함께-요청_http_response"><a class="link" href="#Success-쿠폰과-함께-요청_http_response">HTTP response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -502,10 +610,136 @@ Content-Length: 19
 </div>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="Success-쿠폰-없이-요청"><a class="link" href="#Success-쿠폰-없이-요청">Success-쿠폰-없이-요청</a></h3>
 <div class="sect3">
-<h4 id="Member-단일-조회_response_fields"><a class="link" href="#Member-단일-조회_response_fields">Response fields</a></h4>
-<div class="paragraph">
-<p>Snippet response-fields not found for operation::order</p>
+<h4 id="Success-쿠폰-없이-요청_http_request"><a class="link" href="#Success-쿠폰-없이-요청_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /orders HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Length: 55
+Host: localhost:8080
+
+{
+  "cartItemIds" : [ 1, 2 ],
+  "totalPrice" : 103000
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Success-쿠폰-없이-요청_http_response"><a class="link" href="#Success-쿠폰-없이-요청_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 19
+
+{
+  "orderId" : 2
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Success-주문-목록-검색"><a class="link" href="#Success-주문-목록-검색">Success-주문-목록-검색</a></h3>
+<div class="sect3">
+<h4 id="Success-주문-목록-검색_http_request"><a class="link" href="#Success-주문-목록-검색_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /orders HTTP/1.1
+Authorization: Basic YUBhLmNvbToxMjM0
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Success-주문-목록-검색_http_response"><a class="link" href="#Success-주문-목록-검색_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 707
+
+[ {
+  "orderId" : 3,
+  "orderItems" : [ {
+    "id" : 5,
+    "quantity" : 2,
+    "product" : {
+      "id" : 1,
+      "name" : "치킨",
+      "price" : 10000,
+      "imageUrl" : "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=2370&amp;q=80"
+    }
+  } ]
+}, {
+  "orderId" : 4,
+  "orderItems" : [ {
+    "id" : 6,
+    "quantity" : 4,
+    "product" : {
+      "id" : 2,
+      "name" : "샐러드",
+      "price" : 20000,
+      "imageUrl" : "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=2370&amp;q=80"
+    }
+  } ]
+} ]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Success-주문-상세-요청"><a class="link" href="#Success-주문-상세-요청">Success-주문-상세-요청</a></h3>
+<div class="sect3">
+<h4 id="Success-주문-상세-요청_http_request"><a class="link" href="#Success-주문-상세-요청_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /orders/5 HTTP/1.1
+Authorization: Basic YUBhLmNvbToxMjM0
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Success-주문-상세-요청_http_response"><a class="link" href="#Success-주문-상세-요청_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 416
+
+{
+  "order" : {
+    "orderId" : 5,
+    "orderItems" : [ {
+      "id" : 7,
+      "quantity" : 4,
+      "product" : {
+        "id" : 2,
+        "name" : "샐러드",
+        "price" : 20000,
+        "imageUrl" : "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=2370&amp;q=80"
+      }
+    } ]
+  },
+  "totalPrice" : 81000
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -514,7 +748,7 @@ Content-Length: 19
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-02 13:43:29 +0900
+Last updated 2023-06-02 21:24:25 +0900
 </div>
 </div>
 </body>
