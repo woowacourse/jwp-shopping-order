@@ -2,11 +2,13 @@ package cart.controller.api;
 
 import cart.auth.Auth;
 import cart.controller.dto.request.OrderRequest;
+import cart.controller.dto.response.OrderResponse;
 import cart.controller.dto.response.OrderThumbnailResponse;
 import cart.domain.Member;
 import cart.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,12 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderThumbnailResponse>> getAll(@Auth final Member member) {
         final List<OrderThumbnailResponse> response = orderService.findByMember(member);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> get(@Auth final Member member, @PathVariable final long id) {
+        final OrderResponse response = orderService.findById(member, id);
         return ResponseEntity.ok(response);
     }
 }

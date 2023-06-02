@@ -6,6 +6,7 @@ import cart.exception.CartItemNotFoundException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.NotEnoughQuantityException;
 import cart.exception.NotOwnerException;
+import cart.exception.OrderNotFoundException;
 import cart.exception.PaymentAmountNotEqualException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,8 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(e.getMessage());
     }
 
-    @ExceptionHandler({MemberNotFoundException.class, ProductNotFoundException.class, CartItemNotFoundException.class})
+    @ExceptionHandler({MemberNotFoundException.class, ProductNotFoundException.class,
+            CartItemNotFoundException.class, OrderNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse handleNotFound(IllegalArgumentException e) {
         return new ExceptionResponse(e.getMessage());
