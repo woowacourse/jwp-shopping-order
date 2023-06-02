@@ -50,4 +50,15 @@ public class CartItemService {
 
         cartItemDao.deleteById(id);
     }
+
+    public CartItemResponse findByProductId(final Member member, final Long productId) {
+        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+
+        final CartItem cartItem = cartItems.stream()
+                .filter(item -> item.hasSameProduct(productId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("회원의 장바구니에 해당 상품이 존재하지 않습니다; productId=" + productId));
+
+        return CartItemResponse.of(cartItem);
+    }
 }

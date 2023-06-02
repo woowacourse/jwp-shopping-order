@@ -34,6 +34,11 @@ public class CartItemApiController {
         return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<CartItemResponse> showCartItemByProductId(@Auth final Member member, @PathVariable final Long productId) {
+        return ResponseEntity.ok(cartItemService.findByProductId(member, productId));
+    }
+
     @PostMapping
     public ResponseEntity<Void> addCartItems(@Auth final Member member, @RequestBody final CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);

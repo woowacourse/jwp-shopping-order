@@ -39,4 +39,15 @@ public class CartItemStep {
                 .log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> showCartItemByProductId(final String email, final String password, final Long productId) {
+        return given().log().all()
+                .auth().preemptive().basic(email, password)
+                .pathParam("productId", productId)
+                .when()
+                .get("/cart-items/products/{productId}")
+                .then()
+                .log().all()
+                .extract();
+    }
 }
