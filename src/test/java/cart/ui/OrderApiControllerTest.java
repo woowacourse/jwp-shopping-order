@@ -168,6 +168,7 @@ class OrderApiControllerTest {
                                         parameterWithName("last-id").description("마지막으로 조회한 주문 ID, 첫 요청일시 포함하지 않음")
                                 ),
                                 responseFields(
+                                        fieldWithPath("orders").type(JsonFieldType.ARRAY).description("주문 목록"),
                                         fieldWithPath("orders.[0].id").type(JsonFieldType.NUMBER).description("주문 ID"),
                                         fieldWithPath("orders.[0].orderItems.[0].productId").type(JsonFieldType.NUMBER).description("상품 ID"),
                                         fieldWithPath("orders.[0].orderItems.[0].name").type(JsonFieldType.STRING).description("상품 이름"),
@@ -178,7 +179,8 @@ class OrderApiControllerTest {
                                         fieldWithPath("orders.[0].payPrice").type(JsonFieldType.NUMBER).description("실 결제 금액"),
                                         fieldWithPath("orders.[0].earnedPoints").type(JsonFieldType.NUMBER).description("포인트 적립 금액"),
                                         fieldWithPath("orders.[0].usedPoints").type(JsonFieldType.NUMBER).description("포인트 사용 금액"),
-                                        fieldWithPath("orders.[0].orderDate").type(JsonFieldType.STRING).description("주문 일자")
+                                        fieldWithPath("orders.[0].orderDate").type(JsonFieldType.STRING).description("주문 일자"),
+                                        fieldWithPath("lastOrderId").type(JsonFieldType.NUMBER).description("마지막 주문 ID")
                                 )
                         )
                 );
