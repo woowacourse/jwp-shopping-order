@@ -3,8 +3,8 @@ package cart.application;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.OrderItem;
-import cart.domain.OrderItems;
+import cart.domain.OrderProduct;
+import cart.domain.OrderProducts;
 import cart.domain.Payment;
 import cart.dto.order.OrderProductsRequest;
 import cart.repository.CartItemRepository;
@@ -33,9 +33,9 @@ public class OrderService {
 
     public long orderProducts(Member member, OrderProductsRequest orderProductsRequest) {
         List<CartItem> cartItems = toCartItems(orderProductsRequest.getCartItemIds());
-        OrderItems orderItems = toOrderItems(cartItems);
-        Payment payment = new Payment(orderItems.calculateTotalPayment(), orderProductsRequest.getUsedPoint());
-        Order order = new Order(member, orderItems, payment);
+        OrderProducts orderProducts = toOrderItems(cartItems);
+        Payment payment = new Payment(orderProducts.calculateTotalPayment(), orderProductsRequest.getUsedPoint());
+        Order order = new Order(member, orderProducts, payment);
         // 장바구니에서 삭제
         cartItems.forEach(cartItem -> cartItemRepository.deleteById(cartItem.getId()));
         // 주문 목록에 저장
@@ -55,14 +55,14 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private OrderItems toOrderItems(List<CartItem> cartItems) {
+    private OrderProducts toOrderItems(List<CartItem> cartItems) {
         return cartItems.stream()
                 .map(this::toOrderItem)
-                .collect(collectingAndThen(toList(), OrderItems::new));
+                .collect(collectingAndThen(toList(), OrderProducts::new));
     }
 
-    private OrderItem toOrderItem(CartItem cartItem) {
-        return new OrderItem.Builder()
+    private OrderProduct toOrderItem(CartItem cartItem) {
+        return new OrderProduct.Builder()
                 .id(cartItem.getId())
                 .productName(cartItem.getProduct().getName())
                 .productPrice(cartItem.getProduct().getPrice())
@@ -73,7 +73,7 @@ public class OrderService {
     }
 
     // 사용자별 주문 내역
-    public List<OrderItems> getOrderByMember(Member member) {
+    public List<OrderProducts> getOrderByMember(Member member) {
         return orderRepository.findOrderItemsByMemberId(member.getId());
     }
 

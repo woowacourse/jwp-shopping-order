@@ -3,7 +3,7 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.OrderItems;
+import cart.domain.OrderProducts;
 import cart.dto.order.OrderItemsResponse;
 import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderResponse;
@@ -38,11 +38,11 @@ public class OrderApiController {
 
     @GetMapping
     public ResponseEntity<List<OrderItemsResponse>> showOrder(Member member) {
-        List<OrderItems> orderItems = orderService.getOrderByMember(member);
+        List<OrderProducts> orderItems = orderService.getOrderByMember(member);
         return ResponseEntity.ok(toOrderResponse(orderItems));
     }
 
-    private List<OrderItemsResponse> toOrderResponse(List<OrderItems> orderItems) {
+    private List<OrderItemsResponse> toOrderResponse(List<OrderProducts> orderItems) {
         return orderItems.stream()
                 .map(orderItem -> new OrderItemsResponse(orderItem.getOrderId(), orderItem.getOrderItems()))
                 .collect(Collectors.toList());

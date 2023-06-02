@@ -1,6 +1,6 @@
 package cart.domain;
 
-public class OrderItem {
+public class OrderProduct {
 
     private final Long id;
     private final long orderId;
@@ -10,7 +10,7 @@ public class OrderItem {
     private final int quantity;
     private final int totalPrice;
 
-    private OrderItem(Long id, long orderId, String name, int price, String imageUrl, int quantity, int totalPrice) {
+    private OrderProduct(Long id, long orderId, String name, int price, String imageUrl, int quantity, int totalPrice) {
         this.id = id;
         this.orderId = orderId;
         this.name = name;
@@ -89,8 +89,8 @@ public class OrderItem {
             return this;
         }
 
-        public OrderItem build() {
-            return new OrderItem(id, orderId, productName, productPrice, productImageUrl, quantity, totalPayment);
+        public OrderProduct build() {
+            return new OrderProduct(id, orderId, productName, productPrice, productImageUrl, quantity, totalPayment);
         }
     }
 }

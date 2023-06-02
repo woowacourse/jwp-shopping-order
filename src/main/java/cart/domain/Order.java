@@ -6,20 +6,20 @@ public class Order {
 
     private Long id;
     private final Member member;
-    private final OrderItems orderItems;
+    private final OrderProducts orderProducts;
     private final Payment payment;
     private LocalDateTime createdAt;
 
-    public Order(Member member, OrderItems orderItems, Payment payment) {
+    public Order(Member member, OrderProducts orderProducts, Payment payment) {
         this.member = member;
-        this.orderItems = orderItems;
+        this.orderProducts = orderProducts;
         this.payment = payment;
     }
 
-    public Order(long id, Member member, OrderItems orderItems, Payment payment, LocalDateTime createdAt) {
+    public Order(long id, Member member, OrderProducts orderProducts, Payment payment, LocalDateTime createdAt) {
         this.id = id;
         this.member = member;
-        this.orderItems = orderItems;
+        this.orderProducts = orderProducts;
         this.payment = payment;
         this.createdAt = createdAt;
     }
@@ -32,8 +32,8 @@ public class Order {
         return member;
     }
 
-    public OrderItems getOrderItems() {
-        return orderItems;
+    public OrderProducts getOrderItems() {
+        return orderProducts;
     }
 
     public Payment getPayment() {

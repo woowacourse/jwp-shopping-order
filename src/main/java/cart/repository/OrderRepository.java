@@ -2,12 +2,12 @@ package cart.repository;
 
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.OrderItem;
-import cart.domain.OrderItems;
+import cart.domain.OrderProduct;
+import cart.domain.OrderProducts;
 import cart.domain.Payment;
 import cart.repository.dao.OrderDao;
 import cart.repository.entity.OrderEntity;
-import cart.repository.entity.OrderItemEntity;
+import cart.repository.entity.OrderProductEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -26,27 +26,27 @@ public class OrderRepository {
     }
 
     public long createOrder(Order order) {
-        OrderItems orderItems = order.getOrderItems();
+        OrderProducts orderProducts = order.getOrderItems();
         OrderEntity orderEntity = toOrderEntity(order);
         long orderId = orderDao.insertOrder(orderEntity);
-        saveOrderItems(orderItems, orderId);
+        saveOrderItems(orderProducts, orderId);
         return orderId;
     }
 
-    private void saveOrderItems(OrderItems orderItems, long orderId) {
-        orderItems.getOrderItems()
+    private void saveOrderItems(OrderProducts orderProducts, long orderId) {
+        orderProducts.getOrderItems()
                 .stream()
                 .map(orderItem -> toOrderItemEntity(orderId, orderItem))
                 .forEach(orderDao::insertOrderItems);
     }
 
-    private static OrderItemEntity toOrderItemEntity(long orderId, OrderItem orderItem) {
-        return new OrderItemEntity.Builder()
+    private static OrderProductEntity toOrderItemEntity(long orderId, OrderProduct orderProduct) {
+        return new OrderProductEntity.Builder()
                 .orderId(orderId)
-                .productName(orderItem.getName())
-                .productPrice(orderItem.getPrice())
-                .productImageUrl(orderItem.getImageUrl())
-                .quantity(orderItem.getQuantity())
+                .productName(orderProduct.getName())
+                .productPrice(orderProduct.getPrice())
+                .productImageUrl(orderProduct.getImageUrl())
+                .quantity(orderProduct.getQuantity())
                 .build();
     }
 
@@ -59,35 +59,35 @@ public class OrderRepository {
     }
 
     // 사용자별 주문 내역
-    public List<OrderItems> findOrderItemsByMemberId(long memberId) {
+    public List<OrderProducts> findOrderItemsByMemberId(long memberId) {
         List<Long> orderIds = orderDao.getOrderIdsByMemberId(memberId);
-        List<OrderItems> orders = new ArrayList<>();
+        List<OrderProducts> orders = new ArrayList<>();
         for (long orderId : orderIds) {
-            List<OrderItemEntity> orderItemEntities = orderDao.getOrdersByMemberId(memberId);
-            OrderItems orderItems = toOrderItems(orderId, orderItemEntities);
-            orders.add(orderItems);
+            List<OrderProductEntity> orderItemEntities = orderDao.getOrderItemsByOrderId(orderId);
+            OrderProducts orderProducts = toOrderItems(orderId, orderItemEntities);
+            orders.add(orderProducts);
         }
         return orders;
     }
 
-    private static OrderItems toOrderItems(long orderId, List<OrderItemEntity> orderItemEntities) {
+    private static OrderProducts toOrderItems(long orderId, List<OrderProductEntity> orderItemEntities) {
         return orderItemEntities.stream()
-                .map(orderItemEntity -> new OrderItem.Builder()
-                        .id(orderItemEntity.getId())
-                        .orderId(orderItemEntity.getOrderId())
-                        .productName(orderItemEntity.getProductName())
-                        .productPrice(orderItemEntity.getProductPrice())
-                        .productImageUrl(orderItemEntity.getProductImageUrl())
-                        .quantity(orderItemEntity.getQuantity())
+                .map(orderProductEntity -> new OrderProduct.Builder()
+                        .id(orderProductEntity.getId())
+                        .orderId(orderProductEntity.getOrderId())
+                        .productName(orderProductEntity.getProductName())
+                        .productPrice(orderProductEntity.getProductPrice())
+                        .productImageUrl(orderProductEntity.getProductImageUrl())
+                        .quantity(orderProductEntity.getQuantity())
                         .build()
-                ).collect(collectingAndThen(toList(), (items) -> new OrderItems(orderId, items)));
+                ).collect(collectingAndThen(toList(), (items) -> new OrderProducts(orderId, items)));
     }
 
     // 주문 상세
     public Order findOrderById(Member member, long orderId) {
         OrderEntity orderEntity = orderDao.getOrderById(orderId);
-        OrderItems orderItems = toOrderItems(orderId, orderDao.getOrderItemByOrderId(orderId));
+        OrderProducts orderProducts = toOrderItems(orderId, orderDao.getOrderItemsByOrderId(orderId));
         Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
-        return new Order(orderId, member, orderItems, payment, orderEntity.getCreatedAt());
+        return new Order(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
     }
 }

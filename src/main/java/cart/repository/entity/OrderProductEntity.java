@@ -1,6 +1,6 @@
 package cart.repository.entity;
 
-public class OrderItemEntity {
+public class OrderProductEntity {
 
     private final Long id;
     private final long orderId;
@@ -9,7 +9,7 @@ public class OrderItemEntity {
     private final String productImageUrl;
     private final int quantity;
 
-    private OrderItemEntity(Long id, long orderId, String productName, int productPrice, String productImageUrl, int quantity) {
+    private OrderProductEntity(Long id, long orderId, String productName, int productPrice, String productImageUrl, int quantity) {
         this.id = id;
         this.orderId = orderId;
         this.productName = productName;
@@ -81,8 +81,8 @@ public class OrderItemEntity {
             return this;
         }
 
-        public OrderItemEntity build() {
-            return new OrderItemEntity(id, orderId, productName, productPrice, productImageUrl, quantity);
+        public OrderProductEntity build() {
+            return new OrderProductEntity(id, orderId, productName, productPrice, productImageUrl, quantity);
         }
     }
 }

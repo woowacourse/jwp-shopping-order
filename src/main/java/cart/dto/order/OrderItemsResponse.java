@@ -1,15 +1,15 @@
 package cart.dto.order;
 
-import cart.domain.OrderItem;
+import cart.domain.OrderProduct;
 
 import java.util.List;
 
 public class OrderItemsResponse {
 
     private final long orderId;
-    private final List<OrderItem> orderProducts;
+    private final List<OrderProduct> orderProducts;
 
-    public OrderItemsResponse(long orderId, List<OrderItem> orderProducts) {
+    public OrderItemsResponse(long orderId, List<OrderProduct> orderProducts) {
         this.orderId = orderId;
         this.orderProducts = orderProducts;
     }
@@ -18,7 +18,7 @@ public class OrderItemsResponse {
         return orderId;
     }
 
-    public List<OrderItem> getOrderProducts() {
+    public List<OrderProduct> getOrderProducts() {
         return orderProducts;
     }
 }
