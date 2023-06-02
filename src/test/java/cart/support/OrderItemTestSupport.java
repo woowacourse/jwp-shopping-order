@@ -1,12 +1,12 @@
 package cart.support;
 
-import cart.dao.OrderProductDao;
+import cart.dao.OrderItemDao;
 import cart.domain.OrderHistory;
-import cart.domain.OrderProduct;
+import cart.domain.OrderItem;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderProductTestSupport {
+public class OrderItemTestSupport {
 
     private static Long defaultProductId = 1L;
     private static String defaultName = "product";
@@ -14,20 +14,20 @@ public class OrderProductTestSupport {
     private static String defaultImageUrl = "imageUrl";
     private static Integer defaultQuantity = 1;
 
-    private final OrderProductDao orderProductDao;
+    private final OrderItemDao orderItemDao;
     private final OrderHistoryTestSupport orderHistoryTestSupport;
 
-    public OrderProductTestSupport(final OrderProductDao orderProductDao,
-                                   final OrderHistoryTestSupport orderHistoryTestSupport) {
-        this.orderProductDao = orderProductDao;
+    public OrderItemTestSupport(final OrderItemDao orderItemDao,
+                                final OrderHistoryTestSupport orderHistoryTestSupport) {
+        this.orderItemDao = orderItemDao;
         this.orderHistoryTestSupport = orderHistoryTestSupport;
     }
 
-    public OrderProductBuilder builder() {
-        return new OrderProductBuilder();
+    public OrderItemBuilder builder() {
+        return new OrderItemBuilder();
     }
 
-    public final class OrderProductBuilder {
+    public final class OrderItemBuilder {
 
         private Long id;
         private OrderHistory orderHistory;
@@ -37,51 +37,51 @@ public class OrderProductTestSupport {
         private String imageUrl;
         private Integer quantity;
 
-        public OrderProductBuilder id(final Long id) {
+        public OrderItemBuilder id(final Long id) {
             this.id = id;
             return this;
         }
 
-        public OrderProductBuilder orderHistory(final OrderHistory orderHistory) {
+        public OrderItemBuilder orderHistory(final OrderHistory orderHistory) {
             this.orderHistory = orderHistory;
             return this;
         }
 
-        public OrderProductBuilder productId(final Long productId) {
+        public OrderItemBuilder productId(final Long productId) {
             this.productId = productId;
             return this;
         }
 
-        public OrderProductBuilder name(final String name) {
+        public OrderItemBuilder name(final String name) {
             this.name = name;
             return this;
         }
 
-        public OrderProductBuilder price(final Integer price) {
+        public OrderItemBuilder price(final Integer price) {
             this.price = price;
             return this;
         }
 
-        public OrderProductBuilder imageUrl(final String imageUrl) {
+        public OrderItemBuilder imageUrl(final String imageUrl) {
             this.imageUrl = imageUrl;
             return this;
         }
 
-        public OrderProductBuilder quantity(final Integer quantity) {
+        public OrderItemBuilder quantity(final Integer quantity) {
             this.quantity = quantity;
             return this;
         }
 
-        public OrderProduct build() {
-            OrderProduct orderProduct = make();
-            Long orderProductId = orderProductDao.insert(orderProduct);
-            return new OrderProduct(orderProductId, orderProduct.getOrderHistory(), orderProduct.getProductId(),
-                    orderProduct.getName(), orderProduct.getPrice(), orderProduct.getImageUrl(),
-                    orderProduct.getQuantity());
+        public OrderItem build() {
+            OrderItem orderItem = make();
+            Long orderItemId = orderItemDao.insert(orderItem);
+            return new OrderItem(orderItemId, orderItem.getOrderHistory(), orderItem.getProductId(),
+                    orderItem.getName(), orderItem.getPrice(), orderItem.getImageUrl(),
+                    orderItem.getQuantity());
         }
 
-        public OrderProduct make() {
-            return new OrderProduct(
+        public OrderItem make() {
+            return new OrderItem(
                     id == null ? null : id,
                     orderHistory == null ? orderHistoryTestSupport.builder().build() : orderHistory,
                     productId == null ? ++defaultProductId : productId,

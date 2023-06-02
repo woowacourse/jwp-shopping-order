@@ -3,11 +3,11 @@ package cart.application;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderHistoryDao;
-import cart.dao.OrderProductDao;
+import cart.dao.OrderItemDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.OrderHistory;
-import cart.domain.OrderProduct;
+import cart.domain.OrderItem;
 import cart.domain.Point;
 import cart.dto.request.CartItemIdRequest;
 import cart.dto.request.PaymentRequest;
@@ -25,14 +25,14 @@ public class PayService {
 
     private final CartItemDao cartItemDao;
     private final OrderHistoryDao orderHistoryDao;
-    private final OrderProductDao orderProductDao;
+    private final OrderItemDao orderItemDao;
     private final MemberDao memberDao;
 
     public PayService(final CartItemDao cartItemDao, final OrderHistoryDao orderHistoryDao,
-                      final OrderProductDao orderProductDao, final MemberDao memberDao) {
+                      final OrderItemDao orderItemDao, final MemberDao memberDao) {
         this.cartItemDao = cartItemDao;
         this.orderHistoryDao = orderHistoryDao;
-        this.orderProductDao = orderProductDao;
+        this.orderItemDao = orderItemDao;
         this.memberDao = memberDao;
     }
 
@@ -44,8 +44,8 @@ public class PayService {
 
         OrderHistory orderHistory = getOrderHistory(member, paymentRequest);
 
-        List<OrderProduct> orderProducts = makeOrderProducts(cartItems, orderHistory);
-        orderProductDao.insertAll(orderProducts);
+        List<OrderItem> orderItems = makeOrderItems(cartItems, orderHistory);
+        orderItemDao.insertAll(orderItems);
 
         updatePoint(member, paymentRequest);
         return new OrderIdResponse(orderHistory.getId());
@@ -98,9 +98,9 @@ public class PayService {
                 member);
     }
 
-    private List<OrderProduct> makeOrderProducts(final List<CartItem> cartItems, final OrderHistory orderHistory) {
+    private List<OrderItem> makeOrderItems(final List<CartItem> cartItems, final OrderHistory orderHistory) {
         return cartItems.stream()
-                .map(cartItem -> new OrderProduct(orderHistory, cartItem.getProduct().getId(),
+                .map(cartItem -> new OrderItem(orderHistory, cartItem.getProduct().getId(),
                         cartItem.getProduct().getName(), cartItem.getProduct().getPrice(),
                         cartItem.getProduct().getImageUrl(), cartItem.getQuantity()))
                 .collect(Collectors.toList());

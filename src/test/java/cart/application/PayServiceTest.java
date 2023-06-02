@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderHistoryDao;
-import cart.dao.OrderProductDao;
+import cart.dao.OrderItemDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
@@ -35,7 +35,7 @@ class PayServiceTest {
     @Mock
     private OrderHistoryDao orderHistoryDao;
     @Mock
-    private OrderProductDao orderProductDao;
+    private OrderItemDao orderItemDao;
     @Mock
     private MemberDao memberDao;
 

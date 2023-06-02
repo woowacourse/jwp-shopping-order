@@ -1,6 +1,6 @@
 package cart.domain;
 
-public class OrderProduct {
+public class OrderItem {
 
     private Long id;
     private OrderHistory orderHistory;
@@ -10,13 +10,13 @@ public class OrderProduct {
     private String imageUrl;
     private int quantity;
 
-    public OrderProduct(final OrderHistory orderHistory, final Long productId, final String name, final int price, final String imageUrl,
-                        final int quantity) {
+    public OrderItem(final OrderHistory orderHistory, final Long productId, final String name, final int price, final String imageUrl,
+                     final int quantity) {
         this(null, orderHistory, productId, name, price, imageUrl, quantity);
     }
 
-    public OrderProduct(final Long id, OrderHistory orderHistory, final Long productId, final String name, final int price, final String imageUrl,
-                        final int quantity) {
+    public OrderItem(final Long id, OrderHistory orderHistory, final Long productId, final String name, final int price, final String imageUrl,
+                     final int quantity) {
         this.id = id;
         this.orderHistory = orderHistory;
         this.productId = productId;

@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS order_history
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
-CREATE TABLE IF NOT EXISTS order_product
+CREATE TABLE IF NOT EXISTS order_item
 (
     id               BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_history_id BIGINT       NOT NULL,

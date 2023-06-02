@@ -15,5 +15,5 @@ public class TestSupport {
     @Autowired
     protected OrderHistoryTestSupport orderHistoryTestSupport;
     @Autowired
-    protected OrderProductTestSupport orderProductTestSupport;
+    protected OrderItemTestSupport orderItemTestSupport;
 }
