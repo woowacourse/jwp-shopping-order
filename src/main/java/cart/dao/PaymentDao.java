@@ -1,7 +1,9 @@
 package cart.dao;
 
 import cart.domain.Payment;
+import cart.entity.PaymentEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -32,5 +34,20 @@ public class PaymentDao {
         sqlParameterSource.addValue("member_id", memberId);
 
         return jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+    }
+
+    public PaymentEntity findByOrderId(final Long orderId) {
+        String sql = "SELECT * FROM payment WHERE order_id = ?";
+        return jdbcTemplate.queryForObject(sql, paymentEntityRowMapper(), orderId);
+    }
+
+    private RowMapper<PaymentEntity> paymentEntityRowMapper() {
+        return (rs, rowNum) -> new PaymentEntity(
+                rs.getLong("id"),
+                rs.getLong("member_id"),
+                rs.getInt("original_price"),
+                rs.getInt("discount_price"),
+                rs.getInt("final_price"),
+                rs.getTimestamp("created_at").toLocalDateTime());
     }
 }

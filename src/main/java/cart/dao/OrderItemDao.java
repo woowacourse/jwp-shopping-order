@@ -2,10 +2,13 @@ package cart.dao;
 
 import cart.domain.OrderItem;
 import cart.domain.OrderItems;
+import cart.entity.OrderItemEntity;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -32,5 +35,18 @@ public class OrderItemDao {
                 return orderItems.getItems().size();
             }
         });
+    }
+
+    public List<OrderItemEntity> findAllByOrderId(Long orderId) {
+        String sql = "SELECT * FROM order_item WHERE order_id = ?";
+        return jdbcTemplate.query(sql, orderItemEntityRowMapper(), orderId);
+    }
+
+    private RowMapper<OrderItemEntity> orderItemEntityRowMapper() {
+        return (rs, rowNum) -> new OrderItemEntity(
+                rs.getLong("id"),
+                rs.getLong("order_id"),
+                rs.getLong("product_id"),
+                rs.getInt("quantity"));
     }
 }

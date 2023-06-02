@@ -25,7 +25,7 @@ CREATE TABLE cart_item (
 CREATE TABLE orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    created_at DATETIME DEFAULT NOW() NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW() NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
@@ -45,7 +45,7 @@ CREATE TABLE payment (
     final_price INT NOT NULL,
     order_id BIGINT NOT NULL,
     member_id BIGINT NOT NULL,
-    created_at DATETIME DEFAULT NOW() NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW() NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (member_id) REFERENCES member(id)
 );

@@ -5,14 +5,15 @@ import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.CartItems;
 import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
-import java.util.Optional;
-import org.springframework.stereotype.Service;
-
+import cart.entity.ProductEntity;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
@@ -39,7 +40,16 @@ public class CartItemService {
             cartItemDao.updateQuantity(updateCartItem);
             return updateCartItem.getId();
         }
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        ProductEntity productEntity = productDao.getProductById(cartItemRequest.getProductId());
+        Product product = convertEntityToProduct(productEntity);
+        return cartItemDao.save(new CartItem(member, product));
+    }
+
+    private Product convertEntityToProduct(final ProductEntity productEntity) {
+        return new Product(productEntity.getId(),
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl());
     }
 
     private Optional<CartItem> getCartItem(final Member member, final Long productId) {

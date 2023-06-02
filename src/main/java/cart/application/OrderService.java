@@ -9,6 +9,7 @@ import cart.domain.Payment;
 import cart.domain.PaymentGenerator;
 import cart.domain.Price;
 import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
 import cart.repository.OrderRepository;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,10 @@ public class OrderService {
         return new OrderItems(cartItems.getItems().stream()
                 .map(cartItem -> new OrderItem(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(Collectors.toList()));
+    }
+
+    public OrderResponse findOrder(final Long orderId, final Member member) {
+        Order order = orderRepository.findOrder(orderId, member);
+        return OrderResponse.from(order);
     }
 }
