@@ -1,15 +1,16 @@
 package shop.persistence.dao;
 
-import shop.persistence.entity.ProductEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import shop.exception.DatabaseException;
+import shop.persistence.entity.ProductEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class ProductDao {
@@ -43,11 +44,13 @@ public class ProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<ProductEntity> findById(Long id) {
+    public ProductEntity findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        ProductEntity findProduct = jdbcTemplate.queryForObject(sql, rowMapper, id);
-
-        return Optional.ofNullable(findProduct);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (DataAccessException e) {
+            throw new DatabaseException.IllegalDataException(id + "에 해당하는 상품이 없습니다.");
+        }
     }
 
     public int updateProduct(Long productId, ProductEntity productEntity) {

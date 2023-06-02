@@ -1,11 +1,11 @@
 package shop.persistence;
 
+import org.springframework.stereotype.Repository;
 import shop.domain.product.Product;
 import shop.domain.repository.ProductRepository;
 import shop.exception.DatabaseException;
 import shop.persistence.dao.ProductDao;
 import shop.persistence.entity.ProductEntity;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,8 +41,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(Long id) {
-        ProductEntity productEntity = productDao.findById(id)
-                .orElseThrow(() -> new DatabaseException.IllegalDataException(id + "에 해당하는 상품이 없습니다."));
+        ProductEntity productEntity = productDao.findById(id);
 
         return toProduct(productEntity);
     }

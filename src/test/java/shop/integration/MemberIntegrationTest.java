@@ -34,6 +34,9 @@ public class MemberIntegrationTest extends IntegrationTest {
     @Test
     void joinTest() {
         MemberJoinDto request = new MemberJoinDto("testMember", "asdf1234");
+        Coupon coupon = new Coupon(CouponType.WELCOME_JOIN);
+
+        couponRepository.save(coupon);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

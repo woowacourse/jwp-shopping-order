@@ -1,5 +1,6 @@
 package shop.persistence.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,7 +15,6 @@ import shop.persistence.CartItemDetail;
 import shop.persistence.entity.CartEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class CartDao {
@@ -66,16 +66,18 @@ public class CartDao {
         return jdbcTemplate.query(sql, detailRowMapper, memberId);
     }
 
-    public Optional<CartItemDetail> findById(Long id) {
+    public CartItemDetail findById(Long id) {
         String sql = "SELECT * " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
 
-        CartItemDetail cartItemDetail = jdbcTemplate.queryForObject(sql, detailRowMapper, id);
-
-        return Optional.ofNullable(cartItemDetail);
+        try {
+            return jdbcTemplate.queryForObject(sql, detailRowMapper, id);
+        } catch (DataAccessException e) {
+            throw new DatabaseException.IllegalDataException(id + "에 해당하는 장바구니 상품이 없습니다.");
+        }
     }
 
     public void deleteById(Long id) {

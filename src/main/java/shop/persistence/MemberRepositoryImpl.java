@@ -5,7 +5,6 @@ import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
 import shop.domain.repository.MemberRepository;
-import shop.exception.DatabaseException;
 import shop.persistence.dao.MemberDao;
 import shop.persistence.entity.MemberEntity;
 import shop.util.Encryptor;
@@ -40,20 +39,14 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Member findById(Long id) {
-        MemberEntity findMember = memberDao.findById(id)
-                .orElseThrow(() -> new DatabaseException.IllegalDataException(
-                        id + "를 갖는 회원을 찾을 수 없습니다.")
-                );
+        MemberEntity findMember = memberDao.findById(id);
 
         return toMember(findMember);
     }
 
     @Override
     public Member findByName(String name) {
-        MemberEntity findMember = memberDao.findByName(name)
-                .orElseThrow(() -> new DatabaseException.IllegalDataException(
-                        name + "을 갖는 회원을 찾을 수 없습니다.")
-                );
+        MemberEntity findMember = memberDao.findByName(name);
 
         return toMember(findMember);
     }

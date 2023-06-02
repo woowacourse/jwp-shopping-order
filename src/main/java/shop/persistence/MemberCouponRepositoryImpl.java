@@ -7,7 +7,6 @@ import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
 import shop.domain.repository.MemberCouponRepository;
-import shop.exception.DatabaseException;
 import shop.persistence.dao.MemberCouponDao;
 import shop.persistence.entity.MemberCouponEntity;
 
@@ -42,10 +41,7 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
     @Override
     public MemberCoupon findByMemberIdAndCouponId(Long memberId, Long couponId) {
         MemberCouponDetail memberCouponDetail =
-                memberCouponDao.findByMemberIdAndCouponId(memberId, couponId)
-                        .orElseThrow(() -> new DatabaseException.IllegalDataException(
-                                "사용자(Id : " + memberId + ")에게 " +
-                                        "존재하지 않는 쿠폰(Id : " + couponId + " 입니다."));
+                memberCouponDao.findByMemberIdAndCouponId(memberId, couponId);
 
         return toMemberCoupon(memberCouponDetail);
     }

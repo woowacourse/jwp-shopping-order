@@ -73,10 +73,7 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public CartItem findById(Long id) {
-        CartItemDetail cartItemDetail = cartDao.findById(id)
-                .orElseThrow(() -> new DatabaseException.IllegalDataException(
-                        id + "에 해당하는 장바구니 상품이 없습니다.")
-                );
+        CartItemDetail cartItemDetail = cartDao.findById(id);
 
         return toCartItem(cartItemDetail);
     }

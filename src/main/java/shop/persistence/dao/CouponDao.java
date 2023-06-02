@@ -1,7 +1,6 @@
 package shop.persistence.dao;
 
-import shop.exception.DatabaseException;
-import shop.persistence.entity.CouponEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import shop.exception.DatabaseException;
+import shop.persistence.entity.CouponEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,11 +52,13 @@ public class CouponDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<CouponEntity> findById(Long id) {
+    public CouponEntity findById(Long id) {
         String sql = "SELECT * FROM coupon WHERE id = ?";
-        CouponEntity couponEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
-
-        return Optional.ofNullable(couponEntity);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (DataAccessException e) {
+            throw new DatabaseException.IllegalDataException(id + "를 갖는 쿠폰을 찾을 수 없습니다.");
+        }
     }
 
     public Optional<CouponEntity> findByNameAndDiscountRate(String name, Integer discountRate) {

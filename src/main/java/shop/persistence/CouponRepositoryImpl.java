@@ -43,10 +43,7 @@ public class CouponRepositoryImpl implements CouponRepository {
 
     @Override
     public Coupon findById(Long id) {
-        CouponEntity couponEntity = couponDao.findById(id)
-                .orElseThrow(() -> new DatabaseException.IllegalDataException(
-                        id + "를 갖는 쿠폰을 찾을 수 없습니다.")
-                );
+        CouponEntity couponEntity = couponDao.findById(id);
 
         return toCoupon(couponEntity);
     }

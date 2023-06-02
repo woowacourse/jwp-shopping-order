@@ -10,7 +10,6 @@ import shop.domain.order.OrderItem;
 import shop.domain.order.OrderPrice;
 import shop.domain.product.Product;
 import shop.domain.repository.OrderRepository;
-import shop.exception.DatabaseException;
 import shop.persistence.dao.OrderCouponDao;
 import shop.persistence.dao.OrderDao;
 import shop.persistence.dao.OrderProductDao;
@@ -83,10 +82,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public OrderDetailDto findDetailsByMemberAndOrderId(Member member, Long orderId) {
-        OrderEntity orderEntity = orderDao.findById(orderId)
-                .orElseThrow(() -> new DatabaseException.IllegalDataException(
-                        orderId + "를 갖는 주문 정보를 찾을 수 없습니다.")
-                );
+        OrderEntity orderEntity = orderDao.findById(orderId);
 
         List<OrderProductDetail> orderProducts = orderProductDao.findAllByOrderId(orderId);
         Optional<OrderCouponDetail> orderCouponDetail = orderCouponDao.findCouponByOrderId(orderId);

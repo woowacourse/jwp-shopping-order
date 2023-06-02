@@ -1,15 +1,16 @@
 package shop.persistence.dao;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import shop.exception.DatabaseException;
 import shop.persistence.entity.OrderEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class OrderDao {
@@ -38,11 +39,14 @@ public class OrderDao {
         return simpleJdbcInsert.executeAndReturnKey(param).longValue();
     }
 
-    public Optional<OrderEntity> findById(Long id) {
+    public OrderEntity findById(Long id) {
         String sql = "SELECT * FROM order WHERE id = ?";
-        OrderEntity orderEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
 
-        return Optional.ofNullable(orderEntity);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException.IllegalDataException(id + "를 갖는 주문 정보를 찾을 수 없습니다.");
+        }
     }
 
     public List<OrderEntity> findAllByMemberId(Long memberId) {

@@ -1,16 +1,17 @@
 package shop.persistence.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import shop.exception.DatabaseException;
 import shop.persistence.MemberCouponDetail;
 import shop.persistence.entity.MemberCouponEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class MemberCouponDao {
@@ -47,16 +48,18 @@ public class MemberCouponDao {
         return simpleJdbcInsert.executeAndReturnKey(param).longValue();
     }
 
-    public Optional<MemberCouponDetail> findByMemberIdAndCouponId(Long memberId, Long couponId) {
+    public MemberCouponDetail findByMemberIdAndCouponId(Long memberId, Long couponId) {
         String sql = "SELECT * FROM member_coupon " +
                 "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
                 "INNER JOIN member ON member_coupon.member_id = member.id " +
                 "WHERE member_coupon.member_id = ? AND member_coupon.coupon_id = ?";
 
-        MemberCouponDetail memberCouponDetail =
-                jdbcTemplate.queryForObject(sql, detailRowMapper, memberId, couponId);
-
-        return Optional.ofNullable(memberCouponDetail);
+        try {
+            return jdbcTemplate.queryForObject(sql, detailRowMapper, memberId, couponId);
+        } catch (DataAccessException e) {
+            throw new DatabaseException.IllegalDataException("사용자(Id : " + memberId + ")에게 " +
+                    "존재하지 않는 쿠폰(Id : " + couponId + " 입니다.");
+        }
     }
 
     public List<MemberCouponDetail> findAllByMemberId(Long memberId) {

@@ -1,5 +1,6 @@
 package shop.persistence.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -45,8 +46,13 @@ public class OrderCouponDao {
                 "INNER JOIN coupon ON order_coupon.coupon_id = coupon.id " +
                 "WHERE order_coupon.order_id = ?";
 
-        OrderCouponDetail orderCouponDetail = jdbcTemplate.queryForObject(sql, detailRowMapper, orderId);
+        try {
+            OrderCouponDetail orderCouponDetail = jdbcTemplate.queryForObject(sql, detailRowMapper, orderId);
 
-        return Optional.ofNullable(orderCouponDetail);
+            return Optional.of(orderCouponDetail);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+
     }
 }

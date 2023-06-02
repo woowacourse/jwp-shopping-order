@@ -1,5 +1,6 @@
 package shop.persistence.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +12,6 @@ import shop.exception.DatabaseException;
 import shop.persistence.entity.MemberEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class MemberDao {
@@ -44,18 +44,24 @@ public class MemberDao {
         }
     }
 
-    public Optional<MemberEntity> findById(Long id) {
+    public MemberEntity findById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
 
-        return Optional.ofNullable(memberEntity);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (DataAccessException e) {
+            throw new DatabaseException.IllegalDataException(id + "를 갖는 회원을 찾을 수 없습니다.");
+        }
     }
 
-    public Optional<MemberEntity> findByName(String name) {
+    public MemberEntity findByName(String name) {
         String sql = "SELECT * FROM member WHERE name = ?";
-        MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, rowMapper, name);
 
-        return Optional.ofNullable(memberEntity);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, name);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException.IllegalDataException(name + "을 갖는 회원을 찾을 수 없습니다.");
+        }
     }
 
     public List<MemberEntity> findAll() {
