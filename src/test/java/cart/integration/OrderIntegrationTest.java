@@ -33,6 +33,8 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() {
+        super.setUp();
+
         final long productId1 = createProduct(mainProductRequest);
         final long productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
         cartItemId1 = requestAddCartItemAndGetId(member, productId1);
