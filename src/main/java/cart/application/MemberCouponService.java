@@ -24,6 +24,7 @@ public class MemberCouponService {
 
     public void add(final Member member, final Long couponId) {
         Coupon coupon = couponRepository.findById(couponId);
+        // TODO: 예외처리
         memberCouponRepository.save(new MemberCoupon(member, coupon));
     }
 

@@ -4,16 +4,16 @@ import cart.db.entity.CartItemDetailEntity;
 import cart.db.entity.CartItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class CartItemDao {
@@ -30,11 +30,8 @@ public class CartItemDao {
     }
 
     public Long create(final CartItemEntity cartItemEntity) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("member_id", cartItemEntity.getMemberId());
-        params.put("product_id", cartItemEntity.getProductId());
-        params.put("quantity", cartItemEntity.getQuantity());
-        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartItemEntity);
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     public List<CartItemDetailEntity> findByMemberId(final Long memberId) {
