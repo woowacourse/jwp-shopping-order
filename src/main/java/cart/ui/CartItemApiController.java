@@ -1,11 +1,12 @@
 package cart.ui;
 
 import cart.application.CartItemService;
-import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,12 @@ public class CartItemApiController {
         return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<CartItemResponse> showCartItem(@PathVariable Long productId, Member member) {
+        CartItemResponse cartItemResponse = cartItemService.findByMemberAndProductId(member, productId);
+        return ResponseEntity.ok(cartItemResponse);
+    }
+
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
         Long cartItemId = cartItemService.add(member, cartItemRequest);
@@ -46,5 +53,10 @@ public class CartItemApiController {
         cartItemService.remove(member, id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 }
