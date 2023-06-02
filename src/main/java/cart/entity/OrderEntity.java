@@ -9,19 +9,22 @@ public class OrderEntity {
     private final int discountedTotalItemPrice;
     private final int shippingFee;
     private final LocalDateTime orderedAt;
+    private final Long memberId;
 
     public OrderEntity(
             final Long id,
             final int totalItemPrice,
             final int discountedTotalItemPrice,
             final int shippingFee,
-            final LocalDateTime orderedAt
+            final LocalDateTime orderedAt,
+            Long memberId
     ) {
         this.id = id;
         this.totalItemPrice = totalItemPrice;
         this.discountedTotalItemPrice = discountedTotalItemPrice;
         this.shippingFee = shippingFee;
         this.orderedAt = orderedAt;
+        this.memberId = memberId;
     }
 
     public Long getId() {

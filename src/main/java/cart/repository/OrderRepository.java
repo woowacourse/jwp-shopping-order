@@ -63,7 +63,7 @@ public class OrderRepository {
         return orders;
     }
 
-    private static Order orderEntityToOrder(Member member, OrderEntity orderEntity, List<OrderItem> orderItems) {
+    private static Order orderEntityToOrder(final Member member, final OrderEntity orderEntity, List<OrderItem> orderItems) {
         return new Order(
                 orderEntity.getId(),
                 member,
@@ -74,4 +74,9 @@ public class OrderRepository {
         );
     }
 
+    public Order findById(final Member member, final Long id) {
+        OrderEntity orderEntity = orderDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        List<OrderItem> orderItems = orderItemDao.findByOrderId(orderEntity.getId());
+        return orderEntityToOrder(member, orderEntity, orderItems);
+    }
 }

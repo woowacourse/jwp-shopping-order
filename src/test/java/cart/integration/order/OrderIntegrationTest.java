@@ -6,9 +6,11 @@ import cart.dao.product.ProductDao;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
 import cart.integration.IntegrationTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -104,10 +106,62 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .then();
 
         // when
-        given().log().all()
+        ExtractableResponse<Response> result = given().log().all()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .get("/orders")
-                .then().log().all();
+                .then().log().all()
+                .extract();
+
+
+        List<OrderResponse> response = result.jsonPath().getList(".", OrderResponse.class);
+
+        assertThat(response.size()).isEqualTo(1);
+        assertThat(response.get(0).getTotalItemDiscountAmount()).isEqualTo(orderRequest.getTotalItemDiscountAmount());
+        assertThat(response.get(0).getTotalMemberDiscountAmount()).isEqualTo(orderRequest.getTotalMemberDiscountAmount());
+        assertThat(response.get(0).getTotalItemPrice()).isEqualTo(orderRequest.getTotalItemPrice());
+        assertThat(response.get(0).getDiscountedTotalItemPrice()).isEqualTo(orderRequest.getDiscountedTotalItemPrice());
+        assertThat(response.get(0).getShippingFee()).isEqualTo(orderRequest.getShippingFee());
+    }
+
+    @Test
+    @DisplayName("특정 주문 전체 조회를 한다.")
+    void find_order_by_Id() {
+        // given
+        OrderRequest orderRequest = new OrderRequest(
+                cartItemIds,
+                500,
+                1500,
+                25000,
+                23000,
+                3000,
+                26000);
+
+        ExtractableResponse<Response> postResponse = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then()
+                .extract();
+
+        String createdLocation = postResponse.header("Location").split("/")[2];
+
+        // when
+        ExtractableResponse<Response> result = given().log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders/" + createdLocation)
+                .then().log().all()
+                .extract();
+
+
+        OrderResponse response = result.jsonPath().getObject(".", OrderResponse.class);
+
+        assertThat(response.getTotalItemDiscountAmount()).isEqualTo(orderRequest.getTotalItemDiscountAmount());
+        assertThat(response.getTotalMemberDiscountAmount()).isEqualTo(orderRequest.getTotalMemberDiscountAmount());
+        assertThat(response.getTotalItemPrice()).isEqualTo(orderRequest.getTotalItemPrice());
+        assertThat(response.getDiscountedTotalItemPrice()).isEqualTo(orderRequest.getDiscountedTotalItemPrice());
+        assertThat(response.getShippingFee()).isEqualTo(orderRequest.getShippingFee());
     }
 }

@@ -41,4 +41,9 @@ public class OrderService {
                 .map(order -> OrderResponse.from(order, member))
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public OrderResponse findById(final Member member, final Long id) {
+        Order order = orderRepository.findById(member, id);
+        return OrderResponse.from(order, member);
+    }
 }

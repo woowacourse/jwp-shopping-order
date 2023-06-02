@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static cart.fixture.MemberFixture.ako;
 import static cart.fixture.MemberFixture.ddoring;
@@ -53,15 +54,20 @@ class OrderDaoTest {
         order.calculatePrice();
 
         // when
-        Long result = orderDao.insertOrder(order);
+        Long id = orderDao.insertOrder(order);
+        Optional<OrderEntity> result = orderDao.findById(id);
 
         // then
-        assertThat(result).isEqualTo(1L);
+        assertThat(result.get().getId()).isEqualTo(id);
+        assertThat(result.get().getDiscountedTotalItemPrice()).isEqualTo(order.getDiscountPurchaseItemPrice());
+        assertThat(result.get().getShippingFee()).isEqualTo(order.getShippingFee());
+        assertThat(result.get().getTotalItemPrice()).isEqualTo(order.getPurchaseItemPrice());
+
     }
 
     @Test
-    @DisplayName("memberId를 통해 member")
-    void find_by_memberId() {
+    @DisplayName("memberId를 통해 orderEntity를 찾는다.")
+    void find_by_member_id() {
         // given
         List<OrderItem> orderItems = List.of(
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
@@ -81,4 +87,27 @@ class OrderDaoTest {
         assertThat(result.size()).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("orderId를 통해 orderEntity를 찾는다.")
+    void find_by_order_id() {
+        // given
+        List<OrderItem> orderItems = List.of(
+                new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
+                new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
+        Order order1 = new Order(member1, orderItems);
+        order1.calculatePrice();
+        Order order2 = new Order(member2, orderItems);
+        order2.calculatePrice();
+
+        Long order1Id = orderDao.insertOrder(order1);
+        Long order2Id = orderDao.insertOrder(order2);
+
+        // when
+        Optional<OrderEntity> result = orderDao.findById(order1Id);
+
+        // then
+        assertThat(result.get().getTotalItemPrice()).isEqualTo(order1.getPurchaseItemPrice());
+        assertThat(result.get().getDiscountedTotalItemPrice()).isEqualTo(order1.getDiscountPurchaseItemPrice());
+        assertThat(result.get().getShippingFee()).isEqualTo(order1.getShippingFee());
+    }
 }

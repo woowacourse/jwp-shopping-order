@@ -31,4 +31,10 @@ public class OrderController {
         List<OrderResponse> orderResponses = orderService.findByMember(member);
         return ResponseEntity.ok(orderResponses);
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<OrderResponse> findOrderById(final Member member, @PathVariable Long id) {
+        OrderResponse orderResponse = orderService.findById(member, id);
+        return ResponseEntity.ok(orderResponse);
+    }
 }
