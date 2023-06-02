@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.domain.CartItem;
 import cart.domain.Order;
+import cart.domain.OrderItem;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -37,26 +37,38 @@ public class OrderDao {
 
 
         final long orderId = (long) Objects.requireNonNull(keyHolder.getKeys().get("id"));
-        final List<CartItem> cartItems = order.getCartItems();
+        final List<OrderItem> orderItems = order.getOrderItems();
 
-        jdbcTemplate.batchUpdate("insert into order_items(order_id, product_id, quantity) values(?, ?, ?)", new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate("insert into order_items(order_id, name, price, quantity, image_url) values(?, ?, ?, ?, ?)", new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                final CartItem cartItem = cartItems.get(i);
-                final Long productId = cartItem.getProduct().getId();
-                final int quantity = cartItem.getQuantity();
+                final OrderItem orderItem = orderItems.get(i);
+                final String name = orderItem.getName();
+                final int price = orderItem.getPrice();
+                final int quantity = orderItem.getQuantity();
+                final String imageUrl = orderItem.getImageUrl();
 
                 ps.setLong(1, orderId);
-                ps.setLong(2, productId);
-                ps.setInt(3, quantity);
+                ps.setString(2, name);
+                ps.setInt(3, price);
+                ps.setInt(4, quantity);
+                ps.setString(5, imageUrl);
             }
 
             @Override
             public int getBatchSize() {
-                return cartItems.size();
+                return orderItems.size();
             }
         });
 
         return orderId;
     }
+
+//    public List<Order> findByMember(Member member) {
+//
+//    }
+//
+//    public Order findById(long orderId) {
+//
+//    }
 }

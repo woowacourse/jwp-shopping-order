@@ -4,28 +4,36 @@ import cart.exception.CartItemException;
 import cart.exception.OrderException;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Order {
 
     private static final int MAXIMUM_QUANTITIES_SUM = 99;
 
     private final Long id;
-    private final List<CartItem> cartItems;
+    private final List<OrderItem> orderItems;
+    private final Member member;
     private final OffsetDateTime orderTime;
 
-    private Order(Long id, List<CartItem> cartItems, OffsetDateTime orderTime) {
-        checkQuantityLimit(cartItems);
-        checkItemExist(cartItems);
+    private Order(Long id, List<OrderItem> orderItems, Member member, OffsetDateTime orderTime) {
+        checkQuantityLimit(orderItems);
+        checkItemExist(orderItems);
         this.id = id;
-        this.cartItems = cartItems;
+        this.orderItems = orderItems;
+        this.member = member;
         this.orderTime = orderTime;
     }
 
     public static Order of(Long id, List<CartItem> cartItems, Member member, OffsetDateTime orderTime) {
         checkOwner(cartItems, member);
 
-        return new Order(id, cartItems, orderTime);
+        final List<OrderItem> orderItems = cartItems.stream()
+                .map(OrderItem::from)
+                .collect(Collectors.toList());
+
+        return new Order(id, orderItems, member, orderTime);
     }
 
     public static Order of(Member member, List<CartItem> cartItems) {
@@ -36,27 +44,27 @@ public class Order {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
 
-    private void checkQuantityLimit(List<CartItem> cartItems) {
-        if (sumQuantities(cartItems) > MAXIMUM_QUANTITIES_SUM) {
+    private void checkQuantityLimit(List<OrderItem> orderItems) {
+        if (sumQuantities(orderItems) > MAXIMUM_QUANTITIES_SUM) {
             throw new CartItemException.InvalidQuantity("한 번에 최대 " + MAXIMUM_QUANTITIES_SUM + "개까지 주문이 가능합니다");
         }
     }
 
-    private void checkItemExist(List<CartItem> cartItems) {
-        if (cartItems.isEmpty()) {
+    private void checkItemExist(List<OrderItem> orderItems) {
+        if (orderItems.isEmpty()) {
             throw new OrderException.EmptyCart();
         }
     }
 
-    private int sumQuantities(List<CartItem> cartItems) {
+    private int sumQuantities(List<OrderItem> cartItems) {
         return cartItems.stream()
-                .mapToInt(CartItem::getQuantity)
+                .mapToInt(OrderItem::getQuantity)
                 .sum();
     }
 
     public long getPricesSum() {
-        return cartItems.stream()
-                .mapToLong(CartItem::getPrice)
+        return orderItems.stream()
+                .mapToLong(OrderItem::getPrice)
                 .sum();
     }
 
@@ -64,15 +72,11 @@ public class Order {
         return id;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
-
-    public OffsetDateTime getOrderTime() {
-        return orderTime;
+    public List<OrderItem> getOrderItems() {
+        return new ArrayList<>(orderItems);
     }
 
     public Member getOrderingMember() {
-        return cartItems.get(0).getMember();
+        return member;
     }
 }

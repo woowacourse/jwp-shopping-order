@@ -33,4 +33,10 @@ public class OrderService {
         cartItemService.remove(member, orderRequest.getCartItems());
         return orderDao.save(order);
     }
+
+    @Transactional(readOnly = true)
+    public List<Order> findAll(Member member) {
+//        return orderDao.findByMember(member);
+        return null;
+    }
 }
