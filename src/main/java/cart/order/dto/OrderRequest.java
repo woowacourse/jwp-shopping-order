@@ -5,7 +5,7 @@ import cart.cartitem.dto.CartItemOrderRequest;
 import java.util.List;
 
 public class OrderRequest {
-    private List<CartItemOrderRequest> cartItems;
+    private List<CartItemOrderRequest> cartItemIds;
     private Long originalPrice;
     private Long usedPoint;
     private Long pointToAdd;
@@ -13,15 +13,15 @@ public class OrderRequest {
     public OrderRequest() {
     }
     
-    public OrderRequest(final List<CartItemOrderRequest> cartItems, final Long originalPrice, final Long usedPoint, final Long pointToAdd) {
-        this.cartItems = cartItems;
+    public OrderRequest(final List<CartItemOrderRequest> cartItemIds, final Long originalPrice, final Long usedPoint, final Long pointToAdd) {
+        this.cartItemIds = cartItemIds;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
     }
     
-    public List<CartItemOrderRequest> getCartItems() {
-        return cartItems;
+    public List<CartItemOrderRequest> getCartItemIds() {
+        return cartItemIds;
     }
     
     public Long getOriginalPrice() {
@@ -39,7 +39,7 @@ public class OrderRequest {
     @Override
     public String toString() {
         return "OrderRequest{" +
-                "cartItems=" + cartItems +
+                "cartItems=" + cartItemIds +
                 ", originalPrice=" + originalPrice +
                 ", usedPoint=" + usedPoint +
                 ", pointToAdd=" + pointToAdd +

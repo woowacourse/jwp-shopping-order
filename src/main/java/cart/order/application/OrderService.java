@@ -47,7 +47,7 @@ public class OrderService {
     }
     
     private Set<CartItem> getCartItems(final OrderRequest orderRequest) {
-        return orderRequest.getCartItems().stream()
+        return orderRequest.getCartItemIds().stream()
                 .map(CartItemOrderRequest::getCartItemId)
                 .map(cartItemRepository::findById)
                 .collect(Collectors.toUnmodifiableSet());
@@ -67,7 +67,7 @@ public class OrderService {
     }
     
     private void removeCartItems(final OrderRequest orderRequest) {
-        orderRequest.getCartItems().stream()
+        orderRequest.getCartItemIds().stream()
                 .map(CartItemOrderRequest::getCartItemId)
                 .forEach(cartItemRepository::removeById);
     }
