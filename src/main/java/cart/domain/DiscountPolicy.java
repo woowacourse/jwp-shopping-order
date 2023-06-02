@@ -2,7 +2,7 @@ package cart.domain;
 
 public interface DiscountPolicy {
 
-    long getId();
+    Long getId();
 
     Money calculateDiscountAmount(Order order);
 

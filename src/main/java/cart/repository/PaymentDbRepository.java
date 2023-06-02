@@ -12,9 +12,15 @@ import java.util.Optional;
 
 @Repository
 public class PaymentDbRepository implements PaymentRepository {
-    PaymentRecordDao paymentRecordDao;
-    AppliedDefaultDiscountPolicyDao appliedDefaultDiscountPolicyDao;
-    AppliedDefaultDeliveryPolicyDao appliedDefaultDeliveryPolicyDao;
+    private final PaymentRecordDao paymentRecordDao;
+    private final AppliedDefaultDiscountPolicyDao appliedDefaultDiscountPolicyDao;
+    private final AppliedDefaultDeliveryPolicyDao appliedDefaultDeliveryPolicyDao;
+
+    public PaymentDbRepository(final PaymentRecordDao paymentRecordDao, final AppliedDefaultDiscountPolicyDao appliedDefaultDiscountPolicyDao, final AppliedDefaultDeliveryPolicyDao appliedDefaultDeliveryPolicyDao) {
+        this.paymentRecordDao = paymentRecordDao;
+        this.appliedDefaultDiscountPolicyDao = appliedDefaultDiscountPolicyDao;
+        this.appliedDefaultDeliveryPolicyDao = appliedDefaultDeliveryPolicyDao;
+    }
 
     @Override
     public Long create(final PaymentRecord paymentRecord) {
@@ -36,6 +42,7 @@ public class PaymentDbRepository implements PaymentRepository {
             final Payment payment = new Payment(List.of(discountPolicy), List.of(deliveryPolicy));
             return Optional.of(payment.createPaymentRecord(order));
         } catch (final Exception e) {
+            e.printStackTrace();
             return Optional.empty();
         }
     }

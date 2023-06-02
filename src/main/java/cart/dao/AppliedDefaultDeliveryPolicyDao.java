@@ -34,7 +34,7 @@ public class AppliedDefaultDeliveryPolicyDao {
     }
 
     public DeliveryPolicy findByPaymentRecordId(final Long paymentRecordId) {
-        final String sql = "SELECT B.id AS id, B.name AS name, B.type AS type, B.fee AS fee, B.free_threshold AS free_threshold FROM applied_default_delivery_policy AS A " +
+        final String sql = "SELECT B.id AS id, B.name AS name, B.fee AS fee FROM applied_default_delivery_policy AS A " +
                 "INNER JOIN default_delivery_policy AS B ON A.default_delivery_policy_id = B.id " +
                 "WHERE A.payment_record_id = ?";
         return this.jdbcTemplate.queryForObject(sql, this.deliveryPolicyRowMapper, paymentRecordId);

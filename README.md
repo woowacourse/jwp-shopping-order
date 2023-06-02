@@ -67,12 +67,13 @@ classDiagram
         Map[DiscountPolicy, Money] policyToDiscountAmounts
         Map[DeliveryPolicy, Money] policyToDeliveryFees
     }
-    
+
     class DiscountPolicy {
         <<interface>>
         + Money calculateDiscountAmount(Order order)
     }
     class DefaultDiscountPolicy {
+        long id
         String name
         Money threshold
         double discountRate
@@ -84,18 +85,19 @@ classDiagram
         + Money calculateDeliveryFee(Order order)
     }
     class DefaultDeliveryPolicy {
+        long id
         String name
         + Money calculateDeliveryFee(Order order)
     }
 
-    Product --o CartItem 
+    Product --o CartItem
     OrderItem ..> CartItem
     OrderItem --o Order
     DiscountPolicy --o PaymentRecord
     DeliveryPolicy --o PaymentRecord
     DiscountPolicy ..> Order
     DeliveryPolicy ..> Order
-     Order--o PaymentRecord
+    Order --o PaymentRecord
     DefaultDeliveryPolicy ..|> DeliveryPolicy
     DefaultDiscountPolicy ..|> DiscountPolicy
 

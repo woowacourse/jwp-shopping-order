@@ -30,9 +30,9 @@ public class AppliedDefaultDiscountPolicyDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long insert(final long productId, final long discountPolicyId) {
+    public long insert(final long paymentRecordId, final long discountPolicyId) {
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("product_id", productId);
+        parameters.put("payment_record_id", paymentRecordId);
         parameters.put("default_discount_policy_id", discountPolicyId);
         return this.simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }

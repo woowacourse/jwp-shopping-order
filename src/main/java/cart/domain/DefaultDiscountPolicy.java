@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class DefaultDiscountPolicy implements DiscountPolicy {
     private final Long id;
     private final String name;
@@ -21,7 +23,7 @@ public class DefaultDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -40,5 +42,18 @@ public class DefaultDiscountPolicy implements DiscountPolicy {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        final DefaultDiscountPolicy that = (DefaultDiscountPolicy) o;
+        return Objects.equals(this.id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id);
     }
 }

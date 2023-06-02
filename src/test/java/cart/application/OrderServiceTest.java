@@ -3,10 +3,12 @@ package cart.application;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderItem;
 import cart.exception.CartItemException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static cart.domain.fixture.OrderFixture.member;
-import static cart.domain.fixture.OrderFixture.orderWithoutId;
+import static cart.domain.fixture.MemberFixture.memberWithId;
 import static cart.exception.OrderException.EmptyItemInput;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,9 +29,6 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @Transactional
 class OrderServiceTest {
 
-    public static final List<Long> CART_ITEM_IDS = List.of(
-            1L, 2L, 3L
-    );
     @Autowired
     private OrderService orderService;
 
@@ -38,14 +37,20 @@ class OrderServiceTest {
 
     @Autowired
     private CartItemRepository cartItemRepository;
+    private List<Long> CART_ITEM_IDS;
+
+    @BeforeEach
+    void setUp() {
+        final List<CartItem> cartItems = this.cartItemRepository.findByMember(memberWithId);
+        this.CART_ITEM_IDS = cartItems.stream().map(CartItem::getId).collect(Collectors.toList());
+    }
 
     @Test
     @DisplayName("CartItem 아이디 리스트로 Order 객체를 생성한다.")
     void createOrder() {
         //given
-
         //when
-        final Order order = this.orderService.createDraftOrder(member, CART_ITEM_IDS);
+        final Order order = this.orderService.createDraftOrder(memberWithId, this.CART_ITEM_IDS);
 
         //then
         assertSoftly(softly -> softly.assertThat(order).isNotNull()
@@ -56,10 +61,12 @@ class OrderServiceTest {
     @DisplayName("CartItem 아이디 리스트로 Order 객체를 생성하고 저장한다.")
     void createOrderAndSave() {
         //given
-        final Order expected = orderWithoutId;
-
+        final List<OrderItem> orderItems = this.CART_ITEM_IDS.stream().map(this.cartItemRepository::findById).map(cartItem -> {
+            return OrderItem.from(cartItem.orElseThrow());
+        }).collect(Collectors.toList());
+        final Order expected = new Order(memberWithId, orderItems);
         //when
-        final Long createdOrderId = this.orderService.createOrderAndSave(member, CART_ITEM_IDS);
+        final Long createdOrderId = this.orderService.createOrderAndSave(memberWithId, this.CART_ITEM_IDS);
 
         //then
         assertSoftly(softly -> {
@@ -67,7 +74,7 @@ class OrderServiceTest {
             softly.assertThat(createdOrder).isNotEmpty();
             softly.assertThat(createdOrder.get()).usingRecursiveComparison().ignoringFields("id", "orderTime")
                     .isEqualTo(expected);
-            CART_ITEM_IDS.forEach(cartItemId -> softly.assertThat(this.cartItemRepository.findById(cartItemId)).isEmpty());
+            this.CART_ITEM_IDS.forEach(cartItemId -> softly.assertThat(this.cartItemRepository.findById(cartItemId)).isEmpty());
         });
     }
 
@@ -75,7 +82,7 @@ class OrderServiceTest {
     @DisplayName("Order 아이디로 Order를 반환한다.")
     void retrieveOrderById() {
         //given
-        final Long orderId = this.orderService.createOrderAndSave(member, CART_ITEM_IDS);
+        final Long orderId = this.orderService.createOrderAndSave(memberWithId, this.CART_ITEM_IDS);
         //when
         final Order order = this.orderService.retrieveOrderById(orderId);
         //then
@@ -86,11 +93,11 @@ class OrderServiceTest {
     @DisplayName("모든 Order를 반환한다.")
     void retrieveAllOrders() {
         //given
-        final Long order1 = this.orderService.createOrderAndSave(member, List.of(1L, 2L));
-        final Long order2 = this.orderService.createOrderAndSave(member, List.of(3L));
+        final Long order1 = this.orderService.createOrderAndSave(memberWithId, List.of(1L));
+        final Long order2 = this.orderService.createOrderAndSave(memberWithId, List.of(2L));
         final List<Long> orderIds = List.of(order1, order2);
         //when
-        final List<Order> orders = this.orderService.retrieveMemberOrders(member);
+        final List<Order> orders = this.orderService.retrieveMemberOrders(memberWithId);
         //then
         orders.forEach(order -> assertThat(order.getId()).isIn(orderIds));
     }
@@ -101,7 +108,7 @@ class OrderServiceTest {
         //given
         //when
         //then
-        Assertions.assertThatThrownBy(() -> this.orderService.createDraftOrder(member, List.of()))
+        Assertions.assertThatThrownBy(() -> this.orderService.createDraftOrder(memberWithId, List.of()))
                 .isInstanceOf(EmptyItemInput.class);
     }
 
@@ -110,7 +117,7 @@ class OrderServiceTest {
     void createOrderAndSave_fail_() {
         //given
         final Member unauthorizedMember = new Member(10000000L, "iam@othermember.com", "1234");
-        final CartItem cartItem = this.cartItemRepository.findById(CART_ITEM_IDS.get(0)).orElseThrow();
+        final CartItem cartItem = this.cartItemRepository.findById(this.CART_ITEM_IDS.get(0)).orElseThrow();
         //when
         //then
         assertThatThrownBy(() -> this.orderService.createOrderAndSave(unauthorizedMember, List.of(cartItem.getId())))

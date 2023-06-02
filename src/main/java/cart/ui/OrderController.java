@@ -46,9 +46,9 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDetailResponse> getOrderDetail(Member member, @PathVariable Long orderId) {
-        Order order = orderService.retrieveOrderById(orderId);
-        PaymentRecord paymentRecord = paymentService.createPaymentRecordAndSave(order);
+    public ResponseEntity<OrderDetailResponse> getOrderDetail(final Member member, @PathVariable final Long orderId) {
+        final Order order = this.orderService.retrieveOrderById(orderId);
+        final PaymentRecord paymentRecord = this.paymentService.findByOrder(order);
         return ResponseEntity.ok(OrderDetailResponse.from(paymentRecord));
     }
 }

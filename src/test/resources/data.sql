@@ -5,6 +5,14 @@ INSERT INTO product (name, price, image_url) VALUES ('피자', 13000, 'https://i
 INSERT INTO member (email, password) VALUES ('a@a.com', '1234');
 INSERT INTO member (email, password) VALUES ('b@b.com', '1234');
 
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
-INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+INSERT INTO cart_item (member_id, product_id, quantity)
+VALUES (1, 1, 2);
+INSERT INTO cart_item (member_id, product_id, quantity)
+VALUES (1, 2, 4);
+INSERT INTO cart_item (member_id, product_id, quantity)
+VALUES (2, 3, 5);
+
+INSERT INTO default_discount_policy (name, threshold, discount_rate)
+VALUES ('5만원 이상 구매 시 10% 할인', 50000, 0.1);
+INSERT INTO default_delivery_policy (name, fee)
+VALUES ('기본 배송 정책', 3500);

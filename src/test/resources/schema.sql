@@ -5,7 +5,7 @@ drop table payment_record;
 drop table default_delivery_policy;
 drop table default_discount_policy;
 drop table order_item;
-drop table `order`;
+drop table order_record;
 drop table member;
 drop table product;
 
@@ -31,11 +31,10 @@ CREATE TABLE IF NOT EXISTS cart_item (
     FOREIGN KEY (product_id) REFERENCES product(id)
     );
 
-CREATE TABLE IF NOT EXISTS `order`(
+CREATE TABLE IF NOT EXISTS order_record (
                                       id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                       member_id BIGINT NOT NULL,
                                       order_time DATETIME NOT NULL,
-                                      status VARCHAR(255) NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member(id)
     );
 
@@ -46,7 +45,7 @@ CREATE TABLE IF NOT EXISTS order_item(
     quantity INT NOT NULL,
     total_price INT NOT NULL,
     order_id BIGINT NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES `order`(id) ON DELETE CASCADE
+    FOREIGN KEY (order_id) REFERENCES order_record(id) ON DELETE CASCADE
     );
 
 CREATE TABLE IF NOT EXISTS default_discount_policy(
@@ -63,11 +62,11 @@ CREATE TABLE IF NOT EXISTS default_delivery_policy(
     );
 
 CREATE TABLE IF NOT EXISTS payment_record(
-                                             id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                             order_id BIGINT NOT NULL,
-                                             originalTotalPrice INT NOT NULL,
-                                             FOREIGN KEY (order_id) REFERENCES `order`(id)
-    );
+     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     order_id BIGINT NOT NULL,
+     original_total_price INT NOT NULL,
+     FOREIGN KEY (order_id) REFERENCES order_record(id)
+);
 
 CREATE TABLE IF NOT EXISTS applied_default_discount_policy(
                                                               id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -78,9 +77,9 @@ CREATE TABLE IF NOT EXISTS applied_default_discount_policy(
     );
 
 CREATE TABLE IF NOT EXISTS applied_default_delivery_policy(
-                                                              id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                                              payment_record_id BIGINT NOT NULL,
-                                                              default_delivery_policy_id BIGINT NOT NULL,
-                                                              FOREIGN KEY (payment_record_id) REFERENCES payment_record(id),
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  payment_record_id BIGINT NOT NULL,
+  default_delivery_policy_id BIGINT NOT NULL,
+  FOREIGN KEY (payment_record_id) REFERENCES payment_record(id),
     FOREIGN KEY (default_delivery_policy_id) REFERENCES default_delivery_policy(id)
-    );
+);

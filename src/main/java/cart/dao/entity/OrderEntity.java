@@ -8,11 +8,11 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class OrderEntity {
-    private final long id;
+    private final Long id;
     private final long memberId;
     private final Timestamp orderTime;
 
-    public OrderEntity(final long id, final long memberId, final Timestamp orderTime) {
+    public OrderEntity(final Long id, final long memberId, final Timestamp orderTime) {
         this.id = id;
         this.memberId = memberId;
         this.orderTime = orderTime;

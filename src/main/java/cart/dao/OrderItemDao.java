@@ -2,11 +2,12 @@ package cart.dao;
 
 import cart.dao.entity.OrderItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class OrderItemDao {
@@ -21,8 +22,13 @@ public class OrderItemDao {
     }
 
     public Long insert(final OrderItemEntity orderItemEntity) {
-        final BeanPropertySqlParameterSource beanPropertySqlParameterSource = new BeanPropertySqlParameterSource(orderItemEntity);
-        return this.simpleJdbcInsert.executeAndReturnKey(beanPropertySqlParameterSource).longValue();
+        final Map<String, Object> params = new HashMap<>();
+        params.put("name", orderItemEntity.getName());
+        params.put("quantity", orderItemEntity.getQuantity());
+        params.put("image_url", orderItemEntity.getImageUrl());
+        params.put("total_price", orderItemEntity.getTotalPrice());
+        params.put("order_id", orderItemEntity.getOrderId());
+        return this.simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public List<OrderItemEntity> findByOrderId(final long orderId) {
