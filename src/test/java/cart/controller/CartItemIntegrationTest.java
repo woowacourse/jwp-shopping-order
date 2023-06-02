@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CartItemIntegrationTest extends IntegrationTest {
+class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
@@ -95,7 +95,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isTrue();
+        assertThat(selectedCartItemResponse).isPresent();
         assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
     }
 
@@ -115,7 +115,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        assertThat(selectedCartItemResponse).isNotPresent();
     }
 
     @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
@@ -145,7 +145,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        assertThat(selectedCartItemResponse).isNotPresent();
     }
 
     private Long createProduct(ProductRequest productRequest) {

@@ -1,35 +1,31 @@
 package cart.repository;
 
+import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
+import static fixture.MemberCouponFixture.MEMBER_COUPON_1;
+import static fixture.MemberCouponFixture.MEMBER_COUPON_2;
+import static fixture.MemberFixture.MEMBER_1;
+import static fixture.MemberFixture.MEMBER_2;
+import static fixture.MemberFixture.MEMBER_3;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import cart.dao.CouponDao;
+import anotation.RepositoryTest;
 import cart.dao.MemberCouponDao;
-import cart.dao.MemberDao;
 import cart.domain.Coupon;
-import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
-import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.test.context.ActiveProfiles;
 
-@JdbcTest
-@ActiveProfiles("test")
+@RepositoryTest
 class CouponRepositoryTest {
 
-    private static final Member MEMBER_1 = new Member(1L, "a@a", "1234");
-    private static final Member MEMBER_2 = new Member(2L, "b@b", "1234");
     private static final RowMapper<MemberCouponDto> memberCouponDtoRowMapper = (rs, rn) ->
             new MemberCouponDto(
                     rs.getLong("id"),
@@ -46,76 +42,49 @@ class CouponRepositoryTest {
             );
 
     @Autowired
-    private DataSource dataSource;
     private CouponRepository couponRepository;
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void beforeEach() {
-        jdbcTemplate = new JdbcTemplate(dataSource);
-        couponRepository = new CouponRepository(
-                new CouponDao(dataSource),
-                new MemberCouponDao(dataSource),
-                new MemberDao(dataSource)
-        );
-
-        String couponSaveQuery = "INSERT INTO coupon (id, name, discount_rate, discount_price) VALUES(?, ?, ?, ?)";
-        String memberSaveQuery = "INSERT INTO member (id, email, password) VALUES (?, ?, ?)";
-        jdbcTemplate.update(couponSaveQuery, 1L, "정액 할인 쿠폰", 0d, 5000);
-        jdbcTemplate.update(couponSaveQuery, 2L, "할인율 쿠폰", 10d, 0);
-        jdbcTemplate.update(memberSaveQuery, MEMBER_1.getId(), MEMBER_1.getEmail(), MEMBER_1.getPassword());
-        jdbcTemplate.update(memberSaveQuery, MEMBER_2.getId(), MEMBER_2.getEmail(), MEMBER_2.getPassword());
-    }
+    @Autowired
+    private MemberCouponDao memberCouponDao;
 
     @Test
     @DisplayName("사용자가 쿠폰을 추가하면, 현재 Coupon 테이블에 있는 쿠폰이 모두 추가된다.")
     void addCoupon() {
-        couponRepository.saveCoupon(MEMBER_1);
+        couponRepository.saveCoupon(MEMBER_3);
 
-        String findMemberCouponQuery = "SELECT * FROM member_coupon WHERE member_id = ?";
-        String findCouponQuery = "SELECT * FROM coupon WHERE id = ?";
-        List<MemberCouponDto> memberCouponDtos = jdbcTemplate.query(findMemberCouponQuery, memberCouponDtoRowMapper, MEMBER_1.getId());
+        List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(MEMBER_3.getId());
 
-        List<CouponDto> couponDtos = memberCouponDtos.stream()
-                .map(memberCouponDto -> jdbcTemplate.queryForObject(findCouponQuery, couponDtoRowMapper,
-                        memberCouponDto.getCouponId()))
-                .collect(Collectors.toList());
-        assertThat(couponDtos)
-                .extracting(CouponDto::getId, CouponDto::getName, CouponDto::getDiscountRate, CouponDto::getDiscountPrice)
-                .containsExactly(tuple(1L, "정액 할인 쿠폰", 0d, 5000), tuple(2L, "할인율 쿠폰", 10d, 0));
+        assertThat(memberCouponDtos)
+                .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
+                .containsExactly(tuple(3L, 1L), tuple(3L, 2L));
     }
 
     @Test
     @DisplayName("Member 의 정보를 주면, Member 가 가진 Coupon 을 반환받는다.")
     void findMemberCouponByMember() {
-        initMemberCoupon();
+        List<MemberCoupon> memberCoupons = couponRepository.findMemberCouponByMember(MEMBER_1);
 
-        List<MemberCoupon> memberCoupons = couponRepository.findMemberCouponByMember(MEMBER_2);
-
-        assertThat(memberCoupons)
-                .hasSize(1)
-                .extracting(MemberCoupon::getCoupon)
-                .extracting(Coupon::getId, Coupon::getName, Coupon::getDiscountRate, Coupon::getDiscountPrice)
-                .containsExactly(tuple(1L, "정액 할인 쿠폰", 0d, 5000));
-    }
-
-    private void initMemberCoupon() {
-        String memberCouponSaveQuery = "INSERT INTO member_coupon (id, member_id, coupon_id) VALUES (?, ?, ?)";
-        jdbcTemplate.update(memberCouponSaveQuery, 1L, 1L, 1L);
-        jdbcTemplate.update(memberCouponSaveQuery, 2L, 1L, 2L);
-        jdbcTemplate.update(memberCouponSaveQuery, 3L, 2L, 1L);
+        assertThat(memberCoupons).usingRecursiveComparison()
+                .isEqualTo(List.of(MEMBER_COUPON_1, MEMBER_COUPON_2));
     }
 
     @Test
     @DisplayName("Member Coupon Id 로 해당하는 Coupon 을 가져온다.")
     void findByCouponByMemberCouponId() {
-        initMemberCoupon();
+        Coupon coupon = couponRepository.findCouponByMemberCouponId(1L).orElseThrow(NoSuchElementException::new);
 
-        Coupon coupon = couponRepository.findCouponByMemberCouponId(3L).orElseThrow(NoSuchElementException::new);
+        assertThat(coupon).usingRecursiveComparison()
+                .isEqualTo(COUPON_1_NOT_NULL_PRICE);
+    }
 
-        assertThat(coupon)
-                .extracting(Coupon::getId, Coupon::getName, Coupon::getDiscountRate, Coupon::getDiscountPrice)
-                .containsExactly(1L, "정액 할인 쿠폰", 0d, 5000);
+    @Test
+    @DisplayName("Member Coupon Id 로 Member Coupon 을 삭제한다.")
+    void deleteMemberCouponById() {
+        couponRepository.deleteMemberCouponById(Optional.of(1L));
+        List<MemberCouponDto> memberCouponDtos = memberCouponDao.findByMemberId(MEMBER_1.getId());
+
+        assertThat(memberCouponDtos).hasSize(1)
+                .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
+                .containsExactly(tuple(1L, 2L));
     }
 
 }
