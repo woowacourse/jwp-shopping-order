@@ -20,11 +20,21 @@ public class Member {
         this.password = password;
     }
 
+    public Member(String email, String password, Point point) {
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
     public void usePoint(Point usePoint) {
         if (point.isSmallerThan(usePoint)) {
             throw new PaymentException("보유한 포인트가 사용하고자 하는 포인트보다 적습니다.");
         }
         this.point = this.point.subtract(usePoint);
+    }
+
+    public void earnPoint(Point earningPoint) {
+        this.point = this.point.add(earningPoint);
     }
 
     public Long getId() {

@@ -1,19 +1,18 @@
 package cart.dto;
 
 import cart.domain.OrderItem;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderDto {
     private final Long orderId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private final LocalDateTime orderDateTime;
+    private final String orderDateTime;
     private final List<OrderItemDto> orderItems;
     private final int totalPrice;
 
-    public OrderDto(Long orderId, LocalDateTime orderDateTime, List<OrderItemDto> orderItems, int totalPrice) {
+    public OrderDto(Long orderId, String orderDateTime, List<OrderItemDto> orderItems, int totalPrice) {
         this.orderId = orderId;
         this.orderDateTime = orderDateTime;
         this.orderItems = orderItems;
@@ -24,14 +23,15 @@ public class OrderDto {
         List<OrderItemDto> orderItemDtos = orderItems.stream()
                 .map(OrderItemDto::from)
                 .collect(Collectors.toList());
-        return new OrderDto(orderId, orderDateTime, orderItemDtos, totalPrice);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return new OrderDto(orderId, orderDateTime.format(formatter), orderItemDtos, totalPrice);
     }
 
     public Long getOrderId() {
         return orderId;
     }
 
-    public LocalDateTime getOrderDateTime() {
+    public String getOrderDateTime() {
         return orderDateTime;
     }
 
