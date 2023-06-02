@@ -14,7 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
 class OrderDaoTest {
@@ -47,8 +48,12 @@ class OrderDaoTest {
     void findAllByMember() {
         Member member = memberDao.getMemberById(1L);
         OrderEntity orderEntity = new OrderEntity(member.getId(), member.getId(), 10000, 10000, false);
-
-        assertDoesNotThrow(() -> orderDao.saveOrder(orderEntity));
+        Long orderId = orderDao.saveOrder(orderEntity);
+        assertAll(
+                () -> assertThat(orderDao.findByOrderId(member.getId(), orderId).get().getOriginalPrice()).isEqualTo(10000),
+                () -> assertThat(orderDao.findByOrderId(member.getId(), orderId).get().getConfirmState()).isEqualTo(false),
+                () -> assertThat(orderDao.findByOrderId(member.getId(), orderId).get().getMemberId()).isEqualTo(member.getId())
+        );
     }
 
     @Test
@@ -98,6 +103,16 @@ class OrderDaoTest {
         assertDoesNotThrow(() -> orderDao.deleteOrderById(savedOrderId1));
     }
 
+    @Test
+    @DisplayName("특정 사용자의 특정 주문을 확정한다.")
+    void confirmOrder() {
+        Member member = memberDao.getMemberById(1L);
+        createProduct();
+        Long savedOrderId1 = createOrder(member);
+        saveOrderProduct(savedOrderId1);
+        orderDao.confirmOrder(savedOrderId1, member.getId());
+        assertThat(orderDao.checkConfirmState(savedOrderId1)).isTrue();
+    }
 
     private void saveOrderProduct(Long savedOrderId) {
         List<OrderProductEntity> orderProducts = List.of(new OrderProductEntity(1L, "오션", "오션.com", 10000, 1, savedOrderId));

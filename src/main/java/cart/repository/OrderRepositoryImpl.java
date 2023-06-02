@@ -52,7 +52,8 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void confirmOrder(Long orderId, Member member) {
-        orderDao.confirmOrder(orderId, member.getId());
+        OrderEntity orderEntity = orderDao.findByOrderId(member.getId(), orderId).orElseThrow(() -> new OrderException("잘못된 주문입니다."));
+        orderDao.confirmOrder(orderEntity.getId(), member.getId());
     }
 
     @Override
