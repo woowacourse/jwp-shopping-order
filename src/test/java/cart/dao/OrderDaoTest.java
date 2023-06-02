@@ -33,11 +33,6 @@ class OrderDaoTest extends DaoTest {
                 1L,
                 CurrentTimeUtil.asString(),
                 memberEntity.getId(),
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl(),
-                1,
                 1_000,
                 3_000,
                 0,
@@ -89,23 +84,14 @@ class OrderDaoTest extends DaoTest {
         // given
         long savedId = orderDao.insert(orderEntity);
 
-        String expectName = "newName";
-        String expectImageUrl = "newImageUrl";
-        int expectValue = 100_000;
-
         OrderEntity newOrderEntity = new OrderEntity(
                 orderEntity.getId(),
-                orderEntity.getDateTime(),
+                orderEntity.getCreatedAt(),
                 orderEntity.getMemberId(),
-                orderEntity.getProductId(),
-                expectName,
-                expectValue,
-                expectImageUrl,
-                expectValue,
-                expectValue,
-                expectValue,
-                expectValue,
-                expectValue
+                11,
+                22,
+                33,
+                44
         );
 
         // when
@@ -113,14 +99,10 @@ class OrderDaoTest extends DaoTest {
 
         // then
         OrderEntity result = orderDao.findById(newOrderEntity.getId());
-        assertThat(result.getProductName()).isEqualTo(expectName);
-        assertThat(result.getProductPrice()).isEqualTo(expectValue);
-        assertThat(result.getProductImageUrl()).isEqualTo(expectImageUrl);
-        assertThat(result.getQuantity()).isEqualTo(expectValue);
-        assertThat(result.getTotalProductPrice()).isEqualTo(expectValue);
-        assertThat(result.getTotalDeliveryFee()).isEqualTo(expectValue);
-        assertThat(result.getUsePoint()).isEqualTo(expectValue);
-        assertThat(result.getTotalPrice()).isEqualTo(expectValue);
+        assertThat(result.getTotalProductPrice()).isEqualTo(11);
+        assertThat(result.getTotalDeliveryFee()).isEqualTo(22);
+        assertThat(result.getUsePoint()).isEqualTo(33);
+        assertThat(result.getTotalPrice()).isEqualTo(44);
     }
 
     @Test

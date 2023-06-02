@@ -14,34 +14,29 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderDao {
 
-    private static final String TABLE = "order_history";
+    private static final String TABLE = "orders";
     private static final String ID = "id";
-    private static final String DATE_TIME = "date_time";
+    private static final String CREATED_AT = "created_At";
     private static final String MEMBER_ID = "member_id";
-    private static final String PRODUCT_ID = "product_id";
-    private static final String PRODUCT_NAME = "product_name";
-    private static final String PRODUCT_PRICE = "product_price";
-    private static final String PRODUCT_IMAGE_URL = "product_image_url";
-    private static final String QUANTITY = "quantity";
     private static final String TOTAL_PRODUCT_PRICE = "total_product_price";
     private static final String TOTAL_DELIVERY_FEE = "total_delivery_fee";
     private static final String USE_POINT = "use_point";
     private static final String TOTAL_PRICE = "total_price";
-    private static final String ALL_COLUMN = String.join(", ", ID, DATE_TIME, MEMBER_ID, PRODUCT_ID,
-            PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE_URL, QUANTITY, TOTAL_PRODUCT_PRICE, TOTAL_DELIVERY_FEE,
-            USE_POINT, TOTAL_PRICE
+    private static final String ALL_COLUMN = String.join(", ",
+            ID,
+            CREATED_AT,
+            MEMBER_ID,
+            TOTAL_PRODUCT_PRICE,
+            TOTAL_DELIVERY_FEE,
+            USE_POINT,
+            TOTAL_PRICE
     );
 
     private static final RowMapper<OrderEntity> rowMapper = (resultSet, rowNum) ->
             new OrderEntity(
                     resultSet.getLong(ID),
-                    resultSet.getTimestamp(DATE_TIME).toString(),
+                    resultSet.getTimestamp(CREATED_AT).toString(),
                     resultSet.getLong(MEMBER_ID),
-                    resultSet.getLong(PRODUCT_ID),
-                    resultSet.getString(PRODUCT_NAME),
-                    resultSet.getInt(PRODUCT_PRICE),
-                    resultSet.getString(PRODUCT_IMAGE_URL),
-                    resultSet.getInt(QUANTITY),
                     resultSet.getInt(TOTAL_PRODUCT_PRICE),
                     resultSet.getInt(TOTAL_DELIVERY_FEE),
                     resultSet.getInt(USE_POINT),
@@ -82,11 +77,7 @@ public class OrderDao {
 
     public void update(final OrderEntity newOrderEntity) {
         String sql = "UPDATE " + TABLE + " SET " +
-                "date_time = ?, " +
-                "product_name = ?, " +
-                "product_price = ?, " +
-                "product_image_url = ?, " +
-                "quantity = ?, " +
+                "created_At = ?, " +
                 "total_product_price = ?, " +
                 "total_delivery_fee = ?, " +
                 "use_point = ?, " +
@@ -94,11 +85,7 @@ public class OrderDao {
                 "WHERE id = ?;";
 
         jdbcTemplate.update(sql,
-                newOrderEntity.getDateTime(),
-                newOrderEntity.getProductName(),
-                newOrderEntity.getProductPrice(),
-                newOrderEntity.getProductImageUrl(),
-                newOrderEntity.getQuantity(),
+                newOrderEntity.getCreatedAt(),
                 newOrderEntity.getTotalProductPrice(),
                 newOrderEntity.getTotalDeliveryFee(),
                 newOrderEntity.getUsePoint(),
