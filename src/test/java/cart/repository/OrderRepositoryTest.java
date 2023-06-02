@@ -17,10 +17,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static cart.fixture.domain.CartItemsFixture.장바구니_상품_목록;
-import static cart.fixture.domain.OrderFixture.주문;
-import static cart.fixture.entity.CartItemEntityFixture.장바구니_상품_엔티티;
-import static cart.fixture.entity.MemberEntityFixture.회원_엔티티;
-import static cart.fixture.entity.ProductEntityFixture.상품_엔티티;
+import static cart.fixture.domain.MoneyFixture.포인트;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderRepositoryTest extends RepositoryTestConfig {
@@ -35,17 +32,12 @@ class OrderRepositoryTest extends RepositoryTestConfig {
     @Test
     void 주문과_주문_상품_목록을_저장한다() {
         // given
-        Long 회원_식별자값 = memberDao.insertMember(회원_엔티티("a@a.com", "1234", "10000", "1000"));
-        Long 계란_식별자값 = productDao.insertProduct(상품_엔티티("계란", 1000));
-        Long 장바구니_계란_식별자값 = cartItemDao.insertCartItem(장바구니_상품_엔티티(계란_식별자값, 회원_식별자값, 10));
-
-        Member 회원 = memberDao.getByMemberId(회원_식별자값).get().toDomain();
-        Product 계란 = productDao.getByProductId(계란_식별자값).get().toDomain();
-        CartItem 장바구니_계란 = cartItemDao.findByCartItemId(장바구니_계란_식별자값).get();
-
+        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
+        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
+        CartItem 장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
         CartItems 장바구니_상품_목록 = 장바구니_상품_목록(List.of(장바구니_계란));
 
-        Order 주문 = 주문(회원, 장바구니_상품_목록, Money.from(1000));
+        Order 주문 = new Order(회원, 장바구니_상품_목록, 포인트("1000"));
 
         // when
         Long 주문_식별자값 = orderRepository.saveOrder(주문);
@@ -59,17 +51,12 @@ class OrderRepositoryTest extends RepositoryTestConfig {
     @Test
     void 회원의_주문을_조회한다() {
         // given
-        Long 회원_식별자값 = memberDao.insertMember(회원_엔티티("a@a.com", "1234", "10000", "1000"));
-        Long 계란_식별자값 = productDao.insertProduct(상품_엔티티("계란", 1000));
-        Long 장바구니_계란_식별자값 = cartItemDao.insertCartItem(장바구니_상품_엔티티(계란_식별자값, 회원_식별자값, 10));
-
-        Member 회원 = memberDao.getByMemberId(회원_식별자값).get().toDomain();
-        Product 계란 = productDao.getByProductId(계란_식별자값).get().toDomain();
-        CartItem 장바구니_계란 = cartItemDao.findByCartItemId(장바구니_계란_식별자값).get();
-
+        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
+        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
+        CartItem 장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
         CartItems 장바구니_상품_목록 = 장바구니_상품_목록(List.of(장바구니_계란));
 
-        Order 주문 = 주문(회원, 장바구니_상품_목록, Money.from(1000));
+        Order 주문 = new Order(회원, 장바구니_상품_목록, 포인트("1000"));
         Long 주문_식별자값 = orderRepository.saveOrder(주문);
 
         // when
