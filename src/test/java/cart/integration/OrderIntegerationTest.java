@@ -102,6 +102,27 @@ public class OrderIntegerationTest extends IntegrationTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @Test
+    @DisplayName("주문을 취소한다.")
+    void cancelOrder() {
+        saveProduct();
+        saveCartItem();
+        given().log().uri()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + encoded)
+                .body(orderRequest)
+                .when().post("/orders")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
+
+        given().log().uri()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + encoded)
+                .when().delete("/orders/{id}",1)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
     private void saveCartItem() {
         given().log().uri()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -117,4 +138,6 @@ public class OrderIntegerationTest extends IntegrationTest {
                 .body(productRequest)
                 .when().post("/products");
     }
+
+
 }

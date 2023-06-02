@@ -37,4 +37,10 @@ public class OrderController {
         OrderResponse order = orderService.findByOrderId(member, id);
         return ResponseEntity.ok(order);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> cancelOrder(Member member, @PathVariable("id") Long id){
+        orderService.cancelOrder(member,id);
+        return ResponseEntity.noContent().build();
+    }
 }

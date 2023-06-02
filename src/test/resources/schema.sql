@@ -5,7 +5,6 @@
 -- DROP TABLE IF EXISTS product;
 -- DROP TABLE IF EXISTS coupon;
 -- DROP TABLE IF EXISTS member;
-
 CREATE TABLE if not exists product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
@@ -56,11 +55,11 @@ CREATE TABLE if not exists orders(
 );
 
 CREATE TABLE if not exists order_coupon(
-   id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   coupon_id BIGINT NOT NULL,
-   member_id BIGINT NOT NULL,
-   FOREIGN KEY (coupon_id) REFERENCES coupon(id),
-    FOREIGN KEY (member_id) REFERENCES member(id)
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_coupon_id BIGINT NOT NULL,
+    order_id BIGINT NOT NULL,
+    FOREIGN KEY (member_coupon_id) REFERENCES member_coupon(id),
+    FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
 CREATE TABLE if not exists order_product(

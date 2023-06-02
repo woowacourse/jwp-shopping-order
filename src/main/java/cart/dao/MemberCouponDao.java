@@ -74,4 +74,9 @@ public class MemberCouponDao {
 
         return jdbcTemplate.query(sql,rowMapper,memberId,true);
     }
+
+    public void changeUserUnUsedCouponAvailability(Long memberCouponId) {
+        String sql2 = "UPDATE member_coupon SET availability = ? WHERE id = ?";
+        jdbcTemplate.update(sql2, true, memberCouponId);
+    }
 }

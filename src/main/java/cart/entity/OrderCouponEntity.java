@@ -2,16 +2,16 @@ package cart.entity;
 
 public class OrderCouponEntity {
     private final Long id;
-    private final Long couponId;
+    private final Long memberCouponId;
     private final Long orderId;
 
-    public OrderCouponEntity(Long couponId, Long orderId) {
-        this(null,couponId,orderId);
+    public OrderCouponEntity(Long memberCouponId, Long orderId) {
+        this(null,memberCouponId,orderId);
     }
 
-    public OrderCouponEntity(Long id, Long couponId, Long orderId) {
+    public OrderCouponEntity(Long id, Long memberCouponId, Long orderId) {
         this.id = id;
-        this.couponId = couponId;
+        this.memberCouponId = memberCouponId;
         this.orderId = orderId;
     }
 
@@ -19,8 +19,8 @@ public class OrderCouponEntity {
         return id;
     }
 
-    public Long getCouponId() {
-        return couponId;
+    public Long getMemberCouponId() {
+        return memberCouponId;
     }
 
     public Long getOrderId() {

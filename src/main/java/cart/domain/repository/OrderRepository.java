@@ -13,4 +13,6 @@ public interface OrderRepository {
     List<Order> findAllByMemberId(Member member);
 
     Order findByOrderId(Member member, Long orderId);
+
+    void deleteOrder(Long orderId);
 }

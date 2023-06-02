@@ -21,4 +21,14 @@ public class OrderCouponRepositoryImpl implements OrderCouponRepository {
         }
         orderCouponDao.saveOrderCoupon(orderId, order.getCoupon().getId());
     }
+
+    @Override
+    public Long deleteOrderCoupon(Long orderId) {
+        if (orderCouponDao.checkOrderCouponByOrderId(orderId)) {
+            Long memberCouponId = orderCouponDao.findByOrderId(orderId);
+            orderCouponDao.deleteOrderCoupon(orderId);
+            return memberCouponId;
+        }
+        return null;
+    }
 }

@@ -87,6 +87,18 @@ class OrderDaoTest {
         );
     }
 
+    @Test
+    @DisplayName("특정 사용자의 특정 주문을 취소한다.")
+    void cancelOrder() {
+        Member member = memberDao.getMemberById(1L);
+        createProduct();
+        Long savedOrderId1 = createOrder(member);
+        saveOrderProduct(savedOrderId1);
+
+        assertDoesNotThrow(() -> orderDao.deleteOrderById(savedOrderId1));
+    }
+
+
     private void saveOrderProduct(Long savedOrderId) {
         List<OrderProductEntity> orderProducts = List.of(new OrderProductEntity(1L, "오션", "오션.com", 10000, 1, savedOrderId));
 

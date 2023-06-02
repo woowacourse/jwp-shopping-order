@@ -37,6 +37,13 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void changeUserUnUsedCouponAvailability(Member member, Long memberCouponId) {
+        if(!memberCouponDao.checkMemberCouponById(member.getId(),memberCouponId)){
+            memberCouponDao.changeUserUnUsedCouponAvailability(memberCouponId);
+        }
+    }
+
     private Coupon toDomain(CouponEntity entity) {
         if (entity.equals(CouponEntity.EMPTY)) {
             return Coupon.empty();

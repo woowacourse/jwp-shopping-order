@@ -45,6 +45,11 @@ public class OrderRepositoryImpl implements OrderRepository {
         return toDomain(orderDao.findByOrderId(member.getId(),orderId).orElseThrow(() -> new OrderException("주문 상세정보를 찾을 수 없습니다.")));
     }
 
+    @Override
+    public void deleteOrder(Long orderId) {
+        orderDao.deleteOrderById(orderId);
+    }
+
     private OrderEntity toEntity(Order order) {
         return new OrderEntity(
                 order.getMember().getId(),

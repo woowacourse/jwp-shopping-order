@@ -68,4 +68,12 @@ public class OrderService {
         return new OrderResponse(order.getId(), products, order.calculatePrice(), order.calculateDiscountPrice(),
                 order.getConfirmState(), CouponResponse.of(order.getCoupon()));
     }
+
+    public void cancelOrder(Member member, Long orderId) {
+        Long memberCouponId = orderCouponRepository.deleteOrderCoupon(orderId);
+        if(memberCouponId != null) {
+            memberCouponRepository.changeUserUnUsedCouponAvailability(member, memberCouponId);
+        }
+        orderRepository.deleteOrder(orderId);
+    }
 }

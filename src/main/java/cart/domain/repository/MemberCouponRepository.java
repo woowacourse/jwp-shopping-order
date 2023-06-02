@@ -13,4 +13,6 @@ public interface MemberCouponRepository {
     void changeUserUsedCouponAvailability(Coupon coupon);
 
     List<Coupon> findMemberCoupons(Member member);
+
+    void changeUserUnUsedCouponAvailability(Member member, Long memberCouponId);
 }
