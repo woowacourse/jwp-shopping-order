@@ -52,8 +52,9 @@ CREATE TABLE if not exists member_coupon
 
 CREATE TABLE if not exists cart_order
 (
-    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT NOT NULL,
+    id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT NOT NULL,
+    delivery_fee BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 
@@ -72,10 +73,10 @@ CREATE TABLE if not exists order_item
 
 CREATE TABLE if not exists order_coupon
 (
+    id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_item_id    BIGINT NOT NULL,
     member_coupon_id BIGINT NOT NULL,
     FOREIGN KEY (order_item_id) REFERENCES order_item (id),
-    FOREIGN KEY (member_coupon_id) REFERENCES order_item (id),
-    PRIMARY KEY (order_item_id, member_coupon_id)
+    FOREIGN KEY (member_coupon_id) REFERENCES member_coupon (id)
 );
 
