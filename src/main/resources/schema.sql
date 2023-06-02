@@ -48,14 +48,14 @@ CREATE TABLE coupon
 (
     id             BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name           varchar(255) NOT NULL,
-    discount_price BIGINT       NOT NULL,
-    used_yn        varchar(1) DEFAULT 'N'
+    discount_price BIGINT       NOT NULL
 );
 
 CREATE TABLE member_coupon
 (
     member_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
+    used_yn        varchar(1) DEFAULT 'N',
     primary key (member_id, coupon_id)
 );
 
