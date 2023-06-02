@@ -55,6 +55,8 @@ public class OrderService {
 
     public OrderResponse findById(Long id, Member member) {
         Order order = orderRepository.findById(id);
+
+        order.checkOwner(member);
         return OrderResponse.of(order);
     }
 }

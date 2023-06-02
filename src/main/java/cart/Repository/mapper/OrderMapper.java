@@ -15,15 +15,9 @@ import java.util.stream.Collectors;
 @Component
 public class OrderMapper {
 
-    private final ProductMapper productMapper;
-
-    public OrderMapper(ProductMapper productMapper) {
-        this.productMapper = productMapper;
-    }
-
-    public List<Order> toOrders(List<OrderEntity> orders, Map<Long, List<OrderItemEntity>> orderItemsByOrderId, List<ProductEntity> productEntities) {
+    public static List<Order> toOrders(List<OrderEntity> orders, Map<Long, List<OrderItemEntity>> orderItemsByOrderId, List<ProductEntity> productEntities, MemberEntity memberEntity) {
         return orders.stream()
-                .map(orderEntity -> this.toOrder(orderEntity, orderItemsByOrderId.get(orderEntity.getId()), productEntities))
+                .map(orderEntity -> toOrder(orderEntity, orderItemsByOrderId.get(orderEntity.getId()), productEntities, memberEntity))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -46,6 +40,7 @@ public class OrderMapper {
         return new Order(
                 orderEntity.getId(),
                 orderEntity.getOrderDate(),
+                toMember(memberEntity),
                 orderItems
         );
     }
