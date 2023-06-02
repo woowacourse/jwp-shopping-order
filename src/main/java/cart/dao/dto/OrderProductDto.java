@@ -41,4 +41,14 @@ public class OrderProductDto {
         return quantity;
     }
 
+    @Override
+    public String toString() {
+        return "OrderProductDto{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", productId=" + productId +
+                ", quantity=" + quantity +
+                '}';
+    }
+
 }

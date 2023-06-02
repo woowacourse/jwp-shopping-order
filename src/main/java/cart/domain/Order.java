@@ -28,9 +28,16 @@ public class Order {
         this.orderProducts = orderProducts;
     }
 
+    public Order(final Long id,
+                 final Member member,
+                 final Optional<Coupon> coupon,
+                 final List<OrderProduct> orderProducts) {
+        this(id, LocalDateTime.now(), member, coupon, orderProducts);
+    }
+
     public static Order of(final Member member,
-                           final Optional<Coupon> coupon,
-                           final List<CartItem> cartItems) {
+                                  final Optional<Coupon> coupon,
+                                  final List<CartItem> cartItems) {
         validateSameMember(member, cartItems);
 
         List<OrderProduct> orderProducts = cartItems.stream()
@@ -103,6 +110,17 @@ public class Order {
     public String getCouponName() {
         return coupon.map(Coupon::getName)
                 .orElseGet(() -> "적용된 쿠폰이 없습니다.");
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", timeStamp=" + timeStamp +
+                ", member=" + member +
+                ", coupon=" + coupon +
+                ", orderProducts=" + orderProducts +
+                '}';
     }
 
 }

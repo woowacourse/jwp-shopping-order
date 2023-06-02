@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.dto.OrderProductDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -50,4 +51,11 @@ public class OrderProductDao {
             return Optional.empty();
         }
     }
+
+    public List<OrderProductDto> findByOrderId(Long orderId) {
+        String sql = "SELECT * FROM orders_product where order_id = ?";
+
+        return jdbcTemplate.query(sql, orderProductDtoRowMapper, orderId);
+    }
+
 }

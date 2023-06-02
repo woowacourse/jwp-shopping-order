@@ -53,4 +53,10 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, memberCouponDtoRowMapper, memberId);
     }
 
+    public int deleteById(final Long memberCouponId) {
+        String sql = "DELETE FROM member_coupon WHERE id = ?";
+
+        return jdbcTemplate.update(sql, memberCouponId);
+    }
+
 }

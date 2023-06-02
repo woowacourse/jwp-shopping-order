@@ -17,6 +17,10 @@ public class CouponDto {
         this.discountPrice = discountPrice;
     }
 
+    public CouponDto(final String name, final Double discountRate, final Integer discountPrice) {
+        this(null, name, discountRate, discountPrice);
+    }
+
     public Long getId() {
         return id;
     }

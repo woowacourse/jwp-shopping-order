@@ -2,9 +2,11 @@ package cart.controller.request;
 
 import java.util.List;
 import java.util.Optional;
+import javax.validation.constraints.Size;
 
 public class OrderRequestDto {
 
+    @Size(min = 1)
     private List<Long> cartItemIds;
     private Optional<Long> couponId;
 

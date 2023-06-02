@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.dto.OrderDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -48,6 +49,12 @@ public class OrderDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<OrderDto> findByMemberId(final Long memberId) {
+        String sql = "SELECT * FROM orders WHERE member_id = ?";
+
+        return jdbcTemplate.query(sql, orderDtoRowMapper, memberId);
     }
 
 }

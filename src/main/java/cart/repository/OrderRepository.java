@@ -51,7 +51,6 @@ public class OrderRepository {
         OrderDto orderDto = OrderDto.from(order);
         Long orderId = orderDao.insert(orderDto);
         List<OrderProduct> orderProductsAfterSave = saveOrderProducts(orderId, order.getOrderProducts());
-        System.out.println(order.getMember());
 
         return new Order(
                 orderId,

@@ -48,4 +48,15 @@ public class CartItem {
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                ", member=" + member +
+                '}';
+    }
+
 }

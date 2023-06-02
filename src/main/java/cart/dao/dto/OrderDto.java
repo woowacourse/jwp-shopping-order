@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class OrderDto {
 
-    private final static Long COUPON_NOT_EXISTS = -1L;
+    private static final Long COUPON_NOT_EXISTS = -1L;
 
     private final Long id;
     private final Long memberId;
@@ -57,6 +57,16 @@ public class OrderDto {
 
     public Long getCouponId() {
         return couponId;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDto{" +
+                "id=" + id +
+                ", memberId=" + memberId +
+                ", couponId=" + couponId +
+                ", timeStamp=" + timeStamp +
+                '}';
     }
 
 }

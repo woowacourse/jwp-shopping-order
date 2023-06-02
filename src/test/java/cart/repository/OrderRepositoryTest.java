@@ -1,5 +1,8 @@
 package cart.repository;
 
+import static fixture.CartItemFixture.CART_ITEM_1;
+import static fixture.CartItemFixture.CART_ITEM_2;
+import static fixture.CartItemFixture.CART_ITEM_3;
 import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
 import static fixture.CouponFixture.COUPON_2_NOT_NULL_RATE;
 import static fixture.CouponFixture.COUPON_3_NULL;
@@ -41,12 +44,6 @@ class OrderRepositoryTest {
     private OrderRepository orderRepository;
     @Autowired
     private CartItemDao cartItemDao;
-    @Autowired
-    private MemberDao memberDao;
-    @Autowired
-    private OrderDao orderDao;
-    @Autowired
-    private ProductDao productDao;
 
     @DisplayName("Order 를 저장한다.")
     @ParameterizedTest(name = "쿠폰이 {0} 인 경우")
@@ -87,7 +84,9 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("CartItems 에 들어있는 물품들을 삭제한다. (실패)")
     void delete_fail() {
-        assertThatThrownBy(() -> orderRepository.deleteCartItems(List.of(100L, 101L, 102L)))
+        List<Long> removeCartItemIds = List.of(100L, 101L, 102L);
+
+        assertThatThrownBy(() -> orderRepository.deleteCartItems(removeCartItemIds))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -109,8 +108,20 @@ class OrderRepositoryTest {
     void findOrderByMember() {
         List<Order> ordersByMember = orderRepository.findOrdersByMember(MemberFixture.MEMBER_1);
 
-        assertThat(ordersByMember).usingRecursiveComparison()
+        assertThat(ordersByMember)
+                .usingRecursiveComparison()
                 .isEqualTo(List.of(ORDER_1, ORDER_2));
+    }
+
+    @Test
+    @DisplayName("id 들을 가지고 CartItem 들을 조회한다.")
+    void findCartItemByIds() {
+        List<CartItem> cartItemByIds = orderRepository.findCartItemByIds(List.of(1L, 2L, 3L));
+
+        assertThat(cartItemByIds)
+                .usingRecursiveComparison()
+                .ignoringFields("member.password")
+                .isEqualTo(List.of(CART_ITEM_1, CART_ITEM_2, CART_ITEM_3));
     }
 
 }

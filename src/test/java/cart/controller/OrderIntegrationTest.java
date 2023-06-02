@@ -87,8 +87,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
         // then
         // 사용자는 결제 결과를 응답받는다
-        assertThat(result.getTotalPrice())
-                .isEqualTo(PRICE * 2 - 5000);
+        assertThat(result.getTotalPrice()).isEqualTo(PRICE * 2 - 5000);
         assertThat(result.getOrderProducts())
                 .extracting(OrderProductResponseDto::getProductResponseDto)
                 .extracting(ProductResponseDto::getName, ProductResponseDto::getPrice, ProductResponseDto::getImageUrl)
@@ -107,7 +106,7 @@ class OrderIntegrationTest extends IntegrationTest {
                 .then().statusCode(HttpStatus.OK.value())
                 .extract().as(OrderResponseDto.class);
 
-        assertThat(orderResponse.getTotalPrice()).isEqualTo(PRICE * 2);
+        assertThat(orderResponse.getTotalPrice()).isEqualTo(PRICE * 2 - 5000);
         assertThat(orderResponse.getOrderProducts())
                 .extracting(OrderProductResponseDto::getProductResponseDto)
                 .extracting(ProductResponseDto::getName, ProductResponseDto::getPrice, ProductResponseDto::getImageUrl)
