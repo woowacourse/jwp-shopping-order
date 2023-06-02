@@ -18,7 +18,7 @@
     - [ ] 적용한 쿠폰의 최소 주문 금액보다 주문한 금액이 적으면 결제가 실패한다.
 - [x] 사용자의 쿠폰 목록을 조회할 수 있다.
 - [x] 사용자의 주문 목록을 조회할 수 있다.
-- [ ] 주문 상세 정보를 조회할 수 있다.
+- [x] 주문 상세 정보를 조회할 수 있다.
 
 ### API 명세
 
@@ -103,8 +103,8 @@ Request URI:	/products
 
 ```json
 {
-  "name": "햄버거", 
-  "price": 5000, 
+  "name": "햄버거",
+  "price": 5000,
   "imageUrl": "https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
 }
 ```
@@ -131,8 +131,8 @@ Request URI:	/products/1
 
 ```json
 {
-  "name": "치킨", 
-  "price": 20000, 
+  "name": "치킨",
+  "price": 20000,
   "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
 }
 ```
@@ -188,19 +188,17 @@ HTTP/1.1 200
   {
     "id": 1,
     "quantity": 2,
-    "product":
-        {
-          "id": 1,
-          "name": "치킨",
-          "price": 10000,
-          "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
-        }
+    "product": {
+      "id": 1,
+      "name": "치킨",
+      "price": 10000,
+      "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
+    }
   },
   {
     "id": 2,
     "quantity": 4,
-    "product":
-    {
+    "product": {
       "id": 2,
       "name": "샐러드",
       "price": 20000,
@@ -361,7 +359,10 @@ Headers:        Authorization=BasicYUBhLmNvbToxMjM0
 
 ```json
 {
-  "cartItemIds": [1, 2],
+  "cartItemIds": [
+    1,
+    2
+  ],
   "totalPrice": 5000,
   "couponId": 1
 }
@@ -409,7 +410,7 @@ HTTP/1.1 200
       {
         "id": 1,
         "quantity": 3,
-        "product" : {
+        "product": {
           "id": 2,
           "name": "샐러드",
           "price": 5000,
@@ -419,7 +420,7 @@ HTTP/1.1 200
       {
         "id": 2,
         "quantity": 2,
-        "product" : {
+        "product": {
           "id": 3,
           "name": "치킨",
           "price": 20000,
@@ -434,7 +435,7 @@ HTTP/1.1 200
       {
         "id": 3,
         "quantity": 1,
-        "product" : {
+        "product": {
           "id": 2,
           "name": "샐러드",
           "price": 5000,
@@ -444,7 +445,7 @@ HTTP/1.1 200
       {
         "id": 4,
         "quantity": 1,
-        "product" : {
+        "product": {
           "id": 3,
           "name": "치킨",
           "price": 20000,
@@ -482,7 +483,7 @@ HTTP/1.1 200
       {
         "id": 1,
         "quantity": 3,
-        "product" : {
+        "product": {
           "id": 2,
           "name": "샐러드",
           "price": 5000,
@@ -492,7 +493,7 @@ HTTP/1.1 200
       {
         "id": 100,
         "quantity": 2,
-        "product" : {
+        "product": {
           "id": 3,
           "name": "치킨",
           "price": 20000,

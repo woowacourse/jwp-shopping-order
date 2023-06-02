@@ -2,6 +2,7 @@ package cart.fixtures;
 
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.dto.OrderDetailResponse;
 import cart.dto.OrderResponse;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,8 @@ import java.util.List;
 
 import static cart.fixtures.CouponFixtures.COUPON3;
 import static cart.fixtures.MemberFixtures.MEMBER1;
-import static cart.fixtures.ProductFixtures.*;
+import static cart.fixtures.ProductFixtures.PRODUCT2;
+import static cart.fixtures.ProductFixtures.PRODUCT3;
 
 public class OrderFixtures {
 
@@ -22,4 +24,6 @@ public class OrderFixtures {
 
     public static final OrderResponse ORDER_RESPONSE1 = OrderResponse.of(ORDER1);
     public static final OrderResponse ORDER_RESPONSE2 = OrderResponse.of(ORDER2);
+
+    public static final OrderDetailResponse ORDER_DETAIL_RESPONSE = OrderDetailResponse.of(ORDER1);
 }

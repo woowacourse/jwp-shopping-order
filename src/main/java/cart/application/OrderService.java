@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.dto.OrderDetailResponse;
 import cart.dto.OrderResponse;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,10 @@ public class OrderService {
     public List<OrderResponse> findByMember(Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         return orders.stream().map(OrderResponse::of).collect(toList());
+    }
+
+    public OrderDetailResponse findById(Long orderId) {
+        Order order = orderRepository.findById(orderId);
+        return OrderDetailResponse.of(order);
     }
 }
