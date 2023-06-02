@@ -54,6 +54,9 @@ public class Order {
         return new Order(this.cartItems, this.member, this.price, OrderState.CONFIRMED);
     }
 
+    public boolean isBiggerPrice(Money money) {
+        return this.price.isLargerThan(money);
+    }
     public List<Long> getCartItemIds() {
         return this.cartItems.stream().map(CartItem::getId).collect(Collectors.toList());
     }

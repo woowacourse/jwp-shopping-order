@@ -47,6 +47,11 @@ public class FixedDiscountCoupon extends Coupon {
     }
 
     @Override
+    public Long getMemberId() {
+        return member_id;
+    }
+
+    @Override
     public String getImageUrl() {
         return imageUrl;
     }

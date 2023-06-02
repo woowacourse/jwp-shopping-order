@@ -30,6 +30,12 @@ public class CouponDao {
         }
     }
 
+    public void save(Coupon coupon) {
+        String sql = "INSERT INTO coupon (member_id, discount_price, coupon_name, image_url)" +
+                "VALUES (?,?,?,?)";
+        jdbcTemplate.update(sql, coupon.getMemberId(), coupon.getDiscountPrice().toInt(), coupon.getName(), coupon.getImageUrl());
+    }
+
     private static class CouponRowMapper implements RowMapper<Coupon> {
         @Override
         public Coupon mapRow(ResultSet rs, int rowNum) throws SQLException {

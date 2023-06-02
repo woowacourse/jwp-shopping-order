@@ -8,6 +8,7 @@ public abstract class Coupon {
     public abstract Money getDiscountPrice();
 
     public abstract String getName();
+    public abstract Long getMemberId();
 
     public abstract String getImageUrl();
 

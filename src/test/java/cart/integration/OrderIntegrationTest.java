@@ -155,6 +155,50 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(price2).isEqualTo(23000);
     }
 
+    @DisplayName("10만원 초과로 주문하면 1000원 쿠폰을 사용자에게 준다. - 성공")
+    @Test
+    void orderItems_more_than_100000_give_coupon_success() {
+        //given
+        ExtractableResponse<Response> memberCouponResponse1 = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        List<Object> beforeCoupons = memberCouponResponse1.jsonPath().getList(".");
+
+
+        //when
+        OrderRequest orderRequest = new OrderRequest(List.of(1L,2L), 103000, null);
+
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        //then
+        ExtractableResponse<Response> memberCouponResponse2 = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        List<Object> afterCoupons = memberCouponResponse2.jsonPath().getList(".");
+
+        assertThat(beforeCoupons.size() + 1).isEqualTo(afterCoupons.size());
+    }
+
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

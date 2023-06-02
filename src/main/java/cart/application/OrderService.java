@@ -45,15 +45,18 @@ public class OrderService {
         Order payed = payService.pay(order, deliveryFee, discounting, member.getId());
 
         cartItemDao.deleteByIds(orderRequest.getCartItemIds());
+
+        couponService.addCouponDependsOnPay(member, payed);
         return orderDao.save(payed, discounting);
     }
 
     private boolean isCouponSelected(OrderRequest orderRequest) {
-        return (!orderRequest.isCouponNull()) && (!orderRequest.getCouponId().equals(0));
+        return (!orderRequest.isCouponNull()) && (!orderRequest.getCouponId().equals(0L));
     }
 
     public OrderResponse findOrder(Member member, Long orderId) {
         OrderDto order = orderDao.findById(orderId);
+        // TODO: 2023-06-02 member가 해당 order 권한이는지 검사
         return OrderResponse.of(order);
     }
 

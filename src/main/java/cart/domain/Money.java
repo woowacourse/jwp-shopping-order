@@ -32,6 +32,10 @@ public class Money {
         return new Money(this.money - other.money);
     }
 
+    public boolean isLargerThan(Money money) {
+        return this.money > money.money;
+    }
+
     public int toInt() {
         return this.money;
     }
