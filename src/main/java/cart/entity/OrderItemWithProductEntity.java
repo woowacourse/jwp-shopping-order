@@ -1,7 +1,5 @@
 package cart.entity;
 
-import java.time.LocalDateTime;
-
 public class OrderItemWithProductEntity {
 
     private final long id;
