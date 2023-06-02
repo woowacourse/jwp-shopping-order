@@ -6,17 +6,10 @@ import cart.config.ControllerTestConfig;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.dao.entity.CartItemEntity;
-import cart.dao.entity.MemberEntity;
-import cart.dao.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import java.math.BigDecimal;
-
-import static cart.fixture.domain.CartItemFixture.장바구니_상품;
-import static cart.fixture.domain.ProductFixture.상품;
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -32,20 +25,15 @@ class CartItemApiControllerTest extends ControllerTestConfig {
     private static final String PASSWORD = "1234";
 
     Product 상품_계란_등록() {
-        final ProductEntity 상품_엔티티 = new ProductEntity("계란", 1000, "https://계란_이미지_주소.png");
-        final Long 상품_계란_식별자값 = productDao.insertProduct(상품_엔티티);
-        return 상품(상품_계란_식별자값, 상품_엔티티.getName(), 상품_엔티티.getMoney(), 상품_엔티티.getImageUrl());
+        return productDaoFixture.상품을_등록한다("계란", 1000);
     }
 
     Member 회원_등록() {
-        final MemberEntity memberEntity = new MemberEntity( USERNAME, PASSWORD, BigDecimal.valueOf(1000), BigDecimal.valueOf(1000));
-        Long 회원_식별자값 = memberDao.insertMember(memberEntity);
-        return memberDao.getByMemberId(회원_식별자값).get().toDomain();
+        return memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
     }
 
     CartItem 장바구니_등록(final Product 상품, final Member 회원) {
-        final Long 장바구니_상품_식별자값 = cartItemDao.insertCartItem(new CartItemEntity(상품.getId(), 회원.getId(), 1));
-        return 장바구니_상품(장바구니_상품_식별자값, 상품, 회원, 1);
+        return cartItemDaoFixture.장바구니_상품을_등록한다(상품, 회원, 1);
     }
 
     @Test
@@ -69,11 +57,11 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("[].product.imageUrl").description("상품 이미지 주소")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .get("/cart-items")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -93,12 +81,12 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("productId").description("상품 식별자값")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .body(new CreateCartItemRequest(계란.getId()))
                 .post("/cart-items")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -122,13 +110,13 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("quantity").description("장바구니 상품 수량")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .pathParam("id", 장바구니_상품.getId())
                 .body(new UpdateCartItemQuantityRequest(10))
                 .patch("/cart-items/{id}")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -149,12 +137,12 @@ class CartItemApiControllerTest extends ControllerTestConfig {
                                 headerWithName("Authorization").description("basic 64인코딩값")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .pathParam("id", 장바구니_상품.getId())
                 .delete("/cart-items/{id}")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

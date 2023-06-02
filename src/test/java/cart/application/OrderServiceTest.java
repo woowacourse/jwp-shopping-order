@@ -82,10 +82,9 @@ class OrderServiceTest {
         Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
         CartItem 장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
 
-        // when
         OrderRequest 주문_장바구니_상품_식별자값_목록 = new OrderRequest(List.of(장바구니_계란.getId()), 100);
 
-        // then
+        // expect
         assertThatThrownBy(() -> orderService.createOrder(회원, 주문_장바구니_상품_식별자값_목록))
                 .isInstanceOf(MemberException.NotEnoughMoney.class);
     }

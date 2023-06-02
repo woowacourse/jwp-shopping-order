@@ -2,7 +2,6 @@ package cart.ui.api;
 
 import cart.application.request.CreateProductRequest;
 import cart.config.ControllerTestConfig;
-import cart.dao.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -14,7 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 class ProductApiControllerTest extends ControllerTestConfig {
 
     Long 상품_계란_등록() {
-        return productDao.insertProduct(new ProductEntity("계란", 1000, "https://계란_이미지_주소.png"));
+        return productDaoFixture.상품을_등록한다("계란", 1000).getId();
     }
 
     @Test

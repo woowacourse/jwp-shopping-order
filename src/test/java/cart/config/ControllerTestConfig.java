@@ -33,12 +33,6 @@ public abstract class ControllerTestConfig {
 
     protected String DOCUMENT_IDENTIFIER = "{method-name}";
 
-    protected MemberDao memberDao;
-    protected ProductDao productDao;
-    protected CartItemDao cartItemDao;
-    protected OrderDao orderDao;
-    protected OrderItemDao orderItemDao;
-
     protected MemberDaoFixture memberDaoFixture;
     protected ProductDaoFixture productDaoFixture;
     protected CartItemDaoFixture cartItemDaoFixture;
@@ -49,17 +43,11 @@ public abstract class ControllerTestConfig {
 
     @BeforeEach
     void controller(RestDocumentationContextProvider rest) {
-        memberDao = new MemberDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        orderDao = new OrderDao(jdbcTemplate);
-        orderItemDao = new OrderItemDao(jdbcTemplate);
-
-        memberDaoFixture = new MemberDaoFixture(memberDao);
-        productDaoFixture = new ProductDaoFixture(productDao);
-        cartItemDaoFixture = new CartItemDaoFixture(cartItemDao);
-        orderDaoFixture = new OrderDaoFixture(orderDao);
-        orderItemDaoFixture = new OrderItemDaoFixture(orderItemDao);
+        memberDaoFixture = new MemberDaoFixture(new MemberDao(jdbcTemplate));
+        productDaoFixture = new ProductDaoFixture(new ProductDao(jdbcTemplate));
+        cartItemDaoFixture = new CartItemDaoFixture(new CartItemDao(jdbcTemplate));
+        orderDaoFixture = new OrderDaoFixture(new OrderDao(jdbcTemplate));
+        orderItemDaoFixture = new OrderItemDaoFixture(new OrderItemDao(jdbcTemplate));
 
         RestAssured.port = port;
 

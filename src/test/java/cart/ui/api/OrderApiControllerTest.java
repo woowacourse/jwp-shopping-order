@@ -5,7 +5,6 @@ import cart.config.ControllerTestConfig;
 import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.fixture.dao.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -36,11 +35,11 @@ class OrderApiControllerTest extends ControllerTestConfig {
     @BeforeEach
     void setUp() {
         주문_시간 = now();
-        회원 = new MemberDaoFixture(memberDao).회원을_등록한다("a@a.com", "1234", "100000", "10000");
-        상품 = new ProductDaoFixture(productDao).상품을_등록한다("계란", 1000);
-        장바구니_상품 = new CartItemDaoFixture(cartItemDao).장바구니_상품을_등록한다(상품, 회원, 10);
-        주문_식별자값 = new OrderDaoFixture(orderDao).주문을_등록한다(회원, 장바구니_상품_목록(List.of(장바구니_상품)), "1000", 주문_시간);
-        new OrderItemDaoFixture(orderItemDao).주문_장바구니_상품을_등록한다(주문_식별자값, 장바구니_상품);
+        회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "100000", "10000");
+        상품 = productDaoFixture.상품을_등록한다("계란", 1000);
+        장바구니_상품 = cartItemDaoFixture.장바구니_상품을_등록한다(상품, 회원, 10);
+        주문_식별자값 = orderDaoFixture.주문을_등록한다(회원, 장바구니_상품_목록(List.of(장바구니_상품)), "1000", 주문_시간);
+        orderItemDaoFixture.주문_장바구니_상품을_등록한다(주문_식별자값, 장바구니_상품);
     }
 
     @Test
