@@ -63,14 +63,14 @@ public class OrderService {
 
     private void checkCartItem(final List<CartItem> cartItems, final OrderRequestDto orderRequestDto) {
         final List<Long> cartItemsId = cartItems.stream().map(CartItem::getId).collect(Collectors.toList());
-        final boolean allItemExist = cartItemsId.containsAll(orderRequestDto.getCartItems());
+        final boolean allItemExist = cartItemsId.containsAll(orderRequestDto.getCartItemIds());
         if (!allItemExist) {
             throw new CartItemNotFoundException("주문 요청에 존재하지 않는 카트 아이템이 포함되어 있습니다.");
         }
     }
 
     private List<OrderProduct> makeOrderProduct(final List<CartItem> cartItems, final OrderRequestDto orderRequestDto) {
-        final List<Long> cartItemsId = orderRequestDto.getCartItems();
+        final List<Long> cartItemsId = orderRequestDto.getCartItemIds();
         return cartItems.stream()
                 .filter(cartItem -> cartItemsId.contains(cartItem.getId()))
                 .map(OrderProduct::of)
@@ -101,7 +101,7 @@ public class OrderService {
     }
 
     private long completeOrder(final Member member, final OrderRequestDto orderRequestDto, final Order order) {
-        cartItemDao.deleteByIds(orderRequestDto.getCartItems());
+        cartItemDao.deleteByIds(orderRequestDto.getCartItemIds());
         return orderDao.save(member, order);
     }
 
