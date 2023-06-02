@@ -4,8 +4,10 @@ import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.Products;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -14,12 +16,25 @@ public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<OrderProductJoinDto> orderProductJoinDtoRowMapper = (rs, rowNum) -> {
+        return new OrderProductJoinDto(
+            rs.getLong("id"),
+            rs.getInt("discount_amount"),
+            rs.getInt("delivery_amount"),
+            rs.getInt("total_amount"),
+            rs.getString("address"),
+            rs.getLong("product_id"),
+            rs.getString("product_name"),
+            rs.getInt("product_price"),
+            rs.getString("product_image_url")
+        );
+    };
 
     public OrderDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
             .withTableName("`order`")
-            .usingColumns("member_id", "discounted_amount", "address", "delivery_amount")
+            .usingColumns("member_id", "discounted_amount", "address", "delivery_amount", "total_amount")
             .usingGeneratedKeyColumns("id");
     }
 
@@ -29,6 +44,7 @@ public class OrderDao {
         params.put("discounted_amount", order.discountProductAmount().getValue());
         params.put("address", order.getAddress());
         params.put("delivery_amount", order.getDeliveryAmount().getValue());
+        params.put("total_amount", order.getTotalAmount().getValue());
         final long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
         final String productOrderSql = "INSERT INTO product_order(product_id, order_id) "
@@ -38,6 +54,24 @@ public class OrderDao {
             jdbcTemplate.update(productOrderSql, product.getId(), orderId);
         }
         return new Order(orderId, order.getProducts(), order.getCoupon(), order.getDeliveryAmount(),
-            order.getAddress());
+            order.getTotalAmount(), order.getAddress());
+    }
+
+    public Order findById(final Long id) {
+        final String sql =
+            "SELECT o.id                as id, "
+                + "       o.discounted_amount as discount_amount, "
+                + "       o.delivery_amount   as delivery_amount, "
+                + "       o.address           as address, "
+                + "       o.total_amount      as total_amount, "
+                + "       p.id                as product_id, "
+                + "       p.name              as product_name, "
+                + "       p.price             as product_price, "
+                + "       p.image_url         as product_image_url "
+                + "FROM `order` as o "
+                + "         join product_order po on o.id = po.order_id "
+                + "         join product p on po.product_id = p.id";
+        final List<OrderProductJoinDto> orderProductJoinDtos = jdbcTemplate.query(sql, orderProductJoinDtoRowMapper);
+        return OrderConverter.convertToOrder(orderProductJoinDtos);
     }
 }

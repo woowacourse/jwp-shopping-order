@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `order`
 (
     id                BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id         BIGINT NOT NULL,
+    total_amount      INT    NOT NULL,
     discounted_amount INT    NOT NULL,
     address           VARCHAR(255),
     delivery_amount   INT,
