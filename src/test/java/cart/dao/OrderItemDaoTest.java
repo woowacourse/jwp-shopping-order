@@ -7,6 +7,7 @@ import cart.domain.OrderEntity;
 import cart.domain.OrderItemEntity;
 import cart.domain.Product;
 import cart.util.CurrentTimeUtil;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -83,6 +84,34 @@ class OrderItemDaoTest extends DaoTest {
 
     @Test
     void 주문ID로_데이터를_조회한다() {
+        // given
+        OrderItemEntity orderItemEntity = new OrderItemEntity(product.getId(), orderEntity.getId(), product.getName(), product.getPrice(), product.getImageUrl(), 1);
+        orderItemDao.insert(orderItemEntity);
 
+        // when
+        OrderItemEntity result = orderItemDao.findByOrderId(orderEntity.getId());
+
+        // then
+        assertThat(result).isEqualTo(orderItemEntity);
+    }
+
+    @Test
+    void 주문ID로_상위_2개의_데이터만_가져온다() {
+        // given
+        Product product2 = new Product(2L, "name2", 2000, "imageUrl2", 200);
+        Product product3 = new Product(3L, "name3", 3000, "imageUrl3", 300);
+        productDao.insert(product2);
+        productDao.insert(product3);
+
+        long orderId = 2L;
+        orderDao.insert(new OrderEntity(orderId, CurrentTimeUtil.asString(), memberEntity.getId(), 3000, 3000, 0, 6000));
+        orderItemDao.insert(new OrderItemEntity(orderId, product2.getId(), product2.getName(), product2.getPrice(), product2.getImageUrl(), 1));
+        orderItemDao.insert(new OrderItemEntity(orderId, product3.getId(), product3.getName(), product3.getPrice(), product3.getImageUrl(), 2));
+
+        // when
+        List<OrderItemEntity> result = orderItemDao.findTwoByOrderId(orderId);
+
+        // then
+        assertThat(result).hasSize(2);
     }
 }

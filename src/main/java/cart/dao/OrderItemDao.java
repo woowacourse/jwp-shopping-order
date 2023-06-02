@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.OrderItemEntity;
 import cart.exception.OrderItemNotFoundException;
+import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -78,5 +79,11 @@ public class OrderItemDao {
         } catch (final EmptyResultDataAccessException e) {
             throw new OrderItemNotFoundException();
         }
+    }
+
+    public List<OrderItemEntity> findTwoByOrderId(final Long orderId) {
+        String sql = "SELECT " + ALL_COLUMN + " FROM " + TABLE + " WHERE order_id = ? limit 2;";
+
+        return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 }
