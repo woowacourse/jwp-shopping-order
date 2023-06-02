@@ -57,7 +57,6 @@ Content-Type: application/json
 
 ```http request
 GET /products/{productId} HTTP/1.1
-
 ```
 
 `Response`
@@ -72,7 +71,6 @@ Content-Type: application/json
     "price": 10000,
     "imageUrl": "http://example.com/chicken.jpg"
 }
-
 ```
 
 ### 상품 추가
@@ -88,7 +86,6 @@ Content-Type: application/json
     "price": 30000,
     "imageUrl": "http://example.com/burrito.jpg"
 }
-
 ```
 
 `Response`
@@ -96,7 +93,6 @@ Content-Type: application/json
 ```http request
 HTTP/1.1 201 Created
 Location: /products/{productId}
-
 ```
 
 ### 상품 수정
@@ -112,14 +108,12 @@ Content-Type: application/json
     "price": 30000,
     "imageUrl": "http://example.com/burrito.jpg"
 }
-
 ```
 
 `Response`
 
 ```http request
 HTTP/1.1 200 OK
-
 ```
 
 #### 상품 삭제
@@ -177,7 +171,6 @@ Content-Type: application/json
         }
     }
 ]
-
 ```
 
 ### 장바구니 아이템 추가
@@ -192,7 +185,6 @@ Content-Type: application/json
 {
     "productId": 1
 }
-
 ```
 
 `Response`
@@ -214,7 +206,6 @@ Content-Type: application/json
 {
     "quantity": 3
 }
-
 ```
 
 `Response`

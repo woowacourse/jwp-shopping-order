@@ -28,4 +28,14 @@ public class ProductRepository {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public Product getProductById(Long productId) {
+        ProductEntity productEntity = productDao.getProductById(productId);
+        return new Product(
+                productEntity.getId(),
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl()
+        );
+    }
 }

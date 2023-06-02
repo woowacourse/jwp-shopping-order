@@ -33,14 +33,9 @@ public class ProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Product getProductById(Long productId) {
+    public ProductEntity getProductById(Long productId) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.queryForObject(sql, rowMapper, productId);
     }
 
     public Long createProduct(Product product) {
