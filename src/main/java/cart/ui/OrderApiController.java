@@ -33,33 +33,9 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getOrders() {
-        return ResponseEntity.ok().body(
-                List.of(
-                        new OrderResponse(
-                                1L,
-                                "2023-05-26",
-                                List.of(
-                                        new OrderItemResponse(10L, "새우깡", 3, 1500, "http://example.com/dfdf"),
-                                        new OrderItemResponse(22L, "감자깡", 1, 1200, "http://example.com/abcd")
-                                ),
-                                15000,
-                                1700,
-                                300
-                        ),
-                        new OrderResponse(
-                                3L,
-                                "2023-05-25",
-                                List.of(
-                                        new OrderItemResponse(10L, "새우깡", 3, 1500, "http://example.com/dfdf"),
-                                        new OrderItemResponse(22L, "감자깡", 1, 1200, "http://example.com/abcd")
-                                ),
-                                15000,
-                                1700,
-                                200
-                        )
-                )
-        );
+    public ResponseEntity<List<OrderResponse>> getOrders(final Member member) {
+        final List<OrderResponse> orderResponses = orderService.getOrders(member);
+        return ResponseEntity.ok().body(orderResponses);
     }
 
     @GetMapping("/{id}")
