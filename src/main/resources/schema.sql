@@ -1,3 +1,13 @@
+UPDATE member
+SET grade='GOLD'
+WHERE email = 'a@a.com';
+UPDATE member
+SET grade='SILVER'
+WHERE email = 'b@b.com';
+UPDATE member
+SET grade='BRONZE'
+WHERE email = 'c@c.com';
+
 CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
