@@ -1,6 +1,7 @@
 package cart.domain;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Point {
 
@@ -44,5 +45,29 @@ public class Point {
 
     public LocalDate getExpiredAt() {
         return expiredAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return value == point.value && Objects.equals(id, point.id) && Objects.equals(comment, point.comment) && Objects.equals(createAt, point.createAt) && Objects.equals(expiredAt, point.expiredAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, value, comment, createAt, expiredAt);
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "id=" + id +
+                ", value=" + value +
+                ", comment='" + comment + '\'' +
+                ", createAt=" + createAt +
+                ", expiredAt=" + expiredAt +
+                '}';
     }
 }
