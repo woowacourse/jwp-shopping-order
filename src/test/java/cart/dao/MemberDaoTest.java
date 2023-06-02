@@ -46,7 +46,7 @@ class MemberDaoTest {
     }
 
     @Test
-    void getById() {
+    void 식별자_값으로_유저를_조회한다() {
         MemberEntity 유저 = 다니.ENTITY;
         long memberId = saveMember(유저);
 
@@ -59,7 +59,7 @@ class MemberDaoTest {
     }
 
     @Test
-    void getByEmail() {
+    void 이메일로_유저를_조회한다() {
         MemberEntity 유저 = 다니.ENTITY;
         saveMember(유저);
 
@@ -72,7 +72,7 @@ class MemberDaoTest {
     }
 
     @Test
-    void insert() {
+    void 유저를_저장한다() {
         MemberEntity 유저 = 주노.ENTITY;
         Long memberId = memberDao.insert(유저);
 
@@ -86,7 +86,7 @@ class MemberDaoTest {
     }
 
     @Test
-    void update() {
+    void 유저_정보를_갱신한다() {
         MemberEntity 유저 = 다니.ENTITY;
         long memberId = saveMember(유저);
 
@@ -101,7 +101,7 @@ class MemberDaoTest {
     }
 
     @Test
-    void getAll() {
+    void 모든_유저를_조회한다() {
         saveMember(주노.ENTITY);
         saveMember(메리.ENTITY);
         saveMember(헤나.ENTITY);

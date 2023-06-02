@@ -47,7 +47,7 @@ class ProductDaoTest {
     }
 
     @Test
-    void getById() {
+    void 식별자_값으로_상품을_조회한다() {
         ProductEntity 상품 = 핫도그.ENTITY;
         long productId = saveProduct(상품);
 
@@ -59,7 +59,7 @@ class ProductDaoTest {
     }
 
     @Test
-    void insert() {
+    void 상품을_저장한다() {
         ProductEntity 상품 = 피자.ENTITY;
         Long productId = productDao.insert(상품);
 
@@ -73,7 +73,7 @@ class ProductDaoTest {
     }
 
     @Test
-    void update() {
+    void 상품_정보를_갱신한다() {
         long productId = saveProduct(치킨.ENTITY);
 
         ProductEntity 상품_수정 = new ProductEntity(productId, "수정된 이름", 10, "https://수정된_url");
@@ -87,7 +87,7 @@ class ProductDaoTest {
     }
 
     @Test
-    void getAll() {
+    void 모든_상품을_조회한다() {
         saveProduct(피자.ENTITY);
         saveProduct(치킨.ENTITY);
         saveProduct(핫도그.ENTITY);
@@ -99,7 +99,7 @@ class ProductDaoTest {
     }
 
     @Test
-    void deleteById() {
+    void 식별자_값으로_상품을_삭제한다() {
         ProductEntity 상품 = 피자.ENTITY;
         long productId = saveProduct(상품);
         productDao.deleteById(productId);
