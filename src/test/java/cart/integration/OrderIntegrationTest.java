@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-public class OrderEntityIntegrationTest extends IntegrationTest {
+public class OrderIntegrationTest extends IntegrationTest {
 
     private final Member member1 = new Member(1L, "user1@email.com", "user1Password", 5_000);
     private final Member member2 = new Member(2L, "user2@email.com", "user2Password", 2_000);
@@ -165,7 +165,7 @@ public class OrderEntityIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 전체_주문_목록을_조회한다() {
+    void 특정_회원의_전체_주문_목록을_조회한다() {
         // given
         orderRequest(member1, orderRequest);
 
@@ -175,7 +175,9 @@ public class OrderEntityIntegrationTest extends IntegrationTest {
         orderRequest(member2, orderRequest2);
 
         // when
-        var response = when()
+        var response = given()
+                .auth().preemptive().basic(member1.getEmail(), member1.getPassword())
+                .when()
                 .get("/orders")
                 .then()
                 .extract();

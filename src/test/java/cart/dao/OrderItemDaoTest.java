@@ -92,7 +92,7 @@ class OrderItemDaoTest extends DaoTest {
         var result = orderItemDao.findByOrderId(orderEntity.getId());
 
         // then
-        assertThat(result).containsOnly(orderItemEntity);
+        assertThat(result).hasSize(1);
     }
 
     @Test

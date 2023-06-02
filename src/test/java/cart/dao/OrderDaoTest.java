@@ -80,6 +80,18 @@ class OrderDaoTest extends DaoTest {
     }
 
     @Test
+    void 회원ID로_모든_주문을_조회한다() {
+        // given
+        orderDao.insert(orderEntity);
+
+        // when
+        List<OrderEntity> result = orderDao.findAllByMemberId(memberEntity.getId());
+
+        // then
+        assertThat(result).containsOnly(orderEntity);
+    }
+
+    @Test
     void 주문을_수정한다() {
         // given
         long savedId = orderDao.insert(orderEntity);

@@ -78,6 +78,12 @@ public class OrderDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public List<OrderEntity> findAllByMemberId(final Long memberId) {
+        String sql = "SELECT " + ALL_COLUMN + " FROM " + TABLE + " WHERE member_id = ?;";
+
+        return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
     public void update(final OrderEntity newOrderEntity) {
         String sql = "UPDATE " + TABLE + " SET " +
                 "created_At = ?, " +
