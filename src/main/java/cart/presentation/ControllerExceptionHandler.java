@@ -62,7 +62,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(final RuntimeException e) {
-        return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다.");
+        return createResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다. " + e.getMessage());
     }
 
     private ResponseEntity<String> createResponseEntity(final HttpStatus httpStatus, final String message) {
