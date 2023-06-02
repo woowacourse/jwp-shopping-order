@@ -130,5 +130,24 @@ public class CartItemDao {
         final long count = jdbcTemplate.queryForObject(sql, Long.class, memberName, productId);
         return count > 0;
     }
+
+    public int deleteByProductIdsAndMemberName(final List<Long> productIds, final String memberName) {
+        final String sql = "DELETE FROM cart_item AS c "
+            + "WHERE c.id "
+            + "IN ("
+            + "    SELECT cart_item_temp.id"
+            + "    FROM"
+            + "    ("
+            + "        SELECT ci.id AS id FROM cart_item AS ci"
+            + "        INNER JOIN member AS m ON ci.member_id = m.id"
+            + "        INNER JOIN product AS c ON c.id = ci.product_id"
+            + "        AND c.id IN (:productIds) AND m.name = :memberName"
+            + "    ) cart_item_temp"
+            + ")";
+        final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("productIds", productIds);
+        mapSqlParameterSource.addValue("memberName", memberName);
+        return namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
+    }
 }
 

@@ -83,6 +83,11 @@ public class CartRepositoryImpl implements CartRepository {
         return cartItemDao.existByMemberNameAndProductId(memberName, productId);
     }
 
+    @Override
+    public void deleteByProductIdsAndMemberName(final List<Long> productIds, final String memberName) {
+        cartItemDao.deleteByProductIdsAndMemberName(productIds, memberName);
+    }
+
     private MemberEntity getMemberEntity(final String memberName) {
         return memberDao.findByName(memberName)
             .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));

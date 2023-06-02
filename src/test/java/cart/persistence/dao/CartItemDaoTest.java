@@ -160,7 +160,8 @@ class CartItemDaoTest extends DaoTestHelper {
             저장된_져니_아이디);
 
         // then
-        assertThat(deletedCount).isSameAs(2);
+        assertThat(deletedCount)
+            .isSameAs(2);
     }
 
     @Test
@@ -188,5 +189,24 @@ class CartItemDaoTest extends DaoTestHelper {
         // then
         assertThat(result)
             .isFalse();
+    }
+
+    @Test
+    @DisplayName("사용자 이름과 상품 아이디로 장바구니를 제거한다.")
+    void deleteByProductIdsAndMemberName() {
+        // given
+        final Long 저장된_져니_아이디 = 져니_저장();
+        final Long 저장된_치킨_아이디 = 치킨_저장();
+        final Long 저장된_피자_아이디 = 피자_저장();
+        장바구니_치킨_저장(저장된_져니_아이디, 저장된_치킨_아이디);
+        장바구니_피자_저장(저장된_져니_아이디, 저장된_피자_아이디);
+
+        // when
+        final int deletedCount = cartItemDao.deleteByProductIdsAndMemberName(List.of(저장된_치킨_아이디, 저장된_피자_아이디),
+            "journey");
+
+        // then
+        assertThat(deletedCount)
+            .isSameAs(2);
     }
 }

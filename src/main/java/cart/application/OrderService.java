@@ -68,7 +68,7 @@ public class OrderService {
         validateDeletedProductExistence(requestCartItems);
 
         final long savedOrderId = saveOrder(requestCartItems, member, orderRequest.getCouponId());
-        cartRepository.deleteByCartItemIdsAndMemberId(requestProductIds, memberName);
+        cartRepository.deleteByProductIdsAndMemberName(requestProductIds, memberName);
         applicationEventPublisher.publishEvent(new FirstOrderCouponEvent(member.getMemberId()));
         return savedOrderId;
     }

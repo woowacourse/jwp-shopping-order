@@ -20,4 +20,6 @@ public interface CartRepository {
     void deleteByCartItemIdsAndMemberId(final List<Long> cartItemIds, final String memberName);
 
     boolean existByMemberNameAndProductId(final String memberName, final Long productId);
+
+    void deleteByProductIdsAndMemberName(final List<Long> productIds, final String memberName);
 }
