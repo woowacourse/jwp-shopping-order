@@ -6,6 +6,7 @@ import cart.domain.Member;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.product.CartItem;
 import cart.domain.vo.Price;
+import cart.exception.OrderNotOwnerException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -86,5 +87,11 @@ public class Order {
 
     public Optional<MemberCoupon> getMemberCoupon() {
         return Optional.ofNullable(memberCoupon);
+    }
+
+    public void checkOwner(final Member member) {
+        if (!member.getId().equals(memberId)) {
+            throw new OrderNotOwnerException();
+        }
     }
 }
