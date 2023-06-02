@@ -2,7 +2,6 @@ package cart.application;
 
 import cart.dao.PointDao;
 import cart.domain.Member;
-import cart.dto.response.PointResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,11 @@ public class PointService {
     }
 
     @Transactional(readOnly = true)
-    public PointResponse findByMember(final Member member) {
-        return new PointResponse(pointDao.selectByMemberId(member.getId()));
+    public long findByMember(final Member member) {
+        return pointDao.selectByMemberId(member.getId());
+    }
+
+    public void updateByMember(final Member member, final long point) {
+        pointDao.update(member.getId(), point);
     }
 }

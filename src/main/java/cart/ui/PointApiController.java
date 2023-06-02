@@ -20,7 +20,7 @@ public class PointApiController {
 
     @GetMapping
     public ResponseEntity<PointResponse> findOrderPolicy(Member member) {
-        PointResponse response = pointService.findByMember(member);
+        PointResponse response = new PointResponse(pointService.findByMember(member));
         return ResponseEntity.ok().body(response);
     }
 }

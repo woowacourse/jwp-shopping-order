@@ -1,7 +1,6 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
-import cart.dao.PointDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -18,7 +17,6 @@ import cart.exception.CartItemException.InvalidCartItem;
 import cart.exception.CartItemException.QuantityNotSame;
 import cart.exception.CartItemException.UnknownCartItem;
 import cart.repository.OrderRepository;
-import cart.repository.ShippingPolicyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,19 +31,19 @@ public class OrderService {
 
     private final CartItemDao cartItemDao;
     private final OrderRepository orderRepository;
-    private final ShippingPolicyRepository shippingPolicyRepository;
-    private final PointDao pointDao;
+    private final OrderPolicyService orderPolicyService;
+    private final PointService pointService;
 
     public OrderService(
             final CartItemDao cartItemDao,
             final OrderRepository orderRepository,
-            final ShippingPolicyRepository shippingPolicyRepository,
-            final PointDao pointDao
+            final OrderPolicyService orderPolicyService,
+            final PointService pointService
     ) {
         this.cartItemDao = cartItemDao;
         this.orderRepository = orderRepository;
-        this.shippingPolicyRepository = shippingPolicyRepository;
-        this.pointDao = pointDao;
+        this.orderPolicyService = orderPolicyService;
+        this.pointService = pointService;
     }
 
     public OrderAdditionResponse saveOrder(final Member member, final OrderRequest orderRequest) {
@@ -56,14 +54,16 @@ public class OrderService {
         checkUnknownCartItemIds(extractOrderCartItemIds(orderRequest), cartItems);
         checkQuantity(orderRequest.getOrder(), cartItems);
 
-        ShippingPolicy shippingPolicy = shippingPolicyRepository.findShippingPolicy();
+        ShippingPolicy shippingPolicy = orderPolicyService.findShippingPolicy();
+        PointPolicy pointPolicy = orderPolicyService.findPointPolicy();
+
         List<OrderItem> orderItems = OrderItem.of(cartItems);
         Order order = Order.of(member, shippingPolicy.calculateShippingFee(orderItems), usedPoint.getPoint(), orderItems);
         order.checkTotalProductsPrice(orderRequest.getTotalProductsPrice());
         order.checkShippingFee(orderRequest.getShippingFee());
 
-        Point totalPoint = new Point(pointDao.selectByMemberId(member.getId()));
-        Point newEarnedPoint = PointPolicy.getEarnedPoint(order.getPayment());
+        Point totalPoint = new Point(pointService.findByMember(member));
+        Point newEarnedPoint = pointPolicy.getEarnedPoint(order.getPayment());
         Point updatedPoint = totalPoint.use(usedPoint)
                 .add(newEarnedPoint);
 
@@ -71,7 +71,7 @@ public class OrderService {
         for (CartItem cartItem : cartItems) {
             cartItemDao.deleteById(cartItem.getId());
         }
-        pointDao.update(member.getId(), updatedPoint.getPoint());
+        pointService.updateByMember(member, updatedPoint.getPoint());
 
         return new OrderAdditionResponse(orderId, newEarnedPoint.getPoint());
     }

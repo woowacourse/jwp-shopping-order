@@ -19,7 +19,7 @@ public class OrderPolicyApiController {
 
     @GetMapping
     public ResponseEntity<OrderPolicyResponse> findOrderPolicy() {
-        OrderPolicyResponse response = orderPolicyService.find();
+        OrderPolicyResponse response = orderPolicyService.findTotalPolicy();
         return ResponseEntity.ok().body(response);
     }
 }

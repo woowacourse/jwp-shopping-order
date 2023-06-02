@@ -18,8 +18,18 @@ public class OrderPolicyService {
     }
 
     @Transactional(readOnly = true)
-    public OrderPolicyResponse find() {
-        ShippingPolicy shippingPolicy = shippingPolicyRepository.findShippingPolicy();
-        return new OrderPolicyResponse(shippingPolicy.getThreshold(), shippingPolicy.getBasicShippingFee(), PointPolicy.getPointPercentage());
+    public OrderPolicyResponse findTotalPolicy() {
+        ShippingPolicy shippingPolicy = findShippingPolicy();
+        PointPolicy pointPolicy = findPointPolicy();
+        return new OrderPolicyResponse(shippingPolicy.getThreshold(), shippingPolicy.getBasicShippingFee(), pointPolicy.getPointPercentage());
+    }
+
+    public PointPolicy findPointPolicy() {
+        return new PointPolicy();
+    }
+
+    @Transactional(readOnly = true)
+    public ShippingPolicy findShippingPolicy() {
+        return shippingPolicyRepository.findShippingPolicy();
     }
 }
