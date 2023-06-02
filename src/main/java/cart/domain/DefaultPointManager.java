@@ -23,4 +23,9 @@ public class DefaultPointManager implements PointManager {
         final LocalDateTime expiredAt = localDateTime.plusMonths(EXPIRED_MONTH);
         return Timestamp.valueOf(expiredAt);
     }
+
+    @Override
+    public double getEarningRate() {
+        return EARNING_RATE * 100;
+    }
 }

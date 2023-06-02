@@ -7,4 +7,6 @@ public interface PointManager {
     Point getPoint(Price price);
 
     Timestamp getExpiredAt(Timestamp createdAt);
+
+    double getEarningRate();
 }

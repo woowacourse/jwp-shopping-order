@@ -24,6 +24,21 @@ public class PointRepository {
         this.pointManager = pointManager;
     }
 
+    public Point getTotalLeftPoint(final Member member) {
+        final List<PointEntity> pointEntities = pointDao.findRemainingPointsByMemberId(member.getId());
+        return getTotalLeftPoint(pointEntities);
+    }
+
+    private Point getTotalLeftPoint(final List<PointEntity> pointEntities) {
+        return Point.valueOf(pointEntities.stream()
+                .mapToInt(PointEntity::getLeftPoint)
+                .sum());
+    }
+
+    public double getEarningRate() {
+        return pointManager.getEarningRate();
+    }
+
     public OrderPoint updatePoint(final Member member, final Point usedPoint, final Price totalPrice, final Timestamp createdAt) {
         reduceMemberPoint(member, usedPoint);
         final PointEntity pointEntity = addPoint(member, totalPrice, createdAt);
@@ -35,12 +50,6 @@ public class PointRepository {
         final Point totalLeftPoint = getTotalLeftPoint(pointEntities);
         validatePoint(totalLeftPoint, usedPoint);
         deleteLeftPointByUsedPoint(pointEntities, usedPoint, 0);
-    }
-
-    private Point getTotalLeftPoint(final List<PointEntity> pointEntities) {
-        return Point.valueOf(pointEntities.stream()
-                .mapToInt(PointEntity::getLeftPoint)
-                .sum());
     }
 
     private void validatePoint(final Point totalLeftPoint, final Point usedPoint) {

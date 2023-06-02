@@ -39,4 +39,10 @@ class DefaultPointManagerTest {
         final Timestamp result = defaultPointManager.getExpiredAt(createdAt);
         assertThat(result).isEqualTo(Timestamp.valueOf(expired));
     }
+
+    @Test
+    void getEarningRate() {
+        final double result = defaultPointManager.getEarningRate();
+        assertThat(result).isEqualTo(5);
+    }
 }

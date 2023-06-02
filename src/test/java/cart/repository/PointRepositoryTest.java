@@ -33,6 +33,18 @@ class PointRepositoryTest {
         pointRepository = new PointRepository(pointDao, new DefaultPointManager());
     }
 
+    @Sql({"classpath:deleteAll.sql", "classpath:insertMember.sql", "classpath:insertPoint.sql"})
+    @Test
+    void getTotalLeftPoint() {
+        final Point totalLeftPoint = pointRepository.getTotalLeftPoint(MemberFixture.MEMBER);
+        assertThat(totalLeftPoint).isEqualTo(Point.valueOf(600));
+    }
+
+    @Test
+    void getEarningRate() {
+        assertThat(pointRepository.getEarningRate()).isEqualTo(5);
+    }
+
     @DisplayName("포인트가 모자랄 때 예외를 발생시킨다.")
     @Sql({"classpath:deleteAll.sql", "classpath:insertMember.sql", "classpath:insertPoint.sql"})
     @Test
