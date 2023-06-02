@@ -48,7 +48,7 @@ public class OrderProductDao {
     }
 
     public List<OrderProductEntity> findByOrderId(final Long orderHistoryId) {
-        final String sql = "SELECT * FROM order_product WHERE order_history_id = :order_history_id:";
+        final String sql = "SELECT * FROM order_product WHERE order_history_id = :order_history_id";
         final Map<String, Long> parameter = Map.of("order_history_id", orderHistoryId);
         return namedParameterJdbcTemplate.query(sql, parameter, ORDER_PRODUCT_ENTITY_ROW_MAPPER);
     }
