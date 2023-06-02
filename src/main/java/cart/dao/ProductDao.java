@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
-import cart.exception.CartItemNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
