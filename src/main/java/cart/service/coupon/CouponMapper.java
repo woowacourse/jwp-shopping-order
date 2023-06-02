@@ -20,7 +20,7 @@ public class CouponMapper {
 
     public CouponTypeResponse toCouponTypeResponse(final Coupon coupon) {
         return new CouponTypeResponse(
-                coupon.getId(),
+                coupon.getCouponTypeId(),
                 coupon.getName().getName(),
                 coupon.getDiscountAmount().getDiscountAmount(),
                 coupon.getDescription().getDescription());
