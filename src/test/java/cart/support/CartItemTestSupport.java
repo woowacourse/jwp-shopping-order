@@ -55,7 +55,7 @@ public class CartItemTestSupport {
 
         public CartItem build() {
             CartItem cartItem = make();
-            Long cartItemId = cartItemDao.add(cartItem);
+            Long cartItemId = cartItemDao.insert(cartItem);
             return new CartItem(cartItemId, cartItem.getQuantity(), cartItem.getProduct(), cartItem.getMember());
         }
 

@@ -51,7 +51,7 @@ public class ProductTestSupport {
 
         public Product build() {
             Product product = make();
-            Long productId = productDao.add(product);
+            Long productId = productDao.insert(product);
             return new Product(productId, product.getName(), product.getPrice(), product.getImageUrl());
         }
 

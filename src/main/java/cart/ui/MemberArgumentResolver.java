@@ -45,7 +45,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
+        Member member = memberDao.findByEmail(email);
         if (!member.checkPassword(password)) {
             throw new ShoppingOrderException(ErrorStatus.AUTHENTICATION_INVALID);
         }

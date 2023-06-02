@@ -52,7 +52,7 @@ public class OrderHistoryTestSupport {
 
         public OrderHistory build() {
             OrderHistory orderHistory = make();
-            Long orderHistoryId = orderHistoryDao.add(orderHistory);
+            Long orderHistoryId = orderHistoryDao.insert(orderHistory);
             return new OrderHistory(orderHistoryId, orderHistory.getOriginalPrice(), orderHistory.getUsedPoint(),
                     orderHistory.getOrderPrice(), orderHistory.getMember());
         }

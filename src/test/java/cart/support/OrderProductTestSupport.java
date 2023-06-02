@@ -74,7 +74,7 @@ public class OrderProductTestSupport {
 
         public OrderProduct build() {
             OrderProduct orderProduct = make();
-            Long orderProductId = orderProductDao.add(orderProduct);
+            Long orderProductId = orderProductDao.insert(orderProduct);
             return new OrderProduct(orderProductId, orderProduct.getOrderHistory(), orderProduct.getProductId(),
                     orderProduct.getName(), orderProduct.getPrice(), orderProduct.getImageUrl(),
                     orderProduct.getQuantity());

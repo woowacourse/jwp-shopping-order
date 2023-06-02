@@ -18,6 +18,6 @@ public class MemberService {
     @Transactional
     public void signUp(MemberCreateRequest request) {
         Member member = new Member(request.getEmail(), request.getPassword());
-        memberDao.addMember(member);
+        memberDao.insert(member);
     }
 }

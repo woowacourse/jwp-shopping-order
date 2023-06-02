@@ -49,7 +49,7 @@ public class CartItemDao {
         });
     }
 
-    public Long add(CartItem cartItem) {
+    public Long insert(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

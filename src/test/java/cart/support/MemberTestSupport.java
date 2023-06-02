@@ -51,7 +51,7 @@ public class MemberTestSupport {
 
         public Member build() {
             Member member = make();
-            Long memberId = memberDao.add(member);
+            Long memberId = memberDao.insert(member);
             return new Member(memberId, member.getEmail(), member.getPassword(), member.getPointAsInt());
         }
 

@@ -3,50 +3,75 @@ package cart.dao;
 import cart.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class MemberDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public Member getMemberById(Long id) {
-        String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
+    public Member findById(Long id) {
+        String sql = "SELECT * FROM member WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        List<Member> members = jdbcTemplate.query(sql, params, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public Member getMemberByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
+    public Member findByEmail(String email) {
+        String sql = "SELECT * FROM member WHERE email = :email";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("email", email);
+        List<Member> members = jdbcTemplate.query(sql, params, new MemberRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password, point) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPointAsInt());
+    public Long insert(Member member) {
+        String sql = "INSERT INTO member (email, password, point) VALUES (:email, :password, :point)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("email", member.getEmail());
+        params.addValue("password", member.getPassword());
+        params.addValue("point", member.getPointAsInt());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(sql, params, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
-    public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPointAsInt(), member.getId());
+    public void update(Member member) {
+        String sql = "UPDATE member SET email = :email, password = :password, point = :point WHERE id = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("email", member.getEmail());
+        params.addValue("password", member.getPassword());
+        params.addValue("point", member.getPointAsInt());
+        params.addValue("id", member.getId());
+
+        jdbcTemplate.update(sql, params);
     }
 
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public void delete(Long id) {
+        String sql = "DELETE FROM member WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        jdbcTemplate.update(sql, params);
     }
 
-    public List<Member> getAllMembers() {
+    public List<Member> findAll() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
