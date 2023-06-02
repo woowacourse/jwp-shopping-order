@@ -77,6 +77,39 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
+        void 포인트를_사용해서_주문할_수_있다() {
+            //given
+            long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
+            long 치킨_아이디 = 상품_추가하고_아이디_반환(치킨_10000원);
+            장바구니_아이템_추가_요청(등록된_사용자1, 피자_아이디);
+            장바구니_아이템_추가_요청(등록된_사용자1, 치킨_아이디);
+            List<OrderItemDto> 장바구니 = 장바구니_조회_요청(등록된_사용자1).jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
+                    .collect(Collectors.toList());
+            주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 0L, 장바구니));
+
+            장바구니_아이템_추가_요청(등록된_사용자1, 피자_아이디);
+            장바구니_아이템_추가_요청(등록된_사용자1, 치킨_아이디);
+            List<OrderItemDto> 장바구니2 = 장바구니_조회_요청(등록된_사용자1).jsonPath()
+                    .getList(".", CartItemResponse.class)
+                    .stream()
+                    .map(장바구니_아이템 -> new OrderItemDto(장바구니_아이템.getId(), 장바구니_아이템.getQuantity()))
+                    .collect(Collectors.toList());
+
+            // when
+            ExtractableResponse<Response> 주문_등록_결과 = 주문_등록_요청(등록된_사용자1, new OrderRequest(25_000L, 3_000L, 2_500L, 장바구니2));
+
+            // then
+            assertThat(주문_등록_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+            assertThat(주문_등록_결과.header("Location")).isNotBlank();
+            assertThat(주문_등록_결과.jsonPath().getLong("orderId")).isNotNull();
+            assertThat(주문_등록_결과.jsonPath().getLong("newEarnedPoint")).isEqualTo((long) (2_5500 * 0.1));
+        }
+
+
+        @Test
         void 등록되지_않은_상품이_존재하면_주문할_수_없다() {
             //given
             long 피자_아이디 = 상품_추가하고_아이디_반환(피자_15000원);
