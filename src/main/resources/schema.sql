@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS orders_orderItem;
 DROP TABLE IF EXISTS order_item;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS cart_item;
@@ -49,21 +48,13 @@ CREATE TABLE orders
 CREATE TABLE order_item
 (
     id                BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id          BIGINT        NOT NULL,
     product_id        BIGINT        NOT NULL,
     product_name      VARCHAR(255)  NOT NULL,
     product_price     INT           NOT NULL,
     product_image_url VARCHAR(2083) NOT NULL,
     quantity          INT           NOT NULL,
 
+    FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
-);
-
-CREATE TABLE orders_orderItem
-(
-    id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    orders_id     BIGINT NOT NULL,
-    order_item_id BIGINT NOT NULL,
-
-    FOREIGN KEY (orders_id) REFERENCES orders (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY (order_item_id) REFERENCES order_item (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
