@@ -1,9 +1,12 @@
 package cart.application;
 
 import cart.domain.Product;
+import cart.dto.PagedProductsResponse;
+import cart.dto.PaginationInfoDto;
 import cart.repository.dao.ProductDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import java.util.Comparator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +23,7 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::from).collect(Collectors.toList());
+        return ProductResponse.from(products);
     }
 
     public ProductResponse getProductById(Long productId) {
@@ -40,5 +43,22 @@ public class ProductService {
 
     public void deleteProduct(Long productId) {
         productDao.deleteProduct(productId);
+    }
+
+    public PagedProductsResponse getPagedProducts(final int unitSize, final int page) {
+        final List<Product> allProducts = productDao.getAllProducts();
+
+        int startOrder = unitSize * (page - 1);
+        final List<Product> pagedProducts = allProducts.stream()
+                .sorted(Comparator.comparingLong(Product::getId).reversed())
+                .skip(startOrder)
+                .limit(unitSize)
+                .collect(Collectors.toUnmodifiableList());
+
+        final List<ProductResponse> products = ProductResponse.from(pagedProducts);
+        final int lastPage = allProducts.size() / unitSize + 1;
+        final PaginationInfoDto paginationInfo = new PaginationInfoDto(allProducts.size(), unitSize, page, lastPage);
+
+        return new PagedProductsResponse(products, paginationInfo);
     }
 }
