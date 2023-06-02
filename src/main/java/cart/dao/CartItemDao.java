@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.entity.CartItemEntity;
-import cart.entity.CartItemWithMemberAndProductEntity;
 import cart.entity.CartItemWithProductEntity;
 import cart.exception.CartItemNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
 
-import static cart.entity.RowMapperUtil.cartItemWithMemberAndProductEntityRowMapper;
 import static cart.entity.RowMapperUtil.cartItemWithProductEntityRowMapper;
 
 @Repository
@@ -54,13 +52,13 @@ public class CartItemDao {
         }
     }
 
-    public List<CartItemWithMemberAndProductEntity> findAllDetailByMemberId(final long memberId) {
-        final String sql = "SELECT cart_item.id, member.id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+    public List<CartItemWithProductEntity> findAllDetailByMemberId(final long memberId) {
+        final String sql = "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, cartItemWithMemberAndProductEntityRowMapper, memberId);
+        return jdbcTemplate.query(sql, cartItemWithProductEntityRowMapper, memberId);
     }
 
     public long save(final CartItemEntity source) {

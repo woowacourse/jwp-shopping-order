@@ -17,18 +17,6 @@ public class RowMapperUtil {
             rs.getString("image_url")
     );
 
-    public static final RowMapper<CartItemWithMemberAndProductEntity> cartItemWithMemberAndProductEntityRowMapper = (rs, rn) ->
-            new CartItemWithMemberAndProductEntity(
-                    rs.getLong("cart_item.id"),
-                    rs.getLong("member.id"),
-                    rs.getString("member.email"),
-                    rs.getLong("product.id"),
-                    rs.getString("product.name"),
-                    rs.getInt("product.price"),
-                    rs.getString("product.image_url"),
-                    rs.getInt("cart_item.quantity")
-            );
-
     public static final RowMapper<CartItemWithProductEntity> cartItemWithProductEntityRowMapper = (rs, rn) ->
             new CartItemWithProductEntity(
                     rs.getLong("cart_item.id"),

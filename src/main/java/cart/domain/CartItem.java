@@ -3,13 +3,13 @@ package cart.domain;
 public class CartItem {
 
     private final Long id;
-    private final Member member;
+    private final long memberId;
     private final Product product;
     private final Quantity quantity;
 
-    public CartItem(final Long id, final Member member, final Product product, final Quantity quantity) {
+    public CartItem(final Long id, final long memberId, final Product product, final Quantity quantity) {
         this.id = id;
-        this.member = member;
+        this.memberId = memberId;
         this.product = product;
         this.quantity = quantity;
     }
@@ -18,8 +18,8 @@ public class CartItem {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public long getMember() {
+        return memberId;
     }
 
     public Product getProduct() {
