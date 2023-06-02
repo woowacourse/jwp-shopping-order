@@ -12,18 +12,6 @@ import org.springframework.http.MediaType;
 public class ProductIntegrationTest extends IntegrationTest {
 
     @Test
-    public void getProducts() {
-        var result = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/products")
-                .then()
-                .extract();
-
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    @Test
     public void createProduct() {
         var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 

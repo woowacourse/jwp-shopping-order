@@ -27,11 +27,6 @@ public class ProductApiController {
         this.productService = productService;
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-//        return ResponseEntity.ok(productService.getAllProducts());
-//    }
-
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProductsPagination(
             @RequestParam final Long limit
