@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class OrderIntegrationTest extends IntegrationTest {
 
     private final AuthInfo member = new AuthInfo("a@a.com", "1234");
+    private final AuthInfo otherMember = new AuthInfo("b@b.com", "1234");
     private final ProductRequest mainProductRequest = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
     private long cartItemId1;
     private long cartItemId2;
@@ -131,7 +132,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Nested
     @DisplayName("주문 목록 조회")
-    class GetAll{
+    class GetAll {
 
         @Test
         @DisplayName("성공")
@@ -143,7 +144,6 @@ public class OrderIntegrationTest extends IntegrationTest {
 
             // when
             final ExtractableResponse<Response> response = given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .auth().preemptive().basic(member.getEmail(), member.getPassword())
                     .when().get("/orders")
                     .then()
@@ -164,6 +164,77 @@ public class OrderIntegrationTest extends IntegrationTest {
                     () -> assertThat(documentContext.read("$[0].extraProductCount", Integer.class)).isEqualTo(1),
                     () -> assertThat(documentContext.read("$[0].price", Integer.class)).isEqualTo(paymentAmount)
             );
+        }
+    }
+
+    @Nested
+    @DisplayName("주문 상세 조회")
+    class Get {
+
+        @Test
+        @DisplayName("성공 - 3만원 미만 주문")
+        void success_when_under_30000() {
+            // given
+            final int paymentAmount = 25_000;
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2), paymentAmount);
+            final long id = getIdFromCreatedResponse(requestAddOrder(member, request));
+
+            // when
+            final ExtractableResponse<Response> response = given()
+                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                    .when().get("/orders/{id}", id)
+                    .then()
+                    .extract();
+
+            // then
+            final Configuration conf = Configuration.defaultConfiguration();
+            final DocumentContext documentContext = JsonPath.using(conf).parse(response.asString());
+
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                    () -> assertThat(documentContext.read("$.priceBeforeDiscount", Integer.class)).isEqualTo(25_000),
+                    () -> assertThat(documentContext.read("$.priceAfterDiscount", Integer.class)).isEqualTo(25_000),
+                    () -> assertThat(documentContext.read("$.orderItems.size()", Integer.class))
+                            .isEqualTo(request.getCartItems().size()),
+                    () -> assertThat(documentContext.read("$.orderItems[0].name", String.class)).isEqualTo("치킨"),
+                    () -> assertThat(documentContext.read("$.orderItems[1].name", String.class)).isEqualTo("피자")
+            );
+        }
+
+        @Test
+        @DisplayName("실패 - 다른 유저의 주문")
+        void fail_when_not_members_order() {
+            // given
+            final int paymentAmount = 25_000;
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2), paymentAmount);
+            final long id = getIdFromCreatedResponse(requestAddOrder(member, request));
+
+            // when
+            final ExtractableResponse<Response> response = given()
+                    .auth().preemptive().basic(otherMember.getEmail(), otherMember.getPassword())
+                    .when().get("/orders/{id}", id)
+                    .then()
+                    .extract();
+
+            // then
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        }
+
+        @Test
+        @DisplayName("실패 - 존재하지 않는 order id")
+        void fail_when_order_not_found() {
+            // given
+            final long invalidId = 9999L;
+
+            // when
+            final ExtractableResponse<Response> response = given()
+                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                    .when().get("/orders/{id}", invalidId)
+                    .then()
+                    .extract();
+
+            // then
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         }
     }
 
