@@ -1,4 +1,4 @@
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE product
     image_url TEXT         NOT NULL
 );
 
-CREATE TABLE member
+CREATE TABLE IF NOT EXISTS member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR(255) NOT NULL UNIQUE,
@@ -14,7 +14,7 @@ CREATE TABLE member
     points   INT          NOT NULL DEFAULT 0
 );
 
-CREATE TABLE cart_item
+CREATE TABLE IF NOT EXISTS cart_item
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
@@ -24,19 +24,19 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
 
-CREATE TABLE orders
+CREATE TABLE IF NOT EXISTS orders
 (
-    id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id     BIGINT NOT NULL,
-    earned_points INT    NOT NULL,
-    used_points   INT    NOT NULL,
-    total_price   INT    NOT NULL,
-    pay_price     INT    NOT NULL,
-    order_date    DATETIME DEFAULT CURRENT_TIMESTAMP,
+    id            BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id     BIGINT   NOT NULL,
+    earned_points INT      NOT NULL,
+    used_points   INT      NOT NULL,
+    total_price   INT      NOT NULL,
+    pay_price     INT      NOT NULL,
+    order_date    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
 
-CREATE TABLE order_item
+CREATE TABLE IF NOT EXISTS order_item
 (
     id         BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id   BIGINT       NOT NULL,
