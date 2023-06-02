@@ -69,8 +69,14 @@ public class OrderService {
         return result;
     }
 
-    public void deleteByIds(final Member member, List<Long> orderIds) {
+    public void deleteByIds(final Member member, final List<Long> orderIds) {
         final List<Order> orders = orderRepository.findAllByOrderIds(orderIds);
+        orders.forEach(order -> order.checkOwner(member));
+        orderRepository.deleteAll(orders);
+    }
+
+    public void deleteAll(final Member member) {
+        final List<Order> orders = orderRepository.findAllByMemberId(member.getId());
         orders.forEach(order -> order.checkOwner(member));
         orderRepository.deleteAll(orders);
     }

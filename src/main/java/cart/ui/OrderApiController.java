@@ -54,4 +54,10 @@ public class OrderApiController {
         orderService.deleteByIds(member, orderId);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAll(Member member) {
+        orderService.deleteAll(member);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -235,5 +235,24 @@ public class OrderServiceTest {
                     () -> assertThat(responses.get(0).getOrderId()).isEqualTo(orderId3)
             );
         }
+
+        @DisplayName("사용자의 모든 주문을 삭제한다")
+        @Test
+        void asdf() {
+            // given
+            final OrderRequest orderRequest1 = new OrderRequest(List.of(1L), 0);
+            final OrderRequest orderRequest2 = new OrderRequest(List.of(2L), 0);
+            final OrderRequest orderRequest3 = new OrderRequest(List.of(3L), 0);
+            final Long orderId1 = orderService.order(member, orderRequest1);
+            final Long orderId2 = orderService.order(member, orderRequest2);
+            final Long orderId3 = orderService.order(member, orderRequest3);
+
+            // when
+            orderService.deleteAll(member);
+            final List<OrderDetailResponse> responses = orderService.getAllOrderDetails(member);
+
+            // then
+            assertThat(responses).hasSize(0);
+        }
     }
 }
