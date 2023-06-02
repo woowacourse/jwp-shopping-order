@@ -93,8 +93,9 @@ public class OrderJdbcRepository implements OrderRepository {
     private Order toOrderDomain(final OrderEntity orderEntity, final List<OrderItemWithProductEntity> orderItemWithProductEntities) {
         return new Order(
                 orderEntity.getId(), orderEntity.getMemberId(),
-                new OrderItems(mapToOrderItems(orderItemWithProductEntities), new DiscountPriceCalculator()
-        ));
+                new OrderItems(mapToOrderItems(orderItemWithProductEntities), new DiscountPriceCalculator()),
+                orderEntity.getCreatedAt()
+        );
     }
 
     private List<OrderItem> mapToOrderItems(final List<OrderItemWithProductEntity> orderItemWithProductEntities) {

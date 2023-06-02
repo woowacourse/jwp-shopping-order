@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.controller.dto.request.OrderRequest;
+import cart.controller.dto.response.OrderResponse;
 import cart.controller.dto.response.OrderThumbnailResponse;
 import cart.domain.CartItem;
 import cart.domain.DiscountPriceCalculator;
@@ -33,21 +34,14 @@ public class OrderService {
     @Transactional
     public long save(final Member member, final OrderRequest request) {
         final List<CartItem> cartItems = cartItemRepository.findByIds(request.getCartItems());
-        checkCartItemsOwner(member, cartItems);
+        validateCartItemsOwner(member, cartItems);
         cartItemRepository.deleteAll(request.getCartItems());
         final Order order = createOrder(member, cartItems);
         validatePaymentAmount(order, request.getPaymentAmount());
         return orderRepository.save(order);
     }
 
-    public List<OrderThumbnailResponse> findByMember(final Member member) {
-        final List<OrderAndMainProductDto> dtos = orderRepository.findByMember(member);
-        return dtos.stream()
-                .map(OrderThumbnailResponse::from)
-                .collect(Collectors.toUnmodifiableList());
-    }
-
-    private void checkCartItemsOwner(final Member member, final List<CartItem> cartItems) {
+    private void validateCartItemsOwner(final Member member, final List<CartItem> cartItems) {
         final boolean isIdEquals = cartItems.stream()
                 .map(CartItem::getMemberId)
                 .allMatch(member::isIdEquals);
@@ -55,13 +49,6 @@ public class OrderService {
             return;
         }
         throw new NotOwnerException();
-    }
-
-    private void validatePaymentAmount(final Order order, final int requestPayment) {
-        if (order.isPaymentAmountEqual(requestPayment)) {
-            return;
-        }
-        throw new PaymentAmountNotEqualException();
     }
 
     private Order createOrder(final Member member, final List<CartItem> cartItems) {
@@ -75,5 +62,32 @@ public class OrderService {
         return cartItems.stream()
                 .map(cartItem -> new OrderItem(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    private void validatePaymentAmount(final Order order, final int requestPayment) {
+        if (order.isPaymentAmountEqual(requestPayment)) {
+            return;
+        }
+        throw new PaymentAmountNotEqualException();
+    }
+
+    public List<OrderThumbnailResponse> findByMember(final Member member) {
+        final List<OrderAndMainProductDto> dtos = orderRepository.findByMember(member);
+        return dtos.stream()
+                .map(OrderThumbnailResponse::from)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public OrderResponse findById(final Member member, final long id) {
+        final Order order = orderRepository.findById(id);
+        validateOrderOwner(member, order);
+        return OrderResponse.from(order);
+    }
+
+    private void validateOrderOwner(final Member member, final Order order) {
+        if (member.isIdEquals(order.getMemberId())) {
+            return;
+        }
+        throw new NotOwnerException();
     }
 }
