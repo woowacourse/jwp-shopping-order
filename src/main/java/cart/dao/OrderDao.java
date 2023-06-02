@@ -6,43 +6,35 @@ import cart.domain.Order;
 import cart.domain.OrderDetail;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Repository
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public OrderDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("orders")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long saveOrder(Order order) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Map<String, Object> params = new HashMap<>();
+        params.put("member_id",order.getMember().getId());
+        params.put("payment",order.getPayment().getPayment().longValue());
+        params.put("discount_point",order.getPoint().getPoint().longValue());
 
-        jdbcTemplate.update(connection -> {
-            final String sql = "INSERT INTO orders (member_id, payment, discount_point) VALUES (?, ?, ?)";
-            PreparedStatement ps = connection.prepareStatement(
-                    sql,
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setLong(1, order.getMember().getId());
-            ps.setLong(2, order.getPayment().getPayment().longValue());
-            ps.setLong(3, order.getPoint().getPoint().longValue());
-
-            return ps;
-        }, keyHolder);
-
-        Long orderId = Long.valueOf(String.valueOf(keyHolder.getKeys().get("id")));
+        Long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
         final String sql = "INSERT INTO order_detail(order_id, product_id, quantity) VALUES (?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
