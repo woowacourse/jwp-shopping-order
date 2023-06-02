@@ -1,4 +1,4 @@
-package cart.application;
+package cart.domain;
 
 import cart.domain.Point;
 

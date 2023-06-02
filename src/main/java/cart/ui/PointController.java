@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.application.PointService;
+import cart.service.PointService;
 import cart.domain.Member;
 import cart.dto.PointResponse;
 import cart.dto.SavingPointResponse;

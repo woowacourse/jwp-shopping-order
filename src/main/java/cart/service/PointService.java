@@ -1,8 +1,9 @@
-package cart.application;
+package cart.service;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.domain.Point;
+import cart.domain.PointEarningPolicy;
 import cart.dto.PointResponse;
 import cart.dto.SavingPointResponse;
 import org.springframework.stereotype.Service;
