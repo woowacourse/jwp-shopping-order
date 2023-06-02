@@ -66,6 +66,24 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void 장바구니에_존재하는_상품을_추가하면_수량을_증가시킨다() {
+        // given
+        Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);
+        Long 치킨_ID = 상품_생성_요청후_상품_ID를_리턴한다(상품_생성_요청_생성("치킨", 10_000, "http://example.com/chicken.jpg"));
+        장바구니_상품_추가_요청(멤버, 치킨_ID);
+
+        // when
+        var 응답 = 장바구니_상품_추가_요청(멤버, 치킨_ID);
+        long 추가된_장바구니_상품_ID = 헤더_ID_값_파싱(응답);
+
+        // then
+        assertAll(
+                () -> assertThat(응답.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(cartItemRepository.findById(추가된_장바구니_상품_ID).getQuantity()).isEqualTo(2)
+        );
+    }
+
+    @Test
     void 잘못된_사용자_정보로_장바구니에_상품을_추가_요청시_실패한다() {
         // given
         Member 멤버 = 멤버를_저장하고_ID를_갖는_멤버를_리턴한다(멤버_엔티티);

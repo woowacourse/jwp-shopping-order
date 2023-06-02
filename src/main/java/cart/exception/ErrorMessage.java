@@ -10,6 +10,7 @@ public enum ErrorMessage {
     INVALID_PRICE(HttpStatus.BAD_REQUEST, "가격은 0 이상이어야 합니다."),
     INVALID_MEMBER_POINT_LESS_THAN_USED_POINT(HttpStatus.BAD_REQUEST, "사용한 포인트는 사용자의 포인트보다 적어야 합니다."),
     INVALID_POINT_MORE_THAN_PRICE(HttpStatus.BAD_REQUEST, "사용할 포인트는 주문 금액보다 클 수 없습니다."),
+    INVALID_(HttpStatus.BAD_REQUEST, "사용할 포인트는 주문 금액보다 클 수 없습니다."),
     UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "비밀번호가 다릅니다."),
     INVALID_CART_ITEM_OWNER(HttpStatus.FORBIDDEN, "사용자의 장바구니 상품이 아닙니다."),
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),

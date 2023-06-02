@@ -40,6 +40,14 @@ public class CartItemRepository {
         return new CartItems(cartItems);
     }
 
+    public CartItem findByMemberAndProduct(Member member, Product product) {
+        CartItemWithMemberAndProductEntity cartItemEntity = cartItemDao.findByMemberIdAndProductId(
+                        member.getId(), product.getId())
+                .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
+
+        return toDomain(cartItemEntity);
+    }
+
     public CartItem findById(Long id) {
         CartItemWithMemberAndProductEntity cartItemWithMemberAndProductEntity = cartItemDao.findById(id)
                 .orElseThrow(() -> new CartItemException(NOT_FOUND_CART_ITEM));
@@ -51,6 +59,10 @@ public class CartItemRepository {
         CartItems cartItems = findByMemberId(member);
 
         return cartItems.getContainedCartItems(cartItemIds);
+    }
+
+    public boolean existCartItem(Member member, Product product) {
+        return cartItemDao.existByMemberIdAndProductId(member.getId(), product.getId());
     }
 
     public void updateQuantity(CartItem cartItem) {

@@ -43,6 +43,12 @@ public class CartItemService {
     @Transactional
     public Long save(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId());
+        if (cartItemRepository.existCartItem(member, product)) {
+            CartItem cartItem = cartItemRepository.findByMemberAndProduct(member, product);
+            updateQuantity(member, cartItem, cartItem.getQuantity() + 1);
+
+            return cartItem.getId();
+        }
 
         return cartItemRepository.save(new CartItem(member, product));
     }
@@ -58,6 +64,19 @@ public class CartItemService {
         }
 
         CartItem updatedCartItem = cartItem.changeQuantity(request.getQuantity());
+        cartItemRepository.updateQuantity(updatedCartItem);
+    }
+
+    @Transactional
+    public void updateQuantity(Member member, CartItem cartItem, int updateQuantity) {
+        cartItem.checkOwner(member);
+
+        if (updateQuantity == 0) {
+            cartItemRepository.deleteById(cartItem.getId());
+            return;
+        }
+
+        CartItem updatedCartItem = cartItem.changeQuantity(updateQuantity);
         cartItemRepository.updateQuantity(updatedCartItem);
     }
 

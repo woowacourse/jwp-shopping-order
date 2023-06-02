@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class CartItemDao {
+    private static final int EXISTED_CART_ITEM = 1;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<CartItemWithMemberAndProductEntity> cartItemEntityRowMapper = (rs, rowNum) -> {
@@ -141,6 +142,39 @@ public class CartItemDao {
                 return orderIds.size();
             }
         });
+    }
+
+    public boolean existByMemberIdAndProductId(Long memberId, Long productId) {
+        String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE member_id = ? AND product_id = ?)";
+        Integer existedCartItem = jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId);
+
+        return existedCartItem == EXISTED_CART_ITEM;
+    }
+
+    public Optional<CartItemWithMemberAndProductEntity> findByMemberIdAndProductId(
+            final Long memberId,
+            final Long productId
+    ) {
+        String sql = "SELECT ci.id AS cart_id, "
+                + "ci.member_id AS cart_member_id, "
+                + "ci.quantity AS cart_quantity, "
+                + "m.id AS member_id, "
+                + "m.email AS member_email, "
+                + "m.point AS member_point, "
+                + "p.id AS product_id, "
+                + "p.name AS product_name, "
+                + "p.price AS product_price, "
+                + "p.image_url AS product_image_url " +
+                "FROM cart_item ci " +
+                "INNER JOIN member m ON ci.member_id = m.id " +
+                "INNER JOIN product p ON ci.product_id = p.id " +
+                "WHERE ci.member_id = ? AND ci.product_id = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartItemEntityRowMapper, memberId, productId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
 
