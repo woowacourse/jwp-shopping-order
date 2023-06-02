@@ -1,6 +1,7 @@
 package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.sql.Timestamp;
@@ -9,10 +10,13 @@ import java.util.Optional;
 
 import cart.dao.OrderDetailDao;
 import cart.dao.OrdersDao;
+import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Price;
 import cart.entity.OrderDetailEntity;
 import cart.entity.OrdersEntity;
+import cart.exception.OrderNotFoundException;
+import cart.exception.OrderOwnerException;
 import cart.fixture.CartItemsFixture;
 import cart.fixture.MemberFixture;
 import cart.fixture.OrderFixture;
@@ -88,6 +92,36 @@ class OrderRepositoryTest {
                 () -> assertThat(result.get(1).getCartItems().getTotalPrice()).isEqualTo(Price.valueOf(65_000)),
                 () -> assertThat(result.get(1).getOrderPoint()).usingRecursiveComparison().isEqualTo(OrderPointFixture.ORDER_POINT1),
                 () -> assertThat(result.get(1).getCreatedAt()).isEqualTo(Timestamp.valueOf("2023-05-31 10:00:00"))
+        );
+    }
+
+    @Sql({"classpath:deleteAll.sql", "classpath:insertOrders.sql", "classpath:insertOrderDetail.sql"})
+    @Test
+    void findByNoExistId() {
+        assertThatThrownBy(() -> orderRepository.findById(MemberFixture.MEMBER, 3L))
+                .isInstanceOf(OrderNotFoundException.class)
+                .hasMessage(new OrderNotFoundException(3L).getMessage());
+    }
+
+    @Sql({"classpath:deleteAll.sql", "classpath:insertOrders.sql", "classpath:insertOrderDetail.sql"})
+    @Test
+    void findByIdNotMine() {
+        final Member invalidMember = new Member(2L, null, null);
+        assertThatThrownBy(() -> orderRepository.findById(invalidMember, 1L))
+                .isInstanceOf(OrderOwnerException.class)
+                .hasMessage(new OrderOwnerException(1L).getMessage());
+    }
+
+    @Sql({"classpath:deleteAll.sql", "classpath:insertOrders.sql", "classpath:insertOrderDetail.sql"})
+    @Test
+    void findById() {
+        final Order result = orderRepository.findById(MemberFixture.MEMBER, 1L);
+        assertAll(
+                () -> assertThat(result.getId()).isEqualTo(1L),
+                () -> assertThat(result.getCartItems()).usingRecursiveComparison().isEqualTo(CartItemsFixture.ORDER1_CARTITEMS),
+                () -> assertThat(result.getCartItems().getTotalPrice()).isEqualTo(Price.valueOf(65_000)),
+                () -> assertThat(result.getOrderPoint()).usingRecursiveComparison().isEqualTo(OrderPointFixture.ORDER_POINT1),
+                () -> assertThat(result.getCreatedAt()).isEqualTo(Timestamp.valueOf("2023-05-31 10:00:00"))
         );
     }
 }

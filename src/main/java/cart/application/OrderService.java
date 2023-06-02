@@ -54,4 +54,9 @@ public class OrderService {
                 .map(OrderResponse::of)
                 .collect(Collectors.toList());
     }
+
+    public OrderResponse getOrderById(final Member member, final Long id) {
+        final Order order = orderRepository.findById(member, id);
+        return OrderResponse.of(order);
+    }
 }

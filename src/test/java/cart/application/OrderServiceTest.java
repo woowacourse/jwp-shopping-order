@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import java.util.List;
@@ -82,10 +83,17 @@ class OrderServiceTest {
     @Test
     void getOrders() {
         given(orderRepository.findByMember(any())).willReturn(List.of(OrderFixture.ORDER1, OrderFixture.ORDER2));
-        final List<OrderResponse> orderResponses = orderService.getOrders(MemberFixture.MEMBER);
+        final List<OrderResponse> result = orderService.getOrders(MemberFixture.MEMBER);
         assertAll(
-                () -> assertThat(orderResponses.get(0)).usingRecursiveComparison().isEqualTo(OrderResponseFixture.ORDER1_RESPONSE),
-                () -> assertThat(orderResponses.get(1)).usingRecursiveComparison().isEqualTo(OrderResponseFixture.ORDER2_RESPONSE)
+                () -> assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(OrderResponseFixture.ORDER1_RESPONSE),
+                () -> assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(OrderResponseFixture.ORDER2_RESPONSE)
         );
+    }
+
+    @Test
+    void getOrderById() {
+        given(orderRepository.findById(any(), anyLong())).willReturn(OrderFixture.ORDER1);
+        final OrderResponse result = orderService.getOrderById(MemberFixture.MEMBER, 1L);
+        assertThat(result).usingRecursiveComparison().isEqualTo(OrderResponseFixture.ORDER1_RESPONSE);
     }
 }

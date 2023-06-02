@@ -14,6 +14,8 @@ import cart.domain.Point;
 import cart.domain.Product;
 import cart.entity.OrderDetailEntity;
 import cart.entity.OrdersEntity;
+import cart.exception.OrderNotFoundException;
+import cart.exception.OrderOwnerException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -94,5 +96,14 @@ public class OrderRepository {
                 Point.valueOf(ordersEntity.getUsedPoint()),
                 Point.valueOf(ordersEntity.getEarnedPoint())
         );
+    }
+
+    public Order findById(final Member member, final Long id) {
+        final OrdersEntity ordersEntity = ordersDao.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
+        final Long ownerId = ordersEntity.getMemberId();
+        if (!ownerId.equals(member.getId())) {
+            throw new OrderOwnerException(id);
+        }
+        return getOrderByOrdersEntity(ordersEntity);
     }
 }
