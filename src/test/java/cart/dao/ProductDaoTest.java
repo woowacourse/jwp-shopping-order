@@ -79,6 +79,21 @@ public class ProductDaoTest extends DaoTest {
     }
 
     @Test
+    void 상품의_수량만_수정한다() {
+        // given
+        long savedId = productDao.insert(dummyProduct);
+
+        int newStock = dummyProduct.getStock() + 1;
+
+        // when
+        productDao.updateStockById(savedId, newStock);
+
+        // then
+        int result = productDao.findById(savedId).getStock();
+        assertThat(result).isEqualTo(newStock);
+    }
+
+    @Test
     void 상품을_삭제한다() {
         // given
         long savedId = productDao.insert(dummyProduct);
