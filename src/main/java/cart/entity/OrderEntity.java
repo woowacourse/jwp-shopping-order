@@ -1,5 +1,6 @@
 package cart.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -8,9 +9,9 @@ public class OrderEntity {
     private Long id;
     private Long memberId;
     private int orderStatusId;
-    private Date createAt;
+    private LocalDate createAt;
 
-    public OrderEntity(Long id, Long memberId, int orderStatusId, Date createAt) {
+    public OrderEntity(Long id, Long memberId, int orderStatusId, LocalDate createAt) {
         this.id = id;
         this.memberId = memberId;
         this.orderStatusId = orderStatusId;
@@ -34,7 +35,7 @@ public class OrderEntity {
         return orderStatusId;
     }
 
-    public Date getCreateAt() {
+    public LocalDate getCreateAt() {
         return createAt;
     }
 

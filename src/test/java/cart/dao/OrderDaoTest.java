@@ -12,6 +12,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -39,6 +42,7 @@ class OrderDaoTest {
         jdbcTemplate.update("insert into member(email, password) values('kong@com', '1234567')");
 
         jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
+        jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
     }
 
     @DisplayName("주문 정보를 조회할 수 있다.")
@@ -53,6 +57,16 @@ class OrderDaoTest {
         );
     }
 
+    @DisplayName("주문 정보를 유저 기반으로 조회할 수 있다.")
+    @Test
+    void findByMemberId() {
+        List<OrderEntity> orderEntities = orderDao.findByMemberId(1L);
+        OrderEntity orderEntity1 = new OrderEntity(1L, 1L, 1, LocalDate.now());
+        OrderEntity orderEntity2 = new OrderEntity(2L, 1L, 1, LocalDate.now());
+
+        assertThat(orderEntities).containsExactlyInAnyOrder(orderEntity1, orderEntity2);
+    }
+
     @DisplayName("주문 정보를 저장할 수 있다.")
     @Test
     void save() {
@@ -60,10 +74,10 @@ class OrderDaoTest {
 
         orderDao.save(orderEntity);
 
-        OrderEntity order = orderDao.findById(2L);
+        OrderEntity order = orderDao.findById(3L);
 
         assertAll(
-                () -> assertThat(order.getId()).isEqualTo(2L),
+                () -> assertThat(order.getId()).isEqualTo(3L),
                 () -> assertThat(order.getMemberId()).isEqualTo(2L),
                 () -> assertThat(order.getOrderStatusId()).isEqualTo(OrderStatus.PENDING.getOrderStatusId())
         );

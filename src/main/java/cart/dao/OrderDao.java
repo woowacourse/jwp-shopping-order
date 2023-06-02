@@ -9,6 +9,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public class OrderDao {
@@ -19,10 +21,14 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public OrderEntity findById(Long orderId) {
         String sql = "select id, member_id, orders_status_id, create_at from orders where id = ?";
         return jdbcTemplate.queryForObject(sql, new OrderRowMapper(), orderId);
+    }
+
+    public List<OrderEntity> findByMemberId(Long memberId) {
+        String sql = "select id, member_id, orders_status_id, create_at from orders where member_id = ?";
+        return jdbcTemplate.query(sql, new OrderRowMapper(), memberId);
     }
 
     public Long save(OrderEntity orderEntity) {
@@ -52,7 +58,7 @@ public class OrderDao {
             long id = rs.getLong("id");
             long memberId = rs.getLong("member_id");
             int orderStatusId = rs.getInt("orders_status_id");
-            Date createAt = rs.getDate("create_at");
+            LocalDate createAt = rs.getTimestamp("create_at").toLocalDateTime().toLocalDate();
 
             return new OrderEntity(id, memberId, orderStatusId, createAt);
         }
