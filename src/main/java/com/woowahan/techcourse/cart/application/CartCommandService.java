@@ -4,7 +4,6 @@ import com.woowahan.techcourse.cart.dao.CartItemDao;
 import com.woowahan.techcourse.cart.domain.CartItem;
 import com.woowahan.techcourse.cart.dto.CartItemQuantityUpdateRequest;
 import com.woowahan.techcourse.cart.dto.CartItemRequest;
-import com.woowahan.techcourse.member.domain.Member;
 import com.woowahan.techcourse.product.dao.ProductDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -22,13 +21,13 @@ public class CartCommandService {
         this.cartItemDao = cartItemDao;
     }
 
-    public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(cartItemRequest.getProductId(), member.getId()));
+    public Long add(long memberId, CartItemRequest cartItemRequest) {
+        return cartItemDao.save(new CartItem(cartItemRequest.getProductId(), memberId));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
+    public void updateQuantity(long memberId, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
+        cartItem.checkOwner(memberId);
 
         if (request.getQuantity() == 0) {
             cartItemDao.deleteById(id);
@@ -39,9 +38,9 @@ public class CartCommandService {
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
+    public void remove(long memberId, Long id) {
         CartItem cartItem = cartItemDao.findById(id);
-        cartItem.checkOwner(member);
+        cartItem.checkOwner(memberId);
 
         cartItemDao.deleteById(id);
     }
