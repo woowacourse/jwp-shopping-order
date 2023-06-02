@@ -1,6 +1,7 @@
 package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
@@ -11,6 +12,9 @@ import cart.domain.Product;
 import cart.domain.ProductStock;
 import cart.domain.Stock;
 import cart.entity.ProductEntity;
+import cart.exception.NotEnoughStockException;
+import cart.exception.ProductNotFoundException;
+import cart.fixture.CartItemsFixture;
 import cart.fixture.ProductEntityFixture;
 import cart.fixture.ProductFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -145,6 +149,51 @@ class ProductRepositoryTest {
                 new Stock(15)
         );
         assertThat(result).isEmpty();
+    }
+
+    @Sql({"classpath:deleteAll.sql", "classpath:insertProduct.sql"})
+    @Test
+    void updateStockWithOrder1() {
+        productRepository.updateStock(CartItemsFixture.ORDER1_CARTITEMS);
+        final List<ProductEntity> result = productDao.findAll();
+        assertAll(
+                () -> assertThat(result.get(0).getStock()).isEqualTo(8),
+                () -> assertThat(result.get(1).getStock()).isEqualTo(7),
+                () -> assertThat(result.get(2).getStock()).isEqualTo(10)
+        );
+    }
+
+    @Sql({"classpath:deleteAll.sql", "classpath:insertProduct.sql"})
+    @Test
+    void updateStockWithOrder2() {
+        productRepository.updateStock(CartItemsFixture.ORDER2_CARTITEMS);
+        final List<ProductEntity> result = productDao.findAll();
+        assertAll(
+                () -> assertThat(result.get(0).getStock()).isEqualTo(6),
+                () -> assertThat(result.get(1).getStock()).isEqualTo(5),
+                () -> assertThat(result.get(2).getStock()).isEqualTo(4)
+        );
+    }
+
+    @Test
+    void updateStockWithNoExistId() {
+        assertThatThrownBy(() -> productRepository.updateStock(CartItemsFixture.ORDER3_CARTITEMS))
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessage(new ProductNotFoundException(4L).getMessage());
+    }
+
+    @Test
+    void updateStockWhenNotEnoughStock1() {
+        assertThatThrownBy(() -> productRepository.updateStock(CartItemsFixture.ORDER4_CARTITEMS))
+                .isInstanceOf(NotEnoughStockException.class)
+                .hasMessage(new NotEnoughStockException(10, 11).getMessage());
+    }
+
+    @Test
+    void updateStockWhenNotEnoughStock2() {
+        assertThatThrownBy(() -> productRepository.updateStock(CartItemsFixture.ORDER5_CARTITEMS))
+                .isInstanceOf(NotEnoughStockException.class)
+                .hasMessage(new NotEnoughStockException(10, 11).getMessage());
     }
 
     @Test

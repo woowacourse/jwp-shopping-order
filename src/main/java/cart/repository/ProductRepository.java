@@ -5,10 +5,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import cart.dao.ProductDao;
+import cart.domain.CartItem;
+import cart.domain.CartItems;
 import cart.domain.Product;
 import cart.domain.ProductStock;
 import cart.domain.Stock;
 import cart.entity.ProductEntity;
+import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -43,6 +46,17 @@ public class ProductRepository {
     public Optional<ProductStock> updateProductStock(final Product product, final Stock stock) {
         final ProductEntity productEntity = new ProductEntity(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), stock.getValue());
         return productDao.update(productEntity).map(ProductEntity::toProductStock);
+    }
+
+    public void updateStock(final CartItems cartItems) {
+        cartItems.getCartItems().forEach(this::updateStock);
+    }
+
+    private void updateStock(final CartItem cartItem) {
+        final Long productId = cartItem.getProduct().getId();
+        final Stock stock = productDao.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId)).toStock();
+        final Stock reducedStock = stock.reduceByOrderQuantity(cartItem.getQuantity());
+        productDao.updateStock(productId, reducedStock);
     }
 
     public void deleteProductById(final Long id) {

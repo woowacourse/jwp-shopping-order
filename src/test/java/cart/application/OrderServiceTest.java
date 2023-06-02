@@ -23,6 +23,7 @@ import cart.fixture.OrderResponseFixture;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
+import cart.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
+    @Mock
+    private ProductRepository productRepository;
     @Mock
     private PointRepository pointRepository;
     @Mock
@@ -43,7 +46,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderService(pointRepository, cartItemRepository, orderRepository);
+        orderService = new OrderService(productRepository, pointRepository, cartItemRepository, orderRepository);
     }
 
     @Test

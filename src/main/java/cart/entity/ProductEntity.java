@@ -36,6 +36,10 @@ public class ProductEntity {
         return new Product(id, name, price, imageUrl);
     }
 
+    public Stock toStock() {
+        return new Stock(stock);
+    }
+
     public Long getId() {
         return id;
     }
