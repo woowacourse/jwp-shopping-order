@@ -2,7 +2,11 @@ package cart.presentation;
 
 import cart.exception.AuthenticationException;
 import cart.exception.IllegalAccessCartException;
+import cart.exception.IllegalUsePointException;
+import cart.exception.InsufficientStockException;
 import cart.exception.MemberNotFoundException;
+import cart.exception.MismatchedTotalFeeException;
+import cart.exception.MismatchedTotalPriceException;
 import cart.exception.ProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +37,26 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(MemberNotFoundException.class)
     public ResponseEntity<String> handleMemberNotFoundException(final MemberNotFoundException e) {
+        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<String> handleInsufficientStockException(final InsufficientStockException e) {
+        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(MismatchedTotalPriceException.class)
+    public ResponseEntity<String> handleMismatchedTotalPriceException(final MismatchedTotalPriceException e) {
+        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(IllegalUsePointException.class)
+    public ResponseEntity<String> handleIllegalUsePointException(final IllegalUsePointException e) {
+        return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(MismatchedTotalFeeException.class)
+    public ResponseEntity<String> handleMismatchedTotalFeeException(final MismatchedTotalFeeException e) {
         return createResponseEntity(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
