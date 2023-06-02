@@ -54,14 +54,15 @@ class OrderDaoTest {
     @Test
     void findByIndexRange() {
         // given
+        Long lastIdx = 0L;
         for (int i = 0; i < 30; i++) {
-            orderDao.insert(Fixture.order1);
+            lastIdx = orderDao.insert(Fixture.order1);
         }
 
         // when
-        final List<OrderEntity> orderEntitiesZero = orderDao.findByIndexRange(1L, 0L);
-        final List<OrderEntity> orderEntitiesTen = orderDao.findByIndexRange(1L, 10L);
-        final List<OrderEntity> orderEntitiesTwenty = orderDao.findByIndexRange(1L, 20L);
+        final List<OrderEntity> orderEntitiesZero = orderDao.findByIndexRange(1L, lastIdx);
+        final List<OrderEntity> orderEntitiesTen = orderDao.findByIndexRange(1L, lastIdx - 9L);
+        final List<OrderEntity> orderEntitiesTwenty = orderDao.findByIndexRange(1L, lastIdx - 19L);
 
         // then
         assertAll(

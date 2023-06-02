@@ -56,5 +56,25 @@ class OrderRepositoryTest {
 
         // then
         assertThat(actual).usingRecursiveComparison().isEqualTo(Fixture.order1);
+        verify(orderDao, times(1)).findById(anyLong());
+        verify(orderItemDao, times(1)).findByOrderId(anyLong());
+    }
+
+    @DisplayName("주문 내역 조회")
+    @Test
+    void findPageByIndex() {
+        // given
+        final List<OrderEntity> orderEntities = List.of(new OrderEntity(1L, 1L, 1000, 900, 100, 100, "2023-05-29 08:55:03"));
+        given(orderDao.findByIndexRange(anyLong(), anyLong())).willReturn(orderEntities);
+        given(orderItemDao.findByOrderId(anyLong())).willReturn(List.of(Fixture.orderItem1));
+
+        // when
+        final List<Order> actual = orderRepository.findPageByIndex(1L, 0L);
+
+        // then
+        assertThat(actual).usingRecursiveComparison().isEqualTo(List.of(Fixture.order1));
+        verify(orderDao, times(1)).findByIndexRange(anyLong(), anyLong());
+        verify(orderItemDao, times(orderEntities.size())).findByOrderId(anyLong());
+
     }
 }

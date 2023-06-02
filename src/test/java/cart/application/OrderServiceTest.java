@@ -5,6 +5,7 @@ import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderRepository;
+import cart.dto.OrderListResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -63,5 +64,21 @@ class OrderServiceTest {
         // then
         assertThat(actual.getId()).isEqualTo(Fixture.order1.getId());
         verify(orderRepository, times(1)).findById(anyLong());
+    }
+
+    @DisplayName("전체 주문 내역을 조회한다")
+    @Test
+    void findPageByIndex() {
+        // given
+        final List<Order> orders = List.of(Fixture.order1);
+        given(orderRepository.findPageByIndex(anyLong(), anyLong())).willReturn(orders);
+
+        // when
+        final OrderListResponse actual = orderService.findPageByIndex(Fixture.memberA, 0L);
+
+        // then
+        assertThat(actual.getOrders().size()).isEqualTo(orders.size());
+        assertThat(actual.getOrders().get(0).getId()).isEqualTo(Fixture.order1.getId());
+        verify(orderRepository, times(1)).findPageByIndex(anyLong(), anyLong());
     }
 }
