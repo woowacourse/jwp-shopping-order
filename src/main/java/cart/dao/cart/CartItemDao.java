@@ -25,7 +25,7 @@ public class CartItemDao {
     private static final RowMapper<CartItem> CART_ITEMS_ROW_MAPPER = (rs, rowNum) -> {
         Long memberId = rs.getLong("member_id");
         String email = rs.getString("email");
-        Long productId = rs.getLong("id");
+        Long productId = rs.getLong("product.id");
         String name = rs.getString("name");
         int price = rs.getInt("price");
         String imageUrl = rs.getString("image_url");
