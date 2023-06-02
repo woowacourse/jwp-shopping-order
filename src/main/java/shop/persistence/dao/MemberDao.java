@@ -68,5 +68,11 @@ public class MemberDao {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public Boolean isExistByName(String name) {
+        String sql = "SELECT EXISTS (SELECT * FROM member WHERE name = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, name);
+    }
 }
 

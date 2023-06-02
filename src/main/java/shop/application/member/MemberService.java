@@ -10,6 +10,7 @@ import shop.domain.event.MemberJoinedEvent;
 import shop.domain.member.Member;
 import shop.domain.repository.MemberRepository;
 import shop.exception.AuthenticationException;
+import shop.exception.ShoppingException;
 import shop.util.Encryptor;
 
 import java.util.List;
@@ -28,6 +29,10 @@ public class MemberService {
 
     @Transactional
     public void join(MemberJoinDto memberDto) {
+        if (memberRepository.isExistMemberByName(memberDto.getName())) {
+            throw new ShoppingException("중복되는 이름입니다. 입력한 회원 이름 : " + memberDto.getName());
+        }
+
         Member member = new Member(memberDto.getName(), memberDto.getPassword());
 
         Long memberId = memberRepository.save(member);

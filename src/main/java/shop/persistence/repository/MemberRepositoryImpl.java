@@ -58,4 +58,9 @@ public class MemberRepositoryImpl implements MemberRepository {
                 new EncryptedPassword(memberEntity.getPassword())
         );
     }
+
+    @Override
+    public boolean isExistMemberByName(String name) {
+        return memberDao.isExistByName(name);
+    }
 }

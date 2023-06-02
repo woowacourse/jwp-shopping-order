@@ -12,4 +12,6 @@ public interface MemberRepository {
     Member findById(Long id);
 
     Member findByName(String name);
+
+    boolean isExistMemberByName(String name);
 }
