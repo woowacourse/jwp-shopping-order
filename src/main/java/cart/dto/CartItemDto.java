@@ -7,7 +7,7 @@ public class CartItemDto {
     private int quantity;
     private ProductDto product;
 
-    private CartItemDto(Long cartItemId, int quantity, ProductDto product) {
+    public CartItemDto(Long cartItemId, int quantity, ProductDto product) {
         this.cartItemId = cartItemId;
         this.quantity = quantity;
         this.product = product;

@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
+import cart.domain.Point;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +20,13 @@ public class MemberApiController {
 
     @PostMapping
     public ResponseEntity<Void> addMember(@RequestBody MemberRequest memberRequest) {
-        Member member = new Member(memberRequest.getEmail(), memberRequest.getPassword());
-        memberDao.addMember(member);
+        if (memberRequest.getPoint() == null) {
+            Member memberWithoutPoint = new Member(memberRequest.getEmail(), memberRequest.getPassword());
+            memberDao.addMemberWithoutPoint(memberWithoutPoint);
+            return ResponseEntity.ok().build();
+        }
+        Member memberWithPoint = new Member(memberRequest.getEmail(), memberRequest.getPassword(), new Point(memberRequest.getPoint()));
+        memberDao.addMemberWithPoint(memberWithPoint);
         return ResponseEntity.ok().build();
     }
 }

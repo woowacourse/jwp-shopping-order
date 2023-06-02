@@ -30,9 +30,14 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void addMember(Member member) {
+    public void addMemberWithoutPoint(Member member) {
         String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+    }
+
+    public void addMemberWithPoint(Member member) {
+        String sql = "INSERT INTO member (email, password, point) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint().getValue());
     }
 
     public void updateMember(Member member) {

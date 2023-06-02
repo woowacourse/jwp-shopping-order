@@ -59,7 +59,7 @@ public class CartItemAcceptanceTest {
     void 장바구니에_상품을_추가한다() {
         // given
         var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        Member member = 유저_생성_요청하고_유저_반환("abc", "1234");
+        Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
         var cartItemRequest = new CartItemRequest(productId);
@@ -76,7 +76,7 @@ public class CartItemAcceptanceTest {
     void 잘못된_사용자_정보로_장바구니에_상품_추가_요청시_실패한다() {
         // given
         var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        유저_생성_요청하고_유저_반환("abc", "1234");
+        Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
         var cartItemRequest = new CartItemRequest(productId);
@@ -93,7 +93,7 @@ public class CartItemAcceptanceTest {
     void 장바구니에_담긴_상품의_수량을_변경한다() {
         // given
         var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        Member member = 유저_생성_요청하고_유저_반환("abc", "1234");
+        Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
         var cartItemRequest = new CartItemRequest(productId);
@@ -111,7 +111,7 @@ public class CartItemAcceptanceTest {
     void 장바구니에_담긴_상품의_수량을_0으로_변경하면_장바구니에서_아이템이_삭제된다() {
         // given
         var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        Member member = 유저_생성_요청하고_유저_반환("abc", "1234");
+        Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
         var cartItemRequest = new CartItemRequest(productId);
@@ -129,8 +129,8 @@ public class CartItemAcceptanceTest {
     void 다른_사용자가_담은_장바구니_상품의_수량을_변경하면_실패한다() {
         // given
         var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        Member member1 = 유저_생성_요청하고_유저_반환("abc", "1234");
-        Member member2 = 유저_생성_요청하고_유저_반환("def", "1234");
+        Member member1 = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
+        Member member2 = 유저_생성_요청하고_유저_반환("def", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
         var cartItemRequest = new CartItemRequest(productId);
@@ -147,7 +147,7 @@ public class CartItemAcceptanceTest {
     void 장바구니에_담긴_상품을_삭제한다() {
         // given
         var productRequest = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
-        Member member = 유저_생성_요청하고_유저_반환("abc", "1234");
+        Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId = 상품_생성하고_아이디_반환(productRequest);
 
         var cartItemRequest = new CartItemRequest(productId);
@@ -166,7 +166,7 @@ public class CartItemAcceptanceTest {
         // given
         var productRequest1 = new ProductRequest("떡볶이", 5000, "http://example.com/tteokbboki.jpg", 30);
         var productRequest2 = new ProductRequest("치킨", 5000, "http://example.com/chicken.jpg", 30);
-        Member member = 유저_생성_요청하고_유저_반환("abc", "1234");
+        Member member = 유저_생성_요청하고_유저_반환("abc", "1234", 0);
         Long productId1 = 상품_생성하고_아이디_반환(productRequest1);
         Long productId2 = 상품_생성하고_아이디_반환(productRequest2);
 
@@ -180,9 +180,7 @@ public class CartItemAcceptanceTest {
 
         // then
         STATUS_CODE를_검증한다(response, 정상_처리);
-        장바구니의_모든_상품_조회_결과를_검증한다(response, List.of(cartItemId1, cartItemId2), List.of(productId1, productId2),
-                List.of(1, 1));
-
+        장바구니의_모든_상품_조회_결과를_검증한다(response, List.of(cartItemId1, cartItemId2), List.of(productId1, productId2), List.of(1, 1));
     }
 
     private void 장바구니의_모든_상품_조회_결과를_검증한다(ExtractableResponse<Response> response,

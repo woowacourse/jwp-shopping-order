@@ -3,10 +3,12 @@ package cart.ui;
 public class MemberRequest {
     private String email;
     private String password;
+    private Integer point;
 
-    public MemberRequest(String email, String password) {
+    public MemberRequest(String email, String password, Integer point) {
         this.email = email;
         this.password = password;
+        this.point = point;
     }
 
     public String getEmail() {
@@ -15,5 +17,9 @@ public class MemberRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 }
