@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Coupon;
 import cart.entity.MemberCouponEntity;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -34,8 +33,8 @@ public class MemberCouponDao {
         }
     }
 
-    public void update(final Coupon usedCoupon, final Long memberId) {
-        final String memberCouponSql = "UPDATE member_coupon SET is_used = ? WHERE coupon_id = ? AND member_id = ?";
-        jdbcTemplate.update(memberCouponSql, usedCoupon.isUsed(), usedCoupon.getId(), memberId);
+    public void update(final MemberCouponEntity coupon) {
+        final String sql = "UPDATE member_coupon SET is_used = ? WHERE coupon_id = ? AND member_id = ?";
+        jdbcTemplate.update(sql, coupon.isUsed(), coupon.getCouponId(), coupon.getMemberId());
     }
 }

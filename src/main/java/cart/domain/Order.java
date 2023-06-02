@@ -6,15 +6,15 @@ public class Order {
 
     private final Long id;
     private final Products products;
-    private final Coupon coupon;
+    private final MemberCoupon coupon;
     private final Amount deliveryAmount;
     private final String address;
 
-    public Order(final Products products, final Coupon coupon, final Amount deliveryAmount, final String address) {
+    public Order(final Products products, final MemberCoupon coupon, final Amount deliveryAmount, final String address) {
         this(null, products, coupon, deliveryAmount, address);
     }
 
-    public Order(final Long id, final Products products, final Coupon coupon, final Amount deliveryAmount,
+    public Order(final Long id, final Products products, final MemberCoupon coupon, final Amount deliveryAmount,
         final String address) {
         this.id = id;
         this.products = products;
@@ -36,7 +36,7 @@ public class Order {
         return products;
     }
 
-    public Coupon getCoupon() {
+    public MemberCoupon getCoupon() {
         return coupon;
     }
 

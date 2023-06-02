@@ -2,8 +2,7 @@ package cart.repository;
 
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
-import cart.domain.Coupon;
-import cart.domain.vo.Amount;
+import cart.domain.MemberCoupon;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import java.util.NoSuchElementException;
@@ -21,18 +20,18 @@ public class JdbcMemberCouponRepository implements MemberCouponRepository {
     }
 
     @Override
-    public Coupon findByCouponIdAndMemberId(final Long couponId, final Long memberId) {
+    public MemberCoupon findByCouponIdAndMemberId(final Long couponId, final Long memberId) {
         final MemberCouponEntity memberCouponEntity = memberCouponDao.findByCouponIdAndMemberId(couponId, memberId)
                 .orElseThrow(NoSuchElementException::new);
         final CouponEntity couponEntity = couponDao.findById(couponId)
                 .orElseThrow(NoSuchElementException::new);
-        return new Coupon(couponId, couponEntity.getName(), Amount.of(couponEntity.getDiscountAmount()),
-                Amount.of(couponEntity.getMinAmount()), memberCouponEntity.isUsed());
+        return new MemberCoupon(memberCouponEntity.getId(), memberId, couponEntity.toDomain(),
+                memberCouponEntity.isUsed());
     }
 
     @Override
-    public void update(final Coupon coupon, final Long memberId) {
-        memberCouponDao.update(coupon, memberId);
-        couponDao.update(coupon);
+    public void update(final MemberCoupon coupon, final Long memberId) {
+        memberCouponDao.update(MemberCouponEntity.from(coupon));
+        couponDao.update(CouponEntity.from(coupon.getCoupon()));
     }
 }

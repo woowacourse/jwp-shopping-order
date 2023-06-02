@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Coupon;
 import cart.entity.CouponEntity;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -34,7 +33,7 @@ public class CouponDao {
         }
     }
 
-    public void update(final Coupon coupon) {
+    public void update(final CouponEntity coupon) {
         final String couponSql = "UPDATE coupon SET name = ?, min_amount = ?, discount_amount = ? WHERE id = ?";
         jdbcTemplate.update(couponSql, coupon.getName(), coupon.getMinAmount(), coupon.getDiscountAmount(),
                 coupon.getId());
