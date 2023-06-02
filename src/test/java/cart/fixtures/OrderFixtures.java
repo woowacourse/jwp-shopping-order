@@ -10,10 +10,7 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.product.Product;
-import cart.dto.OrderCartItemDto;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
-import cart.dto.ProductResponse;
+import cart.dto.*;
 import cart.fixtures.MemberFixtures.Dooly;
 
 public class OrderFixtures {
@@ -86,8 +83,10 @@ public class OrderFixtures {
 
         public static OrderResponse RESPONSE() {
             ProductResponse productResponse1 = CHICKEN.RESPONSE;
+            OrderedProductDto orderedProductDto1 = new OrderedProductDto(productResponse1, Dooly_CartItem1.QUANTITY);
             ProductResponse productResponse2 = SALAD.RESPONSE;
-            return new OrderResponse(ID, CREATED_AT, List.of(productResponse1, productResponse2), TOTAL_PRICE);
+            OrderedProductDto orderedProductDto2 = new OrderedProductDto(productResponse2, Dooly_CartItem2.QUANTITY);
+            return new OrderResponse(ID, CREATED_AT, List.of(orderedProductDto2, orderedProductDto1), TOTAL_PRICE);
         }
     }
 
@@ -117,7 +116,8 @@ public class OrderFixtures {
 
         public static OrderResponse RESPONSE() {
             ProductResponse productResponse1 = PANCAKE.RESPONSE;
-            return new OrderResponse(ID, CREATED_AT, List.of(productResponse1), TOTAL_PRICE);
+            OrderedProductDto orderedProductDto1 = new OrderedProductDto(productResponse1, Dooly_CartItem1.QUANTITY);
+            return new OrderResponse(ID, CREATED_AT, List.of(orderedProductDto1), TOTAL_PRICE);
         }
     }
 }

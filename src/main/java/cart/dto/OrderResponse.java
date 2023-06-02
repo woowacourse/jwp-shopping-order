@@ -8,11 +8,11 @@ public class OrderResponse {
 
     private final Long orderId;
     private final String orderedDateTime;
-    private final List<ProductResponse> products;
+    private final List<OrderedProductDto> products;
     private final int totalPrice;
 
     public OrderResponse(final Long orderId, final LocalDateTime orderedDateTime,
-                         final List<ProductResponse> products, final int totalPrice) {
+                         final List<OrderedProductDto> products, final int totalPrice) {
         this.orderId = orderId;
         this.orderedDateTime = convertWithFormat(orderedDateTime);
         this.products = products;
@@ -31,7 +31,7 @@ public class OrderResponse {
         return orderedDateTime;
     }
 
-    public List<ProductResponse> getProducts() {
+    public List<OrderedProductDto> getProducts() {
         return products;
     }
 

@@ -415,24 +415,140 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     () -> assertThat(jsonPath.getString("orders[0].orderedDateTime")).matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"),
                     () -> assertThat(jsonPath.getInt("orders[0].totalPrice")).isEqualTo(Dooly_Order2.TOTAL_PRICE),
 
-                    () -> assertThat(jsonPath.getLong("orders[0].products[0].id")).isEqualTo(Dooly_Order_Item3.PRODUCT_ID),
-                    () -> assertThat(jsonPath.getString("orders[0].products[0].name")).isEqualTo(Dooly_Order_Item3.NAME),
-                    () -> assertThat(jsonPath.getInt("orders[0].products[0].price")).isEqualTo(Dooly_Order_Item3.PRICE),
-                    () -> assertThat(jsonPath.getString("orders[0].products[0].imageUrl")).isEqualTo(Dooly_Order_Item3.IMAGE_URL),
+                    () -> assertThat(jsonPath.getLong("orders[0].products[0].product.id")).isEqualTo(Dooly_Order_Item3.PRODUCT_ID),
+                    () -> assertThat(jsonPath.getString("orders[0].products[0].product.name")).isEqualTo(Dooly_Order_Item3.NAME),
+                    () -> assertThat(jsonPath.getInt("orders[0].products[0].product.price")).isEqualTo(Dooly_Order_Item3.PRICE),
+                    () -> assertThat(jsonPath.getString("orders[0].products[0].product.imageUrl")).isEqualTo(Dooly_Order_Item3.IMAGE_URL),
+                    () -> assertThat(jsonPath.getInt("orders[0].products[0].quantity")).isEqualTo(Dooly_Order_Item3.QUANTITY),
 
                     () -> assertThat(jsonPath.getLong("orders[1].orderId")).isEqualTo(Dooly_Order1.ID),
                     () -> assertThat(jsonPath.getString("orders[1].orderedDateTime")).matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"),
                     () -> assertThat(jsonPath.getInt("orders[1].totalPrice")).isEqualTo(Dooly_Order1.TOTAL_PRICE),
 
-                    () -> assertThat(jsonPath.getLong("orders[1].products[0].id")).isEqualTo(Dooly_Order_Item2.PRODUCT_ID),
-                    () -> assertThat(jsonPath.getString("orders[1].products[0].name")).isEqualTo(Dooly_Order_Item2.NAME),
-                    () -> assertThat(jsonPath.getInt("orders[1].products[0].price")).isEqualTo(Dooly_Order_Item2.PRICE),
-                    () -> assertThat(jsonPath.getString("orders[1].products[0].imageUrl")).isEqualTo(Dooly_Order_Item2.IMAGE_URL),
+                    () -> assertThat(jsonPath.getLong("orders[1].products[0].product.id")).isEqualTo(Dooly_Order_Item2.PRODUCT_ID),
+                    () -> assertThat(jsonPath.getString("orders[1].products[0].product.name")).isEqualTo(Dooly_Order_Item2.NAME),
+                    () -> assertThat(jsonPath.getInt("orders[1].products[0].product.price")).isEqualTo(Dooly_Order_Item2.PRICE),
+                    () -> assertThat(jsonPath.getString("orders[1].products[0].product.imageUrl")).isEqualTo(Dooly_Order_Item2.IMAGE_URL),
+                    () -> assertThat(jsonPath.getInt("orders[1].products[0].quantity")).isEqualTo(Dooly_Order_Item2.QUANTITY),
 
-                    () -> assertThat(jsonPath.getLong("orders[1].products[1].id")).isEqualTo(Dooly_Order_Item1.PRODUCT_ID),
-                    () -> assertThat(jsonPath.getString("orders[1].products[1].name")).isEqualTo(Dooly_Order_Item1.NAME),
-                    () -> assertThat(jsonPath.getInt("orders[1].products[1].price")).isEqualTo(Dooly_Order_Item1.PRICE),
-                    () -> assertThat(jsonPath.getString("orders[1].products[1].imageUrl")).isEqualTo(Dooly_Order_Item1.IMAGE_URL)
+                    () -> assertThat(jsonPath.getLong("orders[1].products[1].product.id")).isEqualTo(Dooly_Order_Item1.PRODUCT_ID),
+                    () -> assertThat(jsonPath.getString("orders[1].products[1].product.name")).isEqualTo(Dooly_Order_Item1.NAME),
+                    () -> assertThat(jsonPath.getInt("orders[1].products[1].product.price")).isEqualTo(Dooly_Order_Item1.PRICE),
+                    () -> assertThat(jsonPath.getString("orders[1].products[1].product.imageUrl")).isEqualTo(Dooly_Order_Item1.IMAGE_URL),
+                    () -> assertThat(jsonPath.getInt("orders[1].products[1].quantity")).isEqualTo(Dooly_Order_Item1.QUANTITY)
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("주문 상세 조회 시")
+    class showOrder {
+
+        @Test
+        @DisplayName("인증 정보가 없으면 예외가 발생한다.")
+        void throws_when_not_found_authentication() {
+            // when
+            Response response = RestAssured.given().log().all()
+                    .get("/orders/1")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증 정보가 존재하지 않습니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("Authorization 헤더의 값이 Basic으로 시작하지 않으면 예외가 발생한다.")
+        void throws_when_authorization_not_start_basic() {
+            // when
+            Response response = RestAssured.given().log().all()
+                    .header(HttpHeaders.AUTHORIZATION, "NO BASIC")
+                    .get("/orders/1")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("BASIC 인증 정보가 존재하지 않습니다. PREFIX로 BASIC을 넣어주세요.")
+            );
+        }
+
+        @Test
+        @DisplayName("인증된 사용자가 아니면 예외가 발생한다.")
+        void throws_when_not_authentication_user() {
+            // given
+            String email = "notExist@email.com";
+            String password = "notExistPassword";
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(email, password)
+                    .get("/orders/1")
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("인증된 사용자가 아닙니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("주문 ID에 해당하는 주문이 없으면 예외가 발생한다.")
+        void throws_when_order_not_found() {
+            // given
+            Long notExistId = -1L;
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(Dooly.EMAIL, Dooly.PASSWORD)
+                    .get("/orders/" + notExistId)
+                    .then().log().all()
+                    .extract().response();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                    () -> assertThat(response.getBody().asString()).isEqualTo("주문 ID에 해당하는 주문을 찾을 수 없습니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("정상적으로 해당 주문이 조회된다.")
+        void success() {
+            // given
+            Long orderId = Dooly_Order1.ID;
+
+            // when
+            Response response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(Dooly.EMAIL, Dooly.PASSWORD)
+                    .get("/orders/" + orderId)
+                    .then().log().all()
+                    .extract().response();
+            JsonPath jsonPath = response.jsonPath();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+
+                    () -> assertThat(jsonPath.getLong("orderId")).isEqualTo(Dooly_Order1.ID),
+                    () -> assertThat(jsonPath.getString("orderedDateTime")).matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"),
+                    () -> assertThat(jsonPath.getInt("totalPrice")).isEqualTo(Dooly_Order1.TOTAL_PRICE),
+
+                    () -> assertThat(jsonPath.getLong("products[0].product.id")).isEqualTo(Dooly_Order_Item2.PRODUCT_ID),
+                    () -> assertThat(jsonPath.getString("products[0].product.name")).isEqualTo(Dooly_Order_Item2.NAME),
+                    () -> assertThat(jsonPath.getInt("products[0].product.price")).isEqualTo(Dooly_Order_Item2.PRICE),
+                    () -> assertThat(jsonPath.getString("products[0].product.imageUrl")).isEqualTo(Dooly_Order_Item2.IMAGE_URL),
+
+                    () -> assertThat(jsonPath.getLong("products[1].product.id")).isEqualTo(Dooly_Order_Item1.PRODUCT_ID),
+                    () -> assertThat(jsonPath.getString("products[1].product.name")).isEqualTo(Dooly_Order_Item1.NAME),
+                    () -> assertThat(jsonPath.getInt("products[1].product.price")).isEqualTo(Dooly_Order_Item1.PRICE),
+                    () -> assertThat(jsonPath.getString("products[1].product.imageUrl")).isEqualTo(Dooly_Order_Item1.IMAGE_URL)
             );
         }
     }

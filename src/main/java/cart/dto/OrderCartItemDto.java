@@ -2,10 +2,13 @@ package cart.dto;
 
 public class OrderCartItemDto {
 
-    private final Long cartItemId;
-    private final String orderCartItemName;
-    private final int orderCartItemPrice;
-    private final String orderCartItemImageUrl;
+    private Long cartItemId;
+    private String orderCartItemName;
+    private int orderCartItemPrice;
+    private String orderCartItemImageUrl;
+
+    private OrderCartItemDto() {
+    }
 
     public OrderCartItemDto(final Long cartItemId, final String orderCartItemName,
                             final int orderCartItemPrice, final String orderCartItemImageUrl) {

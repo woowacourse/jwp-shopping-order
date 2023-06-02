@@ -1,6 +1,7 @@
 package cart.domain.orderitem;
 
 import cart.domain.order.Order;
+import cart.dto.OrderedProductDto;
 import cart.dto.ProductResponse;
 
 public class OrderItem {
@@ -64,8 +65,9 @@ public class OrderItem {
         return productId;
     }
 
-    public ProductResponse toProductResponse() {
-        return new ProductResponse(productId, name, price, imageUrl);
+    public OrderedProductDto toOrderedProductDto() {
+        ProductResponse productResponse = new ProductResponse(productId, name, price, imageUrl);
+        return new OrderedProductDto(productResponse, quantity);
     }
 
     public Long getOrderId() {

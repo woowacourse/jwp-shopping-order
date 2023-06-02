@@ -15,6 +15,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderItemDao {
 
+    private static final String JOIN_SQL = "SELECT cart_order.member_id, " +
+            "member.email, member.password, member.cash, " +
+            "cart_order.id, cart_order.total_price, cart_order.created_at, " +
+            "order_item.id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, " +
+            "FROM order_item " +
+            "INNER JOIN cart_order ON cart_order.id = order_item.cart_order_id " +
+            "INNER JOIN member ON member.id = cart_order.member_id ";
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<OrderItem> rowMapper = (rs, rowNum) -> {
@@ -58,15 +66,16 @@ public class OrderItemDao {
     }
 
     public List<OrderItem> selectAllByMemberId(Long memberId) {
-        String sql = "SELECT cart_order.member_id, " +
-                "member.email, member.password, member.cash, " +
-                "cart_order.id, cart_order.total_price, cart_order.created_at, " +
-                "order_item.id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, " +
-                "FROM order_item " +
-                "INNER JOIN cart_order ON cart_order.id = order_item.cart_order_id " +
-                "INNER JOIN member ON member.id = cart_order.member_id " +
+        String sql = JOIN_SQL +
                 "WHERE cart_order.member_id = ? " +
                 "ORDER BY order_item.cart_order_id DESC, order_item.product_id DESC";
         return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
+    public List<OrderItem> selectAllByMemberIdAndOrderId(Long memberId, Long orderId) {
+        String sql = JOIN_SQL +
+                "WHERE cart_order.member_id = ? AND order_item.cart_order_id = ? " +
+                "ORDER BY order_item.product_id DESC";
+        return jdbcTemplate.query(sql, rowMapper, memberId, orderId);
     }
 }

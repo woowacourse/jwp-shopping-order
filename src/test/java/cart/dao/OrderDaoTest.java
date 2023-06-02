@@ -36,4 +36,24 @@ class OrderDaoTest {
         // then
         assertThat(insertedOrder).isNotNull();
     }
+
+    @Test
+    @DisplayName("주문 ID에 해당하는 행이 없으면 TRUE를 반환한다.")
+    void isNotExistById_true() {
+        // given
+        Long notExistId = -1L;
+
+        // when, then
+        assertThat(orderDao.isNotExistById(notExistId)).isTrue();
+    }
+
+    @Test
+    @DisplayName("주문 ID에 해당하는 행이 없으면 FALSE를 반환한다.")
+    void isNotExistById_false() {
+        // given
+        Long orderId = Dooly_Order1.ID;
+
+        // when, then
+        assertThat(orderDao.isNotExistById(orderId)).isFalse();
+    }
 }

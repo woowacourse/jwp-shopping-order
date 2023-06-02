@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import cart.domain.order.Order;
 import cart.dto.OrderResponse;
-import cart.dto.ProductResponse;
+import cart.dto.OrderedProductDto;
 
 public class OrderItems {
 
@@ -22,7 +22,7 @@ public class OrderItems {
         List<OrderResponse> orderResponses = new ArrayList<>();
         List<Long> orderIds = getOrderIds();
         for (Long orderId : orderIds) {
-            addOrderResponse(orderResponses, orderId);
+            orderResponses.add(getOrderResponse(orderId));
         }
         return orderResponses;
     }
@@ -35,15 +35,15 @@ public class OrderItems {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private void addOrderResponse(List<OrderResponse> orderResponses, Long orderId) {
+    public OrderResponse getOrderResponse(Long orderId) {
         List<OrderItem> filteredOrderItems = getSameOrderIdFilteredOrderItems(orderId);
         OrderItem fisrtOrderItem = filteredOrderItems.get(0);
         Order order = fisrtOrderItem.getOrder();
         Long id = order.getId();
         LocalDateTime orderedDateTime = order.getCreatedAt();
         int totalPrice = order.getTotalPrice();
-        List<ProductResponse> products = getProductResponses(filteredOrderItems);
-        orderResponses.add(new OrderResponse(id, orderedDateTime, products, totalPrice));
+        List<OrderedProductDto> orderedProducts = getOrderedProductDto(filteredOrderItems);
+        return new OrderResponse(id, orderedDateTime, orderedProducts, totalPrice);
     }
 
     private List<OrderItem> getSameOrderIdFilteredOrderItems(Long orderId) {
@@ -52,10 +52,10 @@ public class OrderItems {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private List<ProductResponse> getProductResponses(List<OrderItem> filteredOrderItems) {
+    private List<OrderedProductDto> getOrderedProductDto(List<OrderItem> filteredOrderItems) {
         return filteredOrderItems.stream()
-                .map(OrderItem::toProductResponse)
-                .sorted(Comparator.comparing(ProductResponse::getId).reversed())
+                .map(OrderItem::toOrderedProductDto)
+                .sorted(Comparator.comparing(OrderedProductDto::getProductId).reversed())
                 .collect(Collectors.toUnmodifiableList());
     }
 }

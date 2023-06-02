@@ -30,4 +30,9 @@ public class OrderDao {
         long insertedId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return new Order(insertedId, order.getMember(), order.getTotalPrice(), order.getCreatedAt());
     }
+
+    public Boolean isNotExistById(Long id) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM cart_order WHERE id = ?)";
+        return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
 }

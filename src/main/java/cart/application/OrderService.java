@@ -14,6 +14,7 @@ import cart.domain.order.Order;
 import cart.domain.orderitem.OrderItem;
 import cart.domain.orderitem.OrderItems;
 import cart.dto.*;
+import cart.exception.OrderNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,5 +60,18 @@ public class OrderService {
         OrderItems orderItems = new OrderItems(orderItemDao.selectAllByMemberId(findMember.getId()));
         List<OrderResponse> orderResponses = orderItems.toOrderResponses();
         return new OrdersResponse(orderResponses);
+    }
+
+    public OrderResponse findOrder(AuthMember authMember, Long orderId) {
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
+        checkOrderExist(orderId);
+        OrderItems orderItems = new OrderItems(orderItemDao.selectAllByMemberIdAndOrderId(findMember.getId(), orderId));
+        return orderItems.getOrderResponse(orderId);
+    }
+
+    private void checkOrderExist(Long orderId) {
+        if (orderDao.isNotExistById(orderId)) {
+            throw new OrderNotFoundException("주문 ID에 해당하는 주문을 찾을 수 없습니다.");
+        }
     }
 }
