@@ -3,7 +3,9 @@ package cart.domain;
 import cart.exception.InvalidPointException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Order {
     private final Long id;
@@ -80,5 +82,16 @@ public class Order {
 
     public Member getMember() {
         return member;
+    }
+
+    public int countTotalAmount() {
+        return orderedProducts.keySet().size();
+    }
+
+    public List<String> getProductNames() {
+        return orderedProducts.keySet()
+                .stream()
+                .map(Product::getName)
+                .collect(Collectors.toList());
     }
 }

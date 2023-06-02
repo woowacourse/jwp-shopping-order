@@ -35,8 +35,11 @@ public class PointDao {
     }
 
     public void updatePoints(final PointEntity pointEntity) {
-        final String sql = "UPDATE point SET point_amount = :point_amount WHERE member_id = :id;";
-        final BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(pointEntity);
+        final String sql = "UPDATE point SET point_amount = :point_amount WHERE member_id = :member_id;";
+        final Map<String, ? extends Number> parameters = Map.of(
+                "point_amount", pointEntity.getPointAmount(),
+                "member_id", pointEntity.getMemberId()
+        );
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 }

@@ -33,4 +33,10 @@ public class ControllerExceptionHandler {
         logger.warn(exception.getMessage(), exception);
         return ResponseEntity.status(FORBIDDEN).build();
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Void> handleAllException(Exception exception) {
+        logger.error(exception.getMessage(), exception);
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
+    }
 }

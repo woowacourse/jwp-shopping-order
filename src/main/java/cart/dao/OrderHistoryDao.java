@@ -20,16 +20,23 @@ public class OrderHistoryDao {
             resultSet.getLong("member_id"),
             resultSet.getInt("original_price"),
             resultSet.getInt("used_point"),
-            resultSet.getInt("total_price")
+            resultSet.getInt("order_price")
     );
     private final SimpleJdbcInsert insertOrderHistory;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public OrderHistoryDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.insertOrderHistory = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_history")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public List<OrderHistoryEntity> findAllOrderHistories() {
+        final String sql = "SELECT * FROM order_history";
+        return jdbcTemplate.query(sql, ORDER_HISTORY_ENTITY_ROW_MAPPER);
     }
 
     public OrderHistoryEntity insert(final OrderHistoryEntity entity) {
@@ -40,11 +47,11 @@ public class OrderHistoryDao {
                 entity.getMemberId(),
                 entity.getOriginalPrice(),
                 entity.getUsedPoint(),
-                entity.getTotalPrice()
+                entity.getOrderPrice()
         );
     }
 
-    public List<OrderHistoryEntity> findByMemberId(final Long memberId) {
+    public List<OrderHistoryEntity> findOrderHistoriesByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM order_history WHERE member_id = :member_id";
         final Map<String, Long> parameter = Map.of("member_id", memberId);
         return namedParameterJdbcTemplate.query(sql, parameter, ORDER_HISTORY_ENTITY_ROW_MAPPER);

@@ -1,5 +1,7 @@
 package cart.dto.response;
 
+import java.util.List;
+
 public class OrderHistoryResponse {
 
     private final Long orderId;
@@ -17,6 +19,21 @@ public class OrderHistoryResponse {
         this.totalPrice = totalPrice;
         this.totalAmount = totalAmount;
         this.previewName = previewName;
+    }
+
+    public static OrderHistoryResponse from(
+            final Long orderId,
+            final int totalPrice,
+            final int totalAmount,
+            final List<String> productNames
+    ) {
+        final String previewName = productNames.get(0);
+        return new OrderHistoryResponse(
+                orderId,
+                totalPrice,
+                totalAmount,
+                previewName
+        );
     }
 
     public Long getOrderId() {

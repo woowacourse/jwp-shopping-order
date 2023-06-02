@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
@@ -23,8 +25,17 @@ public class OrderRepository {
         this.orderProductDao = orderProductDao;
     }
 
+    public List<OrderHistoryEntity> findAll(){
+        return orderHistoryDao.findAllOrderHistories();
+    }
+
     public long createOrderHistory(final Member member, final int totalPrice, final int usedPoint, final int orderPrice) {
-        final OrderHistoryEntity entity = new OrderHistoryEntity(member.getId(), totalPrice, usedPoint, orderPrice);
+        final OrderHistoryEntity entity = new OrderHistoryEntity(
+                member.getId(),
+                totalPrice,
+                usedPoint,
+                orderPrice
+        );
         final OrderHistoryEntity savedEntity = orderHistoryDao.insert(entity);
         return savedEntity.getId();
     }
@@ -36,19 +47,45 @@ public class OrderRepository {
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                quantity);
+                quantity
+        );
         final OrderProductEntity savedEntity = orderProductDao.insert(entity);
         return savedEntity.getId();
     }
 
-    public List<Order> findOrdersByMemberId(final Member member) {
-        final List<OrderHistoryEntity> orderHistoryEntities = orderHistoryDao.findByMemberId(member.getId());
+    public List<Long> findOrderIdsOfMember(final Member member) {
+        return orderHistoryDao.findOrderHistoriesByMemberId(member.getId())
+                .stream()
+                .map(OrderHistoryEntity::getId)
+                .collect(Collectors.toList());
+    }
+
+    public List<Order> findOrdersOfMember(final Member member) {
+        final List<OrderHistoryEntity> orderHistoryEntities = orderHistoryDao.findOrderHistoriesByMemberId(member.getId());
 
         final List<Order> orders = new ArrayList<>();
-        for (final OrderHistoryEntity orderHistoryEntity : orderHistoryEntities) {
-            final List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(orderHistoryEntity.getId());
+
+        for (final OrderHistoryEntity orderHistory : orderHistoryEntities) {
+            final List<OrderProductEntity> products = orderProductDao.findByOrderId(orderHistory.getId());
+            final Map<Product, Integer> orderedProducts = products.stream()
+                    .collect(Collectors.toMap(
+                            orderProduct -> new Product(
+                                    orderProduct.getProductId(),
+                                    orderProduct.getName(),
+                                    orderProduct.getPrice(),
+                                    orderProduct.getImageUrl()
+                            ),
+                            OrderProductEntity::getQuantity));
+
+            final Order order = new Order(
+                    orderHistory.getId(),
+                    orderHistory.getUsedPoint(),
+                    orderedProducts,
+                    member
+            );
+            orders.add(order);
         }
 
-        return null;
+        return orders;
     }
 }
