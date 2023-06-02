@@ -7,6 +7,7 @@ import cart.domain.coupon.CouponRepository;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderRepository;
+import cart.domain.order.Quantity;
 import cart.exception.AlreadyUsedCouponException;
 import cart.service.dto.OrderRequest;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class OrderService {
         cartItemRepository.deleteAllByIds(request.getCartItemIds());
 
         final List<OrderItem> orderItems = cartItems.getCartItems().stream()
-                .map(it -> new OrderItem(it.getProduct(), it.getQuantity()))
+                .map(it -> new OrderItem(it.getProduct(), Quantity.from(it.getQuantity())))
                 .collect(toList());
 
         final Order order = new Order(orderItems, cartItems.getMember(), coupon, request.getPrice());

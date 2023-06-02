@@ -10,6 +10,7 @@ import cart.domain.Product;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderRepository;
+import cart.domain.order.Quantity;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -37,7 +38,7 @@ public class OrderJdbcRepository implements OrderRepository {
         final Long orderId = orderDao.save(orderEntity);
 
         final List<OrderItemEntity> orderItemEntities = order.getOrderItems().stream()
-                .map(orderItem -> new OrderItemEntity(orderItem.getProduct().getId(), orderId, orderItem.getQuantity()))
+                .map(orderItem -> new OrderItemEntity(orderItem.getProduct().getId(), orderId, orderItem.getQuantity().getQuantity()))
                 .collect(toList());
 
         orderItemDao.saveAll(orderItemEntities);
@@ -46,10 +47,10 @@ public class OrderJdbcRepository implements OrderRepository {
 
     private static OrderEntity mapToOrderEntity(final Order order) {
         if (ObjectUtils.isEmpty(order.getCoupon())) {
-            return new OrderEntity(order.getPrice(), null, order.getMember().getId());
+            return new OrderEntity(order.getPrice().getPrice(), null, order.getMember().getId());
         }
 
-        return new OrderEntity(order.getPrice(), order.getCoupon().getCouponTypeId(), order.getMember().getId());
+        return new OrderEntity(order.getPrice().getPrice(), order.getCoupon().getCouponTypeId(), order.getMember().getId());
     }
 
     @Override
@@ -80,6 +81,7 @@ public class OrderJdbcRepository implements OrderRepository {
     private OrderItem createOrderItem(final OrderResultMap orderResultMap) {
         final ProductEntity productEntity = orderResultMap.getProductEntity();
         final Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
-        return new OrderItem(orderResultMap.getOrderItemId(), product, orderResultMap.getQuantity());
+        final Quantity quantity = Quantity.from(orderResultMap.getQuantity());
+        return new OrderItem(orderResultMap.getOrderItemId(), product, quantity);
     }
 }

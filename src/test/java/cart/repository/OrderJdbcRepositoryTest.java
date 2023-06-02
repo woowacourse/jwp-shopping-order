@@ -9,6 +9,7 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderRepository;
+import cart.domain.order.Quantity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +55,8 @@ class OrderJdbcRepositoryTest {
     private Order createOrderWithCoupon(final Coupon coupon) {
         final Product chicken = productDao.getProductById(1L);
         final Product dessert = productDao.getProductById(2L);
-        final OrderItem chickenOrderItem = new OrderItem(chicken, 1);
-        final OrderItem desertOrderItem = new OrderItem(dessert, 1);
+        final OrderItem chickenOrderItem = new OrderItem(chicken, Quantity.from(1));
+        final OrderItem desertOrderItem = new OrderItem(dessert, Quantity.from(1));
         return new Order(List.of(chickenOrderItem, desertOrderItem), member, coupon, chicken.getPrice() + dessert.getPrice());
     }
 

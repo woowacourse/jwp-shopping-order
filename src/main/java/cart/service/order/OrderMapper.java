@@ -21,10 +21,10 @@ public class OrderMapper {
                 .map(this::createOrderItem)
                 .collect(toList());
 
-        return new OrderResponse(order.getId(), orderItemResponses, Date.from(order.getDate().atZone(ZoneId.systemDefault()).toInstant()), order.getPrice());
+        return new OrderResponse(order.getId(), orderItemResponses, Date.from(order.getDate().atZone(ZoneId.systemDefault()).toInstant()), order.getPrice().getPrice());
     }
 
     public OrderItemResponse createOrderItem(final OrderItem orderItem) {
-        return new OrderItemResponse(orderItem.getId(), orderItem.getQuantity(), ProductResponse.from(orderItem));
+        return new OrderItemResponse(orderItem.getId(), orderItem.getQuantity().getQuantity(), ProductResponse.from(orderItem));
     }
 }

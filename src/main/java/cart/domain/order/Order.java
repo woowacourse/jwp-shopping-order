@@ -10,11 +10,11 @@ import java.util.List;
 public class Order {
 
     private final Long id;
-    private final List<OrderItem> orderItems;
+    private final OrderItems orderItems;
     private final Member member;
     @Nullable
     private final Coupon coupon;
-    private final int price;
+    private final Price price;
     private final LocalDateTime date;
 
     public Order(final List<OrderItem> orderItems, final Member member, final Coupon coupon, final int price) {
@@ -23,10 +23,10 @@ public class Order {
 
     public Order(final Long id, final List<OrderItem> orderItems, final Member member, final Coupon coupon, final int price, final LocalDateTime date) {
         this.id = id;
-        this.orderItems = orderItems;
+        this.orderItems = OrderItems.from(orderItems);
         this.member = member;
         this.coupon = coupon;
-        this.price = price;
+        this.price = Price.from(price);
         this.date = date;
     }
 
@@ -35,18 +35,19 @@ public class Order {
     }
 
     public List<OrderItem> getOrderItems() {
-        return orderItems;
+        return orderItems.getOrderItems();
     }
 
     public Member getMember() {
         return member;
     }
 
+    @Nullable
     public Coupon getCoupon() {
         return coupon;
     }
 
-    public int getPrice() {
+    public Price getPrice() {
         return price;
     }
 

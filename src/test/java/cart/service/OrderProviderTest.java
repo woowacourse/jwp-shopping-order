@@ -7,6 +7,7 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderRepository;
+import cart.domain.order.Quantity;
 import cart.service.order.OrderMapper;
 import cart.service.order.OrderProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,8 +42,8 @@ public class OrderProviderTest {
         final Member member = new Member(1L, "a@a.com", "1234");
         final Product chicken = new Product(1L, "치킨", 10000, "imgUrl");
         final Product dessert = new Product(1L, "desert", 5000, "imgUrl");
-        final OrderItem chickenOrderItem = new OrderItem(chicken, 1);
-        final OrderItem desertOrderItem = new OrderItem(dessert, 1);
+        final OrderItem chickenOrderItem = new OrderItem(chicken, Quantity.from(1));
+        final OrderItem desertOrderItem = new OrderItem(dessert, Quantity.from(1));
         final Coupon coupon = new Coupon(1L, 1L, "1000원 할인 쿠폰", "1000원이 할인 됩니다.", 1000, false);
 
         final Order order = new Order(List.of(chickenOrderItem, desertOrderItem), member, coupon, chicken.getPrice() + dessert.getPrice());
