@@ -34,7 +34,7 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderItemDto>> showOrderByMember(Member member, @PathVariable Long orderId) {
+    public ResponseEntity<List<OrderItemDto>> showOrderByMember(Member member) {
         List<OrderItemDto> orderByMember = orderService.findOrderByMember(member);
         return ResponseEntity.ok().body(orderByMember);
     }
