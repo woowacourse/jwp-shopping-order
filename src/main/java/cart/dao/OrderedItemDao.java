@@ -18,7 +18,8 @@ public class OrderedItemDao {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(dataSource)
                 .withTableName("ordered_item")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("product_id", "order_id", "quantity");
     }
 
     public Long save(Long productId, Long orderId, Integer quantity) {

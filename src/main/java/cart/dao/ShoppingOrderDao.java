@@ -4,17 +4,13 @@ import cart.domain.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Repository
 public class ShoppingOrderDao {
@@ -39,26 +35,18 @@ public class ShoppingOrderDao {
         this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(dataSource)
                 .withTableName("shopping_order")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("member_id", "ordered_at", "used_point");
     }
 
     public Long save(Order order) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO shopping_order (member_id, ordered_at, used_point) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
+        Map<String, Object> params = new HashMap<>();
+        params.put("member_id", order.getMember().getId());
+        params.put("ordered_at", order.getOrderedAt());
+        params.put("used_point", order.getUsedPoint().getValue());
 
-            ps.setLong(1, order.getMember().getId());
-            ps.setTimestamp(2, Timestamp.valueOf(order.getOrderedAt()));
-            ps.setLong(3, order.getUsedPoint().getValue());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return insertAction.executeAndReturnKey(params).longValue();
     }
 
     public List<OrderResponseEntity> findAll(Long id) {
