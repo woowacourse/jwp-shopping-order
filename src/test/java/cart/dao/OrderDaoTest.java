@@ -37,15 +37,10 @@ class OrderDaoTest extends DaoTestConfig {
     @BeforeEach
     void setUp() {
         orderDao = new OrderDao(jdbcTemplate);
-        OrderItemDao orderItemDao = new OrderItemDao(jdbcTemplate);
-        MemberDao memberDao = new MemberDao(jdbcTemplate);
-        ProductDao productDao = new ProductDao(jdbcTemplate);
-        CartItemDao cartItemDao = new CartItemDao(jdbcTemplate);
-
-        memberDaoFixture = new MemberDaoFixture(memberDao);
-        productDaoFixture = new ProductDaoFixture(productDao);
-        cartItemDaoFixture = new CartItemDaoFixture(cartItemDao);
-        orderItemDaoFixture = new OrderItemDaoFixture(orderItemDao);
+        memberDaoFixture = new MemberDaoFixture( new MemberDao(jdbcTemplate));
+        productDaoFixture = new ProductDaoFixture(new ProductDao(jdbcTemplate));
+        cartItemDaoFixture = new CartItemDaoFixture(new CartItemDao(jdbcTemplate));
+        orderItemDaoFixture = new OrderItemDaoFixture( new OrderItemDao(jdbcTemplate));
     }
 
     @Test

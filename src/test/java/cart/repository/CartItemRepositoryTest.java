@@ -19,17 +19,18 @@ class CartItemRepositoryTest extends RepositoryTestConfig {
 
     CartItemRepository cartItemRepository;
 
+    Member 회원;
+    Product 계란;
+
     @BeforeEach
     void setUp() {
         cartItemRepository = new CartItemRepository(cartItemDao);
+        회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
+        계란 = productDaoFixture.상품을_등록한다("계란", 1000);
     }
 
     @Test
     void 장바구니_상품을_저장한다() {
-        // given
-        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
-        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
-
         // when
         Long 장바구니_상품_식별자값 = cartItemRepository.saveCartItem(장바구니_상품_엔티티(계란.getId(), 회원.getId(), 10));
 
@@ -42,9 +43,6 @@ class CartItemRepositoryTest extends RepositoryTestConfig {
     @Test
     void 장바구니_상품_식별자값을_통해_장바구니_상품을_단건_조회한다() {
         // given
-        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
-        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
-
         Long 장바구니_상품_식별자값 = cartItemRepository.saveCartItem(장바구니_상품_엔티티(계란.getId(), 회원.getId(), 10));
 
         // when
@@ -58,9 +56,6 @@ class CartItemRepositoryTest extends RepositoryTestConfig {
     @Test
     void 장바구니_상품_식별자값_목록을_통해_장바구니_상품_목록을_조회한다() {
         // given
-        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
-        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
-
         Long 장바구니_상품_식별자값 = cartItemRepository.saveCartItem(장바구니_상품_엔티티(계란.getId(), 회원.getId(), 10));
 
         // when
@@ -76,9 +71,6 @@ class CartItemRepositoryTest extends RepositoryTestConfig {
     @Test
     void 회원_식별자값을_통해_장바구니_상품_목록을_조회한다() {
         // given
-        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
-        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
-
         Long 장바구니_상품_식별자값 = cartItemRepository.saveCartItem(장바구니_상품_엔티티(계란.getId(), 회원.getId(), 10));
 
         // when
@@ -94,9 +86,6 @@ class CartItemRepositoryTest extends RepositoryTestConfig {
     @Test
     void 장바구니_수량을_수정할_때_장바구니_수량이_0일_경우_삭제한다() {
         // given
-        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
-        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
-
         Long 장바구니_상품_식별자값 = cartItemRepository.saveCartItem(장바구니_상품_엔티티(계란.getId(), 회원.getId(), 10));
 
         // when
@@ -110,9 +99,6 @@ class CartItemRepositoryTest extends RepositoryTestConfig {
     @Test
     void 장바구니_수량을_수정할_때_장바구니_수량이_1이상일_경우_수정한다() {
         // given
-        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
-        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
-
         Long 장바구니_상품_식별자값 = cartItemRepository.saveCartItem(장바구니_상품_엔티티(계란.getId(), 회원.getId(), 10));
 
         // when

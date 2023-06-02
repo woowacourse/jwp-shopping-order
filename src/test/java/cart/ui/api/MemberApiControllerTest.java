@@ -36,11 +36,11 @@ class MemberApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("point").description("회원 보유 포인트")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .log().all()
                 .auth().preemptive().basic(USERNAME, PASSWORD)
                 .get("/members")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(OK.value());
     }

@@ -24,19 +24,23 @@ class OrderRepositoryTest extends RepositoryTestConfig {
 
     OrderRepository orderRepository;
 
+    Member 회원;
+    Product 계란;
+    CartItem 장바구니_계란;
+    CartItems 장바구니_상품_목록;
+
     @BeforeEach
     void setUp() {
         orderRepository = new OrderRepository(orderDao, orderItemDao);
+        회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
+        계란 = productDaoFixture.상품을_등록한다("계란", 1000);
+        장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
+        장바구니_상품_목록 = 장바구니_상품_목록(List.of(장바구니_계란));
     }
 
     @Test
     void 주문과_주문_상품_목록을_저장한다() {
         // given
-        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
-        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
-        CartItem 장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
-        CartItems 장바구니_상품_목록 = 장바구니_상품_목록(List.of(장바구니_계란));
-
         Order 주문 = new Order(회원, 장바구니_상품_목록, 포인트("1000"));
 
         // when
@@ -51,12 +55,8 @@ class OrderRepositoryTest extends RepositoryTestConfig {
     @Test
     void 회원의_주문을_조회한다() {
         // given
-        Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
-        Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
-        CartItem 장바구니_계란 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
-        CartItems 장바구니_상품_목록 = 장바구니_상품_목록(List.of(장바구니_계란));
-
         Order 주문 = new Order(회원, 장바구니_상품_목록, 포인트("1000"));
+
         Long 주문_식별자값 = orderRepository.saveOrder(주문);
 
         // when

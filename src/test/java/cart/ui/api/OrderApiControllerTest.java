@@ -58,12 +58,12 @@ class OrderApiControllerTest extends ControllerTestConfig {
                                 headerWithName(LOCATION).description("주문 식별자값")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .log().all()
                 .auth().preemptive().basic(회원.getEmail(), 회원.getPassword())
                 .body(new OrderRequest(List.of(장바구니_상품.getId()), 1000))
                 .post("/orders")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -92,12 +92,12 @@ class OrderApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("createdAt").description("주문 시간")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .log().all()
                 .auth().preemptive().basic(회원.getEmail(), 회원.getPassword())
                 .pathParam("id", 주문_식별자값)
                 .get("/orders/{id}")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -120,11 +120,11 @@ class OrderApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("[].orderProducts.[].totalPrice").description("주문한 해당 상품의 총금액 (수량 * 금액)")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
-                .when()
+        .when()
                 .log().all()
                 .auth().preemptive().basic(회원.getEmail(), 회원.getPassword())
                 .get("/orders")
-                .then()
+        .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
