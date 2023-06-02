@@ -82,7 +82,7 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public OrderDetailResponse findOrderDetailById(Member member, final Long id) {
+    public OrderDetailResponse findOrderDetailById(final Member member, final Long id) {
         final Order order = orderRepository.findById(id, member);
         return OrderDetailResponse.from(order);
     }

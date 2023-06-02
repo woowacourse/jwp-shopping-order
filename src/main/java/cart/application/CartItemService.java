@@ -29,14 +29,14 @@ public class CartItemService {
     }
 
     @Transactional
-    public Long save(Member member, CartItemRequest cartItemRequest) {
+    public Long save(final Member member, final CartItemRequest cartItemRequest) {
         final Product product = productRepository.findById(cartItemRequest.getProductId());
         final CartItem cartItem = new CartItem(member, product);
         return cartItemRepository.save(cartItem);
     }
 
-    public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
+    public List<CartItemResponse> findByMember(final Member member) {
+        final List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
 
         return cartItems.stream()
                 .map(CartItemResponse::of)
@@ -44,8 +44,8 @@ public class CartItemService {
     }
 
     @Transactional
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemRepository.findById(id);
+    public void updateQuantity(final Member member, final Long id, final CartItemQuantityUpdateRequest request) {
+        final CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -58,7 +58,7 @@ public class CartItemService {
     }
 
     @Transactional
-    public void deleteById(Member member, Long id) {
+    public void deleteById(final Member member, final Long id) {
         CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
         cartItemRepository.deleteById(id);

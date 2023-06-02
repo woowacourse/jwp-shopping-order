@@ -36,7 +36,7 @@ public class OrderItemDao {
         jdbcTemplate.executeBatch(sqlParameterSources);
     }
 
-    public List<OrderItemEntity> findByOrderId(Long orderId) {
+    public List<OrderItemEntity> findByOrderId(final Long orderId) {
         final String sql = "SELECT * FROM ordered_item WHERE order_id = ?";
         try {
             return jdbcTemplate.getJdbcTemplate().query(sql, orderItemMapper(), orderId);

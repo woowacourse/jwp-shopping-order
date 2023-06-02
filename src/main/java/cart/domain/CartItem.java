@@ -2,7 +2,7 @@ package cart.domain;
 
 public class CartItem extends Item {
 
-    public CartItem(Member member, Product product) {
+    public CartItem(final Member member, final Product product) {
         super(null, 1, product, member);
     }
 

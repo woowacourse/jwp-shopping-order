@@ -45,8 +45,8 @@ public class CartItemDao {
         }
     }
 
-    public Optional<CartItemEntity> findById(Long id) {
-        String sql = "SELECT c.id as id, "
+    public Optional<CartItemEntity> findById(final Long id) {
+        final String sql = "SELECT c.id as id, "
                 + "c.member_id as member_id, "
                 + "m.email as member_email, "
                 + "m.password as member_password, "
@@ -67,17 +67,17 @@ public class CartItemDao {
         }
     }
 
-    public Long save(CartItemEntity cartItemEntity) {
+    public Long save(final CartItemEntity cartItemEntity) {
         return jdbcTemplate.executeAndReturnKey(new BeanPropertySqlParameterSource(cartItemEntity)).longValue();
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void deleteById(final Long id) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.getJdbcTemplate().update(sql, id);
     }
 
-    public void update(CartItemEntity cartItemEntity) {
-        String sql = "UPDATE cart_item SET member_id = ?, product_id = ? ,quantity = ? WHERE id = ?";
+    public void update(final CartItemEntity cartItemEntity) {
+        final String sql = "UPDATE cart_item SET member_id = ?, product_id = ? ,quantity = ? WHERE id = ?";
         jdbcTemplate.getJdbcTemplate().update(
                 sql,
                 cartItemEntity.getMemberId(),

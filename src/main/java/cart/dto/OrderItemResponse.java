@@ -10,7 +10,7 @@ public class OrderItemResponse {
     private final int quantity;
     private final ProductResponse product;
 
-    public OrderItemResponse(Long id, int quantity, ProductResponse product) {
+    public OrderItemResponse(final Long id, final int quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;

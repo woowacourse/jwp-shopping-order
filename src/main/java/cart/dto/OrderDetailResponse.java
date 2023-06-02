@@ -29,7 +29,7 @@ public class OrderDetailResponse {
         this.products = products;
     }
 
-    public static OrderDetailResponse from(Order order) {
+    public static OrderDetailResponse from(final Order order) {
         return new OrderDetailResponse(
                 order.getId(),
                 order.getUsedPoint(),

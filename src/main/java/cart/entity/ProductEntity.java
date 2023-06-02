@@ -1,6 +1,5 @@
 package cart.entity;
 
-import cart.domain.Product;
 import java.util.Objects;
 
 public class ProductEntity {
@@ -19,14 +18,6 @@ public class ProductEntity {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public static Product toDomain(final ProductEntity productEntity) {
-        return new Product(productEntity.id, productEntity.name, productEntity.price, productEntity.imageUrl);
-    }
-
-    public static ProductEntity from(final Product product) {
-        return new ProductEntity(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {

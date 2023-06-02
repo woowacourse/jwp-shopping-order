@@ -23,11 +23,11 @@ public class OrderDao {
                 .usingColumns("member_id", "used_point", "saved_point");
     }
 
-    public Long save(OrderEntity orderEntity) {
+    public Long save(final OrderEntity orderEntity) {
         return jdbcTemplate.executeAndReturnKey(new BeanPropertySqlParameterSource(orderEntity)).longValue();
     }
 
-    public Optional<OrderEntity> findById(Long id) {
+    public Optional<OrderEntity> findById(final Long id) {
         final String sql = "SELECT * FROM shopping_order WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.getJdbcTemplate()

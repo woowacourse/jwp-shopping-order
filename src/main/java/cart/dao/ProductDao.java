@@ -16,7 +16,7 @@ public class ProductDao {
 
     private final SimpleJdbcInsert jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id")
@@ -24,7 +24,7 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findAll() {
-        String sql = "SELECT * FROM product";
+        final String sql = "SELECT * FROM product";
         try {
             return jdbcTemplate.getJdbcTemplate().query(sql, productMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -32,8 +32,8 @@ public class ProductDao {
         }
     }
 
-    public Optional<ProductEntity> findById(Long id) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+    public Optional<ProductEntity> findById(final Long id) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.getJdbcTemplate().queryForObject(sql, productMapper(), id));
         } catch (EmptyResultDataAccessException e) {
@@ -41,12 +41,12 @@ public class ProductDao {
         }
     }
 
-    public Long save(ProductEntity productEntity) {
+    public Long save(final ProductEntity productEntity) {
         return jdbcTemplate.executeAndReturnKey(new BeanPropertySqlParameterSource(productEntity)).longValue();
     }
 
-    public void update(ProductEntity productEntity) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+    public void update(final ProductEntity productEntity) {
+        final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.getJdbcTemplate()
                 .update(
                         sql,
@@ -57,8 +57,8 @@ public class ProductDao {
                 );
     }
 
-    public void deleteById(Long productId) {
-        String sql = "DELETE FROM product WHERE id = ?";
+    public void deleteById(final Long productId) {
+        final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.getJdbcTemplate().update(sql, productId);
     }
 

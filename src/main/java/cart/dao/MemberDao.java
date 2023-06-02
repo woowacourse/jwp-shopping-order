@@ -13,12 +13,12 @@ public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MemberDao(JdbcTemplate jdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public Optional<MemberEntity> findById(Long id) {
-        String sql = "SELECT * FROM member WHERE id = ?";
+        final String sql = "SELECT * FROM member WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(
                     sql,
@@ -30,8 +30,8 @@ public class MemberDao {
         }
     }
 
-    public Optional<MemberEntity> findByEmail(String email) {
-        String sql = "SELECT * FROM member WHERE email = ?";
+    public Optional<MemberEntity> findByEmail(final String email) {
+        final String sql = "SELECT * FROM member WHERE email = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberMapper(), email));
         } catch (EmptyResultDataAccessException e) {
@@ -40,12 +40,12 @@ public class MemberDao {
     }
 
     public List<MemberEntity> findAll() {
-        String sql = "SELECT * from member";
+        final String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, memberMapper());
     }
 
-    public void update(MemberEntity member) {
-        String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
+    public void update(final MemberEntity member) {
+        final String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint(), member.getId());
     }
 
