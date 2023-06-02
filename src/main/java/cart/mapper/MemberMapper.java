@@ -1,6 +1,7 @@
 package cart.mapper;
 
 import cart.domain.Member;
+import cart.dto.response.MemberResponse;
 import cart.entity.MemberEntity;
 
 public class MemberMapper {
@@ -14,5 +15,9 @@ public class MemberMapper {
 
     public static MemberEntity toEntity(Member member) {
         return new MemberEntity(member.getId(), member.getEmail(), member.getPassword(), member.getMoney(), member.getPoint());
+    }
+
+    public static MemberResponse toResponse(Member member) {
+        return new MemberResponse(member.getId(), member.getEmail(), member.getMoney(), member.getPoint());
     }
 }
