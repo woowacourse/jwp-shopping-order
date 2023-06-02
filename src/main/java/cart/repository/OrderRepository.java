@@ -4,6 +4,7 @@ import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.PointHistoryDao;
 import cart.domain.Order;
+import cart.domain.Point;
 import cart.entity.OrderEntity;
 import cart.entity.PointEntity;
 import org.springframework.stereotype.Repository;

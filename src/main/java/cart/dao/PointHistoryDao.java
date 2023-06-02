@@ -29,7 +29,7 @@ public class PointHistoryDao {
         String inSql = pointIds.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
-        String sql = String.format("select * from point_history where point_id in (%s)", inSql);
+        String sql = String.format("select id, orders_id, point_id, used_point from point_history where point_id in (%s)", inSql);
 
         return jdbcTemplate.query(sql, new PointHistoryRowMapper());
     }
