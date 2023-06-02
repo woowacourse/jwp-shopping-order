@@ -21,6 +21,10 @@ public class Product {
         this(null, name, price, imageUrl);
     }
 
+    public boolean isSameId(final Long id) {
+        return this.id.equals(id);
+    }
+
     public Long getId() {
         return id;
     }
