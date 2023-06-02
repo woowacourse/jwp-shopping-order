@@ -48,4 +48,10 @@ public class OrderService {
         List<Order> orders = orderDao.findAllByMember(member.getId());
         return OrdersResponse.of(orders);
     }
+
+    public void remove(Member member, Long id) {
+        Order order = orderDao.findById(id);
+        // member의 order가 맞는지 확인!
+        orderDao.deleteById(id);
+    }
 }

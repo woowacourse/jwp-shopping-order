@@ -109,4 +109,11 @@ public class OrderDao {
 
         return orders;
     }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM orders WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+
 }

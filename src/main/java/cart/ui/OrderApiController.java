@@ -37,4 +37,11 @@ public class OrderApiController {
     public ResponseEntity<OrdersResponse> showAllOrders(Member member) {
         return ResponseEntity.ok(orderService.findAll(member));
     }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> removeOrder(Member member, @PathVariable Long id) {
+        orderService.remove(member, id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
