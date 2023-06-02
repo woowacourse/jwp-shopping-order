@@ -17,11 +17,11 @@ INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VA
 INSERT INTO purchase_order (member_id, order_at, payment, used_point, status) VALUES (1, '2023-05-31 17:11:12', 21000, 2000, 'Pending');
 
 -- purchase_order_item
-INSERT INTO purchase_order_item (purchase_order_id, product_id, name, price, image_url, quantity) VALUES (1, 1, '치킨', 10000, 'testImage1', 2);
-INSERT INTO purchase_order_item (purchase_order_id, product_id, name, price, image_url, quantity) VALUES (1, 2, '샐러드', 20000, 'testImage2', 4);
+INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (1, 1, '치킨', 10000, 'testImage1', 2);
+INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (1, 2, '샐러드', 20000, 'testImage2', 4);
 
-INSERT INTO purchase_order_item (purchase_order_id, product_id, name, price, image_url, quantity) VALUES (2, 1, '치킨', 10000, 'testImage1', 5);
-INSERT INTO purchase_order_item (purchase_order_id, product_id, name, price, image_url, quantity) VALUES (2, 3, '피자', 13000, 'testImage3', 3);
+INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (2, 1, '치킨', 10000, 'testImage1', 5);
+INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (2, 3, '피자', 13000, 'testImage3', 3);
 
-INSERT INTO purchase_order_item (purchase_order_id, product_id, name, price, image_url, quantity) VALUES (3, 3, '피자', 13000, 'testImage3', 5);
-INSERT INTO purchase_order_item (purchase_order_id, product_id, name, price, image_url, quantity) VALUES (3, 2, '샐러드', 20000, 'testImage2', 7);
+INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (3, 3, '피자', 13000, 'testImage3', 5);
+INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (3, 2, '샐러드', 20000, 'testImage2', 7);
