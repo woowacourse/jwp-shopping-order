@@ -52,7 +52,7 @@ class CouponIntegrationTest extends IntegrationTest {
 
         final MvcResult result = mockMvc
                 .perform(get("/coupons/discount")
-                        .param("total-price", "10000")
+                        .param("origin-price", "10000")
                         .param("coupon-id", String.valueOf(savedMemberCoupon.getId()))
                         .header("Authorization", MEMBER_1_AUTH_HEADER))
                 .andExpect(status().isOk())
