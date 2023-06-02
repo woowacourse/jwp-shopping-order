@@ -2,10 +2,13 @@ package cart.ui;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
+import cart.exception.CartItemNotFoundException;
 import cart.exception.IllegalPointUsageException;
 import cart.exception.InvalidOrderCheckedException;
 import cart.exception.InvalidOrderProductException;
 import cart.exception.InvalidOrderQuantityException;
+import cart.exception.OrderNotFoundException;
+import cart.exception.ProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
         logger.error("Error from CartItemException.IllegalMember : ", e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @ExceptionHandler({CartItemNotFoundException.class, OrderNotFoundException.class, ProductNotFoundException.class})
+    public ResponseEntity<String> handleNotFoundException(RuntimeException e) {
+        logger.error("Error from NotFoundException : ", e);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getClass().getSimpleName());
     }
 
     @ExceptionHandler({

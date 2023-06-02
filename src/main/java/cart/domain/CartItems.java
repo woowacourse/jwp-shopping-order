@@ -14,11 +14,15 @@ public class CartItems {
     }
 
     public void validateAllCartItemsOrderedLegally(CartItems serverItems) {
-        if (cartItems.stream().anyMatch(cartItem -> !cartItem.isChecked())) {
+        if (cartItems.size() != serverItems.size() || cartItems.stream().anyMatch(cartItem -> !cartItem.isChecked())) {
             throw new InvalidOrderCheckedException();
         }
 
         validateContainingSameItemsWith(serverItems);
+    }
+
+    public int size() {
+        return cartItems.size();
     }
 
     private void validateContainingSameItemsWith(CartItems other) {

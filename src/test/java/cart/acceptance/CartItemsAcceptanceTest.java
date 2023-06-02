@@ -2,12 +2,14 @@ package cart.acceptance;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.CartItemDao;
 import cart.dto.request.CartItemAddRequest;
 import cart.dto.request.CartItemUpdateRequest;
 import cart.dto.response.CartItemUpdateResponse;
+import cart.exception.CartItemNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -91,6 +93,8 @@ public class CartItemsAcceptanceTest extends AcceptanceTest {
                 .patch("/cart-items/1")
                 .then();
 
-        assertThat(cartItemDao.findById(1L)).isNull();
+        assertThatThrownBy(() -> cartItemDao.findById(1L))
+                .isInstanceOf(CartItemNotFoundException.class)
+                .hasMessageContaining("존재하지 않는 CartItemEntity에 접근하였습니다. (접근 id값 : 1)");
     }
 }

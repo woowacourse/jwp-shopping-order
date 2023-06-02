@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.exception.CartItemNotFoundException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -102,6 +103,9 @@ public class CartItemDao {
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member, checked);
         }, cartItemIds.toArray());
+        if (cartItems.isEmpty()) {
+            throw new CartItemNotFoundException(cartItemIds);
+        }
         return cartItems;
     }
 
@@ -148,22 +152,26 @@ public class CartItemDao {
             Product product = new Product(productId, name, price, imageUrl);
             return new CartItem(cartItemId, quantity, product, member, checked);
         }, id);
-        return cartItems.isEmpty() ? null : cartItems.get(0);
-    }
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+        if (cartItems.isEmpty()) {
+            throw new CartItemNotFoundException(id);
+        }
+        return cartItems.get(0);
     }
 
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        int affected = jdbcTemplate.update(sql, id);
+        if (affected == 0) {
+            throw new CartItemNotFoundException(id);
+        }
     }
 
     public void update(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.isChecked(), cartItem.getId());
+        int affected = jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.isChecked(), cartItem.getId());
+        if (affected == 0) {
+            throw new CartItemNotFoundException(cartItem.getId());
+        }
     }
 
     public void deleteByProductId(final Long productId) {
