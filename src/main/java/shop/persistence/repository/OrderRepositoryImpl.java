@@ -1,4 +1,4 @@
-package shop.persistence;
+package shop.persistence.repository;
 
 import org.springframework.stereotype.Repository;
 import shop.application.order.dto.OrderDetailDto;
@@ -10,6 +10,8 @@ import shop.domain.order.OrderItem;
 import shop.domain.order.OrderPrice;
 import shop.domain.product.Product;
 import shop.domain.repository.OrderRepository;
+import shop.persistence.entity.detail.OrderCouponDetail;
+import shop.persistence.entity.detail.OrderProductDetail;
 import shop.persistence.dao.OrderCouponDao;
 import shop.persistence.dao.OrderDao;
 import shop.persistence.dao.OrderProductDao;

@@ -1,4 +1,4 @@
-package shop.persistence;
+package shop.persistence.repository;
 
 import org.springframework.stereotype.Repository;
 import shop.domain.coupon.Coupon;

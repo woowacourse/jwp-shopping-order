@@ -1,4 +1,4 @@
-package shop.persistence;
+package shop.persistence.entity.detail;
 
 public class OrderProductDetail {
     private final Long id;

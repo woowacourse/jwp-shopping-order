@@ -1,4 +1,4 @@
-package shop.persistence;
+package shop.persistence.repository;
 
 import org.springframework.stereotype.Repository;
 import shop.domain.coupon.Coupon;
@@ -7,6 +7,7 @@ import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
 import shop.domain.repository.MemberCouponRepository;
+import shop.persistence.entity.detail.MemberCouponDetail;
 import shop.persistence.dao.MemberCouponDao;
 import shop.persistence.entity.MemberCouponEntity;
 

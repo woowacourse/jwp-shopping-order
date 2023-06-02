@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
-import shop.persistence.OrderProductDetail;
+import shop.persistence.entity.detail.OrderProductDetail;
 import shop.persistence.entity.OrderProductEntity;
 
 import java.sql.PreparedStatement;

@@ -1,4 +1,4 @@
-package shop.persistence;
+package shop.persistence.repository;
 
 import org.springframework.stereotype.Repository;
 import shop.domain.cart.CartItem;
@@ -8,6 +8,7 @@ import shop.domain.member.MemberName;
 import shop.domain.product.Product;
 import shop.domain.repository.CartRepository;
 import shop.exception.DatabaseException;
+import shop.persistence.entity.detail.CartItemDetail;
 import shop.persistence.dao.CartDao;
 import shop.persistence.entity.CartEntity;
 

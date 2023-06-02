@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import shop.exception.DatabaseException;
-import shop.persistence.CartItemDetail;
+import shop.persistence.entity.detail.CartItemDetail;
 import shop.persistence.entity.CartEntity;
 
 import java.util.List;
