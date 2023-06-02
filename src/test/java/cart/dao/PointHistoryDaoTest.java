@@ -59,7 +59,7 @@ class PointHistoryDaoTest {
         jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(3, 1, 2000)");
     }
 
-    @DisplayName("포인트 id를 기준으로 사용한 이력을 조회할 수 있다.")
+    @DisplayName("포인트 id를 기준으로 사용한 포인트 이력을 조회할 수 있다.")
     @Test
     void findByPointIds() {
         PointHistoryEntity expected1 = new PointHistoryEntity(1L, 2L, 1L, 1000);
@@ -68,6 +68,16 @@ class PointHistoryDaoTest {
         List<PointHistoryEntity> pointHistoryEntities = pointHistoryDao.findByPointIds(List.of(1L));
 
         assertThat(pointHistoryEntities).containsExactlyInAnyOrder(expected1, expected2);
+    }
+
+    @DisplayName("주문 번호를 기준으로 사용한 포인트 이력을 조회할 수 있다.")
+    @Test
+    void findByOrderId() {
+        PointHistoryEntity expected = new PointHistoryEntity(1L, 2L, 1L, 1000);
+
+        List<PointHistoryEntity> pointHistoryEntities = pointHistoryDao.findByOrderId(2L);
+
+        assertThat(pointHistoryEntities).containsExactlyInAnyOrder(expected);
     }
 
     @DisplayName("포인트 사용 이력을 저장할 수 있다.")

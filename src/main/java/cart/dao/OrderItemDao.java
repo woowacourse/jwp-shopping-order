@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.OrderItem;
 import cart.domain.Product;
+import cart.entity.OrderItemEntity;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,29 +23,29 @@ public class OrderItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<OrderItem> findAll() {
-        String sql = "select product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
+    public List<OrderItemEntity> findAll() {
+        String sql = "select orders_id, product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
                 " left join product on orders_item.product_id = product.id";
         return jdbcTemplate.query(sql, new OrderItemRowMapper());
     }
 
-    public List<OrderItem> findByOrderId(Long orderId) {
-        String sql = "select product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
+    public List<OrderItemEntity> findByOrderId(Long orderId) {
+        String sql = "select orders_id, product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
                 " left join product on orders_item.product_id = product.id where orders_id = ?";
         return jdbcTemplate.query(sql, new OrderItemRowMapper(), orderId);
     }
 
-    public List<OrderItem> findAllByOrderIds(List<Long> orderIds) {
+    public List<OrderItemEntity> findAllByOrderIds(List<Long> orderIds) {
         String inSql = orderIds.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
-        String sql = String.format("select product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
-                " left join product on orders_item.product_id = product.id where orders_id in (%s)", inSql);
+        String sql = String.format("select orders_id, product_id, product.name, product.price, product.image_url, quantity, total_price from orders_item" +
+                " left join product on orders_item.product_id = product.id where orders_item.orders_id in (%s)", inSql);
         return jdbcTemplate.query(sql, new OrderItemRowMapper());
     }
 
-    public void saveAll(Long orderId, List<OrderItem> orderItems) {
+    public void saveAll(Long orderId, List<OrderItemEntity> orderItems) {
         jdbcTemplate.batchUpdate("insert into orders_item(orders_id, product_id, quantity, total_price) values(?, ?, ?, ?)",
                 new BatchPreparedStatementSetter() {
                     @Override
@@ -62,19 +63,20 @@ public class OrderItemDao {
                 });
     }
 
-    private static class OrderItemRowMapper implements RowMapper<OrderItem> {
+    private static class OrderItemRowMapper implements RowMapper<OrderItemEntity> {
 
         @Override
-        public OrderItem mapRow(ResultSet rs, int rowNum) throws SQLException {
+        public OrderItemEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             long productId = rs.getLong("product_id");
             String name = rs.getString("product.name");
             int price = rs.getInt("product.price");
             String imageUrl = rs.getString("product.image_url");
 
             Product product = new Product(productId, name, price, imageUrl);
+            long orderId = rs.getLong("orders_id");
             int quantity = rs.getInt("quantity");
             int totalPrice = rs.getInt("total_price");
-            return new OrderItem(product, quantity, totalPrice);
+            return new OrderItemEntity(orderId, product, quantity, totalPrice);
         }
     }
 }

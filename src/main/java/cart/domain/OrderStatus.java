@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Arrays;
+
 public enum OrderStatus {
 
     PENDING(1, "Pending"),
@@ -14,6 +16,13 @@ public enum OrderStatus {
     OrderStatus(int orderStatusId, String orderStatus) {
         this.orderStatusId = orderStatusId;
         this.orderStatus = orderStatus;
+    }
+
+    public static OrderStatus findOrderStatusById(int orderStatusId) {
+        return Arrays.stream(values())
+                .filter(orderStatus -> orderStatus.orderStatusId == orderStatusId)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException());
     }
 
     public int getOrderStatusId() {

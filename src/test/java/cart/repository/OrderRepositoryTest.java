@@ -5,6 +5,7 @@ import cart.dao.OrderItemDao;
 import cart.dao.PointHistoryDao;
 import cart.domain.*;
 import cart.entity.OrderEntity;
+import cart.entity.OrderItemEntity;
 import cart.entity.PointHistoryEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,8 +63,10 @@ class OrderRepositoryTest {
 
         jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 1, 5600, '주문 포인트 적립', '2023-06-02', '2023-09-30')");
 
+        jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(1, 1, 1000)");
+
         member = new Member(1L, "kong@com", "1234");
-        points = new Points(List.of(Point.of(1L, 5000, "주문 포인트 적립", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30))));
+        points = new Points(List.of(Point.of(1L, 4000, "주문 포인트 적립", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30))));
     }
 
     @DisplayName("주문 정보를 저장할 수 있다.")
@@ -71,6 +74,8 @@ class OrderRepositoryTest {
     void save() {
         OrderItem orderItem1 = new OrderItem(product1, 2, 20000);
         OrderItem orderItem2 = new OrderItem(product2, 3, 60000);
+        OrderItemEntity orderItemEntity1 = new OrderItemEntity(2L, product1, 2, 20000);
+        OrderItemEntity orderItemEntity2 = new OrderItemEntity(2L, product2, 3, 60000);
 
         List<OrderItem> orderItems = List.of(orderItem1, orderItem2);
         Order order = new Order(points, orderItems, member);
@@ -78,14 +83,30 @@ class OrderRepositoryTest {
         orderRepository.save(order);
 
         OrderEntity orderEntityDb = orderDao.findById(2L);
-        List<OrderItem> orderItemsDb = orderItemDao.findByOrderId(2L);
+        List<OrderItemEntity> orderItemsDb = orderItemDao.findByOrderId(2L);
         List<PointHistoryEntity> pointHistoryEntities = pointHistoryDao.findByPointIds(List.of(1L));
 
         assertAll(
                 () -> assertThat(orderEntityDb.getId()).isEqualTo(2),
-                () -> assertThat(orderItemsDb).containsExactlyInAnyOrder(orderItem1, orderItem2),
-                () -> assertThat(pointHistoryEntities.size()).isEqualTo(1),
-                () -> assertThat(pointHistoryEntities.get(0).getUsedPoint()).isEqualTo(5000)
+                () -> assertThat(orderItemsDb).containsExactlyInAnyOrder(orderItemEntity1, orderItemEntity2),
+                () -> assertThat(pointHistoryEntities.size()).isEqualTo(2),
+                () -> assertThat(pointHistoryEntities.get(0).getUsedPoint()).isEqualTo(1000),
+                () -> assertThat(pointHistoryEntities.get(1).getUsedPoint()).isEqualTo(4000)
+        );
+    }
+
+    @DisplayName("사용자에 대한 주문 정보를 반환할 수 있다.")
+    @Test
+    void findAllByMember() {
+        OrderItem orderItem1 = new OrderItem(product1, 3, 30000);
+        OrderItem orderItem2 = new OrderItem(product2, 2, 40000);
+        List<Order> orders = orderRepository.findAllByMember(member);
+
+        assertAll(
+                () -> assertThat(orders.size()).isEqualTo(1),
+                () -> assertThat(orders.get(0).getId()).isEqualTo(1L),
+                () -> assertThat(orders.get(0).getOrderItems()).containsExactlyInAnyOrder(orderItem1, orderItem2),
+                () -> assertThat(orders.get(0).getTotalUsedPoint()).isEqualTo(1000)
         );
     }
 }

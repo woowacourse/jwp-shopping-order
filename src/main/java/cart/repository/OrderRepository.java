@@ -3,12 +3,18 @@ package cart.repository;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.PointHistoryDao;
-import cart.domain.Order;
+import cart.domain.*;
 import cart.entity.OrderEntity;
+import cart.entity.OrderItemEntity;
 import cart.entity.PointEntity;
+import cart.entity.PointHistoryEntity;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -24,14 +30,23 @@ public class OrderRepository {
         this.pointHistoryDao = pointHistoryDao;
     }
 
-    public Long save(Order order) {
+    public Long save(Order order) { // TODO: Order Member 분리
         OrderEntity orderEntity = new OrderEntity(order.getMember().getId(), order.getOrderStatus().getOrderStatusId());
         Long orderId = orderDao.save(orderEntity);
-        orderItemDao.saveAll(orderId, order.getOrderItems());
+
+        List<OrderItemEntity> orderItemEntities = getOrderItemEntities(order);
+
+        orderItemDao.saveAll(orderId, orderItemEntities);
 
         List<PointEntity> pointEntities = getPointEntities(order);
         pointHistoryDao.saveAll(orderId, pointEntities);
         return orderId;
+    }
+
+    private List<OrderItemEntity> getOrderItemEntities(Order order) {
+        return order.getOrderItems().stream()
+                .map(orderItem -> new OrderItemEntity(orderItem.getProduct(), orderItem.getQuantity(), orderItem.getTotalPrice()))
+                .collect(Collectors.toList());
     }
 
     private List<PointEntity> getPointEntities(Order order) {
@@ -44,5 +59,61 @@ public class OrderRepository {
 
     public void deleteById(Long orderId) {
         orderDao.deleteById(orderId);
+    }
+
+    public List<Order> findAllByMember(Member member) {
+        List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
+        List<Long> orderIds = getOrderIds(orderEntities);
+
+        List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderIds(orderIds);
+
+        Map<Long, List<OrderItemEntity>> itemsByOrder = getItemsByOrder(orderEntities, orderItemEntities);
+
+        return getOrders(member, orderEntities, itemsByOrder);
+    }
+
+    private List<Long> getOrderIds(List<OrderEntity> orderEntities) {
+        return orderEntities.stream()
+                .map(OrderEntity::getId)
+                .collect(Collectors.toList());
+    }
+
+    private Map<Long, List<OrderItemEntity>> getItemsByOrder(List<OrderEntity> orderEntities, List<OrderItemEntity> orderItems) {
+        Map<Long, List<OrderItemEntity>> itemsByOrder = new HashMap<>();
+        for (OrderEntity orderEntity : orderEntities) {
+            itemsByOrder.put(orderEntity.getId(), new ArrayList<>());
+        }
+
+        for (OrderItemEntity orderItemEntity : orderItems) {
+            List<OrderItemEntity> orderItemEntities = itemsByOrder.get(orderItemEntity.getOrderId());
+            orderItemEntities.add(orderItemEntity);
+        }
+        return itemsByOrder;
+    }
+
+    private List<Order> getOrders(Member member, List<OrderEntity> orderEntities, Map<Long, List<OrderItemEntity>> itemsByOrder) {
+        List<Order> orders = new ArrayList<>();
+        for (OrderEntity orderEntity : orderEntities) {
+            Long id = orderEntity.getId();
+            OrderStatus orderStatus = OrderStatus.findOrderStatusById(orderEntity.getOrderStatusId());
+            List<OrderItem> orderItems = getOrderItems(itemsByOrder, id);
+            Points points = getPoints(id);
+            orders.add(new Order(id, orderStatus, points, orderItems, member));
+        }
+        return orders;
+    }
+
+    private static List<OrderItem> getOrderItems(Map<Long, List<OrderItemEntity>> itemsByOrder, Long id) {
+        return itemsByOrder.get(id).stream()
+                .map(orderItemEntity -> new OrderItem(orderItemEntity.getProduct(),
+                        orderItemEntity.getQuantity(), orderItemEntity.getTotalPrice()))
+                .collect(Collectors.toList());
+    }
+
+    private Points getPoints(Long id) {
+        List<PointHistoryEntity> pointHistoryEntities = pointHistoryDao.findByOrderId(id);
+        return new Points(pointHistoryEntities.stream()
+                .map(pointHistoryEntity -> Point.from(pointHistoryEntity.getUsedPoint()))
+                .collect(Collectors.toList()));
     }
 }

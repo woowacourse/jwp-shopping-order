@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.OrderItem;
+import cart.entity.OrderItemEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,27 +50,27 @@ class OrderItemDaoTest {
     @DisplayName("주문 상품 정보를 조회할 수 있다.")
     @Test
     void findAll() {
-        List<OrderItem> orderItems = orderItemDao.findAll();
+        List<OrderItemEntity> orderItems = orderItemDao.findAll();
 
-        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItem(product1, 3, 30000), new OrderItem(product2, 2, 40000));
+        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItemEntity(1L, product1, 3, 30000), new OrderItemEntity(1L, product2, 2, 40000), new OrderItemEntity(2L, product2, 1, 20000));
     }
 
     @DisplayName("주문 번호를 기준으로 주문 상품 정보를 조회할 수 있다.")
     @Test
     void findByOrderId() {
-        List<OrderItem> orderItems = orderItemDao.findByOrderId(1L);
+        List<OrderItemEntity> orderItems = orderItemDao.findByOrderId(1L);
 
-        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItem(product1, 3, 30000), new OrderItem(product2, 2, 40000));
+        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItemEntity(1L, product1, 3, 30000), new OrderItemEntity(1L, product2, 2, 40000));
     }
 
     @DisplayName("주문 번호들을 기준으로 주문 상품 정보를 조회할 수 있다.")
     @Test
     void findAllByOrderIds() {
-        OrderItem orderItem1 = new OrderItem(product1, 3, 30000);
-        OrderItem orderItem2 = new OrderItem(product2, 2, 40000);
-        OrderItem orderItem3 = new OrderItem(product2, 1, 20000);
+        OrderItemEntity orderItem1 = new OrderItemEntity(1L, product1, 3, 30000);
+        OrderItemEntity orderItem2 = new OrderItemEntity(1L, product2, 2, 40000);
+        OrderItemEntity orderItem3 = new OrderItemEntity(2L, product2, 1, 20000);
 
-        List<OrderItem> orderItems = orderItemDao.findAllByOrderIds(List.of(1L, 2L));
+        List<OrderItemEntity> orderItems = orderItemDao.findAllByOrderIds(List.of(1L, 2L));
 
         assertThat(orderItems).containsExactlyInAnyOrder(orderItem1, orderItem2, orderItem3);
     }
@@ -77,13 +78,13 @@ class OrderItemDaoTest {
     @DisplayName("주문 상품 정보를 추가할 수 있다.")
     @Test
     void saveAll() {
-        OrderItem orderItem1 = new OrderItem(product1, 4, 40000);
-        OrderItem orderItem2 = new OrderItem(product2, 3, 60000);
+        OrderItemEntity orderItem1 = new OrderItemEntity(1L, product1, 4, 40000);
+        OrderItemEntity orderItem2 = new OrderItemEntity(1L, product2, 3, 60000);
 
-        List<OrderItem> orderItems = List.of(orderItem1, orderItem2);
+        List<OrderItemEntity> orderItems = List.of(orderItem1, orderItem2);
         orderItemDao.saveAll(1L, orderItems);
 
-        List<OrderItem> actualOrderItems = orderItemDao.findAll();
+        List<OrderItemEntity> actualOrderItems = orderItemDao.findAll();
 
         assertThat(actualOrderItems).containsAnyOf(orderItem1, orderItem2);
     }

@@ -27,6 +27,10 @@ public class Point {
         return new Point(null, value, comment, LocalDate.now(), expiredAt);
     }
 
+    public static Point from(int value) {
+        return new Point(null, value, null, null, null);
+    }
+
     public Long getId() {
         return id;
     }

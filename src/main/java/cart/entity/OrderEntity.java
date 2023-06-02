@@ -21,6 +21,7 @@ public class OrderEntity {
     public OrderEntity(Long memberId, int orderStatusId) {
         this.memberId = memberId;
         this.orderStatusId = orderStatusId;
+        this.createAt = LocalDate.now();
     }
 
     public Long getId() {

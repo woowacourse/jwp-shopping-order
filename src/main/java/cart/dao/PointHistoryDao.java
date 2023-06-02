@@ -34,6 +34,12 @@ public class PointHistoryDao {
         return jdbcTemplate.query(sql, new PointHistoryRowMapper());
     }
 
+    public List<PointHistoryEntity> findByOrderId(Long orderId) {
+        String sql = "select id, orders_id, point_id, used_point from point_history where orders_id = ?";
+
+        return jdbcTemplate.query(sql, new PointHistoryRowMapper(), orderId);
+    }
+
     public void save(Long orderId, Long pointId, int usedPoint) {
         String sql = "insert into point_history(orders_id, point_id, used_point) values(?, ?, ?)";
 
