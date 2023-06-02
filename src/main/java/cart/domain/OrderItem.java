@@ -14,6 +14,14 @@ public class OrderItem {
         this.totalPrice = totalPrice;
     }
 
+    public String getProductName() {
+        return product.getName();
+    }
+
+    public String getProductImageUrl() {
+        return product.getImageUrl();
+    }
+
     public Product getProduct() {
         return product;
     }

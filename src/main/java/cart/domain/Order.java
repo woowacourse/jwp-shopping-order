@@ -35,6 +35,31 @@ public class Order {
         return pointAccumulationPolicy.calculateAccumulationPoint(totalCost);
     }
 
+    public int getPayAmount() {
+        return orderItems.stream()
+                .mapToInt(OrderItem::getTotalPrice)
+                .sum() - getTotalUsedPoint();
+    }
+
+    public String getFirstItemName() {
+        try {
+            return orderItems.get(0).getProductName();
+        } catch (IndexOutOfBoundsException exception) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public String getFirstItemImageUrl() {
+        try {
+            return orderItems.get(0).getProductImageUrl();
+        } catch (IndexOutOfBoundsException exception) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public int getItemSize() {
+        return orderItems.size();
+    }
     public Long getId() {
         return id;
     }

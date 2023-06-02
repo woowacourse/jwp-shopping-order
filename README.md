@@ -18,52 +18,58 @@
 - [ ] 주문 요청에는 사용된 포인트와 각 상품 id, 수량을 전달해 주문을 요청한다.
 
 ### 포인트
-- [ ] 상품 주문 시 포인트가 적립된다.
-    - [ ] 실제 주문 가격 5만원 미만은 실제 주문 가격의 5%가 적립된다.
-    - [ ] 실제 주문 가격 5만원 이상 10만원 미만은 실제 주문 가격의 8%가 적립된다.
-    - [ ] 실제 주문 가격 10만원 이상은 실제 주문 가격의 10%가 적립된다.
-    - [ ] 포인트의 유효기간은 3개월 뒤의 말 일까지이다.
-	- [ ] 주문 가격에서 포인트를 사용한다면 그 금액은 포인트 적립에서 제외한다. 
+- [x] 상품 주문 시 포인트가 적립된다.
+    - [x] 실제 주문 가격 5만원 미만은 실제 주문 가격의 5%가 적립된다.
+    - [x] 실제 주문 가격 5만원 이상 10만원 미만은 실제 주문 가격의 8%가 적립된다.
+    - [x] 실제 주문 가격 10만원 이상은 실제 주문 가격의 10%가 적립된다.
+    - [x] 포인트의 유효기간은 3개월 뒤의 말 일까지이다.
+	- [x] 주문 가격에서 포인트를 사용한다면 그 금액은 포인트 적립에서 제외한다. 
 - [ ] 포인트를 조회할 때 현재 남은 포인트와 이달 소멸될 포인트를 전달한다.
 
 ## json 명세서
 
 ### 주문 목록 조회 -> 10개씩
 
-#### GET /orders/?page=n HTTP/1.1
+#### GET /orders/?orderPage=n HTTP/1.1
 
 #### HTTP/1.1 200 OK
 
 #### Content-Type: application/json
 
 ```http request
-
-[
-	{
-		"orderId": 1,
-		"payAmount": 10000, // 최종 결제 금액 (전체 - 포인트)
-		"orderAt": "2024-10-23",
-		"productName": "마우스",
-		"productImageUrl": "http://example.com/chicken.jpg",
-		"totalProductCount": 4
-	},
-	{
-		"orderId": 1,
-		"payAmount": 10000,
-		"orderAt": "2024-10-23",
-		"productName": "마우스",
-		"productImageUrl": "http://example.com/chicken.jpg",
-		"totalProductCount": 4
-	},
-	{
-		"orderId": 1,
-		"payAmount": 10000,
-		"orderAt": "2024-10-23",
-		"productName": "마우스",
-		"productImageUrl": "http://example.com/chicken.jpg",
-		"totalProductCount": 4
-	}
-]
+{
+    "totalPages": 10,
+    "currentPage": 5,
+    "contents": [
+        {
+            "orderId": 1,
+            "payAmount": 10000, // 최종 결제 금액 (전체 - 포인트)
+            "orderAt": "2024-10-23",
+            "orderStatus": "Pending",
+            "productName": "마우스",
+            "productImageUrl": "http://example.com/chicken.jpg",
+            "totalProductCount": 4
+        },
+                {
+            "orderId": 1,
+            "payAmount": 10000, // 최종 결제 금액 (전체 - 포인트)
+            "orderAt": "2024-10-23",
+            "orderStatus": "Pending",
+            "productName": "마우스",
+            "productImageUrl": "http://example.com/chicken.jpg",
+            "totalProductCount": 4
+        },
+                {
+            "orderId": 1,
+            "payAmount": 10000, // 최종 결제 금액 (전체 - 포인트)
+            "orderAt": "2024-10-23",
+            "orderStatus": "Pending",
+            "productName": "마우스",
+            "productImageUrl": "http://example.com/chicken.jpg",
+            "totalProductCount": 4
+        }
+    ]
+}
 ```
 
 ### 주문 상세 정보 조회
@@ -78,14 +84,14 @@
 	"savedPoint": 4000, // 적립된 포인트
 	"products": [
 		{
-			"quantity": 5,
-			"product": {
-				"id": 1,
-				"price": 10000,
-				"name": "치킨",
-				"imageUrl": "http://example.com/chicken.jpg"
-			}
-		},
+            "quantity": 5,
+            "product": {
+                "id": 1,
+                "price": 10000,
+                "name": "치킨",
+                "imageUrl": "http://example.com/chicken.jpg"
+            }
+        },
 		{
 			"quantity": 1,
 			"product": {
@@ -99,7 +105,11 @@
 }
 ```
 
-### 주문 페이지 내에서 사용할 포인트 조회 -> /points
+### 주문 취소
+#### DELETE /orders/{orderId} HTTP/1.1
+#### HTTP/1.1 200 OK
+
+### 주문 페이지 (응답) -> /point
 
 ### 주문 정보 (클라이언트 요청) -> 201 void 형태로 응답
 #### POST /orders HTTP/1.1
