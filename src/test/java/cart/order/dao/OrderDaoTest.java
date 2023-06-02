@@ -1,9 +1,7 @@
 package cart.order.dao;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -11,15 +9,11 @@ import static org.mockito.Mockito.when;
 import cart.coupon.dao.CouponDao;
 import cart.coupon.domain.Coupon;
 import cart.coupon.domain.EmptyCoupon;
-import cart.coupon.domain.FixDiscountCoupon;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
-import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import cart.order.exception.NotFoundOrderException;
 import java.util.List;
-import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,7 +59,7 @@ class OrderDaoTest {
         .thenReturn(coupon);
 
     //when
-    final List<Order> orders = orderDao.findByMemberId2(memberId);
+    final List<Order> orders = orderDao.findByMemberId(memberId);
 
     //then
     assertEquals(3, orders.size());
@@ -78,7 +72,7 @@ class OrderDaoTest {
     final long orderId = 1L;
 
     //when
-    final Order order = orderDao.findByOrderId2(orderId);
+    final Order order = orderDao.findByOrderId(orderId);
 
     //then
     assertEquals(order.getId(), orderId);
@@ -94,7 +88,7 @@ class OrderDaoTest {
     orderDao.deleteByOrderId(1L);
 
     //then
-    assertThatThrownBy(() -> orderDao.findByOrderId2(orderId))
+    assertThatThrownBy(() -> orderDao.findByOrderId(orderId))
         .isInstanceOf(NotFoundOrderException.class);
   }
 }

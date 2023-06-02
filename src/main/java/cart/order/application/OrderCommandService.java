@@ -9,7 +9,6 @@ import cart.order.dao.OrderDao;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
 import cart.order.exception.CanNotDeleteNotMyOrderException;
-import cart.order.exception.NotFoundOrderException;
 import cart.order.exception.NotSameTotalPriceException;
 import cart.order_item.application.OrderItemCommandService;
 import cart.order_item.domain.OrderedItems;
@@ -40,7 +39,7 @@ public class OrderCommandService {
     final OrderEntity orderEntity = OrderMapper.mapToOrderEntity(member, registerOrderRequest);
     final Long savedOrderId = orderDao.save(orderEntity);
 
-    final Order order = OrderMapper.mapToOrder(member, savedOrderId, registerOrderRequest);
+    final Order order = orderDao.findByOrderId(savedOrderId);
 
     final OrderedItems orderedItems = orderItemCommandService.registerOrderItem(
         registerOrderRequest.getCartItemIds(),
@@ -68,23 +67,16 @@ public class OrderCommandService {
   }
 
   public void deleteOrder(final Member member, final Long orderId) {
-    final OrderEntity orderEntity = orderDao.findByOrderId(orderId)
-        .orElseThrow(() -> new NotFoundOrderException("해당 주문은 존재하지 않습니다."));
+    final Order order = orderDao.findByOrderId(orderId);
 
-    final Order order = OrderMapper.mapToOrder(
-        member,
-        orderId,
-        new Money(orderEntity.getDeliveryFee())
-    );
-
-    validateOrderOwner(order, orderEntity.getMemberId());
+    validateOrderOwner(order, member);
 
     orderDao.deleteByOrderId(orderId);
     orderItemCommandService.deleteBatch(order);
   }
 
-  private void validateOrderOwner(final Order order, final Long memberId) {
-    if (order.isNotMyOrder(memberId)) {
+  private void validateOrderOwner(final Order order, final Member member) {
+    if (order.isNotMyOrder(member)) {
       throw new CanNotDeleteNotMyOrderException("사용자의 주문 목록 이외는 삭제할 수 없습니다.");
     }
   }

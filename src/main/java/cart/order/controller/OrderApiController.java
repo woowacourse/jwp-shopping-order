@@ -47,18 +47,18 @@ public class OrderApiController {
     return ResponseEntity.ok(orderQueryService.searchOrders(member));
   }
 
-  @GetMapping("/orders/{order-id}")
+  @GetMapping("/orders/{orderId}")
   @ResponseStatus(HttpStatus.OK)
   public SpecificOrderResponse showOrder(
       final Member member,
-      @PathVariable("order-id") final Long orderId
+      @PathVariable("orderId") final Long orderId
   ) {
     return orderQueryService.searchOrder(member, orderId);
   }
 
-  @DeleteMapping("/orders/{order-id}")
+  @DeleteMapping("/orders/{orderId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteOrder(final Member member, @PathVariable("order-id") final Long orderId) {
+  public void deleteOrder(final Member member, @PathVariable("orderId") final Long orderId) {
     orderCommandService.deleteOrder(member, orderId);
   }
 }

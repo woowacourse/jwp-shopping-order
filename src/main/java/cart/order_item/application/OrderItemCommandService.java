@@ -49,7 +49,7 @@ public class OrderItemCommandService {
     );
     orderItemDao.save(orderItemEntities);
 
-    final List<OrderItem> orderItems = OrderItemMapper.mapToOrderItems(orderItemEntities, order);
+    final List<OrderItem> orderItems = orderItemDao.findByOrderId(order.getId());
     return new OrderedItems(orderItems);
   }
 

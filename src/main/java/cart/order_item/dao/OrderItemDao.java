@@ -8,7 +8,6 @@ import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
@@ -24,25 +23,7 @@ public class OrderItemDao {
 
   private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-  private OrderDao orderDao;
-
-  private final RowMapper<OrderItemEntity> rowMapper = (rs, rowNum) ->
-      new OrderItemEntity(
-          rs.getLong("id"),
-          rs.getLong("order_id"),
-          rs.getString("name"),
-          rs.getBigDecimal("price"),
-          rs.getString("image_url"),
-          rs.getInt("quantity")
-      );
-
-  public OrderItemDao(final JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
-    this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-        .withTableName("ORDER_ITEM")
-        .usingGeneratedKeyColumns("id");
-    this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-  }
+  private final OrderDao orderDao;
 
   public OrderItemDao(final JdbcTemplate jdbcTemplate, final OrderDao orderDao) {
     this.jdbcTemplate = jdbcTemplate;
@@ -57,18 +38,12 @@ public class OrderItemDao {
     simpleJdbcInsert.executeBatch(SqlParameterSourceUtils.createBatch(orderItemEntities));
   }
 
-  public List<OrderItemEntity> findByOrderId(final Long orderId) {
-    final String sql = "SELECT * FROM ORDER_ITEM OI WHERE OI.order_id = ?";
-
-    return jdbcTemplate.query(sql, rowMapper, orderId);
-  }
-
-  public List<OrderItem> findByOrderId2(final Long orderId) {
+  public List<OrderItem> findByOrderId(final Long orderId) {
     final String sql = "SELECT * FROM ORDER_ITEM OI WHERE OI.order_id = ?";
 
     return jdbcTemplate.query(sql, (rs, rowNum) -> {
       final long id = rs.getLong("id");
-      final Order order = orderDao.findByOrderId2(orderId);
+      final Order order = orderDao.findByOrderId(orderId);
       final String name = rs.getString("name");
       final BigDecimal price = rs.getBigDecimal("price");
       final String imageUrl = rs.getString("image_url");

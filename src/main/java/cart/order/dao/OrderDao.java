@@ -10,10 +10,8 @@ import cart.order.exception.NotFoundOrderException;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -25,27 +23,15 @@ public class OrderDao {
 
   private final SimpleJdbcInsert simpleJdbcInsert;
 
-  private MemberDao memberDao;
+  private final MemberDao memberDao;
 
-  private CouponDao couponDao;
+  private final CouponDao couponDao;
 
-  private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) ->
-    new OrderEntity(
-        rs.getLong("id"),
-        rs.getLong("member_id"),
-        rs.getBigDecimal("delivery_fee")
-    );
-
-  public OrderDao(final JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
-    this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-        .withTableName("ORDERS")
-        .usingGeneratedKeyColumns("id");
-  }
-
-  public OrderDao(final JdbcTemplate jdbcTemplate, final MemberDao memberDao,
-      final CouponDao couponDao) {
-
+  public OrderDao(
+      final JdbcTemplate jdbcTemplate,
+      final MemberDao memberDao,
+      final CouponDao couponDao
+  ) {
     this.jdbcTemplate = jdbcTemplate;
     this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
         .withTableName("ORDERS")
@@ -59,13 +45,7 @@ public class OrderDao {
         .longValue();
   }
 
-  public List<OrderEntity> findByMemberId(final long memberId) {
-    final String sql = "SELECT * FROM ORDERS O WHERE O.member_id = ?";
-
-    return jdbcTemplate.query(sql, rowMapper, memberId);
-  }
-
-  public List<Order> findByMemberId2(final long memberId) {
+  public List<Order> findByMemberId(final long memberId) {
     final String sql = "SELECT * FROM ORDERS O WHERE O.member_id = ?";
 
     return jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -78,18 +58,7 @@ public class OrderDao {
     }, memberId);
   }
 
-
-  public Optional<OrderEntity> findByOrderId(final Long orderId) {
-    final String sql = "SELECT * FROM ORDERS O WHERE O.id = ?";
-
-    try {
-      return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, orderId));
-    } catch (EmptyResultDataAccessException exception) {
-      return Optional.empty();
-    }
-  }
-
-  public Order findByOrderId2(final Long orderId) {
+  public Order findByOrderId(final Long orderId) {
     final String sql = "SELECT * FROM ORDERS O WHERE O.id = ?";
 
     try {

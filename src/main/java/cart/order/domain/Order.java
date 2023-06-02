@@ -27,11 +27,15 @@ public class Order {
     this.deliveryFee = deliveryFee;
   }
 
-  public boolean isNotMyOrder(final Long memberId) {
-    return !this.member.isMe(memberId);
+  public boolean isNotMyOrder(final Member member) {
+    return !this.member.isMe(member);
   }
 
   public Long getId() {
     return id;
+  }
+
+  public Money getDeliveryFee() {
+    return deliveryFee;
   }
 }

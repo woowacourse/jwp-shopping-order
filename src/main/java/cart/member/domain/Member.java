@@ -14,8 +14,8 @@ public class Member {
     this.password = password;
   }
 
-  public boolean isMe(final Long memberId) {
-    return id.equals(memberId);
+  public boolean isMe(final Member member) {
+    return this.equals(member);
   }
 
   public Long getId() {

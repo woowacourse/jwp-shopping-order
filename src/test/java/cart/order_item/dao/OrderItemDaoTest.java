@@ -2,9 +2,17 @@ package cart.order_item.dao;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import cart.coupon.domain.EmptyCoupon;
+import cart.member.domain.Member;
+import cart.order.dao.OrderDao;
+import cart.order.domain.Order;
 import cart.order_item.dao.entity.OrderItemEntity;
 import cart.order_item.domain.OrderItem;
+import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,9 +34,13 @@ class OrderItemDaoTest {
 
   private OrderItemDao orderItemDao;
 
+  private OrderDao orderDao;
+
   @BeforeEach
   void setUp() {
-    orderItemDao = new OrderItemDao(jdbcTemplate);
+    orderDao = mock(OrderDao.class);
+
+    orderItemDao = new OrderItemDao(jdbcTemplate, orderDao);
   }
 
   @Test
@@ -58,8 +70,14 @@ class OrderItemDaoTest {
     //given
     final Long orderId = 1L;
 
+    final Member member = new Member(1L, "email", "password");
+    final Order order = new Order(1L, member, new Money(100), new EmptyCoupon());
+
+    when(orderDao.findByOrderId(anyLong()))
+        .thenReturn(order);
+
     //when
-    final List<OrderItem> orderItems = orderItemDao.findByOrderId2(orderId);
+    final List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
 
     //then
     assertEquals(3, orderItems.size());
@@ -72,14 +90,14 @@ class OrderItemDaoTest {
     final long orderId = 1L;
     final List<Long> 삭제할_주문아이템_아이디 = orderItemDao.findByOrderId(orderId)
         .stream()
-        .map(OrderItemEntity::getId)
+        .map(OrderItem::getId)
         .collect(Collectors.toList());
 
     //when
     orderItemDao.deleteBatch(삭제할_주문아이템_아이디);
 
     //then
-    final List<OrderItem> deletedOrderItems = orderItemDao.findByOrderId2(orderId);
+    final List<OrderItem> deletedOrderItems = orderItemDao.findByOrderId(orderId);
 
     assertEquals(0, deletedOrderItems.size());
   }
