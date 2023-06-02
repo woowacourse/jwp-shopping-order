@@ -1,5 +1,7 @@
 package cart.service;
 
+import static java.util.stream.Collectors.toUnmodifiableList;
+
 import cart.domain.product.Product;
 import cart.domain.vo.Price;
 import cart.repository.ProductRepository;
@@ -42,5 +44,11 @@ public class ProductService {
 
     public void deleteProduct(final Long productId) {
         productRepository.deleteProduct(productId);
+    }
+
+    public List<ProductResponse> getProductPagination(final Long limit, final Long scrollCount) {
+        return productRepository.findAllPagination(limit, scrollCount).stream()
+                .map(ProductResponse::from)
+                .collect(toUnmodifiableList());
     }
 }

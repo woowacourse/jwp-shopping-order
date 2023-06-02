@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,9 +27,16 @@ public class ProductApiController {
         this.productService = productService;
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+//        return ResponseEntity.ok(productService.getAllProducts());
+//    }
+
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> getAllProductsPagination(
+            @RequestParam final Long limit
+            , @RequestParam(value = "scroll-count") final Long scrollCount) {
+        return ResponseEntity.ok(productService.getProductPagination(limit, scrollCount));
     }
 
     @GetMapping("/{id}")

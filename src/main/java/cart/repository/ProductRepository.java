@@ -39,4 +39,10 @@ public class ProductRepository {
     public void deleteProduct(final Long productId) {
         productDao.deleteProduct(productId);
     }
+
+    public List<Product> findAllPagination(final Long limit, final Long scrollCount) {
+        return productDao.findAllPagination(limit, scrollCount).stream()
+                .map(ProductDto::toProduct)
+                .collect(toUnmodifiableList());
+    }
 }

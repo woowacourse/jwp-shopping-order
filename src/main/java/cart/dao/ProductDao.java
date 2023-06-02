@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
 
+    private static final RowMapper<ProductDto> PRODUCT_DTO_ROW_MAPPER = (rs, rowNum) -> {
+        Long productId = rs.getLong("id");
+        String name = rs.getString("name");
+        int price = rs.getInt("price");
+        String imageUrl = rs.getString("image_url");
+        return new ProductDto(productId, name, price, imageUrl);
+    };
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final DataSource dataSource) {
@@ -22,13 +30,7 @@ public class ProductDao {
 
     public List<ProductDto> getAllProducts() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new ProductDto(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.query(sql, PRODUCT_DTO_ROW_MAPPER);
     }
 
     public ProductDto getProductById(final Long productId) {
@@ -68,5 +70,10 @@ public class ProductDao {
     public void deleteProduct(final Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public List<ProductDto> findAllPagination(final Long limit, final Long scrollCount) {
+        final String sql = "SELECT * FROM product LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, PRODUCT_DTO_ROW_MAPPER, limit, scrollCount * limit);
     }
 }
