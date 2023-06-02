@@ -1,13 +1,16 @@
 package cart.repository;
 
+import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.OrderItems;
+import cart.domain.Payment;
 import cart.repository.dao.OrderDao;
 import cart.repository.entity.OrderEntity;
 import cart.repository.entity.OrderItemEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -61,30 +64,30 @@ public class OrderRepository {
         List<OrderItems> orders = new ArrayList<>();
         for (long orderId : orderIds) {
             List<OrderItemEntity> orderItemEntities = orderDao.getOrdersByMemberId(memberId);
-            OrderItems orderItems = orderItemEntities.stream()
-                    .map(orderItemEntity -> new OrderItem.Builder()
-                            .id(orderItemEntity.getId())
-                            .orderId(orderItemEntity.getOrderId())
-                            .productName(orderItemEntity.getProductName())
-                            .productPrice(orderItemEntity.getProductPrice())
-                            .productImageUrl(orderItemEntity.getProductImageUrl())
-                            .quantity(orderItemEntity.getQuantity())
-                            .build()
-                    ).collect(collectingAndThen(toList(), (items) -> new OrderItems(orderId, items)));
+            OrderItems orderItems = toOrderItems(orderId, orderItemEntities);
             orders.add(orderItems);
         }
         return orders;
     }
 
-    // 주문 상세
-//    public Order findOrderById(Member member, long orderId) {
-//        OrderItems orderItems = findOrderItemsByMemberId(member.getId());
-//        OrderEntity orderEntity = findOrderDetailById(orderId);
-//        Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
-//        return new Order(orderId, member, orderItems, payment, orderEntity.getCreatedAt());
-//    }
+    private static OrderItems toOrderItems(long orderId, List<OrderItemEntity> orderItemEntities) {
+        return orderItemEntities.stream()
+                .map(orderItemEntity -> new OrderItem.Builder()
+                        .id(orderItemEntity.getId())
+                        .orderId(orderItemEntity.getOrderId())
+                        .productName(orderItemEntity.getProductName())
+                        .productPrice(orderItemEntity.getProductPrice())
+                        .productImageUrl(orderItemEntity.getProductImageUrl())
+                        .quantity(orderItemEntity.getQuantity())
+                        .build()
+                ).collect(collectingAndThen(toList(), (items) -> new OrderItems(orderId, items)));
+    }
 
-    private OrderEntity findOrderDetailById(long orderId) {
-        return orderDao.getOrderById(orderId);
+    // 주문 상세
+    public Order findOrderById(Member member, long orderId) {
+        OrderEntity orderEntity = orderDao.getOrderById(orderId);
+        OrderItems orderItems = toOrderItems(orderId, orderDao.getOrderItemByOrderId(orderId));
+        Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
+        return new Order(orderId, member, orderItems, payment, orderEntity.getCreatedAt());
     }
 }

@@ -76,4 +76,9 @@ public class OrderService {
     public List<OrderItems> getOrderByMember(Member member) {
         return orderRepository.findOrderItemsByMemberId(member.getId());
     }
+
+    // 주문 상세
+    public Order getOrderDetailById(Member member, long orderId) {
+        return orderRepository.findOrderById(member, orderId);
+    }
 }

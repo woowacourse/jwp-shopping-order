@@ -89,13 +89,17 @@ public class OrderDao {
                     .id(resultSet.getLong("id"))
                     .memberId(resultSet.getLong("member_id"))
                     .totalPayment(resultSet.getInt("total_payment"))
-                    .usedPoint(resultSet.getInt("point"))
+                    .usedPoint(resultSet.getInt("used_point"))
                     .createdAt(resultSet.getTimestamp("created_at"))
                     .build();
 
-
     public OrderEntity getOrderById(long orderId) {
-        String query = "SELECT * FROM orders WHERE order_id = ?";
+        String query = "SELECT * FROM orders WHERE id = ?";
         return jdbcTemplate.queryForObject(query, orderEntityRowMapper, orderId);
+    }
+
+    public List<OrderItemEntity> getOrderItemByOrderId(long orderId) {
+        String query = "SELECT * FROM order_item WHERE order_id = ?";
+        return jdbcTemplate.query(query, orderItemEntityRowMapper, orderId);
     }
 }

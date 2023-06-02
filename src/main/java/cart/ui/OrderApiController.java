@@ -9,6 +9,7 @@ import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,5 +46,21 @@ public class OrderApiController {
         return orderItems.stream()
                 .map(orderItem -> new OrderItemsResponse(orderItem.getOrderId(), orderItem.getOrderItems()))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> showOrderDetail(Member member, @PathVariable long id) {
+        Order orderDetail = orderService.getOrderDetailById(member, id);
+        return ResponseEntity.ok(toOrderDetailResponse(orderDetail));
+    }
+
+    private OrderResponse toOrderDetailResponse(Order order) {
+        return new OrderResponse(
+                order.getId(),
+                order.getOrderItems(),
+                order.getPayment().getTotalPayment(),
+                order.getPayment().getUsedPoint(),
+                order.getCreatedAt()
+        );
     }
 }
