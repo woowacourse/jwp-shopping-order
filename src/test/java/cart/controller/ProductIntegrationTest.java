@@ -1,4 +1,4 @@
-package cart.integration;
+package cart.controller;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;

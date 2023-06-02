@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-class OrderIntegrationRefactorTest extends IntegrationRefactorTest {
+class OrderIntegrationTest extends IntegrationTest {
 
     @DisplayName("쿠폰을 사용하지 않은 주문내역을 조회한다.")
     @Test

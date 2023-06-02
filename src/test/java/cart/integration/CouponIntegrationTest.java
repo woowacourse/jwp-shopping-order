@@ -19,7 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
-class CouponIntegrationRefactorTest extends IntegrationRefactorTest {
+class CouponIntegrationTest extends IntegrationTest {
 
     @DisplayName("멤버가 보유한 모든 멤버쿠폰들을 조회한다.")
     @Test
