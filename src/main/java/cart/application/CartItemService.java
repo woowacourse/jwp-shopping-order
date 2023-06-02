@@ -5,8 +5,11 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.dto.PagedCartItemsResponse;
+import cart.dto.PaginationInfoDto;
 import cart.repository.dao.CartItemDao;
 import cart.repository.dao.ProductDao;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +27,7 @@ public class CartItemService {
 
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
-        return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
+        return cartItems.stream().map(CartItemResponse::from).collect(Collectors.toList());
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
@@ -71,6 +74,23 @@ public class CartItemService {
         final CartItem findCartItem = cartItemDao.findById(cartItemId);
         findCartItem.checkOwner(member);
 
-        return CartItemResponse.of(findCartItem);
+        return CartItemResponse.from(findCartItem);
+    }
+
+    public PagedCartItemsResponse getPagedCartItems(final Member member, final int unitSize, final int page) {
+        final List<CartItem> allCartItems = cartItemDao.findByMemberId(member.getId());
+
+        int startOrder = unitSize * (page - 1);
+        final List<CartItem> pagedCartItems = allCartItems.stream()
+                .sorted(Comparator.comparingLong(CartItem::getId).reversed())
+                .skip(startOrder)
+                .limit(unitSize)
+                .collect(Collectors.toUnmodifiableList());
+
+        final List<CartItemResponse> cartItemResponse = CartItemResponse.from(pagedCartItems);
+        final int lastPage = (int) Math.ceil((double) allCartItems.size() / unitSize);
+        final PaginationInfoDto paginationInfo = new PaginationInfoDto(allCartItems.size(), unitSize, page, lastPage);
+
+        return new PagedCartItemsResponse(cartItemResponse, paginationInfo);
     }
 }
