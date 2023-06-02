@@ -1,5 +1,7 @@
 package cart.dto.response;
 
+import cart.domain.coupon.Coupon;
+
 public class CouponResponse {
     private final Long id;
     private final String name;
@@ -15,6 +17,12 @@ public class CouponResponse {
         this.minimumPrice = minimumPrice;
         this.discountRate = discountRate;
         this.discountAmount = discountAmount;
+    }
+
+    public static CouponResponse of(Coupon coupon) {
+        return new CouponResponse(
+                coupon.getId(), coupon.getName(), coupon.getCouponTypes().getCouponTypeName(),
+                coupon.getMinimumPrice(), coupon.getDiscountRate(), coupon.getDiscountPrice());
     }
 
     public Long getId() {

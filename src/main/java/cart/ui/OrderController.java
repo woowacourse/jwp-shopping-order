@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.dto.OrderResponse;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrdersResponse;
 import org.springframework.http.ResponseEntity;
@@ -31,4 +32,9 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> getOrder(Member member, @PathVariable("id") Long id){
+        OrderResponse order = orderService.findByOrderId(member, id);
+        return ResponseEntity.ok(order);
+    }
 }

@@ -10,6 +10,7 @@ import cart.domain.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.repository.OrderRepository;
 import cart.entity.OrderEntity;
+import cart.exception.OrderException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,6 +38,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     public List<Order> findAllByMemberId(Member member) {
         return orderDao.findAllByMemberId(member.getId()).stream()
                 .map(this::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public Order findByOrderId(Member member, Long orderId) {
+        return toDomain(orderDao.findByOrderId(member.getId(),orderId).orElseThrow(() -> new OrderException("주문 상세정보를 찾을 수 없습니다.")));
     }
 
     private OrderEntity toEntity(Order order) {

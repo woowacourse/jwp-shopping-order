@@ -20,12 +20,12 @@ CREATE TABLE if not exists member (
 );
 
 CREATE TABLE if not exists cart_item (
- id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
- member_id BIGINT NOT NULL,
- product_id BIGINT NOT NULL,
- quantity INT NOT NULL,
- FOREIGN KEY (member_id) REFERENCES member(id),
-FOREIGN KEY (product_id) REFERENCES product(id)
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
 CREATE TABLE if not exists coupon(
@@ -43,16 +43,16 @@ CREATE TABLE if not exists member_coupon(
     member_id BIGINT NOT NULL,
     availability BOOLEAN NOT NULL,
     FOREIGN KEY (coupon_id) REFERENCES coupon(id),
-FOREIGN KEY (member_id) REFERENCES member(id)
+    FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
 CREATE TABLE if not exists orders(
-id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-member_id BIGINT NOT NULL,
-original_price INT NOT NULL,
-discount_price INT NOT NULL,
-confirm_state BOOLEAN NOT NULL,
-FOREIGN KEY (member_id) REFERENCES member(id)
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    original_price INT NOT NULL,
+    discount_price INT NOT NULL,
+    confirm_state BOOLEAN NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
 CREATE TABLE if not exists order_coupon(
@@ -60,15 +60,15 @@ CREATE TABLE if not exists order_coupon(
    coupon_id BIGINT NOT NULL,
    member_id BIGINT NOT NULL,
    FOREIGN KEY (coupon_id) REFERENCES coupon(id),
-FOREIGN KEY (member_id) REFERENCES member(id)
+    FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
 CREATE TABLE if not exists order_product(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name varchar(255) NOT NULL,
-image_url varchar(255) NOT NULL,
-price INT NOT NULL,
-quantity INT NOT NULL,
-order_id BIGINT NOT NULL,
-FOREIGN KEY (order_id) REFERENCES orders(id) on delete cascade
+    image_url varchar(255) NOT NULL,
+    price INT NOT NULL,
+    quantity INT NOT NULL,
+    order_id BIGINT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) on delete cascade
 );

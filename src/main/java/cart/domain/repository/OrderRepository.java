@@ -11,4 +11,6 @@ public interface OrderRepository {
     Long saveOrder(Order order);
 
     List<Order> findAllByMemberId(Member member);
+
+    Order findByOrderId(Member member, Long orderId);
 }

@@ -87,4 +87,30 @@ class OrderRepositoryTest {
                 () -> assertThat(orders.get(1).calculatePrice()).isEqualTo(1100)
         );
     }
+
+    @Test
+    @DisplayName("특정 사용자의 특정 주문을 조회한다.")
+    void findOrder() {
+        Member member = memberDao.getMemberById(1L);
+        Long 오션 = productRepository.createProduct(new Product("오션", 1000, "ocean.jpg"));
+        Long 바다 = productRepository.createProduct(new Product("바다", 100, "바다.jpg"));
+        CartItem cartItem1 = new CartItem(1L, 1, productRepository.getProductById(오션), member);
+        CartItem cartItem2 = new CartItem(2L, 1, productRepository.getProductById(바다), member);
+        Long 카트_오션 = cartItemRepository.save(cartItem1);
+        Long 카트_바다 = cartItemRepository.save(cartItem2);
+        List<CartItem> cartItems1 = List.of(cartItemRepository.findById(카트_오션), cartItemRepository.findById(카트_바다));
+
+        Order requestOrder = new Order(member, cartItems1, Coupon.empty());
+        Long orderId1 = orderRepository.saveOrder(requestOrder);
+        orderProductRepository.saveOrderProductsByOrderId(orderId1,requestOrder);
+
+        Order order = orderRepository.findByOrderId(member, orderId1);
+
+        assertAll(
+                () -> assertThat(order.getMember()).usingRecursiveComparison().isEqualTo(member),
+                () -> assertThat(order.getCartProducts().get(0).getProduct().getName()).isEqualTo("오션"),
+                () -> assertThat(order.getCartProducts().get(1).getProduct().getName()).isEqualTo("바다"),
+                () -> assertThat(order.calculatePrice()).isEqualTo(1100)
+        );
+    }
 }

@@ -4,8 +4,11 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.repository.*;
+import cart.dto.OrderResponse;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.CouponResponse;
 import cart.dto.response.OrdersResponse;
+import cart.dto.response.ProductQuantityResponse;
 import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,4 +58,14 @@ public class OrderService {
                 .map(OrdersResponse::of).collect(Collectors.toList());
     }
 
+    public OrderResponse findByOrderId(Member member, Long orderId) {
+        Order order = orderRepository.findByOrderId(member, orderId);
+
+        List<ProductQuantityResponse> products = order.getCartProducts().stream()
+                .map(ProductQuantityResponse::of)
+                .collect(Collectors.toList());
+
+        return new OrderResponse(order.getId(), products, order.calculatePrice(), order.calculateDiscountPrice(),
+                order.getConfirmState(), CouponResponse.of(order.getCoupon()));
+    }
 }

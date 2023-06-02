@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.OrderEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderDao {
@@ -41,5 +43,15 @@ public class OrderDao {
     public Long saveOrder(OrderEntity orderEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(orderEntity);
         return insertAction.executeAndReturnKey(params).longValue();
+    }
+
+    public Optional<OrderEntity> findByOrderId(Long memberId, Long orderId) {
+        try {
+            String sql = "select * from orders where id = ? and member_id = ?";
+
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, orderId, memberId));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
