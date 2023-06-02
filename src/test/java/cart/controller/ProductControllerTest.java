@@ -51,7 +51,7 @@ class ProductControllerTest {
         final Product product1 = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
         final Product product2 = productRepository.save(new Product("우가티", "tea.jpg", 20000L));
 
-        // when
+        // expect
         mockMvc.perform(get("/products")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -72,7 +72,7 @@ class ProductControllerTest {
         // given
         final Product product = productRepository.save(new Product("허브티", "tea.jpg", 1000L));
 
-        // when
+        // expect
         mockMvc.perform(get("/products/" + product.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

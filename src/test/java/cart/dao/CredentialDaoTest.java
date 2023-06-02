@@ -1,18 +1,15 @@
 package cart.dao;
 
+import static cart.fixture.MemberFixture.사용자1_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.auth.Credential;
 import cart.test.RepositoryTest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -20,28 +17,15 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 class CredentialDaoTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
-    private SimpleJdbcInsert memberJdbcInsert;
+    private MemberDao memberDao;
 
     @Autowired
     private CredentialDao credentialDao;
 
-    @BeforeEach
-    void setUp() {
-        memberJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("member")
-                .usingColumns("email", "password")
-                .usingGeneratedKeyColumns("id");
-    }
-
     @Test
     void 이메일을_입력받아_동일한_이메일을_가진_사용자를_조회한다() {
         // given
-        final MapSqlParameterSource parameter = new MapSqlParameterSource();
-        parameter.addValue("email", "pizza1@pizza.com");
-        parameter.addValue("password", "password");
-        memberJdbcInsert.executeAndReturnKey(parameter).longValue();
+        memberDao.insert(사용자1_엔티티);
 
         // when
         final Credential credential = credentialDao.findByEmail("pizza1@pizza.com").get();

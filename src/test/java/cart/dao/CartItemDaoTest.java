@@ -12,12 +12,10 @@ import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
 import cart.test.RepositoryTest;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -25,20 +23,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class CartItemDaoTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private CartItemDao cartItemDao;
 
+    @Autowired
     private MemberDao memberDao;
 
+    @Autowired
     private ProductDao productDao;
-
-    @BeforeEach
-    void setUp() {
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        memberDao = new MemberDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
-    }
 
     @Test
     void 장바구니에_상품을_추가한다() {
