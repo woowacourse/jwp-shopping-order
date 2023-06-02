@@ -30,11 +30,13 @@ public class CartItemService {
     }
 
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
-        final Optional<CartItem> cartItem = cartItemDao.findByMemberIdAndProductId(member.getId(),
+        final Optional<CartItem> optionalCartItem = cartItemDao.findByMemberIdAndProductId(member.getId(),
             cartItemRequest.getProductId());
-        if (cartItem.isPresent()) {
-            final CartItem updatedCartItem = cartItem.get().addQuantity(cartItemRequest.getQuantity());
+        if (optionalCartItem.isPresent()) {
+            final CartItem cartItem = optionalCartItem.get();
+            final CartItem updatedCartItem = cartItem.addQuantity(cartItemRequest.getQuantity());
             cartItemDao.updateQuantity(updatedCartItem);
+            return cartItem.getId();
         }
         return cartItemDao.save(
             new CartItem(cartItemRequest.getQuantity(), productDao.getProductById(cartItemRequest.getProductId()),
