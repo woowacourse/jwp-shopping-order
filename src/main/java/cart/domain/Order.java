@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.exception.OrderException;
+import cart.exception.PointException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,13 +47,13 @@ public class Order {
 
     private static void validateCartItems(final List<CartItem> cartItems) {
         if (cartItems.isEmpty()) {
-            throw new IllegalArgumentException("최소 하나 이상의 상품이 포함되어야 합니다.");
+            throw new OrderException.EmptyOrder();
         }
     }
 
     private static void validatePoint(final int memberPoint, final int usedPoints) {
         if (memberPoint < usedPoints) {
-            throw new IllegalArgumentException("보유한 포인트가 부족합니다.");
+            throw new PointException.NotEnough(memberPoint, usedPoints);
         }
     }
 

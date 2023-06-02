@@ -1,6 +1,8 @@
 package cart.domain;
 
 import cart.Fixture;
+import cart.exception.OrderException;
+import cart.exception.PointException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -31,13 +33,13 @@ class OrderTest {
     @Test
     void generatePointFail() {
         assertThatThrownBy(() -> Order.of(Fixture.memberA, 9999, List.of(Fixture.cartItem1)))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(PointException.NotEnough.class);
     }
 
     @DisplayName("주문한 상품의 개수가 0이면 예외가 발생한다")
     @Test
     void generateCartItemSizeFail() {
         assertThatThrownBy(() -> Order.of(Fixture.memberA, 0, List.of()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(OrderException.EmptyOrder.class);
     }
 }

@@ -1,10 +1,7 @@
 package cart.ui;
 
 import cart.dto.ExceptionResponse;
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
-import cart.exception.MemberException;
-import cart.exception.ProductException;
+import cart.exception.*;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,7 +18,7 @@ import java.util.stream.Collectors;
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
+    public ResponseEntity<ExceptionResponse> handleException(final Exception ex) {
         logger.error("", ex);
 
         return ResponseEntity.internalServerError()
@@ -29,7 +26,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ExceptionResponse> handlerAuthenticationException(AuthenticationException ex) {
+    public ResponseEntity<ExceptionResponse> handlerAuthenticationException(final AuthenticationException ex) {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -37,7 +34,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<ExceptionResponse> handleException(CartItemException.IllegalMember ex) {
+    public ResponseEntity<ExceptionResponse> handleException(final CartItemException.IllegalMember ex) {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
@@ -45,7 +42,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CartItemException.AlreadyExist.class)
-    public ResponseEntity<ExceptionResponse> handleException(CartItemException.AlreadyExist ex) {
+    public ResponseEntity<ExceptionResponse> handleException(final CartItemException.AlreadyExist ex) {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
@@ -55,21 +52,31 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({CartItemException.NotFound.class,
             ProductException.NotFound.class,
             MemberException.NotFound.class})
-    public ResponseEntity<ExceptionResponse> handleException(RuntimeException ex) {
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(final RuntimeException ex) {
         logger.info("", ex);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatus status,
-                                                                  WebRequest request) {
+    @ExceptionHandler({OrderException.EmptyOrder.class,
+            PointException.NotEnough.class,
+            PointException.NegativePoint.class})
+    public ResponseEntity<ExceptionResponse> handleException(final RuntimeException ex) {
         logger.info("", ex);
 
-        String fieldErrorMessage = ex.getBindingResult().getFieldErrors()
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex,
+                                                                  final HttpHeaders headers,
+                                                                  final HttpStatus status,
+                                                                  final WebRequest request) {
+        logger.info("", ex);
+
+        final String fieldErrorMessage = ex.getBindingResult().getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
@@ -80,11 +87,11 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
-            Exception ex,
-            Object body,
-            HttpHeaders headers,
-            HttpStatus status,
-            WebRequest request) {
+            final Exception ex,
+            final Object body,
+            final HttpHeaders headers,
+            final HttpStatus status,
+            final WebRequest request) {
         logger.warn("", ex);
 
         return super.handleExceptionInternal(ex, body, headers, status, request);

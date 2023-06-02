@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.PointException;
+
 import java.util.Objects;
 
 public class Point {
@@ -8,13 +10,13 @@ public class Point {
     private final int point;
 
     public Point(final int point) {
-
+        validatePoint(point);
         this.point = point;
     }
 
     private void validatePoint(final int point) {
         if (point < MINIMUM_POINT) {
-            throw new IllegalArgumentException("포인트는 음수일 수 없습니다");
+            throw new PointException.NegativePoint(point);
         }
     }
 
