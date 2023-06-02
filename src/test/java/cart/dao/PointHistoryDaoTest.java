@@ -52,10 +52,10 @@ class PointHistoryDaoTest {
         jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 3, 1400, '주문 포인트 적립', '2023-06-15', '2023-09-30')");
 
         jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(2, 1, 1000)");
-        jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(2, 1, 2000)");
+        jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(3, 1, 2000)");
     }
 
-    @DisplayName("")
+    @DisplayName("포인트 id를 기준으로 사용한 이력을 조회할 수 있다.")
     @Test
     void findByPointIds() {
         PointHistoryEntity expected1 = new PointHistoryEntity(1L, 2L, 1L, 1000);
@@ -63,6 +63,16 @@ class PointHistoryDaoTest {
 
         List<PointHistoryEntity> pointHistoryEntities = pointHistoryDao.findByPointIds(List.of(1L));
 
-        assertThat(pointHistoryEntities).containsAnyOf(expected1, expected2);
+        assertThat(pointHistoryEntities).containsExactlyInAnyOrder(expected1, expected2);
+    }
+
+    @DisplayName("포인트 사용 이력을 저장할 수 있다.")
+    @Test
+    void save() {
+        pointHistoryDao.save(3L, 2L, 5000);
+
+        Integer usedPoint = jdbcTemplate.queryForObject("select used_point from point_history where orders_id = 3 and point_id = 2", Integer.class);
+
+        assertThat(usedPoint).isEqualTo(5000);
     }
 }

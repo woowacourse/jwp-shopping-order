@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -20,13 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 @Sql(value = {"classpath:test_init.sql"})
-class PointHistoryEntityDaoTest {
+class OrderItemDaoTest {
 
     private JdbcTemplate jdbcTemplate;
     private OrderItemDao orderItemDao;
 
     @Autowired
-    public PointHistoryEntityDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrderItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.orderItemDao = new OrderItemDao(jdbcTemplate);
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -58,7 +57,7 @@ class PointHistoryEntityDaoTest {
     void findByOrderId() {
         List<OrderItem> orderItems = orderItemDao.findByOrderId(1L);
 
-        assertThat(orderItems).containsAnyOf(new OrderItem(product1, 3, 30000), new OrderItem(product2, 2, 40000));
+        assertThat(orderItems).containsExactlyInAnyOrder(new OrderItem(product1, 3, 30000), new OrderItem(product2, 2, 40000));
     }
 
     @DisplayName("주문 상품 정보를 추가할 수 있다.")

@@ -67,6 +67,6 @@ class PointDaoTest {
 
         List<PointEntity> points = pointDao.findByMemberId(1L);
 
-        assertThat(points).containsAnyOf(expected1, expected2);
+        assertThat(points).containsExactlyInAnyOrder(expected1, expected2);
     }
 }

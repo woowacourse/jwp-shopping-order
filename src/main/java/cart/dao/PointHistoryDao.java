@@ -2,10 +2,12 @@ package cart.dao;
 
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -29,6 +31,12 @@ public class PointHistoryDao {
         String sql = String.format("select * from point_history where point_id in (%s)", inSql);
 
         return jdbcTemplate.query(sql, new PointHistoryRowMapper());
+    }
+
+    public void save(Long orderId, Long pointId, int usedPoint) {
+        String sql = "insert into point_history(orders_id, point_id, used_point) values(?, ?, ?)";
+
+        jdbcTemplate.update(sql, orderId, pointId, usedPoint);
     }
 
     private static class PointHistoryRowMapper implements RowMapper<PointHistoryEntity> {
