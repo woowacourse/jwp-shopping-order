@@ -3,6 +3,7 @@ package cart.controller;
 import cart.controller.dto.response.ExceptionResponse;
 import cart.exception.AuthorizationException;
 import cart.exception.CartItemNotFoundException;
+import cart.exception.EmptyCartItemsException;
 import cart.exception.IdTypeException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.NotEnoughQuantityException;
@@ -10,10 +11,14 @@ import cart.exception.NotOwnerException;
 import cart.exception.OrderNotFoundException;
 import cart.exception.PaymentAmountNotEqualException;
 import cart.exception.ProductNotFoundException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,5 +52,20 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handlePaymentAmountNotEqual(PaymentAmountNotEqualException e) {
         return new ExceptionResponse(4001, e.getMessage());
+    }
+
+    @ExceptionHandler(EmptyCartItemsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleEmptyCartItems(EmptyCartItemsException e) {
+        return new ExceptionResponse(4002, e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
+        final String errorMessage = e.getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(" "));
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), errorMessage);
     }
 }
