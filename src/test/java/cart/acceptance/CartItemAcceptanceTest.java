@@ -18,12 +18,13 @@ import static org.springframework.http.HttpStatus.*;
 
 public class CartItemAcceptanceTest extends AcceptanceTest {
 
+    private static final int JOIN_EVENT_POINT = 5000;
     @Autowired
     private MemberRepository memberRepository;
 
     @Test
     void 카트에_아이템을_추가한다() {
-        memberRepository.addMember(MEMBER_GITCHAN);
+        memberRepository.addMember(MEMBER_GITCHAN, JOIN_EVENT_POINT);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
 
         final ExtractableResponse<Response> response = 카트에_아이템_추가_요청(MEMBER_GITCHAN, new CartItemCreateRequest(productId, 1));
@@ -37,7 +38,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 카트에_저장된_아이템의_개수를_변경한다() {
-        memberRepository.addMember(MEMBER_GITCHAN);
+        memberRepository.addMember(MEMBER_GITCHAN, JOIN_EVENT_POINT);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
         final Long cartItemId = 카트에_아이템_추가하고_아이디_반환(MEMBER_GITCHAN, new CartItemCreateRequest(productId, 1));
 
@@ -51,7 +52,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 카트에_저장된_아이템을_삭제한다() {
-        memberRepository.addMember(MEMBER_GITCHAN);
+        memberRepository.addMember(MEMBER_GITCHAN, JOIN_EVENT_POINT);
         final Long productId = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
         final Long cartItemId = 카트에_아이템_추가하고_아이디_반환(MEMBER_GITCHAN, new CartItemCreateRequest(productId, 1));
 

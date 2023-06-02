@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
+    private static final int JOIN_EVENT_POINT = 5000;
     private final MemberRepository memberRepository;
 
     public MemberService(final MemberRepository memberRepository) {
@@ -20,7 +21,7 @@ public class MemberService {
     }
 
     public MemberCreateResponse join(final MemberCreateRequest request) {
-        final Member member = memberRepository.addMember(new Member(request.getEmail(), request.getPassword()));
+        final Member member = memberRepository.addMember(new Member(request.getEmail(), request.getPassword()), JOIN_EVENT_POINT);
         return MemberCreateResponse.from(member);
     }
 

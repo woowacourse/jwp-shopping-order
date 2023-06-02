@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Repository
 public class MemberRepository {
 
-    private static final int JOIN_EVENT_POINT = 5_000;
     private final MemberDao memberDao;
     private final PointDao pointDao;
 
@@ -22,9 +21,9 @@ public class MemberRepository {
         this.pointDao = pointDao;
     }
 
-    public Member addMember(final Member member) {
+    public Member addMember(final Member member, final int joinEventPoint) {
         final MemberEntity savedMember = memberDao.addMember(MemberEntity.from(member));
-        pointDao.insert(new PointEntity(savedMember.getId(), JOIN_EVENT_POINT));
+        pointDao.insert(new PointEntity(savedMember.getId(), joinEventPoint));
         return savedMember.toMember();
     }
 

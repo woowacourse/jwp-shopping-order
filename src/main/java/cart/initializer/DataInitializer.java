@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 
 @Component
 public class DataInitializer {
+    private static final int JOIN_EVENT_POINT = 5000;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CartItemRepository cartItemRepository;
@@ -34,9 +35,9 @@ public class DataInitializer {
         final Long 주노 = productRepository.createProduct(new Product("주노", 130000, "https://lh3.googleusercontent.com/u/0/drive-viewer/AFGJ81qqjh0GfuPMQ9cdRtm87_mDsspllcIMj7-xGLal4AP1EBaGPTXTjBb1sgxk-_Vg8Z93PLDGHWNiXmKf62JKdTKW5M6Sfg=w1470-h1546"));
         final Long 리내 = productRepository.createProduct(new Product("이리내", 13000, "https://lh3.googleusercontent.com/drive-viewer/AFGJ81q1kSc2EAZwZT_zwpumBoAFR3VqLcnkWHBVY5gNUifsVnhclYyjQM_4I0i3Hhi4a3wq7Tvn1kDNjV_205z3_tH96avW=w1470-h1546"));
 
-        final Member savedMember1 = memberRepository.addMember(new Member("a@a.com", "1234"));
-        final Member savedMember2 = memberRepository.addMember(new Member("b@b.com", "1234"));
-        final Member savedMember3 = memberRepository.addMember(new Member("ringlo@email.com", "ringlo1010235"));
+        final Member savedMember1 = memberRepository.addMember(new Member("a@a.com", "1234"), JOIN_EVENT_POINT);
+        final Member savedMember2 = memberRepository.addMember(new Member("b@b.com", "1234"), JOIN_EVENT_POINT);
+        final Member savedMember3 = memberRepository.addMember(new Member("ringlo@email.com", "ringlo1010235"), JOIN_EVENT_POINT);
 
         cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(깃짱), 1));
         cartItemRepository.save(new CartItem(savedMember1, productRepository.getProductById(제리), 1));

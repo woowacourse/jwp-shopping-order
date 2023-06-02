@@ -25,6 +25,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 public class PayAcceptanceTest extends AcceptanceTest {
 
+    private static final int JOIN_EVENT_POINT = 5000;
     @Autowired
     private MemberRepository memberRepository;
 
@@ -33,7 +34,7 @@ public class PayAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 카트에_담긴_아이템을_주문할_수_있다() {
-        final Member savedMember = memberRepository.addMember(MEMBER_GITCHAN);
+        final Member savedMember = memberRepository.addMember(MEMBER_GITCHAN, JOIN_EVENT_POINT);
         final Long product1Id = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
         final Long product2Id = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_AIRPOD);
         final Long cartItem1Id = 카트에_아이템_추가하고_아이디_반환(savedMember, new CartItemCreateRequest(product1Id, 1));
@@ -54,7 +55,7 @@ public class PayAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 카트에_담긴_아이템의_총_가격이_변동하면_예외가_발생한다() {
-        final Member savedMember = memberRepository.addMember(MEMBER_GITCHAN);
+        final Member savedMember = memberRepository.addMember(MEMBER_GITCHAN, JOIN_EVENT_POINT);
         final Long product1Id = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_CAMERA_EOS_M200);
         final Long product2Id = 제품_추가하고_아이디_반환(PRODUCT_REQUEST_AIRPOD);
         final Long cartItem1Id = 카트에_아이템_추가하고_아이디_반환(savedMember, new CartItemCreateRequest(product1Id, 1));
