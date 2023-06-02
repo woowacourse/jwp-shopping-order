@@ -13,7 +13,7 @@ public class TestFeatures {
 
     public static final Product 상품1_치킨 = new Product(1L, "치킨", 10_000, "testImage1");
     public static final Product 상품2_샐러드 = new Product(2L, "샐러드", 20_000, "testImage2");
-    public static final Product 상품3_피자 = new Product(3L, "피자", 13_000, "testIamge3");
+    public static final Product 상품3_피자 = new Product(3L, "피자", 13_000, "testImage3");
 
     public static final Member 회원1 = new Member(1L, "a@a.com", "1234");
     public static final Member 회원2 = new Member(2L, "b@b.com", "1234");

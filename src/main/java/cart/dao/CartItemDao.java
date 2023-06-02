@@ -4,6 +4,9 @@ import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,9 +18,13 @@ import java.util.Objects;
 
 @Repository
 public class CartItemDao {
+
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
+    public CartItemDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                       JdbcTemplate jdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -50,14 +57,17 @@ public class CartItemDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, cartItem.getMember().getId());
-            ps.setLong(2, cartItem.getProduct().getId());
+            ps.setLong(1, cartItem.getMember()
+                                  .getId());
+            ps.setLong(2, cartItem.getProduct()
+                                  .getId());
             ps.setInt(3, cartItem.getQuantity());
 
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return Objects.requireNonNull(keyHolder.getKey())
+                      .longValue();
     }
 
     public CartItem findById(Long id) {
@@ -91,6 +101,14 @@ public class CartItemDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByProductIds(Long memberId, List<Long> productIds) {
+        String sql = "DELETE FROM cart_item WHERE member_id = :member_id AND product_id IN (:product_ids)";
+        SqlParameterSource source = new MapSqlParameterSource()
+                .addValue("member_id", memberId)
+                .addValue("product_ids", productIds);
+        namedParameterJdbcTemplate.update(sql, source);
     }
 
     public void updateQuantity(CartItem cartItem) {
