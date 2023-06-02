@@ -130,8 +130,8 @@ VALUES ('백만원 할인', 1000000);
 INSERT INTO member_coupon (member_id, coupon_id)
 VALUES (1, 1);
 
-INSERT INTO member_coupon (member_id, coupon_id)
-VALUES (1, 2);
+INSERT INTO member_coupon (member_id, coupon_id, used_yn)
+VALUES (1, 2, 'Y');
 
 INSERT INTO member_coupon (member_id, coupon_id)
 VALUES (1, 3);
