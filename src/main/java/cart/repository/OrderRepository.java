@@ -1,10 +1,10 @@
 package cart.repository;
 
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderProduct;
-import cart.domain.OrderProducts;
-import cart.domain.Payment;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
+import cart.domain.order.OrderProducts;
+import cart.domain.payment.Payment;
 import cart.repository.dao.OrderDao;
 import cart.repository.entity.OrderEntity;
 import cart.repository.entity.OrderProductEntity;

@@ -1,5 +1,7 @@
-package cart.domain;
+package cart.domain.member;
 
+import cart.domain.payment.Payment;
+import cart.domain.payment.Point;
 import cart.exception.MemberException;
 import cart.exception.PointException;
 

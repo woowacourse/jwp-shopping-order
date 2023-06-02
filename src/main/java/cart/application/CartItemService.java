@@ -1,14 +1,14 @@
 package cart.application;
 
-import cart.repository.dao.CartItemDao;
-import cart.repository.dao.ProductDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.carts.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
+import cart.repository.dao.CartItemDao;
+import cart.repository.dao.ProductDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

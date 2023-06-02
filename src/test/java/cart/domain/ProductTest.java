@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.product.Product;
 import cart.exception.ProductException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

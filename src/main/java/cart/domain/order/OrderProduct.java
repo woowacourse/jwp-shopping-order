@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.order;
 
 public class OrderProduct {
 

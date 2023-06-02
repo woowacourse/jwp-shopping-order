@@ -1,10 +1,10 @@
 package cart.application;
 
-import cart.repository.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ProductException;
+import cart.repository.dao.ProductDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

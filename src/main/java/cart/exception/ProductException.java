@@ -1,6 +1,6 @@
 package cart.exception;
 
-import static cart.domain.Product.*;
+import static cart.domain.product.Product.*;
 
 public class ProductException extends RuntimeException {
 

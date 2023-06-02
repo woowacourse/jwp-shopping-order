@@ -1,11 +1,11 @@
 package cart.application;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderProduct;
-import cart.domain.OrderProducts;
-import cart.domain.Payment;
+import cart.domain.carts.CartItem;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
+import cart.domain.order.OrderProducts;
+import cart.domain.payment.Payment;
 import cart.dto.order.OrderProductsRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;

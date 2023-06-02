@@ -1,4 +1,7 @@
-package cart.domain;
+package cart.domain.order;
+
+import cart.domain.member.Member;
+import cart.domain.payment.Payment;
 
 import java.time.LocalDateTime;
 

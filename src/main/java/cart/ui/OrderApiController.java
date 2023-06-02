@@ -1,10 +1,10 @@
 package cart.ui;
 
 import cart.application.OrderService;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderProduct;
-import cart.domain.OrderProducts;
+import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderProduct;
+import cart.domain.order.OrderProducts;
 import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderProductsRequest;
 import cart.dto.order.OrderProductsResponse;

@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.member.Member;
 import cart.exception.MemberException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

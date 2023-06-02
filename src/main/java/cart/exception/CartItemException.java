@@ -1,8 +1,8 @@
 package cart.exception;
 
-import cart.domain.CartItem;
+import cart.domain.carts.CartItem;
 
-import static cart.domain.CartItem.MINIMUM_QUANTITY;
+import static cart.domain.carts.CartItem.MINIMUM_QUANTITY;
 
 public class CartItemException extends RuntimeException {
 

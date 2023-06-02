@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.payment;
 
 public class Payment {
 

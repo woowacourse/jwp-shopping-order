@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.domain.CartItem;
+import cart.domain.carts.CartItem;
 import cart.repository.dao.CartItemDao;
 import org.springframework.stereotype.Repository;
 

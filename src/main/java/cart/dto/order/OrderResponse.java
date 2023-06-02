@@ -1,6 +1,6 @@
 package cart.dto.order;
 
-import cart.domain.OrderProducts;
+import cart.domain.order.OrderProducts;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
