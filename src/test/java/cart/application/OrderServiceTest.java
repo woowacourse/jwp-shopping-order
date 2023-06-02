@@ -18,6 +18,7 @@ import cart.exception.PriceNotMatchException;
 import cart.fixture.CartItemFixture;
 import cart.fixture.MemberFixture;
 import cart.fixture.OrderFixture;
+import cart.fixture.OrderResponseFixture;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
@@ -48,7 +49,7 @@ class OrderServiceTest {
     void createOrder() {
         given(cartItemRepository.findByIds(any(), any())).willReturn(CartItems.of(List.of(CartItemFixture.CHICKEN, CartItemFixture.PIZZA)));
         given(pointRepository.updatePoint(any(), any(), any(), any())).willReturn(new OrderPoint(1L, Point.valueOf(100), Point.valueOf(50)));
-        given(orderRepository.createOrder(any(), any())).willReturn(new Order(10L, OrderFixture.ORDER));
+        given(orderRepository.createOrder(any(), any())).willReturn(new Order(10L, OrderFixture.ORDER1));
         final OrderResponse result = orderService.createOrder(MemberFixture.MEMBER, new OrderRequest(List.of(1L, 2L), 100, 25_000));
         assertAll(
                 () -> assertThat(result.getOrderId()).isEqualTo(10L),
@@ -76,5 +77,15 @@ class OrderServiceTest {
         assertThatThrownBy(() -> orderService.createOrder(MemberFixture.MEMBER, invalidPriceRequest))
                 .isInstanceOf(PriceNotMatchException.class)
                 .hasMessage(new PriceNotMatchException(25_001, 25_000).getMessage());
+    }
+
+    @Test
+    void getOrders() {
+        given(orderRepository.findByMember(any())).willReturn(List.of(OrderFixture.ORDER1, OrderFixture.ORDER2));
+        final List<OrderResponse> orderResponses = orderService.getOrders(MemberFixture.MEMBER);
+        assertAll(
+                () -> assertThat(orderResponses.get(0)).usingRecursiveComparison().isEqualTo(OrderResponseFixture.ORDER1_RESPONSE),
+                () -> assertThat(orderResponses.get(1)).usingRecursiveComparison().isEqualTo(OrderResponseFixture.ORDER2_RESPONSE)
+        );
     }
 }

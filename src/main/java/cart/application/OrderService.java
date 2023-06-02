@@ -2,6 +2,7 @@ package cart.application;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cart.domain.CartItems;
 import cart.domain.Member;
@@ -45,5 +46,12 @@ public class OrderService {
         final OrderPoint orderPoint = pointRepository.updatePoint(member, usedPoint, cartItems.getTotalPrice(), createdAt);
         final Order order = orderRepository.createOrder(member, new Order(cartItems, orderPoint, createdAt));
         return OrderResponse.of(order);
+    }
+
+    public List<OrderResponse> getOrders(final Member member) {
+        final List<Order> orders = orderRepository.findByMember(member);
+        return orders.stream()
+                .map(OrderResponse::of)
+                .collect(Collectors.toList());
     }
 }

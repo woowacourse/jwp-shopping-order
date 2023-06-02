@@ -39,7 +39,7 @@ class OrderRepositoryTest {
 
     @Test
     void createOrder() {
-        final Long id = orderRepository.createOrder(MemberFixture.MEMBER, OrderFixture.ORDER).getId();
+        final Long id = orderRepository.createOrder(MemberFixture.MEMBER, OrderFixture.ORDER1).getId();
         final Optional<OrdersEntity> ordersEntity = ordersDao.findById(id);
         final List<OrderDetailEntity> orderDetailEntities = orderDetailDao.findByOrderId(id);
         assertAll(
