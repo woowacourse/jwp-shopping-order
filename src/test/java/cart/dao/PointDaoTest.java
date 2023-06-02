@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.domain.Point;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,9 +11,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql({"classpath:test_init.sql"})
@@ -39,11 +38,14 @@ class PointDaoTest {
         jdbcTemplate.update("insert into member(email, password) values('konghana@com', '1234')");
 
         jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
+        jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
 
         jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(1, 1, 3, 30000)");
         jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(1, 2, 2, 40000)");
+        jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(2, 3, 2, 26000)");
 
         jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 1, 5600, '주문 포인트 적립', '2023-06-02', '2023-09-30')");
+        jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 2, 1300, '주문 포인트 적립', '2023-06-15', '2023-09-30')");
     }
 
     @DisplayName("주문 번호를 기준으로 포인트를 조회할 수 있다.")
@@ -54,5 +56,16 @@ class PointDaoTest {
         Point point = pointDao.findByOrderId(1L);
 
         assertThat(point).isEqualTo(expected);
+    }
+
+    @DisplayName("주문 번호를 기준으로 포인트를 조회할 수 있다.")
+    @Test
+    void findByMemberId() {
+        Point expected1 = Point.of(1L, 5600, "주문 포인트 적립", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30));
+        Point expected2 = Point.of(2L, 1300, "주문 포인트 적립", LocalDate.of(2023, 06, 15), LocalDate.of(2023, 9, 30));
+
+        List<Point> points = pointDao.findByMemberId(1L);
+
+        assertThat(points).containsAnyOf(expected1, expected2);
     }
 }
