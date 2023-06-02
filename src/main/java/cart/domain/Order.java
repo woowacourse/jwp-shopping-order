@@ -47,7 +47,8 @@ public class Order {
 
         Money calculated = totalPrice.minus(discountingPrice).plus(deliveryFee);
         System.out.println("total" + totalPrice.toInt() + "!!!!!!!!");
-        System.out.println("calculate" + totalPrice.toInt() + "!!!!!!!!");
+        System.out.println("discount" +discountingPrice.toInt() + "!!!!!!!!");
+        System.out.println("calculate" +calculated.toInt() + "!!!!!!!!");
         System.out.println("!!!!!!!!");
 
         if (!this.price.equals(calculated)) {
