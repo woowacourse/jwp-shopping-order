@@ -10,10 +10,11 @@ import cart.domain.order.OrderItems;
 import cart.domain.order.Price;
 import cart.dto.OrderCreateRequest;
 import cart.dto.OrderSelectResponse;
-import cart.dto.OrdersSelectResponse;
+import cart.dto.OrderSimpleInfoResponse;
 import cart.repository.OrderRepository;
 import cart.repository.dao.CartItemDao;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +45,7 @@ public class OrderService {
     }
 
     private void validateOrderPrice(final OrderCreateRequest orderCreateRequest, final Order order) {
-        final Price requestPrice = new Price(orderCreateRequest.getTotalPrice());
+        final Price requestPrice = new Price(orderCreateRequest.getFinalPrice());
         if (!order.getDiscountedPrice().equals(requestPrice)) {
             throw new IllegalArgumentException("계산된 금액이 일치하지 않습니다");
         }
@@ -57,9 +58,11 @@ public class OrderService {
         return OrderSelectResponse.from(order);
     }
 
-    public OrdersSelectResponse getAllOrders(final Member member) {
+    public List<OrderSimpleInfoResponse> getAllOrders(final Member member) {
         List<Order> orders = orderRepository.findAll(member);
 
-        return OrdersSelectResponse.from(orders);
+        return orders.stream()
+                .map(order -> OrderSimpleInfoResponse.from(order))
+                .collect(Collectors.toUnmodifiableList());
     }
 }

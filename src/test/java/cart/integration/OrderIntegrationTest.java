@@ -7,11 +7,11 @@ import cart.dto.OrderCreateRequest;
 import cart.dto.OrderItemSelectResponse;
 import cart.dto.OrderSelectResponse;
 import cart.dto.OrderSimpleInfoResponse;
-import cart.dto.OrdersSelectResponse;
 import cart.repository.dao.MemberDao;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -69,8 +69,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(orderSelectResponse.getId()).isEqualTo(saveId);
         assertThat(orderSelectResponse.getOriginalPrice()).isEqualTo(100_000);
         assertThat(orderSelectResponse.getDiscountPrice()).isEqualTo(5_000);
-        assertThat(orderSelectResponse.getDiscountedPrice()).isEqualTo(totalPrice);
-        assertThat(orderSelectResponse.getCartItems()).map(OrderItemSelectResponse::getId)
+        assertThat(orderSelectResponse.getFinalPrice()).isEqualTo(totalPrice);
+        assertThat(orderSelectResponse.getOrderProducts()).map(OrderItemSelectResponse::getId)
                 .isEqualTo(cartItemIds);
     }
 
@@ -92,10 +92,10 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         // when
         final ExtractableResponse<Response> response = selectAllOrdersByMemberRequest();
-        OrdersSelectResponse ordersSelectResponse = response.as(OrdersSelectResponse.class);
+        final List<OrderSimpleInfoResponse> ordersSelectResponse = Arrays.asList(response.as(OrderSimpleInfoResponse[].class));
 
         // then
-        assertThat(ordersSelectResponse.getOrders()).map(OrderSimpleInfoResponse::getId)
+        assertThat(ordersSelectResponse).map(OrderSimpleInfoResponse::getId)
                 .containsExactly(saveId1, saveId2);
     }
 
