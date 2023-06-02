@@ -14,6 +14,7 @@ import cart.exception.notfound.OrderNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
@@ -49,7 +50,19 @@ public class OrderRepository {
         return orderProductDao.findAllByOrderId(orderId);
     }
 
+    public List<Order> findAllByOrderIds(final List<Long> ids) {
+        return orderDao.findAllByIds(ids);
+    }
+
     public List<Order> findAllByMemberId(final Long memberId) {
         return orderDao.findAllByMemberId(memberId);
+    }
+
+    public void deleteAll(final List<Order> orders) {
+        orders.forEach(order -> orderProductDao.deleteAllByOrderId(order.getId()));
+        final List<Long> orderIds = orders.stream()
+                .map(Order::getId)
+                .collect(Collectors.toList());
+        orderDao.deleteByIds(orderIds);
     }
 }

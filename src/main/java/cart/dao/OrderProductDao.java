@@ -97,4 +97,10 @@ public class OrderProductDao {
 
         return jdbcTemplate.query(sql, orderProductRowMapper, orderId);
     }
+
+    public void deleteAllByOrderId(final Long orderId) {
+        final String sql = "DELETE FROM order_product WHERE order_id = ?";
+
+        jdbcTemplate.update(sql, orderId);
+    }
 }

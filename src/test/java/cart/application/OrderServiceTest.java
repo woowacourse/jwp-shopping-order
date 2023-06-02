@@ -19,6 +19,7 @@ import cart.exception.global.point.InvalidPointUseException;
 import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.notfound.OrderNotFoundException;
 import cart.exception.notfound.ProductNotFoundException;
+import cart.ui.dto.order.OrderDetailResponse;
 import cart.ui.dto.order.OrderRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -211,6 +212,28 @@ public class OrderServiceTest {
                 assertThatThrownBy(() -> orderService.order(member, orderRequest))
                         .isInstanceOf(InvalidPointUseException.class);
             }
+        }
+
+        @DisplayName("주문 id의 리스트로 해당 주문들을 삭제할 수 있다.")
+        @Test
+        void deleteByIds() {
+            // given
+            final OrderRequest orderRequest1 = new OrderRequest(List.of(1L), 0);
+            final OrderRequest orderRequest2 = new OrderRequest(List.of(2L), 0);
+            final OrderRequest orderRequest3 = new OrderRequest(List.of(3L), 0);
+            final Long orderId1 = orderService.order(member, orderRequest1);
+            final Long orderId2 = orderService.order(member, orderRequest2);
+            final Long orderId3 = orderService.order(member, orderRequest3);
+
+            // when
+            orderService.deleteByIds(member, List.of(orderId1, orderId2));
+            final List<OrderDetailResponse> responses = orderService.getAllOrderDetails(member);
+
+            // then
+            assertAll(
+                    () -> assertThat(responses).hasSize(1),
+                    () -> assertThat(responses.get(0).getOrderId()).isEqualTo(orderId3)
+            );
         }
     }
 }
