@@ -40,13 +40,13 @@ public class OrderDao {
     public Optional<OrderHistory> getByOrderId(Long orderId) {
         String sql = sqlHelper()
                 .select()
-                .columns("oi.id, oi.product_id, oi.member_id, oi.name, oi.price, oi.image_url, oi.quantity")
+                .columns("order_item.id, order_item.product_id, order_item.member_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity")
                 .columns(", member.id, member.email, member.password, member.money, member.point")
-                .columns(", o.id, o.created_at, o.total_price, o.use_point")
-                .from().table("orders o")
-                .innerJoin("order_item oi").on("oi.orders_id = o.id")
-                .innerJoin("member").on("o.member_id = member.id")
-                .where().condition("o.id = ?")
+                .columns(", orders.id, orders.created_at, orders.total_price, orders.use_point")
+                .from().table("orders")
+                .innerJoin("order_item").on("order_item.orders_id = orders.id")
+                .innerJoin("member").on("orders.member_id = member.id")
+                .where().condition("orders.id = ?")
                 .toString();
 
         try {
