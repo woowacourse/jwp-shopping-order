@@ -1,11 +1,13 @@
 package cart.dao;
 
 import cart.entity.OrderEntity;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -40,7 +42,11 @@ public class OrderDao {
     public List<OrderEntity> findOrderByMemberId(final Long memberId) {
         String sql = "SELECT * FROM orders WHERE member_id = ?";
 
-        return jdbcTemplate.query(sql, orderRowMapper, memberId);
+        try {
+            return jdbcTemplate.query(sql, orderRowMapper, memberId);
+        } catch (EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
     }
 
     public Optional<OrderEntity> findById(long id) {
