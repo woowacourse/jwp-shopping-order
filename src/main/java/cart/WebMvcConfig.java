@@ -13,6 +13,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
     private final MemberDao memberDao;
 
     public WebMvcConfig(final MemberDao memberDao) {
