@@ -44,7 +44,7 @@ jobs:
           file: ./Dockerfile
           push: true
           platforms: linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: presentsong/shopping-order:latest
           labels: ${{ steps.meta.outputs.labels }}
   deploy:
     runs-on: self-hosted
@@ -56,20 +56,18 @@ jobs:
           sudo docker stop shopping-order || true
           sudo docker rm shopping-order || true
 
-      #      - name: Log in to Docker Hub
-      #        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-      #        with:
-      #          username: ${{ secrets.DOCKER_USERNAME }}
-      #          password: ${{ secrets.DOCKER_PASSWORD }}
-
       - name: docker pull
         run: |
-          sudo docker pull presentsong/shopping-order:step2
+          sudo docker pull presentsong/shopping-order:latest
 
       - name: docker run
         run: |
-          sudo docker run -d -p 80:8080 -e DB_URL=${DB_URL} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} --name shopping-order presentsong/shopping-order:step2
+          sudo docker run -d -p 80:8080 -e DB_URL=${DB_URL} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} --name shopping-order presentsong/shopping-order:latest
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          
+      - name: clean docker images
+        run: |
+          sudo docker image prune -f
