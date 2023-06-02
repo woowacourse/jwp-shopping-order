@@ -24,9 +24,12 @@ public class OrderItems {
         return discountPriceCalculator.calculate(originalPrice);
     }
 
+    public Price calculatePaymentAmount() {
+        return calculateOriginalPrice().subtract(calculateDiscountPrice());
+    }
+
     public boolean isPaymentAmountEqual(final Price price) {
-        final Price paymentAmount = calculateOriginalPrice().subtract(calculateDiscountPrice());
-        return price.equals(paymentAmount);
+        return price.equals(calculatePaymentAmount());
     }
 
     public List<OrderItem> getOrderItems() {

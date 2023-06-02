@@ -48,6 +48,17 @@ class OrderItemsTest {
     }
 
     @Test
+    @DisplayName("지불 금액 계산 테스트")
+    void calculate_payment_amount_test() {
+        // given, when
+        final Price price = orderItems.calculatePaymentAmount();
+
+        // then
+        final Price expected = new Price(135000);
+        assertThat(price).isEqualTo(expected);
+    }
+
+    @Test
     @DisplayName("지불 금액이 일치 여부 확인 테스트 - true")
     void payment_amount_is_equal() {
         // given
