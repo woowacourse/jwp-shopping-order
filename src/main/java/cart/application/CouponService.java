@@ -3,6 +3,9 @@ package cart.application;
 import cart.dao.CouponDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.domain.vo.Amount;
+import cart.dto.CouponDiscountRequest;
+import cart.dto.CouponDiscountResponse;
 import cart.dto.CouponResponse;
 import cart.dto.PossibleCouponResponse;
 import cart.exception.BusinessException;
@@ -44,9 +47,14 @@ public class CouponService {
     }
 
     public void registerCouponToMember(final Long couponId, final Member member) {
+        final Coupon coupon = findCoupon(couponId);
+        couponDao.save(coupon, member.getId());
+    }
+
+    private Coupon findCoupon(final Long couponId) {
         final Coupon coupon = couponDao.findById(couponId)
             .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
-        couponDao.save(coupon, member.getId());
+        return coupon;
     }
 
     public List<PossibleCouponResponse> findPossibleCouponByMember(final Member member) {
@@ -58,5 +66,11 @@ public class CouponService {
 
     private PossibleCouponResponse makePossibleCouponResponse(final Coupon coupon) {
         return new PossibleCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
+    }
+
+    public CouponDiscountResponse calculateCouponDiscount(final CouponDiscountRequest request) {
+        final Coupon coupon = findCoupon(request.getCouponId());
+        final Amount amount = coupon.calculateProduct(Amount.of(request.getTotalProductAmount()));
+        return new CouponDiscountResponse(amount.getValue());
     }
 }

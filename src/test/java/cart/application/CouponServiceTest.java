@@ -1,16 +1,22 @@
 package cart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.CouponDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.vo.Amount;
+import cart.dto.CouponDiscountRequest;
+import cart.dto.CouponDiscountResponse;
 import cart.dto.CouponResponse;
 import cart.dto.PossibleCouponResponse;
+import cart.exception.BusinessException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,5 +80,33 @@ class CouponServiceTest {
 
     private PossibleCouponResponse makePossibleCouponResponse(final Coupon coupon) {
         return new PossibleCouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue());
+    }
+
+    @Test
+    @DisplayName("쿠폰 할인 금액을 조회한다.")
+    void testCalculateCouponDiscount() {
+        //given
+        given(couponDao.findById(anyLong()))
+            .willReturn(Optional.of(coupon1));
+        final CouponDiscountRequest request = new CouponDiscountRequest(1L, 30_000);
+
+        //when
+        final CouponDiscountResponse response = couponService.calculateCouponDiscount(request);
+
+        //then
+        assertThat(response.getDiscountedProductAmount()).isEqualTo(29_000);
+    }
+
+    @Test
+    @DisplayName("최소 금액을 넘지 못하는 총 상품 금액이 들어왔을 때, 쿠폰 할인 금액을 조회한다.")
+    void testCalculateCouponDiscountWhenTotalProductAmountLess() {
+        //given
+        given(couponDao.findById(anyLong()))
+            .willReturn(Optional.of(coupon1));
+        final CouponDiscountRequest request = new CouponDiscountRequest(1L, 8_000);
+
+        //when
+        assertThatThrownBy(() -> couponService.calculateCouponDiscount(request))
+            .isInstanceOf(BusinessException.class);
     }
 }
