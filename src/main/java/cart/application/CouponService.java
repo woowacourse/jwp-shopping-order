@@ -67,7 +67,7 @@ public class CouponService {
         return new MemberCoupon(
                 dto.getId(),
                 memberService.getMemberBy(dto.getOwnerId()),
-                getCouponBy(dto.getId()),
+                getCouponBy(dto.getCouponId()),
                 dto.getIsUsed()
         );
     }
