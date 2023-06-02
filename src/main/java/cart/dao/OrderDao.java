@@ -49,8 +49,8 @@ public class OrderDao {
         }
     }
 
-    public List<OrderDto> findByMemberId(final Long id) {
-        final String sql = "SELECT * FROM orders WHERE id = ?";
-        return jdbcTemplate.query(sql, ORDER_DTO_ROW_MAPPER, id);
+    public List<OrderDto> findByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, ORDER_DTO_ROW_MAPPER, memberId);
     }
 }
