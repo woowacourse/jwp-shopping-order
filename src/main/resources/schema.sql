@@ -1,9 +1,9 @@
+drop table if exists order_item;
+drop table if exists orders;
+drop table if exists coupon;
+drop table if exists cart_item;
 drop table if exists product;
 drop table if exists member;
-drop table if exists cart_item;
-drop table if exists coupon;
-drop table if exists orders;
-drop table if exists order_item;
 
 CREATE TABLE if not exists product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
