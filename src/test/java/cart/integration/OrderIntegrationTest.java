@@ -165,6 +165,24 @@ public class OrderIntegrationTest extends IntegrationTest {
                     () -> assertThat(documentContext.read("$[0].price", Integer.class)).isEqualTo(paymentAmount)
             );
         }
+
+        @Test
+        @DisplayName("성공 - 주문이 없는 경우")
+        void success_when_no_order() {
+            // given, when
+            final ExtractableResponse<Response> response = given()
+                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                    .when().get("/orders")
+                    .then()
+                    .extract();
+
+            // then
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                    () -> assertThat(response.body().asString()).isEqualTo("[]")
+            );
+
+        }
     }
 
     @Nested
