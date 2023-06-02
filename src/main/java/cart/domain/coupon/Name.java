@@ -9,18 +9,15 @@ public class Name {
     private final String name;
 
     private Name(final String name) {
-        validate(name);
+        if (ObjectUtils.isEmpty(name)) {
+            throw new IllegalStateException("이름은 빈 칸일 수 없습니다.");
+        }
+
         this.name = name;
     }
 
     public static Name from(final String name) {
         return new Name(name);
-    }
-
-    private void validate(final String name) {
-        if (ObjectUtils.isEmpty(name)) {
-            throw new IllegalStateException("이름은 빈 칸일 수 없습니다.");
-        }
     }
 
     @Override

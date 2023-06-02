@@ -32,6 +32,7 @@ OrderRequest {
         return price;
     }
 
+    @Nullable
     public Long getCouponId() {
         return couponId;
     }

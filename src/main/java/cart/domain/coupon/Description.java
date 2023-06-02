@@ -9,18 +9,15 @@ public class Description {
     private final String description;
 
     private Description(final String description) {
-        validate(description);
+        if (ObjectUtils.isEmpty(description)) {
+            throw new IllegalStateException("설명은 빈 칸일 수 없습니다.");
+        }
+
         this.description = description;
     }
 
     public static Description from(final String description) {
         return new Description(description);
-    }
-
-    private void validate(final String description) {
-        if (ObjectUtils.isEmpty(description)) {
-            throw new IllegalStateException("설명은 빈 칸일 수 없습니다.");
-        }
     }
 
     @Override

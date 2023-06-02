@@ -9,18 +9,15 @@ public class UsageStatus {
     private final Boolean usageStatus;
 
     private UsageStatus(final Boolean usageStatus) {
-        validate(usageStatus);
+        if (ObjectUtils.isEmpty(usageStatus)) {
+            throw new IllegalStateException("쿠폰 사용 상태는 빈 칸일 수 없습니다.");
+        }
+
         this.usageStatus = usageStatus;
     }
 
     public static UsageStatus from(final Boolean usageStatus) {
         return new UsageStatus(usageStatus);
-    }
-
-    private void validate(final Boolean usageStatus) {
-        if (ObjectUtils.isEmpty(usageStatus)) {
-            throw new IllegalStateException("쿠폰 사용 상태는 빈 칸일 수 없습니다.");
-        }
     }
 
     public boolean isNotUsed() {

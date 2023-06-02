@@ -7,18 +7,15 @@ public class DiscountAmount {
     private final int discountAmount;
 
     private DiscountAmount(final int discountAmount) {
-        validate(discountAmount);
+        if (discountAmount <= 0) {
+            throw new IllegalStateException("할인 금액은 0보다 작을 수 없습니다.");
+        }
+
         this.discountAmount = discountAmount;
     }
 
     public static DiscountAmount from(final int discountAmount) {
         return new DiscountAmount(discountAmount);
-    }
-
-    private void validate(final int discountAmount) {
-        if (discountAmount <= 0) {
-            throw new IllegalStateException("할인 금액은 0보다 작을 수 없습니다.");
-        }
     }
 
     @Override

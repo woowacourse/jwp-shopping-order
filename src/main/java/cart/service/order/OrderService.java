@@ -41,7 +41,6 @@ public class OrderService {
 
         Coupon coupon = checkCoupon(request);
 
-
         cartItemRepository.deleteAllByIds(request.getCartItemIds());
 
         final List<OrderItem> orderItems = cartItems.getCartItems().stream()
