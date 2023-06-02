@@ -9,10 +9,6 @@ public class ProductEntity {
     private final int price;
     private final String imageUrl;
 
-    public ProductEntity(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
-    }
-
     public ProductEntity(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;

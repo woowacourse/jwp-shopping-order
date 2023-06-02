@@ -25,7 +25,7 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public void checkOwner(Member member) {
+    public void validateOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new IllegalMemberException("아이템의 소유자와 로그인한 사용자가 일치하지 않습니다.");
         }
@@ -45,5 +45,22 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

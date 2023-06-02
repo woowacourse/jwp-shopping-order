@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.domain.CartItem;
+import java.util.Objects;
 
 public class CartItemEntity {
 
@@ -38,21 +38,6 @@ public class CartItemEntity {
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
         this.quantity = quantity;
-    }
-
-    public static CartItemEntity from(final CartItem cartItem) {
-        return new CartItemEntity(
-                cartItem.getId(),
-                cartItem.getMember().getId(),
-                cartItem.getMember().getEmail(),
-                cartItem.getMember().getPassword(),
-                cartItem.getMember().getPoint(),
-                cartItem.getProduct().getId(),
-                cartItem.getProduct().getName(),
-                cartItem.getProduct().getPrice(),
-                cartItem.getProduct().getImageUrl(),
-                cartItem.getQuantity()
-        );
     }
 
     public Long getId() {
@@ -93,5 +78,22 @@ public class CartItemEntity {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final CartItemEntity that = (CartItemEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

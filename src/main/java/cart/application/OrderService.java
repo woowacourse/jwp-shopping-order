@@ -63,7 +63,7 @@ public class OrderService {
     }
 
     private void validateOwner(final Member member, final List<CartItem> cartItemsToOrder) {
-        cartItemsToOrder.forEach(cartItem -> cartItem.checkOwner(member));
+        cartItemsToOrder.forEach(cartItem -> cartItem.validateOwner(member));
     }
 
     private int calculateTotalPrice(final List<CartItem> cartItemsToOrder) {

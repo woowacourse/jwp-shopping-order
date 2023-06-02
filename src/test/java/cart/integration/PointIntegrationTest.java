@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
 import cart.entity.MemberEntity;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

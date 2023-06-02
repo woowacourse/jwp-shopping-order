@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     public ProductResponse findProductById(final Long id) {
-        Product product = productRepository.findById(id);
+        final Product product = productRepository.findById(id);
         return ProductResponse.from(product);
     }
 
