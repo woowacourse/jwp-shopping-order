@@ -79,8 +79,8 @@ public class OrderService {
     private void checkQuantity(final List<OrderItemDto> orders, final List<CartItem> cartItems) {
         for (OrderItemDto orderItemDto : orders) {
             CartItem cartItem = cartItems.stream()
-                    .filter(item -> Objects.equals(item.getId(), orderItemDto.getCartItemId())).
-                    findFirst()
+                    .filter(item -> Objects.equals(item.getId(), orderItemDto.getCartItemId()))
+                    .findFirst()
                     .orElseThrow(InvalidCartItem::new);
             if (orderItemDto.getQuantity() != cartItem.getQuantity()) {
                 throw new QuantityNotSame();

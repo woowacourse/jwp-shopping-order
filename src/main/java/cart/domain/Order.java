@@ -42,7 +42,7 @@ public class Order {
         return new Order(null, member, shippingFee, totalProductPrice, usedPoint, orderItems, null);
     }
 
-    public static Order of(final Member member, final OrderEntity orderEntity, final List<OrderItem> orderItems){
+    public static Order of(final Member member, final OrderEntity orderEntity, final List<OrderItem> orderItems) {
         return new Order(
                 orderEntity.getId(),
                 member,

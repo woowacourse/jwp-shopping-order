@@ -22,7 +22,7 @@ public class OrderResponse {
         this.orderDetails = orderDetails;
     }
 
-    public static OrderResponse from(final Order order){
+    public static OrderResponse from(final Order order) {
         return new OrderResponse(
                 order.getId(),
                 order.getCreatedAt(),

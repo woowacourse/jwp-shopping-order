@@ -1,7 +1,7 @@
 package cart.domain;
 
-import cart.exception.OrderException.NegativePoint;
 import cart.exception.OrderException.LackOfPoint;
+import cart.exception.OrderException.NegativePoint;
 
 public class Point {
 
@@ -13,7 +13,7 @@ public class Point {
     }
 
     private void validateNegative(final long point) {
-        if(point < 0){
+        if (point < 0) {
             throw new NegativePoint();
         }
     }
