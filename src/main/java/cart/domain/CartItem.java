@@ -22,6 +22,16 @@ public class CartItem {
         this.member = member;
     }
 
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new AuthorizationException("해당 사용자의 장바구니 상품이 아닙니다.");
+        }
+    }
+
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public Long getId() {
         return id;
     }
@@ -36,16 +46,5 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new AuthorizationException(
-                    "Illegal member attempts to cart; cartItemId=" + this.id + ", memberId=" + member.getId());
-        }
-    }
-
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
     }
 }

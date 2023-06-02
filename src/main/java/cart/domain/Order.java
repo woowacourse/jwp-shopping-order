@@ -1,7 +1,9 @@
 package cart.domain;
 
+import cart.exception.AuthorizationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
     private Long id;
@@ -38,6 +40,12 @@ public class Order {
         int totalPrice = totalProductPrice + deliveryFee - usePoint.getValue();
 
         return new Payment(totalProductPrice, deliveryFee, usePoint.getValue(), totalPrice);
+    }
+
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new AuthorizationException("해당 사용자의 주문이 아닙니다.");
+        }
     }
 
     public Long getId() {

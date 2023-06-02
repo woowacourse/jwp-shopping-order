@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
-import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.PaymentDao;
 import cart.dao.ProductDao;
@@ -55,25 +54,16 @@ import org.springframework.test.context.jdbc.Sql;
 public class OrderAcceptanceTest {
     @LocalServerPort
     private int port;
-
     @Autowired
     private MemberDao memberDao;
-
     @Autowired
     private ProductDao productDao;
-
     @Autowired
     private CartItemDao cartItemDao;
-
-    @Autowired
-    private OrderDao orderDao;
-
     @Autowired
     private OrderItemDao orderItemDao;
-
     @Autowired
     private PaymentDao paymentDao;
-
 
     private ProductRequest productRequest1;
     private ProductRequest productRequest2;
@@ -82,7 +72,6 @@ public class OrderAcceptanceTest {
     private Long productId1;
     private Long productId2;
     private Long productId3;
-
 
     @BeforeEach
     void setUp() {
@@ -228,7 +217,8 @@ public class OrderAcceptanceTest {
     }
 
     private static void 주문_목록_조회_결과를_검증한다(ExtractableResponse<Response> response, List<OrderDto> expectedDtos) {
-        List<OrderDto> actualDtos = response.as(new TypeRef<>() {});
+        List<OrderDto> actualDtos = response.as(new TypeRef<>() {
+        });
 
         for (int i = 0; i < actualDtos.size(); i++) {
             assertThat(actualDtos.get(i).getOrderId()).isEqualTo(expectedDtos.get(i).getOrderId());

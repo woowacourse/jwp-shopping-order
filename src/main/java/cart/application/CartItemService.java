@@ -11,8 +11,10 @@ import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CartItemService {
     private final ProductRepository productRepository;
     private final CartItemDao cartItemDao;
@@ -33,7 +35,8 @@ public class CartItemService {
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 cartItem이 존재하지 않습니다."));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -46,7 +49,8 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 cartItem이 존재하지 않습니다."));
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);

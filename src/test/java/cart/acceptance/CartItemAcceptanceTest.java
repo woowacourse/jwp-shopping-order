@@ -191,12 +191,12 @@ public class CartItemAcceptanceTest {
             CartItemDto cartItemDto = actualResponses.get(i);
             assertThat(cartItemDto.getCartItemId()).isEqualTo(cartItemIds.get(i));
             assertThat(cartItemDto.getQuantity()).isEqualTo(quantitys.get(i));
-            assertThat(cartItemDto.getProduct().getProductId()).isEqualTo(productIds.get(i));
+            assertThat(cartItemDto.getProductDto().getProductId()).isEqualTo(productIds.get(i));
         }
     }
 
     private void 장바구니_상품_수량_수정_결과를_검증한다(Long cartItemId, int expected) {
-        CartItem cartItem = cartItemDao.findById(cartItemId);
+        CartItem cartItem = cartItemDao.findById(cartItemId).get();
         if (expected == 0) {
             assertThat(cartItem).isNull();
             return;
