@@ -4,6 +4,7 @@ import java.util.List;
 
 public class OrderRequest {
     private List<OrderItemRequest> orderItems;
+
     public OrderRequest() {
     }
 
