@@ -31,6 +31,13 @@ public class ProductJdbcRepository implements ProductRepository {
     }
 
     @Override
+    public List<Product> findByIds(final List<Long> ids) {
+        return productDao.findByIds(ids).stream()
+                .map(this::toDomain)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
     public long save(final Product product) {
         return productDao.insert(toEntity(product));
     }
