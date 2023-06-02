@@ -9,6 +9,10 @@ public class Coupon {
     private final Amount discountAmount;
     private final Amount minAmount;
 
+    public Coupon(final String name, final Amount discountAmount, final Amount minAmount) {
+        this(null, name, discountAmount, minAmount);
+    }
+
     public Coupon(final Long id, final String name, final Amount discountAmount, final Amount minAmount) {
         this.id = id;
         this.name = name;

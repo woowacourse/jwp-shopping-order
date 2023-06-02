@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
 import cart.domain.Order;
@@ -35,19 +36,26 @@ public class OrderService {
 
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
         final List<Product> products = findProducts(orderRequest);
+
+        if (orderRequest.getCouponId() == null) {
+            final Coupon emptyCoupon = new Coupon("", Amount.of(0), Amount.of(0));
+            final Order order = orderRepository.create(
+                    new Order(new Products(products), new MemberCoupon(member.getId(), emptyCoupon),
+                            Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
+            return new OrderResponse(order.getId(), orderRequest.getTotalAmount(), order.getDeliveryAmount().getValue(),
+                    order.discountProductAmount().getValue(), order.getAddress(),
+                    makeOrderProductResponses(orderRequest, products));
+        }
         final MemberCoupon coupon = memberCouponRepository.findByCouponIdAndMemberId(orderRequest.getCouponId(),
                 member.getId());
-
         final Order order = orderRepository.create(
                 new Order(new Products(products), coupon, Amount.of(orderRequest.getDeliveryAmount()),
                         orderRequest.getAddress()), member.getId());
         coupon.use();
         memberCouponRepository.update(coupon, member.getId());
-        final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest,
-                products);
-        return new OrderResponse(order.getId(), orderRequest.getTotalAmount(),
-                order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
-                orderProductResponses);
+        final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest, products);
+        return new OrderResponse(order.getId(), orderRequest.getTotalAmount(), order.getDeliveryAmount().getValue(),
+                order.discountProductAmount().getValue(), order.getAddress(), orderProductResponses);
     }
 
     private List<Product> findProducts(final OrderRequest orderRequest) {

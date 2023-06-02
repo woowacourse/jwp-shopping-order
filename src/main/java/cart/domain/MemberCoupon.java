@@ -10,6 +10,10 @@ public class MemberCoupon {
     private final Coupon coupon;
     private boolean isUsed;
 
+    public MemberCoupon(final Long memberId, final Coupon coupon) {
+        this(null, memberId, coupon, false);
+    }
+
     public MemberCoupon(final Long id, final Long memberId, final Coupon coupon, final boolean isUsed) {
         this.id = id;
         this.memberId = memberId;
