@@ -1,6 +1,7 @@
 package cart.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -52,5 +53,10 @@ public class OrdersDao {
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<OrdersEntity> findByMemberId(final Long memberId) {
+        final String sql = "SELECT id, member_id, point_id, earned_point, used_point, created_at FROM orders WHERE member_id = ? ORDER BY created_at DESC";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

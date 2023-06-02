@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 import cart.entity.OrdersEntity;
 import cart.fixture.OrdersEntityFixture;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -51,6 +53,30 @@ class OrdersDaoTest {
                 () -> assertThat(result.get().getEarnedPoint()).isEqualTo(100),
                 () -> assertThat(result.get().getUsedPoint()).isEqualTo(200),
                 () -> assertThat(result.get().getCreatedAt()).isEqualTo(Timestamp.valueOf("2023-05-31 10:00:00"))
+        );
+    }
+
+    @DisplayName("최근 주문을 먼저 가져온다.")
+    @Sql({"classpath:deleteAll.sql", "classpath:insertMember.sql", "classpath:insertPoint.sql"})
+    @Test
+    void findByMemberId() {
+        final Long id1 = ordersDao.insert(OrdersEntityFixture.ODO1).getId();
+        final Long id2 = ordersDao.insert(OrdersEntityFixture.ODO2).getId();
+        final List<OrdersEntity> result = ordersDao.findByMemberId(1L);
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result.get(0).getId()).isEqualTo(id2),
+                () -> assertThat(result.get(0).getMemberId()).isEqualTo(1L),
+                () -> assertThat(result.get(0).getPointId()).isEqualTo(2L),
+                () -> assertThat(result.get(0).getEarnedPoint()).isEqualTo(300),
+                () -> assertThat(result.get(0).getUsedPoint()).isEqualTo(400),
+                () -> assertThat(result.get(0).getCreatedAt()).isEqualTo(Timestamp.valueOf("2024-05-31 10:00:00")),
+                () -> assertThat(result.get(1).getId()).isEqualTo(id1),
+                () -> assertThat(result.get(1).getMemberId()).isEqualTo(1L),
+                () -> assertThat(result.get(1).getPointId()).isEqualTo(1L),
+                () -> assertThat(result.get(1).getEarnedPoint()).isEqualTo(100),
+                () -> assertThat(result.get(1).getUsedPoint()).isEqualTo(200),
+                () -> assertThat(result.get(1).getCreatedAt()).isEqualTo(Timestamp.valueOf("2023-05-31 10:00:00"))
         );
     }
 }
