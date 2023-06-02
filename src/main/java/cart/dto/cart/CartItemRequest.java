@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.cart;
 
 import javax.validation.constraints.NotNull;
 
