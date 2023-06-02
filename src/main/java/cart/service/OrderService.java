@@ -10,8 +10,11 @@ import cart.domain.OrderItemEntity;
 import cart.domain.Point;
 import cart.domain.Product;
 import cart.dto.CartItemInfoRequest;
+import cart.dto.OrderItemResponse;
 import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
 import cart.dto.ProductInfoRequest;
+import cart.dto.ProductResponse;
 import cart.exception.IllegalUsePointException;
 import cart.exception.InsufficientStockException;
 import cart.exception.MismatchedTotalFeeException;
@@ -19,7 +22,9 @@ import cart.exception.MismatchedTotalPriceException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.util.CurrentTimeUtil;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +84,9 @@ public class OrderService {
     }
 
     private void validatePoint(final OrderRequest orderRequest) {
-        if (orderRequest.getUsePoint() < Point.MIN_USAGE_VALUE) {
+        Integer usePoint = orderRequest.getUsePoint();
+        
+        if (usePoint > 0 && usePoint < Point.MIN_USAGE_VALUE) {
             throw new IllegalUsePointException();
         }
     }
@@ -177,5 +184,22 @@ public class OrderService {
                 productInfo.getImageUrl(),
                 cartItemInfo.getQuantity()
         );
+    }
+
+    public List<OrderResponse> getAllOrders() {
+        List<OrderResponse> result = new ArrayList<>();
+
+        List<OrderEntity> orderEntities = orderDao.findAll();
+        for (final OrderEntity orderEntity : orderEntities) {
+            List<OrderItemEntity> twoOrderItemEntities = orderItemDao.findTwoByOrderId(orderEntity.getId());
+
+            List<OrderItemResponse> orderItems = twoOrderItemEntities.stream()
+                    .map(orderItemEntity -> new OrderItemResponse(orderItemEntity.getQuantity(), new ProductResponse(orderItemEntity.getProductId(), orderItemEntity.getProductName(), orderItemEntity.getProductPrice(), orderItemEntity.getProductImageUrl(), productDao.findById(orderItemEntity.getProductId()).getStock())))
+                    .collect(Collectors.toList());
+
+            result.add(new OrderResponse(orderEntity.getId(), orderEntity.getCreatedAt(), orderItems));
+        }
+
+        return result;
     }
 }

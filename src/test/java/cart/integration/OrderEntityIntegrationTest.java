@@ -1,6 +1,7 @@
 package cart.integration;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartItem;
@@ -162,11 +163,27 @@ public class OrderEntityIntegrationTest extends IntegrationTest {
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
-//
-//    @Test
-//    void 전체_주문_목록을_조회한다() {
-//
-//    }
+
+    @Test
+    void 전체_주문_목록을_조회한다() {
+        // given
+        orderRequest(member1, orderRequest);
+
+        CartItemInfoRequest cartItemInfoRequest3 = new CartItemInfoRequest(cartItem3.getId(), cartItem3.getQuantityValue(), productInfoRequest1);
+        CartItemInfoRequest cartItemInfoRequest4 = new CartItemInfoRequest(cartItem4.getId(), cartItem4.getQuantityValue(), productInfoRequest2);
+        OrderRequest orderRequest2 = new OrderRequest(List.of(cartItemInfoRequest3, cartItemInfoRequest4), totalProductPrice, totalDeliveryFee, usePoint, totalPrice);
+        orderRequest(member2, orderRequest2);
+
+        // when
+        var response = when()
+                .get("/orders")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
 //
 //    @Test
 //    void 특정_주문에_대한_상세_정보를_조회한다() {
