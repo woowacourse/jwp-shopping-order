@@ -43,6 +43,7 @@
 2. 사용자 포인트 조회
 3. 포인트 사용 금액 결정
 4. 결제
+5. 결제 금액의 5% 포인트 적립
 
 ### `GET /members/points`
 
@@ -66,7 +67,7 @@ Body
 
 ```json
 {
-  "points": 123
+  "points": 5000
 }
 ```
 
@@ -112,7 +113,7 @@ Body
       "cartItemId": 3
     }
   ],
-  "totalPrice": 4000,
+  "originalPrice": 4000,
   "points": 100
 }
 ```
@@ -120,7 +121,15 @@ Body
 #### Response
 
 ```
-201 CREATED  /members/orders/1
+200 OK  
+```
+
+Body
+
+```json
+{
+  "orderId": 1
+}
 ```
 
 ### `GET /members/orders`
@@ -147,13 +156,13 @@ Body
 [
   {
     "orderId": 1,
-    "totalPrice": 25000,
+    "orderPrice": 25000,
     "totalAmount": 2,
     "previewName": "PET보틀-정사각(370ml)"
   },
   {
     "orderId": 2,
-    "totalPrice": 1400,
+    "orderPrice": 1400,
     "totalAmount": 3,
     "previewName": "[든든] 동원 스위트콘"
   }
@@ -192,7 +201,7 @@ Body
       "price": 84400
     }
   ],
-  "totalPrice": 184400,
+  "originalPrice": 184400,
   "usedPoints": 1000,
   "orderPrice": 183400
 }
