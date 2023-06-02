@@ -17,10 +17,10 @@ INSERT INTO member_coupon(member_id, coupon_id) VALUES (1, 2);
 INSERT INTO member_coupon(member_id, coupon_id) VALUES (2, 1);
 INSERT INTO member_coupon(member_id, coupon_id) VALUES (2, 2);
 
-INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (1, CURRENT_TIMESTAMP, 1);
-INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (1, CURRENT_TIMESTAMP, 2);
-INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (2, CURRENT_TIMESTAMP, 1);
-INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (2, CURRENT_TIMESTAMP, 2);
+INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (1, '2023-01-01 12:00:00.000000', 1);
+INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (1, '2023-01-01 12:00:00.000000', 2);
+INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (2, '2023-01-01 12:00:00.000000', 1);
+INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (2, '2023-01-01 12:00:00.000000', 2);
 
 INSERT INTO orders_product(order_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO orders_product(order_id, product_id, quantity) VALUES (1, 2, 2);
