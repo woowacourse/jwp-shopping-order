@@ -9,6 +9,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.exception.OrderNotFoundException;
 import cart.repository.mapper.OrderMapper;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,6 +57,9 @@ public class OrderRepository {
         List<Long> orderIds = orderEntities.stream()
             .map(OrderEntity::getId)
             .collect(Collectors.toList());
+        if (orderIds.isEmpty()) {
+            return Collections.emptyList();
+        }
         return orderItemDao.findAllByOrderIds(orderIds);
     }
 

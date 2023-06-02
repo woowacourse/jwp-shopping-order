@@ -22,6 +22,7 @@ import cart.domain.Quantity;
 import cart.exception.OrderNotFoundException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -146,6 +147,20 @@ class OrderRepositoryTest {
                                 new Product(1L, "치킨", Money.from(10_000), "chickenImg"),
                                 Quantity.from(4))), createdAt, Member.fromId(memberId))
                 ));
+    }
+
+    @Test
+    @DisplayName("조회할 주문 내역이 존재하지 않는다면 비어있는 리스트가 반환된다.")
+    void findByMember_emptyList() {
+        // given
+        given(orderDao.findAllByMemberId(anyLong())).willReturn(Collections.emptyList());
+
+        // when
+        List<Order> orders = orderRepository.findAllByMember(
+            new Member(1L, "email", "password"));
+
+        // then
+        assertThat(orders).isEmpty();
     }
 
 }

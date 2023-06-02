@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
+import cart.dto.CartItemResponse;
 import cart.dto.OrderItemResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -109,6 +111,22 @@ public class OrderIntegrationTest extends IntegrationTest {
             .isEqualTo("존재하지 않는 장바구니 상품이 포함되어 있습니다.");
     }
 
+    @Test
+    @DisplayName("주문한 장바구니 상품은 장바구니에서 삭제된다.")
+    void order_deleteCartItems() {
+        // when
+        createOrder(List.of(1L), member1);
+        ExtractableResponse<Response> cartItemsOfMember = findCartItemsOfMember(member1);
+
+        // then
+        List<Long> resultCartItemIds = cartItemsOfMember.jsonPath()
+            .getList(".", CartItemResponse.class)
+            .stream()
+            .map(CartItemResponse::getId)
+            .collect(Collectors.toList());
+        assertThat(resultCartItemIds).containsExactly(2L);
+    }
+
     private ExtractableResponse<Response> createOrder(List<Long> cartItemIds, Member member) {
         OrderRequest orderRequest = new OrderRequest(cartItemIds);
 
@@ -139,6 +157,17 @@ public class OrderIntegrationTest extends IntegrationTest {
             .when()
             .get("/orders/{id}")
             .then()
+            .extract();
+    }
+
+    private ExtractableResponse<Response> findCartItemsOfMember(Member member) {
+        return given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .get("/cart-items")
+            .then()
+            .log().all()
             .extract();
     }
 
