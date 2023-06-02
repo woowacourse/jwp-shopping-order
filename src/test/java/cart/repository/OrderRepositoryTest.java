@@ -9,14 +9,19 @@ import java.util.Optional;
 
 import cart.dao.OrderDetailDao;
 import cart.dao.OrdersDao;
+import cart.domain.Order;
+import cart.domain.Price;
 import cart.entity.OrderDetailEntity;
 import cart.entity.OrdersEntity;
+import cart.fixture.CartItemsFixture;
 import cart.fixture.MemberFixture;
 import cart.fixture.OrderFixture;
+import cart.fixture.OrderPointFixture;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 class OrderRepositoryTest {
@@ -62,6 +67,27 @@ class OrderRepositoryTest {
                 () -> assertThat(orderDetailEntities.get(1).getProductPrice()).isEqualTo(15_000),
                 () -> assertThat(orderDetailEntities.get(1).getProductImageUrl()).isEqualTo("http://example.com/pizza.jpg"),
                 () -> assertThat(orderDetailEntities.get(1).getOrderQuantity()).isEqualTo(1)
+        );
+    }
+
+    @Sql({"classpath:deleteAll.sql", "classpath:insertOrders.sql", "classpath:insertOrderDetail.sql"})
+    @Test
+    void findByMember() {
+        final List<Order> result = orderRepository.findByMember(MemberFixture.MEMBER);
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+
+                () -> assertThat(result.get(0).getId()).isEqualTo(2L),
+                () -> assertThat(result.get(0).getCartItems()).usingRecursiveComparison().isEqualTo(CartItemsFixture.ORDER2_CARTITEMS),
+                () -> assertThat(result.get(0).getCartItems().getTotalPrice()).isEqualTo(Price.valueOf(235_000)),
+                () -> assertThat(result.get(0).getOrderPoint()).usingRecursiveComparison().isEqualTo(OrderPointFixture.ORDER_POINT2),
+                () -> assertThat(result.get(0).getCreatedAt()).isEqualTo(Timestamp.valueOf("2024-05-31 10:00:00")),
+
+                () -> assertThat(result.get(1).getId()).isEqualTo(1L),
+                () -> assertThat(result.get(1).getCartItems()).usingRecursiveComparison().isEqualTo(CartItemsFixture.ORDER1_CARTITEMS),
+                () -> assertThat(result.get(1).getCartItems().getTotalPrice()).isEqualTo(Price.valueOf(65_000)),
+                () -> assertThat(result.get(1).getOrderPoint()).usingRecursiveComparison().isEqualTo(OrderPointFixture.ORDER_POINT1),
+                () -> assertThat(result.get(1).getCreatedAt()).isEqualTo(Timestamp.valueOf("2023-05-31 10:00:00"))
         );
     }
 }

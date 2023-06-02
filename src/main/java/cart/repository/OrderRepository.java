@@ -1,10 +1,17 @@
 package cart.repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import cart.dao.OrderDetailDao;
 import cart.dao.OrdersDao;
+import cart.domain.CartItem;
 import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderPoint;
+import cart.domain.Point;
+import cart.domain.Product;
 import cart.entity.OrderDetailEntity;
 import cart.entity.OrdersEntity;
 import org.springframework.stereotype.Repository;
@@ -47,5 +54,45 @@ public class OrderRepository {
                         .orderQuantity(cartItem.getQuantity())
                         .build())
                 .forEach(orderDetailDao::insert);
+    }
+
+    public List<Order> findByMember(final Member member) {
+        final List<OrdersEntity> ordersEntities = ordersDao.findByMemberId(member.getId());
+        return ordersEntities.stream()
+                .map(this::getOrderByOrdersEntity)
+                .collect(Collectors.toList());
+    }
+
+    private Order getOrderByOrdersEntity(final OrdersEntity ordersEntity) {
+        return new Order(
+                ordersEntity.getId(),
+                getCartItemsByOrderId(ordersEntity.getId()),
+                getOrderPointByOrdersEntity(ordersEntity),
+                ordersEntity.getCreatedAt()
+        );
+    }
+
+    private CartItems getCartItemsByOrderId(final Long orderId) {
+        final List<OrderDetailEntity> orderDetailEntities = orderDetailDao.findByOrderId(orderId);
+        return CartItems.of(orderDetailEntities.stream()
+                .map(this::getCartItemByOrderDetailEntity)
+                .collect(Collectors.toList()));
+    }
+
+    private CartItem getCartItemByOrderDetailEntity(final OrderDetailEntity orderDetailEntity) {
+        return new CartItem(new Product(
+                orderDetailEntity.getProductId(),
+                orderDetailEntity.getProductName(),
+                orderDetailEntity.getProductPrice(),
+                orderDetailEntity.getProductImageUrl()
+        ), orderDetailEntity.getOrderQuantity());
+    }
+
+    private OrderPoint getOrderPointByOrdersEntity(final OrdersEntity ordersEntity) {
+        return new OrderPoint(
+                ordersEntity.getPointId(),
+                Point.valueOf(ordersEntity.getUsedPoint()),
+                Point.valueOf(ordersEntity.getEarnedPoint())
+        );
     }
 }

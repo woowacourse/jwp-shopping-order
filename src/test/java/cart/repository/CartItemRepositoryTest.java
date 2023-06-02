@@ -54,9 +54,9 @@ class CartItemRepositoryTest {
     @Sql({"classpath:deleteAll.sql", "classpath:insertMember.sql", "classpath:insertProduct.sql"})
     @Test
     void addCartItemWithNoExistProductId() {
-        assertThatThrownBy(() -> cartItemRepository.addCartItem(MemberFixture.MEMBER, 3L))
+        assertThatThrownBy(() -> cartItemRepository.addCartItem(MemberFixture.MEMBER, 100L))
                 .isInstanceOf(ProductNotFoundException.class)
-                .hasMessage(new ProductNotFoundException(3L).getMessage());
+                .hasMessage(new ProductNotFoundException(100L).getMessage());
     }
 
     @Sql({"classpath:deleteAll.sql", "classpath:insertMember.sql", "classpath:insertProduct.sql"})
