@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.dao.PaymentDao;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -7,6 +8,7 @@ import cart.domain.Payment;
 import cart.domain.Point;
 import cart.domain.Product;
 import cart.dto.CartItemDto;
+import cart.dto.OrderDto;
 import cart.dto.OrderRequest;
 import cart.exception.OrderException;
 import cart.exception.PaymentException;
@@ -21,13 +23,16 @@ import org.springframework.stereotype.Service;
 public class OrderService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+    private final PaymentDao paymentDao;
 
-    public OrderService(ProductRepository productRepository, OrderRepository orderRepository) {
+    public OrderService(ProductRepository productRepository, OrderRepository orderRepository, PaymentDao paymentDao) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
+        this.paymentDao = paymentDao;
     }
 
     public Long order(Member member, OrderRequest orderRequest) {
+        // TODO : cartItem이 해당 member의 것인지
         /**
          * 검증해야 할 것
          * 1. request 속 product와 db 속 product가 같은지
@@ -66,14 +71,17 @@ public class OrderService {
         List<Long> cartItemIds = cartItems.stream()
                 .map(it -> it.getCartItemId())
                 .collect(Collectors.toList());
-        return orderRepository.order(cartItemIds, member, order, payment);
+        Long orderId = orderRepository.order(cartItemIds, member, order);
+        paymentDao.save(orderId, payment);
+
+        return orderId;
     }
 
     private static void validatePayment(OrderRequest orderRequest, Payment payment) {
         if (payment.getTotalProductPrice() != orderRequest.getTotalProductPrice()) {
             throw new PaymentException("상품의 총 금액이 다릅니다."
-                    + " 입력된 금액 : "+Integer.toString(orderRequest.getTotalProductPrice())
-                    + " 실제 금액 : "+ Integer.toString(payment.getTotalProductPrice()));
+                    + " 입력된 금액 : " + Integer.toString(orderRequest.getTotalProductPrice())
+                    + " 실제 금액 : " + Integer.toString(payment.getTotalProductPrice()));
         }
         if (payment.getTotalDeliveryFee() != orderRequest.getTotalDeliveryFee()) {
             throw new PaymentException("총 배달비가 다릅니다.");
@@ -81,5 +89,18 @@ public class OrderService {
         if (payment.getTotalPrice() != orderRequest.getTotalPrice()) {
             throw new PaymentException("주문의 총 금액이 다릅니다.");
         }
+    }
+
+    public OrderDto getOrderDetail(Member member, Long orderId) {
+        // TODO : order가 해당 member의 것인지
+        Order order = orderRepository.findById(orderId);
+        Payment payment = paymentDao.findByOrderId(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 결제 내역이 존재하지 않습니다."));
+
+        return OrderDto.of(order.getId(), order.getOrderDateTime(), order.getOrderItems(), payment.getTotalPrice());
+    }
+
+    public List<OrderDto> getOrderList(Member member) {
+        return null;
     }
 }

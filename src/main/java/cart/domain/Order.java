@@ -1,21 +1,30 @@
 package cart.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Order {
     private Long id;
     private Member member;
     private List<OrderItem> orderItems;
+    private LocalDateTime orderDateTime;
 
     public Order(Member member, List<OrderItem> orderItems) {
         this.member = member;
         this.orderItems = orderItems;
     }
 
-    public Order(Long id, Member member, List<OrderItem> orderItems) {
+    public Order(Long id, Member member, LocalDateTime orderDateTime) {
+        this.id = id;
+        this.member = member;
+        this.orderDateTime = orderDateTime;
+    }
+
+    public Order(Long id, Member member, List<OrderItem> orderItems, LocalDateTime orderDateTime) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
+        this.orderDateTime = orderDateTime;
     }
 
     public Payment calculatePayment(Point usePoint) {
@@ -40,6 +49,10 @@ public class Order {
 
     public List<OrderItem> getOrderItems() {
         return orderItems;
+    }
+
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
 
     @Override

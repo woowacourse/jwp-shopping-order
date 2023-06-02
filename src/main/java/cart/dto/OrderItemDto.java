@@ -1,6 +1,7 @@
-package cart.ui;
+package cart.dto;
 
-import cart.dto.ProductDto;
+import cart.domain.OrderItem;
+import cart.domain.Product;
 
 public class OrderItemDto {
     private final int quantity;
@@ -9,6 +10,11 @@ public class OrderItemDto {
     public OrderItemDto(int quantity, ProductDto product) {
         this.quantity = quantity;
         this.product = product;
+    }
+
+    public static OrderItemDto from(OrderItem orderItem) {
+        ProductDto productDto = ProductDto.from(orderItem.getOriginalProduct());
+        return new OrderItemDto(orderItem.getQuantity(), productDto);
     }
 
     public int getQuantity() {

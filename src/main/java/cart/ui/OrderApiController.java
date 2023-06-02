@@ -27,9 +27,15 @@ public class OrderApiController {
         return ResponseEntity.created(URI.create("/orders/"+orderId)).build();
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<OrderDto>> getOrderList(Member member) {
-//        List<OrderDto> orders = orderService.getOrderList(member);
-//        return ResponseEntity.ok().body(orders);
-//    }
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderDto> getOrderDetail(Member member, @PathVariable Long orderId) {
+        OrderDto orderDto = orderService.getOrderDetail(member, orderId);
+        return ResponseEntity.ok().body(orderDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderDto>> getOrderList(Member member) {
+        List<OrderDto> orderDtos = orderService.getOrderList(member);
+        return ResponseEntity.ok().body(orderDtos);
+    }
 }

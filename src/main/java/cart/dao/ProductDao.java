@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Order;
 import cart.domain.Product;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -39,10 +38,10 @@ public class ProductDao {
         return jdbcTemplate.query(sql, mapper);
     }
 
-    public Optional<Product> getProductById(Long productId) {
+    public Optional<Product> findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapper, productId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapper, id));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }

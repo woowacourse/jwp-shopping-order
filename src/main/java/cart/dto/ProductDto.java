@@ -17,7 +17,7 @@ public class ProductDto {
         this.stock = stock;
     }
 
-    public static ProductDto of(Product product) {
+    public static ProductDto from(Product product) {
         return new ProductDto(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), product.getStock());
     }
 

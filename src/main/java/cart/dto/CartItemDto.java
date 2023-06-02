@@ -13,11 +13,11 @@ public class CartItemDto {
         this.product = product;
     }
 
-    public static CartItemDto of(CartItem cartItem) {
+    public static CartItemDto from(CartItem cartItem) {
         return new CartItemDto(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductDto.of(cartItem.getProduct())
+                ProductDto.from(cartItem.getProduct())
         );
     }
 
