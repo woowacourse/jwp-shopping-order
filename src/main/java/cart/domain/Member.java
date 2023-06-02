@@ -2,6 +2,8 @@ package cart.domain;
 
 import cart.ui.member.dto.MemberRequest;
 
+import java.util.Objects;
+
 public class Member {
 
     private final Long id;
@@ -48,4 +50,18 @@ public class Member {
         return memberId == this.id;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Member member = (Member) o;
+
+        return Objects.equals(id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

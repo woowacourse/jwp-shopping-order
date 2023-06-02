@@ -35,6 +35,10 @@ public class CartItem {
         throw new IllegalArgumentException("상품의 수량이 일치하지 않습니다.");
     }
 
+    public boolean isNotOwnedByMember(final Member member) {
+        return !this.member.equals(member);
+    }
+
     public void validate(final Long productId, final Long memberId, final Integer quantity) {
         if (!(product.isEqualId(productId) && member.isEqualId(memberId))) {
             throw new IllegalArgumentException("장바구니 정보가 일치하지 않습니다.");

@@ -85,19 +85,19 @@ public class CartItemJdbcRepository implements CartItemRepository {
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
 
-        List<CartItem> cartItems = jdbcTemplate.query(sql, cartItemRowMapper, memberId);
+        final List<CartItem> cartItems = jdbcTemplate.query(sql, cartItemRowMapper, memberId);
         return new CartItems(cartItems);
     }
 
     @Override
     public void updateQuantity(final CartItem cartItem) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 
     @Override
     public void deleteById(final Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 

@@ -13,6 +13,7 @@ import java.util.Map;
 
 @Repository
 public class PointJdbcRepository implements PointRepository {
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 

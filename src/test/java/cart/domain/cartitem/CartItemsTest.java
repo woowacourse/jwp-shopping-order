@@ -3,6 +3,7 @@ package cart.domain.cartitem;
 import cart.fixture.MemberFixture;
 import cart.fixture.ProductFixture;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -25,4 +26,27 @@ class CartItemsTest {
         assertThat(cartItems.calculateTotalPrice()).isEqualTo(totalPrice);
     }
 
+    @DisplayName("전체 장바구니 중 하나라도 소유자가 다르면 true")
+    @Test
+    void isNotOwnedMemberTrueTest() {
+        CartItems cartItems = new CartItems(List.of(
+                new CartItem(2, ProductFixture.꼬리요리_ID포함, MemberFixture.디노_ID포함),
+                new CartItem(2, ProductFixture.통구이_ID포함, MemberFixture.디노_ID포함),
+                new CartItem(2, ProductFixture.배변패드_ID포함, MemberFixture.비버_ID포함)
+        )
+        );
+        assertThat(cartItems.isNotOwnedMember(MemberFixture.디노_ID포함)).isTrue();
+    }
+
+    @DisplayName("전체 장바구니 모두 소유자가 같으면 false")
+    @Test
+    void isNotOwnedMemberFalseTest() {
+        CartItems cartItems = new CartItems(List.of(
+                new CartItem(2, ProductFixture.꼬리요리_ID포함, MemberFixture.디노_ID포함),
+                new CartItem(2, ProductFixture.통구이_ID포함, MemberFixture.디노_ID포함),
+                new CartItem(2, ProductFixture.배변패드_ID포함, MemberFixture.디노_ID포함)
+        )
+        );
+        assertThat(cartItems.isNotOwnedMember(MemberFixture.디노_ID포함)).isFalse();
+    }
 }

@@ -25,10 +25,9 @@ public class OrderWriteController {
     @PostMapping
     public ResponseEntity<Void> createOrder(
             final MemberAuth memberAuth,
-            @RequestBody final CreateOrderRequest createOrderRequests
+            @RequestBody final CreateOrderRequest createOrderRequest
     ) {
-
-        final Long orderId = orderWriteService.createOrder(memberAuth, createOrderRequests);
+        final Long orderId = orderWriteService.createOrder(memberAuth, CreateOrderDto.from(createOrderRequest));
 
         final String createOrderUri = generateCreateUri(orderId);
         return ResponseEntity

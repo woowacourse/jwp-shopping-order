@@ -22,13 +22,13 @@ CREATE TABLE IF NOT EXISTS cart_item
     quantity   INT    NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `order`
+CREATE TABLE IF NOT EXISTS orders
 (
     id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id     BIGINT NOT NULL,
     total_price   INT    NOT NULL,
     payment_price INT    NOT NULL,
-    totalPoint         INT      DEFAULT 0,
+    point         INT      DEFAULT 0,
     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

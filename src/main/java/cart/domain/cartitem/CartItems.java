@@ -1,5 +1,6 @@
 package cart.domain.cartitem;
 
+import cart.domain.Member;
 import cart.ui.order.CreateOrderItemDto;
 
 import java.util.List;
@@ -29,9 +30,12 @@ public class CartItems {
         }
     }
 
+    public boolean isNotOwnedMember(final Member member) {
+        return cartItems.stream()
+                .anyMatch(cartItem -> cartItem.isNotOwnedByMember(member));
+    }
 
     public List<CartItem> getCartItems() {
         return cartItems;
     }
-
 }
