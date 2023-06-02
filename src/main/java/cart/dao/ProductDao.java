@@ -1,10 +1,13 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
+import cart.exception.CartItemNotFoundException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -20,10 +23,12 @@ public class ProductDao {
     private static final int SINGLE_AFFECTED_ROW_NUMBER = 1;
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertAction;
 
     public ProductDao(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.insertAction = new SimpleJdbcInsert(dataSource)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
@@ -39,6 +44,21 @@ public class ProductDao {
         try {
             return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
         } catch (EmptyResultDataAccessException e) {
+            throw new ProductNotFoundException();
+        }
+    }
+
+    public List<ProductEntity> findByIds(final List<Long> ids) {
+        final String sql = "SELECT * FROM product WHERE id IN (:ids)";
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ids", ids);
+        final List<ProductEntity> results = namedParameterJdbcTemplate.query(sql, params, productEntityRowMapper);
+        validateResultSize(ids.size(), results.size());
+        return results;
+    }
+
+    private void validateResultSize(final int sourceSize, final int resultSize) {
+        if (sourceSize != resultSize) {
             throw new ProductNotFoundException();
         }
     }
