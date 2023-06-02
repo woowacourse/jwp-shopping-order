@@ -1,5 +1,7 @@
 package cart.integration;
 
+import cart.dao.ProductDao;
+import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,12 @@ public class IntegrationTest {
 
     @Autowired
     protected MemberRepository memberRepository;
+
+    @Autowired
+    protected ProductDao productDao;
+
+    @Autowired
+    protected CartItemRepository cartItemRepository;
 
     @BeforeEach
     void setUp() {
