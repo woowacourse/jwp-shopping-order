@@ -13,15 +13,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cart.Repository.mapper.CartItemMapper.*;
+
 @Repository
 public class CartItemRepository {
-    private final CartItemMapper cartItemMapper;
     private final ProductDao productDao;
     private final MemberDao memberDao;
     private final CartItemDao cartItemDao;
 
-    public CartItemRepository(CartItemMapper cartItemMapper, ProductDao productDao, MemberDao memberDao, CartItemDao cartItemDao) {
-        this.cartItemMapper = cartItemMapper;
+    public CartItemRepository( ProductDao productDao, MemberDao memberDao, CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.memberDao = memberDao;
         this.cartItemDao = cartItemDao;
@@ -35,7 +35,7 @@ public class CartItemRepository {
 
         List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
 
-        return cartItemMapper.toCartItems(
+        return toCartItems(
                 cartItemEntities,
                 productsInCarts,
                 memberEntity);
@@ -55,11 +55,14 @@ public class CartItemRepository {
         MemberEntity memberEntity = memberDao.getMemberById(cartItemEntities.get(0).getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
 
-        return cartItemMapper.toCartItems(cartItemEntities, productsInCarts, memberEntity);
+        return toCartItems(
+                cartItemEntities,
+                productsInCarts,
+                memberEntity);
     }
 
     public Long save(CartItem cartItem) {
-        CartItemEntity cartItemEntity = cartItemMapper.toCartItemEntity(cartItem);
+        CartItemEntity cartItemEntity = toCartItemEntity(cartItem);
         return cartItemDao.save(cartItemEntity);
     }
 
@@ -73,11 +76,11 @@ public class CartItemRepository {
         MemberEntity memberEntity = memberDao.getMemberById(cartItemEntity.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
 
-        return cartItemMapper.toCartItem(cartItemEntity, productEntity, memberEntity);
+        return toCartItem(cartItemEntity, productEntity, memberEntity);
     }
 
     public void updateQuantity(CartItem cartItem) {
-        CartItemEntity cartItemEntity = cartItemMapper.toCartItemEntity(cartItem);
+        CartItemEntity cartItemEntity = toCartItemEntity(cartItem);
         cartItemDao.updateQuantity(cartItemEntity);
     }
 

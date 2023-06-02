@@ -27,13 +27,8 @@ public class OrderService {
     public Long add(Member member, OrderRequest orderRequest) {
         List<CartItem> cartItems = cartItemService.findByCartItemIds(orderRequest.getCartItemIds());
         cartItems.forEach(it -> it.checkOwner(member));
-
-        List<OrderItem> orderItems = cartItems.stream().map(it ->
-                new OrderItem(
-                        it.getProduct(),
-                        it.getQuantity()
-                )
-        ).collect(Collectors.toUnmodifiableList());
+        
+        List<OrderItem> orderItems = toOrderItemsFrom(cartItems);
 
         Order order = new Order(orderItems);
         Long orderId = orderRepository.save(member, order);

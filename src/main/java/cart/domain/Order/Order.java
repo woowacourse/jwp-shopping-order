@@ -4,10 +4,10 @@ import cart.domain.Member.Member;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
     private final Long id;
-
     private final Timestamp orderDate;
     private final Member member;
 
@@ -30,7 +30,7 @@ public class Order {
 
     public int getTotalPrice() {
         return orderItem.stream()
-                .mapToInt(orderItem -> orderItem.getPrice() * orderItem.getQuantity())
+                .mapToInt(OrderItem::totalPrice)
                 .sum();
     }
 

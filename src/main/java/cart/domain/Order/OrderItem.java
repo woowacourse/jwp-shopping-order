@@ -22,4 +22,8 @@ public class OrderItem {
     public int getPrice() {
         return product.getPrice().price();
     }
+
+    public int totalPrice() {
+        return getPrice() * getQuantity();
+    }
 }

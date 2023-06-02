@@ -4,9 +4,8 @@ import cart.domain.Member.Member;
 import cart.entity.MemberEntity;
 import org.springframework.stereotype.Component;
 
-@Component
 public class MemberMapper {
-    public Member toMember(MemberEntity memberEntity) {
+    public static Member toMember(MemberEntity memberEntity) {
         return new Member(
                 memberEntity.getId(),
                 memberEntity.getEmail(),
