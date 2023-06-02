@@ -2,11 +2,12 @@ package cart.domain.repository;
 
 import cart.domain.Member;
 import cart.domain.Order;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Component
 public interface OrderRepository {
     Long saveOrder(Order order);
 

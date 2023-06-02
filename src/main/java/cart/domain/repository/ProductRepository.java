@@ -1,11 +1,12 @@
 package cart.domain.repository;
 
 import cart.domain.Product;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Component
 public interface ProductRepository {
     List<Product> getAllProducts();
 
