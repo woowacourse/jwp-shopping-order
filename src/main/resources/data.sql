@@ -60,15 +60,15 @@ VALUES (1, 6, 2);
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 6, 2);
 
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 3000);
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 5000);
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 5000);
+INSERT INTO orders (member_id, delivery_fee, coupon_id)
+VALUES (1, 3000, 3);
+INSERT INTO orders (member_id, delivery_fee, coupon_id)
+VALUES (1, 5000, 2);
+INSERT INTO orders (member_id, delivery_fee, coupon_id)
+VALUES (1, 5000, null);
 
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (2, 4000);
+INSERT INTO orders (member_id, delivery_fee, coupon_id)
+VALUES (2, 4000, 1);
 
 -- 1번 주문
 

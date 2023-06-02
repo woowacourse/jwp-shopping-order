@@ -33,7 +33,8 @@ CREATE TABLE orders
 (
     id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id    BIGINT NOT NULL,
-    delivery_fee BIGINT NOT NULL
+    delivery_fee BIGINT NOT NULL,
+    coupon_id    BIGINT
 );
 
 CREATE TABLE order_item
@@ -57,7 +58,7 @@ CREATE TABLE member_coupon
 (
     member_id BIGINT NOT NULL,
     coupon_id BIGINT NOT NULL,
-    used_yn        varchar(1) DEFAULT 'N',
+    used_yn   varchar(1) DEFAULT 'N',
     primary key (member_id, coupon_id)
 );
 

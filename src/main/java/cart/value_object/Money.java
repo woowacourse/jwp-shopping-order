@@ -25,6 +25,10 @@ public class Money {
     return new Money(value.multiply(BigDecimal.valueOf(multiplicand)));
   }
 
+  public Money minus(final Money other) {
+    return new Money(value.subtract(other.value));
+  }
+
   public boolean isNotSame(final Money other) {
     return !this.equals(other);
   }
