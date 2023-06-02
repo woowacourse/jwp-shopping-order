@@ -1,7 +1,5 @@
 package shop.persistence.dao;
 
-import shop.exception.DatabaseException;
-import shop.persistence.entity.MemberEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,6 +7,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import shop.exception.DatabaseException;
+import shop.persistence.entity.MemberEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +39,8 @@ public class MemberDao {
         try {
             return simpleJdbcInsert.executeAndReturnKey(param).longValue();
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("해당 Name(" + memberEntity.getName() + ")은 이미 사용되고 있습니다.");
+            throw new DatabaseException.DataConflictException("해당 Name(" + memberEntity.getName() +
+                    ")은 이미 사용되고 있습니다.");
         }
     }
 
@@ -60,16 +61,6 @@ public class MemberDao {
     public List<MemberEntity> findAll() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, rowMapper);
-    }
-
-    public void updateMember(MemberEntity memberEntity) {
-        String sql = "UPDATE member SET name = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, memberEntity.getName(), memberEntity.getPassword(), memberEntity.getId());
-    }
-
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
     }
 }
 

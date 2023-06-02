@@ -1,15 +1,15 @@
 package shop.persistence;
 
+import org.springframework.stereotype.Repository;
 import shop.domain.cart.CartItem;
 import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
 import shop.domain.product.Product;
 import shop.domain.repository.CartRepository;
-import shop.exception.PersistenceException;
+import shop.exception.DatabaseException;
 import shop.persistence.dao.CartDao;
 import shop.persistence.entity.CartEntity;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,7 +74,9 @@ public class CartRepositoryImpl implements CartRepository {
     @Override
     public CartItem findById(Long id) {
         CartItemDetail cartItemDetail = cartDao.findById(id)
-                .orElseThrow(() -> new PersistenceException(id + "에 해당하는 장바구니 상품이 없습니다."));
+                .orElseThrow(() -> new DatabaseException.IllegalDataException(
+                        id + "에 해당하는 장바구니 상품이 없습니다.")
+                );
 
         return toCartItem(cartItemDetail);
     }
@@ -89,7 +91,9 @@ public class CartRepositoryImpl implements CartRepository {
         int countOfUpdatedCartItem = cartDao.updateQuantity(cartItem.getId(), cartItem.getQuantity());
 
         if (countOfUpdatedCartItem == 0) {
-            throw new PersistenceException(cartItem.getId() + "에 해당하는 장바구니 상품이 없습니다.");
+            throw new DatabaseException.IllegalDataException(
+                    cartItem.getId() + "에 해당하는 장바구니 상품이 없습니다."
+            );
         }
     }
 
@@ -98,7 +102,7 @@ public class CartRepositoryImpl implements CartRepository {
         int countOfDeletedItem = cartDao.deleteByMemberIdAndCartItemIds(memberId, ids);
 
         if (countOfDeletedItem != ids.size()) {
-            throw new PersistenceException("유효하지 않은 상품 ID가 존재합니다. " +
+            throw new DatabaseException.IllegalDataException("유효하지 않은 상품 ID가 존재합니다. " +
                     "요청 id : " + ids);
         }
     }

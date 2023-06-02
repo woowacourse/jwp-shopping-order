@@ -1,16 +1,17 @@
 package shop.persistence;
 
+import org.springframework.stereotype.Repository;
 import shop.domain.coupon.Coupon;
 import shop.domain.coupon.CouponType;
 import shop.domain.repository.CouponRepository;
-import shop.exception.PersistenceException;
+import shop.exception.DatabaseException;
 import shop.persistence.dao.CouponDao;
 import shop.persistence.entity.CouponEntity;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+// TODO: 2023-06-01 CouponRepository + MemberCouponRepository 합치기 ?
 @Repository
 public class CouponRepositoryImpl implements CouponRepository {
     private final CouponDao couponDao;
@@ -43,7 +44,9 @@ public class CouponRepositoryImpl implements CouponRepository {
     @Override
     public Coupon findById(Long id) {
         CouponEntity couponEntity = couponDao.findById(id)
-                .orElseThrow(() -> new PersistenceException(id + "를 갖는 쿠폰을 찾을 수 없습니다."));
+                .orElseThrow(() -> new DatabaseException.IllegalDataException(
+                        id + "를 갖는 쿠폰을 찾을 수 없습니다.")
+                );
 
         return toCoupon(couponEntity);
     }
@@ -54,7 +57,7 @@ public class CouponRepositoryImpl implements CouponRepository {
         Integer discountRate = couponType.getDiscountRate();
 
         CouponEntity couponEntity = couponDao.findByNameAndDiscountRate(name, discountRate)
-                .orElseThrow(() -> new PersistenceException(
+                .orElseThrow(() -> new DatabaseException.IllegalDataException(
                         name + "(" + discountRate + ")에 해당하는 쿠폰을 찾을 수 없습니다.")
                 );
 

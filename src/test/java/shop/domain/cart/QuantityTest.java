@@ -1,6 +1,6 @@
 package shop.domain.cart;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -13,7 +13,7 @@ class QuantityTest {
     @ValueSource(ints = {0, 1001})
     void createPriceTest1(int quantity) {
         assertThatThrownBy(() -> new Quantity(quantity))
-                .isInstanceOf(GlobalException.class);
+                .isInstanceOf(ShoppingException.class);
     }
 
     @ParameterizedTest(name = "장바구니에 담을 수 있는 상품 개수는 1 ~ 1,000개이다.")

@@ -1,6 +1,6 @@
 package shop.domain.coupon;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 
 // TODO: 2023-05-31 원시타입 vs wrapper
 public class DiscountRate {
@@ -16,7 +16,7 @@ public class DiscountRate {
 
     private void validate(int discountRate) {
         if (discountRate < MIN_DISCOUNT_RATE || discountRate > MAX_DISCOUNT_RATE) {
-            throw new GlobalException("쿠폰 할인율은 5~90% 사이여야 합니다.");
+            throw new ShoppingException("쿠폰 할인율은 5~90% 사이여야 합니다.");
         }
     }
 

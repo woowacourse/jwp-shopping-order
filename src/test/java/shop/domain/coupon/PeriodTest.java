@@ -1,6 +1,6 @@
 package shop.domain.coupon;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -13,7 +13,7 @@ class PeriodTest {
     @ValueSource(ints = {0, 366})
     void createPriceTest1(int period) {
         assertThatThrownBy(() -> new Period(period))
-                .isInstanceOf(GlobalException.class);
+                .isInstanceOf(ShoppingException.class);
     }
 
     @ParameterizedTest(name = "유효 기간은 1일 이상, 365일 이하이다.")

@@ -2,7 +2,7 @@ package shop.domain.cart;
 
 import shop.domain.member.Member;
 import shop.domain.product.Product;
-import shop.exception.CartItemException;
+import shop.exception.ShoppingException;
 
 import java.util.Objects;
 
@@ -10,7 +10,7 @@ public class CartItem {
     private Long id;
     private Quantity quantity;
     private final Product product;
-    private final Member member; // TODO: 2023-05-29 Member 필요없음
+    private final Member member;
 
     public CartItem(Member member, Product product) {
         this.quantity = new Quantity(1);
@@ -27,7 +27,10 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new ShoppingException.IllegalAccessException(
+                    "장바구니 상품에 대한 접근 권한이 없습니다." +
+                    "장바구니 상품 ID : " + id + ", 회원 ID : " + member.getId()
+            );
         }
     }
 
@@ -53,10 +56,6 @@ public class CartItem {
 
     public Product getProduct() {
         return product;
-    }
-
-    public Long getTotalPrice() {
-        return (long) product.getPrice() * quantity.getQuantity();
     }
 
     public int getQuantity() {

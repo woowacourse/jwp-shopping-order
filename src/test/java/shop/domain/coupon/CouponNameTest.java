@@ -1,6 +1,6 @@
 package shop.domain.coupon;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -17,7 +17,7 @@ class CouponNameTest {
     @ValueSource(strings = {"", msgOf51Length})
     void createCouponNameTest1(String name) {
         assertThatThrownBy(() -> new CouponName(name))
-                .isInstanceOf(GlobalException.class);
+                .isInstanceOf(ShoppingException.class);
     }
 
     @ParameterizedTest(name = "쿠폰의 이름은 1글자 이상, 50글자 이하여야 한다.")

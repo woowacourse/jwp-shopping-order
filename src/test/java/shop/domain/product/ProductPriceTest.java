@@ -1,6 +1,6 @@
 package shop.domain.product;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -13,7 +13,7 @@ class ProductPriceTest {
     @ValueSource(ints = {-1, 0, 10_000_001})
     void createPriceTest1(int price) {
         assertThatThrownBy(() -> new ProductPrice(price))
-                .isInstanceOf(GlobalException.class);
+                .isInstanceOf(ShoppingException.class);
     }
 
     @ParameterizedTest(name = "상품 가격은 1원 이상, 10,000,000원 이하여야 합니다.")

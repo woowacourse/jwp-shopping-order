@@ -1,6 +1,6 @@
 package shop.domain.coupon;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 
 public class Period {
     private static final int MIN_PERIOD = 1;
@@ -15,7 +15,7 @@ public class Period {
 
     private void validate(int period) {
         if (period < MIN_PERIOD || period > MAX_PERIOD) {
-            throw new GlobalException("사용 가능 기간은 1일 ~ 365일 사이여야 합니다.");
+            throw new ShoppingException("사용 가능 기간은 1일 ~ 365일 사이여야 합니다.");
         }
     }
 

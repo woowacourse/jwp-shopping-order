@@ -1,6 +1,6 @@
 package shop.domain.coupon;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 
 public class CouponName {
     private static final int MIN_NAME_LENGTH = 1;
@@ -15,7 +15,7 @@ public class CouponName {
 
     private void validate(String name) {
         if (name.length() < MIN_NAME_LENGTH || name.length() > MAX_NAME_LENGTH) {
-            throw new GlobalException("쿠폰 이름은 1글자 이상, 50글자 이하여야 합니다.");
+            throw new ShoppingException("쿠폰 이름은 1글자 이상, 50글자 이하여야 합니다.");
         }
     }
 

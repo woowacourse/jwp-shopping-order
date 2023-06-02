@@ -40,7 +40,7 @@ public class CouponDao {
         try {
             return simpleJdbcInsert.executeAndReturnKey(param).longValue();
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("동일한 이름(" + couponEntity.getName() + ")과 " +
+            throw new DatabaseException.DataConflictException("동일한 이름(" + couponEntity.getName() + ")과 " +
                     "할인율(" + couponEntity.getDiscountRate() + ")을 가진 쿠폰이 존재합니다.");
         }
     }

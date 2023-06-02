@@ -1,7 +1,5 @@
 package shop.util;
 
-import shop.exception.EncryptionException;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -15,7 +13,7 @@ public class Encryptor {
 
             return bytesToHex(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
-            throw new EncryptionException(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

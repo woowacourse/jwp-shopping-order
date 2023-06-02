@@ -1,6 +1,6 @@
 package shop.domain.product;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -13,7 +13,7 @@ class ProductNameTest {
     @ValueSource(strings = {"", "이것은 스물 한글자를 만들기 위함입니다"})
     void createProductNameTest1(String name) {
         assertThatThrownBy(() -> new ProductName(name))
-                .isInstanceOf(GlobalException.class);
+                .isInstanceOf(ShoppingException.class);
     }
 
     @ParameterizedTest(name = "상품 이름은 1글자 이상, 20글자 이하여야 한다.")

@@ -1,8 +1,10 @@
 package shop.domain.coupon;
 
 import shop.domain.member.Member;
+import shop.exception.ShoppingException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MemberCoupon {
     private final Long id;
@@ -42,15 +44,11 @@ public class MemberCoupon {
         return coupon.getId();
     }
 
-    public LocalDateTime getCouponExpiredAt() {
-        return coupon.getExpiredAt();
-    }
-
-    public String getCouponName(){
+    public String getCouponName() {
         return coupon.getName();
     }
 
-    public Integer getDiscountRate(){
+    public Integer getDiscountRate() {
         return coupon.getDiscountRate();
     }
 
@@ -64,5 +62,19 @@ public class MemberCoupon {
 
     public Boolean isUsed() {
         return isUsed;
+    }
+
+    public void checkAvailability() {
+        if (isUsed) {
+            throw new ShoppingException("이미 사용한 쿠폰입니다.");
+        }
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isAfter(expiredAt)) {
+            String expiredDate = expiredAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS"));
+
+            throw new ShoppingException("사용 기간이 만료된 쿠폰입니다. " +
+                    "사용 만료 기간 : " + expiredDate);
+        }
     }
 }

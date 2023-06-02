@@ -1,6 +1,6 @@
 package shop.domain.coupon;
 
-import shop.exception.GlobalException;
+import shop.exception.ShoppingException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -13,7 +13,7 @@ class DiscountRateTest {
     @ValueSource(ints = {4, 91})
     void createDiscountRateTest1(int rate) {
         assertThatThrownBy(() -> new DiscountRate(rate))
-                .isInstanceOf(GlobalException.class);
+                .isInstanceOf(ShoppingException.class);
     }
 
     @ParameterizedTest(name = "쿠폰의 할인율은 5 ~ 90% 사이여야한다.")

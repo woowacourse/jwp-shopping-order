@@ -1,8 +1,5 @@
 package shop.persistence.dao;
 
-import shop.exception.DatabaseException;
-import shop.persistence.CartItemDetail;
-import shop.persistence.entity.CartEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +9,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import shop.exception.DatabaseException;
+import shop.persistence.CartItemDetail;
+import shop.persistence.entity.CartEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +49,10 @@ public class CartDao {
         try {
             return simpleJdbcInsert.executeAndReturnKey(param).longValue();
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("잘못된 id 값이 존재합니다. " +
-                    "입력된 상품 id : " + cartEntity.getProductId() + " 회원 id : " + cartEntity.getMemberId());
+            throw new DatabaseException.IllegalDataException(
+                    "잘못된 id 값이 존재합니다. 입력된 상품 id : " + cartEntity.getProductId() +
+                            " 회원 id : " + cartEntity.getMemberId()
+            );
         }
     }
 
@@ -73,13 +75,7 @@ public class CartDao {
 
         CartItemDetail cartItemDetail = jdbcTemplate.queryForObject(sql, detailRowMapper, id);
 
-        return Optional.of(cartItemDetail);
-    }
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-
-        jdbcTemplate.update(sql, memberId, productId);
+        return Optional.ofNullable(cartItemDetail);
     }
 
     public void deleteById(Long id) {
