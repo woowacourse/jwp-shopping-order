@@ -28,7 +28,7 @@ class OrderTest {
         Member member = new Member(1L, "ocean@ocean", "1234");
 
         assertThatThrownBy(() -> new Order(member, List.of(), null))
-                .hasMessage("주문상품이 비어있습니다.");
+                .hasMessage("주문 상품이 비어있습니다.");
     }
 
     @Test
