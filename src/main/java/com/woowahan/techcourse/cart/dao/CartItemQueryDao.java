@@ -5,6 +5,7 @@ import com.woowahan.techcourse.cart.dto.CartItemResponse;
 import com.woowahan.techcourse.product.domain.Product;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,14 +17,18 @@ public class CartItemQueryDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartItemResponse> findByMemberId(Long memberId) {
+    public List<CartItemResponse> findByMemberId(long memberId) {
         String sql =
-                "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity "
-                        +
-                        "FROM cart_item " +
-                        "INNER JOIN product ON cart_item.product_id = product.id " +
-                        "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
+                "SELECT cart_item.id, cart_item.member_id, cart_item.quantity, "
+                        + "product.id, product.name, product.price, product.image_url "
+                        + "FROM cart_item "
+                        + "INNER JOIN product ON cart_item.product_id = product.id "
+                        + "WHERE cart_item.member_id = ?";
+        return jdbcTemplate.query(sql, getCartItemResponseRowMapper(memberId), memberId);
+    }
+
+    private RowMapper<CartItemResponse> getCartItemResponseRowMapper(long memberId) {
+        return (rs, rowNum) -> {
             long productId = rs.getLong("product.id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
@@ -33,6 +38,6 @@ public class CartItemQueryDao {
             Product product = new Product(productId, name, price, imageUrl);
             CartItem cartItem = new CartItem(cartItemId, quantity, productId, memberId);
             return CartItemResponse.of(cartItem, product);
-        });
+        };
     }
 }
