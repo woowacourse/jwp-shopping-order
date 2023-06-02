@@ -1,6 +1,6 @@
 package cart.domain;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Order {
 
@@ -8,7 +8,7 @@ public class Order {
     private final Member member;
     private final OrderItems orderItems;
     private final Payment payment;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     public Order(Member member, OrderItems orderItems, Payment payment) {
         this.member = member;
@@ -16,7 +16,7 @@ public class Order {
         this.payment = payment;
     }
 
-    public Order(long id, Member member, OrderItems orderItems, Payment payment, Timestamp createdAt) {
+    public Order(long id, Member member, OrderItems orderItems, Payment payment, LocalDateTime createdAt) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
@@ -40,7 +40,7 @@ public class Order {
         return payment;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 }

@@ -1,6 +1,6 @@
 package cart.repository.entity;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class OrderEntity {
 
@@ -8,9 +8,9 @@ public class OrderEntity {
     private final long memberId;
     private final int totalPayment;
     private final int usedPoint;
-    private final Timestamp createdAt;
+    private final LocalDateTime createdAt;
 
-    public OrderEntity(Long id, long memberId, int totalPayment, int usedPoint, Timestamp createdAt) {
+    public OrderEntity(Long id, long memberId, int totalPayment, int usedPoint, LocalDateTime createdAt) {
         this.id = id;
         this.memberId = memberId;
         this.totalPayment = totalPayment;
@@ -34,7 +34,7 @@ public class OrderEntity {
         return usedPoint;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
@@ -55,8 +55,7 @@ public class OrderEntity {
         private long memberId;
         private int totalPayment;
         private int usedPoint;
-        private Timestamp createdAt;
-
+        private LocalDateTime createdAt;
 
         public Builder id(long id) {
             this.id = id;
@@ -78,7 +77,7 @@ public class OrderEntity {
             return this;
         }
 
-        public Builder createdAt(Timestamp createdAt) {
+        public Builder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }

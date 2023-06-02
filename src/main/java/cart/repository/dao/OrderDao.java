@@ -90,7 +90,7 @@ public class OrderDao {
                     .memberId(resultSet.getLong("member_id"))
                     .totalPayment(resultSet.getInt("total_payment"))
                     .usedPoint(resultSet.getInt("used_point"))
-                    .createdAt(resultSet.getTimestamp("created_at"))
+                    .createdAt(resultSet.getTimestamp("created_at").toLocalDateTime())
                     .build();
 
     public OrderEntity getOrderById(long orderId) {

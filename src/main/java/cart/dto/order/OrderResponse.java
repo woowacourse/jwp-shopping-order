@@ -1,8 +1,9 @@
 package cart.dto.order;
 
 import cart.domain.OrderItems;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class OrderResponse {
 
@@ -10,9 +11,10 @@ public class OrderResponse {
     private final OrderItems orderItems;
     private final int orderTotalPrice;
     private final int usedPoint;
-    private final Timestamp createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private final LocalDateTime createdAt;
 
-    public OrderResponse(long id, OrderItems orderItems, int orderTotalPrice, int usedPoint, Timestamp createdAt) {
+    public OrderResponse(long id, OrderItems orderItems, int orderTotalPrice, int usedPoint, LocalDateTime createdAt) {
         this.id = id;
         this.orderItems = orderItems;
         this.orderTotalPrice = orderTotalPrice;
@@ -36,7 +38,7 @@ public class OrderResponse {
         return usedPoint;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 }
