@@ -4,7 +4,7 @@ import cart.exception.CartItemException;
 
 import java.util.Objects;
 
-public class CartItem {
+public class CartItem implements Model {
     private Long id;
     private int quantity;
     private final Product product;

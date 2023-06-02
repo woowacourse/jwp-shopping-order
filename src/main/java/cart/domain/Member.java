@@ -2,7 +2,7 @@ package cart.domain;
 
 import java.util.Objects;
 
-public class Member {
+public class Member implements Model {
     private Long id;
     private String email;
     private String password;

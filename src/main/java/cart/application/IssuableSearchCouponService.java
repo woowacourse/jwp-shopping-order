@@ -26,6 +26,7 @@ public class IssuableSearchCouponService {
     @Transactional(readOnly = true)
     public List<IssuableSearchCouponResponse> findAll(Member member) {
         List<Coupon> coupons = couponRepository.findAll();
+        ModelSortHelper.sortByIdInDescending(coupons);
 
         List<Coupon> couponsOfMember = memberCouponRepository.findMemberCouponsByMemberId(member.getId()).stream()
                 .map(MemberCoupon::getCoupon)

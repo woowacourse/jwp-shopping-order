@@ -2,7 +2,7 @@ package cart.domain;
 
 import java.util.Objects;
 
-public class Product {
+public class Product implements Model {
     private Long id;
     private String name;
     private int price;

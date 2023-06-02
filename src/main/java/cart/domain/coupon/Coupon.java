@@ -1,10 +1,11 @@
 package cart.domain.coupon;
 
+import cart.domain.Model;
 import cart.domain.Order;
 
 import java.util.Objects;
 
-public abstract class Coupon implements DiscountAction, CouponUseConditionAction {
+public abstract class Coupon implements Model, DiscountAction, CouponUseConditionAction {
     private final Long id;
     private final String name;
     private final DiscountType discountType;

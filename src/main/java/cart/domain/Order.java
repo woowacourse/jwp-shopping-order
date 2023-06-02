@@ -5,7 +5,7 @@ import cart.domain.coupon.Coupon;
 import java.util.List;
 import java.util.Objects;
 
-public class Order {
+public class Order implements Model {
     private final Long id;
     private final Integer originalPrice;
     private final Integer discountPrice;

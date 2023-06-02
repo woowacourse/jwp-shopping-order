@@ -45,6 +45,7 @@ public class MemberCouponService {
     @Transactional(readOnly = true)
     public List<MemberCouponResponse> findMemberCouponsByMemberId(Long memberId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findMemberCouponsByMemberId(memberId);
+        ModelSortHelper.sortByIdInDescending(memberCoupons);
         return memberCoupons.stream()
                 .map(memberCoupon -> new MemberCouponResponse(
                                 memberCoupon.getId(),
@@ -61,6 +62,7 @@ public class MemberCouponService {
     @Transactional(readOnly = true)
     public List<MemberCouponResponse> findAll() {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findAll();
+        ModelSortHelper.sortByIdInDescending(memberCoupons);
         return memberCoupons.stream()
                 .map(memberCoupon -> new MemberCouponResponse(
                                 memberCoupon.getId(),

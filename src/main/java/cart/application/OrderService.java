@@ -49,6 +49,8 @@ public class OrderService {
             discountPrice = usedMemberCoupon.discount(totalPrice);
             memberCouponRepository.delete(usedMemberCoupon.getId());
             usedCoupon = usedMemberCoupon.getCoupon();
+
+            validatePaymentAmount(discountPrice);
         }
 
         // TODO order가 MemberCoupon을 가지게 변경
@@ -59,6 +61,12 @@ public class OrderService {
         orderRequest.getSelectCartIds().stream()
                 .forEach(cartItemDao::deleteById);
         return orderRepository.add(order);
+    }
+
+    private void validatePaymentAmount(int price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("결제 금액은 0원보다 작을 수 없습니다.");
+        }
     }
 
     private void validateUsableCoupon(Coupon usedCoupon, Order order) {
@@ -93,7 +101,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderResponse> findOrdersByMember(Member member) {
         List<Order> orders = orderRepository.findOrderByMemberId(member.getId());
-
+        ModelSortHelper.sortByIdInDescending(orders);
         return orders.stream()
                 .map(order -> {
                     List<OrderProductResponse> orderProductResponses = order.getOrderProducts().stream()
@@ -117,7 +125,9 @@ public class OrderService {
         Order order = orderRepository.findOrderById(id);
         validateOwnerOfOrder(member, order);
 
-        List<OrderProductResponse> orderProductResponses = order.getOrderProducts().stream()
+        List<OrderProduct> orderProducts = order.getOrderProducts();
+        ModelSortHelper.sortByIdInDescending(orderProducts);
+        List<OrderProductResponse> orderProductResponses = orderProducts.stream()
                 .map(orderProduct -> {
                     ProductResponse productResponse = new ProductResponse(
                             orderProduct.getProduct().getId(),

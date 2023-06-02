@@ -1,12 +1,13 @@
 package cart.domain.memberCoupon;
 
 import cart.domain.Member;
+import cart.domain.Model;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.DiscountAction;
 
 import java.util.Objects;
 
-public class MemberCoupon implements DiscountAction {
+public class MemberCoupon implements Model, DiscountAction {
     private final Long id;
     private final Member member;
     private final Coupon coupon;
