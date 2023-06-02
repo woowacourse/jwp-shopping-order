@@ -1,6 +1,7 @@
 package com.woowahan.techcourse.cart.dto;
 
 import com.woowahan.techcourse.cart.domain.CartItem;
+import com.woowahan.techcourse.product.domain.Product;
 import com.woowahan.techcourse.product.ui.dto.ProductResponse;
 
 public class CartItemResponse {
@@ -15,11 +16,11 @@ public class CartItemResponse {
         this.product = product;
     }
 
-    public static CartItemResponse of(CartItem cartItem) {
+    public static CartItemResponse of(CartItem cartItem, Product product) {
         return new CartItemResponse(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
+                ProductResponse.of(product)
         );
     }
 

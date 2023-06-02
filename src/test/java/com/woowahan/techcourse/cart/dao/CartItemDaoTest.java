@@ -52,7 +52,7 @@ class CartItemDaoTest {
         @Test
         void 카트_아이템_추가_테스트() {
             // given
-            long cartItemId = cartItemDao.save(new CartItem(product, memberId));
+            long cartItemId = cartItemDao.save(new CartItem(productId, memberId));
 
             // when
             // then
@@ -66,9 +66,9 @@ class CartItemDaoTest {
         @Test
         void 카트_전부_제거_테스트() {
             // given
-            long cartItemId = cartItemDao.save(new CartItem(product, memberId));
-            long cartItemId2 = cartItemDao.save(new CartItem(product, memberId));
-            long cartItemId3 = cartItemDao.save(new CartItem(product, memberId));
+            long cartItemId = cartItemDao.save(new CartItem(productId, memberId));
+            long cartItemId2 = cartItemDao.save(new CartItem(productId, memberId));
+            long cartItemId3 = cartItemDao.save(new CartItem(productId, memberId));
 
             // when
             cartItemDao.deleteAll(memberId, List.of(cartItemId, cartItemId2, cartItemId3));
