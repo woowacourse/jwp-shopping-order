@@ -1,0 +1,3 @@
+[submodule "src/main/resources/submodule/jwp-shopping-order-private"]
+	path = src/main/resources/submodule/jwp-shopping-order-private
+	url = https://github.com/yujamint/jwp-shopping-order-private.git
