@@ -2,8 +2,8 @@ package cart.ui.api;
 
 import cart.application.OrderService;
 import cart.application.request.OrderRequest;
+import cart.application.response.OrderWithOutTotalPriceResponse;
 import cart.application.response.OrderWithTotalPriceResponse;
-import cart.application.response.OrdersResponse;
 import cart.domain.member.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -45,11 +46,11 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<OrdersResponse> findAllByMember(Member member) {
-        OrdersResponse ordersResponse = orderService.findAllByMemberId(member.getId());
+    public ResponseEntity<List<OrderWithOutTotalPriceResponse>> findAllByMember(Member member) {
+        List<OrderWithOutTotalPriceResponse> orderResponses = orderService.findAllByMemberId(member.getId());
 
         return ResponseEntity
                 .status(OK)
-                .body(ordersResponse);
+                .body(orderResponses);
     }
 }

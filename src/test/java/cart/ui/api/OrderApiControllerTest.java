@@ -111,13 +111,12 @@ class OrderApiControllerTest extends ControllerTestConfig {
                                 headerWithName(AUTHORIZATION).description("basic 64인코딩값")
                         ),
                         responseFields(
-                                fieldWithPath("orders").description("회원 주문 목록"),
-                                fieldWithPath("orders.[].orderId").description("주문 식별자값"),
-                                fieldWithPath("orders.[].orderProducts.[].productId").description("주문한 상품 식별자값"),
-                                fieldWithPath("orders.[].orderProducts.[].name").description("주문한 상품명"),
-                                fieldWithPath("orders.[].orderProducts.[].quantity").description("주문한 상품 수량"),
-                                fieldWithPath("orders.[].orderProducts.[].price").description("주문한 단일 상품 금액"),
-                                fieldWithPath("orders.[].orderProducts.[].totalPrice").description("주문한 해당 상품의 총금액 (수량 * 금액)")
+                                fieldWithPath("[].orderId").description("주문 식별자값"),
+                                fieldWithPath("[].orderProducts.[].productId").description("주문한 상품 식별자값"),
+                                fieldWithPath("[].orderProducts.[].name").description("주문한 상품명"),
+                                fieldWithPath("[].orderProducts.[].quantity").description("주문한 상품 수량"),
+                                fieldWithPath("[].orderProducts.[].price").description("주문한 단일 상품 금액"),
+                                fieldWithPath("[].orderProducts.[].totalPrice").description("주문한 해당 상품의 총금액 (수량 * 금액)")
                         )))
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()

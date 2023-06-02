@@ -3,7 +3,6 @@ package cart.application;
 import cart.application.request.OrderRequest;
 import cart.application.response.OrderWithOutTotalPriceResponse;
 import cart.application.response.OrderWithTotalPriceResponse;
-import cart.application.response.OrdersResponse;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
@@ -68,12 +67,10 @@ public class OrderService {
         return OrderWithTotalPriceResponse.from(orderRepository.findByOrderId(orderId));
     }
 
-    public OrdersResponse findAllByMemberId(Long memberId) {
-        List<OrderWithOutTotalPriceResponse> orderResponses = orderRepository.findOrdersByMemberId(memberId)
+    public List<OrderWithOutTotalPriceResponse> findAllByMemberId(Long memberId) {
+        return orderRepository.findOrdersByMemberId(memberId)
                 .stream()
                 .map(OrderWithOutTotalPriceResponse::from)
                 .collect(Collectors.toList());
-
-        return OrdersResponse.from(orderResponses);
     }
 }
