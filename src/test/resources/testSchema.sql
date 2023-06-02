@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS orders
     member_id      BIGINT UNSIGNED NOT NULL,
     payment        BIGINT UNSIGNED NOT NULL,
     discount_point BIGINT UNSIGNED NOT NULL,
-    order_date     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    order_date     DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
     );
 
