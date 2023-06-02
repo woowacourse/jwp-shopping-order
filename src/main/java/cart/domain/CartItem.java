@@ -8,34 +8,27 @@ public class CartItem {
 
     public static final int MINIMUM_QUANTITY = 1;
 
-    private Long id;
-    private int quantity;
+    private final Long id;
     private final Product product;
     private final Member member;
+    private int quantity;
 
     public CartItem(Member member, Product product) {
         this(0L, MINIMUM_QUANTITY, product, member);
     }
 
     public CartItem(Long id, int quantity, Product product, Member member) {
-        validate(id, quantity, member, product);
+        validate(member, product, quantity);
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
     }
 
-    private void validate(Long id, int quantity, Member member, Product product) {
-        validateId(id);
-        validateQuantity(quantity);
+    private void validate(Member member, Product product, int quantity) {
         validateMember(member);
+        validateQuantity(quantity);
         validateProduct(product);
-    }
-
-    private void validateId(Long id) {
-        if (Objects.isNull(id)) {
-            throw new CartItemException.InvalidIdByNull();
-        }
     }
 
     private void validateQuantity(int quantity) {
