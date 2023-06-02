@@ -1,5 +1,7 @@
 package cart.dto;
 
+import java.util.Objects;
+
 public class CouponResponse {
 
     private Long couponId;
@@ -19,7 +21,26 @@ public class CouponResponse {
         this.discountAmount = discountAmount;
         this.isPublished = isPublished;
     }
-    
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final CouponResponse that = (CouponResponse) o;
+        return getMinAmount() == that.getMinAmount() && getDiscountAmount() == that.getDiscountAmount()
+            && isPublished == that.isPublished && Objects.equals(getCouponId(), that.getCouponId())
+            && Objects.equals(getCouponName(), that.getCouponName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCouponId(), getCouponName(), getMinAmount(), getDiscountAmount(), isPublished);
+    }
+
     public Long getCouponId() {
         return couponId;
     }
@@ -36,7 +57,7 @@ public class CouponResponse {
         return discountAmount;
     }
 
-    public boolean isPublished() {
+    public boolean getIsPublished() {
         return isPublished;
     }
 }

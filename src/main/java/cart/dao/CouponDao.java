@@ -34,16 +34,34 @@ public class CouponDao {
     }
 
     public Coupon save(final Coupon coupon, final Long memberId) {
-        final Map<String, Object> params = new HashMap<>();
-        params.put("name", coupon.getName());
-        params.put("min_Amount", coupon.getMinAmount().getValue());
-        params.put("discount_amount", coupon.getDiscountAmount().getValue());
-        final long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-
+        final Long couponId = findCouponId(coupon);
         final String sql = "INSERT INTO member_coupon(member_id, coupon_id, is_used) "
             + "VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, memberId, id, coupon.isUsed());
-        return new Coupon(id, coupon.getName(), coupon.getDiscountAmount(), coupon.getMinAmount(), coupon.isUsed());
+        jdbcTemplate.update(sql, memberId, couponId, coupon.isUsed());
+        return new Coupon(couponId, coupon.getName(), coupon.getDiscountAmount(), coupon.getMinAmount(),
+            coupon.isUsed());
+    }
+
+    private Long findCouponId(final Coupon coupon) {
+        final Optional<Coupon> optionalCoupon = findById(coupon.getId());
+        if (optionalCoupon.isEmpty()) {
+            final Map<String, Object> params = new HashMap<>();
+            params.put("name", coupon.getName());
+            params.put("min_Amount", coupon.getMinAmount().getValue());
+            params.put("discount_amount", coupon.getDiscountAmount().getValue());
+            return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        }
+        return optionalCoupon.get().getId();
+    }
+
+    public Optional<Coupon> findById(final Long couponId) {
+        final String sql =
+            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount, mc.is_used as is_used "
+                + "FROM member_coupon as mc "
+                + "INNER JOIN coupon c on mc.coupon_id = c.id "
+                + "WHERE coupon_id = ?";
+        final List<Coupon> coupons = jdbcTemplate.query(sql, rowMapper, couponId);
+        return coupons.stream().findAny();
     }
 
     public Optional<Coupon> findByCouponIdAndMemberId(final long couponId, final long memberId) {
