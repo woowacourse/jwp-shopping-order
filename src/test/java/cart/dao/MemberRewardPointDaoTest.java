@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -36,13 +37,15 @@ class MemberRewardPointDaoTest {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
     private DataSource dataSource;
 
     private MemberRewardPointDao memberRewardPointDao;
 
     @BeforeEach
     void setUp() {
-        memberRewardPointDao = new MemberRewardPointDao(namedParameterJdbcTemplate, dataSource);
+        memberRewardPointDao = new MemberRewardPointDao(namedParameterJdbcTemplate, jdbcTemplate, dataSource);
     }
 
     @DisplayName("포인트와 회원 아이디, 주문 아이디르르 통해 포인트 정보를 저장한다")
@@ -96,5 +99,38 @@ class MemberRewardPointDaoTest {
         // then
         assertThat(point).usingRecursiveComparison()
                          .isEqualTo(회원1_주문1_포인트);
+    }
+
+    @DisplayName("기존의 데이터를 수정된 데이터로 한 번에 수정한다")
+    @Test
+    void updatePoints() {
+        // given
+        List<Point> updatePoints = List.of(
+                new Point(1L, 0, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
+                        LocalDateTime.parse("2023-05-25 12:12:12", formatter)),
+                new Point(3L, 500, LocalDateTime.parse("2023-05-15 12:12:12", formatter),
+                        LocalDateTime.parse("2023-05-30 12:12:12", formatter))
+        );
+        List<Point> expectResult = List.of(
+                new Point(1L, 0, LocalDateTime.parse("2023-05-20 12:12:12", formatter),
+                        LocalDateTime.parse("2023-05-25 12:12:12", formatter)),
+                new Point(2L, 700, LocalDateTime.parse("2023-05-18 12:12:12", formatter),
+                        LocalDateTime.parse("2023-05-29 12:12:12", formatter)),
+                new Point(3L, 500, LocalDateTime.parse("2023-05-15 12:12:12", formatter),
+                        LocalDateTime.parse("2023-05-30 12:12:12", formatter))
+        );
+
+        // when
+        memberRewardPointDao.updatePoints(updatePoints);
+
+        // then
+        List<Point> resultPoints = getAllPoint();
+        assertThat(resultPoints).usingRecursiveFieldByFieldElementComparator()
+                                .containsAll(expectResult);
+    }
+
+    private List<Point> getAllPoint() {
+        String sql = "SELECT * FROM member_reward_point";
+        return namedParameterJdbcTemplate.query(sql, rowMapper);
     }
 }

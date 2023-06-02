@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.domain.point.Point;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,6 +11,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -25,10 +29,13 @@ public class MemberRewardPointDao {
             );
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
 
-    public MemberRewardPointDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource) {
+    public MemberRewardPointDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                                JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
         this.insertAction = new SimpleJdbcInsert(dataSource)
                 .withTableName("member_reward_point")
                 .usingGeneratedKeyColumns("id");
@@ -45,14 +52,32 @@ public class MemberRewardPointDao {
     }
 
     public List<Point> getAllByMemberId(Long memberId) {
-        String sql = "SELECT * FROM member_reward_point WHERE member_id = :member_id";
+        String sql = "SELECT id, point, created_at, expired_at FROM member_reward_point WHERE member_id = :member_id";
         SqlParameterSource source = new MapSqlParameterSource("member_id", memberId);
         return namedParameterJdbcTemplate.query(sql, source, rowMapper);
     }
 
     public Point getPointByOrderId(Long orderId) {
-        String sql = "SELECT * FROM member_reward_point WHERE reward_order_id = :reward_order_id";
+        String sql = "SELECT id, point, created_at, expired_at FROM member_reward_point WHERE reward_order_id = :reward_order_id";
         SqlParameterSource source = new MapSqlParameterSource("reward_order_id", orderId);
         return namedParameterJdbcTemplate.queryForObject(sql, source, rowMapper);
+    }
+
+    public void updatePoints(List<Point> points) {
+        String sql = "UPDATE member_reward_point SET point = ? WHERE id = ?";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        Point point = points.get(i);
+                        ps.setLong(1, point.getPoint());
+                        ps.setLong(2, point.getId());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return points.size();
+                    }
+                }
+        );
     }
 }
