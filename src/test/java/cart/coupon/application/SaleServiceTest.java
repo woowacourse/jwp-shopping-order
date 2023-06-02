@@ -53,13 +53,6 @@ class SaleServiceTest {
                 .isEqualTo(1500);
     }
 
-    @Test
-    @DisplayName("쿠폰을 사용자에게 할당해줄 수 있어요.")
-    void giveCouponToMember() {
-        final var 백여우 = new Member(1L, "fox@gmail.com", "1234");
-        백여우.giveCoupon(1L);
-    }
-
     public Cart getTestCart() {
         final var 백여우 = new Member(1L, "fox@gmail.com", "1234");
         final var 피자 = new Product(1L, "피자", 20_000, "img");

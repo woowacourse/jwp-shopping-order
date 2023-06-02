@@ -57,9 +57,5 @@ public class BaseDataListener implements ApplicationListener<ContextRefreshedEve
 
         final var chicken3000DiscountId = discountPolicyService.savePolicy(DiscountCondition.makeConditionForSpecificProducts(List.of(chickenId), DiscountUnit.ABSOLUTE, 3000));
         saleRepository.save("치킨만 3,000원 할인", chicken3000DiscountId);
-
-        memberRepository.addCoupon(member, tenPercentForAllDiscountCouponId);
-        memberRepository.addCoupon(member, twentyPercentForAllDiscountCouponId);
-        memberRepository.addCoupon(member, freeDeliveryCouponId);
     }
 }

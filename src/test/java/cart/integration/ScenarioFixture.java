@@ -10,8 +10,8 @@ import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.discountpolicy.discountcondition.DiscountUnit;
-import cart.member.application.MemberRepository;
 import cart.member.Member;
+import cart.member.application.MemberRepository;
 import cart.product.Product;
 import cart.product.application.ProductRepository;
 import cart.sale.SaleRepository;
@@ -19,8 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-
-import static io.restassured.RestAssured.given;
 
 public class ScenarioFixture extends IntegrationTest {
     @Autowired
@@ -82,9 +80,9 @@ public class ScenarioFixture extends IntegrationTest {
     }
 
     private void 사용자에게_쿠폰_발급하기() {
-        memberRepository.addCoupon(사용자1, 전체10프로할인쿠폰.getId());
-        memberRepository.addCoupon(사용자1, 전체20프로할인쿠폰.getId());
-        memberRepository.addCoupon(사용자1, 배송비무료쿠폰.getId());
+        couponRepository.giveCouponToMember(사용자1.getId(), 전체10프로할인쿠폰.getId());
+        couponRepository.giveCouponToMember(사용자1.getId(), 전체20프로할인쿠폰.getId());
+        couponRepository.giveCouponToMember(사용자1.getId(), 배송비무료쿠폰.getId());
     }
 
     private void 할인_만들기() {

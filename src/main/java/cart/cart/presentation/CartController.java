@@ -33,7 +33,7 @@ public class CartController {
 
     @GetMapping("/coupons")
     public ResponseEntity<List<CouponResponse>> showCoupons(@Auth Member member) {
-        return ResponseEntity.ok(couponService.findCouponsByMember(member));
+        return ResponseEntity.ok(couponService.findCouponsByMember(member.getId()));
     }
 
     @GetMapping("/cart-items/coupon")

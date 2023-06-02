@@ -36,10 +36,9 @@ public class CouponService {
         return couponRepository.findById(couponId);
     }
 
-    public List<CouponResponse> findCouponsByMember(Member member) {
-        return member.getCouponIds()
-                .stream().map(couponRepository::findById)
-                .map(CouponResponse::from)
+    public List<CouponResponse> findCouponsByMember(Long memberId) {
+        return couponRepository.findAllByMemberId(memberId)
+                .stream().map(CouponResponse::from)
                 .collect(Collectors.toList());
     }
 
