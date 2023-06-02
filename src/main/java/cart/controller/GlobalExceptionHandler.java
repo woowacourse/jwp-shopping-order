@@ -3,6 +3,7 @@ package cart.controller;
 import cart.controller.dto.response.ExceptionResponse;
 import cart.exception.AuthorizationException;
 import cart.exception.CartItemNotFoundException;
+import cart.exception.IdTypeException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.NotEnoughQuantityException;
 import cart.exception.NotOwnerException;
@@ -36,7 +37,8 @@ public class GlobalExceptionHandler {
         return new ExceptionResponse(e.getMessage());
     }
 
-    @ExceptionHandler({PaymentAmountNotEqualException.class, NotEnoughQuantityException.class})
+    @ExceptionHandler({PaymentAmountNotEqualException.class, NotEnoughQuantityException.class,
+            IdTypeException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleBadRequest(IllegalArgumentException e) {
         return new ExceptionResponse(e.getMessage());

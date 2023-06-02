@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
 @RequestMapping("/products")
@@ -25,11 +28,6 @@ public class ProductController {
 
     public ProductController(ProductService productService) {
         this.productService = productService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAll() {
-        return ResponseEntity.ok(productService.findAll());
     }
 
     @GetMapping("/{id}")
@@ -55,4 +53,12 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getMultiple(@RequestParam(value = "ids", required = false) final String ids) {
+        if (ids == null) {
+            return ResponseEntity.ok(productService.findAll());
+        }
+        final List<ProductResponse> responses = productService.findByIds(ids);
+        return ResponseEntity.ok(responses);
+    }
 }

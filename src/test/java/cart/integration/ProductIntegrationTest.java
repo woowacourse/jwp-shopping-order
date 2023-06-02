@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,6 +80,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
     @Nested
     @DisplayName("원하는 상품 목록 조회")
+    @Sql("/product_data.sql")
     class GetMultiple {
 
         @Test
@@ -89,7 +91,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
             // when
             final ExtractableResponse<Response> response = given()
-                    .pathParam("ids", ids)
+                    .queryParam("ids", ids)
                     .when().get("/products")
                     .then()
                     .extract();
@@ -114,7 +116,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
             // when
             final ExtractableResponse<Response> response = given()
-                    .pathParam("ids", ids)
+                    .queryParam("ids", ids)
                     .when().get("/products")
                     .then()
                     .extract();
@@ -131,7 +133,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 
             // when
             final ExtractableResponse<Response> response = given()
-                    .pathParam("ids", ids)
+                    .queryParam("ids", ids)
                     .when().get("/products")
                     .then()
                     .extract();
