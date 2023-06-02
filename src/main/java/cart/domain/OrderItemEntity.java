@@ -9,14 +9,15 @@ import lombok.Getter;
 public class OrderItemEntity {
 
     private final Long id;
+    private final Long orderId;
     private final Long productId;
     private final String productName;
     private final int productPrice;
     private final String productImageUrl;
     private final int quantity;
 
-    public OrderItemEntity(Long productId, String productName, int productPrice, String productImageUrl, int quantity) {
-        this(null, productId, productName, productPrice, productImageUrl, quantity);
+    public OrderItemEntity(Long orderId, Long productId, String productName, int productPrice, String productImageUrl, int quantity) {
+        this(null, orderId, productId, productName, productPrice, productImageUrl, quantity);
     }
 
     @Override
