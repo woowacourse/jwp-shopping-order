@@ -58,6 +58,18 @@ public class OrderDao {
     public void deleteOrderById(Long orderId) {
         String sql = "delete from orders where id = ?";
 
-        jdbcTemplate.update(sql,orderId);
+        jdbcTemplate.update(sql, orderId);
+    }
+
+    public void confirmOrder(Long orderId, Long memberId) {
+        String sql = "UPDATE orders SET confirm_state = ? WHERE id = ? and member_id = ?";
+
+        jdbcTemplate.update(sql, true, orderId, memberId);
+    }
+
+    public boolean checkConfirmState(Long orderId) {
+        String sql = "select exists(select * from orders where id = ? and confirm_state = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, orderId, true);
     }
 }

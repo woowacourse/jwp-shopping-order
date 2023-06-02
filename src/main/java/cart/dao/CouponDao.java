@@ -2,6 +2,7 @@ package cart.dao;
 
 
 import cart.entity.CouponEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CouponDao {
@@ -45,5 +47,14 @@ public class CouponDao {
         String sql = "select * from coupon";
 
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public Optional<CouponEntity> findCouponByName(CouponEntity coupon) {
+        try {
+            String sql = "select * from coupon where name like ?";
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, coupon.getName()));
+        } catch(DataAccessException e){
+            return Optional.empty();
+        }
     }
 }

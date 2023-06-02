@@ -15,4 +15,8 @@ public interface OrderRepository {
     Order findByOrderId(Member member, Long orderId);
 
     void deleteOrder(Long orderId);
+
+    void confirmOrder(Long orderId, Member member);
+
+    boolean checkConfirmState(Long orderId);
 }

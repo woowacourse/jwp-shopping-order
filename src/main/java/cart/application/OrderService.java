@@ -3,9 +3,11 @@ package cart.application;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.coupon.Coupon;
 import cart.domain.repository.*;
 import cart.dto.OrderResponse;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.CouponConfirmResponse;
 import cart.dto.response.CouponResponse;
 import cart.dto.response.OrdersResponse;
 import cart.dto.response.ProductQuantityResponse;
@@ -25,7 +27,9 @@ public class OrderService {
     private final OrderProductRepository orderProductRepository;
     private final OrderCouponRepository orderCouponRepository;
 
-    public OrderService(CartItemRepository cartItemRepository, MemberCouponRepository memberCouponRepository, OrderRepository orderRepository, OrderProductRepository orderProductRepository, CouponRepository couponRepository, OrderCouponRepository orderCouponRepository) {
+    public OrderService(CartItemRepository cartItemRepository, MemberCouponRepository memberCouponRepository,
+                        OrderRepository orderRepository, OrderProductRepository orderProductRepository,
+                        OrderCouponRepository orderCouponRepository) {
         this.cartItemRepository = cartItemRepository;
         this.memberCouponRepository = memberCouponRepository;
         this.orderRepository = orderRepository;
@@ -70,10 +74,21 @@ public class OrderService {
     }
 
     public void cancelOrder(Member member, Long orderId) {
+        if(orderRepository.checkConfirmState(orderId)){
+            throw new OrderException("주문 확정 주문은 취소할 수 없습니다.");
+        }
         Long memberCouponId = orderCouponRepository.deleteOrderCoupon(orderId);
         if(memberCouponId != null) {
             memberCouponRepository.changeUserUnUsedCouponAvailability(member, memberCouponId);
         }
         orderRepository.deleteOrder(orderId);
+    }
+
+    public CouponConfirmResponse confirmOrder(Member member, Long orderId) {
+        orderRepository.confirmOrder(orderId, member);
+        Coupon coupon = memberCouponRepository.publishBonusCoupon(orderId, member);
+        return new CouponConfirmResponse(new CouponResponse(coupon.getId(),coupon.getName(),
+                coupon.getCouponTypes().getCouponTypeName(),coupon.getMinimumPrice(),coupon.getDiscountRate(),
+                coupon.getDiscountPrice()));
     }
 }

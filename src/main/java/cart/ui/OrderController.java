@@ -4,6 +4,7 @@ import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.OrderResponse;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.CouponConfirmResponse;
 import cart.dto.response.OrdersResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,11 @@ public class OrderController {
     public ResponseEntity<Void> cancelOrder(Member member, @PathVariable("id") Long id){
         orderService.cancelOrder(member,id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/confirm")
+    public ResponseEntity<CouponConfirmResponse> confirmOrder(Member member, @PathVariable("id") Long id){
+        CouponConfirmResponse response = orderService.confirmOrder(member, id);
+        return ResponseEntity.ok(response);
     }
 }

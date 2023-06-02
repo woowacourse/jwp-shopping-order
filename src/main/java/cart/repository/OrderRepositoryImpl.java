@@ -50,6 +50,16 @@ public class OrderRepositoryImpl implements OrderRepository {
         orderDao.deleteOrderById(orderId);
     }
 
+    @Override
+    public void confirmOrder(Long orderId, Member member) {
+        orderDao.confirmOrder(orderId, member.getId());
+    }
+
+    @Override
+    public boolean checkConfirmState(Long orderId) {
+        return orderDao.checkConfirmState(orderId);
+    }
+
     private OrderEntity toEntity(Order order) {
         return new OrderEntity(
                 order.getMember().getId(),
