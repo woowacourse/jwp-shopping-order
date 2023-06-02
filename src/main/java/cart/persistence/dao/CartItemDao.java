@@ -73,4 +73,9 @@ public class CartItemDao {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
     }
+
+    public boolean isExist(final Long memberId, final Long productId) {
+        final String sql = "SELECT COUNT(*) FROM cart_item WHERE member_id = ? AND product_id = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId) > 0;
+    }
 }

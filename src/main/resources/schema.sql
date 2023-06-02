@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS order_product;
+DROP TABLE IF EXISTS order_history;
+DROP TABLE IF EXISTS cart_item;
+DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS product;
+
 CREATE TABLE product
 (
     id         BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -25,7 +31,8 @@ CREATE TABLE cart_item
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
+    UNIQUE KEY `member_product_id` (`member_id`, `product_id`)
 );
 
 CREATE TABLE order_history

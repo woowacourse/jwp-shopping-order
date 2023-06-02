@@ -63,7 +63,11 @@ public class CartItemRepository {
     }
 
     public Long createCartItem(final CartItem cartItem) {
-        final CartItemEntity cartItemEntity = Mapper.cartItemEntityMapper(cartItem);
+        if (cartItemDao.isExist(cartItem.getMember().getId(), cartItem.getProduct().getId())) {
+            throw new IllegalArgumentException("이미 존재하는 상품입니다.");
+        }
+
+        final CartItemEntity cartItemEntity = cartItemEntityMapper(cartItem);
         return cartItemDao.create(cartItemEntity);
     }
 
