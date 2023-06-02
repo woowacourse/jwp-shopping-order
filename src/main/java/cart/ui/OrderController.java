@@ -1,5 +1,6 @@
 package cart.ui;
 
+import cart.application.OrderService;
 import cart.domain.Member;
 import cart.dto.DiscountResponse;
 import cart.dto.OrderDetailResponse;
@@ -20,9 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
+    private final OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @PostMapping
     public ResponseEntity<Void> postOrder(Member member, @RequestBody OrderRequest orderRequest) {
-        return ResponseEntity.created(URI.create("/orders/1")).build();
+        Long orderId = orderService.createOrderAndSave(member, orderRequest.getCartItemIds());
+        return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @GetMapping
