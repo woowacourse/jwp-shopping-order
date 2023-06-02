@@ -4,9 +4,12 @@ import cart.domain.Member;
 import cart.service.CouponService;
 import cart.service.response.CouponResponse;
 import cart.service.response.DiscountPriceResponse;
+import cart.service.response.MemberCouponResponse;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +25,8 @@ public class CouponController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CouponResponse>> findMemberCoupons(final Member member) {
-        final List<CouponResponse> memberCoupons = couponService.findMemberCoupons(member);
+    public ResponseEntity<List<MemberCouponResponse>> findMemberCoupons(final Member member) {
+        final List<MemberCouponResponse> memberCoupons = couponService.findMemberCoupons(member);
         return ResponseEntity.ok(memberCoupons);
     }
 
@@ -33,5 +36,11 @@ public class CouponController {
                                                                      @RequestParam(value = "coupon-id") final Long memberCouponId) {
         final DiscountPriceResponse discount = couponService.discount(member, originPrice, memberCouponId);
         return ResponseEntity.ok(discount);
+    }
+
+    @PostMapping("/{id}/issue")
+    public ResponseEntity<Void> issueCoupon(final Member member, @PathVariable final Long id) {
+        //couponService.issue(member, id);
+        return null;
     }
 }

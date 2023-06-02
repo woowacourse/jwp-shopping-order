@@ -9,6 +9,7 @@ import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.service.response.CouponResponse;
 import cart.service.response.DiscountPriceResponse;
+import cart.service.response.MemberCouponResponse;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,10 @@ public class CouponService {
         this.couponRepository = couponRepository;
     }
 
-    public List<CouponResponse> findMemberCoupons(final Member member) {
+    public List<MemberCouponResponse> findMemberCoupons(final Member member) {
         final List<MemberCoupon> memberCoupons = memberCouponRepository.findByMemberId(member.getId());
         return memberCoupons.stream()
-                .map(memberCoupon -> new CouponResponse(memberCoupon.getId(), memberCoupon.getCoupon().getName()))
+                .map(memberCoupon -> new MemberCouponResponse(memberCoupon.getId(), memberCoupon.getCoupon().getName()))
                 .collect(toUnmodifiableList());
     }
 

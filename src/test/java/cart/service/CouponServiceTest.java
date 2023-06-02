@@ -10,7 +10,7 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
-import cart.service.response.CouponResponse;
+import cart.service.response.MemberCouponResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,10 +35,10 @@ class CouponServiceTest {
         final MemberCoupon memberCoupon = new MemberCoupon(coupon, MEMBER_1.getId());
         final MemberCoupon savedMemberCoupon = memberCouponRepository.insert(memberCoupon);
 
-        final List<CouponResponse> memberCoupons = couponService.findMemberCoupons(MEMBER_1);
+        final List<MemberCouponResponse> memberCoupons = couponService.findMemberCoupons(MEMBER_1);
 
         assertThat(memberCoupons)
-                .extracting(CouponResponse::getId, CouponResponse::getName)
+                .extracting(MemberCouponResponse::getId, MemberCouponResponse::getName)
                 .containsExactly(
                         tuple(savedMemberCoupon.getId(), coupon.getName())
                 );
