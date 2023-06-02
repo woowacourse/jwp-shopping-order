@@ -6,21 +6,18 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class CouponDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
     private static RowMapper<Coupon> rowMapper() {
         return (rs, rowNum) -> new Coupon(
@@ -35,7 +32,6 @@ public class CouponDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("coupon")
                 .usingGeneratedKeyColumns("id");
-        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<Coupon> findAll() {

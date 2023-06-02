@@ -34,11 +34,4 @@ public class MemberCoupons {
                 .filter(MemberCoupon::isUnUsed)
                 .collect(Collectors.toList()));
     }
-
-    @Override
-    public String toString() {
-        return "MemberCoupons{" +
-                "coupons=" + coupons +
-                '}';
-    }
 }

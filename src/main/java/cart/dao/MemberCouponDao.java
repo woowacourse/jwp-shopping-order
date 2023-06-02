@@ -75,6 +75,10 @@ public class MemberCouponDao {
     }
 
     public void updateCoupon(MemberCoupons memberCoupons, Long memberId) {
+        if (memberCoupons.isEmpty()) {
+            return;
+        }
+
         String sql = "UPDATE member_coupon SET member_id = ?, coupon_id = ?, used = ? where id = ?";
 
         List<MemberCoupon> coupons = memberCoupons.getCoupons();
@@ -89,10 +93,5 @@ public class MemberCouponDao {
                     ps.setLong(4, memberCoupon.getId());
 
                 });
-    }
-
-    public void deleteByMemberId(Long memberId) {
-        final String sql = "delete from member_coupon where member_id = ?";
-        jdbcTemplate.update(sql, memberId);
     }
 }

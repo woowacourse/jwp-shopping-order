@@ -47,13 +47,4 @@ public class MemberCoupon {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    @Override
-    public String toString() {
-        return "MemberCoupon{" +
-                "id=" + id +
-                ", coupon=" + coupon +
-                ", used=" + used +
-                '}';
-    }
 }

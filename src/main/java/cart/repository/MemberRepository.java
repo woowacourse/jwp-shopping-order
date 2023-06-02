@@ -26,16 +26,4 @@ public class MemberRepository {
     public List<Member> getAllMember() {
         return memberDao.getAllMembers();
     }
-
-    public void addMember(Member member) {
-        memberDao.addMember(member);
-    }
-
-    public void updateMember(Member member) {
-        memberDao.updateMember(member);
-    }
-
-    public void deleteMember(Long id) {
-        memberDao.deleteMember(id);
-    }
 }
