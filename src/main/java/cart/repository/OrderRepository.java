@@ -112,7 +112,7 @@ public class OrderRepository {
                 .collect(toMap(Coupon::getId, Function.identity(), (coupon1, coupon2) -> coupon1));
 
         return usedMemberCoupons.stream()
-                .map(it -> new MemberCoupon(memberId, couponIdByCoupon.get(it.getId())))
+                .map(it -> new MemberCoupon(memberId, couponIdByCoupon.get(it.getCouponId())))
                 .collect(toMap(MemberCoupon::getId, Function.identity()));
     }
 
