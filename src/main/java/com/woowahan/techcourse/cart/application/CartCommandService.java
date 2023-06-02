@@ -4,6 +4,7 @@ import com.woowahan.techcourse.cart.dao.CartItemDao;
 import com.woowahan.techcourse.cart.domain.CartItem;
 import com.woowahan.techcourse.cart.dto.CartItemQuantityUpdateRequest;
 import com.woowahan.techcourse.cart.dto.CartItemRequest;
+import com.woowahan.techcourse.cart.exception.CartItemNotFoundException;
 import com.woowahan.techcourse.product.dao.ProductDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class CartCommandService {
     }
 
     public void updateQuantity(long memberId, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(CartItemNotFoundException::new);
         cartItem.checkOwner(memberId);
 
         if (request.getQuantity() == 0) {
@@ -39,7 +41,8 @@ public class CartCommandService {
     }
 
     public void remove(long memberId, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(CartItemNotFoundException::new);
         cartItem.checkOwner(memberId);
 
         cartItemDao.deleteById(id);

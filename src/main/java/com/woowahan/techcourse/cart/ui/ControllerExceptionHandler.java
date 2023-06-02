@@ -1,6 +1,7 @@
 package com.woowahan.techcourse.cart.ui;
 
 import com.woowahan.techcourse.cart.exception.AuthenticationException;
+import com.woowahan.techcourse.cart.exception.CartItemNotFoundException;
 import com.woowahan.techcourse.cart.exception.IllegalMemberException;
 import com.woowahan.techcourse.common.ui.ErrorResponse;
 import org.slf4j.Logger;
@@ -23,6 +24,13 @@ public class ControllerExceptionHandler {
         logger.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse("로그인이 필요합니다."));
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCartItemNotFound(CartItemNotFoundException e) {
+        logger.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse("해당 상품이 장바구니에 존재하지 않습니다."));
     }
 
     @ExceptionHandler(IllegalMemberException.class)

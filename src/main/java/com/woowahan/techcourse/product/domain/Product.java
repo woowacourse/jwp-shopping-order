@@ -2,15 +2,13 @@ package com.woowahan.techcourse.product.domain;
 
 public class Product {
 
+    private final Long id;
     private final String name;
     private final int price;
     private final String imageUrl;
-    private Long id;
 
     public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this(null, name, price, imageUrl);
     }
 
     public Product(Long id, String name, int price, String imageUrl) {

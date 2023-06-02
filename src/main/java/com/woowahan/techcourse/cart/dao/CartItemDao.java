@@ -2,6 +2,7 @@ package com.woowahan.techcourse.cart.dao;
 
 import com.woowahan.techcourse.cart.domain.CartItem;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -40,10 +41,13 @@ public class CartItemDao {
         return simpleJdbcInsert.executeAndReturnKey(mapSqlParameterSource).longValue();
     }
 
-    public CartItem findById(Long id) {
+    public Optional<CartItem> findById(long id) {
         String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, ROW_MAPPER, id);
-        return cartItems.isEmpty() ? null : cartItems.get(0);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     public void deleteById(Long id) {

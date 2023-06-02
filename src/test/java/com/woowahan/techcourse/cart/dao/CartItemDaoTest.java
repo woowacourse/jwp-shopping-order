@@ -56,7 +56,17 @@ class CartItemDaoTest {
 
             // when
             // then
-            assertThat(cartItemDao.findById(cartItemId)).isNotNull();
+            assertThat(cartItemDao.findById(cartItemId)).isPresent();
+        }
+
+        @Test
+        void 없는_것을_조회하면_빈_결과가_나옴() {
+            // given
+            long cartItemId = cartItemDao.save(new CartItem(productId, memberId));
+
+            // when
+            // then
+            assertThat(cartItemDao.findById(cartItemId + 1)).isEmpty();
         }
     }
 
@@ -74,9 +84,9 @@ class CartItemDaoTest {
             cartItemDao.deleteAll(memberId, List.of(cartItemId, cartItemId2, cartItemId3));
 
             // then
-            assertThat(cartItemDao.findById(cartItemId)).isNull();
-            assertThat(cartItemDao.findById(cartItemId2)).isNull();
-            assertThat(cartItemDao.findById(cartItemId3)).isNull();
+            assertThat(cartItemDao.findById(cartItemId)).isEmpty();
+            assertThat(cartItemDao.findById(cartItemId2)).isEmpty();
+            assertThat(cartItemDao.findById(cartItemId3)).isEmpty();
         }
     }
 }
