@@ -25,8 +25,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
-        logger.error("An error occurred: {}", e.getMessage(), e);
+        logger.info("An error occurred: {}", e.getMessage(), e);
         return ResponseEntity.internalServerError().body(e.getMessage());
     }
-
 }
