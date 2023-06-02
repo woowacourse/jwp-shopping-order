@@ -1,0 +1,30 @@
+### 상품 주문
+POST http://localhost:8080/orders
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "orderItems" : [
+    {
+      "cartItemId": 1
+    },
+    {
+      "cartItemId": 2
+    }
+  ],
+  "payment" : {
+    "originalPayment" : 100000,
+    "finalPayment" : 100000,
+    "point" : 0
+  }
+}
+
+### 전체 주문 조회
+GET http://localhost:8080/orders
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+Content-Type: application/json
+
+### 특정 주문 조회
+GET http://localhost:8080/orders/1
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+Content-Type: application/json
