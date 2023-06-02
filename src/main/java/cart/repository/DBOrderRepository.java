@@ -1,41 +1,78 @@
 package cart.repository;
 
 import cart.domain.*;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class DBOrderRepository implements OrderRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static Coupon getCoupon(ResultSet rs) throws SQLException {
-        if (rs.getLong("coupon_id") == 0) {
-            return null;
-        }
-        Long couponId = rs.getLong("coupon_id");
-        String couponName = rs.getString("coupon_name");
-        int discountValue = rs.getInt("discount_value");
-        int minimumOrderAmount = rs.getInt("minimum_order_amount");
-        LocalDateTime endDate = rs.getTimestamp("end_date").toLocalDateTime();
-        return new Coupon(couponId, couponName, discountValue, minimumOrderAmount, endDate);
-    }
-
-    private static Member getMember(ResultSet rs) throws SQLException {
-        Long memberId = rs.getLong("member_id");
-        String email = rs.getString("email");
-        String password = rs.getString("password");
-        return new Member(memberId, email, password);
-    }
-
     public DBOrderRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public Long save(Order order) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO `order` (member_id, delivery_fee, payed_price, order_date) VALUES (?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            ps.setLong(1, order.getMember().getId());
+            ps.setInt(2, order.getDeliveryFee());
+            ps.setInt(3, order.getFinalPrice());
+            ps.setTimestamp(4, Timestamp.valueOf(order.getOrderTime()));
+            return ps;
+        }, keyHolder);
+
+        Long orderId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        saveOrderItems(orderId, order.getOrderItems());
+        if (order.getCoupon() != null) {
+            saveOrderCoupon(orderId, order.getCoupon().getId());
+        }
+        return orderId;
+    }
+
+    private void saveOrderCoupon(Long orderId, Long couponId) {
+        String sql = "INSERT INTO order_coupon (order_id, coupon_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, orderId, couponId);
+    }
+
+    private void saveOrderItems(Long orderId, List<OrderItem> orderItems) {
+        String sql = "INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                OrderItem orderItem = orderItems.get(i);
+                ps.setLong(1, orderId);
+                ps.setLong(2, orderItem.getProduct().getId());
+                ps.setString(3, orderItem.getProduct().getName());
+                ps.setInt(4, orderItem.getProduct().getPrice());
+                ps.setString(5, orderItem.getProduct().getImageUrl());
+                ps.setInt(6, orderItem.getQuantity());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return orderItems.size();
+            }
+        });
     }
 
     @Override
@@ -102,6 +139,25 @@ public class DBOrderRepository implements OrderRepository {
 
             return orders;
         }, memberId);
+    }
+
+    private static Coupon getCoupon(ResultSet rs) throws SQLException {
+        if (rs.getLong("coupon_id") == 0) {
+            return null;
+        }
+        Long couponId = rs.getLong("coupon_id");
+        String couponName = rs.getString("coupon_name");
+        int discountValue = rs.getInt("discount_value");
+        int minimumOrderAmount = rs.getInt("minimum_order_amount");
+        LocalDateTime endDate = rs.getTimestamp("end_date").toLocalDateTime();
+        return new Coupon(couponId, couponName, discountValue, minimumOrderAmount, endDate);
+    }
+
+    private static Member getMember(ResultSet rs) throws SQLException {
+        Long memberId = rs.getLong("member_id");
+        String email = rs.getString("email");
+        String password = rs.getString("password");
+        return new Member(memberId, email, password);
     }
 
     @Override

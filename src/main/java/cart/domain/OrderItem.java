@@ -14,6 +14,10 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
+    public static OrderItem from(CartItem cartItem) {
+        return new OrderItem(null, cartItem.getProduct(), cartItem.getQuantity());
+    }
+
     public Long getId() {
         return id;
     }

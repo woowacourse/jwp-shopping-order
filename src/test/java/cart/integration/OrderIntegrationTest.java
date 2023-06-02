@@ -24,6 +24,52 @@ public class OrderIntegrationTest extends IntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("쿠폰을 사용하고 주문을 한다.")
+    void orderWithCouponTest() throws JsonProcessingException {
+        ExtractableResponse<Response> response = requestOrderWithCoupon(MEMBER1);
+        ExtractableResponse<Response> responseOfOrdersAfterOrder = requestGetOrders(MEMBER1);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isEqualTo("/orders");
+        assertThat(responseOfOrdersAfterOrder.body().asString()).isEqualTo(objectMapper.writeValueAsString(List.of(ORDER_RESPONSE1, ORDER_RESPONSE2, ORDER_RESPONSE_AFTER_ORDER_WITH_COUPON)));
+    }
+
+    private ExtractableResponse<Response> requestOrderWithCoupon(Member member) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(ORDER_REQUEST_WITH_COUPON)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    @Test
+    @DisplayName("쿠폰을 사용하지 않고 주문을 한다.")
+    void orderWithoutCouponTest() throws JsonProcessingException {
+        ExtractableResponse<Response> response = requestOrderWithoutCoupon(MEMBER1);
+        ExtractableResponse<Response> responseOfOrdersAfterOrder = requestGetOrders(MEMBER1);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isEqualTo("/orders");
+        assertThat(responseOfOrdersAfterOrder.body().asString()).isEqualTo(objectMapper.writeValueAsString(List.of(ORDER_RESPONSE1, ORDER_RESPONSE2, ORDER_RESPONSE_AFTER_ORDER_WITHOUT_COUPON)));
+    }
+
+    private ExtractableResponse<Response> requestOrderWithoutCoupon(Member member) {
+        return given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(ORDER_REQUEST_WITH_COUPON)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    @Test
     @DisplayName("주문 목록을 가져온다.")
     void showOrdersTest() throws JsonProcessingException {
         ExtractableResponse<Response> response = requestGetOrders(MEMBER1);
