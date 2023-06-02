@@ -88,7 +88,7 @@ class OrderServiceTest {
         Long order2 = orderService.createOrderAndSave(member, List.of(3L));
         List<Long> orderIds = List.of(order1, order2);
         //when
-        List<Order> orders = orderService.retrieveAllOrders();
+        List<Order> orders = orderService.retrieveMemberOrders(member);
         //then
         orders.forEach(order -> assertThat(order.getId()).isIn(orderIds));
     }

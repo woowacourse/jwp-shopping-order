@@ -26,7 +26,7 @@ public class Order {
 
     public Money calculateOriginalTotalPrice() {
         return orderItems.stream()
-                .map(OrderItem::getOrderPrice)
+                .map(OrderItem::getTotalPrice)
                 .reduce(new Money(0), Money::add);
     }
 

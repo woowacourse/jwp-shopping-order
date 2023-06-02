@@ -42,4 +42,13 @@ public class OrderService {
         cartItemIds.forEach(cartItemRepository::deleteById);
         return savedOrderId;
     }
+
+    // TODO: 예외 정리하기
+    public Order retrieveOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow();
+    }
+
+    public List<Order> retrieveMemberOrders(Member member) {
+        return orderRepository.findByMember(member);
+    }
 }

@@ -7,6 +7,7 @@ import cart.domain.Payment;
 import cart.domain.PaymentRecord;
 import cart.repository.DeliveryPolicyRepository;
 import cart.repository.DiscountPolicyRepository;
+import cart.repository.PaymentRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +16,32 @@ public class PaymentService {
 
     private final DiscountPolicyRepository discountPolicyRepository;
     private final DeliveryPolicyRepository deliveryPolicyRepository;
+    private final PaymentRepository paymentRepository;
 
     public PaymentService(DiscountPolicyRepository discountPolicyRepository,
-                          DeliveryPolicyRepository deliveryPolicyRepository) {
+                          DeliveryPolicyRepository deliveryPolicyRepository, PaymentRepository paymentRepository) {
         this.discountPolicyRepository = discountPolicyRepository;
         this.deliveryPolicyRepository = deliveryPolicyRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     // TODO: 2023/05/31 Custom Exception 만들기
     public PaymentRecord createDraftPaymentRecord(Order order) {
-        DiscountPolicy discountPolicy = discountPolicyRepository.findDefault().orElseThrow();
-        DeliveryPolicy deliveryPolicy = deliveryPolicyRepository.findDefault().orElseThrow();
+        DiscountPolicy discountPolicy = discountPolicyRepository.findDefault()
+                .orElseThrow(); // TODO: 2023/06/02 CustomException 만들기
+        DeliveryPolicy deliveryPolicy = deliveryPolicyRepository.findDefault()
+                .orElseThrow(); // TODO: 2023/06/02 CustomException 만들기
         Payment payment = new Payment(List.of(discountPolicy), List.of(deliveryPolicy));
 
         return payment.createPaymentRecord(order);
+    }
+
+    public PaymentRecord createPaymentRecordAndSave(Order order) {
+        PaymentRecord record = createDraftPaymentRecord(order);
+        return paymentRepository.save(record);
+    }
+
+    public PaymentRecord findByOrder(Order order) {
+        return paymentRepository.findByOrder(order).orElseThrow(); // TODO: 2023/06/02 CustomException 만들기
     }
 }

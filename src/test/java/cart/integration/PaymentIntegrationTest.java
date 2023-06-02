@@ -60,7 +60,7 @@ public class PaymentIntegrationTest extends IntegrationTest {
     @Test
     void getPayment() {
         ExtractableResponse<Response> response = given(this.spec).log().all()
-                .queryParam("cartItemIds", 1, 2, 3)
+                .queryParam("cartItemIds", cartItemIds)
                 .filter(
                         document("get-payment",
                                 requestParameters(parameterWithName("cartItemIds").description("선택한 장바구니의 아이템 id")),

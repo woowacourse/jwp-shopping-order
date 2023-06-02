@@ -5,18 +5,18 @@ public class OrderItem {
     private final String name;
     private final int quantity;
     private final String imageUrl;
-    private final Money orderPrice;
+    private final Money totalPrice;
 
-    public OrderItem(Long id, String name, int quantity, String imageUrl, Money orderPrice) {
+    public OrderItem(Long id, String name, int quantity, String imageUrl, Money totalPrice) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
-        this.orderPrice = orderPrice;
+        this.totalPrice = totalPrice;
     }
 
-    public OrderItem(String name, int quantity, String imageUrl, Money orderPrice) {
-        this(null, name, quantity, imageUrl, orderPrice);
+    public OrderItem(String name, int quantity, String imageUrl, Money totalPrice) {
+        this(null, name, quantity, imageUrl, totalPrice);
     }
 
     public static OrderItem from(CartItem cartItem) {
@@ -27,7 +27,23 @@ public class OrderItem {
         return new OrderItem(product.getName(), quantity, product.getImageUrl(), orderPrice);
     }
 
-    public Money getOrderPrice() {
-        return orderPrice;
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public Money getTotalPrice() {
+        return totalPrice;
     }
 }

@@ -5,7 +5,6 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import cart.exception.CartItemException.NotFound;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +29,7 @@ public class CartItemApiController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-//        throw new IllegalMember(new CartItem(1L, 1, null, null), member);
-        throw new NotFound(1L);
-//        return ResponseEntity.ok(cartItemService.findByMember(member));
+        return ResponseEntity.ok(cartItemService.findByMember(member));
     }
 
     @PostMapping

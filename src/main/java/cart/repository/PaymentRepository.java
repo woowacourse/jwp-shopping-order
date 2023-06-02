@@ -1,12 +1,14 @@
 package cart.repository;
 
 import cart.domain.Order;
-import cart.domain.Payment;
+import cart.domain.PaymentRecord;
 import java.util.Optional;
 
 public interface PaymentRepository {
-    Long save(Payment payment, Long orderId);
+//    Long save(Payment payment, Long orderId);
 
-    Optional<Payment> findByOrder(Order order);
+    PaymentRecord save(PaymentRecord paymentRecord);
+
+    Optional<PaymentRecord> findByOrder(Order order);
 
 }
