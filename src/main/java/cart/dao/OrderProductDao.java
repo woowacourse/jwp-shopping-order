@@ -29,7 +29,7 @@ public class OrderProductDao {
     public OrderProductDao(final JdbcTemplate jdbcTemplate) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.insertOrderProduct = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("order_history")
+                .withTableName("order_product")
                 .usingGeneratedKeyColumns("id");
     }
 
