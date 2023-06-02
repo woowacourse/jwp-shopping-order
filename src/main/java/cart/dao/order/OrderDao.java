@@ -1,5 +1,6 @@
 package cart.dao.order;
 
+import cart.domain.bill.Bill;
 import cart.domain.order.Order;
 import cart.entity.OrderEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -34,7 +35,7 @@ public class OrderDao {
     }
 
 
-    public Long insertOrder(final Order order) {
+    public Long insertOrder(final Order order, final Bill bill) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -44,9 +45,9 @@ public class OrderDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, order.getPurchaseItemPrice());
-            ps.setLong(2, order.getDiscountPurchaseItemPrice());
-            ps.setInt(3, order.getShippingFee());
+            ps.setLong(1, bill.getTotalItemPrice());
+            ps.setLong(2, bill.getDiscountedTotalItemPrice());
+            ps.setInt(3, bill.getShippingFee());
             ps.setDate(4, Date.valueOf(order.getGenerateTime().toLocalDate()));
             ps.setLong(5, order.getMember().getId());
 

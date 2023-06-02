@@ -1,6 +1,7 @@
 package cart.dao.order;
 
 import cart.dao.member.MemberDao;
+import cart.domain.bill.Bill;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
@@ -50,8 +51,9 @@ class OrderItemDaoTest {
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
         Order order = new Order(member, orderItems);
+        Bill bill = order.makeBill();
 
-        Long orderId = orderDao.insertOrder(order);
+        Long orderId = orderDao.insertOrder(order, bill);
 
         // when
         orderItemDao.insert(order.getOrderItems().getOrderItems(), orderId);

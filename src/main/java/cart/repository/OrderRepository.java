@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.cart.CartItemDao;
 import cart.dao.order.OrderDao;
 import cart.dao.order.OrderItemDao;
+import cart.domain.bill.Bill;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
@@ -36,9 +37,9 @@ public class OrderRepository {
         return new Order(member, orderItems);
     }
 
-    public Long save(final Order order, final List<Long> cartItemIds) {
+    public Long save(final Order order, final Bill bill, final List<Long> cartItemIds) {
         cartItemDao.deleteByIds(cartItemIds);
-        Long orderId = orderDao.insertOrder(order);
+        Long orderId = orderDao.insertOrder(order, bill);
         orderItemDao.insert(order.getOrderItems().getOrderItems(), orderId);
         return orderId;
     }
@@ -67,10 +68,7 @@ public class OrderRepository {
         return new Order(
                 orderEntity.getId(),
                 member,
-                new OrderItems(orderItems),
-                new Money(orderEntity.getShippingFee()),
-                new Money(orderEntity.getTotalItemPrice()),
-                new Money(orderEntity.getDiscountedTotalItemPrice())
+                new OrderItems(orderItems)
         );
     }
 

@@ -1,6 +1,7 @@
 package cart.dao.order;
 
 import cart.dao.member.MemberDao;
+import cart.domain.bill.Bill;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
@@ -51,17 +52,17 @@ class OrderDaoTest {
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
         Order order = new Order(member1, orderItems);
-        order.calculatePrice();
+        Bill bill = order.makeBill();
 
         // when
-        Long id = orderDao.insertOrder(order);
+        Long id = orderDao.insertOrder(order, bill);
         Optional<OrderEntity> result = orderDao.findById(id);
 
         // then
         assertThat(result.get().getId()).isEqualTo(id);
-        assertThat(result.get().getDiscountedTotalItemPrice()).isEqualTo(order.getDiscountPurchaseItemPrice());
-        assertThat(result.get().getShippingFee()).isEqualTo(order.getShippingFee());
-        assertThat(result.get().getTotalItemPrice()).isEqualTo(order.getPurchaseItemPrice());
+        assertThat(result.get().getDiscountedTotalItemPrice()).isEqualTo(bill.getDiscountedTotalItemPrice());
+        assertThat(result.get().getShippingFee()).isEqualTo(bill.getShippingFee());
+        assertThat(result.get().getTotalItemPrice()).isEqualTo(bill.getTotalPrice());
 
     }
 
@@ -73,12 +74,12 @@ class OrderDaoTest {
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
         Order order1 = new Order(member1, orderItems);
-        order1.calculatePrice();
+        Bill bill1 = order1.makeBill();
         Order order2 = new Order(member2, orderItems);
-        order2.calculatePrice();
+        Bill bill2 = order2.makeBill();
 
-        orderDao.insertOrder(order1);
-        orderDao.insertOrder(order2);
+        orderDao.insertOrder(order1, bill1);
+        orderDao.insertOrder(order2, bill2);
 
         // when
         List<OrderEntity> result = orderDao.findByMemberId(member1.getId());
@@ -95,19 +96,19 @@ class OrderDaoTest {
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10));
         Order order1 = new Order(member1, orderItems);
-        order1.calculatePrice();
+        Bill bill1 = order1.makeBill();
         Order order2 = new Order(member2, orderItems);
-        order2.calculatePrice();
+        Bill bill2 = order2.makeBill();
 
-        Long order1Id = orderDao.insertOrder(order1);
-        Long order2Id = orderDao.insertOrder(order2);
+        Long order1Id = orderDao.insertOrder(order1, bill1);
+        Long order2Id = orderDao.insertOrder(order2, bill2);
 
         // when
         Optional<OrderEntity> result = orderDao.findById(order1Id);
 
         // then
-        assertThat(result.get().getTotalItemPrice()).isEqualTo(order1.getPurchaseItemPrice());
-        assertThat(result.get().getDiscountedTotalItemPrice()).isEqualTo(order1.getDiscountPurchaseItemPrice());
-        assertThat(result.get().getShippingFee()).isEqualTo(order1.getShippingFee());
+        assertThat(result.get().getTotalItemPrice()).isEqualTo(bill1.getTotalPrice());
+        assertThat(result.get().getDiscountedTotalItemPrice()).isEqualTo(bill1.getDiscountedTotalItemPrice());
+        assertThat(result.get().getShippingFee()).isEqualTo(bill1.getShippingFee());
     }
 }

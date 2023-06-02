@@ -1,5 +1,6 @@
 package cart.dto.order;
 
+import cart.domain.bill.Bill;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 
@@ -38,17 +39,17 @@ public class OrderResponse {
         this.totalPrice = totalPrice;
     }
 
-    public static OrderResponse from(final Order order, final Member member) {
+    public static OrderResponse from(final Order order, final Member member, final Bill bill) {
         List<OrderItemDto> orderItemDtos = orderItemsToOrderItemDtos(order);
         return new OrderResponse(
                 orderItemDtos,
                 order.getGenerateTime(),
                 order.getOrderItems().getItemBenefit().getMoney(),
                 order.getOrderItems().getMemberBenefit(member).getMoney(),
-                order.getPurchaseItemPrice(),
-                order.getDiscountPurchaseItemPrice(),
-                order.getShippingFee(),
-                order.getDiscountPurchaseItemPrice() + order.getShippingFee()
+                bill.getTotalItemPrice(),
+                bill.getDiscountedTotalItemPrice(),
+                bill.getShippingFee(),
+                bill.getDiscountedTotalItemPrice() + bill.getShippingFee()
         );
     }
 
