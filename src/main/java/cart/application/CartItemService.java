@@ -30,8 +30,7 @@ public class CartItemService {
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
                 .orElseThrow();// TODO: 2023/06/02 커스텀 예외 만들기
-        return cartItemRepository.create(
-                new CartItem(member, product));
+        return cartItemRepository.create(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

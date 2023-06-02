@@ -4,9 +4,13 @@ import static cart.domain.fixture.OrderFixture.member;
 import static cart.domain.fixture.OrderFixture.orderWithoutId;
 import static cart.exception.OrderException.EmptyItemInput;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import cart.domain.CartItem;
+import cart.domain.Member;
 import cart.domain.Order;
+import cart.exception.CartItemException;
 import cart.repository.CartItemFakeRepository;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderFakeRepository;
@@ -103,4 +107,15 @@ class OrderServiceTest {
                 .isInstanceOf(EmptyItemInput.class);
     }
 
+    @Test
+    @DisplayName("요청 회원의 CartItem이 아닐 때 예외처리한다.")
+    void createOrderAndSave_fail_() {
+        //given
+        Member unauthorizedMember = new Member(10000000L, "iam@othermember.com", "1234");
+        CartItem cartItem = cartItemRepository.findById(CART_ITEM_IDS.get(0)).orElseThrow();
+        //when
+        //then
+        assertThatThrownBy(() -> orderService.createOrderAndSave(unauthorizedMember, List.of(cartItem.getId())))
+                .isInstanceOf(CartItemException.IllegalMember.class);
+    }
 }
