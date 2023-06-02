@@ -28,7 +28,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public void orderCartItems(final Member member, final OrderCartItemsRequest request) {
+    public long orderCartItems(final Member member, final OrderCartItemsRequest request) {
         CartItems cartItems = cartItemRepository.findByIds(request.getCartItemIds());
         cartItems.checkOwner(member);
 
@@ -38,8 +38,8 @@ public class OrderService {
 
         Order order = Order.of(member, cartItems, memberCoupon);
 
-        orderRepository.order(order);
         cartItemRepository.deleteAll(cartItems);
         memberCouponRepository.use(memberCoupon);
+        return orderRepository.order(order);
     }
 }

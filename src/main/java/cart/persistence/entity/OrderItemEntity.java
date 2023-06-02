@@ -1,10 +1,7 @@
 package cart.persistence.entity;
 
 import cart.domain.Product;
-import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderItemEntity {
 
@@ -32,14 +29,7 @@ public class OrderItemEntity {
         this.quantity = quantity;
     }
 
-    public static List<OrderItemEntity> from(final Order order) {
-        List<OrderItem> orderItems = order.getOrderItems();
-        return orderItems.stream()
-                .map(orderItem -> of(orderItem, order.getId()))
-                .collect(Collectors.toList());
-    }
-
-    private static OrderItemEntity of(final OrderItem orderItem, final long orderId) {
+    public static OrderItemEntity of(final OrderItem orderItem, final long orderId) {
         Product product = orderItem.getProduct();
         return new OrderItemEntity(orderItem.getId(), orderId, product.getId(), product.getName(), product.getPrice(),
                 product.getImageUrl(), orderItem.getQuantity());
