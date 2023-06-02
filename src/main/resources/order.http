@@ -1,0 +1,15 @@
+###
+POST http://localhost:8080/orders
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "cartItemIdList" : [1,2,3],
+  "totalPrice" : 585400,
+  "deliveryFee" : 3000,
+  "couponId" : 1
+}
+
+###
+GET http://localhost:8080/orders
+Authorization: Basic YUBhLmNvbToxMjM0
