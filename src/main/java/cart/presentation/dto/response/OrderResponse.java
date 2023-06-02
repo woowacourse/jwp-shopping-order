@@ -5,18 +5,18 @@ import java.util.List;
 public class OrderResponse {
 
     private final Long orderId;
-    private final List<OrderDto> orderDto;
+    private final List<OrderDto> orderInfos;
 
-    public OrderResponse(Long orderId, List<OrderDto> orderDto) {
+    public OrderResponse(Long orderId, List<OrderDto> orderInfos) {
         this.orderId = orderId;
-        this.orderDto = orderDto;
+        this.orderInfos = orderInfos;
     }
 
     public Long getOrderId() {
         return orderId;
     }
 
-    public List<OrderDto> getOrderInfo() {
-        return orderDto;
+    public List<OrderDto> getOrderInfos() {
+        return orderInfos;
     }
 }
