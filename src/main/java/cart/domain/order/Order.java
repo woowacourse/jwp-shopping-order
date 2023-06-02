@@ -33,7 +33,7 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Order of(final Member member, final CartItems cartItems, final MemberCoupon memberCoupon) {
+    public static Order order(final Member member, final CartItems cartItems, final MemberCoupon memberCoupon) {
         List<OrderItem> orderItems = cartItems.getCartItems().stream()
                 .map(OrderItem::of)
                 .collect(Collectors.toList());
