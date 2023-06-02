@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.OrderEntity;
+import cart.exception.OrderNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,7 @@ import javax.sql.DataSource;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
@@ -26,12 +26,10 @@ class OrderDaoTest {
 
     @Autowired
     private DataSource dataSource;
-    private JdbcTemplate jdbcTemplate;
     private OrderDao orderDao;
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate = new JdbcTemplate(dataSource);
         orderDao = new OrderDao(dataSource);
     }
 
@@ -63,5 +61,34 @@ class OrderDaoTest {
                 () -> assertThat(orderEntities.get(0).getOriginalPrice()).isEqualTo(23000),
                 () -> assertThat(orderEntities.get(0).getDiscountPrice()).isEqualTo(0)
         );
+    }
+
+    @Test
+    @DisplayName("주문 조회 성공")
+    void findById_success() {
+        // given
+        final long id = 1L;
+
+        // when
+        final OrderEntity orderEntity = orderDao.findById(id);
+
+        // then
+        assertAll(
+                () -> assertThat(orderEntity.getId()).isEqualTo(1L),
+                () -> assertThat(orderEntity.getMemberId()).isEqualTo(1L),
+                () -> assertThat(orderEntity.getOriginalPrice()).isEqualTo(23000),
+                () -> assertThat(orderEntity.getDiscountPrice()).isEqualTo(0)
+        );
+    }
+
+    @Test
+    @DisplayName("주문 조회 실패 - 잘못된 id")
+    void findById_fail_invalid_id() {
+        // given
+        final long id = 111111L;
+
+        // when, then
+        assertThatThrownBy(() -> orderDao.findById(id))
+                .isInstanceOf(OrderNotFoundException.class);
     }
 }

@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.entity.OrderEntity;
+import cart.exception.OrderNotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -33,5 +35,14 @@ public class OrderDao {
     public List<OrderEntity> findByMemberId(final long memberId) {
         final String sql = "SELECT * FROM orders WHERE member_id = ?";
         return jdbcTemplate.query(sql, orderEntityRowMapper, memberId);
+    }
+
+    public OrderEntity findById(final long id) {
+        final String sql = "SELECT * FROM orders WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, orderEntityRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new OrderNotFoundException();
+        }
     }
 }
