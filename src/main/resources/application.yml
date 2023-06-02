@@ -25,7 +25,6 @@ spring:
     url: jdbc:mysql://localhost:3306/shopping_cart?serverTimezone=UTC&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 1234
 
   sql:
     init:
