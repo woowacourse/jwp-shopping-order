@@ -1,10 +1,9 @@
 package cart.integration;
 
-import cart.cart.domain.cartitem.CartItem;
-import cart.cart.domain.cartitem.application.CartItemRepository;
-import cart.cart.domain.cartitem.application.CartItemService;
-import cart.cart.domain.cartitem.presentation.dto.CartItemRequest;
-import cart.cart.presentation.dto.CartItemResponse;
+import cart.cartitem.CartItem;
+import cart.cartitem.application.CartItemRepository;
+import cart.cartitem.application.CartItemService;
+import cart.cartitem.presentation.dto.CartItemRequest;
 import cart.coupon.Coupon;
 import cart.coupon.application.CouponRepository;
 import cart.discountpolicy.application.DiscountPolicyService;

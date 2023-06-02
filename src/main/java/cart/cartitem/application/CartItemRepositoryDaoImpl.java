@@ -1,7 +1,7 @@
-package cart.cart.domain.cartitem.application;
+package cart.cartitem.application;
 
-import cart.cart.domain.cartitem.CartItem;
-import cart.cart.domain.cartitem.infrastructure.CartItemDao;
+import cart.cartitem.CartItem;
+import cart.cartitem.infrastructure.CartItemDao;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

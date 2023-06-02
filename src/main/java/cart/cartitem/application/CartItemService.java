@@ -1,15 +1,11 @@
-package cart.cart.domain.cartitem.application;
+package cart.cartitem.application;
 
-import cart.cart.domain.cartitem.CartItem;
-import cart.cart.domain.cartitem.presentation.dto.CartItemQuantityUpdateRequest;
-import cart.cart.domain.cartitem.presentation.dto.CartItemRequest;
-import cart.cart.presentation.dto.CartItemResponse;
+import cart.cartitem.CartItem;
+import cart.cartitem.presentation.dto.CartItemQuantityUpdateRequest;
+import cart.cartitem.presentation.dto.CartItemRequest;
 import cart.member.Member;
 import cart.product.application.ProductRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {

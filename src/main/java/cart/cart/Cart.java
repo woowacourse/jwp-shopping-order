@@ -1,7 +1,7 @@
 package cart.cart;
 
-import cart.cart.domain.cartitem.CartItem;
-import cart.cart.domain.deliveryprice.DeliveryPrice;
+import cart.cartitem.CartItem;
+import cart.deliveryprice.DeliveryPrice;
 
 import java.util.List;
 

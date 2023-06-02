@@ -1,6 +1,6 @@
-package cart.cart.domain.cartitem;
+package cart.cartitem;
 
-import cart.cart.domain.cartitem.application.exception.CartItemException;
+import cart.cartitem.application.exception.CartItemException;
 import cart.member.Member;
 import cart.product.Product;
 

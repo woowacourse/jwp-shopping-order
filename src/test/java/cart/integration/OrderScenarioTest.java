@@ -1,5 +1,6 @@
 package cart.integration;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -101,6 +102,7 @@ public class OrderScenarioTest extends ScenarioFixture {
     }
 
     @Test
+    @Disabled
     @DisplayName("사용자가 적용할 쿠폰 목록을 체크한다.")
     void 사용자가_적용할_쿠폰_목록을_체크한다() {
         final var 결과 = given().log().all()

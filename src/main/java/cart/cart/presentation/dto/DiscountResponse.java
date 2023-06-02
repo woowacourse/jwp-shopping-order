@@ -1,7 +1,7 @@
 package cart.cart.presentation.dto;
 
 import cart.cart.Cart;
-import cart.cart.domain.deliveryprice.DeliveryPrice;
+import cart.deliveryprice.DeliveryPrice;
 
 import java.util.List;
 import java.util.stream.Collectors;

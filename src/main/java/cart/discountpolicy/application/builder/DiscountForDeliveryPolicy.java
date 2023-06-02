@@ -1,7 +1,7 @@
 package cart.discountpolicy.application.builder;
 
 import cart.cart.Cart;
-import cart.cart.domain.deliveryprice.DeliveryPrice;
+import cart.deliveryprice.DeliveryPrice;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 
 public class DiscountForDeliveryPolicy extends DiscountTargetPolicy {

@@ -1,8 +1,7 @@
 package cart.cart.presentation.dto;
 
-import cart.cart.domain.cartitem.CartItem;
+import cart.cartitem.CartItem;
 import cart.product.presentation.dto.ProductResponse;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CartItemResponse {
     private long id;

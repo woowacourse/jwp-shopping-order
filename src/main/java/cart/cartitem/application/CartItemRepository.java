@@ -1,6 +1,6 @@
-package cart.cart.domain.cartitem.application;
+package cart.cartitem.application;
 
-import cart.cart.domain.cartitem.CartItem;
+import cart.cartitem.CartItem;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package cart.discountpolicy.application.builder;
 
 import cart.cart.Cart;
-import cart.cart.domain.cartitem.CartItem;
+import cart.cartitem.CartItem;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 
 public class DiscountForAllProductsPolicy extends DiscountTargetPolicy {

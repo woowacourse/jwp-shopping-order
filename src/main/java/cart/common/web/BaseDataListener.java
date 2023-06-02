@@ -37,7 +37,8 @@ public class BaseDataListener implements ApplicationListener<ContextRefreshedEve
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        final var memberId = memberRepository.addMember(new Member(null, "a@a.com", "1234"));
+        final var memberId = memberRepository.addMember(new Member(null, "a@a.gmail.com", "1234"));
+        final var member2Id = memberRepository.addMember(new Member(null, "b@b.gmail.com", "1234"));
         final var member = memberRepository.getMemberById(memberId);
 
         final var chickenId = productRepository.createProduct(new Product("치킨", 10_000, "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"));

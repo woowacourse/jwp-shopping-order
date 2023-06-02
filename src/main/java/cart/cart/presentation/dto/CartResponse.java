@@ -1,11 +1,6 @@
 package cart.cart.presentation.dto;
 
-import cart.cart.Cart;
-import cart.cart.domain.cartitem.CartItem;
-import cart.coupon.Coupon;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CartResponse {
     private List<CartItemResponse> products;

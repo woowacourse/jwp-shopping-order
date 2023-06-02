@@ -1,6 +1,6 @@
-package cart.cart.domain.cartitem.application.exception;
+package cart.cartitem.application.exception;
 
-import cart.cart.domain.cartitem.CartItem;
+import cart.cartitem.CartItem;
 import cart.member.Member;
 
 public class CartItemException extends RuntimeException {

@@ -1,4 +1,4 @@
-package cart.cart.domain.deliveryprice;
+package cart.deliveryprice;
 
 public class DeliveryPrice {
     public static final int DEFAULT_PRICE = 3_000;

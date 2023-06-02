@@ -1,7 +1,7 @@
 package cart.order.application;
 
-import cart.cart.application.CartRepository;
-import cart.cart.domain.cartitem.CartItem;
+import cart.cart.application.CartService;
+import cart.cartitem.CartItem;
 import cart.coupon.application.CouponService;
 import cart.member.Member;
 import cart.order.Order;
@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
-    private final CartRepository cartRepository;
+    private final CartService cartService;
     private final SaleService saleService;
     private final CouponService couponService;
     private final OrderRepository orderRepository;
 
-    public OrderService(CartRepository cartRepository, SaleService saleService, CouponService couponService, OrderRepository orderRepository) {
-        this.cartRepository = cartRepository;
+    public OrderService(CartService cartService, SaleService saleService, CouponService couponService, OrderRepository orderRepository) {
+        this.cartService = cartService;
         this.saleService = saleService;
         this.couponService = couponService;
         this.orderRepository = orderRepository;
@@ -35,7 +35,7 @@ public class OrderService {
 
     public Long order(Member member, OrderRequest orderRequest) {
         // 1. cart 찾아오기
-        final var cart = cartRepository.findCart(member);
+        final var cart = cartService.findCart(member);
 
         // 2. cart에 Sale 적용하기
         saleService.applySale(cart);

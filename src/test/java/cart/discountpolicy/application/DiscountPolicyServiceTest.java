@@ -1,8 +1,8 @@
 package cart.discountpolicy.application;
 
 import cart.cart.Cart;
-import cart.cart.domain.cartitem.CartItem;
-import cart.cart.domain.deliveryprice.DeliveryPrice;
+import cart.cartitem.CartItem;
+import cart.deliveryprice.DeliveryPrice;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.discountpolicy.discountcondition.DiscountUnit;

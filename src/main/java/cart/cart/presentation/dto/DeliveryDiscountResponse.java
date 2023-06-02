@@ -1,8 +1,5 @@
 package cart.cart.presentation.dto;
 
-import cart.cart.Cart;
-import cart.cart.domain.deliveryprice.DeliveryPrice;
-
 public class DeliveryDiscountResponse {
     private long originalPrice;
     private long discountPrice;

@@ -1,8 +1,8 @@
-package cart.cart.domain.cartitem.presentation;
+package cart.cartitem.presentation;
 
-import cart.cart.domain.cartitem.application.CartItemService;
-import cart.cart.domain.cartitem.presentation.dto.CartItemQuantityUpdateRequest;
-import cart.cart.domain.cartitem.presentation.dto.CartItemRequest;
+import cart.cartitem.application.CartItemService;
+import cart.cartitem.presentation.dto.CartItemQuantityUpdateRequest;
+import cart.cartitem.presentation.dto.CartItemRequest;
 import cart.common.auth.Auth;
 import cart.member.Member;
 import org.springframework.http.ResponseEntity;
