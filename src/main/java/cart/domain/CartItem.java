@@ -10,7 +10,7 @@ public class CartItem {
     private final Long id;
     private final Long memberId;
     private final Product product;
-    private Integer quantity;
+    private int quantity;
 
     public CartItem(final Long memberId, final Product product) {
         this(null, 1, memberId, product);
@@ -55,7 +55,7 @@ public class CartItem {
         return id;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
