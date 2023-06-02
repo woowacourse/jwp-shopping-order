@@ -1,8 +1,10 @@
 package cart.ui.order.dto;
 
+import cart.application.service.order.OrderDto;
 import cart.ui.coupon.dto.CouponResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderResponse {
 
@@ -21,6 +23,15 @@ public class OrderResponse {
         this.usedCoupons = usedCoupons;
         this.usedPoint = usedPoint;
         this.paymentPrice = paymentPrice;
+    }
+
+    public static OrderResponse from(final OrderDto orderDto) {
+        return new OrderResponse(
+                orderDto.getOrderId(),
+                OrderItemResponse.from(orderDto.getOrderItems()),
+                orderDto.getUsedCoupons().stream().map(CouponResponse::from).collect(Collectors.toUnmodifiableList()),
+                orderDto.getUsedPoint(), orderDto.getPaymentPrice()
+        );
     }
 
     public Long getOrderId() {

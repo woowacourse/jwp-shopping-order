@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface OrderedItemRepository {
 
-    void createOrderItems(List<OrderItem> orderItem);
+    void createOrderItems(final Long orderId, final List<OrderItem> orderItems);
 
     List<OrderItem> findOrderItemsByOrderId(final Long orderId);
 

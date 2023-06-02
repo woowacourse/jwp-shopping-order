@@ -1,5 +1,10 @@
 package cart.ui.order.dto;
 
+import cart.application.service.order.OrderItemDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class OrderItemResponse {
     private final Long id;
     private final String productName;
@@ -25,6 +30,20 @@ public class OrderItemResponse {
         this.createdAt = createdAt;
         this.productQuantity = productQuantity;
         this.imageUrl = imageUrl;
+    }
+
+    public static List<OrderItemResponse> from(final List<OrderItemDto> orderItems) {
+        return orderItems.stream()
+                .map(orderItemDto -> new OrderItemResponse(
+                        orderItemDto.getId(),
+                        orderItemDto.getProductName(),
+                        orderItemDto.getProductPrice(),
+                        orderItemDto.getPaymentPrice(),
+                        orderItemDto.getCreatedAt(),
+                        orderItemDto.getProductQuantity(),
+                        orderItemDto.getImageUrl()
+                ))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Long getId() {

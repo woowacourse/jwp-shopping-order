@@ -28,6 +28,7 @@ public class CouponResponse {
         );
     }
 
+
     public Long getId() {
         return id;
     }

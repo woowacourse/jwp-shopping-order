@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class OrderJdbcRepository implements OrderRepository {
 
@@ -28,6 +30,11 @@ public class OrderJdbcRepository implements OrderRepository {
         parameters.addValue("payment_price", order.getPaymentPrice());
         parameters.addValue("point", order.getPoint());
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+    }
+
+    @Override
+    public List<Order> findAllByMemberId(final Long id) {
+        return null;
     }
 
 }

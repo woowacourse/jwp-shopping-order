@@ -46,7 +46,7 @@ public class OrderWriteService {
 
     // TODO : 잔여 포인트와 결제에 사용할 포인트 비교
     public Long createOrder(final MemberAuth memberAuth, final CreateOrderDto createOrderDto) {
-        Member member = new Member(memberAuth.getId(), memberAuth.getName(), memberAuth.getEmail(), memberAuth.getPassword());
+        final Member member = new Member(memberAuth.getId(), memberAuth.getName(), memberAuth.getEmail(), memberAuth.getPassword());
         List<CreateOrderItemDto> createOrderItemDtos = createOrderDto.getCreateOrderItemDtos();
 
         CartItems cartItems = findCartItems(createOrderItemDtos);
@@ -71,13 +71,19 @@ public class OrderWriteService {
 
         paymentPrice -= usedPoint;
 
-        Order order = new Order(paymentPrice, totalPrice, usedPoint, member);
-        Long orderId = orderRepository.createOrder(order);
+        int finalPaymentPrice = paymentPrice;
 
-        List<OrderItem> orderItems = cartItems.getCartItems().stream()
-                .map(cartItem -> OrderItem.of(cartItem.getQuantity(), cartItem.getProduct(), orderId))
-                .collect(Collectors.toUnmodifiableList());
-        orderedItemRepository.createOrderItems(orderItems);
+
+        //오더 만듬
+        final Order order = new Order(finalPaymentPrice, totalPrice, usedPoint, member, cartItems.getCartItems().stream()
+                .map(cartItem1 -> OrderItem.of(cartItem1.getQuantity(), cartItem1.getProduct()))
+                .collect(Collectors.toUnmodifiableList()));
+
+//        오더 저장
+        Long orderId = orderRepository.createOrder(order);
+//        오더 아이템 저장
+        orderedItemRepository.createOrderItems(orderId, order.getOrderItems());
+
 
         // 멤버 쿠폰 status변경
         for (Long memberCouponId : couponIds) {
