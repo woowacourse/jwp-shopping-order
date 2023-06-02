@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
+    private static final int POINT_REWARD_PERCENT = 10;
+
     private final OrderRepository orderRepository;
     private final PointService pointService;
     private final ProductDao productDao;
@@ -43,7 +45,7 @@ public class OrderService {
         Order order = new Order(null, member, orderItems, spendPoint.getAmount(), LocalDateTime.now());
         pointService.decreasePoint(member, spendPoint);
         Order saveOrder = orderRepository.save(order);
-        pointService.increasePoint(member, saveOrder.calculateRewardPoint(10));
+        pointService.increasePoint(member, saveOrder.calculateRewardPoint(POINT_REWARD_PERCENT));
         deleteCartItems(member, orderItems);
         return saveOrder.getId();
     }
