@@ -207,13 +207,13 @@ Body
     {
       "name": "[든든] 동원 스위트콘",
       "imageUrl": "http://image/test1.png",
-      "count": 2,
+      "quantity": 2,
       "price": 99800
     },
     {
       "name": "PET보틀-원형(500ml)",
       "imageUrl": "http://image/test2.png",
-      "count": 3,
+      "quantity": 3,
       "price": 84400
     }
   ],
