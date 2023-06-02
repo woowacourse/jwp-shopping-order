@@ -2,12 +2,12 @@ package cart.domain.order;
 
 public class ShippingFee {
 
-    public static final int BASE_SHIPPING_FEE = 3_000;
-    public static final int FREE_SHIPPING_AMOUNT = 30_000;
+    private static final int BASE_SHIPPING_FEE = 3_000;
+    private static final int FREE_SHIPPING_AMOUNT = 30_000;
 
     private final int value;
 
-    private ShippingFee(final int value) {
+    public ShippingFee(final int value) {
         this.value = value;
     }
 
