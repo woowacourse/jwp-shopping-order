@@ -19,10 +19,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import cart.TestSource;
 import cart.application.dto.PostOrderRequest;
 import cart.application.dto.SingleKindProductRequest;
-import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.exception.IllegalOrderException;
+import cart.repository.OrderRepository;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -32,7 +32,7 @@ class AddOrderServiceTest {
     @Mock
     ApplicationEventPublisher publisher;
     @Mock
-    OrderDao orderDao;
+    OrderRepository orderRepository;
     @Mock
     ProductDao productDao;
     @InjectMocks
@@ -48,7 +48,7 @@ class AddOrderServiceTest {
         SingleKindProductRequest product2 = new SingleKindProductRequest(productId2, 10);
         PostOrderRequest request = new PostOrderRequest(0, List.of(product1, product2));
 
-        given(productDao.getProductsByIds(anyList())).willReturn(List.of(new Product(productId1, "", 0, "")));
+        given(productDao.findProductsByIds(anyList())).willReturn(List.of(new Product(productId1, "", 0, "")));
 
         // when & then
         assertThatThrownBy(() -> addOrderService.addOrder(TestSource.member1, request))
@@ -65,7 +65,7 @@ class AddOrderServiceTest {
         SingleKindProductRequest product2 = new SingleKindProductRequest(productId2, 10);
         PostOrderRequest request = new PostOrderRequest(0, List.of(product1, product2));
 
-        given(productDao.getProductsByIds(anyList()))
+        given(productDao.findProductsByIds(anyList()))
             .willReturn(List.of(
                 new Product(productId1, "", 1000, ""),
                 new Product(productId2, "", 2000, "")

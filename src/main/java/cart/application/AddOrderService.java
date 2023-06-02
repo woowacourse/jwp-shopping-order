@@ -15,7 +15,6 @@ import cart.application.dto.PostOrderRequest;
 import cart.application.dto.SingleKindProductRequest;
 import cart.application.event.CartItemDeleteEvent;
 import cart.application.event.PointEvent;
-import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -23,17 +22,18 @@ import cart.domain.OrderStatus;
 import cart.domain.Product;
 import cart.domain.QuantityAndProduct;
 import cart.exception.IllegalOrderException;
+import cart.repository.OrderRepository;
 
 @Service
 public class AddOrderService {
 
     private final ApplicationEventPublisher publisher;
-    private final OrderDao orderDao;
+    private final OrderRepository orderRepository;
     private final ProductDao productDao;
 
-    public AddOrderService(ApplicationEventPublisher publisher, OrderDao orderDao, ProductDao productDao) {
+    public AddOrderService(ApplicationEventPublisher publisher, OrderRepository orderRepository, ProductDao productDao) {
         this.publisher = publisher;
-        this.orderDao = orderDao;
+        this.orderRepository = orderRepository;
         this.productDao = productDao;
     }
 
@@ -46,7 +46,7 @@ public class AddOrderService {
 
         LocalDateTime now = LocalDateTime.now();
         int payAmount = totalPrice - request.getUsedPoint();
-        Long orderId = orderDao.insert(new Order(member, now, payAmount, OrderStatus.PENDING, quantityAndProducts));
+        Long orderId = orderRepository.insert(new Order(member, now, payAmount, OrderStatus.PENDING, quantityAndProducts));
 
         handlePoint(member, request, now, payAmount, orderId);
         handleCartItemDeletion(member, quantityAndProducts);
@@ -57,7 +57,7 @@ public class AddOrderService {
         List<SingleKindProductRequest> requestProducts = request.getProducts();
         List<Long> productIds = requestProducts.stream()
             .map(SingleKindProductRequest::getProductId).distinct().collect(toList());
-        List<Product> foundProducts = productDao.getProductsByIds(productIds);
+        List<Product> foundProducts = productDao.findProductsByIds(productIds);
         validateProductsPresence(productIds, foundProducts);
 
         Map<Long, Product> productsById = foundProducts.stream()
