@@ -3,11 +3,11 @@ package cart.fixtures;
 import static cart.fixtures.MemberFixtures.*;
 import static cart.fixtures.ProductFixtures.*;
 
-import cart.domain.cartitem.CartItem;
-import cart.domain.member.Member;
-import cart.domain.product.Product;
-import cart.dto.CartItemResponse;
-import cart.dto.ProductCartItemResponse;
+import cart.domain.cartitem.domain.CartItem;
+import cart.domain.cartitem.dto.CartItemResponse;
+import cart.domain.member.domain.Member;
+import cart.domain.product.domain.Product;
+import cart.domain.product.dto.ProductCartItemResponse;
 
 public class CartItemFixtures {
 

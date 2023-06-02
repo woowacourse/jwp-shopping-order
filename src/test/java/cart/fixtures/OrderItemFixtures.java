@@ -4,7 +4,7 @@ import static cart.fixtures.CartItemFixtures.*;
 import static cart.fixtures.OrderFixtures.Dooly_Order1;
 import static cart.fixtures.OrderFixtures.Dooly_Order2;
 
-import cart.domain.orderitem.OrderItem;
+import cart.domain.order.domain.OrderItem;
 
 public class OrderItemFixtures {
 

@@ -6,11 +6,15 @@ import static cart.fixtures.ProductFixtures.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import cart.domain.cartitem.CartItem;
-import cart.domain.member.Member;
-import cart.domain.order.Order;
-import cart.domain.product.Product;
-import cart.dto.*;
+import cart.domain.cartitem.domain.CartItem;
+import cart.domain.member.domain.Member;
+import cart.domain.order.domain.Order;
+import cart.domain.order.dto.OrderCartItemDto;
+import cart.domain.order.dto.OrderRequest;
+import cart.domain.order.dto.OrderResponse;
+import cart.domain.order.dto.OrderedProductDto;
+import cart.domain.product.domain.Product;
+import cart.domain.product.dto.ProductResponse;
 import cart.fixtures.MemberFixtures.Dooly;
 
 public class OrderFixtures {
