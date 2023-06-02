@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import java.util.Optional;
 
+import cart.domain.Stock;
 import cart.entity.ProductEntity;
 import cart.fixture.ProductEntityFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -111,6 +112,21 @@ class ProductDaoTest {
         productDao.deleteById(chickenId);
         final Optional<ProductEntity> result = productDao.update(new ProductEntity(chickenId, ProductEntityFixture.PIZZA));
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void updateStock() {
+        final Long chickenId = productDao.insert(ProductEntityFixture.CHICKEN).getId();
+        productDao.updateStock(chickenId, new Stock(20));
+        final Optional<ProductEntity> result = productDao.findById(chickenId);
+        assertAll(
+                () -> assertThat(result).isPresent(),
+                () -> assertThat(result.get().getId()).isEqualTo(chickenId),
+                () -> assertThat(result.get().getName()).isEqualTo("치킨"),
+                () -> assertThat(result.get().getPrice()).isEqualTo(10_000),
+                () -> assertThat(result.get().getImageUrl()).isEqualTo("http://example.com/chicken.jpg"),
+                () -> assertThat(result.get().getStock()).isEqualTo(20)
+        );
     }
 
     @Test

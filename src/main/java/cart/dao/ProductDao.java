@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import cart.domain.Stock;
 import cart.entity.ProductEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -63,6 +64,11 @@ public class ProductDao {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ?, stock = ? WHERE id = ?";
         jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getStock(), productEntity.getId());
         return findById(productEntity.getId());
+    }
+
+    public void updateStock(final Long id, final Stock stock) {
+        final String sql = "UPDATE product SET stock = ? WHERE id = ?";
+        jdbcTemplate.update(sql, stock.getValue(), id);
     }
 
     public void deleteById(final Long id) {
