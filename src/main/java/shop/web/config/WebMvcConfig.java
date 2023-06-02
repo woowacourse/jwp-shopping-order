@@ -1,20 +1,32 @@
 package shop.web.config;
 
-import shop.domain.repository.MemberRepository;
-import shop.web.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import shop.domain.repository.MemberRepository;
+import shop.web.auth.AuthInterceptor;
+import shop.web.auth.AuthService;
+import shop.web.auth.MemberArgumentResolver;
 
 import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    private final AuthService authService;
     private final MemberRepository memberRepository;
 
-    public WebMvcConfig(MemberRepository memberRepository) {
+    public WebMvcConfig(AuthService authService, MemberRepository memberRepository) {
+        this.authService = authService;
         this.memberRepository = memberRepository;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AuthInterceptor(authService))
+                .addPathPatterns("/**")
+                .excludePathPatterns("/users/login", "/users/join", "/admin", "/settings","/products/**");
     }
 
     @Override
