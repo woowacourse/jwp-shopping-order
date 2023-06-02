@@ -66,3 +66,13 @@ tasks.register('copyDocument', Copy) {
 build {
     dependsOn copyDocument
 }
+
+
+processResources.dependsOn('copySecret')
+
+tasks.register('copySecret', Copy) {
+    from './src/main/resources/submodule/jwp-shopping-order-private/'
+    include "application*.yml"  // 복사할 파일들
+    into 'src/main/resources'  // 복사 위치
+}
+
