@@ -1,7 +1,7 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
+import cart.db.dao.CartItemDao;
+import cart.db.dao.ProductDao;
 import cart.domain.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;

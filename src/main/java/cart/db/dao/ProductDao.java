@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.db.dao;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;

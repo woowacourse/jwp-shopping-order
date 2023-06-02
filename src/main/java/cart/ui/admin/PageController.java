@@ -1,7 +1,7 @@
 package cart.ui.admin;
 
 import cart.application.ProductService;
-import cart.dao.MemberDao;
+import cart.db.dao.MemberDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ public class PageController {
 
     @GetMapping("/settings")
     public String members(Model model) {
-        model.addAttribute("members", memberDao.getAllMembers());
+        model.addAttribute("members", memberDao.findAll());
         return "settings";
     }
 }

@@ -1,7 +1,7 @@
 package cart.application;
 
-import cart.dao.CouponRepository;
-import cart.dao.MemberCouponRepository;
+import cart.db.repository.CouponRepository;
+import cart.db.repository.MemberCouponRepository;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.member.Member;

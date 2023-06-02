@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.db.repository;
 
 import cart.domain.coupon.Coupon;
 import org.springframework.jdbc.core.JdbcTemplate;

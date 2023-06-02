@@ -49,7 +49,7 @@ public class Coupon {
     }
 
     private void validateExpiredAt(final LocalDateTime expiredAt) {
-        if (expiredAt.isBefore(LocalDateTime.now())) {
+        if (expiredAt.isAfter(LocalDateTime.now())) {
             throw new IllegalArgumentException("쿠폰 만료 날짜는 현재 시간 이후로 입력해주세요.");
         }
     }

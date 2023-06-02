@@ -1,8 +1,8 @@
 package cart.application;
 
-import cart.dao.CouponRepository;
-import cart.dao.OrderRepository;
-import cart.dao.ProductDao;
+import cart.db.repository.CouponRepository;
+import cart.db.repository.OrderRepository;
+import cart.db.dao.ProductDao;
 import cart.domain.coupon.Coupon;
 import cart.domain.Item;
 import cart.domain.order.Order;
@@ -33,14 +33,15 @@ public class OrderService {
 
     @Transactional
     public void add(final Long memberId, final OrderRequest orderRequest) {
-        Map<Long, Integer> itemsMap = orderRequest.getItems()
+        Map<Long, Integer> orderRequestItems = orderRequest.getItems()
                 .stream()
                 .collect(Collectors.toMap(ItemRequest::getProductId, ItemRequest::getQuantity));
 
-        List<Product> products = productDao.getProductsByIds(new ArrayList<>(itemsMap.keySet()));
+        List<Product> products = productDao.getProductsByIds(new ArrayList<>(orderRequestItems.keySet()));
+        // TODO: 유효성 검증: 개수가 일치하는지 확인
 
         List<Item> items = products.stream()
-                .map(product -> new Item(product, itemsMap.get(product.getId())))
+                .map(product -> new Item(product, orderRequestItems.get(product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
         Long couponId = orderRequest.getCouponId();

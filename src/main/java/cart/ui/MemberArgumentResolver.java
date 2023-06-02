@@ -1,6 +1,7 @@
 package cart.ui;
 
-import cart.dao.MemberDao;
+import cart.db.dao.MemberDao;
+import cart.db.entity.MemberEntity;
 import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -43,7 +44,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         // 본인 여부 확인
-        Member member = memberDao.getMemberByName(email);
+        MemberEntity memberEntity = memberDao.findByName(email);
+        Member member = new Member(memberEntity.getId(), memberEntity.getName(), memberEntity.getPassword());
         if (!member.checkPassword(password)) {
             throw new AuthenticationException("사용자 인증에 실패하였습니다.");
         }

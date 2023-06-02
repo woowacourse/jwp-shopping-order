@@ -1,6 +1,6 @@
 package cart;
 
-import cart.dao.MemberDao;
+import cart.db.dao.MemberDao;
 import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
