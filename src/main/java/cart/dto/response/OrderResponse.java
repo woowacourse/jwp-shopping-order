@@ -6,13 +6,13 @@ public class OrderResponse {
 
     private final Long id;
     private final int savingRate;
-    private final int points;
+    private final int usedPoints;
     private final List<OrderItemResponse> cartItems;
 
-    public OrderResponse(final Long id, final int savingRate, final int points, final List<OrderItemResponse> cartItems) {
+    public OrderResponse(final Long id, final int savingRate, final int usedPoints, final List<OrderItemResponse> cartItems) {
         this.id = id;
         this.savingRate = savingRate;
-        this.points = points;
+        this.usedPoints = usedPoints;
         this.cartItems = cartItems;
     }
 
@@ -24,8 +24,8 @@ public class OrderResponse {
         return savingRate;
     }
 
-    public int getPoints() {
-        return points;
+    public int getUsedPoints() {
+        return usedPoints;
     }
 
     public List<OrderItemResponse> getCartItems() {

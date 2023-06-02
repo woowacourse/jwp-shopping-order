@@ -19,6 +19,6 @@ public class ProfileAcceptanceTest extends AcceptanceTest {
 
         final var profileResponse = response.as(ProfileResponse.class);
 
-        assertThat(profileResponse.getPoints()).isEqualTo(1320);
+        assertThat(profileResponse.getCurrentPoints()).isEqualTo(1320);
     }
 }

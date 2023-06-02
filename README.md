@@ -64,7 +64,7 @@ Authorization: Basic ${credentials}
 HTTP/1.1 200 OK
 Content-Type: application/json
 {
-  "points": 1320
+  "currentPoints": 1320
 }
 ```
 
@@ -256,7 +256,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 {
   "savingRate": 10,
-  "points": 1270
+  "expectedSavePoints": 1270
 }
 ```
 
@@ -277,7 +277,7 @@ Content-Type: application/json
   {
     "id": 1,
     "savingRate": 10,
-    "points": 420,
+    "usedPoints": 420,
     "cartItems": [
       {
         "productId": 5,
@@ -312,7 +312,7 @@ Content-Type: application/json
 {
   "id": 1,
   "savingRate": 10,
-  "points": 420,
+  "usedPoints": 420,
   "cartItems": [
     {
       "productId": 5,

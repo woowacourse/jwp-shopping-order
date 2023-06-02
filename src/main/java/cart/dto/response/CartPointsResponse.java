@@ -3,18 +3,18 @@ package cart.dto.response;
 public class CartPointsResponse {
 
     private final int savingRate;
-    private final int points;
+    private final int expectedSavePoints;
 
-    public CartPointsResponse(final int savingRate, final int points) {
+    public CartPointsResponse(final int savingRate, final int expectedSavePoints) {
         this.savingRate = savingRate;
-        this.points = points;
+        this.expectedSavePoints = expectedSavePoints;
     }
 
     public int getSavingRate() {
         return savingRate;
     }
 
-    public int getPoints() {
-        return points;
+    public int getExpectedSavePoints() {
+        return expectedSavePoints;
     }
 }

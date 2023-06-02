@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class ProfileResponse {
 
-    private final int points;
+    private final int currentPoints;
 
     @JsonCreator
-    public ProfileResponse(final int points) {
-        this.points = points;
+    public ProfileResponse(final int currentPoints) {
+        this.currentPoints = currentPoints;
     }
 
-    public int getPoints() {
-        return points;
+    public int getCurrentPoints() {
+        return currentPoints;
     }
 }

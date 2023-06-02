@@ -25,7 +25,7 @@ class OrderServiceTest extends ServiceTest {
 
         assertAll(
                 () -> assertThat(member.getPoints()).isEqualTo(10780),
-                () -> assertThat(response.getPoints()).isEqualTo(200)
+                () -> assertThat(response.getUsedPoints()).isEqualTo(200)
         );
     }
 

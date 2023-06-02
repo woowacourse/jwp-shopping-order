@@ -52,7 +52,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(orderResponse.getCartItems().get(0).getName()).isEqualTo("치킨"),
                 () -> assertThat(orderResponse.getCartItems().get(0).getPrice()).isEqualTo(10000),
                 () -> assertThat(orderResponse.getCartItems().get(0).getQuantity()).isEqualTo(1),
-                () -> assertThat(orderResponse.getPoints()).isEqualTo(1000),
+                () -> assertThat(orderResponse.getUsedPoints()).isEqualTo(1000),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
@@ -88,7 +88,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         final CartPointsResponse cartPointsResponse = response.as(CartPointsResponse.class);
 
         assertAll(
-                () -> assertThat(cartPointsResponse.getPoints()).isEqualTo(10000),
+                () -> assertThat(cartPointsResponse.getExpectedSavePoints()).isEqualTo(10000),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
