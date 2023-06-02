@@ -47,18 +47,16 @@ class CouponServiceTest {
         final Coupon coupon1 = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
         final Coupon coupon2 = couponRepository.save(_3만원_이상_배달비_3천원_할인_쿠폰);
         final Member member = memberRepository.save(사용자1);
-        memberCouponRepository.saveAll(List.of(
-                new MemberCoupon(member.getId(), coupon1),
-                new MemberCoupon(member.getId(), coupon2)
-        ));
+        final MemberCoupon memberCoupon1 = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon1));
+        final MemberCoupon memberCoupon2 = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon2));
 
         // when
         final List<MemberCouponResponse> result = couponService.findAllByMemberId(member.getId());
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new MemberCouponResponse(coupon1.getId(), "30000원 이상 2000원 할인 쿠폰", "price", 2000L, 30000L),
-                new MemberCouponResponse(coupon2.getId(), "30000원 이상 배달비 할인 쿠폰", "delivery", 3000L, 30000L)
+                new MemberCouponResponse(memberCoupon1.getId(), "30000원 이상 2000원 할인 쿠폰", "price", 2000L, 30000L),
+                new MemberCouponResponse(memberCoupon2.getId(), "30000원 이상 배달비 할인 쿠폰", "delivery", 3000L, 30000L)
         ));
     }
 

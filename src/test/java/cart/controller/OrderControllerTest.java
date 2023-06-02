@@ -79,10 +79,10 @@ class OrderControllerTest {
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
-        memberCouponRepository.saveAll(List.of(new MemberCoupon(member.getId(), coupon)));
+        final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon));
         final OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
                 List.of(cartItem1.getId(), cartItem2.getId()),
-                coupon.getId()
+                memberCoupon.getId()
         );
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
         final String request = objectMapper.writeValueAsString(orderSaveRequest);

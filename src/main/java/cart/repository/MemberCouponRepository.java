@@ -1,6 +1,7 @@
 package cart.repository;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 import cart.dao.CouponDao;
 import cart.dao.MemberCouponDao;
@@ -11,7 +12,9 @@ import cart.entity.MemberCouponEntity;
 import cart.exception.cart.MemberCouponNotFoundException;
 import cart.exception.coupon.CouponNotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -61,12 +64,15 @@ public class MemberCouponRepository {
     }
 
     public List<MemberCoupon> findAllByMemberId(final Long memberId) {
-        final List<Long> couponIds = memberCouponDao.findAllByUsedAndMemberId(false, memberId).stream()
+        final List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findAllByUsedAndMemberId(false, memberId);
+        final List<Long> couponIds = memberCouponEntities.stream()
                 .map(MemberCouponEntity::getCouponId)
                 .collect(toList());
-        return couponDao.findByIds(couponIds).stream()
+        final Map<Long, Coupon> couponIdByCoupon = couponDao.findByIds(couponIds).stream()
                 .map(CouponEntity::toDomain)
-                .map(coupon -> new MemberCoupon(memberId, coupon))
+                .collect(toMap(Coupon::getId, Function.identity()));
+        return memberCouponEntities.stream()
+                .map(it -> new MemberCoupon(it.getId(), memberId, couponIdByCoupon.get(it.getCouponId()), it.isUsed()))
                 .collect(toList());
     }
 }
