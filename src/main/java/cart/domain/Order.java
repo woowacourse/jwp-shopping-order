@@ -31,11 +31,14 @@ public class Order {
         }
     }
 
-    public int calculatePrice(){
-        return cartProducts.stream().mapToInt(it -> it.getProduct().getPrice() * it.getQuantity()).sum();
+    public int calculatePrice() {
+        return cartProducts.stream()
+                .mapToInt(it -> it.getProduct().getPrice() * it.getQuantity()).sum();
     }
-    public int calculateDiscountPrice(){
-        int totalPrice = cartProducts.stream().mapToInt(it -> it.getProduct().getPrice() * it.getQuantity()).sum();
+
+    public int calculateDiscountPrice() {
+        int totalPrice = cartProducts.stream()
+                .mapToInt(it -> it.getProduct().getPrice() * it.getQuantity()).sum();
         return coupon.applyCouponPrice(totalPrice);
     }
 

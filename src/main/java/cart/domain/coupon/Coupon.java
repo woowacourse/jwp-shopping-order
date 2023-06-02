@@ -13,26 +13,26 @@ public class Coupon {
     private final int discountPrice;
     private final double discountRate;
 
-    public static Coupon empty(){
+    public static Coupon empty() {
         return new Coupon(
                 null,
                 "EMPTY_COUPON",
                 new EmptyDiscount()
-                ,0,0,0
+                , 0, 0, 0
         );
     }
 
-    public static Coupon bonusCoupon(){
+    public static Coupon bonusCoupon() {
         return new Coupon(
                 null,
-                "주문확정_보너스쿠폰",
+                "주문확정_1000원_할인_보너스쿠폰",
                 new PriceDiscount(),
-                5000,1000,0
+                5000, 1000, 0
         );
     }
 
     public Coupon(String name, CouponTypes couponTypes, int minimumPrice, int discountPrice, double discountRate) {
-        this(null,name,couponTypes,minimumPrice,discountPrice,discountRate);
+        this(null, name, couponTypes, minimumPrice, discountPrice, discountRate);
     }
 
     public Coupon(Long id, String name, CouponTypes couponTypes, int minimumPrice, int discountPrice, double discountRate) {
@@ -46,13 +46,13 @@ public class Coupon {
     }
 
     private void validate(String name) {
-        if(name.length() < MINIMUM_NAME_LENGTH){
+        if (name.length() < MINIMUM_NAME_LENGTH) {
             throw new CouponException("쿠폰의 이름은 최소 1글자 이상입니다.");
         }
     }
 
-    public int applyCouponPrice(int totalPrice){
-        return couponTypes.calculatePrice(totalPrice,minimumPrice,discountPrice,discountRate);
+    public int applyCouponPrice(int totalPrice) {
+        return couponTypes.calculatePrice(totalPrice, minimumPrice, discountPrice, discountRate);
     }
 
     public Long getId() {
