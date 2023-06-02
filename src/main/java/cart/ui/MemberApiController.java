@@ -3,7 +3,7 @@ package cart.ui;
 import cart.application.MemberService;
 import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
-import cart.dto.order.PointResponse;
+import cart.ui.dto.order.PointResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

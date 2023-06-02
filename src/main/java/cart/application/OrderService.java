@@ -5,13 +5,13 @@ import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
-import cart.dto.order.OrderDetailResponse;
-import cart.dto.order.OrderProductDto;
-import cart.dto.order.OrderRequest;
 import cart.exception.global.point.InvalidPointUseException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
+import cart.ui.dto.order.OrderDetailResponse;
+import cart.ui.dto.order.OrderProductDto;
+import cart.ui.dto.order.OrderRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

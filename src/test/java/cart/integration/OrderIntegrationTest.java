@@ -2,8 +2,8 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
-import cart.dto.order.OrderRequest;
 import cart.exception.notfound.MemberNotFoundException;
+import cart.ui.dto.order.OrderRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

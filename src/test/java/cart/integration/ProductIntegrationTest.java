@@ -1,7 +1,7 @@
 package cart.integration;
 
-import cart.dto.product.ProductRequest;
-import cart.dto.product.ProductResponse;
+import cart.ui.dto.product.ProductRequest;
+import cart.ui.dto.product.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

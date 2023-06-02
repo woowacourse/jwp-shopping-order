@@ -1,8 +1,8 @@
 package cart.ui;
 
 import cart.application.ProductService;
-import cart.dto.product.ProductRequest;
-import cart.dto.product.ProductResponse;
+import cart.ui.dto.product.ProductRequest;
+import cart.ui.dto.product.ProductResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

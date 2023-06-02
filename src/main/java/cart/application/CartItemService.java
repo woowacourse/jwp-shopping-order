@@ -4,12 +4,12 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.dto.cartitem.CartItemIdsRequest;
-import cart.dto.cartitem.CartItemQuantityUpdateRequest;
-import cart.dto.cartitem.CartItemRequest;
-import cart.dto.order.PaymentInfoResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
+import cart.ui.dto.cartitem.CartItemIdsRequest;
+import cart.ui.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.ui.dto.cartitem.CartItemRequest;
+import cart.ui.dto.order.PaymentInfoResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

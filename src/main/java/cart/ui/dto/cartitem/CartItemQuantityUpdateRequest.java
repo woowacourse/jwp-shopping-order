@@ -1,4 +1,4 @@
-package cart.dto.cartitem;
+package cart.ui.dto.cartitem;
 
 public class CartItemQuantityUpdateRequest {
     private int quantity;

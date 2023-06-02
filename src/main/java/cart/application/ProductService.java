@@ -1,8 +1,8 @@
 package cart.application;
 
 import cart.domain.product.Product;
-import cart.dto.product.ProductRequest;
 import cart.repository.ProductRepository;
+import cart.ui.dto.product.ProductRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

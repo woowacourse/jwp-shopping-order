@@ -1,4 +1,4 @@
-package cart.dto.order;
+package cart.ui.dto.order;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

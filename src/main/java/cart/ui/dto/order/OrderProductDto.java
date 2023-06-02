@@ -1,6 +1,6 @@
-package cart.dto.order;
+package cart.ui.dto.order;
 
-import cart.dto.product.ProductResponse;
+import cart.ui.dto.product.ProductResponse;
 
 public class OrderProductDto {
 
