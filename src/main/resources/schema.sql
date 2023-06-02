@@ -5,21 +5,21 @@ drop table if exists cart_item;
 drop table if exists product;
 drop table if exists member;
 
-CREATE TABLE if not exists product (
+CREATE TABLE IF NOT EXISTS product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
     image_url VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE if not exists member (
+CREATE TABLE IF NOT EXISTS member (
      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) NOT NULL UNIQUE,
      password VARCHAR(255) NOT NULL,
      money BIGINT NOT NULL default 0
 );
 
-CREATE TABLE if not exists cart_item (
+CREATE TABLE IF NOT EXISTS cart_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE if not exists cart_item (
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
-CREATE TABLE if not exists coupon (
+CREATE TABLE IF NOT EXISTS coupon (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     coupon_name varchar(30) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE if not exists coupon (
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
-CREATE TABLE if not exists orders (
+CREATE TABLE IF NOT EXISTS orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     price BIGINT NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE if not exists orders (
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
-CREATE TABLE if not exists order_item (
+CREATE TABLE IF NOT EXISTS order_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     orders_id BIGINT NOT NULL,
     cart_item_id BIGINT NOT NULL,
