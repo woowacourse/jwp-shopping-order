@@ -1,10 +1,10 @@
 package cart.application;
 
 import cart.domain.Product;
+import cart.domain.repository.ProductRepository;
 import cart.domain.vo.Amount;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import cart.repository.ProductRepository;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

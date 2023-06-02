@@ -1,12 +1,13 @@
-package cart.repository;
+package cart.infrastructure.repository;
 
-import cart.dao.CartItemDao;
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.domain.repository.CartItemRepository;
 import cart.entity.CartItemEntity;
+import cart.infrastructure.dao.CartItemDao;
+import cart.infrastructure.dao.MemberDao;
+import cart.infrastructure.dao.ProductDao;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

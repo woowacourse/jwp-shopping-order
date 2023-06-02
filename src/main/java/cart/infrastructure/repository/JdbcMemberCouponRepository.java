@@ -1,10 +1,11 @@
-package cart.repository;
+package cart.infrastructure.repository;
 
-import cart.dao.CouponDao;
-import cart.dao.MemberCouponDao;
 import cart.domain.MemberCoupon;
+import cart.domain.repository.MemberCouponRepository;
 import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
+import cart.infrastructure.dao.CouponDao;
+import cart.infrastructure.dao.MemberCouponDao;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Repository;
 

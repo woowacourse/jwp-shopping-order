@@ -2,12 +2,12 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.RemoveCartItemsRequest;
-import cart.repository.CartItemRepository;
-import cart.repository.ProductRepository;
+import cart.domain.repository.CartItemRepository;
+import cart.domain.repository.ProductRepository;
+import cart.dto.request.CartItemQuantityUpdateRequest;
+import cart.dto.request.CartItemRequest;
+import cart.dto.request.RemoveCartItemsRequest;
+import cart.dto.response.CartItemResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

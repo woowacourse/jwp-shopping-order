@@ -1,8 +1,9 @@
-package cart.repository;
+package cart.infrastructure.repository;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
+import cart.domain.repository.ProductRepository;
 import cart.entity.ProductEntity;
+import cart.infrastructure.dao.ProductDao;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;

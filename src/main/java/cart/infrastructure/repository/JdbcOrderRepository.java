@@ -1,12 +1,13 @@
-package cart.repository;
+package cart.infrastructure.repository;
 
-import cart.dao.OrderDao;
-import cart.dao.ProductOrderDao;
 import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.Products;
+import cart.domain.repository.OrderRepository;
 import cart.entity.OrderEntity;
 import cart.entity.ProductOrderEntity;
+import cart.infrastructure.dao.OrderDao;
+import cart.infrastructure.dao.ProductOrderDao;
 import org.springframework.stereotype.Repository;
 
 @Repository

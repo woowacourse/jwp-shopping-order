@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.infrastructure.dao;
 
 import cart.entity.MemberCouponEntity;
 import java.util.Optional;
