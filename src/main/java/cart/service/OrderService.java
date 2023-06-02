@@ -3,6 +3,7 @@ package cart.service;
 import cart.dao.*;
 import cart.domain.*;
 import cart.dto.*;
+import cart.exception.CartItemException;
 import cart.exception.InvalidCardException;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class OrderService {
         Long orderId = shoppingOrderDao.save(order);
         List<Long> cartItemIds = orderRequest.getCartItemIds();
         for (Long cartItemId : cartItemIds) {
-            CartItem cartItem = cartItemDao.findById(cartItemId);
+            CartItem cartItem = cartItemDao.findById(cartItemId).orElseThrow(()->new CartItemException("장바구니 목록에서 조회할 수 없습니다"));
             cartItem.checkOwner(member);
             Integer quantity = cartItem.getQuantity();
             Product product = cartItem.getProduct();

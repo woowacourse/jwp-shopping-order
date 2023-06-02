@@ -7,9 +7,11 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,8 +33,16 @@ public class CartItemService {
         return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
     }
 
+    public CartItem findById(Long id) {
+        Optional<CartItem> cartItem = cartItemDao.findById(id);
+        if (cartItem.isPresent()) {
+            return cartItem.get();
+        }
+        throw new CartItemException("장바구니 목록에서 조회할 수 없습니다");
+    }
+
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = findById(id);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -45,7 +55,7 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = findById(id);
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
