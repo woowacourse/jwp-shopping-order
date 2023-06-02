@@ -12,7 +12,7 @@ public class DiscountForAllProductsPolicy extends DiscountTargetPolicy {
     @Override
     public void discount(Cart cart) {
         for (CartItem cartItem : cart.getCartItems()) {
-            cartItem.setDiscountPrice(discountUnitPolicy.calculateDiscountPrice(discountCondition.getDiscountValue(), cartItem.getProduct().getPrice()));
+            cartItem.setDiscountPrice(discountUnitPolicy.calculateDiscountPrice(discountCondition.getDiscountValue(), cartItem.getOriginalPrice()));
         }
     }
 }

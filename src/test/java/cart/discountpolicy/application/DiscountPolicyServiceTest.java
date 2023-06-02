@@ -111,8 +111,8 @@ class DiscountPolicyServiceTest {
         final var 피자 = new Product(1L, "피자", 20_000, "img");
         final var 치킨 = new Product(2L, "치킨", 30_000, "img");
 
-        final var 백여우가담은피자 = new CartItem(1L, 3, 피자, 백여우);
-        final var 백여우가담은치킨 = new CartItem(2L, 2, 치킨, 백여우);
+        final var 백여우가담은피자 = new CartItem(1L, 피자.getName(), 피자.getPrice(), 3, 피자.getImageUrl(), 피자.getId(), 백여우.getId());
+        final var 백여우가담은치킨 = new CartItem(2L, 치킨.getName(), 치킨.getPrice(), 2, 피자.getImageUrl(), 치킨.getId(), 백여우.getId());
 
         return new Cart(
                 List.of(백여우가담은피자, 백여우가담은치킨),

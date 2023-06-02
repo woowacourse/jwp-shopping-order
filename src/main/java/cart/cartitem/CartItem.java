@@ -8,48 +8,67 @@ import java.util.Objects;
 
 public class CartItem {
     private Long id;
+    private String name;
+    private int originalPrice;
     private int quantity;
     private int discountPrice;
-    private final Product product;
-    private final Member member;
+    private String imageUrl;
+    private Long productId;
+    private Long memberId;
 
-    public CartItem(Member member, Product product) {
-        this.quantity = 1;
-        this.member = member;
-        this.product = product;
-        this.discountPrice = 0;
+    public CartItem(Long id, String name, int originalPrice, int quantity, String imageUrl, Long productId, Long memberId) {
+        this.id = id;
+        this.name = name;
+        this.originalPrice = originalPrice;
+        this.quantity = quantity;
+        this.imageUrl = imageUrl;
+        this.productId = productId;
+        this.memberId = memberId;
     }
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
-        this.id = id;
+    public CartItem(String name, int originalPrice, int quantity, String imageUrl, Long productId, Long memberId) {
+        this.name = name;
+        this.originalPrice = originalPrice;
         this.quantity = quantity;
-        this.product = product;
-        this.member = member;
-        this.discountPrice = 0;
+        this.imageUrl = imageUrl;
+        this.productId = productId;
+        this.memberId = memberId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public String getName() {
+        return name;
     }
 
-    public Product getProduct() {
-        return product;
+    public int getOriginalPrice() {
+        return originalPrice;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public int getDiscountPrice() {
         return discountPrice;
     }
 
+    public Long getProductId() {
+        return productId;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
     public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
+        if (!Objects.equals(this.memberId, member.getId())) {
             throw new CartItemException.IllegalMember(this, member);
         }
     }
@@ -67,17 +86,19 @@ public class CartItem {
     }
 
     public int getDiscountedPrice() {
-        return this.product.getPrice() - this.discountPrice;
+        return this.originalPrice - this.discountPrice;
     }
 
     @Override
     public String toString() {
         return "CartItem{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
+                ", originalPrice=" + originalPrice +
                 ", quantity=" + quantity +
                 ", discountPrice=" + discountPrice +
-                ", product=" + product +
-                ", member=" + member +
+                ", productId=" + productId +
+                ", memberId=" + memberId +
                 '}';
     }
 }

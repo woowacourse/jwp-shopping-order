@@ -17,7 +17,7 @@ public class CartItemDiscountResponse {
     }
 
     public static CartItemDiscountResponse from(CartItem cartItem) {
-        return new CartItemDiscountResponse(cartItem.getId(), cartItem.getProduct().getPrice(), cartItem.getDiscountPrice());
+        return new CartItemDiscountResponse(cartItem.getId(), cartItem.getOriginalPrice(), cartItem.getDiscountPrice());
     }
 
     public long getCartItemId() {

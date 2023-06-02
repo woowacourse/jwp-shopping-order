@@ -85,12 +85,12 @@ public class OrderService {
     private OrderItem convertCartItemToOrderItem(CartItem cartItem, OrderRequest orderRequest) {
         final var quantity = cartItem.getQuantity();
         return new OrderItem(
-                cartItem.getProduct().getId(),
-                cartItem.getProduct().getName(),
-                cartItem.getProduct().getPrice(),
+                cartItem.getProductId(),
+                cartItem.getName(),
+                cartItem.getOriginalPrice(),
                 cartItem.getDiscountPrice(),
                 quantity,
-                cartItem.getProduct().getImageUrl()
+                cartItem.getImageUrl()
         );
     }
 

@@ -12,8 +12,8 @@ public class DiscountForSpecificProductsPolicy extends DiscountTargetPolicy {
     @Override
     public void discount(Cart cart) {
         for (CartItem cartItem : cart.getCartItems()) {
-            if (discountCondition.getDiscountTargetProductIds().contains(cartItem.getProduct().getId())) {
-                cartItem.setDiscountPrice(discountUnitPolicy.calculateDiscountPrice(discountCondition.getDiscountValue(), cartItem.getProduct().getPrice()));
+            if (discountCondition.getDiscountTargetProductIds().contains(cartItem.getProductId())) {
+                cartItem.setDiscountPrice(discountUnitPolicy.calculateDiscountPrice(discountCondition.getDiscountValue(), cartItem.getOriginalPrice()));
             }
         }
     }

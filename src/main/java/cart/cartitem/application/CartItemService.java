@@ -4,6 +4,7 @@ import cart.cartitem.CartItem;
 import cart.cartitem.presentation.dto.CartItemQuantityUpdateRequest;
 import cart.cartitem.presentation.dto.CartItemRequest;
 import cart.member.Member;
+import cart.product.Product;
 import cart.product.application.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemRepository.save(new CartItem(member, productRepository.getProductById(cartItemRequest.getProductId())));
+        final var product = productRepository.getProductById(cartItemRequest.getProductId());
+        return cartItemRepository.save(new CartItem(product.getName(), product.getPrice(), 1, product.getImageUrl(), product.getId(), member.getId()));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

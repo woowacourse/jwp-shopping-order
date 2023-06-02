@@ -55,7 +55,7 @@ public class CartService {
     public Cart findCart(Member member) {
         final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
         final var totalPrice = cartItems.stream()
-                .mapToInt(cartItem -> cartItem.getProduct().getPrice() * cartItem.getQuantity())
+                .mapToInt(cartItem -> cartItem.getOriginalPrice() * cartItem.getQuantity())
                 .sum();
 
         final var deliveryPrice = DeliveryPrice.calculateDeliveryPrice(totalPrice);

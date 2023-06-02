@@ -28,10 +28,10 @@ public class CartItemResponse {
 
     public static CartItemResponse from(CartItem cartItem) {
         final var productResponse = new ProductResponse(
-                cartItem.getProduct().getId(),
-                cartItem.getProduct().getName(),
-                cartItem.getProduct().getPrice(),
-                cartItem.getProduct().getImageUrl(),
+                cartItem.getProductId(),
+                cartItem.getName(),
+                cartItem.getOriginalPrice(),
+                cartItem.getImageUrl(),
                 cartItem.isOnSale(),
                 cartItem.getDiscountPrice());
         return new CartItemResponse(cartItem.getId(), cartItem.getQuantity(), productResponse);

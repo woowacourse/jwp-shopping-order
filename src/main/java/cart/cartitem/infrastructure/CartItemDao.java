@@ -1,8 +1,7 @@
 package cart.cartitem.infrastructure;
 
 import cart.cartitem.CartItem;
-import cart.member.Member;
-import cart.product.Product;
+import cart.cartitem.application.CartItemRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,33 +13,33 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class CartItemDao {
+public class CartItemDao implements CartItemRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+    @Override
+    public List<CartItem> findAllByMemberId(Long memberId) {
+        final var sql = "SELECT CI.id as id, P.name as name, P.price as original_price, P.image_url as image_irl, " +
+                "CI.quantity as quantity, CI.product_id as product_id, CI.member_id as member_id " +
+                "from CART_ITEM CI " +
+                "inner join PRODUCT P on CI.product_id = P.id " +
+                "where CI.member_id = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new CartItem(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("original_price"),
+                        rs.getInt("quantity"),
+                        rs.getString("image_url"),
+                        rs.getLong("product_id"),
+                        rs.getLong("member_id")
+                ),
+                memberId);
     }
 
+    @Override
     public Long save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -50,8 +49,8 @@ public class CartItemDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, cartItem.getMember().getId());
-            ps.setLong(2, cartItem.getProduct().getId());
+            ps.setLong(1, cartItem.getMemberId());
+            ps.setLong(2, cartItem.getProductId());
             ps.setInt(3, cartItem.getQuantity());
 
             return ps;
@@ -60,39 +59,32 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    @Override
     public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
-                "FROM cart_item " +
-                "INNER JOIN member ON cart_item.member_id = member.id " +
-                "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
-            Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
-        return cartItems.isEmpty() ? null : cartItems.get(0);
+        final var sql = "SELECT CI.id as id, P.name as name, P.price as original_price, P.image_url as image_irl, " +
+                "CI.quantity as quantity, CI.product_id as product_id, CI.member_id as member_id " +
+                "from CART_ITEM CI " +
+                "inner join PRODUCT P on CI.product_id = P.id " +
+                "where CI.id = ?";
+
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new CartItem(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getInt("original_price"),
+                rs.getInt("quantity"),
+                rs.getString("image_url"),
+                rs.getLong("product_id"),
+                rs.getLong("member_id")
+        ), id);
     }
 
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
