@@ -20,7 +20,7 @@ public class MemberCouponService {
 
     @Transactional(readOnly = true)
     public List<MemberCouponResponse> findAllByMemberId(final Long memberId) {
-        final List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByMemberId(memberId);
+        final List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByMemberIdWithUsed(memberId, false);
         return memberCoupons.stream()
                 .map(MemberCouponResponse::from)
                 .collect(Collectors.toList());

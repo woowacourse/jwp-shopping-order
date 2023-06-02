@@ -52,8 +52,8 @@ public class MemberCouponRepository {
         );
     }
 
-    public List<MemberCoupon> findAllByMemberId(final Long memberId) {
-        final List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(memberId);
+    public List<MemberCoupon> findAllByMemberIdWithUsed(final Long memberId, final boolean used) {
+        final List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberIdWithUsed(memberId, used);
         return memberCouponEntities.stream()
                 .map(this::getMemberCoupon)
                 .collect(Collectors.toList());

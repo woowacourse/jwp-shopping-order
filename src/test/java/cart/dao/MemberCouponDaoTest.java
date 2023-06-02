@@ -97,7 +97,7 @@ class MemberCouponDaoTest {
         memberCouponDao.insert(memberCouponEntity);
 
         // when
-        final List<MemberCouponEntity> result = memberCouponDao.findByMemberId(member1.getId());
+        final List<MemberCouponEntity> result = memberCouponDao.findByMemberIdWithUsed(member1.getId(), false);
 
         // then
         assertThat(result.size()).isEqualTo(2);

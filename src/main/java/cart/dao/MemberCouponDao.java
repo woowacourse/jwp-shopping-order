@@ -49,9 +49,9 @@ public class MemberCouponDao {
         jdbcTemplate.update(sql, memberCouponEntity.isUsed(), memberCouponEntity.getId());
     }
 
-    public List<MemberCouponEntity> findByMemberId(final Long memberId) {
-        String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
+    public List<MemberCouponEntity> findByMemberIdWithUsed(final Long memberId, final boolean used) {
+        String sql = "SELECT * FROM member_coupon WHERE member_id = ? AND used = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId, used);
     }
 
     public Optional<MemberCouponEntity> findById(final Long id) {
