@@ -1,17 +1,20 @@
 package cart.controller.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class CartItemQuantityUpdateRequest {
 
-    private int quantity;
+    @NotNull(message = "quantity 가 null 입니다.")
+    private Integer quantity;
 
     public CartItemQuantityUpdateRequest() {
     }
 
-    public CartItemQuantityUpdateRequest(int quantity) {
+    public CartItemQuantityUpdateRequest(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 }

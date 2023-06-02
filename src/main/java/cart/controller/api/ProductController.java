@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -34,19 +35,19 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> create(@RequestBody @Valid final ProductRequest productRequest) {
         final long id = productService.save(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody @Valid final ProductRequest productRequest) {
         productService.update(id, productRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         productService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

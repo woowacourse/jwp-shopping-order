@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -35,14 +36,14 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Auth final Member member, @RequestBody final CartItemRequest cartItemRequest) {
+    public ResponseEntity<Void> add(@Auth final Member member, @RequestBody @Valid final CartItemRequest cartItemRequest) {
         final long id = cartItemService.save(member, cartItemRequest);
         return ResponseEntity.created(URI.create("/cart-items/" + id)).build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateQuantity(
-            @Auth final Member member, @PathVariable final Long id, @RequestBody final CartItemQuantityUpdateRequest request) {
+            @Auth final Member member, @PathVariable final Long id, @RequestBody @Valid final CartItemQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request);
         return ResponseEntity.ok().build();
     }
