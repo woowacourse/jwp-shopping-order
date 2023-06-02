@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class Money {
 
+    public static final Money ZERO = new Money(0);
+
     private final BigDecimal value;
 
     public Money(int value) {
@@ -28,13 +30,27 @@ public class Money {
         return new Money(result);
     }
 
+    public Money multiply(BigDecimal multiplicand) {
+        BigDecimal result = value.multiply(multiplicand);
+        return new Money(result);
+    }
+
     public Money add(Money otherMoney) {
         BigDecimal result = value.add(otherMoney.value);
         return new Money(result);
     }
 
+    public Money subtract(BigDecimal subtrahend) {
+        BigDecimal result = value.subtract(subtrahend);
+        return new Money(result);
+    }
+
     public boolean isNotSameValue(BigDecimal otherValue) {
-        return !this.value.equals(otherValue);
+        return this.value.compareTo(otherValue) != 0;
+    }
+
+    public boolean isLessThan(BigDecimal otherValue) {
+        return this.value.compareTo(otherValue) == -1;
     }
 
     public BigDecimal getValue() {
@@ -50,7 +66,7 @@ public class Money {
             return false;
         }
         Money money = (Money) o;
-        return Objects.equals(value, money.value);
+        return value.compareTo(money.value) == 0;
     }
 
     @Override

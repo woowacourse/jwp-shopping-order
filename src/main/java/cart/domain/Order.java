@@ -52,7 +52,7 @@ public class Order {
     public Money calculateTotalPrice() {
         Money totalCartsPrice = items.stream()
                 .map(Item::calculateItemPrice)
-                .reduce(new Money(0), Money::add);
+                .reduce(Money.ZERO, Money::add);
         return totalCartsPrice.add(deliveryFee);
     }
 
