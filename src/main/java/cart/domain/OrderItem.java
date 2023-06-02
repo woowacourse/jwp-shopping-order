@@ -8,16 +8,16 @@ public class OrderItem {
     private final int price;
     private final String imageUrl;
     private final int quantity;
-    private final int totalPayment;
+    private final int totalPrice;
 
-    private OrderItem(Long id, long orderId, String name, int price, String imageUrl, int quantity, int totalPayment) {
+    private OrderItem(Long id, long orderId, String name, int price, String imageUrl, int quantity, int totalPrice) {
         this.id = id;
         this.orderId = orderId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
-        this.totalPayment = totalPayment;
+        this.totalPrice = totalPrice;
     }
 
     public Long getId() {
@@ -40,8 +40,8 @@ public class OrderItem {
         return quantity;
     }
 
-    public int getTotalPayment() {
-        return totalPayment;
+    public int getTotalPrice() {
+        return totalPrice;
     }
 
     public static class Builder {

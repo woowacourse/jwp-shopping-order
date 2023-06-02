@@ -27,6 +27,9 @@ public class OrderDao {
                     .quantity(resultSet.getInt("quantity"))
                     .build();
 
+    private final RowMapper<Long> orderIdRowMapper = (resultSet, rowNum) ->
+            resultSet.getLong("orders.id");
+
     public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -71,5 +74,28 @@ public class OrderDao {
                 "JOIN orders ON orders.id = order_item.order_id " +
                 "WHERE orders.member_id = ?";
         return jdbcTemplate.query(query, orderItemEntityRowMapper, memberId);
+    }
+
+    public List<Long> getOrderIdsByMemberId(long memberId) {
+        String query = "SELECT orders.id " +
+                "FROM order_item " +
+                "JOIN orders ON orders.id = order_item.order_id " +
+                "WHERE orders.member_id = ?";
+        return jdbcTemplate.query(query, orderIdRowMapper, memberId);
+    }
+
+    private final RowMapper<OrderEntity> orderEntityRowMapper = (resultSet, rowNum) ->
+            new OrderEntity.Builder()
+                    .id(resultSet.getLong("id"))
+                    .memberId(resultSet.getLong("member_id"))
+                    .totalPayment(resultSet.getInt("total_payment"))
+                    .usedPoint(resultSet.getInt("point"))
+                    .createdAt(resultSet.getTimestamp("created_at"))
+                    .build();
+
+
+    public OrderEntity getOrderById(long orderId) {
+        String query = "SELECT * FROM orders WHERE order_id = ?";
+        return jdbcTemplate.queryForObject(query, orderEntityRowMapper, orderId);
     }
 }

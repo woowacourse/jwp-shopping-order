@@ -56,18 +56,35 @@ public class OrderRepository {
     }
 
     // 사용자별 주문 내역
-    public OrderItems findOrderItemsByMemberId(long memberId) {
-        List<OrderItemEntity> orderEntities = orderDao.getOrdersByMemberId(memberId);
-        long orderId = orderEntities.get(0).getOrderId();
-        return orderEntities.stream()
-                .map(orderItemEntity -> new OrderItem.Builder()
-                        .id(orderItemEntity.getId())
-                        .orderId(orderItemEntity.getOrderId())
-                        .productName(orderItemEntity.getProductName())
-                        .productPrice(orderItemEntity.getProductPrice())
-                        .productImageUrl(orderItemEntity.getProductImageUrl())
-                        .quantity(orderItemEntity.getQuantity())
-                        .build()
-                ).collect(collectingAndThen(toList(), (orderItems) -> new OrderItems(orderId, orderItems)));
+    public List<OrderItems> findOrderItemsByMemberId(long memberId) {
+        List<Long> orderIds = orderDao.getOrderIdsByMemberId(memberId);
+        List<OrderItems> orders = new ArrayList<>();
+        for (long orderId : orderIds) {
+            List<OrderItemEntity> orderItemEntities = orderDao.getOrdersByMemberId(memberId);
+            OrderItems orderItems = orderItemEntities.stream()
+                    .map(orderItemEntity -> new OrderItem.Builder()
+                            .id(orderItemEntity.getId())
+                            .orderId(orderItemEntity.getOrderId())
+                            .productName(orderItemEntity.getProductName())
+                            .productPrice(orderItemEntity.getProductPrice())
+                            .productImageUrl(orderItemEntity.getProductImageUrl())
+                            .quantity(orderItemEntity.getQuantity())
+                            .build()
+                    ).collect(collectingAndThen(toList(), (items) -> new OrderItems(orderId, items)));
+            orders.add(orderItems);
+        }
+        return orders;
+    }
+
+    // 주문 상세
+//    public Order findOrderById(Member member, long orderId) {
+//        OrderItems orderItems = findOrderItemsByMemberId(member.getId());
+//        OrderEntity orderEntity = findOrderDetailById(orderId);
+//        Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
+//        return new Order(orderId, member, orderItems, payment, orderEntity.getCreatedAt());
+//    }
+
+    private OrderEntity findOrderDetailById(long orderId) {
+        return orderDao.getOrderById(orderId);
     }
 }

@@ -7,18 +7,18 @@ import java.util.List;
 public class OrderItemsResponse {
 
     private final long orderId;
-    private final List<OrderItem> orderItems;
+    private final List<OrderItem> orderProducts;
 
-    public OrderItemsResponse(long orderId, List<OrderItem> orderItems) {
+    public OrderItemsResponse(long orderId, List<OrderItem> orderProducts) {
         this.orderId = orderId;
-        this.orderItems = orderItems;
+        this.orderProducts = orderProducts;
     }
 
     public long getOrderId() {
         return orderId;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
+    public List<OrderItem> getOrderProducts() {
+        return orderProducts;
     }
 }

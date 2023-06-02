@@ -2,9 +2,11 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.domain.OrderItems;
 import cart.dto.order.OrderItemsResponse;
 import cart.dto.order.OrderProductsRequest;
+import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
@@ -32,12 +36,14 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<OrderItemsResponse> showOrder(Member member) {
-        OrderItems orderItems = orderService.getOrderByMember(member);
+    public ResponseEntity<List<OrderItemsResponse>> showOrder(Member member) {
+        List<OrderItems> orderItems = orderService.getOrderByMember(member);
         return ResponseEntity.ok(toOrderResponse(orderItems));
     }
 
-    private OrderItemsResponse toOrderResponse(OrderItems orderItems) {
-        return new OrderItemsResponse(orderItems.getOrderId(), orderItems.getOrderItems());
+    private List<OrderItemsResponse> toOrderResponse(List<OrderItems> orderItems) {
+        return orderItems.stream()
+                .map(orderItem -> new OrderItemsResponse(orderItem.getOrderId(), orderItem.getOrderItems()))
+                .collect(Collectors.toList());
     }
 }

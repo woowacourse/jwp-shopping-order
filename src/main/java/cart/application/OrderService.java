@@ -73,7 +73,7 @@ public class OrderService {
     }
 
     // 사용자별 주문 내역
-    public OrderItems getOrderByMember(Member member) {
+    public List<OrderItems> getOrderByMember(Member member) {
         return orderRepository.findOrderItemsByMemberId(member.getId());
     }
 }
