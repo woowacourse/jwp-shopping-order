@@ -175,6 +175,7 @@ class ProductRepositoryTest {
         );
     }
 
+    @Sql({"classpath:deleteAll.sql", "classpath:insertProduct.sql"})
     @Test
     void updateStockWithNoExistId() {
         assertThatThrownBy(() -> productRepository.updateStock(CartItemsFixture.ORDER3_CARTITEMS))
@@ -182,6 +183,7 @@ class ProductRepositoryTest {
                 .hasMessage(new ProductNotFoundException(4L).getMessage());
     }
 
+    @Sql({"classpath:deleteAll.sql", "classpath:insertProduct.sql"})
     @Test
     void updateStockWhenNotEnoughStock1() {
         assertThatThrownBy(() -> productRepository.updateStock(CartItemsFixture.ORDER4_CARTITEMS))
@@ -189,6 +191,7 @@ class ProductRepositoryTest {
                 .hasMessage(new NotEnoughStockException(10, 11).getMessage());
     }
 
+    @Sql({"classpath:deleteAll.sql", "classpath:insertProduct.sql"})
     @Test
     void updateStockWhenNotEnoughStock2() {
         assertThatThrownBy(() -> productRepository.updateStock(CartItemsFixture.ORDER5_CARTITEMS))
