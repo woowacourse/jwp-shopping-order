@@ -1,5 +1,6 @@
 package cart.ui;
 
+import cart.dto.ErrorResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.CartItemNotFoundException;
@@ -56,13 +57,13 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(NotEnoughPointException.class)
-    public ResponseEntity<String> handleException(final NotEnoughPointException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleException(final NotEnoughPointException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(2, e.getMessage()));
     }
 
     @ExceptionHandler(NotEnoughStockException.class)
-    public ResponseEntity<String> handleException(final NotEnoughStockException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleException(final NotEnoughStockException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(1, e.getMessage()));
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
