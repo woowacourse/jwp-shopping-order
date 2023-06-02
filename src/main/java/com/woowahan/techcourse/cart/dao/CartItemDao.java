@@ -1,7 +1,6 @@
 package com.woowahan.techcourse.cart.dao;
 
 import com.woowahan.techcourse.cart.domain.CartItem;
-import com.woowahan.techcourse.member.domain.Member;
 import com.woowahan.techcourse.product.domain.Product;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -25,28 +24,6 @@ public class CartItemDao {
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
-        String sql =
-                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
-                        +
-                        "FROM cart_item " +
-                        "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id " +
-                        "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
-    }
-
     public Long save(CartItem cartItem) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -56,7 +33,7 @@ public class CartItemDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setLong(1, cartItem.getMember().getId());
+            ps.setLong(1, cartItem.getMemberId());
             ps.setLong(2, cartItem.getProductId());
             ps.setInt(3, cartItem.getQuantity());
 
@@ -68,24 +45,21 @@ public class CartItemDao {
 
     public CartItem findById(Long id) {
         String sql =
-                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
+                "SELECT cart_item.id, cart_item.member_id, product.id, product.name, product.price, product.image_url, cart_item.quantity "
                         +
                         "FROM cart_item " +
-                        "INNER JOIN member ON cart_item.member_id = member.id " +
                         "INNER JOIN product ON cart_item.product_id = product.id " +
                         "WHERE cart_item.id = ?";
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             Long cartItemId = rs.getLong("cart_item.id");
             int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
             Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
+            return new CartItem(cartItemId, quantity, product, memberId);
         });
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }

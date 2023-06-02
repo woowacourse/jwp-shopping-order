@@ -8,28 +8,29 @@ import java.util.Objects;
 public class CartItem {
 
     private static final int DEFAULT_QUANTITY = 1;
-    private final Product product;
-    private final Member member;
+
     private final Long id;
+    private final Product product;
+    private final long memberId;
     private int quantity;
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, int quantity, Product product, long memberId) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
-        this.member = member;
+        this.memberId = memberId;
     }
 
-    public CartItem(Member member, Product product) {
-        this(null, DEFAULT_QUANTITY, product, member);
+    public CartItem(Product product, long memberId) {
+        this(null, DEFAULT_QUANTITY, product, memberId);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Product getProduct() {
@@ -45,7 +46,7 @@ public class CartItem {
     }
 
     public void checkOwner(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
+        if (!Objects.equals(memberId, member.getId())) {
             throw new IllegalMemberException(this, member);
         }
     }

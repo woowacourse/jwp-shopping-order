@@ -23,7 +23,8 @@ public class CartCommandService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(
+                new CartItem(productDao.getProductById(cartItemRequest.getProductId()), member.getId()));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

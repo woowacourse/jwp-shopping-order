@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.cart.ui;
 
 import com.woowahan.techcourse.cart.application.CartCommandService;
-import com.woowahan.techcourse.cart.application.CartQueryService;
+import com.woowahan.techcourse.cart.dao.CartItemQueryDao;
 import com.woowahan.techcourse.cart.dto.CartItemIdResponse;
 import com.woowahan.techcourse.cart.dto.CartItemQuantityUpdateRequest;
 import com.woowahan.techcourse.cart.dto.CartItemRequest;
@@ -24,16 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartItemApiController {
 
     private final CartCommandService cartCommandService;
-    private final CartQueryService cartQueryService;
+    private final CartItemQueryDao cartItemQueryDao;
 
-    public CartItemApiController(CartCommandService cartCommandService, CartQueryService cartQueryService) {
+    public CartItemApiController(CartCommandService cartCommandService, CartItemQueryDao cartItemQueryDao) {
         this.cartCommandService = cartCommandService;
-        this.cartQueryService = cartQueryService;
+        this.cartItemQueryDao = cartItemQueryDao;
     }
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> showCartItems(Member member) {
-        return ResponseEntity.ok(cartQueryService.findByMember(member));
+        return ResponseEntity.ok(cartItemQueryDao.findByMemberId(member.getId()));
     }
 
     @PostMapping
