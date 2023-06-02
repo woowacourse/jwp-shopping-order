@@ -69,10 +69,10 @@ CREATE TABLE member_reward_point
 
 CREATE TABLE order_member_used_point
 (
-    id                  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id            BIGINT NOT NULL,
-    member_reward_point BIGINT NOT NULL,
-    used_point          INT    NOT NULL,
+    id                   BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id             BIGINT NOT NULL,
+    used_reward_point_id BIGINT NOT NULL,
+    used_point           INT    NOT NULL,
     FOREIGN KEY (order_id) REFERENCES purchase_order (id),
-    FOREIGN KEY (member_reward_point) REFERENCES member_reward_point (id)
+    FOREIGN KEY (used_reward_point_id) REFERENCES member_reward_point (id)
 );

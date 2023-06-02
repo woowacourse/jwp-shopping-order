@@ -25,3 +25,11 @@ INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, q
 
 INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (3, 3, '피자', 13000, 'testImage3', 5);
 INSERT INTO purchase_order_item (order_id, product_id, name, price, image_url, quantity) VALUES (3, 2, '샐러드', 20000, 'testImage2', 7);
+
+INSERT INTO member_reward_point (member_id, point, created_at, expired_at, reward_order_id) VALUES (1L, 500, '2023-05-20 12:12:12', '2023-05-25 12:12:12', 1L);
+INSERT INTO member_reward_point (member_id, point, created_at, expired_at, reward_order_id) VALUES (1L, 700, '2023-05-18 12:12:12', '2023-05-29 12:12:12', 2L);
+INSERT INTO member_reward_point (member_id, point, created_at, expired_at, reward_order_id) VALUES (1L, 1000, '2023-05-15 12:12:12', '2023-05-30 12:12:12', 3L);
+
+INSERT INTO order_member_used_point (order_id, used_reward_point_id, used_point) VALUES (1L, 1L, 500);
+INSERT INTO order_member_used_point (order_id, used_reward_point_id, used_point) VALUES (1L, 2L, 400);
+INSERT INTO order_member_used_point (order_id, used_reward_point_id, used_point) VALUES (1L, 3L, 800);

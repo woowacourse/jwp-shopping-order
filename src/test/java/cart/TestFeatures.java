@@ -2,6 +2,7 @@ package cart;
 
 import cart.domain.*;
 import cart.domain.point.Point;
+import cart.domain.point.UsedPoint;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,4 +36,8 @@ public class TestFeatures {
     public static final Point 회원1_주문1_포인트 = new Point(1L, 500, LocalDateTime.parse("2023-05-20 12:12:12", formatter), LocalDateTime.parse("2023-05-25 12:12:12", formatter));
     public static final Point 회원1_주문2_포인트 = new Point(2L, 700, LocalDateTime.parse("2023-05-18 12:12:12", formatter), LocalDateTime.parse("2023-05-29 12:12:12", formatter));
     public static final Point 회원1_주문3_포인트 = new Point(3L, 1000, LocalDateTime.parse("2023-05-15 12:12:12", formatter), LocalDateTime.parse("2023-05-30 12:12:12", formatter));
+
+    public static final UsedPoint 주문1_포인트_사용1 = new UsedPoint(1L, 1L, 500);
+    public static final UsedPoint 주문1_포인트_사용2 = new UsedPoint(2L, 2L, 400);
+    public static final UsedPoint 주문1_포인트_사용3 = new UsedPoint(3L, 3L, 800);
 }
