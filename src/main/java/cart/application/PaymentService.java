@@ -1,16 +1,13 @@
 package cart.application;
 
-import cart.domain.DeliveryPolicy;
-import cart.domain.DiscountPolicy;
-import cart.domain.Order;
-import cart.domain.Payment;
-import cart.domain.PaymentRecord;
+import cart.domain.*;
 import cart.exception.PaymentException;
 import cart.repository.DeliveryPolicyRepository;
 import cart.repository.DiscountPolicyRepository;
 import cart.repository.PaymentRepository;
-import java.util.List;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PaymentService {
@@ -19,29 +16,30 @@ public class PaymentService {
     private final DeliveryPolicyRepository deliveryPolicyRepository;
     private final PaymentRepository paymentRepository;
 
-    public PaymentService(DiscountPolicyRepository discountPolicyRepository,
-                          DeliveryPolicyRepository deliveryPolicyRepository, PaymentRepository paymentRepository) {
+    public PaymentService(final DiscountPolicyRepository discountPolicyRepository,
+                          final DeliveryPolicyRepository deliveryPolicyRepository, final PaymentRepository paymentRepository) {
         this.discountPolicyRepository = discountPolicyRepository;
         this.deliveryPolicyRepository = deliveryPolicyRepository;
         this.paymentRepository = paymentRepository;
     }
 
-    public PaymentRecord createDraftPaymentRecord(Order order) {
-        List<DiscountPolicy> discountPolicies = discountPolicyRepository.findDefault();
-        List<DeliveryPolicy> deliveryPolicies = deliveryPolicyRepository.findDefault();
+    public PaymentRecord createDraftPaymentRecord(final Order order) {
+        final List<DiscountPolicy> discountPolicies = this.discountPolicyRepository.findDefault();
+        final List<DeliveryPolicy> deliveryPolicies = this.deliveryPolicyRepository.findDefault();
 
-        Payment payment = new Payment(discountPolicies, deliveryPolicies);
+        final Payment payment = new Payment(discountPolicies, deliveryPolicies);
 
         return payment.createPaymentRecord(order);
     }
 
-    public PaymentRecord createPaymentRecordAndSave(Order order) {
-        PaymentRecord record = createDraftPaymentRecord(order);
-        return paymentRepository.save(record);
+    public PaymentRecord createPaymentRecordAndSave(final Order order) {
+        final PaymentRecord record = this.createDraftPaymentRecord(order);
+        final Long id = this.paymentRepository.create(record);
+        return record;
     }
 
-    public PaymentRecord findByOrder(Order order) {
-        return paymentRepository.findByOrder(order)
+    public PaymentRecord findByOrder(final Order order) {
+        return this.paymentRepository.findByOrder(order)
                 .orElseThrow(() -> new PaymentException.NotFound(order));
     }
 }

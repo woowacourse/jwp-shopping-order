@@ -9,36 +9,43 @@ public class Order {
     private final List<OrderItem> orderItems;
     private final LocalDateTime orderTime;
 
-    public Order(Long id, Member member, List<OrderItem> orderItems) {
-        this.id = id;
-        this.member = member;
-        this.orderItems = orderItems;
-        orderTime = LocalDateTime.now();
-    }
-
-    public Order(Member member, List<OrderItem> orderItems) {
+    public Order(final Member member, final List<OrderItem> orderItems) {
         this(null, member, orderItems);
     }
 
+    public Order(final Long id, final Member member, final List<OrderItem> orderItems) {
+        this.id = id;
+        this.member = member;
+        this.orderItems = orderItems;
+        this.orderTime = LocalDateTime.now();
+    }
+
+    public Order(final Long id, final Member member, final List<OrderItem> orderItems, final LocalDateTime orderTime) {
+        this.id = id;
+        this.member = member;
+        this.orderItems = orderItems;
+        this.orderTime = orderTime;
+    }
+
     public LocalDateTime getOrderTime() {
-        return orderTime;
+        return this.orderTime;
     }
 
     public Money calculateOriginalTotalPrice() {
-        return orderItems.stream()
+        return this.orderItems.stream()
                 .map(OrderItem::getTotalPrice)
                 .reduce(new Money(0), Money::add);
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public Member getMember() {
-        return member;
+        return this.member;
     }
 
     public List<OrderItem> getOrderItems() {
-        return orderItems;
+        return this.orderItems;
     }
 }
