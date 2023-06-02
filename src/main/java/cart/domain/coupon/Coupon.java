@@ -2,6 +2,8 @@ package cart.domain.coupon;
 
 import cart.domain.Money;
 import cart.domain.discountpolicy.DiscountPolicy;
+import cart.exception.CouponException;
+import cart.exception.IllegalMoneyAmountException;
 
 import java.util.Objects;
 
@@ -27,7 +29,11 @@ public class Coupon {
     }
 
     public Money apply(Money money) {
-        return discountPolicy.apply(money, discountValue);
+        try {
+            return discountPolicy.apply(money,  discountValue);
+        } catch (IllegalMoneyAmountException exception) {
+            throw new CouponException.OverOriginalPrice();
+        }
     }
 
     public Long getId() {

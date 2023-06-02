@@ -1,12 +1,14 @@
 package cart.domain.coupon;
 
 import cart.domain.Money;
-import cart.domain.discountpolicy.AmountDiscountPolicy;
-import cart.domain.discountpolicy.RateDiscountPolicy;
+import cart.exception.CouponException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static cart.domain.fixture.CouponFixture.AMOUNT_1000_COUPON;
+import static cart.domain.fixture.CouponFixture.RATE_10_COUPON;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CouponTest {
 
@@ -15,7 +17,7 @@ class CouponTest {
     void use_amount_discount_coupon_test() {
         // given
         Money originalPrice = new Money(10000);
-        Coupon amountCoupon = new Coupon("1000원 할인 쿠폰", new AmountDiscountPolicy(), 1000);
+        Coupon amountCoupon = AMOUNT_1000_COUPON;
 
         // when
         Money discountedPrice = amountCoupon.apply(originalPrice);
@@ -29,7 +31,7 @@ class CouponTest {
     void use_rate_discount_coupon_test() {
         // give
         Money originalPrice = new Money(10000);
-        Coupon rateCoupon = new Coupon("10퍼센트 할인 쿠폰", new RateDiscountPolicy(), 0.9);
+        Coupon rateCoupon = RATE_10_COUPON;
 
         // when
         Money discountedPrice = rateCoupon.apply(originalPrice);
@@ -38,4 +40,16 @@ class CouponTest {
         assertThat(discountedPrice).isEqualTo(new Money(9000));
     }
 
+    @Test
+    @DisplayName("주문금액보다 더 큰 할인액의 쿠폰을 사용한다.")
+    void use_coupon_over_order_price_test() {
+        // given
+        Money originalPrice = new Money(900);
+        Coupon coupon = AMOUNT_1000_COUPON;
+
+        // when
+        // then
+        assertThatThrownBy(() -> coupon.apply(originalPrice))
+                .isInstanceOf(CouponException.OverOriginalPrice.class);
+    }
 }

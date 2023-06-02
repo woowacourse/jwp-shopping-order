@@ -10,8 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 
 import java.util.List;
 
-import static cart.fixture.CouponFixture.AMOUNT_1000_COUPON;
-import static cart.fixture.CouponFixture.RATE_10_COUPON;
+import static cart.domain.fixture.CouponFixture.AMOUNT_1000_COUPON;
+import static cart.domain.fixture.CouponFixture.RATE_10_COUPON;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest

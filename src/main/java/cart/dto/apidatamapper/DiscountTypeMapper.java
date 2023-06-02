@@ -1,7 +1,7 @@
 package cart.dto.apidatamapper;
 
 import cart.domain.discountpolicy.DiscountType;
-import cart.exception.WrongDiscountTypeInputException;
+import cart.exception.CouponException;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -24,6 +24,6 @@ public class DiscountTypeMapper {
                 .filter(entry -> entry.getValue().equals(typeString))
                 .map(Map.Entry::getKey)
                 .findFirst()
-                .orElseThrow(() -> new WrongDiscountTypeInputException(typeString));
+                .orElseThrow(() -> new CouponException.WrongDiscountType(typeString));
     }
 }

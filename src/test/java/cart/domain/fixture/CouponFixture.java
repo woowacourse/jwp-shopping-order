@@ -1,4 +1,4 @@
-package cart.fixture;
+package cart.domain.fixture;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.AmountDiscountPolicy;

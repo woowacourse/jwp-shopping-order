@@ -3,7 +3,7 @@ package cart.ui;
 import cart.dto.ExceptionResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
-import cart.exception.WrongDiscountTypeInputException;
+import cart.exception.CouponException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -22,8 +22,10 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @ExceptionHandler(WrongDiscountTypeInputException.class)
-    public ResponseEntity<ExceptionResponse> handleWrongDiscountInputException(WrongDiscountTypeInputException exception) {
+    @ExceptionHandler(value = {
+            CouponException.class
+    })
+    public ResponseEntity<ExceptionResponse> handleWrongDiscountInputException(Exception exception) {
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(exception.getMessage()));
     }

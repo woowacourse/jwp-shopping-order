@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cart.fixture.CouponFixture.AMOUNT_1000_COUPON;
-import static cart.fixture.CouponFixture.RATE_10_COUPON;
+import static cart.domain.fixture.CouponFixture.AMOUNT_1000_COUPON;
+import static cart.domain.fixture.CouponFixture.RATE_10_COUPON;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
