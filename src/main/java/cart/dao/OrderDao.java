@@ -32,16 +32,19 @@ public class OrderDao {
             TOTAL_PRICE
     );
 
-    private static final RowMapper<OrderEntity> rowMapper = (resultSet, rowNum) ->
-            new OrderEntity(
-                    resultSet.getLong(ID),
-                    resultSet.getTimestamp(CREATED_AT).toString(),
-                    resultSet.getLong(MEMBER_ID),
-                    resultSet.getInt(TOTAL_PRODUCT_PRICE),
-                    resultSet.getInt(TOTAL_DELIVERY_FEE),
-                    resultSet.getInt(USE_POINT),
-                    resultSet.getInt(TOTAL_PRICE)
-            );
+    private static final RowMapper<OrderEntity> rowMapper = (resultSet, rowNum) -> {
+        String current = resultSet.getTimestamp(CREATED_AT).toString();
+
+        return new OrderEntity(
+                resultSet.getLong(ID),
+                current.substring(0, current.length() - 2),
+                resultSet.getLong(MEMBER_ID),
+                resultSet.getInt(TOTAL_PRODUCT_PRICE),
+                resultSet.getInt(TOTAL_DELIVERY_FEE),
+                resultSet.getInt(USE_POINT),
+                resultSet.getInt(TOTAL_PRICE)
+        );
+    };
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

@@ -58,7 +58,7 @@ public class ProductIntegrationTest extends IntegrationTest {
                 .getObject(".", ProductResponse.class);
 
         // then
-        assertThat(response.getId()).isNotNull();
+        assertThat(response.getProductId()).isNotNull();
         assertThat(response.getName()).isEqualTo(dummyRequest.getName());
         assertThat(response.getPrice()).isEqualTo(dummyRequest.getPrice());
     }

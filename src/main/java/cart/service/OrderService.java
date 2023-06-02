@@ -56,7 +56,7 @@ public class OrderService {
     }
 
     private void validateOwner(final Member member, final OrderRequest orderRequest) {
-        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItemInfos();
+        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItems();
 
         for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
             CartItem cartItem = cartItemRepository.findById(cartItemInfo.getCartItemId());
@@ -66,16 +66,16 @@ public class OrderService {
     }
 
     private void validatePrice(final OrderRequest orderRequest) {
-        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItemInfos();
+        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItems();
 
         int totalPrice = 0;
 
         for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
-            ProductInfoRequest productInfo = cartItemInfo.getProductInfo();
+            ProductInfoRequest productInfo = cartItemInfo.getProduct();
 
             Long productId = productInfo.getProductId();
             Product product = productDao.findById(productId);
-            totalPrice += product.getPrice();
+            totalPrice += product.getPrice() * cartItemInfo.getQuantity();
         }
 
         if (totalPrice != orderRequest.getTotalProductPrice()) {
@@ -102,7 +102,7 @@ public class OrderService {
     }
 
     private void removeCartItem(final OrderRequest orderRequest) {
-        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItemInfos();
+        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItems();
 
         for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
             cartItemRepository.deleteById(cartItemInfo.getCartItemId());
@@ -119,12 +119,12 @@ public class OrderService {
     }
 
     private void updateStock(final OrderRequest orderRequest) {
-        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItemInfos();
+        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItems();
 
         for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
             Integer quantity = cartItemInfo.getQuantity();
 
-            ProductInfoRequest productInfo = cartItemInfo.getProductInfo();
+            ProductInfoRequest productInfo = cartItemInfo.getProduct();
             Long productId = productInfo.getProductId();
             Integer stock = productInfo.getStock();
 
@@ -154,10 +154,10 @@ public class OrderService {
     }
 
     private void saveOrderItems(final long orderId, final OrderRequest orderRequest) {
-        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItemInfos();
+        List<CartItemInfoRequest> cartItemInfos = orderRequest.getCartItems();
 
         for (final CartItemInfoRequest cartItemInfo : cartItemInfos) {
-            ProductInfoRequest productInfo = cartItemInfo.getProductInfo();
+            ProductInfoRequest productInfo = cartItemInfo.getProduct();
 
             OrderItemEntity orderItemEntity = toOrderItemEntity(orderId, cartItemInfo, productInfo);
             orderItemDao.insert(orderItemEntity);
@@ -186,15 +186,15 @@ public class OrderService {
         );
     }
 
-    public List<OrderResponse> getAllOrders() {
+    public List<OrderResponse> getAllOrdersBy(final Long memberId) {
         List<OrderResponse> result = new ArrayList<>();
 
-        List<OrderEntity> orderEntities = orderDao.findAll();
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
         for (final OrderEntity orderEntity : orderEntities) {
             List<OrderItemEntity> twoOrderItemEntities = orderItemDao.findTwoByOrderId(orderEntity.getId());
 
             List<OrderItemResponse> orderItems = twoOrderItemEntities.stream()
-                    .map(orderItemEntity -> new OrderItemResponse(orderItemEntity.getQuantity(), new ProductResponse(orderItemEntity.getProductId(), orderItemEntity.getProductName(), orderItemEntity.getProductPrice(), orderItemEntity.getProductImageUrl(), productDao.findById(orderItemEntity.getProductId()).getStock())))
+                    .map(orderItemEntity -> new OrderItemResponse(orderItemEntity.getQuantity(), new ProductResponse(orderItemEntity.getProductId(), orderItemEntity.getProductPrice(), orderItemEntity.getProductName(), orderItemEntity.getProductImageUrl(), productDao.findById(orderItemEntity.getProductId()).getStock())))
                     .collect(Collectors.toList());
 
             result.add(new OrderResponse(orderEntity.getId(), orderEntity.getCreatedAt(), orderItems, orderEntity.getTotalPrice()));
@@ -208,7 +208,7 @@ public class OrderService {
         List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderEntity.getId());
 
         List<OrderItemResponse> orderItemResponses = orderItemEntities.stream()
-                .map(orderItemEntity -> new OrderItemResponse(orderItemEntity.getQuantity(), new ProductResponse(orderItemEntity.getProductId(), orderItemEntity.getProductName(), orderItemEntity.getProductPrice(), orderItemEntity.getProductImageUrl(), productDao.findById(orderItemEntity.getProductId()).getStock())))
+                .map(orderItemEntity -> new OrderItemResponse(orderItemEntity.getQuantity(), new ProductResponse(orderItemEntity.getProductId(), orderItemEntity.getProductPrice(), orderItemEntity.getProductName(), orderItemEntity.getProductImageUrl(), productDao.findById(orderItemEntity.getProductId()).getStock())))
                 .collect(Collectors.toList());
 
         return new OrderResponse(orderEntity.getId(), orderEntity.getCreatedAt(), orderItemResponses, orderEntity.getTotalPrice());

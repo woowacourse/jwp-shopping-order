@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class OrderRequest {
 
-    private final List<CartItemInfoRequest> cartItemInfos;
+    private final List<CartItemInfoRequest> cartItems;
     private final Integer totalProductPrice;
     private final Integer totalDeliveryFee;
     private final Integer usePoint;
