@@ -19,7 +19,9 @@ CREATE TABLE IF NOT EXISTS cart_item
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL
+    quantity   INT    NOT NULL,
+    CONSTRAINT EMPPK FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    CONSTRAINT EMPPK_2 FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS orders
@@ -30,7 +32,7 @@ CREATE TABLE IF NOT EXISTS orders
     used_point    INT       NOT NULL,
     created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    CONSTRAINT EMPPK_3 FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS order_item
@@ -43,5 +45,5 @@ CREATE TABLE IF NOT EXISTS order_item
     product_image_url VARCHAR(255) NOT NULL,
     quantity          INT          NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (order_id) REFERENCES orders (id)
+    CONSTRAINT EMPPK_4 FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE
 );
