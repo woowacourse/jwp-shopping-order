@@ -64,4 +64,9 @@ public class OrderService {
         }
         return order;
     }
+
+    public void cancel(final Member member, final Long orderId) {
+        final Order order = checkMember(member, orderId);
+        orderRepository.update(order.cancel());
+    }
 }

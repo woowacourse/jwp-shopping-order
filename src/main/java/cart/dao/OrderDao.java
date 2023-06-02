@@ -16,7 +16,8 @@ public class OrderDao {
     private static final RowMapper<OrderEntity> ROW_MAPPER = (resultSet, rowNum) -> new OrderEntity(
             resultSet.getLong("id"),
             resultSet.getLong("member_id"),
-            resultSet.getLong("delivery_fee")
+            resultSet.getLong("delivery_fee"),
+            resultSet.getString("status")
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -27,7 +28,7 @@ public class OrderDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id", "delivery_fee");
+                .usingColumns("member_id", "delivery_fee", "status");
     }
 
     public Long save(final OrderEntity orderEntity) {
@@ -36,15 +37,15 @@ public class OrderDao {
     }
 
     public List<OrderEntity> findByMemberId(final long memberId) {
-        final String sql = "SELECT id, member_id, delivery_fee "
+        final String sql = "SELECT id, member_id, delivery_fee, status "
                 + "FROM orders "
                 + "WHERE member_id = ? "
                 + "ORDER BY created_at DESC";
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
 
-    public Optional<OrderEntity> find(final Long id) {
-        final String sql = "SELECT id, member_id, delivery_fee "
+    public Optional<OrderEntity> findById(final Long id) {
+        final String sql = "SELECT id, member_id, delivery_fee, status "
                 + "FROM orders "
                 + "WHERE id = ? "
                 + "ORDER BY created_at DESC";
@@ -60,12 +61,10 @@ public class OrderDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public boolean isExist(final Long memberId, final Long id) {
-        final String sql = "SELECT EXISTS ( " +
-                "SELECT * FROM orders " +
-                "WHERE member_id = ? " +
-                "AND id = ? " +
-                ") AS SUCCESS";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, memberId, id));
+    public void updateStatus(final OrderEntity order) {
+        final String sql = "UPDATE orders "
+                + "SET status = ? "
+                + "WHERE id = ? ";
+        jdbcTemplate.update(sql, order.getStatus(), order.getId());
     }
 }

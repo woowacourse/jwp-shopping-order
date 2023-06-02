@@ -1,5 +1,7 @@
 package cart.dao.entity;
 
+import cart.domain.Order;
+import cart.domain.OrderStatus;
 import java.util.Objects;
 
 public class OrderEntity {
@@ -7,15 +9,25 @@ public class OrderEntity {
     private final Long id;
     private final long memberId;
     private final long deliveryFee;
+    private final String status;
 
-    public OrderEntity(final Long id, final long memberId, final long deliveryFee) {
+    public OrderEntity(final Long id, final long memberId, final long deliveryFee, final String status) {
         this.id = id;
         this.memberId = memberId;
         this.deliveryFee = deliveryFee;
+        this.status = status;
     }
 
     public OrderEntity(final long memberId, final long deliveryFee) {
-        this(null, memberId, deliveryFee);
+        this(null, memberId, deliveryFee, OrderStatus.COMPLETE.getValue());
+    }
+
+    public static OrderEntity from(final Order order) {
+        return new OrderEntity(
+                order.getId(),
+                order.getMember().getId(),
+                order.getDeliveryFee().getValue(),
+                order.getStatus().getValue());
     }
 
     public Long getId() {
@@ -28,6 +40,10 @@ public class OrderEntity {
 
     public Long getDeliveryFee() {
         return deliveryFee;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     @Override

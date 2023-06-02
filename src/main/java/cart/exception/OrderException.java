@@ -27,4 +27,16 @@ public class OrderException extends RuntimeException {
             super("Illegal member attempts to order; cartItemId=" + order.getId() + ", memberId=" + member.getId());
         }
     }
+
+    public static class IllegalOrderStatus extends OrderException {
+        public IllegalOrderStatus(final String name) {
+            super("illegal Order status name; name =" + name);
+        }
+    }
+
+    public static class AlreadyCanceledOrder extends OrderException {
+        public AlreadyCanceledOrder(final Long id) {
+            super("cannot cancel already canceled order; id =" + id);
+        }
+    }
 }

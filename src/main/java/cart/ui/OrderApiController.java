@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,5 +50,11 @@ public class OrderApiController {
     public ResponseEntity<Void> deleteOrder(final Member member, @PathVariable final Long orderId) {
         orderService.remove(member, orderId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{orderId}")
+    public ResponseEntity<Void> cancelOrder(final Member member, @PathVariable final Long orderId) {
+        orderService.cancel(member, orderId);
+        return ResponseEntity.ok().build();
     }
 }

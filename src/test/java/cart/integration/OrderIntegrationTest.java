@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
+import cart.domain.OrderStatus;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.repository.MemberRepository;
@@ -153,9 +154,57 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("주문을 취소한다.")
+    @DisplayName("주문을 삭제한다.")
     @Test
     void deleteOrder() {
+        // given
+        주문_정보_추가(member, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L));
+
+        // when
+        final ExtractableResponse<Response> response = 주문_삭제(member, 1L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("잘못된 주문 정보로 삭제를 요청하면 실패한다.")
+    @Test
+    void deleteOrderByIllegalId() {
+        // given
+        주문_정보_추가(member, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L));
+
+        // when
+        final ExtractableResponse<Response> response = 주문_삭제(member, 2L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("잘못된 사용자가 주문 삭제를 요청하면 실패한다.")
+    @Test
+    void deleteOrderByIllegalMemberId() {
+        // given
+        주문_정보_추가(member, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L));
+
+        // when
+        final ExtractableResponse<Response> response = 주문_삭제(member2, 1L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("주문의 상태를 결제 취소로 변경한다.")
+    @Test
+    void cancelOrderById() {
         // given
         주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
@@ -166,39 +215,10 @@ public class OrderIntegrationTest extends IntegrationTest {
         final ExtractableResponse<Response> response = 주문_취소(member, 1L);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    @DisplayName("잘못된 주문 정보로 취소를 요청하면 실패한다.")
-    @Test
-    void deleteOrderByIllegalId() {
-        // given
-        주문_정보_추가(member, new OrderRequest(
-                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
-
-        // when
-        final ExtractableResponse<Response> response = 주문_취소(member, 2L);
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @DisplayName("잘못된 사용자가 주문 취소를 요청하면 실패한다.")
-    @Test
-    void deleteOrderByIllegalMemberId() {
-        // given
-        주문_정보_추가(member, new OrderRequest(
-                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
-                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
-                3000L));
-
-        // when
-        final ExtractableResponse<Response> response = 주문_취소(member2, 1L);
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        final ExtractableResponse<Response> result = 주문_정보_목록_조회(member);
+        assertThat(result.jsonPath().get("orderStatus").toString())
+                .isEqualTo("[" + OrderStatus.CANCEL.getValue() + "]");
     }
 
     private ExtractableResponse<Response> 주문_정보_추가(final Member member, final OrderRequest orderRequest) {
@@ -235,12 +255,23 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> 주문_취소(final Member member, final Long orderId) {
+    private ExtractableResponse<Response> 주문_삭제(final Member member, final Long orderId) {
         return given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .delete("/orders/{orderId}", orderId)
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 주문_취소(final Member member, final Long orderId) {
+        return given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .patch("/orders/{orderId}", orderId)
                 .then()
                 .log().all()
                 .extract();

@@ -60,15 +60,15 @@ VALUES (1, 6, 2);
 INSERT INTO cart_item (member_id, product_id, quantity)
 VALUES (2, 6, 2);
 
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 3000);
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 5000);
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (1, 5000);
+INSERT INTO orders (member_id, delivery_fee, status)
+VALUES (1, 3000, '결제완료');
+INSERT INTO orders (member_id, delivery_fee, status)
+VALUES (1, 5000, '결제완료');
+INSERT INTO orders (member_id, delivery_fee, status)
+VALUES (1, 5000, '결제완료');
 
-INSERT INTO orders (member_id, delivery_fee)
-VALUES (2, 4000);
+INSERT INTO orders (member_id, delivery_fee, status)
+VALUES (2, 4000, '결제완료');
 
 -- 1번 주문
 

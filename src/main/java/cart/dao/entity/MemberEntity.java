@@ -11,10 +11,6 @@ public class MemberEntity {
         this.password = password;
     }
 
-    public MemberEntity(final long id) {
-        this(id, null, null);
-    }
-
     public Long getId() {
         return id;
     }

@@ -5,9 +5,7 @@ import cart.dao.OrderItemDao;
 import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.domain.Member;
-import cart.domain.Money;
 import cart.domain.Order;
-import cart.domain.OrderItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +23,7 @@ public class OrderRepository {
     }
 
     public long add(final Order order) {
-        final long orderId = orderDao.save(
-                new OrderEntity(order.getMember().getId(), order.getDeliveryFee().getValue()));
+        final long orderId = orderDao.save(OrderEntity.from(order));
         orderItemDao.saveAll(OrderItemEntity.of(orderId, order.getOrderItems()));
         return orderId;
     }
@@ -34,30 +31,29 @@ public class OrderRepository {
     public List<Order> findByMember(final Member member) {
         final List<OrderEntity> foundOrders = orderDao.findByMemberId(member.getId());
         final List<Order> orders = new ArrayList<>();
-        for (final OrderEntity order : foundOrders) {
-            final List<OrderItemEntity> foundOrderItems = orderItemDao.findByOrderId(order.getId());
-            orders.add(
-                    new Order(order.getId(), new Member(order.getMemberId()), OrderItem.from(foundOrderItems)));
+        for (final OrderEntity foundOrder : foundOrders) {
+            final List<OrderItemEntity> foundOrderItems = orderItemDao.findByOrderId(foundOrder.getId());
+            orders.add(Order.from(foundOrder, foundOrderItems));
         }
         return orders;
     }
 
     public Optional<Order> findById(final Long orderId) {
-        final Optional<OrderEntity> foundResult = orderDao.find(orderId);
+        final Optional<OrderEntity> foundResult = orderDao.findById(orderId);
         if (foundResult.isEmpty()) {
             return Optional.empty();
         }
         final OrderEntity foundOrder = foundResult.get();
         final List<OrderItemEntity> foundOrderItems = orderItemDao.findByOrderId(orderId);
-        return Optional.of(new Order(
-                foundOrder.getId(),
-                new Member(foundOrder.getMemberId()), new Money(foundOrder.getDeliveryFee()),
-                OrderItem.from(foundOrderItems)
-        ));
+        return Optional.of(Order.from(foundOrder, foundOrderItems));
     }
 
     public void remove(final Long orderId) {
         orderDao.deleteById(orderId);
         orderItemDao.deleteByOrderId(orderId);
+    }
+
+    public void update(final Order order) {
+        orderDao.updateStatus(OrderEntity.from(order));
     }
 }

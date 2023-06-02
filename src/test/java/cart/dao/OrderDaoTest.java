@@ -1,5 +1,6 @@
 package cart.dao;
 
+import static cart.domain.OrderStatus.COMPLETE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.entity.OrderEntity;
@@ -46,7 +47,8 @@ class OrderDaoTest {
 
         // then
         assertThat(found)
-                .containsExactly(new OrderEntity(createdId2, 1L, 3000L), new OrderEntity(createdId, 1L, 3000L));
+                .containsExactly(new OrderEntity(createdId2, 1L, 3000L, COMPLETE.getValue()),
+                        new OrderEntity(createdId, 1L, 3000L, COMPLETE.getValue()));
     }
 
     @DisplayName("특정 주문 상세 정보(상품 목록 제외)를 DB에서 조회한다.")
@@ -58,10 +60,10 @@ class OrderDaoTest {
         final Long createdId = orderDao.save(new OrderEntity(memberId, deliveryFee));
 
         // when
-        final OrderEntity order = orderDao.find(createdId).get();
+        final OrderEntity order = orderDao.findById(createdId).get();
 
         // then
-        assertThat(order).isEqualTo(new OrderEntity(createdId, memberId, deliveryFee));
+        assertThat(order).isEqualTo(new OrderEntity(createdId, memberId, deliveryFee, COMPLETE.getValue()));
     }
 
 
@@ -75,6 +77,6 @@ class OrderDaoTest {
         orderDao.deleteById(createdId);
 
         // then
-        assertThat(orderDao.find(createdId).isEmpty()).isTrue();
+        assertThat(orderDao.findById(createdId).isEmpty()).isTrue();
     }
 }
