@@ -10,7 +10,6 @@ import cart.domain.coupon.MemberCoupon;
 import cart.exception.MemberCouponNotFoundException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import org.springframework.stereotype.Repository;
 
@@ -39,8 +38,15 @@ public class MemberCouponRepository {
                 .collect(toUnmodifiableList());
     }
 
-    public MemberCoupon findById(final Long id) {
-        final MemberCouponDto memberCouponDto = memberCouponDao.findById(id)
+    public MemberCoupon findUsedCouponById(final Long id) {
+        final MemberCouponDto memberCouponDto = memberCouponDao.findUsedCouponById(id)
+                .orElseThrow(MemberCouponNotFoundException::new);
+        final Coupon coupon = couponRepository.findById(memberCouponDto.getCouponId());
+        return new MemberCoupon(memberCouponDto.getId(), coupon, memberCouponDto.getMemberId());
+    }
+
+    public MemberCoupon findUnUsedCouponById(final Long id) {
+        final MemberCouponDto memberCouponDto = memberCouponDao.findUnUsedCouponById(id)
                 .orElseThrow(MemberCouponNotFoundException::new);
         final Coupon coupon = couponRepository.findById(memberCouponDto.getCouponId());
         return new MemberCoupon(memberCouponDto.getId(), coupon, memberCouponDto.getMemberId());

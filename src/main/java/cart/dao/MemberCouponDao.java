@@ -36,8 +36,18 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, Map.of("memberId", memberId), MEMBER_COUPON_DTO_ROW_MAPPER);
     }
 
-    public Optional<MemberCouponDto> findById(final Long id) {
+    public Optional<MemberCouponDto> findUnUsedCouponById(final Long id) {
         final String sql = "select * from member_coupon where id = :id AND used = false";
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(sql, Map.of("id", id), MEMBER_COUPON_DTO_ROW_MAPPER));
+        } catch (final EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<MemberCouponDto> findUsedCouponById(final Long id) {
+        final String sql = "select * from member_coupon where id = :id AND used = true";
         try {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(sql, Map.of("id", id), MEMBER_COUPON_DTO_ROW_MAPPER));

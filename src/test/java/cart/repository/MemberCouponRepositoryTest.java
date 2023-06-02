@@ -3,12 +3,10 @@ package cart.repository;
 import static cart.TestDataFixture.DISCOUNT_50_PERCENT;
 import static cart.TestDataFixture.MEMBER_1;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.RepositoryTest;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.exception.MemberCouponNotFoundException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,14 +34,14 @@ class MemberCouponRepositoryTest {
                 .containsExactly(savedCoupon);
     }
 
-    @DisplayName("id로 멤버쿠폰을 조회한다.")
+    @DisplayName("id로 사용하지 않은 멤버쿠폰을 조회한다.")
     @Test
     void findById() {
         final Coupon savedCoupon = couponRepository.insert(DISCOUNT_50_PERCENT);
         final MemberCoupon memberCoupon = new MemberCoupon(savedCoupon, MEMBER_1.getId());
         final MemberCoupon savedMemberCoupon = memberCouponRepository.insert(memberCoupon);
 
-        final MemberCoupon findMemberCoupon = memberCouponRepository.findById(savedMemberCoupon.getId());
+        final MemberCoupon findMemberCoupon = memberCouponRepository.findUnUsedCouponById(savedMemberCoupon.getId());
 
         assertThat(findMemberCoupon).isEqualTo(savedMemberCoupon);
     }
@@ -71,7 +69,8 @@ class MemberCouponRepositoryTest {
         memberCouponRepository.useMemberCoupon(savedMemberCoupon);
 
         final Long memberCouponId = savedMemberCoupon.getId();
-        assertThatThrownBy(() -> memberCouponRepository.findById(memberCouponId))
-                .isInstanceOf(MemberCouponNotFoundException.class);
+        assertThat(memberCouponRepository.findUsedCouponById(memberCouponId))
+                .usingRecursiveComparison()
+                .isEqualTo(savedMemberCoupon);
     }
 }

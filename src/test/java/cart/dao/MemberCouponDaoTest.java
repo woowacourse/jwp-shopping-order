@@ -40,8 +40,9 @@ class MemberCouponDaoTest {
                 .isEqualTo(List.of(new MemberCouponDto(memberCouponId, 2L, 3L)));
     }
 
+    @DisplayName("사용하지 않은 멤버쿠폰을 조회하는 기능 테스트")
     @Nested
-    class findById {
+    class findUnUsedCouponById {
 
         @DisplayName("실제 존재하는 Id인 경우")
         @Test
@@ -49,7 +50,7 @@ class MemberCouponDaoTest {
             final MemberCouponDto memberCouponDto = new MemberCouponDto(null, 2L, 3L);
             final Long memberCouponId = memberCouponDao.insert(memberCouponDto);
 
-            final Optional<MemberCouponDto> coupon = memberCouponDao.findById(memberCouponId);
+            final Optional<MemberCouponDto> coupon = memberCouponDao.findUnUsedCouponById(memberCouponId);
 
             assertThat(coupon).isPresent();
             assertThat(coupon.get())
@@ -60,20 +61,48 @@ class MemberCouponDaoTest {
         @DisplayName("존재하지 않는 Id인 경우")
         @Test
         void isEmpty() {
-            final Optional<MemberCouponDto> optionCouponDto = memberCouponDao.findById(1L);
+            final Optional<MemberCouponDto> optionCouponDto = memberCouponDao.findUnUsedCouponById(1L);
 
             assertThat(optionCouponDto).isEmpty();
         }
     }
 
-    @DisplayName("memberCouponDto를 저자하는 기능 테스트")
+    @DisplayName("사용한 멤버쿠폰을 조회하는 기능 테스트")
+    @Nested
+    class findUsedCouponById {
+
+        @DisplayName("실제 존재하는 Id인 경우")
+        @Test
+        void isPresent() {
+            final MemberCouponDto memberCouponDto = new MemberCouponDto(null, 2L, 3L);
+            final Long memberCouponId = memberCouponDao.insert(memberCouponDto);
+            memberCouponDao.updateUsedTrue(memberCouponId);
+
+            final Optional<MemberCouponDto> coupon = memberCouponDao.findUsedCouponById(memberCouponId);
+
+            assertThat(coupon).isPresent();
+            assertThat(coupon.get())
+                    .extracting(MemberCouponDto::getId, MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
+                    .containsExactly(memberCouponId, 2L, 3L);
+        }
+
+        @DisplayName("존재하지 않는 Id인 경우")
+        @Test
+        void isEmpty() {
+            final Optional<MemberCouponDto> optionCouponDto = memberCouponDao.findUnUsedCouponById(1L);
+
+            assertThat(optionCouponDto).isEmpty();
+        }
+    }
+
+    @DisplayName("memberCouponDto를 저장하는 기능 테스트")
     @Test
     void insert() {
         final MemberCouponDto memberCouponDto = new MemberCouponDto(null, 2L, 3L);
 
         final Long id = memberCouponDao.insert(memberCouponDto);
 
-        final Optional<MemberCouponDto> result = memberCouponDao.findById(id);
+        final Optional<MemberCouponDto> result = memberCouponDao.findUnUsedCouponById(id);
         assertThat(result).isPresent();
         assertThat(result.get())
                 .extracting(MemberCouponDto::getId, MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
@@ -88,7 +117,7 @@ class MemberCouponDaoTest {
 
         memberCouponDao.updateUsedTrue(memberCouponId);
 
-        final Optional<MemberCouponDto> optionCoupon = memberCouponDao.findById(memberCouponId);
+        final Optional<MemberCouponDto> optionCoupon = memberCouponDao.findUnUsedCouponById(memberCouponId);
         assertThat(optionCoupon).isEmpty();
     }
 }

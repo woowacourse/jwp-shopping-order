@@ -31,7 +31,7 @@ public class CouponService {
     }
 
     public DiscountPriceResponse discount(final Member member, final Integer originPrice, final Long memberCouponId) {
-        final MemberCoupon memberCoupon = memberCouponRepository.findById(memberCouponId);
+        final MemberCoupon memberCoupon = memberCouponRepository.findUnUsedCouponById(memberCouponId);
         memberCoupon.checkOwner(member);
         final Price origin = new Price(originPrice);
         final Price discountPrice = memberCoupon.discount(origin);

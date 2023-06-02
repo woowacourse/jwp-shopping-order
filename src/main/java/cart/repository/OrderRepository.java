@@ -3,6 +3,7 @@ package cart.repository;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
+import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
 import cart.dao.dto.OrderDto;
@@ -10,6 +11,7 @@ import cart.dao.dto.OrderProductDto;
 import cart.domain.Member;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
+import cart.domain.product.CartItem;
 import cart.domain.product.Product;
 import cart.domain.vo.Quantity;
 import cart.exception.OrderNotFoundException;
@@ -24,23 +26,31 @@ public class OrderRepository {
 
     private final OrderDao orderDao;
     private final OrderProductDao orderProductDao;
+    private final CartItemDao cartItemDao;
     private final ProductRepository productRepository;
     private final MemberCouponRepository memberCouponRepository;
 
     public OrderRepository(final OrderDao orderDao, final OrderProductDao orderProductDao,
+                           final CartItemDao cartItemDao,
                            final ProductRepository productRepository,
                            final MemberCouponRepository memberCouponRepository) {
         this.orderDao = orderDao;
         this.orderProductDao = orderProductDao;
+        this.cartItemDao = cartItemDao;
         this.productRepository = productRepository;
         this.memberCouponRepository = memberCouponRepository;
     }
 
-    public Order save(final Order order) {
+    public Order save(final Order order, final List<CartItem> cartItems) {
         final OrderDto orderDto = OrderDto.from(order);
         final Long orderId = orderDao.insert(orderDto);
 
         final List<OrderProduct> orderProductsAfterSave = saveOrderProducts(orderId, order.getOrderProducts());
+        order.getMemberCoupon().ifPresent(memberCouponRepository::useMemberCoupon);
+
+        for (final CartItem cartItem : cartItems) {
+            cartItemDao.delete(cartItem.getMemberId(), cartItem.getProduct().getId());
+        }
 
         return new Order(orderId, orderProductsAfterSave, order.getTimeStamp(), order.getMemberId(),
                 order.getMemberCoupon().orElse(null));
@@ -62,7 +72,7 @@ public class OrderRepository {
         final List<OrderProduct> orderProducts = findOrderProductsByOrderId(id);
         return orderDto.getMemberCouponId()
                 .map(memberCouponId -> new Order(orderDto.getId(), orderProducts, orderDto.getTimeStamp()
-                        , orderDto.getMemberId(), memberCouponRepository.findById(memberCouponId)))
+                        , orderDto.getMemberId(), memberCouponRepository.findUsedCouponById(memberCouponId)))
                 .orElseGet(() -> new Order(orderDto.getId(), orderProducts, orderDto.getTimeStamp(),
                         orderDto.getMemberId()));
     }
