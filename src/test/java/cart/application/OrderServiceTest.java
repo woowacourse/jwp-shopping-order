@@ -3,6 +3,14 @@ package cart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.dao.CartItemDao;
+import cart.dao.OrderDao;
+import cart.dao.OrderItemDao;
+import cart.dao.ProductDao;
+import cart.domain.BasicDeliveryFeeCalculator;
+import cart.domain.CouponDiscountCalculator;
+import cart.domain.DeliveryFeeCalculator;
+import cart.domain.DiscountCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -11,17 +19,38 @@ import cart.dto.OrderAddRequest;
 import cart.dto.OrderItemRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@JdbcTest
 @Sql("classpath:initializeTestDb.sql")
 class OrderServiceTest {
     
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+    private DeliveryFeeCalculator deliveryFeeCalculator;
+    private DiscountCalculator discountCalculator;
+    private CartItemDao cartItemDao;
+    private ProductDao productDao;
+    private OrderItemDao orderItemDao;
+    private OrderDao orderDao;
     private OrderService orderService;
+    
+    @BeforeEach
+    void setup() {
+        deliveryFeeCalculator = new BasicDeliveryFeeCalculator();
+        discountCalculator = new CouponDiscountCalculator();
+        cartItemDao = new CartItemDao(jdbcTemplate);
+        productDao = new ProductDao(jdbcTemplate);
+        orderItemDao = new OrderItemDao(jdbcTemplate);
+        orderDao = new OrderDao(jdbcTemplate);
+        orderService = new OrderService(deliveryFeeCalculator, discountCalculator, cartItemDao, productDao,
+                orderItemDao, orderDao);
+    }
     
     //에러 테스트 추가 : 해당 product가 없는 경우
     //에러 테스트 추가 : product가 해당 장바구니에 없는 경우
