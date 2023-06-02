@@ -3,7 +3,6 @@ package cart.application;
 import cart.application.request.OrderRequest;
 import cart.application.response.OrderWithOutTotalPriceResponse;
 import cart.application.response.OrderWithTotalPriceResponse;
-import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
@@ -39,32 +38,26 @@ public class OrderService {
     @Transactional
     public Long createOrder(Member member, OrderRequest request) {
         Money usePoint = Money.from(request.getPoint());
+
         CartItems findCartItems = cartItemRepository.findByCartItemIds(request.getCartItemIds());
         findCartItems.checkOwner(member);
 
         Order order = Order.of(member, findCartItems, usePoint, DEFAULT_POINT_POLICY);
         publisher.publishEvent(MemberUpdateEvent.from(member));
 
-        cartItemRepository.deleteByCartItemIds(collectCartItemIds(findCartItems));
+        cartItemRepository.deleteByCartItemIds(request.getCartItemIds());
 
         return orderRepository.saveOrder(order);
-    }
-
-    private List<Long> collectCartItemIds(CartItems cartItems) {
-        return cartItems.getCartItems()
-                .stream()
-                .map(CartItem::getId)
-                .collect(Collectors.toList());
     }
 
     public OrderWithTotalPriceResponse findByOrderId(Member member, Long orderId) {
         OrderHistory orderHistory = orderRepository.findByOrderId(orderId);
 
-        if (member.isNotSame(orderHistory.getMember())) {
+        if (orderHistory.isNotOwner(member)) {
             throw new OrderException.NotOwner();
         }
 
-        return OrderWithTotalPriceResponse.from(orderRepository.findByOrderId(orderId));
+        return OrderWithTotalPriceResponse.from(orderHistory);
     }
 
     public List<OrderWithOutTotalPriceResponse> findAllByMemberId(Long memberId) {

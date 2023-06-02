@@ -24,6 +24,10 @@ public class OrderHistory {
         this.createdAt = createdAt;
     }
 
+    public boolean isNotOwner(Member otherMember) {
+        return member.isNotSame(otherMember);
+    }
+
     public Long getId() {
         return id;
     }

@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class Money {
 
+    public static final Money ZERO = Money.from(0);
+
     private final BigDecimal value;
 
     private Money(BigDecimal value) {
