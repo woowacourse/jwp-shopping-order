@@ -2,7 +2,6 @@ package cart.cartitem;
 
 import cart.cartitem.application.exception.CartItemException;
 import cart.member.Member;
-import cart.product.Product;
 
 import java.util.Objects;
 

@@ -7,37 +7,47 @@ import java.util.List;
 
 public class Cart {
     private final List<CartItem> cartItems;
-    private DeliveryPrice deliveryPrice;
+    private int originalDeliveryPrice;
+    private int discountDeliveryPrice;
     private int discountFromTotalPrice;
 
-    public Cart(List<CartItem> cartItems, DeliveryPrice deliveryPrice) {
+    public Cart(List<CartItem> cartItems) {
         this.cartItems = cartItems;
-        this.deliveryPrice = deliveryPrice;
+        this.originalDeliveryPrice = DeliveryPrice.DEFAULT_PRICE;
+        this.discountFromTotalPrice = 0;
+    }
+
+    public int calculateTotalPrice() {
+        return cartItems.stream()
+                .mapToInt(CartItem::getDiscountedPrice)
+                .sum();
+    }
+
+    public int calculateFinalDeliveryPrice() {
+        return this.originalDeliveryPrice - this.discountDeliveryPrice;
+    }
+
+    public void addDiscountForDeliveryPrice(int discountDeliveryPrice) {
+        this.discountDeliveryPrice += discountDeliveryPrice;
+    }
+
+    public void addDiscountFromTotalPrice(int discountPrice) {
+        this.discountFromTotalPrice += discountPrice;
     }
 
     public List<CartItem> getCartItems() {
         return cartItems;
     }
 
-    public DeliveryPrice getDeliveryPrice() {
-        return deliveryPrice;
+    public int getOriginalDeliveryPrice() {
+        return originalDeliveryPrice;
+    }
+
+    public int getDiscountDeliveryPrice() {
+        return discountDeliveryPrice;
     }
 
     public int getDiscountFromTotalPrice() {
         return discountFromTotalPrice;
-    }
-
-    public void setDiscountFromTotalPrice(int discountFromTotalPrice) {
-        this.discountFromTotalPrice = discountFromTotalPrice;
-    }
-
-    public void setDeliveryPrice(DeliveryPrice deliveryPrice) {
-        this.deliveryPrice = deliveryPrice;
-    }
-
-    public int calculateProductsTotalPrice() {
-        return this.cartItems
-                .stream().mapToInt(CartItem::getDiscountedPrice)
-                .sum();
     }
 }

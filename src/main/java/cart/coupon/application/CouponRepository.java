@@ -1,7 +1,7 @@
 package cart.coupon.application;
 
 import cart.coupon.Coupon;
-import cart.member.Member;
+import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.member.application.MemberCouponMapper;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +34,13 @@ public class CouponRepository {
 
     public void giveCouponToMember(Long memberId, Long couponId) {
         this.memberCouponMapper.addCoupon(memberId, couponId);
+    }
+
+    public List<Coupon> findAllByMemberIdExcludingTarget(Long memberId, List<DiscountTarget> discountTargets) {
+        return null;
+    }
+
+    public List<Coupon> findAllByMemberIdApplyingToTotalPrice(Long memberId) {
+        return null;
     }
 }

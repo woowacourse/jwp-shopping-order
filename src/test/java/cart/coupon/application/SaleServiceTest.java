@@ -49,7 +49,7 @@ class SaleServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(0, 0);
-        assertThat(cart.getDeliveryPrice().getPrice())
+        assertThat(cart.getOriginalDeliveryPrice().getPrice())
                 .isEqualTo(1500);
     }
 

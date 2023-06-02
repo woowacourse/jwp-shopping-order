@@ -1,12 +1,13 @@
 package cart.cart.application;
 
 import cart.cart.Cart;
-import cart.cartitem.application.CartItemRepository;
-import cart.deliveryprice.DeliveryPrice;
-import cart.cart.presentation.DeliveryResponse;
 import cart.cart.presentation.dto.CartItemResponse;
+import cart.cart.presentation.dto.DeliveryResponse;
 import cart.cart.presentation.dto.DiscountResponse;
+import cart.cartitem.application.CartItemRepository;
 import cart.coupon.application.CouponService;
+import cart.deliveryprice.DeliveryPrice;
+import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.member.Member;
 import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
@@ -17,48 +18,56 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
     private final CartItemRepository cartItemRepository;
-    private final SaleService saleService;
     private final CouponService couponService;
+    private final SaleService saleService;
 
-    public CartService(CartItemRepository cartItemRepository, SaleService saleService, CouponService couponService) {
+    public CartService(CartItemRepository cartItemRepository, CouponService couponService, SaleService saleService) {
         this.cartItemRepository = cartItemRepository;
-        this.saleService = saleService;
         this.couponService = couponService;
+        this.saleService = saleService;
     }
 
     public List<CartItemResponse> findCartItemsByMember(Member member) {
-        final Cart cart = findCart(member);
-        saleService.applySale(cart);
+        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
+        final var cart = new Cart(cartItems);
 
-        return cart.getCartItems()
-                .stream().map(CartItemResponse::from)
+        saleService.applySales(cart, DiscountTarget.TOTAL);
+
+        return cartItems.stream()
+                .map(CartItemResponse::from)
                 .collect(Collectors.toList());
     }
 
     public DiscountResponse discountWithCoupons(Member member, List<Long> couponIds) {
-        final Cart cart = findCart(member);
-        saleService.applySale(cart);
-        for (Long couponId : couponIds) {
-            couponService.applyCoupon(couponId, cart);
-        }
-        final var discountPriceFromTotalPrice = couponService.findAllDiscountPriceFromTotalPrice(couponIds, cart);
-        return DiscountResponse.from(cart, discountPriceFromTotalPrice);
+        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
+        final var cart = new Cart(cartItems);
+
+        applyDiscountPolicy(member, cart);
+
+        return DiscountResponse.from(cart);
     }
 
     public DeliveryResponse findDeliveryPrice(Member member) {
-        final Cart cart = findCart(member);
-        saleService.applySale(cart);
-        final var deliveryPrice = cart.getDeliveryPrice();
-        return new DeliveryResponse(deliveryPrice.getPrice(), DeliveryPrice.FREE_LIMIT);
+        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
+        final var cart = new Cart(cartItems);
+
+        applyDiscountPolicy(member, cart);
+
+        return new DeliveryResponse(cart.calculateFinalDeliveryPrice(), DeliveryPrice.FREE_LIMIT);
     }
 
-    public Cart findCart(Member member) {
-        final var cartItems = cartItemRepository.findAllByMemberId(member.getId());
-        final var totalPrice = cartItems.stream()
-                .mapToInt(cartItem -> cartItem.getOriginalPrice() * cartItem.getQuantity())
-                .sum();
+    private void applyDiscountPolicy(Member member, Cart cart) {
+        applyDiscountPolicyExceptTotalPrice(member, cart);
+        applyDiscountPolicyToTotalPrice(member, cart);
+    }
 
-        final var deliveryPrice = DeliveryPrice.calculateDeliveryPrice(totalPrice);
-        return new Cart(cartItems, deliveryPrice);
+    private void applyDiscountPolicyToTotalPrice(Member member, Cart cart) {
+        saleService.applySalesApplyingToTotalPrice(cart);
+        couponService.applyCouponsApplyingToTotalPrice(member.getId(), cart);
+    }
+
+    private void applyDiscountPolicyExceptTotalPrice(Member member, Cart cart) {
+        saleService.applySales(cart, DiscountTarget.TOTAL);
+        couponService.applyCoupons(member.getId(), cart, DiscountTarget.TOTAL);
     }
 }

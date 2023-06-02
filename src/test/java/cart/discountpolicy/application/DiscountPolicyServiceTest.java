@@ -66,7 +66,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(10_000, 0);
-        assertThat(cart.getDeliveryPrice().getPrice())
+        assertThat(cart.getOriginalDeliveryPrice().getPrice())
                 .isEqualTo(3_000);
     }
 
@@ -84,7 +84,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(0, 0);
-        assertThat(cart.getDeliveryPrice().getPrice())
+        assertThat(cart.getOriginalDeliveryPrice().getPrice())
                 .isEqualTo(1500);
     }
 
@@ -102,7 +102,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(12_000, 18_000);
-        assertThat(cart.getDeliveryPrice().getPrice())
+        assertThat(cart.getOriginalDeliveryPrice().getPrice())
                 .isEqualTo(3_000);
     }
 

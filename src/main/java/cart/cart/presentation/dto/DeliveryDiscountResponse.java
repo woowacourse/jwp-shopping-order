@@ -1,13 +1,13 @@
 package cart.cart.presentation.dto;
 
 public class DeliveryDiscountResponse {
-    private long originalPrice;
-    private long discountPrice;
+    private int originalPrice;
+    private int discountPrice;
 
     public DeliveryDiscountResponse() {
     }
 
-    public DeliveryDiscountResponse(long originalPrice, long discountPrice) {
+    public DeliveryDiscountResponse(int originalPrice, int discountPrice) {
         this.originalPrice = originalPrice;
         this.discountPrice = discountPrice;
     }

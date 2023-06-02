@@ -40,10 +40,4 @@ public class CartController {
     public ResponseEntity<DiscountResponse> applyCoupon(@Auth Member member, @RequestParam(required = false) List<Long> id) {
         return ResponseEntity.ok(cartService.discountWithCoupons(member, id));
     }
-
-    @PostMapping("/coupons")
-    public ResponseEntity<DiscountResponse> selectCoupons(@Auth Member member, @RequestBody CouponDiscountRequest couponDiscountRequest) {
-        final var discountResponse = cartService.discountWithCoupons(member, couponDiscountRequest.getCouponIds());
-        return ResponseEntity.ok(discountResponse);
-    }
 }

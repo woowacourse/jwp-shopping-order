@@ -1,15 +1,18 @@
 package cart.sale;
 
+import cart.cart.Cart;
+import cart.discountpolicy.DiscountPolicy;
+
 public class Sale {
     private final String name;
-    private final Long discountPolicyId;
+    private final DiscountPolicy discountPolicy;
 
-    public Sale(String name, Long discountPolicyId) {
+    public Sale(String name, DiscountPolicy discountPolicy) {
         this.name = name;
-        this.discountPolicyId = discountPolicyId;
+        this.discountPolicy = discountPolicy;
     }
 
-    public Long getDiscountPolicyId() {
-        return discountPolicyId;
+    public void apply(Cart cart) {
+        this.discountPolicy.discount(cart);
     }
 }

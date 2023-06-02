@@ -1,14 +1,17 @@
 package cart.coupon;
 
+import cart.cart.Cart;
+import cart.discountpolicy.DiscountPolicy;
+
 public class Coupon {
     private final Long id;
     private final String name;
-    private final Long discountConditionId;
+    private final DiscountPolicy discountPolicy;
 
-    public Coupon(Long id, String name, Long discountConditionId) {
+    public Coupon(Long id, String name, DiscountPolicy discountPolicy) {
         this.id = id;
         this.name = name;
-        this.discountConditionId = discountConditionId;
+        this.discountPolicy = discountPolicy;
     }
 
     public String getName() {
@@ -19,7 +22,7 @@ public class Coupon {
         return id;
     }
 
-    public Long getDiscountConditionId() {
-        return discountConditionId;
+    public void apply(Cart cart) {
+        this.discountPolicy.discount(cart);
     }
 }

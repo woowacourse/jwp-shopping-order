@@ -38,7 +38,7 @@ public class OrderService {
         final var cart = cartService.findCart(member);
 
         // 2. cart에 Sale 적용하기
-        saleService.applySale(cart);
+        saleService.applySales(cart);
 
         // 3. cart에 Coupon 적용하기
         for (Long couponId : orderRequest.getCouponIds()) {

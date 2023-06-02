@@ -1,7 +1,6 @@
 package cart.discountpolicy.application.builder;
 
 import cart.cart.Cart;
-import cart.deliveryprice.DeliveryPrice;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 
 public class DiscountForDeliveryPolicy extends DiscountTargetPolicy {
@@ -11,8 +10,7 @@ public class DiscountForDeliveryPolicy extends DiscountTargetPolicy {
 
     @Override
     public void discount(Cart cart) {
-        final var deliveryPrice = cart.getDeliveryPrice();
-        final var discountedDeliveryPrice = discountUnitPolicy.calculateDiscountPrice(discountCondition.getDiscountValue(), deliveryPrice.getPrice());
-        cart.setDeliveryPrice(new DeliveryPrice(deliveryPrice.getPrice() - discountedDeliveryPrice));
+        final var discountDeliveryPrice = discountUnitPolicy.calculateDiscountPrice(discountCondition.getDiscountValue(), cart.getOriginalDeliveryPrice());
+        cart.addDiscountForDeliveryPrice(discountDeliveryPrice);
     }
 }

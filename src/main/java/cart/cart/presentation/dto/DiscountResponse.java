@@ -20,24 +20,25 @@ public class DiscountResponse {
         this.discountFromTotalPrice = discountFromTotalPrice;
     }
 
-    public static DiscountResponse from(Cart cart, int discountPriceFromTotalPrice) {
-        final var cartItemDiscountResponses = cart.getCartItems()
-                .stream().map(CartItemDiscountResponse::from)
-                .collect(Collectors.toList());
-        final var deliveryDiscountResponse = new DeliveryDiscountResponse(DeliveryPrice.DEFAULT_PRICE, cart.getDeliveryPrice().getPrice());
-        final var discountFromTotalPrice = new DiscountFromTotalPrice(discountPriceFromTotalPrice);
+    public static DiscountResponse from(Cart cart) {
+        final var cartItemDiscountResponses = getCartItemDiscountResponses(cart);
+        final var deliveryDiscountResponse = getDeliveryDiscountResponse(cart);
+        final var discountFromTotalPrice = getDiscountFromTotalPrice(cart);
+
         return new DiscountResponse(cartItemDiscountResponses, deliveryDiscountResponse, discountFromTotalPrice);
     }
 
-    public List<CartItemDiscountResponse> getCartItemsPrice() {
-        return cartItemsPrice;
+    private static List<CartItemDiscountResponse> getCartItemDiscountResponses(Cart cart) {
+        return cart.getCartItems()
+                .stream().map(CartItemDiscountResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public DeliveryDiscountResponse getDeliveryPrice() {
-        return deliveryPrice;
+    private static DeliveryDiscountResponse getDeliveryDiscountResponse(Cart cart) {
+        return new DeliveryDiscountResponse(cart.getOriginalDeliveryPrice(), cart.getDiscountDeliveryPrice());
     }
 
-    public DiscountFromTotalPrice getDiscountFromTotalPrice() {
-        return discountFromTotalPrice;
+    private static DiscountFromTotalPrice getDiscountFromTotalPrice(Cart cart) {
+        return new DiscountFromTotalPrice(cart.getDiscountFromTotalPrice());
     }
 }

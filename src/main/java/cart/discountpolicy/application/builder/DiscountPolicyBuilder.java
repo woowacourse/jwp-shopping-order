@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DiscountPolicyBuilder {
-    private static final Map<DiscountTarget, Class<? extends DiscountTargetPolicy>> targetPolicies = new HashMap<>();
+    private static final Map<DiscountTarget, Class<? extends DiscountPolicy>> targetPolicies = new HashMap<>();
     private static final Map<DiscountUnit, DiscountUnitPolicy> unitPolicies = new HashMap<>();
 
     static {

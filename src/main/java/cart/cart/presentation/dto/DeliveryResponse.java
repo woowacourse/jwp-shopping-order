@@ -1,4 +1,4 @@
-package cart.cart.presentation;
+package cart.cart.presentation.dto;
 
 public class DeliveryResponse {
     private long price;
