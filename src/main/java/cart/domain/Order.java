@@ -19,7 +19,7 @@ public class Order {
         this.orderItems = orderItems;
         this.productPrice = orderItems.calculateOrderPrice();
         this.discountPrice = calculateDiscountedPrice();
-        this.deliveryFee = deliveryFee;
+        this.deliveryFee = calculateDeliveryFee(deliveryFee);
         this.totalPrice = calculateTotalPrice();
         this.date = date;
     }
@@ -36,13 +36,17 @@ public class Order {
     }
 
     private Long calculateDiscountedPrice() {
-        if (productPrice >= 50000) {
-            return productPrice - 5000;
-        }
-        if (productPrice >= 30000) {
-            return productPrice - 3000;
+        if (productPrice >= 100000) {
+            return (long) (productPrice * 0.9);
         }
         return productPrice;
+    }
+
+    private Long calculateDeliveryFee(Long deliveryFee) {
+        if (productPrice >= 50000) {
+            return 0L;
+        }
+        return deliveryFee;
     }
 
     private Long calculateTotalPrice() {
