@@ -68,4 +68,18 @@ class OrderDaoTest {
                 () -> assertThat(order.getOrderStatusId()).isEqualTo(OrderStatus.PENDING.getOrderStatusId())
         );
     }
+
+    @DisplayName("주문 정보를 삭제할 수 있다.")
+    @Test
+    void deleteById() {
+        orderDao.deleteById(1L);
+
+        OrderEntity order = orderDao.findById(1L);
+
+        assertAll(
+                () -> assertThat(order.getId()).isEqualTo(1L),
+                () -> assertThat(order.getMemberId()).isEqualTo(1L),
+                () -> assertThat(order.getOrderStatusId()).isEqualTo(OrderStatus.CANCELLED.getOrderStatusId())
+        );
+    }
 }

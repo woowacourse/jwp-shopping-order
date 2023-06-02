@@ -84,4 +84,8 @@ public class PointRepository {
         PointEntity pointEntity = new PointEntity(point.getId(), point.getValue(), point.getComment(), point.getCreateAt(), point.getExpiredAt());
         pointDao.save(memberId, orderId, pointEntity);
     }
+
+    public void delete(Long orderId) {
+        pointDao.deleteByOrderId(orderId);
+    }
 }

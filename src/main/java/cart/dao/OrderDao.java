@@ -1,8 +1,6 @@
 package cart.dao;
 
-import cart.domain.Order;
-import cart.domain.OrderItem;
-import cart.domain.Product;
+import cart.domain.OrderStatus;
 import cart.entity.OrderEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -39,6 +37,12 @@ public class OrderDao {
         }, keyHolder);
 
         return (Long) keyHolder.getKeys().get("ID");
+    }
+
+    public void deleteById(Long orderId) {
+        String sql = "update orders set orders_status_id = ? where id = ?";
+
+        jdbcTemplate.update(sql, OrderStatus.CANCELLED.getOrderStatusId(), orderId);
     }
 
     private static class OrderRowMapper implements RowMapper<OrderEntity> {

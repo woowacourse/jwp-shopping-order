@@ -4,7 +4,6 @@ import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.PointHistoryDao;
 import cart.domain.Order;
-import cart.domain.Point;
 import cart.entity.OrderEntity;
 import cart.entity.PointEntity;
 import org.springframework.stereotype.Repository;
@@ -30,13 +29,20 @@ public class OrderRepository {
         Long orderId = orderDao.save(orderEntity);
         orderItemDao.saveAll(orderId, order.getOrderItems());
 
-        List<PointEntity> pointEntities = order.getUsedPoints()
-                .stream()
-                .map(point -> new PointEntity(point.getId(), point.getValue(), point.getComment(),
-                        point.getCreateAt(), point.getExpiredAt()))
-                .collect(Collectors.toList());
-
+        List<PointEntity> pointEntities = getPointEntities(order);
         pointHistoryDao.saveAll(orderId, pointEntities);
         return orderId;
+    }
+
+    private List<PointEntity> getPointEntities(Order order) {
+        return order.getUsedPoints()
+                .stream()
+                .map(point -> new PointEntity(point.getId(), point.getValue(), point.getComment(),
+                                point.getCreateAt(), point.getExpiredAt()))
+                .collect(Collectors.toList());
+    }
+
+    public void deleteById(Long orderId) {
+        orderDao.deleteById(orderId);
     }
 }
