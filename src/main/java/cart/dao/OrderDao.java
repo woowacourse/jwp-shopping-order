@@ -1,8 +1,6 @@
 package cart.dao;
 
-import cart.domain.Order;
-import cart.domain.Product;
-import cart.domain.Products;
+import cart.entity.OrderEntity;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,21 +20,12 @@ public class OrderDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Order save(final Order order, final Long memberId) {
+    public Long create(final OrderEntity order, final Long memberId) {
         final Map<String, Object> params = new HashMap<>();
         params.put("member_id", memberId);
-        params.put("discounted_amount", order.discountProductAmount().getValue());
+        params.put("discounted_amount", order.getDiscountedAmount());
         params.put("address", order.getAddress());
-        params.put("delivery_amount", order.getDeliveryAmount().getValue());
-        final long orderId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-
-        final String productOrderSql = "INSERT INTO product_order(product_id, order_id) "
-            + "VALUES (?, ?)";
-        final Products products = order.getProducts();
-        for (final Product product : products.getValue()) {
-            jdbcTemplate.update(productOrderSql, product.getId(), orderId);
-        }
-        return new Order(orderId, order.getProducts(), order.getCoupon(), order.getDeliveryAmount(),
-            order.getAddress());
+        params.put("delivery_amount", order.getDeliveryAmount());
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 }

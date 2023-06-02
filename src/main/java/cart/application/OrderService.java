@@ -1,9 +1,5 @@
 package cart.application;
 
-import cart.dao.CouponDao;
-import cart.dao.MemberCouponDao;
-import cart.dao.OrderDao;
-import cart.dao.ProductDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -15,6 +11,9 @@ import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.BusinessException;
+import cart.repository.MemberCouponRepository;
+import cart.repository.OrderRepository;
+import cart.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,29 +22,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderService {
 
-    private final OrderDao orderDao;
-    private final ProductDao productDao;
-    private final CouponDao couponDao;
-    private final MemberCouponDao memberCouponDao;
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
-    public OrderService(final OrderDao orderDao, final ProductDao productDao, final CouponDao couponDao,
-        final MemberCouponDao memberCouponDao) {
-        this.orderDao = orderDao;
-        this.productDao = productDao;
-        this.couponDao = couponDao;
-        this.memberCouponDao = memberCouponDao;
+    public OrderService(final OrderRepository orderRepository, final ProductRepository productRepository,
+                        final MemberCouponRepository memberCouponRepository) {
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
+        this.memberCouponRepository = memberCouponRepository;
     }
 
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
         final List<Product> products = findProducts(orderRequest);
-        final Coupon coupon = couponDao.findByCouponIdAndMemberId(orderRequest.getCouponId(), member.getId())
-            .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
+        final Coupon coupon = memberCouponRepository.findByCouponIdAndMemberId(orderRequest.getCouponId(), member.getId());
 
-        final Order order = orderDao.save(
+        final Order order = orderRepository.create(
             new Order(new Products(products), coupon, Amount.of(orderRequest.getDeliveryAmount()),
                 orderRequest.getAddress()), member.getId());
         final Coupon usedCoupon = coupon.use();
-        couponDao.update(usedCoupon, member.getId());
+        memberCouponRepository.update(usedCoupon, member.getId());
         final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest,
             products);
         return new OrderResponse(order.getId(), orderRequest.getTotalAmount(),
@@ -57,7 +53,7 @@ public class OrderService {
         final List<Product> products = new ArrayList<>();
         final List<Amount> amounts = orderRequest.getProducts().stream()
             .map(it -> {
-                final Product product = productDao.getProductById(it.getProductId());
+                final Product product = productRepository.findById(it.getProductId());
                 products.add(product);
                 return product.getAmount().multiply(it.getQuantity());
             })

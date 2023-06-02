@@ -1,34 +1,46 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.entity.MemberEntity;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
+            MemberEntity.of(
+                    rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("password")
+            );
+
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Member getMemberById(Long id) {
+    public Optional<MemberEntity> findById(final Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
-    public Member getMemberByEmail(String email) {
+    public Optional<MemberEntity> findByEmail(final String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, email));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public void addMember(Member member) {
@@ -46,16 +58,9 @@ public class MemberDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Member> getAllMembers() {
+    public List<MemberEntity> findAll() {
         String sql = "SELECT * from member";
-        return jdbcTemplate.query(sql, new MemberRowMapper());
-    }
-
-    private static class MemberRowMapper implements RowMapper<Member> {
-        @Override
-        public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
-        }
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }
 
