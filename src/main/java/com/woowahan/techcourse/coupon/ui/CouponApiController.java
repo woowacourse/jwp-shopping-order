@@ -33,11 +33,22 @@ public class CouponApiController {
 
     @GetMapping("/members/coupons")
     public ResponseEntity<CouponsResponse> findAllByMemberId(Member member) {
+        return findAllCouponsByMemberId(member);
+    }
+
+    @PostMapping("/members/coupon")
+    public ResponseEntity<Void> addMemberCoupon(Member member,
+            @RequestBody @Valid AddMemberCouponRequest request) {
+        return addCoupon(member, request);
+    }
+
+    @GetMapping("/coupons/me")
+    public ResponseEntity<CouponsResponse> findAllCouponsByMemberId(Member member) {
         CouponsResponse response = new CouponsResponse(couponQueryService.findAllCouponsByMemberId(member.getId()));
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/members/coupon")
+    @PostMapping("/coupons/me")
     public ResponseEntity<Void> addCoupon(Member member,
             @RequestBody @Valid AddMemberCouponRequest request) {
         couponCommandService.addCoupon(request.getCouponId(), member.getId());
