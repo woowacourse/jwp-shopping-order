@@ -97,7 +97,7 @@ public class CartItemDao {
                         "WHERE cart_item.id = ?";
         List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member_id");
-            Long productId = rs.getLong("id");
+            Long productId = rs.getLong("product.id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
@@ -122,7 +122,7 @@ public class CartItemDao {
 
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+        jdbcTemplate.update(sql, cartItem.getQuantity().getValue(), cartItem.getId());
     }
 }
 
