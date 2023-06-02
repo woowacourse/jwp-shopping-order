@@ -71,14 +71,10 @@ public class OrderItemDao {
         }
     }
 
-    public OrderItemEntity findByOrderId(final Long orderId) {
+    public List<OrderItemEntity> findByOrderId(final Long orderId) {
         String sql = "SELECT " + ALL_COLUMN + " FROM " + TABLE + " WHERE order_id = ?;";
 
-        try {
-            return jdbcTemplate.queryForObject(sql, rowMapper, orderId);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new OrderItemNotFoundException();
-        }
+        return jdbcTemplate.query(sql, rowMapper, orderId);
     }
 
     public List<OrderItemEntity> findTwoByOrderId(final Long orderId) {

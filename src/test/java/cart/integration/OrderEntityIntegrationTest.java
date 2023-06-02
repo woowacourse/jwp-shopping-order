@@ -177,16 +177,27 @@ public class OrderEntityIntegrationTest extends IntegrationTest {
         // when
         var response = when()
                 .get("/orders")
+                .then()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isNotNull();
+    }
+
+    @Test
+    void 특정_주문에_대한_상세_정보를_조회한다() {
+        // given
+        orderRequest(member1, orderRequest);
+
+        // when
+        var response = when()
+                .get("/orders/{orderId}", 1)
                 .then().log().all()
                 .extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.body()).isNotNull();
     }
-
-//
-//    @Test
-//    void 특정_주문에_대한_상세_정보를_조회한다() {
-//
-//    }
 }

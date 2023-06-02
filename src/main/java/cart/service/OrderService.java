@@ -85,7 +85,7 @@ public class OrderService {
 
     private void validatePoint(final OrderRequest orderRequest) {
         Integer usePoint = orderRequest.getUsePoint();
-        
+
         if (usePoint > 0 && usePoint < Point.MIN_USAGE_VALUE) {
             throw new IllegalUsePointException();
         }
@@ -197,9 +197,20 @@ public class OrderService {
                     .map(orderItemEntity -> new OrderItemResponse(orderItemEntity.getQuantity(), new ProductResponse(orderItemEntity.getProductId(), orderItemEntity.getProductName(), orderItemEntity.getProductPrice(), orderItemEntity.getProductImageUrl(), productDao.findById(orderItemEntity.getProductId()).getStock())))
                     .collect(Collectors.toList());
 
-            result.add(new OrderResponse(orderEntity.getId(), orderEntity.getCreatedAt(), orderItems));
+            result.add(new OrderResponse(orderEntity.getId(), orderEntity.getCreatedAt(), orderItems, orderEntity.getTotalPrice()));
         }
 
         return result;
+    }
+
+    public OrderResponse findOrderBy(final Long orderId) {
+        OrderEntity orderEntity = orderDao.findById(orderId);
+        List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderEntity.getId());
+
+        List<OrderItemResponse> orderItemResponses = orderItemEntities.stream()
+                .map(orderItemEntity -> new OrderItemResponse(orderItemEntity.getQuantity(), new ProductResponse(orderItemEntity.getProductId(), orderItemEntity.getProductName(), orderItemEntity.getProductPrice(), orderItemEntity.getProductImageUrl(), productDao.findById(orderItemEntity.getProductId()).getStock())))
+                .collect(Collectors.toList());
+
+        return new OrderResponse(orderEntity.getId(), orderEntity.getCreatedAt(), orderItemResponses, orderEntity.getTotalPrice());
     }
 }

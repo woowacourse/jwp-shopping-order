@@ -89,10 +89,10 @@ class OrderItemDaoTest extends DaoTest {
         orderItemDao.insert(orderItemEntity);
 
         // when
-        OrderItemEntity result = orderItemDao.findByOrderId(orderEntity.getId());
+        var result = orderItemDao.findByOrderId(orderEntity.getId());
 
         // then
-        assertThat(result).isEqualTo(orderItemEntity);
+        assertThat(result).containsOnly(orderItemEntity);
     }
 
     @Test
