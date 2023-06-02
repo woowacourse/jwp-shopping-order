@@ -8,7 +8,7 @@ import java.util.List;
 public class OrderRequest {
 
     private List<Long> cartItems;
-    @NotNull
+    @NotNull(message = "paymentAmount 가 null 입니다.")
     private Integer paymentAmount;
 
     public OrderRequest() {
