@@ -2,12 +2,14 @@ package cart.repository;
 
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
+import cart.domain.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.OrderItems;
 import cart.domain.Price;
 import cart.domain.Product;
+import cart.domain.Quantity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.OrderItemWithProductEntity;
@@ -67,8 +69,15 @@ public class OrderJdbcRepository implements OrderRepository {
         }
     }
 
+    @Override
+    public Order findById(final long id) {
+        final OrderEntity orderEntity = orderDao.findById(id);
+        final List<OrderItemWithProductEntity> orderItemWithProductEntities = orderItemDao.findProductDetailByOrderId(id);
+        return toOrderDomain(orderEntity, orderItemWithProductEntities);
+    }
+
     private OrderEntity toOrderEntity(final Order order) {
-        return new OrderEntity(order.getMember().getId(), order.getOriginalPrice(), order.getDiscountPrice());
+        return new OrderEntity(order.getMemberId(), order.getOriginalPrice(), order.getDiscountPrice());
     }
 
     private List<OrderItemEntity> mapToOrderItemEntities(final long orderId, final OrderItems orderItems) {
@@ -79,5 +88,23 @@ public class OrderJdbcRepository implements OrderRepository {
 
     private OrderItemEntity toOrderItemEntity(final long orderId, final OrderItem orderItem) {
         return new OrderItemEntity(orderId, orderItem.getProduct().getId(), orderItem.getQuantity().getValue());
+    }
+
+    private Order toOrderDomain(final OrderEntity orderEntity, final List<OrderItemWithProductEntity> orderItemWithProductEntities) {
+        return new Order(
+                orderEntity.getId(), orderEntity.getMemberId(),
+                new OrderItems(mapToOrderItems(orderItemWithProductEntities), new DiscountPriceCalculator()
+        ));
+    }
+
+    private List<OrderItem> mapToOrderItems(final List<OrderItemWithProductEntity> orderItemWithProductEntities) {
+        return orderItemWithProductEntities.stream()
+                .map(entity -> new OrderItem(
+                        entity.getId(),
+                        new Product(entity.getProductId(), entity.getProductName(),
+                                new Price(entity.getProductPrice()), entity.getProductImageUrl()),
+                        new Quantity(entity.getQuantity())
+                ))
+                .collect(Collectors.toUnmodifiableList());
     }
 }

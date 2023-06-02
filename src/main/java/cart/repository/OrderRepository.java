@@ -10,4 +10,5 @@ public interface OrderRepository {
 
     long save(final Order order);
     List<OrderAndMainProductDto> findByMember(final Member member);
+    Order findById(long id);
 }

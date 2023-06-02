@@ -3,17 +3,21 @@ package cart.domain;
 public class Order {
 
     private final Long id;
-    private final Member member;
+    private final long memberId;
     private final OrderItems orderItems;
 
-    public Order(final Long id, final Member member, final OrderItems orderItems) {
+    public Order(final Long id, final long memberId, final OrderItems orderItems) {
         this.id = id;
-        this.member = member;
+        this.memberId = memberId;
         this.orderItems = orderItems;
     }
 
-    public Order(final Member member, final OrderItems orderItems) {
-        this(null, member, orderItems);
+    public Order(final long memberId, final OrderItems orderItems) {
+        this(null, memberId, orderItems);
+    }
+
+    public boolean isMemberIdEqual(final long memberId) {
+        return this.memberId == memberId;
     }
 
     public boolean isPaymentAmountEqual(final int amount) {
@@ -32,8 +36,8 @@ public class Order {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public long getMemberId() {
+        return memberId;
     }
 
     public OrderItems getOrderItems() {

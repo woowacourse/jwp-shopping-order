@@ -36,7 +36,7 @@ public class OrderService {
     @Transactional
     public long save(final Member member, final OrderRequest request) {
         final List<CartItemWithProductDto> cartItemWithProductDtos = cartItemRepository.findByIds(request.getCartItems());
-        checkOwner(member, cartItemWithProductDtos);
+        checkCartItemsOwner(member, cartItemWithProductDtos);
         cartItemRepository.deleteAll(request.getCartItems());
         final Order order = createOrder(member, cartItemWithProductDtos);
         validatePaymentAmount(order, request.getPaymentAmount());
@@ -50,7 +50,7 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private void checkOwner(final Member member, final List<CartItemWithProductDto> dtos) {
+    private void checkCartItemsOwner(final Member member, final List<CartItemWithProductDto> dtos) {
         final boolean isIdEquals = dtos.stream()
                 .map(CartItemWithProductDto::getMemberId)
                 .allMatch(member::isIdEquals);
@@ -68,7 +68,7 @@ public class OrderService {
     }
 
     private Order createOrder(final Member member, final List<CartItemWithProductDto> dtos) {
-        return new Order(member,
+        return new Order(member.getId(),
                 new OrderItems(dtos.stream()
                         .map(this::createOrderItem)
                         .collect(Collectors.toUnmodifiableList()),
