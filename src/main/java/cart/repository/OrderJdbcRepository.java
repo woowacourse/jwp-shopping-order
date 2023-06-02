@@ -7,10 +7,7 @@ import cart.dao.entity.OrderEntity;
 import cart.dao.entity.OrderItemEntity;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
-import cart.domain.order.Order;
-import cart.domain.order.OrderItem;
-import cart.domain.order.OrderRepository;
-import cart.domain.order.Quantity;
+import cart.domain.order.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -71,11 +68,13 @@ public class OrderJdbcRepository implements OrderRepository {
 
     private Order mapToOrder(final Map<Long, List<OrderResultMap>> orders, final Long orderId) {
         final List<OrderResultMap> orderResultMaps = orders.get(orderId);
+
         final List<OrderItem> orderItems = orderResultMaps.stream()
                 .map(this::createOrderItem)
                 .collect(toList());
+        final OrderItems orderItems1 = new OrderItems(orderItems);
 
-        return new Order(orderId, orderItems, null, null, orderResultMaps.get(0).getPrice(), orderResultMaps.get(0).getDate());
+        return new Order(orderId, orderItems1, null, null, Price.from(orderResultMaps.get(0).getPrice()), orderResultMaps.get(0).getDate());
     }
 
     private OrderItem createOrderItem(final OrderResultMap orderResultMap) {

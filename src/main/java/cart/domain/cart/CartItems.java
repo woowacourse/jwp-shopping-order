@@ -1,8 +1,13 @@
 package cart.domain.cart;
 
 import cart.domain.member.Member;
+import cart.domain.order.OrderItem;
+import cart.domain.order.OrderItems;
+import cart.domain.order.Quantity;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class CartItems {
 
@@ -14,6 +19,14 @@ public class CartItems {
 
     public static CartItems from(final List<CartItem> cartItems) {
         return new CartItems(cartItems);
+    }
+
+    public OrderItems mapToOrderItems() {
+        final List<OrderItem> orderItems = cartItems.stream()
+                .map(it -> new OrderItem(it.getProduct(), Quantity.from(it.getQuantity())))
+                .collect(toList());
+
+        return new OrderItems(orderItems);
     }
 
     public boolean isNotSameSize(final int size) {

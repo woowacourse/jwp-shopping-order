@@ -1,5 +1,6 @@
 package cart.domain.order;
 
+import cart.domain.cart.CartItems;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
 import org.springframework.lang.Nullable;
@@ -17,17 +18,24 @@ public class Order {
     private final Price price;
     private final LocalDateTime date;
 
-    public Order(final List<OrderItem> orderItems, final Member member, final Coupon coupon, final int price) {
+    public Order(final OrderItems orderItems, final Member member, final Coupon coupon, final Price price) {
         this(null, orderItems, member, coupon, price, LocalDateTime.now());
     }
 
-    public Order(final Long id, final List<OrderItem> orderItems, final Member member, final Coupon coupon, final int price, final LocalDateTime date) {
+    public Order(final Long id, final OrderItems orderItems, final Member member, @Nullable final Coupon coupon, final Price price, final LocalDateTime date) {
         this.id = id;
-        this.orderItems = OrderItems.from(orderItems);
+        this.orderItems = orderItems;
         this.member = member;
         this.coupon = coupon;
-        this.price = Price.from(price);
+        this.price = price;
         this.date = date;
+    }
+
+    public static Order create(final CartItems cartItems, final Coupon coupon, final Price price) {
+        final OrderItems orderItems = cartItems.mapToOrderItems();
+        final Member member = cartItems.getMember();
+
+        return new Order(orderItems, member, coupon, price);
     }
 
     public Long getId() {

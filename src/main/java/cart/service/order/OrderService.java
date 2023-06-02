@@ -5,19 +5,15 @@ import cart.domain.cart.CartItems;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
 import cart.domain.order.Order;
-import cart.domain.order.OrderItem;
 import cart.domain.order.OrderRepository;
-import cart.domain.order.Quantity;
+import cart.domain.order.Price;
 import cart.exception.AlreadyUsedCouponException;
 import cart.service.dto.OrderRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
@@ -39,29 +35,21 @@ public class OrderService {
             throw new NoSuchElementException("존재하지 않는 상품이 포함되어 있습니다.");
         }
 
-        Coupon coupon = checkCoupon(request);
+        Coupon coupon = findCoupon(request.getCouponId());
 
         cartItemRepository.deleteAllByIds(request.getCartItemIds());
 
-        final List<OrderItem> orderItems = cartItems.getCartItems().stream()
-                .map(it -> new OrderItem(it.getProduct(), Quantity.from(it.getQuantity())))
-                .collect(toList());
-
-        final Order order = new Order(orderItems, cartItems.getMember(), coupon, request.getPrice());
+        final Price price = Price.from(request.getPrice());
+        final Order order = Order.create(cartItems, coupon, price);
         return orderRepository.save(order);
     }
 
-    private Coupon checkCoupon(final OrderRequest request) {
-        Coupon coupon = Coupon.empty();
-        if (hasCoupon(request.getCouponId())) {
-            coupon = findCouponAndUse(request.getCouponId());
+    private Coupon findCoupon(final Long couponId) {
+        if (ObjectUtils.isEmpty(couponId)) {
+            return Coupon.empty();
         }
 
-        return coupon;
-    }
-
-    private boolean hasCoupon(final Long couponId) {
-        return !ObjectUtils.isEmpty(couponId);
+        return findCouponAndUse(couponId);
     }
 
     private Coupon findCouponAndUse(final Long couponId) {
@@ -72,7 +60,6 @@ public class OrderService {
         }
 
         couponRepository.changeStatusTo(couponId, Boolean.TRUE);
-
         return coupon;
     }
 

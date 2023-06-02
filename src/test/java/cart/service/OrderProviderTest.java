@@ -4,10 +4,7 @@ import cart.controller.dto.OrderResponse;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.domain.order.Order;
-import cart.domain.order.OrderItem;
-import cart.domain.order.OrderRepository;
-import cart.domain.order.Quantity;
+import cart.domain.order.*;
 import cart.service.order.OrderMapper;
 import cart.service.order.OrderProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +43,7 @@ public class OrderProviderTest {
         final OrderItem desertOrderItem = new OrderItem(dessert, Quantity.from(1));
         final Coupon coupon = new Coupon(1L, 1L, "1000원 할인 쿠폰", "1000원이 할인 됩니다.", 1000, false);
 
-        final Order order = new Order(List.of(chickenOrderItem, desertOrderItem), member, coupon, chicken.getPrice() + dessert.getPrice());
+        final Order order = new Order(new OrderItems(List.of(chickenOrderItem, desertOrderItem)), member, coupon, Price.from(chicken.getPrice() + dessert.getPrice()));
         given(orderRepository.findOrderByMemberId(anyLong())).willReturn(List.of(order));
 
         // when

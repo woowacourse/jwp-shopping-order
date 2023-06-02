@@ -6,10 +6,7 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.domain.order.Order;
-import cart.domain.order.OrderItem;
-import cart.domain.order.OrderRepository;
-import cart.domain.order.Quantity;
+import cart.domain.order.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +54,10 @@ class OrderJdbcRepositoryTest {
         final Product dessert = productDao.getProductById(2L);
         final OrderItem chickenOrderItem = new OrderItem(chicken, Quantity.from(1));
         final OrderItem desertOrderItem = new OrderItem(dessert, Quantity.from(1));
-        return new Order(List.of(chickenOrderItem, desertOrderItem), member, coupon, chicken.getPrice() + dessert.getPrice());
+
+        final OrderItems orderItems = new OrderItems(List.of(chickenOrderItem, desertOrderItem));
+        final Price price = Price.from(chicken.getPrice() + dessert.getPrice());
+        return new Order(orderItems, member, coupon, price);
     }
 
     @Test
