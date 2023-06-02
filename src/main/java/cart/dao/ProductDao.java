@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,30 +16,26 @@ import java.util.Objects;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-
+    private static final RowMapper<Product> productMapper = (rs, rowNum) -> {
+        Long productId = rs.getLong("id");
+        String name = rs.getString("name");
+        int price = rs.getInt("price");
+        String imageUrl = rs.getString("image_url");
+        boolean deleted = rs.getBoolean("deleted");
+        return new Product(productId, name, price, imageUrl,deleted);
+    };
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.query(sql, productMapper);
     }
 
     public Product findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+        return jdbcTemplate.queryForObject(sql,productMapper,productId);
     }
 
     public Long createProduct(Product product) {
@@ -66,7 +63,7 @@ public class ProductDao {
     }
 
     public void deleteProduct(Long productId) {
-        String sql = "UPDATE product SET deleted =true WHERE =?";
+        String sql = "UPDATE product SET deleted =true WHERE id=?";
         jdbcTemplate.update(sql, productId);
     }
 

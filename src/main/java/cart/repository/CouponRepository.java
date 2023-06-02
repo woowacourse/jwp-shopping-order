@@ -26,7 +26,7 @@ public class CouponRepository {
     }
 
     public void issueCoupon(final long memberId, final long couponId) {
-        if (memberCouponDao.findByMemberIdCouponId(memberId, couponId)) {
+        if (memberCouponDao.checkByMemberIdCouponId(memberId, couponId)) {
             return;
         }
         memberCouponDao.create(memberId, couponId);

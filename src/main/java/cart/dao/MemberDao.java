@@ -30,20 +30,8 @@ public class MemberDao {
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
-    }
 
-    public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getId());
-    }
 
-    public void deleteMember(Long id) {
-        String sql = "DELETE FROM member WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
 
     public List<Member> getAllMembers() {
         String sql = "SELECT * from member";

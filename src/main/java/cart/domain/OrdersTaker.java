@@ -51,6 +51,7 @@ public class OrdersTaker {
             discountPrice = (int) ((1-coupon.getDiscountRate()) * discountPrice) - coupon.getDiscountAmount();
             validateLimit(originalPrice,coupon.getMinimumPrice());
         }
+        validateNegativePrice(discountPrice);
         return discountPrice;
     }
     public List<OrdersResponse> findOrdersWithOriginalPrice(final Member member){
@@ -77,6 +78,11 @@ public class OrdersTaker {
     private void validateLimit(final int price, final int limit){
         if(price<limit){
             throw new OrdersPriceNotMatchException( limit + "이상으로 구매하셔야 합니다. ( 현재금액 : " + price +")");
+        }
+    }
+    private void validateNegativePrice(final int price){
+        if(price<0){
+            throw new OrdersPriceNotMatchException("금액은 음수가 될 수 없습니다.");
         }
     }
     private List<OrdersResponse> reverse(List<OrdersResponse> responses){

@@ -34,4 +34,21 @@ class OrdersDaoTest {
     void findByIdTest(){
         Assertions.assertThat(ordersDao.findById(1L).get().getPrice()).isEqualTo(9000);
     }
+    @Test
+    @DisplayName("제품이 없을 시 optional로 가져온다")
+    void findNonTest(){
+        Assertions.assertThat(ordersDao.findById(4L).isEmpty()).isTrue();
+    }
+    @Test
+    @DisplayName("해당 아이디의 주문을 승락처리한다")
+    void updateConfirmById(){
+        ordersDao.updateConfirmById(1L);
+        Assertions.assertThat(ordersDao.findById(1L).get().getConfirmState()).isTrue();
+    }
+    @Test
+    @DisplayName("해당 주문 내역을 지운다")
+    void deleteByIdTest(){
+        ordersDao.deleteById(1L);
+        Assertions.assertThat(ordersDao.findById(1L).isEmpty()).isTrue();
+    }
 }
