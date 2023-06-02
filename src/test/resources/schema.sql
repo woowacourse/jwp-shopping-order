@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS orders (
     original_price INT NOT NULL,
     discount_price INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-    FOREIGN KEY (member_id) REFERENCES member(id)
+    FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS order_item (
@@ -34,6 +34,6 @@ CREATE TABLE IF NOT EXISTS order_item (
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
