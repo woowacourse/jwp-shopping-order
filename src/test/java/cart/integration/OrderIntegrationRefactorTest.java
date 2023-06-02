@@ -32,6 +32,7 @@ class OrderIntegrationRefactorTest extends IntegrationRefactorTest {
     @DisplayName("쿠폰을 사용하지 않은 주문내역을 조회한다.")
     @Test
     void findOrderWithoutCoupon() throws Exception {
+        //given
         final Product savedProduct = productRepository.insertProduct(PRODUCT_1);
         final CartItem savedCartItem = cartItemDao.save(new CartItem(3, MEMBER_1, savedProduct));
         final List<CartItem> cartItems = List.of(savedCartItem);
@@ -150,8 +151,8 @@ class OrderIntegrationRefactorTest extends IntegrationRefactorTest {
         final Product savedProduct = productRepository.insertProduct(PRODUCT_1);
         final CartItem savedCartItem = cartItemDao.save(new CartItem(3, MEMBER_1, savedProduct));
         final Coupon savedCoupon = couponRepository.insert(DISCOUNT_5000_CONSTANT);
-        final MemberCoupon savedMemberCoupon = memberCouponRepository.insert(
-                new MemberCoupon(savedCoupon, MEMBER_1.getId()));
+        final MemberCoupon savedMemberCoupon = memberCouponRepository
+                .insert(new MemberCoupon(savedCoupon, MEMBER_1.getId()));
 
         final OrderRequestDto request = new OrderRequestDto(List.of(savedCartItem.getId()), savedMemberCoupon.getId());
 

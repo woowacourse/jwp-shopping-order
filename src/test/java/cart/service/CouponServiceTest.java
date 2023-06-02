@@ -28,7 +28,6 @@ class CouponServiceTest {
     @Autowired
     private CouponRepository couponRepository;
 
-
     @DisplayName("멤버가 가진 쿠폰들을 조회하는 기능 테스트")
     @Test
     void findMemberCoupons() {

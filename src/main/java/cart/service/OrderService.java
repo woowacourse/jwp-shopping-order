@@ -31,7 +31,7 @@ public class OrderService {
 
     public OrderResponseDto findOrderById(final Member member, final Long id) {
         final Order order = orderRepository.findById(id);
-//        order.checkOwner(member);
+        //order.checkOwner(member);
         return OrderResponseDto.from(order);
     }
 

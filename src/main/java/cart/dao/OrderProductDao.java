@@ -32,7 +32,7 @@ public class OrderProductDao {
     }
 
     public Long insert(final OrderProductDto orderProductDto) {
-        Map<String, Object> params = Map.of(
+        final Map<String, Object> params = Map.of(
                 "order_id", orderProductDto.getOrderId(),
                 "product_id", orderProductDto.getProductId(),
                 "quantity", orderProductDto.getQuantity()

@@ -6,7 +6,7 @@ public class CouponResponse {
     private final String name;
 
     private CouponResponse() {
-        this(null,null);
+        this(null, null);
     }
 
     public CouponResponse(final Long id, final String name) {

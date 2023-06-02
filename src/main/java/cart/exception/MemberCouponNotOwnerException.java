@@ -1,4 +1,4 @@
 package cart.exception;
 
-public class MemberCouponNotOwnerException extends RuntimeException{
+public class MemberCouponNotOwnerException extends RuntimeException {
 }
