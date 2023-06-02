@@ -2,6 +2,9 @@ package cart.dao;
 
 import static java.util.stream.Collectors.toList;
 
+import cart.domain.Coupon;
+import cart.domain.CouponType;
+import cart.domain.MemberCoupon;
 import cart.entity.OrderCouponEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,11 +17,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderCouponDao {
 
-    private final static RowMapper<OrderCouponEntity> rowMapper = (rs, rowNum) ->
-            new OrderCouponEntity(
-                    rs.getLong("id"),
-                    rs.getLong("order_item_id"),
-                    rs.getLong("coupon_id")
+
+    private final static RowMapper<MemberCoupon> memberCouponRowMapper = (rs, rowNum) ->
+            new MemberCoupon(
+                    rs.getLong("member_coupon.id"),
+                    rs.getLong("member_coupon.member_id"),
+                    new Coupon(
+                            rs.getLong("coupon.id"),
+                            rs.getString("coupon.name"),
+                            CouponType.from(rs.getString("coupon.type")),
+                            rs.getInt("coupon.discount_amount")
+                    ),
+                    rs.getBoolean("member_coupon.used")
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -44,12 +54,23 @@ public class OrderCouponDao {
         simpleJdbcInsert.executeBatch(array);
     }
 
-    public List<OrderCouponEntity> findByOrderId(Long orderId) {
-        String sql =
-                "select distinct order_coupon.id, order_coupon.order_item_id, order_coupon.coupon_id, order_item.order_id " +
-                        "from order_coupon " +
-                        "join order_item on order_coupon.order_item_id = order_item_id " +
-                        "where order_item.order_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, orderId);
+
+    public List<MemberCoupon> findByOrderId(Long orderId) {
+        String sql = "SELECT mc.id, mc.member_id, mc.used, c.id, c.name, c.type, c.discount_amount, oi.order_id " +
+                "FROM order_coupon oc " +
+                "JOIN member_coupon mc ON oc.member_coupon_id = mc.id " +
+                "JOIN coupon c ON mc.coupon_id = c.id " +
+                "JOIN order_item oi ON oc.order_item_id = oi.id " +
+                "where oi.order_id = ?";
+        return jdbcTemplate.query(sql, memberCouponRowMapper, orderId);
+    }
+
+    public List<MemberCoupon> findByOrderItemId(Long orderItemId) {
+        String sql = "SELECT mc.id, mc.member_id, mc.used, c.id, c.name, c.type, c.discount_amount " +
+                "FROM order_coupon oc " +
+                "JOIN member_coupon mc ON oc.member_coupon_id = mc.id " +
+                "JOIN coupon c ON c.id = mc.coupon_id " +
+                "where oc.order_item_id = ?";
+        return jdbcTemplate.query(sql, memberCouponRowMapper, orderItemId);
     }
 }

@@ -2,7 +2,9 @@ package cart.fixture;
 
 import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import cart.domain.Product;
+import cart.entity.OrderCouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,7 +32,7 @@ public class JdbcTemplateFixture {
     }
 
     public static void insertOrderItem(OrderItemEntity orderItemEntity, JdbcTemplate jdbcTemplate) {
-        String sql = "INSERT INTO order_item (id, order_id, product_id, quantity, product_name, product_price, product_image_url) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO order_item (id, order_id, product_id, quantity, product_name, product_price, product_image_url, total_price) VALUES (?,?,?,?,?,?,?,?)";
         jdbcTemplate.update(sql,
                 orderItemEntity.getId(),
                 orderItemEntity.getOrderId(),
@@ -38,7 +40,14 @@ public class JdbcTemplateFixture {
                 orderItemEntity.getQuantity(),
                 orderItemEntity.getProductName(),
                 orderItemEntity.getProductPrice(),
-                orderItemEntity.getProductImageUrl());
+                orderItemEntity.getProductImageUrl(),
+                orderItemEntity.getTotalPrice());
+    }
+
+
+    public static void insertOrderCoupon(OrderCouponEntity orderCouponEntity, JdbcTemplate jdbcTemplate) {
+        String sql = "INSERT INTO order_coupon(order_item_id, member_coupon_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, orderCouponEntity.getOrderItemId(), orderCouponEntity.getMemberCouponId());
     }
 
     public static void insertMemberCoupon(Member member, Coupon coupon, JdbcTemplate jdbcTemplate) {
@@ -46,8 +55,10 @@ public class JdbcTemplateFixture {
         jdbcTemplate.update(sql, member.getId(), coupon.getId(), false);
     }
 
-    public static void insertUsedMemberCoupon(Member member, Coupon coupon, JdbcTemplate jdbcTemplate) {
-        String sql = "INSERT INTO member_coupon(member_id, coupon_id, used) VALUES (?,?, ?)";
-        jdbcTemplate.update(sql, member.getId(), coupon.getId(), true);
+    public static void insertMemberCoupon(MemberCoupon memberCoupon, JdbcTemplate jdbcTemplate) {
+        String sql = "INSERT INTO member_coupon(id, member_id, coupon_id, used) VALUES (?,?,?, ?)";
+        jdbcTemplate.update(sql, memberCoupon.getId(), memberCoupon.getMemberId(), memberCoupon.getCoupon().getId(),
+                memberCoupon.isUsed());
     }
+
 }

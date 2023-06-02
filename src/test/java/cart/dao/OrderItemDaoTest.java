@@ -1,5 +1,8 @@
 package cart.dao;
 
+import static cart.fixture.JdbcTemplateFixture.insertMember;
+import static cart.fixture.JdbcTemplateFixture.insertOrder;
+import static cart.fixture.JdbcTemplateFixture.insertProduct;
 import static cart.fixture.MemberFixture.MEMBER;
 import static cart.fixture.ProductFixture.CHICKEN;
 import static cart.fixture.ProductFixture.PIZZA;
@@ -7,7 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Member;
 import cart.domain.Product;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
@@ -41,11 +43,11 @@ class OrderItemDaoTest {
     @Test
     void 전달받은_아이템을_모두_저장한다() {
         // given
-        insertMember(MEMBER);
+        insertMember(MEMBER, jdbcTemplate);
         OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId());
-        insertOrder(orderEntity);
-        insertProduct(CHICKEN);
-        insertProduct(PIZZA);
+        insertOrder(orderEntity, jdbcTemplate);
+        insertProduct(CHICKEN,jdbcTemplate);
+        insertProduct(PIZZA, jdbcTemplate);
         OrderItemEntity chicken = getOrderItemEntity(orderEntity.getId(), CHICKEN, 5);
         OrderItemEntity pizza = getOrderItemEntity(orderEntity.getId(), PIZZA, 10);
         List<OrderItemEntity> orderItemEntities = List.of(chicken, pizza);
@@ -57,11 +59,11 @@ class OrderItemDaoTest {
     @Test
     void 주문_아이디를_통해_아이템을_찾는다() {
         // given
-        insertMember(MEMBER);
+        insertMember(MEMBER, jdbcTemplate);
         OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId());
-        insertOrder(orderEntity);
-        insertProduct(CHICKEN);
-        insertProduct(PIZZA);
+        insertOrder(orderEntity, jdbcTemplate);
+        insertProduct(CHICKEN, jdbcTemplate);
+        insertProduct(PIZZA, jdbcTemplate);
         OrderItemEntity orderChicken = getOrderItemEntity(orderEntity.getId(), CHICKEN, 5);
         OrderItemEntity orderPizza = getOrderItemEntity(orderEntity.getId(), PIZZA, 10);
         List<OrderItemEntity> orderItemEntities = List.of(orderChicken, orderPizza);
@@ -83,22 +85,6 @@ class OrderItemDaoTest {
     }
 
     private OrderItemEntity getOrderItemEntity(Long orderId, Product product, int quantity) {
-        return new OrderItemEntity(orderId, product.getId(), quantity, product.getName(), product.getPrice(), product.getImageUrl());
-    }
-
-
-    private void insertOrder(OrderEntity orderEntity) {
-        String sql = "INSERT INTO orders (id, member_id) VALUES (?,?)";
-        jdbcTemplate.update(sql, orderEntity.getId(), orderEntity.getMemberId());
-    }
-
-    private void insertMember(Member member) {
-        String sql = "INSERT INTO member (id, email, password) VALUES (?, ?,?)";
-        jdbcTemplate.update(sql, member.getId(), member.getEmail(), member.getPassword());
-    }
-
-    private void insertProduct(Product product) {
-        String sql = "INSERT INTO Product (id, name, price, image_url) VALUES (?, ?,?,?)";
-        jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new OrderItemEntity(orderId, product.getId(), quantity, product.getName(), product.getPrice(), product.getImageUrl(), 5000);
     }
 }

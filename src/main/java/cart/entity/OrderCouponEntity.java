@@ -4,16 +4,16 @@ public class OrderCouponEntity {
 
     private Long id;
     private Long orderItemId;
-    private Long couponId;
+    private Long memberCouponId;
 
-    public OrderCouponEntity(Long orderItemId, Long couponId) {
-        this(null, orderItemId, couponId);
+    public OrderCouponEntity(Long orderItemId, Long memberCouponId) {
+        this(null, orderItemId, memberCouponId);
     }
 
-    public OrderCouponEntity(Long id, Long orderItemId, Long couponId) {
+    public OrderCouponEntity(Long id, Long orderItemId, Long memberCouponId) {
         this.id = id;
         this.orderItemId = orderItemId;
-        this.couponId = couponId;
+        this.memberCouponId = memberCouponId;
     }
 
 
@@ -25,7 +25,7 @@ public class OrderCouponEntity {
         return orderItemId;
     }
 
-    public Long getCouponId() {
-        return couponId;
+    public Long getMemberCouponId() {
+        return memberCouponId;
     }
 }

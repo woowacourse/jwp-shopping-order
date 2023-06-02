@@ -22,7 +22,8 @@ public class OrderItemDao {
                     rs.getInt("quantity"),
                     rs.getString("product_name"),
                     rs.getInt("product_price"),
-                    rs.getString("product_image_url")
+                    rs.getString("product_image_url"),
+                    rs.getInt("total_price")
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -33,6 +34,11 @@ public class OrderItemDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("order_item")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public Long save(OrderItemEntity orderItemEntity) {
+        final SqlParameterSource source = new BeanPropertySqlParameterSource(orderItemEntity);
+        return simpleJdbcInsert.executeAndReturnKey(source).longValue();
     }
 
     public void batchSave(List<OrderItemEntity> orderItemEntities) {

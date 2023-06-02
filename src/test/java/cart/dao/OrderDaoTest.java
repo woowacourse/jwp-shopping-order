@@ -1,5 +1,6 @@
 package cart.dao;
 
+import static cart.fixture.JdbcTemplateFixture.insertMember;
 import static cart.fixture.MemberFixture.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -36,7 +37,7 @@ class OrderDaoTest {
     @Test
     void 주문을_저장한다() {
         // given
-        insertMember(MEMBER);
+        insertMember(MEMBER, jdbcTemplate);
         OrderEntity orderEntity = new OrderEntity(MEMBER.getId());
 
         // when
@@ -49,7 +50,7 @@ class OrderDaoTest {
     @Test
     void 아이디를_통해_주문을_찾는다() {
         // given
-        insertMember(MEMBER);
+        insertMember(MEMBER, jdbcTemplate);
         OrderEntity orderEntity = new OrderEntity(MEMBER.getId());
         Long orderId = orderDao.save(orderEntity);
 
@@ -75,12 +76,12 @@ class OrderDaoTest {
     @Test
     void 멤버_아이디를_통해_모든_주문을_찾는다() {
         // given
-        insertMember(MEMBER);
+        insertMember(MEMBER, jdbcTemplate);
         orderDao.save(new OrderEntity(MEMBER.getId()));
         orderDao.save(new OrderEntity(MEMBER.getId()));
         orderDao.save(new OrderEntity(MEMBER.getId()));
 
-        insertMember(new Member(MEMBER.getId() + 1, "email@naver.com", "password"));
+        insertMember(new Member(MEMBER.getId() + 1, "email@naver.com", "password"), jdbcTemplate);
         orderDao.save(new OrderEntity(MEMBER.getId()+1));
         orderDao.save(new OrderEntity(MEMBER.getId()+1));
 
@@ -89,10 +90,5 @@ class OrderDaoTest {
 
         // then
         assertThat(actual.size()).isEqualTo(3);
-    }
-
-    private void insertMember(Member member) {
-        String memberSql = "INSERT INTO member (id, email, password) VALUES (?, ?,?)";
-        jdbcTemplate.update(memberSql, member.getId(), member.getEmail(), member.getPassword());
     }
 }

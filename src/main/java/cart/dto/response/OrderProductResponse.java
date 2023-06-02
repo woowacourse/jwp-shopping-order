@@ -1,5 +1,7 @@
 package cart.dto.response;
 
+import cart.domain.Product;
+
 public class OrderProductResponse {
 
     private Long id;
@@ -15,6 +17,10 @@ public class OrderProductResponse {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public static OrderProductResponse from(Product product) {
+        return new OrderProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {
