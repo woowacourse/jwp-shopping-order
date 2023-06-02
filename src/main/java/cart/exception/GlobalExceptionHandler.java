@@ -1,5 +1,7 @@
 package cart.exception;
 
+import cart.exception.auth.AuthenticationException;
+import cart.exception.cart.ProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

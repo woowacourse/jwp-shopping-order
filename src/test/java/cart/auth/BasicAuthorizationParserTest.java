@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.exception.InvalidBasicCredentialException;
+import cart.exception.auth.InvalidBasicCredentialException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

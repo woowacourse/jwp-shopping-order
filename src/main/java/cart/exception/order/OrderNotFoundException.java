@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.order;
+
+import cart.exception.CartException;
 
 public class OrderNotFoundException extends CartException {
     public OrderNotFoundException() {

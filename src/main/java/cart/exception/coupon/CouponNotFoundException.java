@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.coupon;
+
+import cart.exception.CartException;
 
 public class CouponNotFoundException extends CartException {
     public CouponNotFoundException() {

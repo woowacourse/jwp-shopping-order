@@ -2,7 +2,7 @@ package cart.domain.member;
 
 import cart.domain.Money;
 import cart.domain.coupon.Coupon;
-import cart.exception.CouponAlreadyUsedException;
+import cart.exception.coupon.CouponAlreadyUsedException;
 
 import java.math.BigDecimal;
 

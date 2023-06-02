@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.cart;
+
+import cart.exception.CartException;
 
 public class InvalidCartItemOwnerException extends CartException {
 

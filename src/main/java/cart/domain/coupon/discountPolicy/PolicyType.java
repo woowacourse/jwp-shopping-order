@@ -1,6 +1,6 @@
 package cart.domain.coupon.discountPolicy;
 
-import cart.exception.PolicyTypeNotFoundException;
+import cart.exception.coupon.PolicyTypeNotFoundException;
 
 import java.util.Arrays;
 

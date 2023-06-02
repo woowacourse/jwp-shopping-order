@@ -1,7 +1,7 @@
 package cart.domain;
 
 import cart.exception.InvalidMoneyValueException;
-import cart.exception.ProductNotValidException;
+import cart.exception.cart.ProductNotValidException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

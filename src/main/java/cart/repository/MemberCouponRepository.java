@@ -5,8 +5,8 @@ import cart.dao.MemberCouponDao;
 import cart.dao.MemberDao;
 import cart.domain.member.MemberCoupon;
 import cart.entity.MemberCouponEntity;
-import cart.exception.CouponNotFoundException;
-import cart.exception.MemberNotFoundException;
+import cart.exception.coupon.CouponNotFoundException;
+import cart.exception.member.MemberNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -1,4 +1,6 @@
-package cart.exception;
+package cart.exception.order;
+
+import cart.exception.CartException;
 
 public class InvalidOrderOwnerException extends CartException {
     public InvalidOrderOwnerException() {

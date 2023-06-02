@@ -1,7 +1,7 @@
 package cart.domain.member;
 
 import cart.domain.fixture.Fixture;
-import cart.exception.CouponAlreadyUsedException;
+import cart.exception.coupon.CouponAlreadyUsedException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

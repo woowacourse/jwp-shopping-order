@@ -1,7 +1,7 @@
 package cart.domain;
 
 import cart.domain.member.MemberValidator;
-import cart.exception.InvalidCartItemOwnerException;
+import cart.exception.cart.InvalidCartItemOwnerException;
 
 import java.util.Objects;
 

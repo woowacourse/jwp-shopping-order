@@ -6,7 +6,7 @@ import cart.domain.CartItem;
 import cart.domain.Product;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
-import cart.exception.ProductNotFoundException;
+import cart.exception.cart.ProductNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

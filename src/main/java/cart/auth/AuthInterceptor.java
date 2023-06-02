@@ -1,7 +1,7 @@
 package cart.auth;
 
 import cart.dao.CredentialDao;
-import cart.exception.AuthenticationException;
+import cart.exception.auth.AuthenticationException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;

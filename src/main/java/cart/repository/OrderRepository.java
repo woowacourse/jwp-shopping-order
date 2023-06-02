@@ -17,8 +17,8 @@ import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
-import cart.exception.CouponNotFoundException;
-import cart.exception.MemberNotFoundException;
+import cart.exception.coupon.CouponNotFoundException;
+import cart.exception.member.MemberNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;

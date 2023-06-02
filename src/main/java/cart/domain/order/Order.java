@@ -4,8 +4,8 @@ import cart.domain.CartItem;
 import cart.domain.Money;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberValidator;
-import cart.exception.InvalidOrderOwnerException;
-import cart.exception.InvalidOrderSizeException;
+import cart.exception.order.InvalidOrderOwnerException;
+import cart.exception.order.InvalidOrderSizeException;
 
 import java.util.List;
 import java.util.Objects;

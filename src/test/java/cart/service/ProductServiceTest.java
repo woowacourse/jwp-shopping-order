@@ -5,7 +5,7 @@ import cart.domain.Product;
 import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
-import cart.exception.ProductNotFoundException;
+import cart.exception.cart.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
