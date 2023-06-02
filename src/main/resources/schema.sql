@@ -38,14 +38,14 @@ create table if not exists orders
     foreign key (member_id) references member (id)
 );
 
-create table if not exists ordered_item
+create table if not exists order_item
 (
-    id                    bigint       not null auto_increment primary key,
-    product_name          varchar(255) not null,
-    product_price         int          not null,
-    product_image         varchar(255) not null,
-    product_quantity      int          not null,
-    product_discount_rate int          not null,
-    order_id              bigint       not null,
+    id            bigint       not null auto_increment primary key,
+    name          varchar(255) not null,
+    price         int          not null,
+    image_url     varchar(255) not null,
+    quantity      int          not null,
+    discount_rate int          not null,
+    order_id      bigint       not null,
     foreign key (order_id) references orders (id)
 );
