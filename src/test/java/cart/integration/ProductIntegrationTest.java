@@ -3,27 +3,24 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.application.ProductService;
 import cart.dto.PagedProductsResponse;
 import cart.dto.PaginationInfoDto;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
-    @Test
-    public void getProducts() {
-        var result = allProductsSelectRequest();
-
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
+    @Autowired
+    private ProductService productService;
 
     @Test
     public void createProduct() {
@@ -71,13 +68,13 @@ public class ProductIntegrationTest extends IntegrationTest {
         // given
         int unitSize = 5;
         int page = 2;
-        var allProducts = allProductsSelectRequest().as(List.class);
+        var allProducts = productService.getAllProducts();
         int expectedTotalPage = allProducts.size() / unitSize + 1;
 
         // when
         final ExtractableResponse<Response> response = given().log().all()
-                .pathParam("unit-size", unitSize)
-                .pathParam("page", page)
+                .queryParam("unit-size", unitSize)
+                .queryParam("page", page)
                 .when().get("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -91,15 +88,6 @@ public class ProductIntegrationTest extends IntegrationTest {
         assertThat(pagination.getCurrentPage()).isEqualTo(page);
         assertThat(pagination.getLastPage()).isEqualTo(expectedTotalPage);
         assertThat(pagination.getTotal()).isEqualTo(allProducts.size());
-    }
-
-    private ExtractableResponse<Response> allProductsSelectRequest() {
-        return given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/products")
-                .then()
-                .extract();
     }
 
     private ExtractableResponse<Response> productCreateRequest(final ProductRequest product) {

@@ -1,8 +1,5 @@
 package cart.ui;
 
-import static cart.fixtures.ProductFixtures.바닐라_크림_콜드브루_5800원_ID_4;
-import static cart.fixtures.ProductFixtures.아메리카노_4500원_ID_3;
-import static cart.fixtures.ProductFixtures.유자_민트_티_5900원_ID_1;
 import static cart.fixtures.ProductFixtures.자몽_허니_블랙티_5700원_ID_2;
 import static cart.utils.RestDocsHelper.customDocument;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,7 +11,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -23,9 +19,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.application.ProductService;
-import cart.repository.dao.MemberDao;
 import cart.dto.ProductResponse;
-import java.util.List;
+import cart.repository.dao.MemberDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -65,29 +60,6 @@ class ProductApiControllerTest {
                         ),
                         responseHeaders(
                                 headerWithName("Location").description("생성된 상품 resource 위치")
-                        )
-                ));
-    }
-
-    @Test
-    public void getAllProducts() throws Exception {
-        List<ProductResponse> products = List.of(
-                ProductResponse.from(유자_민트_티_5900원_ID_1),
-                ProductResponse.from(자몽_허니_블랙티_5700원_ID_2),
-                ProductResponse.from(아메리카노_4500원_ID_3),
-                ProductResponse.from(바닐라_크림_콜드브루_5800원_ID_4)
-        );
-        willReturn(products).given(productService).getAllProducts();
-
-        this.mockMvc.perform(get("/products"))
-                .andExpect(status().isOk())
-                .andDo(customDocument("get-all-products",
-                        responseFields(
-                                beneathPath("[]"),
-                                fieldWithPath("id").description("상품 id"),
-                                fieldWithPath("name").description("상품 이름"),
-                                fieldWithPath("price").description("상품 가격"),
-                                fieldWithPath("imageUrl").description("상품 이미지")
                         )
                 ));
     }
