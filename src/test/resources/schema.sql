@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS order_member_point;
-DROP TABLE IF EXISTS member_point;
-DROP TABLE IF EXISTS purchase_order_item;
-DROP TABLE IF EXISTS purchase_order;
-DROP TABLE IF EXISTS cart_item;
-DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS order_member_point CASCADE;
+DROP TABLE IF EXISTS member_point CASCADE;
+DROP TABLE IF EXISTS purchase_order_item CASCADE;
+DROP TABLE IF EXISTS purchase_order CASCADE;
+DROP TABLE IF EXISTS cart_item CASCADE;
+DROP TABLE IF EXISTS member CASCADE;
+DROP TABLE IF EXISTS product CASCADE;
 
 CREATE TABLE product
 (
@@ -55,22 +55,24 @@ CREATE TABLE purchase_order_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE member_point
+CREATE TABLE member_reward_point
 (
-    id         BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT      NOT NULL,
-    point      INT         NOT NULL,
-    created_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expired_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status     VARCHAR(50) NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    id              BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id       BIGINT    NOT NULL,
+    point           INT       NOT NULL,
+    created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expired_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reward_order_id BIGINT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (reward_order_id) REFERENCES purchase_order (id)
 );
 
-CREATE TABLE order_member_point
+CREATE TABLE order_member_used_point
 (
-    id              BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id        BIGINT NOT NULL,
-    member_point_id BIGINT NOT NULL,
+    id                  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id            BIGINT NOT NULL,
+    member_reward_point BIGINT NOT NULL,
+    used_point          INT    NOT NULL,
     FOREIGN KEY (order_id) REFERENCES purchase_order (id),
-    FOREIGN KEY (member_point_id) REFERENCES member (id)
+    FOREIGN KEY (member_reward_point) REFERENCES member_reward_point (id)
 );
