@@ -18,7 +18,7 @@ public class CartItem {
         return id;
     }
 
-    public long getMember() {
+    public long getMemberId() {
         return memberId;
     }
 

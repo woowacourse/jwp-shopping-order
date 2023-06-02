@@ -2,19 +2,16 @@ package cart.service;
 
 import cart.controller.dto.request.OrderRequest;
 import cart.controller.dto.response.OrderThumbnailResponse;
+import cart.domain.CartItem;
 import cart.domain.DiscountPriceCalculator;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.OrderItems;
-import cart.domain.Price;
-import cart.domain.Product;
-import cart.domain.Quantity;
 import cart.exception.NotOwnerException;
 import cart.exception.PaymentAmountNotEqualException;
 import cart.repository.CartItemRepository;
 import cart.repository.OrderRepository;
-import cart.repository.dto.CartItemWithProductDto;
 import cart.repository.dto.OrderAndMainProductDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +32,10 @@ public class OrderService {
 
     @Transactional
     public long save(final Member member, final OrderRequest request) {
-        final List<CartItemWithProductDto> cartItemWithProductDtos = cartItemRepository.findByIds(request.getCartItems());
-        checkCartItemsOwner(member, cartItemWithProductDtos);
+        final List<CartItem> cartItems = cartItemRepository.findByIds(request.getCartItems());
+        checkCartItemsOwner(member, cartItems);
         cartItemRepository.deleteAll(request.getCartItems());
-        final Order order = createOrder(member, cartItemWithProductDtos);
+        final Order order = createOrder(member, cartItems);
         validatePaymentAmount(order, request.getPaymentAmount());
         return orderRepository.save(order);
     }
@@ -50,9 +47,9 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private void checkCartItemsOwner(final Member member, final List<CartItemWithProductDto> dtos) {
-        final boolean isIdEquals = dtos.stream()
-                .map(CartItemWithProductDto::getMemberId)
+    private void checkCartItemsOwner(final Member member, final List<CartItem> cartItems) {
+        final boolean isIdEquals = cartItems.stream()
+                .map(CartItem::getMemberId)
                 .allMatch(member::isIdEquals);
         if (isIdEquals) {
             return;
@@ -67,20 +64,16 @@ public class OrderService {
         throw new PaymentAmountNotEqualException();
     }
 
-    private Order createOrder(final Member member, final List<CartItemWithProductDto> dtos) {
-        return new Order(member.getId(),
-                new OrderItems(dtos.stream()
-                        .map(this::createOrderItem)
-                        .collect(Collectors.toUnmodifiableList()),
-                        new DiscountPriceCalculator()
-                )
+    private Order createOrder(final Member member, final List<CartItem> cartItems) {
+        return new Order(
+                member.getId(),
+                new OrderItems(convertCartItemsToOrderItems(cartItems), new DiscountPriceCalculator())
         );
     }
 
-    private OrderItem createOrderItem(final CartItemWithProductDto dto) {
-        return new OrderItem(
-                new Product(dto.getProductId(), dto.getProductName(), new Price(dto.getProductPrice()), dto.getProductImageUrl()),
-                new Quantity(dto.getQuantity())
-        );
+    private List<OrderItem> convertCartItemsToOrderItems(final List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(cartItem -> new OrderItem(cartItem.getProduct(), cartItem.getQuantity()))
+                .collect(Collectors.toUnmodifiableList());
     }
 }

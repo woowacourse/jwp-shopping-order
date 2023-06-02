@@ -8,7 +8,6 @@ import cart.domain.Product;
 import cart.domain.Quantity;
 import cart.entity.CartItemEntity;
 import cart.entity.CartItemWithProductEntity;
-import cart.repository.dto.CartItemWithProductDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,10 +23,10 @@ public class CartItemJdbcRepository implements CartItemRepository {
     }
 
     @Override
-    public List<CartItemWithProductDto> findByIds(final List<Long> ids) {
+    public List<CartItem> findByIds(final List<Long> ids) {
         final List<CartItemWithProductEntity> entities = cartItemDao.findProductDetailByIds(ids);
         return entities.stream()
-                .map(CartItemWithProductDto::from)
+                .map(this::toDomain)
                 .collect(Collectors.toUnmodifiableList());
     }
 
