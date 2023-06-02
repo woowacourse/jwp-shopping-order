@@ -1,3 +1,6 @@
+DELETE
+FROM member;
+
 INSERT INTO member (id, email, password)
 VALUES (1, 'a@a.com', '1234');
 INSERT INTO member (id, email, password)
