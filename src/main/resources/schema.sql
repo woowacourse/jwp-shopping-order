@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS order_product
     id                    INT UNSIGNED    NOT NULL AUTO_INCREMENT,
     order_id              INT UNSIGNED    NOT NULL,
     product_id            INT UNSIGNED    NOT NULL,
-    ordered_product_price BIGINT UNSIGNED NOT NULL,
+    ordered_product_price INT UNSIGNED NOT NULL,
     quantity              INT             NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (order_id) REFERENCES `order` (id),
