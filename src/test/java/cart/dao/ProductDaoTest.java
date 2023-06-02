@@ -1,6 +1,7 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.Product;
 import cart.repository.dao.ProductDao;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
@@ -57,11 +59,9 @@ class ProductDaoTest {
         final Long saveId = productDao.createProduct(product);
         productDao.deleteProduct(saveId);
 
-        // when
-        final Product findProduct = productDao.getProductById(saveId);
-
-        // then
-        assertThat(findProduct.isDeleted()).isTrue();
+        // when, then
+        assertThatThrownBy(() -> productDao.getProductById(saveId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @Test

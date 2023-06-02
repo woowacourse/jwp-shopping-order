@@ -25,7 +25,7 @@ public class ProductDao {
     }
 
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT * FROM product WHERE is_deleted = FALSE";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
@@ -37,7 +37,7 @@ public class ProductDao {
     }
 
     public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+        String sql = "SELECT * FROM product WHERE id = ? AND is_deleted = FALSE";
         return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
@@ -48,7 +48,7 @@ public class ProductDao {
     }
 
     public List<Product> getProductByIds(List<Long> productIds) {
-        String sql = "SELECT id, name, price, image_url, is_deleted FROM product WHERE id IN (:ids)";
+        String sql = "SELECT id, name, price, image_url, is_deleted FROM product WHERE id IN (:ids) AND is_deleted = FALSE";
 
         Map<String, Object> params = Collections.singletonMap("ids", productIds);
 

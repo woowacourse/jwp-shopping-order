@@ -158,4 +158,4 @@
 ## 할일
 - [x] 주문 생성 기능 서비스 테스트 작성
 - [ ] 주문 내역 조회시, response의 키 값 cartItems -> orderItems로 바꾸는 거 어떤지 팀원과 논의한 후에 변경하기
-- [ ] Product 조회 시에 is_deleted = 0인 row만 조회하도록 수정
+- [x] Product 조회 시에 is_deleted = 0인 row만 조회하도록 수정
