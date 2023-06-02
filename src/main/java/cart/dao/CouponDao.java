@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.Coupon;
+import cart.domain.Member;
 import cart.domain.vo.Amount;
 import java.util.HashMap;
 import java.util.List;
@@ -67,5 +68,14 @@ public class CouponDao {
         jdbcTemplate.update(couponSql, usedCoupon.getName(), usedCoupon.getMinAmount().getValue(),
             usedCoupon.getDiscountAmount().getValue(),
             usedCoupon.getId());
+    }
+
+    public List<Coupon> findAllByMember(final Member member) {
+        final String sql =
+            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount, mc.is_used as is_used "
+                + "FROM member_coupon as mc "
+                + "INNER JOIN coupon c on mc.coupon_id = c.id "
+                + "WHERE member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, member.getId());
     }
 }

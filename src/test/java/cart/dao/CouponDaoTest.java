@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.vo.Amount;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Repository;
 class CouponDaoTest {
 
     private final Member member = new Member(1L, "test@test.com", "password");
-    private final Coupon coupon = new Coupon("name", Amount.of(1_000), Amount.of(10_000), false);
+    private final Coupon coupon1 = new Coupon("name1", Amount.of(1_000), Amount.of(10_000), false);
+    private final Coupon coupon2 = new Coupon("name2", Amount.of(2_000), Amount.of(20_000), true);
 
     @Autowired
     private CouponDao couponDao;
@@ -32,7 +34,7 @@ class CouponDaoTest {
     void testFindByCouponIdAndMemberId() {
         //given
         final Member savedMember = memberDao.addMember(member);
-        final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
+        final Coupon savedCoupon = couponDao.save(coupon1, savedMember.getId());
 
         //when
         final Optional<Coupon> optionalCoupon = couponDao.findByCouponIdAndMemberId(savedCoupon.getId(),
@@ -41,7 +43,7 @@ class CouponDaoTest {
         //then
         assertThat(optionalCoupon).isPresent();
         final Coupon coupon = optionalCoupon.get();
-        assertThat(coupon.getName()).isEqualTo(this.coupon.getName());
+        assertThat(coupon.getName()).isEqualTo(this.coupon1.getName());
     }
 
     @Test
@@ -49,7 +51,7 @@ class CouponDaoTest {
     void testUpdate() {
         //given
         final Member savedMember = memberDao.addMember(member);
-        final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
+        final Coupon savedCoupon = couponDao.save(coupon1, savedMember.getId());
         final Coupon usedCoupon = savedCoupon.use();
 
         //when
@@ -59,5 +61,23 @@ class CouponDaoTest {
         final Coupon coupon = couponDao.findByCouponIdAndMemberId(usedCoupon.getId(), savedMember.getId())
             .orElseThrow(RuntimeException::new);
         assertThat(coupon.isUsed()).isTrue();
+    }
+
+    @Test
+    @DisplayName("회원이 가지고있는 모든 쿠폰을 조회한다.")
+    void testFindAllByMember() {
+        //given
+        final Member savedMember = memberDao.addMember(member);
+        final Coupon savedCoupon1 = couponDao.save(coupon1, savedMember.getId());
+        final Coupon savedCoupon2 = couponDao.save(coupon2, savedMember.getId());
+
+        //when
+        final List<Coupon> coupons = couponDao.findAllByMember(member);
+
+        //then
+        final List<Coupon> expectedCoupons = List.of(savedCoupon1, savedCoupon2);
+        for (int index = 0; index < coupons.size(); index++) {
+            assertThat(coupons.get(index).getId()).isEqualTo(expectedCoupons.get(index).getId());
+        }
     }
 }
