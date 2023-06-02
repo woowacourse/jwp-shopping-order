@@ -10,6 +10,7 @@ import cart.service.response.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -30,18 +31,21 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
+    @Transactional
     public Long createProduct(final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), new Price(productRequest.getPrice()),
                 productRequest.getImageUrl());
         return productRepository.insertProduct(product).getId();
     }
 
+    @Transactional
     public void updateProduct(final Long productId, final ProductRequest productRequest) {
         final Product product = new Product(productRequest.getName(), new Price(productRequest.getPrice()),
                 productRequest.getImageUrl());
         productRepository.updateProduct(productId, product);
     }
 
+    @Transactional
     public void deleteProduct(final Long productId) {
         productRepository.deleteProduct(productId);
     }

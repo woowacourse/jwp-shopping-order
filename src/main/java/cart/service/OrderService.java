@@ -14,6 +14,7 @@ import cart.service.response.OrderResponseDto;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -35,6 +36,7 @@ public class OrderService {
         return OrderResponseDto.from(order);
     }
 
+    @Transactional
     public Long order(final Member member, final OrderRequestDto requestDto) {
         final List<CartItem> cartItems = requestDto.getCartItemIds().stream()
                 .map(cartItemDao::findById)

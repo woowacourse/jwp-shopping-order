@@ -12,6 +12,7 @@ import cart.service.response.DiscountPriceResponse;
 import cart.service.response.MemberCouponResponse;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CouponService {
@@ -39,6 +40,7 @@ public class CouponService {
         return DiscountPriceResponse.of(discountPrice, origin.subtract(discountPrice));
     }
 
+    @Transactional
     public Long issue(final Member member, final Long id) {
         final Coupon coupon = couponRepository.findById(id);
         final MemberCoupon memberCoupon = new MemberCoupon(coupon, member.getId());
