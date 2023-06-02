@@ -8,14 +8,14 @@ import java.util.stream.Collectors;
 
 public class OrderResponse {
     private final Long orderId;
-    private final List<OrderInfoResponse> orderInfo;
+    private final List<OrderInfoResponse> orderInfos;
     private final int originalPrice;
     private final int usedPoint;
     private final int pointToAdd;
 
-    private OrderResponse(Long orderId, List<OrderInfoResponse> orderInfo, int originalPrice, int usedPoint, int pointToAdd) {
+    private OrderResponse(Long orderId, List<OrderInfoResponse> orderInfos, int originalPrice, int usedPoint, int pointToAdd) {
         this.orderId = orderId;
-        this.orderInfo = orderInfo;
+        this.orderInfos = orderInfos;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
@@ -35,8 +35,8 @@ public class OrderResponse {
         return orderId;
     }
 
-    public List<OrderInfoResponse> getOrderInfo() {
-        return orderInfo;
+    public List<OrderInfoResponse> getOrderInfos() {
+        return orderInfos;
     }
 
     public int getOriginalPrice() {

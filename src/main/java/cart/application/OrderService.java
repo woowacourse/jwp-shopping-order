@@ -30,7 +30,7 @@ public class OrderService {
 
     @Transactional
     public Long order(Long memberId, OrderRequest orderRequest) {
-        OrderManager orderManager = new OrderManager(orderRequest.getOrder()
+        OrderManager orderManager = new OrderManager(orderRequest.getCartItemIds()
                 .stream()
                 .map(cartItemDao::findById)
                 .collect(Collectors.toList()));
@@ -52,7 +52,7 @@ public class OrderService {
             orderInfoDao.save(orderInfo);
         }
 
-        for (Long cartItemId : orderRequest.getOrder()) {
+        for (Long cartItemId : orderRequest.getCartItemIds()) {
             cartItemDao.deleteById(cartItemId);
         }
         memberDao.updateMember(order.getMember());

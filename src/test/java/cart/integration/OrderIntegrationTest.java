@@ -184,7 +184,7 @@ class OrderIntegrationTest extends IntegrationTest {
                 .extract();
 
         OrderResponse resultResponse = response.as(OrderResponse.class);
-        List<OrderInfoResponse> orderInfoResponse = resultResponse.getOrderInfo();
+        List<OrderInfoResponse> orderInfoResponse = resultResponse.getOrderInfos();
 
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
