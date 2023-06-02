@@ -40,4 +40,14 @@ public class Order {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", member=" + member +
+                ", totalPrice=" + totalPrice +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

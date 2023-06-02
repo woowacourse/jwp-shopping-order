@@ -39,4 +39,11 @@ public class Cash {
     public int hashCode() {
         return Objects.hash(cash);
     }
+
+    @Override
+    public String toString() {
+        return "Cash{" +
+                "cash=" + cash +
+                '}';
+    }
 }

@@ -1,7 +1,13 @@
 package cart.dao;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import cart.domain.member.Member;
+import cart.domain.order.Order;
 import cart.domain.orderitem.OrderItem;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -11,6 +17,27 @@ public class OrderItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<OrderItem> rowMapper = (rs, rowNum) -> {
+        long memberId = rs.getLong("cart_order.member_id");
+        String email = rs.getString("member.email");
+        String password = rs.getString("member.password");
+        int cash = rs.getInt("member.cash");
+        Member member = new Member(memberId, email, password, cash);
+
+        long orderId = rs.getLong("cart_order.id");
+        int totalPrice = rs.getInt("cart_order.total_price");
+        LocalDateTime createdAt = rs.getTimestamp("cart_order.created_at").toLocalDateTime();
+        Order order = new Order(orderId, member, totalPrice, createdAt);
+
+        long orderItemId = rs.getLong("order_item.id");
+        long productId = rs.getLong("order_item.product_id");
+        String name = rs.getString("order_item.name");
+        int price = rs.getInt("order_item.price");
+        String imageUrl = rs.getString("order_item.image_url");
+        int quantity = rs.getInt("order_item.quantity");
+
+        return new OrderItem(orderItemId, order, productId, name, price, imageUrl, quantity);
+    };
 
     public OrderItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -28,5 +55,18 @@ public class OrderItemDao {
                 .addValue("quantity", orderItem.getQuantity());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public List<OrderItem> selectAllByMemberId(Long memberId) {
+        String sql = "SELECT cart_order.member_id, " +
+                "member.email, member.password, member.cash, " +
+                "cart_order.id, cart_order.total_price, cart_order.created_at, " +
+                "order_item.id, order_item.product_id, order_item.name, order_item.price, order_item.image_url, order_item.quantity, " +
+                "FROM order_item " +
+                "INNER JOIN cart_order ON cart_order.id = order_item.cart_order_id " +
+                "INNER JOIN member ON member.id = cart_order.member_id " +
+                "WHERE cart_order.member_id = ? " +
+                "ORDER BY order_item.cart_order_id DESC, order_item.product_id DESC";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

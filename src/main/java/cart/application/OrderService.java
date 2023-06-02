@@ -12,9 +12,8 @@ import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.orderitem.OrderItem;
-import cart.dto.AuthMember;
-import cart.dto.OrderCartItemDto;
-import cart.dto.OrderRequest;
+import cart.domain.orderitem.OrderItems;
+import cart.dto.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +32,7 @@ public class OrderService {
         this.orderItemDao = orderItemDao;
     }
 
+    // TODO: 크기 줄이기 (OrderItems?)
     public Long order(AuthMember authMember, OrderRequest orderRequest) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
         CartItems allCartItems = new CartItems(cartItemDao.selectAllByMemberId(findMember.getId()));
@@ -52,5 +52,12 @@ public class OrderService {
             orderItemDao.insert(orderItem);
         }
         return insertedOrder.getId();
+    }
+
+    public OrdersResponse findOrders(AuthMember authMember) {
+        Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
+        OrderItems orderItems = new OrderItems(orderItemDao.selectAllByMemberId(findMember.getId()));
+        List<OrderResponse> orderResponses = orderItems.toOrderResponses();
+        return new OrdersResponse(orderResponses);
     }
 }

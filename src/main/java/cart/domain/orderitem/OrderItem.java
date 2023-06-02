@@ -1,6 +1,7 @@
 package cart.domain.orderitem;
 
 import cart.domain.order.Order;
+import cart.dto.ProductResponse;
 
 public class OrderItem {
 
@@ -39,7 +40,6 @@ public class OrderItem {
     public Long getId() {
         return id;
     }
-
     public Order getOrder() {
         return order;
     }
@@ -62,5 +62,30 @@ public class OrderItem {
 
     public Long getProductId() {
         return productId;
+    }
+
+    public ProductResponse toProductResponse() {
+        return new ProductResponse(productId, name, price, imageUrl);
+    }
+
+    public Long getOrderId() {
+        return order.getId();
+    }
+
+    public boolean isSameOrder(Long orderId) {
+        return order.getId().equals(orderId);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", order=" + order +
+                ", productId=" + productId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }
