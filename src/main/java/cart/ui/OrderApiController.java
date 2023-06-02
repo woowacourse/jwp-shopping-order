@@ -15,7 +15,8 @@ import java.net.URI;
 @RestController
 @RequestMapping("/orders")
 public class OrderApiController {
-
+    public static final String MAXIMUM_BIGINT = "9223372036854775807";
+    
     private final OrderService orderService;
 
     public OrderApiController(final OrderService orderService) {
@@ -37,7 +38,7 @@ public class OrderApiController {
 
     @GetMapping
     public ResponseEntity<OrderListResponse> showOrders(final Member member,
-                                                        @RequestParam(value = "last-id", defaultValue = "0") final Long idx) {
+                                                        @RequestParam(value = "last-id", defaultValue = MAXIMUM_BIGINT) final Long idx) {
         return ResponseEntity.ok(orderService.findPageByIndex(member, idx));
     }
 
