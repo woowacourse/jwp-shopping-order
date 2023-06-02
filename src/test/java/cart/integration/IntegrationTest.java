@@ -1,6 +1,7 @@
 package cart.integration;
 
 import cart.dto.request.MemberCreateRequest;
+import cart.support.TestSupport;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -12,7 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IntegrationTest {
+public class IntegrationTest extends TestSupport {
     @LocalServerPort
     private int port;
 
@@ -38,7 +39,7 @@ public class IntegrationTest {
                 .auth().preemptive().basic(email, password)
                 .when()
                 .get("members/points")
-                .then().log().all()
+                .then()
                 .extract();
     }
 }

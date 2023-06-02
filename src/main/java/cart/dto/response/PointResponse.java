@@ -11,7 +11,7 @@ public class PointResponse {
     }
 
     public static PointResponse of(Member member) {
-        return new PointResponse(member.getPoint().getValue());
+        return new PointResponse(member.getPointAsInt());
     }
 
     public Integer getPoint() {
