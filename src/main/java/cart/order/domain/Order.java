@@ -21,6 +21,12 @@ public class Order {
     this.coupon = coupon;
   }
 
+  public Order(final Long id, final Member member, final Money deliveryFee) {
+    this.id = id;
+    this.member = member;
+    this.deliveryFee = deliveryFee;
+  }
+
   public boolean isNotMyOrder(final Long memberId) {
     return !this.member.isMe(memberId);
   }

@@ -1,6 +1,12 @@
 package cart.coupon.dao;
 
+import cart.coupon.domain.Coupon;
+import cart.coupon.domain.EmptyCoupon;
+import cart.coupon.domain.FixDiscountCoupon;
+import cart.value_object.Money;
+import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -33,5 +39,20 @@ public class CouponDao {
         new MapSqlParameterSource().addValue("ids", couponIds);
 
     return namedParameterJdbcTemplate.query(sql, parameterSource, rowMapper);
+  }
+
+  public Coupon findById(final Long couponId) {
+    final String sql = "SELECT * FROM COUPON C WHERE C.id = ?";
+
+    try {
+      return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+        final long id = rs.getLong("id");
+        final String name = rs.getString("name");
+        final BigDecimal discountPrice = rs.getBigDecimal("discount_price");
+        return new FixDiscountCoupon(id, name, new Money(discountPrice));
+      }, couponId);
+    } catch (EmptyResultDataAccessException e) {
+      return new EmptyCoupon();
+    }
   }
 }

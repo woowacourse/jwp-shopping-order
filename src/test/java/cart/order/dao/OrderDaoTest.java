@@ -3,8 +3,18 @@ package cart.order.dao;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import cart.coupon.dao.CouponDao;
+import cart.coupon.domain.Coupon;
+import cart.coupon.domain.EmptyCoupon;
+import cart.coupon.domain.FixDiscountCoupon;
+import cart.member.dao.MemberDao;
+import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
+import cart.order.domain.Order;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -26,9 +36,15 @@ class OrderDaoTest {
 
   private OrderDao orderDao;
 
+  private MemberDao memberDao;
+  private CouponDao couponDao;
+
   @BeforeEach
   void setUp() {
-    orderDao = new OrderDao(jdbcTemplate);
+    memberDao = mock(MemberDao.class);
+    couponDao = mock(CouponDao.class);
+
+    orderDao = new OrderDao(jdbcTemplate, memberDao, couponDao);
   }
 
   @Test
@@ -37,11 +53,20 @@ class OrderDaoTest {
     //given
     final long memberId = 1L;
 
+    final Member member = new Member(1L, "email", "password");
+    final Coupon coupon = new EmptyCoupon();
+
+    when(memberDao.getMemberById(anyLong()))
+        .thenReturn(member);
+
+    when(couponDao.findById(anyLong()))
+        .thenReturn(coupon);
+
     //when
-    List<OrderEntity> orderEntities = orderDao.findByMemberId(memberId);
+    final List<Order> orders = orderDao.findByMemberId2(memberId);
 
     //then
-    assertEquals(3, orderEntities.size());
+    assertEquals(3, orders.size());
   }
 
   @Test
@@ -51,12 +76,12 @@ class OrderDaoTest {
     final long orderId = 1L;
 
     //when
-    Optional<OrderEntity> orderEntity = orderDao.findByOrderId(orderId);
+    final Optional<Order> order = orderDao.findByOrderId2(orderId);
 
     //then
     assertAll(
-        () -> Assertions.assertThat(orderEntity).isPresent(),
-        () -> assertEquals(orderEntity.get().getId(), orderId)
+        () -> Assertions.assertThat(order).isPresent(),
+        () -> assertEquals(order.get().getId(), orderId)
     );
   }
 
@@ -70,8 +95,8 @@ class OrderDaoTest {
     orderDao.deleteByOrderId(1L);
 
     //then
-    final Optional<OrderEntity> deletedOrder = orderDao.findByOrderId(orderId);
+    final Optional<Order> order = orderDao.findByOrderId2(orderId);
 
-    assertTrue(deletedOrder.isEmpty());
+    assertTrue(order.isEmpty());
   }
 }
