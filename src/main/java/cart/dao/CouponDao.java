@@ -49,7 +49,7 @@ public class CouponDao {
     }
 
     public List<Coupon> findByMemberId(Long memberId) {
-        String sql = "SELECT id, member_id, discount_price, created_at, updated_at FROM coupon WHERE member_id = ?";
+        String sql = "SELECT * FROM coupon WHERE member_id = ?";
 
         return jdbcTemplate.query(sql, new Object[]{memberId}, new CouponRowMapper());
     }
