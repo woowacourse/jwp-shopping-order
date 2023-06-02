@@ -1,0 +1,4 @@
+### 포인트 조회
+GET http://localhost:8080/points
+Authorization: Basic dG1kZ2gxNTkyQG5hdmVyLmNvbToxMjM0
+Content-Type: application/json

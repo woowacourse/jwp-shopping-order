@@ -1,0 +1,28 @@
+### 상품 목록 조회
+GET http://localhost:8080/products
+
+### 상품 조회
+GET http://localhost:8080/products/1
+
+### 상품 추가
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+    "name": "하마드",
+    "price": 30000,
+    "imageUrl": "http://example.com/burrito.jpg"
+}
+
+### 상품 수정
+PUT http://localhost:8080/products/1
+Content-Type: application/json
+
+{
+  "name": "하마드",
+  "price": 30000,
+  "imageUrl": "http://example.com/burrito.jpg"
+}
+
+### 상품 삭제
+DELETE http://localhost:8080/products/1

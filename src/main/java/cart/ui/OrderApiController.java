@@ -2,12 +2,10 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.EachOrderResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.net.URI;
 import java.util.List;
@@ -35,7 +33,7 @@ public class OrderApiController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<EachOrderResponse> showOrder(Member member, @PathVariable Long orderId){
+    public ResponseEntity<OrderResponse> showOrder(Member member, @PathVariable Long orderId){
         return ResponseEntity.ok(orderService.showOrder(member, orderId));
     }
 }

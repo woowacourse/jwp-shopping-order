@@ -148,6 +148,22 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
     }
 
+    @Test
+    void 멤버와_상품_ID를_통해_특정_장바구니_품목을_조회한다() {
+        final CartItemResponse cartItemResponse = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().log().all()
+                .get("/cart-items/products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .jsonPath()
+                .getObject(".", CartItemResponse.class);
+        assertThat(cartItemResponse.getId()).isEqualTo(1L);
+
+    }
+
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
