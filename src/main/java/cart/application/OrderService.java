@@ -36,7 +36,11 @@ public class OrderService {
         Order order = Order.of(cartItems, member, orderRequest.getTotalPrice());
 
         Money deliveryFee = deliveryPolicy.calculate(order);
-        Money discounting = couponService.apply(order, orderRequest.getCouponId());
+
+        Money discounting = Money.from(0);
+        if (isCouponSelected(orderRequest)) {
+            discounting = couponService.apply(order, orderRequest.getCouponId());
+        }
 
         Order payed = payService.pay(order, deliveryFee, discounting, member.getId());
 
@@ -44,14 +48,19 @@ public class OrderService {
         return orderDao.save(payed, discounting);
     }
 
+    private boolean isCouponSelected(OrderRequest orderRequest) {
+        return (!orderRequest.isCouponNull()) && (!orderRequest.getCouponId().equals(0));
+    }
+
     public OrderResponse findOrder(Member member, Long orderId) {
         OrderDto order = orderDao.findById(orderId);
-        // TODO: 2023-06-02 order가 member의 것인지 검증
         return OrderResponse.of(order);
     }
 
     public List<OrderItemDto> findOrderByMember(Member member) {
         List<OrderDto> orders = orderDao.findByMemberId(member.getId());
-        return orders.stream().map(orderDto -> {return OrderItemDto.of(orderDto.getId(), orderDto.getCartItems());}).collect(Collectors.toList());
+        return orders.stream().map(orderDto -> {
+            return OrderItemDto.of(orderDto.getId(), orderDto.getCartItems());
+        }).collect(Collectors.toList());
     }
 }

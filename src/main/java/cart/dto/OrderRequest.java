@@ -24,4 +24,8 @@ public class OrderRequest {
     public Long getCouponId() {
         return couponId;
     }
+
+    public boolean isCouponNull() {
+        return this.couponId == null;
+    }
 }

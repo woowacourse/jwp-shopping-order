@@ -100,6 +100,61 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(price).isEqualTo(22000);
     }
 
+    @DisplayName("장바구니의 아이템들을 쿠폰 선택 없이 주문한다. - 성공")
+    @Test
+    void orderItems_when_couponId_null_success() {
+
+        OrderRequest orderRequest1 = new OrderRequest(List.of(1L), 23000, null);
+        OrderRequest orderRequest2 = new OrderRequest(List.of(2L), 83000, 0L);
+
+        ExtractableResponse<Response> orderResponseNull = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest1)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        ExtractableResponse<Response> orderResponseZero = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest2)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        ExtractableResponse<Response> NullCouponSpecific = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get(orderResponseNull.header("Location"))
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(orderResponseNull.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        int price = NullCouponSpecific.body().jsonPath().getInt("totalPrice");
+        assertThat(price).isEqualTo(23000);
+
+
+        ExtractableResponse<Response> zeroCouponSpecific = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get(orderResponseNull.header("Location"))
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(orderResponseNull.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        int price2 = zeroCouponSpecific.body().jsonPath().getInt("totalPrice");
+        assertThat(price2).isEqualTo(23000);
+    }
+
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
