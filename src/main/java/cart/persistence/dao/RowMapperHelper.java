@@ -169,7 +169,8 @@ public class RowMapperHelper {
             OrderEntity order = orderRowMapperWithTable().mapRow(rs, rowNum);
             MemberCouponEntity memberCoupon = memberCouponRowMapperWithTable().mapRow(rs, rowNum);
             MemberEntity member = memberRowMapperWithTable().mapRow(rs, rowNum);
-            return new OrderDetailDTO(order, member, memberCoupon);
+            CouponEntity coupon = couponRowMapperWithTable().mapRow(rs, rowNum);
+            return new OrderDetailDTO(order, member, memberCoupon, coupon);
         };
     }
 
