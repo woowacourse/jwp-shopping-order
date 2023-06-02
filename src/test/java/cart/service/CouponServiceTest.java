@@ -38,7 +38,7 @@ class CouponServiceTest {
         final List<MemberCouponResponse> memberCoupons = couponService.findMemberCoupons(MEMBER_1);
 
         assertThat(memberCoupons)
-                .extracting(MemberCouponResponse::getId, MemberCouponResponse::getName)
+                .extracting(MemberCouponResponse::getMemberCouponId, MemberCouponResponse::getName)
                 .containsExactly(
                         tuple(savedMemberCoupon.getId(), coupon.getName())
                 );

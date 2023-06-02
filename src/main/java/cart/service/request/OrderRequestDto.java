@@ -6,26 +6,26 @@ import java.util.Optional;
 public class OrderRequestDto {
 
     private final List<Long> cartItemIds;
-    private final Long couponId;
+    private final Long memberCouponId;
 
     private OrderRequestDto() {
         this(null, null);
     }
 
-    public OrderRequestDto(final List<Long> cartItemIds, final Long couponId) {
+    public OrderRequestDto(final List<Long> cartItemIds, final Long memberCouponId) {
         this.cartItemIds = cartItemIds;
-        this.couponId = couponId;
+        this.memberCouponId = memberCouponId;
     }
 
     public List<Long> getCartItemIds() {
         return cartItemIds;
     }
 
-    public Long getCouponId() {
-        return couponId;
+    public Long getMemberCouponId() {
+        return memberCouponId;
     }
 
     public Optional<Long> getOptionalCouponId() {
-        return Optional.ofNullable(couponId);
+        return Optional.ofNullable(memberCouponId);
     }
 }

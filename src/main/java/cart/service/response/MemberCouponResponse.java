@@ -2,20 +2,20 @@ package cart.service.response;
 
 public class MemberCouponResponse {
 
-    private final Long id;
+    private final Long memberCouponId;
     private final String name;
 
     private MemberCouponResponse() {
-        this(null,null);
+        this(null, null);
     }
 
-    public MemberCouponResponse(final Long id, final String name) {
-        this.id = id;
+    public MemberCouponResponse(final Long memberCouponId, final String name) {
+        this.memberCouponId = memberCouponId;
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
+    public Long getMemberCouponId() {
+        return memberCouponId;
     }
 
     public String getName() {

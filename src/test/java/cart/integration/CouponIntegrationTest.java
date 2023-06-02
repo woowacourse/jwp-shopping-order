@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.TestDataFixture;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
-import cart.service.response.CouponResponse;
 import cart.service.response.DiscountPriceResponse;
+import cart.service.response.MemberCouponResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -36,11 +36,11 @@ class CouponIntegrationTest extends IntegrationTest {
                 .andReturn();
 
         final String resultJsonString = result.getResponse().getContentAsString();
-        final List<CouponResponse> responses = OBJECT_MAPPER.readValue(resultJsonString, new TypeReference<>() {
+        final List<MemberCouponResponse> responses = OBJECT_MAPPER.readValue(resultJsonString, new TypeReference<>() {
         });
 
         assertThat(responses)
-                .extracting(CouponResponse::getName, CouponResponse::getId)
+                .extracting(MemberCouponResponse::getName, MemberCouponResponse::getMemberCouponId)
                 .containsExactly(tuple(coupon.getName(), savedMemberCoupon.getId()));
     }
 
@@ -54,7 +54,7 @@ class CouponIntegrationTest extends IntegrationTest {
         final MvcResult result = mockMvc
                 .perform(get("/coupons/discount")
                         .param("origin-price", "10000")
-                        .param("coupon-id", String.valueOf(savedMemberCoupon.getId()))
+                        .param("member-coupon-id", String.valueOf(savedMemberCoupon.getId()))
                         .header("Authorization", MEMBER_1_AUTH_HEADER))
                 .andExpect(status().isOk())
                 .andReturn();

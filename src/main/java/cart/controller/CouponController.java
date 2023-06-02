@@ -33,7 +33,7 @@ public class CouponController {
     @GetMapping("/discount")
     public ResponseEntity<DiscountPriceResponse> discountPriceCoupon(final Member member,
                                                                      @RequestParam(value = "origin-price") final Integer originPrice,
-                                                                     @RequestParam(value = "coupon-id") final Long memberCouponId) {
+                                                                     @RequestParam(value = "member-coupon-id") final Long memberCouponId) {
         final DiscountPriceResponse discount = couponService.discount(member, originPrice, memberCouponId);
         return ResponseEntity.ok(discount);
     }

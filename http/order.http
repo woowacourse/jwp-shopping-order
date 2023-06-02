@@ -82,7 +82,7 @@ Content-Type: application/json
     1,
     2
   ],
-  "couponId": 1
+  "memberCouponId": 1
 }
 
 ### response

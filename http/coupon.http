@@ -1,5 +1,5 @@
 ### 쿠폰할인 적용
-GET http://localhost:8080/coupons/discount?total-price=10000&coupon-id=1
+GET http://localhost:8080/coupons/discount?total-price=10000&member-coupon-id=1
 Accept: application/json
 
 ### response
@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ### 멤버의 쿠폰 전체 조회하기
-GET http://localhost:8080/couposn
+GET http://localhost:8080/coupons
 Accept: application/json
 Authorization: Basic c2FuZ3VuOjEyMzQ=
 
@@ -22,11 +22,11 @@ Content-Type: application/json
 
 [
   {
-    "id": 1,
+    "memberCouponId": 1,
     "name": "50% 할인쿠폰"
   },
   {
-    "id": 2,
+    "memberCouponId": 2,
     "name": "5000원 할인쿠폰"
   }
 ]
