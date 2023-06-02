@@ -5,10 +5,13 @@ import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
+import cart.domain.order.OrderHistory;
+import cart.domain.order.OrderItem;
+import cart.domain.order.OrderItems;
 import cart.domain.product.Product;
 import cart.domain.vo.Money;
+import cart.domain.vo.Quantity;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -53,7 +56,6 @@ class OrderRepositoryTest extends RepositoryTestConfig {
                 .isNotZero();
     }
 
-    @Disabled
     @Test
     void 회원의_주문을_조회한다() {
         // given
@@ -69,13 +71,22 @@ class OrderRepositoryTest extends RepositoryTestConfig {
 
         Order 주문 = 주문(회원, 장바구니_상품_목록, Money.from(1000));
         Long 주문_식별자값 = orderRepository.saveOrder(주문);
-//
-//        // when
-//        orderRepository.
-//
-//        // then
-//        assertThat(주문_식별자값)
-//                .isNotNull()
-//                .isNotZero();
+
+        // when
+        List<OrderHistory> 회원_주문_기록_목록 = orderRepository.findOrdersByMemberId(회원.getId());
+
+        // then
+        assertThat(회원_주문_기록_목록)
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(List.of(
+                        new OrderHistory(주문_식별자값,
+                                회원,
+                                OrderItems.from(List.of(new OrderItem(null, 계란, Quantity.from(10), 회원.getId()))),
+                                Money.from(10000),
+                                Money.from(1000),
+                                null
+                        )
+                ));
     }
 }

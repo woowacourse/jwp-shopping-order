@@ -84,6 +84,7 @@ class OrderApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("orderId").description("주문 식별자값"),
                                 fieldWithPath("orderProducts.[].productId").description("주문한 상품 식별자값"),
                                 fieldWithPath("orderProducts.[].name").description("주문한 상품명"),
+                                fieldWithPath("orderProducts.[].imageUrl").description("주문한 상품 이미지"),
                                 fieldWithPath("orderProducts.[].quantity").description("주문한 상품 수량"),
                                 fieldWithPath("orderProducts.[].price").description("주문한 단일 상품 금액"),
                                 fieldWithPath("orderProducts.[].totalPrice").description("주문한 해당 상품의 총금액 (수량 * 금액)"),
@@ -114,6 +115,7 @@ class OrderApiControllerTest extends ControllerTestConfig {
                                 fieldWithPath("[].orderId").description("주문 식별자값"),
                                 fieldWithPath("[].orderProducts.[].productId").description("주문한 상품 식별자값"),
                                 fieldWithPath("[].orderProducts.[].name").description("주문한 상품명"),
+                                fieldWithPath("[].orderProducts.[].imageUrl").description("주문한 상품 이미지"),
                                 fieldWithPath("[].orderProducts.[].quantity").description("주문한 상품 수량"),
                                 fieldWithPath("[].orderProducts.[].price").description("주문한 단일 상품 금액"),
                                 fieldWithPath("[].orderProducts.[].totalPrice").description("주문한 해당 상품의 총금액 (수량 * 금액)")
