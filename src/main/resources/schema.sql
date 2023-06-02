@@ -31,21 +31,38 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
 
-CREATE TABLE order_history
+## 테이블 변경함. DAO부터 다시 기능 구현하기..!
+CREATE TABLE orders
 (
-    id                  BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    date_time           DATETIME      NOT NULL,
-    member_id           BIGINT        NOT NULL,
-    product_id          BIGINT        NOT NULL,
-    product_name        VARCHAR(255)  NOT NULL,
-    product_price       INT           NOT NULL,
-    product_image_url   VARCHAR(2083) NOT NULL,
-    quantity            INT           NOT NULL,
-    total_product_price INT           NOT NULL,
-    total_delivery_fee  INT           NOT NULL,
-    use_point           INT           NOT NULL,
-    total_price         INT           NOT NULL,
+    id                  BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created_at          TIMESTAMP NOT NULL,
+    member_id           BIGINT    NOT NULL,
+    total_product_price INT       NOT NULL,
+    total_delivery_fee  INT       NOT NULL,
+    use_point           INT       NOT NULL,
+    total_price         INT       NOT NULL,
 
-    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
+);
+
+CREATE TABLE orders_orderItem
+(
+    id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_history_id BIGINT NOT NULL,
+    order_item       BIGINT NOT NULL,
+
+    FOREIGN KEY (order_history_id) REFERENCES orders (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (order_item) REFERENCES order_item (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE order_item
+(
+    id                BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id        BIGINT        NOT NULL,
+    product_name      VARCHAR(255)  NOT NULL,
+    product_price     INT           NOT NULL,
+    product_image_url VARCHAR(2083) NOT NULL,
+    quantity          INT           NOT NULL,
+
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
