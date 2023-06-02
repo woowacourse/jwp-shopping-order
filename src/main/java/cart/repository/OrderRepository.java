@@ -109,7 +109,7 @@ public class OrderRepository {
                 .collect(toList());
         final Map<Long, Coupon> couponIdByCoupon = couponDao.findByIds(couponIds).stream()
                 .map(CouponEntity::toDomain)
-                .collect(toMap(Coupon::getId, Function.identity()));
+                .collect(toMap(Coupon::getId, Function.identity(), (coupon1, coupon2) -> coupon1));
 
         return usedMemberCoupons.stream()
                 .map(it -> new MemberCoupon(memberId, couponIdByCoupon.get(it.getId())))
