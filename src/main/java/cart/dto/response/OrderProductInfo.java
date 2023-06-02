@@ -1,9 +1,12 @@
 package cart.dto.response;
 
 public class OrderProductInfo {
-    private final long id;
-    private final int quantity;
-    public final ProductResponse product;
+    private long id;
+    private int quantity;
+    public ProductResponse product;
+
+    public OrderProductInfo() {
+    }
 
     public OrderProductInfo(final long id, final int quantity, final ProductResponse product) {
         this.id = id;

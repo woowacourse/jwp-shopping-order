@@ -1,6 +1,10 @@
 package cart.ui;
 
 import cart.dto.request.OrderRequestDto;
+import cart.dto.response.OrderDetail;
+import cart.dto.response.OrderInfo;
+import cart.dto.response.OrderResponseDto;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,14 +14,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -42,7 +46,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-@ActiveProfiles("integration")
 @AutoConfigureRestDocs
 class OrderApiControllerTest {
 
@@ -171,7 +174,7 @@ class OrderApiControllerTest {
         );
 
         final OrderRequestDto couponOrderRequestDto = new OrderRequestDto(
-                List.of(1L),
+                List.of(2L),
                 81000,
                 1L
         );
@@ -190,13 +193,62 @@ class OrderApiControllerTest {
                                 .content(objectMapper.writeValueAsString(couponOrderRequestDto)))
                 .andExpect(status().isOk());
 
-        //when, then
-        final ResultActions resultActions = mockMvc.perform(
-                        get("/orders")
-                                .header(HttpHeaders.AUTHORIZATION, basicHeader()))
-                .andExpect(status().isOk());
 
-        resultActions.andReturn().getResponse().getContentAsString();
+        //when
+        final List<OrderInfo> orderInfos = objectMapper.readValue(mockMvc.perform(
+                                get("/orders")
+                                        .header(HttpHeaders.AUTHORIZATION, basicHeader()))
+                        .andExpect(status().isOk())
+                        .andDo(document("orderList",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint())))
+                        .andReturn().getResponse().getContentAsString(),
+                new TypeReference<List<OrderInfo>>() {
+                }
+        );
+
+        //then
+        assertAll(
+                () -> assertThat(orderInfos).hasSize(2),
+                () -> assertThat(orderInfos.get(0).getOrderItems()).hasSize(1),
+                () -> assertThat(orderInfos.get(1).getOrderItems()).hasSize(1)
+        );
+
+
+    }
+
+    @DisplayName("주문 상세 테스트")
+    @Test
+    void orderDetail() throws Exception {
+        //given
+        final OrderRequestDto couponOrderRequestDto = new OrderRequestDto(
+                List.of(2L),
+                81000,
+                1L
+        );
+
+        final long orderId = objectMapper.readValue(mockMvc.perform(
+                                post("/orders")
+                                        .header(HttpHeaders.AUTHORIZATION, basicHeader())
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(couponOrderRequestDto)))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsString(),
+                OrderResponseDto.class).getOrderId();
+
+        //when, then
+        final OrderDetail orderDetail = objectMapper.readValue(mockMvc.perform(
+                                get("/orders/" + orderId)
+                                        .header(HttpHeaders.AUTHORIZATION, basicHeader()))
+                        .andExpect(status().isOk())
+                        .andDo(document("orderDetail",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint())))
+                        .andReturn().getResponse().getContentAsString(),
+                OrderDetail.class);
+
+        assertThat(orderDetail.getTotalPrice()).isEqualTo(81000);
+        assertThat(orderDetail.getOrder().getOrderItems()).hasSize(1);
     }
 
     private String basicHeader() {
@@ -206,19 +258,19 @@ class OrderApiControllerTest {
     }
 
     class WithoutCouponRequestDto {
-        private List<Long> cartItems;
+        private List<Long> cartItemIds;
         private int totalPrice;
 
         public WithoutCouponRequestDto() {
         }
 
-        public WithoutCouponRequestDto(final List<Long> cartItems, final int totalPrice) {
-            this.cartItems = cartItems;
+        public WithoutCouponRequestDto(final List<Long> cartItemIds, final int totalPrice) {
+            this.cartItemIds = cartItemIds;
             this.totalPrice = totalPrice;
         }
 
-        public List<Long> getCartItems() {
-            return cartItems;
+        public List<Long> getCartItemIds() {
+            return cartItemIds;
         }
 
         public int getTotalPrice() {

@@ -1,7 +1,10 @@
 package cart.dto.response;
 
 public class OrderResponseDto {
-    private final long orderId;
+    private long orderId;
+
+    public OrderResponseDto() {
+    }
 
     public OrderResponseDto(final long orderId) {
         this.orderId = orderId;

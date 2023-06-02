@@ -50,6 +50,9 @@ class OrderServiceTest {
     @Mock
     private ProductDao productDao;
 
+    @Mock
+    private CouponService couponService;
+
     @InjectMocks
     private OrderService orderService;
 

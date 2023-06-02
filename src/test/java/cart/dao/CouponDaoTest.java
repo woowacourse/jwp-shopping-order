@@ -38,6 +38,10 @@ class CouponDaoTest {
     void findCouponById() throws SQLException {
         //given
 
+        //clear
+        jdbcTemplate.update("delete from coupon");
+        jdbcTemplate.update("delete from user_coupon");
+
         //targetCoupon
         jdbcTemplate.update("insert into coupon values (1, 1000, '1000')");
         jdbcTemplate.update("insert into coupon values (2, 2000, '2000')");
@@ -50,7 +54,7 @@ class CouponDaoTest {
         jdbcTemplate.update("insert into user_coupon values (2, 1, 2)");
 
         //otherUser
-        jdbcTemplate.update("insert into user_coupon values (3, 2, 3)");
+        jdbcTemplate.update("insert into user_coupon values (5, 2, 3)");
 
         //when
         final List<Coupon> couponById = couponDao.findCouponById(1L);
@@ -66,8 +70,7 @@ class CouponDaoTest {
     @Test
     void deleteUserCoupon() throws SQLException {
         //given
-        jdbcTemplate.update("insert into coupon values (1, 1000, '1000')");
-        jdbcTemplate.update("insert into user_coupon values (1, 1, 1)");
+        jdbcTemplate.update("insert into user_coupon values (3, 1, 1)");
 
 
         final Coupon deletingCoupon = new Coupon(1L, 100, null);

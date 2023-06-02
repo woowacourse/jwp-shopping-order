@@ -1,8 +1,11 @@
 package cart.dto.response;
 
 public class OrderDetail {
-    private final OrderInfo order;
-    private final int totalPrice;
+    private OrderInfo order;
+    private int totalPrice;
+
+    public OrderDetail() {
+    }
 
     public OrderDetail(final OrderInfo order, final int totalPrice) {
         this.order = order;

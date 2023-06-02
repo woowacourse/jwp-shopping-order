@@ -10,7 +10,6 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductIntegrationTest extends IntegrationTest {
-
     @Test
     public void getProducts() {
         final var result = given()
