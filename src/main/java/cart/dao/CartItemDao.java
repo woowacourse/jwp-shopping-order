@@ -42,13 +42,13 @@ public class CartItemDao {
 
         String sql = sqlHelper()
                 .select()
-                .columns("ci.id, ci.member_id, ci.quantity")
-                .columns(", m.id, m.email, m.password, m.money, m.point")
-                .columns(", p.id, p.name, p.price, p.image_url")
-                .from().table("cart_item ci")
-                .innerJoin("member m").on("ci.member_id = m.id")
-                .innerJoin("product p").on("ci.product_id = p.id")
-                .where().in("ci.id", collectCartItemIds)
+                .columns("cart_item.id, cart_item.member_id, cart_item.quantity")
+                .columns(", member.id, member.email, member.password, member.money, member.point")
+                .columns(", product.id, product.name, product.price, product.image_url")
+                .from().table("cart_item")
+                .innerJoin("member").on("cart_item.member_id = member.id")
+                .innerJoin("product").on("cart_item.product_id = product.id")
+                .where().in("cart_item.id", collectCartItemIds)
                 .toString();
 
         return jdbcTemplate.query(sql, CartItemRowMapper.joinMemberAndProduct);
@@ -57,13 +57,13 @@ public class CartItemDao {
     public Optional<CartItem> findByCartItemId(Long cartItemId) {
         String sql = sqlHelper()
                 .select()
-                .columns("ci.id, ci.member_id, ci.quantity")
-                .columns(", m.id, m.email, m.password, m.money, m.point")
-                .columns(", p.id, p.name, p.price, p.image_url")
-                .from().table("cart_item ci")
-                .innerJoin("member m").on("ci.member_id = m.id")
-                .innerJoin("product p").on("ci.product_id = p.id")
-                .where().condition("ci.id = ?")
+                .columns("cart_item.id, cart_item.member_id, cart_item.quantity")
+                .columns(", member.id, member.email, member.password, member.money, member.point")
+                .columns(", product.id, product.name, product.price, product.image_url")
+                .from().table("cart_item")
+                .innerJoin("member").on("cart_item.member_id = member.id")
+                .innerJoin("product").on("cart_item.product_id = product.id")
+                .where().condition("cart_item.id = ?")
                 .toString();
 
         try {
@@ -77,13 +77,13 @@ public class CartItemDao {
     public List<CartItem> findByMemberId(Long memberId) {
         String sql = sqlHelper()
                 .select()
-                .columns("ci.id, ci.member_id, ci.quantity")
-                .columns(", m.id, m.email, m.password, m.money, m.point")
-                .columns(", p.id, p.name, p.price, p.image_url")
-                .from().table("cart_item ci")
-                .innerJoin("member m").on("ci.member_id = m.id")
-                .innerJoin("product p").on("ci.product_id = p.id")
-                .where().condition("ci.member_id = ?")
+                .columns("cart_item.id, cart_item.member_id, cart_item.quantity")
+                .columns(", member.id, member.email, member.password, member.money, member.point")
+                .columns(", product.id, product.name, product.price, product.image_url")
+                .from().table("cart_item")
+                .innerJoin("member").on("cart_item.member_id = member.id")
+                .innerJoin("product").on("cart_item.product_id = product.id")
+                .where().condition("cart_item.member_id = ?")
                 .toString();
 
 

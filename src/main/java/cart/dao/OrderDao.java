@@ -41,11 +41,11 @@ public class OrderDao {
         String sql = sqlHelper()
                 .select()
                 .columns("oi.id, oi.product_id, oi.member_id, oi.name, oi.price, oi.image_url, oi.quantity")
-                .columns(", m.id, m.email, m.password, m.money, m.point")
+                .columns(", member.id, member.email, member.password, member.money, member.point")
                 .columns(", o.id, o.created_at, o.total_price, o.use_point")
                 .from().table("orders o")
                 .innerJoin("order_item oi").on("oi.orders_id = o.id")
-                .innerJoin("member m").on("o.member_id = m.id")
+                .innerJoin("member").on("o.member_id = member.id")
                 .where().condition("o.id = ?")
                 .toString();
 

@@ -56,7 +56,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity
                 .status(BAD_REQUEST)
-                .body(ErrorResponse.from(BAD_REQUEST.name(), "잘못된 클라이언트의 요청입니다." + e.getMessage(), now()));
+                .body(ErrorResponse.from(BAD_REQUEST.name(), "잘못된 클라이언트의 요청입니다.", now()));
     }
 
     @ExceptionHandler(Exception.class)
