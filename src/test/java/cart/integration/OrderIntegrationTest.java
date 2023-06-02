@@ -181,7 +181,20 @@ public class OrderIntegrationTest extends IntegrationTest {
                     () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                     () -> assertThat(response.body().asString()).isEqualTo("[]")
             );
+        }
 
+        @Test
+        @DisplayName("실패 - 유저 인증 실패")
+        void fail_unauthorized() {
+            // given, when
+            final ExtractableResponse<Response> response = given()
+                    .auth().preemptive().basic(member.getEmail(), member.getPassword() + "123")
+                    .when().get("/orders")
+                    .then()
+                    .extract();
+
+            // then
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
