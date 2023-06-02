@@ -63,6 +63,17 @@ class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
+    @DisplayName("사용자가 장바구니에 중복된 상품을 담으려고 하는 경우 실패한다.")
+    @Test
+    void addDuplicateCartItem() {
+        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+        requestAddCartItem(member, cartItemRequest);
+
+        ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("사용자가 담은 장바구니 아이템을 조회한다.")
     @Test
     void getCartItems() {

@@ -82,7 +82,7 @@ class OrderIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
     }
 
-    @DisplayName("이미 주문한 장바구니 항목을 다시 주문할 경우 예외를 반환한다")
+    @DisplayName("주문 상품이 장바구니 내에 없는 경우 예외를 반환한다")
     @Test
     void a() {
         Long cartItemId1 = requestAddCartItem(testMember, new CartItemRequest(1L));

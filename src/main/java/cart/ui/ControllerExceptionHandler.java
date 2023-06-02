@@ -1,9 +1,6 @@
 package cart.ui;
 
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
-import cart.exception.PointException;
-import cart.exception.PriceInconsistencyException;
+import cart.exception.*;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +21,22 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(PriceInconsistencyException.class)
-    public ResponseEntity<Void> handlerPriceInconsistencyException(PriceInconsistencyException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    public ResponseEntity<String> handlerPriceInconsistencyException(PriceInconsistencyException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
     @ExceptionHandler(PointException.class)
-    public ResponseEntity<Void> handlerPointException(PointException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    public ResponseEntity<String> handlerPointException(PointException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<Void> emptyResultDataAccessException(EmptyResultDataAccessException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<String> emptyResultDataAccessException(EmptyResultDataAccessException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateCartItemException.class)
+    public ResponseEntity<String> duplicateCartItemException(DuplicateCartItemException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }
