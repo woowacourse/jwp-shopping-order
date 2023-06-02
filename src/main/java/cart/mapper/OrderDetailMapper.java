@@ -1,7 +1,7 @@
 package cart.mapper;
 
 import cart.domain.OrderDetail;
-import cart.dto.OrderProductResponse;
+import cart.dto.response.OrderProductResponse;
 import cart.entity.OrderDetailEntity;
 
 public class OrderDetailMapper {

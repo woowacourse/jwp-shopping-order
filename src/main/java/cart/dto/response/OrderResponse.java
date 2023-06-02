@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -8,6 +8,7 @@ import java.util.List;
 public class OrderResponse {
     private final Long orderId;
     private final List<OrderProductResponse> orderProducts;
+    
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private final LocalDateTime createdAt;
 

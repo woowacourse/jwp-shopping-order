@@ -2,7 +2,7 @@ package cart.ui;
 
 import cart.config.ControllerTestConfig;
 import cart.domain.Product;
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 

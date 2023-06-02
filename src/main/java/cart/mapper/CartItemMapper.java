@@ -1,7 +1,7 @@
 package cart.mapper;
 
 import cart.domain.CartItem;
-import cart.dto.CartItemResponse;
+import cart.dto.response.CartItemResponse;
 
 public class CartItemMapper {
     private CartItemMapper() {

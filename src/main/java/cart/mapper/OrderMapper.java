@@ -1,8 +1,8 @@
 package cart.mapper;
 
 import cart.domain.Order;
-import cart.dto.OrderProductResponse;
-import cart.dto.OrderResponse;
+import cart.dto.response.OrderProductResponse;
+import cart.dto.response.OrderResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
