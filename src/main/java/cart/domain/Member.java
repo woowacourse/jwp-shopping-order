@@ -17,7 +17,7 @@ public class Member {
     private Integer point;
 
     public Member(Long id, String email, String password, Integer money, Integer point) {
-        validate(id, email, password);
+        validate(email, password);
         this.id = id;
         this.email = email;
         this.password = password;
@@ -29,27 +29,20 @@ public class Member {
         this(id, email, password, 0, 0);
     }
 
-    private void validate(Long id, String email, String password) {
-        validateId(id);
+    private void validate(String email, String password) {
         validateEmail(email);
         validatePassword(password);
     }
 
     private void validatePassword(String password) {
         if (Objects.isNull(password) || password.length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new MemberException.InvalidPassword();
-        }
-    }
-
-    private void validateId(Long id) {
-        if (Objects.isNull(id)) {
-            throw new MemberException.InvalidIdByNull();
+            throw new MemberException.InvalidPassword(password);
         }
     }
 
     private void validateEmail(String email) {
         if (Objects.isNull(email) || !EMAIL_PATTERN.matcher(email).matches()) {
-            throw new MemberException.InvalidEmail();
+            throw new MemberException.InvalidEmail(email);
         }
     }
 

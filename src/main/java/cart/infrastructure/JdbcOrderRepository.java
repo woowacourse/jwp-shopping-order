@@ -82,11 +82,13 @@ public class JdbcOrderRepository implements OrderRepository {
     private class OrderRowMapper implements RowMapper<Order> {
         @Override
         public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
+            long memberId = rs.getLong("member_id");
+            long orderId = rs.getLong("id");
             return new Order(
-                    rs.getLong("id"),
-                    memberRepository.findById(rs.getLong("member_id"))
-                            .orElseThrow(MemberException.NotFound::new),
-                    orderDetailRepository.findAllByOrderId(rs.getLong("id")),
+                    orderId,
+                    memberRepository.findById(memberId)
+                            .orElseThrow(() -> new MemberException.NotFound(memberId)),
+                    orderDetailRepository.findAllByOrderId(orderId),
                     rs.getTimestamp("created_at").toLocalDateTime()
             );
         }

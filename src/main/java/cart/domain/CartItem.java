@@ -39,19 +39,19 @@ public class CartItem {
 
     private void validateProduct(Product product) {
         if (Objects.isNull(product)) {
-            throw new CartItemException.InvalidProduct();
+            throw new CartItemException.InvalidProduct(null);
         }
     }
 
     private void validateMember(Member member) {
         if (Objects.isNull(member)) {
-            throw new CartItemException.InvalidMember();
+            throw new CartItemException.InvalidMember(null);
         }
     }
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.InvalidMember();
+            throw new CartItemException.InvalidMember(member.getId());
         }
     }
 

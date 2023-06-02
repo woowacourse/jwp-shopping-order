@@ -24,7 +24,7 @@ public class JdbcMemberRepository implements MemberRepository {
     @Override
     public Optional<Member> findById(Long id) {
         MemberEntity memberEntity = memberDao.getById(id)
-                .orElseThrow(MemberException.NotFound::new);
+                .orElseThrow(() -> new MemberException.NotFound(id));
 
         return Optional.of(MemberMapper.toMember(memberEntity));
     }
@@ -32,7 +32,7 @@ public class JdbcMemberRepository implements MemberRepository {
     @Override
     public Optional<Member> findByEmail(String email) {
         MemberEntity memberEntity = memberDao.getByEmail(email)
-                .orElseThrow(MemberException.NotFound::new);
+                .orElseThrow(() -> new MemberException.NotFound(email));
 
         return Optional.of(MemberMapper.toMember(memberEntity));
     }

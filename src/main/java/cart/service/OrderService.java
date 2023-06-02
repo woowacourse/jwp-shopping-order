@@ -41,7 +41,9 @@ public class OrderService {
     }
 
     public OrderResponse findById(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow(OrderException.NotFound::new);
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderException.NotFound(id));
+
         return OrderMapper.toResponse(order);
     }
 
@@ -72,7 +74,7 @@ public class OrderService {
 
         for (Long id : request.getCartIds()) {
             CartItem cartItem = cartItemRepository.findById(id)
-                    .orElseThrow(OrderException.NotFound::new);
+                    .orElseThrow(() -> new OrderException.NotFound(id));
             cartItems.add(cartItem);
         }
         return cartItems;

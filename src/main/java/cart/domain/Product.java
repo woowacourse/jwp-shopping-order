@@ -4,7 +4,6 @@ import cart.exception.ProductException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
 
 public class Product {
 
@@ -18,7 +17,7 @@ public class Product {
     private String imageUrl;
 
     public Product(Long id, String name, int price, String imageUrl) {
-        validate(id, name, price, imageUrl);
+        validate(name, price, imageUrl);
         this.id = id;
         this.name = name;
         this.price = price;
@@ -38,26 +37,15 @@ public class Product {
         validateImageUrl(imageUrl);
     }
 
-    private void validate(Long id, String name, int price, String imageUrl) {
-        validateId(id);
-        validate(name, price, imageUrl);
-    }
-
-    private void validateId(Long id) {
-        if (Objects.isNull(id)) {
-            throw new ProductException.InvalidIdByNull();
-        }
-    }
-
     private void validateName(String name) {
         if (name.length() < MINIMUM_NAME_LENGTH || name.length() > MAXIMUM_NAME_LENGTH) {
-            throw new ProductException.InvalidNameLength();
+            throw new ProductException.InvalidNameLength(name);
         }
     }
 
     private void validatePrice(int price) {
         if (price < MINIMUM_PRICE) {
-            throw new ProductException.InvalidPrice();
+            throw new ProductException.InvalidPrice(price);
         }
     }
 
@@ -65,8 +53,14 @@ public class Product {
         try {
             new URL(imageUrl);
         } catch (MalformedURLException e) {
-            throw new ProductException.InvalidImageUrl();
+            throw new ProductException.InvalidImageUrl(imageUrl);
         }
+    }
+
+    public void update(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -83,11 +77,5 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public void update(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
     }
 }

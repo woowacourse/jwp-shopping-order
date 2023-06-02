@@ -49,7 +49,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(MemberException.InvalidEmail::new);
+                .orElseThrow(() -> new MemberException.NotFound(email));
 
         if (!member.checkPassword(password)) {
             throw new AuthenticationException();

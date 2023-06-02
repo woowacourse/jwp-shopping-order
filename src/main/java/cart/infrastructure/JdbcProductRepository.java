@@ -24,7 +24,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Optional<Product> findById(Long productId) {
         ProductEntity productEntity = productDao.getById(productId)
-                .orElseThrow(ProductException.NotFound::new);
+                .orElseThrow(() -> new ProductException.NotFound(productId));
 
         return Optional.of(ProductMapper.toProduct(productEntity));
     }

@@ -36,14 +36,14 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(ProductException.NotFound::new);
+                .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
 
         return cartItemRepository.create(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(CartItemException.NotFound::new);
+                .orElseThrow(() -> new CartItemException.NotFound(id));
 
         cartItem.checkOwner(member);
 
@@ -58,7 +58,7 @@ public class CartItemService {
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(CartItemException.NotFound::new);
+                .orElseThrow(() -> new CartItemException.NotFound(id));
 
         cartItem.checkOwner(member);
 

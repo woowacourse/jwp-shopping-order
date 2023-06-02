@@ -67,13 +67,15 @@ public class JdbcCartItemRepository implements CartItemRepository {
     private class CartItemRowMapper implements RowMapper<CartItem> {
         @Override
         public CartItem mapRow(ResultSet rs, int rowNum) throws SQLException {
+            long productId = rs.getLong("product_id");
+            long memberId = rs.getLong("member_id");
             return new CartItem(
                     rs.getLong("id"),
                     rs.getInt("quantity"),
-                    productRepository.findById(rs.getLong("product_id"))
-                            .orElseThrow(ProductException.NotFound::new),
-                    memberRepository.findById(rs.getLong("member_id"))
-                            .orElseThrow(MemberException.NotFound::new)
+                    productRepository.findById(productId)
+                            .orElseThrow(() -> new ProductException.NotFound(productId)),
+                    memberRepository.findById(memberId)
+                            .orElseThrow(() -> new MemberException.NotFound(memberId))
             );
         }
     }

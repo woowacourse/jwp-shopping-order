@@ -31,7 +31,7 @@ public class ProductService {
 
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(ProductException.NotFound::new);
+                .orElseThrow(() -> new ProductException.NotFound(productId));
 
         return ProductMapper.toResponse(product);
     }
@@ -43,7 +43,7 @@ public class ProductService {
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(ProductException.NotFound::new);
+                .orElseThrow(() -> new ProductException.NotFound(productId));
 
         product.update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
 
