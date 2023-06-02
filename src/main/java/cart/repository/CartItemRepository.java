@@ -37,8 +37,12 @@ public class CartItemRepository {
         return CartItems.from(findCartItems);
     }
 
-    public void updateQuantity(Long cartItemId, int quantity) {
-        cartItemDao.updateQuantity(cartItemId, quantity);
+    public void updateQuantityOrDelete(CartItemEntity cartItemEntity) {
+        if (cartItemEntity.getQuantity() == 0) {
+            cartItemDao.deleteByCartItemId(cartItemEntity.getId());
+            return;
+        }
+        cartItemDao.updateQuantity(cartItemEntity.getId(), cartItemEntity.getQuantity());
     }
 
     public void deleteByCartItemIds(List<Long> cartItemIds) {

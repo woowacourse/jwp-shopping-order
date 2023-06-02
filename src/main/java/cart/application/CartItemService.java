@@ -32,7 +32,7 @@ public class CartItemService {
     @Transactional
     public Long addCartItem(Member member, CreateCartItemRequest request) {
         Product findProduct = productRepository.findByProductId(request.getProductId());
-        CartItemEntity cartItemEntity = new CartItemEntity(findProduct.getId(), member.getId(), 1);
+        CartItemEntity cartItemEntity = new CartItemEntity(findProduct.getId(), member.getId());
 
         return cartItemRepository.saveCartItem(cartItemEntity);
     }
@@ -49,16 +49,10 @@ public class CartItemService {
     @Transactional
     public void updateQuantity(Member member, Long cartItemId, UpdateCartItemQuantityRequest request) {
         CartItem cartItem = cartItemRepository.findByCartItemId(cartItemId);
-
         cartItem.checkOwner(member);
 
-        if (request.getQuantity() == 0) {
-            cartItemRepository.deleteByCartItemId(cartItemId);
-            return;
-        }
-
-        cartItem.changeQuantity(Quantity.from(request.getQuantity()));
-        cartItemRepository.updateQuantity(cartItem.getId(), cartItem.getQuantity().getValue());
+        CartItem updateCartItem = cartItem.changeQuantity(Quantity.from(request.getQuantity()));
+        cartItemRepository.updateQuantityOrDelete(CartItemEntity.toEntity(updateCartItem));
     }
 
     @Transactional

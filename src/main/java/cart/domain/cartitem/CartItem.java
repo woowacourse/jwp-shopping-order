@@ -60,6 +60,11 @@ public class CartItem {
         return new CartItem(product, member, quantity.decrease(other.quantity).getValue());
     }
 
+    public CartItem changeQuantity(Quantity otherQuantity) {
+        this.quantity = otherQuantity;
+        return this;
+    }
+
     public Money totalPrice() {
         return product.getPrice().times(quantity);
     }
@@ -68,10 +73,6 @@ public class CartItem {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new CartItemException.InvalidMember();
         }
-    }
-
-    public void changeQuantity(Quantity quantity) {
-        this.quantity = quantity;
     }
 
     public boolean isQuantityZero() {

@@ -8,10 +8,16 @@ import java.util.Objects;
 
 public class CartItemEntity {
 
+     private static final int DEFAULT_QUANTITY = 1;
+
     private final Long id;
     private final Long productId;
     private final Long memberId;
     private final int quantity;
+
+    public CartItemEntity(Long productId, Long memberId) {
+        this(null, productId, memberId, DEFAULT_QUANTITY);
+    }
 
     public CartItemEntity(Long productId, Long memberId, int quantity) {
         this(null, productId, memberId, quantity);
@@ -22,6 +28,15 @@ public class CartItemEntity {
         this.productId = productId;
         this.memberId = memberId;
         this.quantity = quantity;
+    }
+
+    public static CartItemEntity toEntity(CartItem cartItem) {
+        return new CartItemEntity(
+                cartItem.getId(),
+                cartItem.getProduct().getId(),
+                cartItem.getMember().getId(),
+                cartItem.getQuantity().getValue()
+        );
     }
 
     public CartItem toDomain(Product product, Member member) {
