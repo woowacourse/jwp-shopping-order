@@ -9,32 +9,22 @@ import lombok.Getter;
 public class OrderEntity {
 
     private final Long id;
-    private final String dateTime;
+    private final String createdAt;
     private final Long memberId;
-    private final Long productId;
-    private final String productName;
-    private final int productPrice;
-    private final String productImageUrl;
-    private final int quantity;
     private final int totalProductPrice;
     private final int totalDeliveryFee;
     private final int usePoint;
     private final int totalPrice;
 
     public OrderEntity(
-            final String dateTime,
+            final String createdAt,
             final Long memberId,
-            final Long productId,
-            final String productName,
-            final int productPrice,
-            final String productImageUrl,
-            final int quantity,
             final int totalProductPrice,
             final int totalDeliveryFee,
             final int usePoint,
             final int totalPrice
     ) {
-        this(null, dateTime, memberId, productId, productName, productPrice, productImageUrl, quantity, totalProductPrice, totalDeliveryFee, usePoint, totalPrice);
+        this(null, createdAt, memberId, totalProductPrice, totalDeliveryFee, usePoint, totalPrice);
     }
 
     @Override
