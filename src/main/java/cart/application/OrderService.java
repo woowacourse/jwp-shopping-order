@@ -50,11 +50,11 @@ public class OrderService {
         }
 
         List<Product> productsInRequest = cartItems.stream()
-                .map(CartItemDto::getProductDto)
+                .map(CartItemDto::getProduct)
                 .map(it -> new Product(it.getProductId(), it.getName(), it.getPrice(), it.getImageUrl(), it.getStock()))
                 .collect(Collectors.toList());
         List<Long> productIds = cartItems.stream()
-                .map(it -> it.getProductDto().getProductId())
+                .map(it -> it.getProduct().getProductId())
                 .collect(Collectors.toList());
         List<Product> productsInDb = productRepository.getProductsByIds(productIds);
 

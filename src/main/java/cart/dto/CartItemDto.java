@@ -29,7 +29,7 @@ public class CartItemDto {
         return quantity;
     }
 
-    public ProductDto getProductDto() {
+    public ProductDto getProduct() {
         return product;
     }
 }

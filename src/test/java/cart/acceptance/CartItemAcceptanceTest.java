@@ -27,6 +27,7 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -185,26 +186,25 @@ public class CartItemAcceptanceTest {
 
     private void 장바구니의_모든_상품_조회_결과를_검증한다(ExtractableResponse<Response> response,
                                          List<Long> cartItemIds, List<Long> productIds, List<Integer> quantitys) {
-        List<CartItemDto> actualResponses = response.as(new TypeRef<>() {
-        });
+        List<CartItemDto> actualResponses = response.as(new TypeRef<>() {});
         for (int i = 0; i < actualResponses.size(); i++) {
             CartItemDto cartItemDto = actualResponses.get(i);
             assertThat(cartItemDto.getCartItemId()).isEqualTo(cartItemIds.get(i));
             assertThat(cartItemDto.getQuantity()).isEqualTo(quantitys.get(i));
-            assertThat(cartItemDto.getProductDto().getProductId()).isEqualTo(productIds.get(i));
+            assertThat(cartItemDto.getProduct().getProductId()).isEqualTo(productIds.get(i));
         }
     }
 
     private void 장바구니_상품_수량_수정_결과를_검증한다(Long cartItemId, int expected) {
-        CartItem cartItem = cartItemDao.findById(cartItemId).get();
+        Optional<CartItem> cartItem = cartItemDao.findById(cartItemId);
         if (expected == 0) {
-            assertThat(cartItem).isNull();
+            assertThat(cartItem).isEmpty();
             return;
         }
-        assertThat(cartItem.getQuantity()).isEqualTo(expected);
+        assertThat(cartItem.get().getQuantity()).isEqualTo(expected);
     }
 
     private void 장바구니_상품_삭제_결과를_검증한다(Long cartItemId) {
-        assertThat(cartItemDao.findById(cartItemId)).isNull();
+        assertThat(cartItemDao.findById(cartItemId)).isEmpty();
     }
 }

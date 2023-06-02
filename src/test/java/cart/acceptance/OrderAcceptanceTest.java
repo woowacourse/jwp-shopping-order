@@ -197,8 +197,8 @@ public class OrderAcceptanceTest {
         장바구니_상품_수량_수정_요청(member, cartItemId4, 4);
 
         OrderRequest orderRequest2 = new OrderRequest(
-                List.of(toCartItemDto(cartItemId1, 3, productId2, productRequest2),
-                        toCartItemDto(cartItemId2, 4, productId3, productRequest3)), 90000, 0, 4000, 86000);
+                List.of(toCartItemDto(cartItemId3, 3, productId2, productRequest2),
+                        toCartItemDto(cartItemId4, 4, productId3, productRequest3)), 90000, 0, 4000, 86000);
         Long orderId2 = 주문_요청하고_아이디_반환(member, orderRequest2);
 
         // when
