@@ -41,7 +41,7 @@ public class PointHistoryDao {
     }
 
 
-    public void saveAll(Long orderId, List<PointEntity> points) {
+    public void saveAll(Long orderId, List<PointEntity> pointEntities) {
         String sql = "insert into point_history(orders_id, point_id, used_point) values(?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql,
@@ -49,13 +49,13 @@ public class PointHistoryDao {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ps.setLong(1, orderId);
-                        ps.setLong(2, points.get(i).getId());
-                        ps.setInt(3, points.get(i).getValue());
+                        ps.setLong(2, pointEntities.get(i).getId());
+                        ps.setInt(3, pointEntities.get(i).getValue());
                     }
 
                     @Override
                     public int getBatchSize() {
-                        return points.size();
+                        return pointEntities.size();
                     }
                 });
     }

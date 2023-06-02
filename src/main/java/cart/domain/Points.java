@@ -13,10 +13,14 @@ public class Points implements Iterable<Point> {
         this.points = points;
     }
 
-    public int getPoints() {
+    public int getTotalPoints() {
         return points.stream()
                 .mapToInt(Point::getValue)
                 .sum();
+    }
+
+    public List<Point> getPoints() {
+        return points;
     }
 
     @Override
