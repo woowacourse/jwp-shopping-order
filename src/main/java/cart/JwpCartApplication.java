@@ -9,5 +9,4 @@ public class JwpCartApplication {
     public static void main(String[] args) {
         SpringApplication.run(JwpCartApplication.class, args);
     }
-
 }

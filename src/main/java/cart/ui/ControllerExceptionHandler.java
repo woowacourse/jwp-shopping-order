@@ -25,5 +25,4 @@ public class ControllerExceptionHandler {
         LOGGER.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-
 }
