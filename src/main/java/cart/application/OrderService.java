@@ -44,16 +44,17 @@ public class OrderService {
         final Point usingPoint = new Point(orderCreateRequest.getPoint());
         final CreditCard creditCard = new CreditCard(orderCreateRequest.getCardNumber(), orderCreateRequest.getCvc());
 
-        member.usePoint(usingPoint);
         final int totalPrice = calculateTotalPrice(cartItemsToOrder);
+        member.usePoint(usingPoint);
         creditCard.payWithPoint(totalPrice, usingPoint);
+
         final Point savingPoint = Point.fromPayment(totalPrice);
         member.addPoint(savingPoint);
         memberDao.update(MemberEntity.from(member));
 
         final List<OrderItem> orderItems = convertToOrderItems(cartItemsToOrder);
 
-        final Order order = new Order(orderItems, usingPoint, savingPoint);
+        final Order order = new Order(member, orderItems, usingPoint, savingPoint);
         final Long orderId = orderRepository.save(order);
 
         cartItemIds.forEach(cartItemRepository::deleteById);
@@ -76,8 +77,7 @@ public class OrderService {
                 .map(cartItem -> new OrderItem(
                         cartItem.getId(),
                         cartItem.getQuantity(),
-                        cartItem.getProduct(),
-                        cartItem.getMember()
+                        cartItem.getProduct()
                 ))
                 .collect(Collectors.toUnmodifiableList());
     }

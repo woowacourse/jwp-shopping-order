@@ -1,11 +1,5 @@
 package cart.entity;
 
-import cart.domain.Member;
-import cart.domain.OrderItem;
-import cart.domain.Product;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class OrderItemEntity {
 
     private final Long id;
@@ -51,24 +45,6 @@ public class OrderItemEntity {
                 imageUrl,
                 quantity
         );
-    }
-
-    public static List<OrderItem> toDomain(final List<OrderItemEntity> orderItemEntities, final Member member) {
-        return orderItemEntities.stream()
-                .map(
-                        orderItemEntity -> new OrderItem(
-                                orderItemEntity.id,
-                                orderItemEntity.quantity,
-                                new Product(
-                                        orderItemEntity.productId,
-                                        orderItemEntity.productNameAtOrder,
-                                        orderItemEntity.productPriceAtOrder,
-                                        orderItemEntity.productImageUrlAtOrder
-                                ),
-                                member
-                        )
-                )
-                .collect(Collectors.toUnmodifiableList());
     }
 
     public Long getId() {

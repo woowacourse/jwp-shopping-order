@@ -47,17 +47,18 @@ public class OrderRepository {
     private Order toDomain(final OrderEntity orderEntity, final Member member) {
         return new Order(
                 orderEntity.getId(),
-                toDomain(orderItemDao.findByOrderId(orderEntity.getId()), member),
+                member,
+                toDomain(orderItemDao.findByOrderId(orderEntity.getId())),
                 orderEntity.getUsedPoint(),
                 orderEntity.getSavedPoint(),
                 orderEntity.getOrderedAt()
-        );
+                );
     }
 
     private OrderEntity toEntity(final Order order) {
         return new OrderEntity(
                 order.getId(),
-                order.getOrderItems().get(0).getMember().getId(),
+                order.getMember().getId(),
                 order.getOrderedAt(),
                 order.getUsedPoint(),
                 order.getSavedPoint()
@@ -78,7 +79,7 @@ public class OrderRepository {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private List<OrderItem> toDomain(final List<OrderItemEntity> orderItemEntities, final Member member) {
+    private List<OrderItem> toDomain(final List<OrderItemEntity> orderItemEntities) {
         return orderItemEntities.stream()
                 .map(orderItemEntity -> new OrderItem(
                         orderItemEntity.getId(),
@@ -88,8 +89,7 @@ public class OrderRepository {
                                 orderItemEntity.getProductNameAtOrder(),
                                 orderItemEntity.getProductPriceAtOrder(),
                                 orderItemEntity.getProductImageUrlAtOrder()
-                        ),
-                        member
+                        )
                 ))
                 .collect(Collectors.toUnmodifiableList());
     }

@@ -6,35 +6,42 @@ import java.util.List;
 public class Order {
 
     private final Long id;
+    private final Member member;
     private final List<OrderItem> orderItems;
     private final Point usedPoint;
     private final Point savedPoint;
     private final LocalDateTime orderedAt;
 
-    public Order(final List<OrderItem> orderItems,
-                 final Point usedPoint,
-                 final Point savedPoint) {
-        this(null, orderItems, usedPoint, savedPoint, null);
+    public Order(
+            final Member member,
+            final List<OrderItem> orderItems,
+            final Point usedPoint,
+            final Point savedPoint
+    ) {
+        this(null, member, orderItems, usedPoint, savedPoint, null);
     }
 
     public Order(
             final Long id,
+            final Member member,
             final List<OrderItem> orderItems,
             final int usedPoint,
             final int savedPoint,
             final LocalDateTime orderedAt
     ) {
-        this(id, orderItems, new Point(usedPoint), new Point(savedPoint), orderedAt);
+        this(id, member, orderItems, new Point(usedPoint), new Point(savedPoint), orderedAt);
     }
 
     public Order(
             final Long id,
+            final Member member,
             final List<OrderItem> orderItems,
             final Point usedPoint,
             final Point savedPoint,
             final LocalDateTime orderedAt
     ) {
         this.id = id;
+        this.member = member;
         this.orderItems = orderItems;
         this.usedPoint = usedPoint;
         this.savedPoint = savedPoint;
@@ -43,6 +50,10 @@ public class Order {
 
     public Long getId() {
         return id;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public List<OrderItem> getOrderItems() {
