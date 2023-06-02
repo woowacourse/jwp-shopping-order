@@ -1,4 +1,4 @@
-package shop.presentation.member;
+package shop.web.controller.member;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Base64Utils;
@@ -9,7 +9,7 @@ import shop.application.member.dto.MemberCouponDto;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
 import shop.domain.member.Member;
-import shop.presentation.member.dto.MemberLoginResponse;
+import shop.web.controller.member.dto.MemberLoginResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;

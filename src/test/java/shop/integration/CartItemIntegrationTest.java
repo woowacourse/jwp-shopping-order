@@ -4,8 +4,8 @@ import shop.domain.member.Member;
 import shop.domain.member.MemberName;
 import shop.domain.member.NaturalPassword;
 import shop.domain.repository.MemberRepository;
-import shop.presentation.cart.dto.CartQuantityUpdateDto;
-import shop.presentation.cart.dto.CartItemRequest;
+import shop.web.controller.cart.dto.CartQuantityUpdateRequest;
+import shop.web.controller.cart.dto.CartItemRequest;
 import shop.application.cart.dto.CartDto;
 import shop.application.product.dto.ProductModificationDto;
 import io.restassured.response.ExtractableResponse;
@@ -200,7 +200,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
-        CartQuantityUpdateDto quantityUpdateRequest = new CartQuantityUpdateDto(quantity);
+        CartQuantityUpdateRequest quantityUpdateRequest = new CartQuantityUpdateRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getName(), member.getPassword())

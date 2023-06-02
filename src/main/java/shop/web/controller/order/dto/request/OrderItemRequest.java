@@ -1,4 +1,4 @@
-package shop.presentation.order.dto.request;
+package shop.web.controller.order.dto.request;
 
 public class OrderItemRequest {
     private Long productId;

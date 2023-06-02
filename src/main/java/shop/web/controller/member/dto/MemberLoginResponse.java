@@ -1,4 +1,4 @@
-package shop.presentation.member.dto;
+package shop.web.controller.member.dto;
 
 public class MemberLoginResponse {
     private String token;

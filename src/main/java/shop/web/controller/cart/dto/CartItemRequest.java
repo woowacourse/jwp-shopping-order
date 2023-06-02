@@ -1,4 +1,4 @@
-package shop.presentation.cart.dto;
+package shop.web.controller.cart.dto;
 
 public class CartItemRequest {
     private Long productId;

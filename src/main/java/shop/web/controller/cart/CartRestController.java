@@ -1,9 +1,9 @@
-package shop.presentation.cart;
+package shop.web.controller.cart;
 
 import shop.application.cart.CartItemService;
 import shop.domain.member.Member;
-import shop.presentation.cart.dto.CartQuantityUpdateDto;
-import shop.presentation.cart.dto.CartItemRequest;
+import shop.web.controller.cart.dto.CartQuantityUpdateRequest;
+import shop.web.controller.cart.dto.CartItemRequest;
 import shop.application.cart.dto.CartDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +39,7 @@ public class CartRestController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(Member member, @PathVariable Long id,
-                                                       @RequestBody CartQuantityUpdateDto request) {
+                                                       @RequestBody CartQuantityUpdateRequest request) {
         cartItemService.updateQuantity(member, id, request.getQuantity());
 
         return ResponseEntity.ok().build();

@@ -1,4 +1,4 @@
-package shop.presentation;
+package shop.web.controller;
 
 import shop.application.member.MemberService;
 import shop.application.product.ProductService;

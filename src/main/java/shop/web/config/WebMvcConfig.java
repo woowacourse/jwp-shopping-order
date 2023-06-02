@@ -1,7 +1,7 @@
-package shop;
+package shop.web.config;
 
 import shop.domain.repository.MemberRepository;
-import shop.presentation.MemberArgumentResolver;
+import shop.web.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
