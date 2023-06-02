@@ -3,10 +3,10 @@ package cart.persistence.dao;
 import cart.persistence.dto.OrderDetailDTO;
 import cart.persistence.entity.OrderEntity;
 import java.sql.PreparedStatement;
+import java.sql.Types;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,13 +15,9 @@ import org.springframework.stereotype.Repository;
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public OrderDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("order")
-                .usingGeneratedKeyColumns("id");
     }
 
     public long create(final OrderEntity order) {
@@ -32,7 +28,7 @@ public class OrderDao {
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, order.getMemberId());
-            ps.setLong(2, order.getMemberCouponId());
+            ps.setObject(2, Optional.ofNullable(order.getMemberCouponId()).orElse(null), Types.BIGINT);
             ps.setInt(3, order.getShippingFee());
             ps.setInt(4, order.getTotalPrice());
             return ps;

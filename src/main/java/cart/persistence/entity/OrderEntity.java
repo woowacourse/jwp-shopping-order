@@ -9,16 +9,16 @@ public class OrderEntity {
 
     private final Long id;
     private final long memberId;
-    private final long memberCouponId;
+    private final Long memberCouponId;
     private final int shippingFee;
     private final int totalPrice;
     private final Timestamp createdAt;
 
-    public OrderEntity(final long memberId, final long memberCouponId, final int shippingFee, final int totalPrice) {
+    public OrderEntity(final long memberId, final Long memberCouponId, final int shippingFee, final int totalPrice) {
         this(null, memberId, memberCouponId, shippingFee, totalPrice, null);
     }
 
-    public OrderEntity(final Long id, final long memberId, final long memberCouponId, final int shippingFee,
+    public OrderEntity(final Long id, final long memberId, final Long memberCouponId, final int shippingFee,
             final int totalPrice,
             final Timestamp createdAt) {
         this.id = id;
@@ -44,7 +44,7 @@ public class OrderEntity {
         return memberId;
     }
 
-    public long getMemberCouponId() {
+    public Long getMemberCouponId() {
         return memberCouponId;
     }
 
