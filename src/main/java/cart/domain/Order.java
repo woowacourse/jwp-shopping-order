@@ -34,6 +34,7 @@ public class Order {
         }
         int deliveryFee = DeliveryPolicy.calculateDeliveryFee(totalProductPrice);
         PointPolicy.usePoint(member, usePoint);
+        PointPolicy.earnPoint(member, totalProductPrice);
         int totalPrice = totalProductPrice + deliveryFee - usePoint.getValue();
 
         return new Payment(totalProductPrice, deliveryFee, usePoint.getValue(), totalPrice);

@@ -4,6 +4,7 @@ import cart.exception.PaymentException;
 
 public class PointPolicy {
     public static final Point MINIMUM_POINT_USAGE_STANDARD = new Point(3000);
+    public static final double POINT_EARNING_RATE = 0.05;
 
     public static void usePoint(Member member, Point usePoint) {
         if (usePoint.isZero()) {
@@ -11,6 +12,11 @@ public class PointPolicy {
         }
         judgeMemberCanUsePoint(member, usePoint);
         member.usePoint(usePoint);
+    }
+
+    public static void earnPoint(Member member, int totalProductPrice) {
+        Point earningPoint = new Point((int)(totalProductPrice * POINT_EARNING_RATE));
+        member.earnPoint(earningPoint);
     }
 
     private static void judgeMemberCanUsePoint(Member member, Point usePoint) {

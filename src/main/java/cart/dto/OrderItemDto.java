@@ -1,7 +1,6 @@
 package cart.dto;
 
 import cart.domain.OrderItem;
-import cart.domain.Product;
 
 public class OrderItemDto {
     private final int quantity;

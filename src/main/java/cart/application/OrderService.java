@@ -42,7 +42,7 @@ public class OrderService {
         List<CartItemDto> cartItems = orderRequest.getCartItems();
 
         List<Product> productsInRequest = cartItems.stream()
-                .map(it -> it.getProduct())
+                .map(CartItemDto::getProduct)
                 .map(it -> new Product(it.getProductId(), it.getName(), it.getPrice(), it.getImageUrl(), it.getStock()))
                 .collect(Collectors.toList());
         List<Long> productIds = cartItems.stream()
@@ -59,7 +59,7 @@ public class OrderService {
         int size = cartItems.size();
         List<OrderItem> orderItems = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            orderItems.add(OrderItem.of(productsInRequest.get(i), cartItems.get(i).getQuantity()));
+            orderItems.add(OrderItem.of(productsInDb.get(i), cartItems.get(i).getQuantity()));
         }
 
         // 3. point 쓸 수 있는지, payment가 제대로 됐는지 + member(point) 업데이트
@@ -67,10 +67,9 @@ public class OrderService {
         Payment payment = order.calculatePayment(new Point(orderRequest.getUsePoint()));
         validatePayment(orderRequest, payment);
 
-        // TODO : point 적립
         // 주문 성공시 -> cart_item 싹 지우기, member(point) 업데이트, product 싹 업데이트, order 저장, order_item 싹 저장, payment저장
         List<Long> cartItemIds = cartItems.stream()
-                .map(it -> it.getCartItemId())
+                .map(CartItemDto::getCartItemId)
                 .collect(Collectors.toList());
         Long orderId = orderRepository.order(cartItemIds, member, order);
         paymentDao.save(orderId, payment);
