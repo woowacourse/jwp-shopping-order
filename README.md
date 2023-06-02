@@ -28,50 +28,50 @@
 
 - Request
 
-```java
-GET/coupons HTTP/1.1
-    Host:localhost:8080
-    Authorization:Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+```http
+GET /coupons HTTP/1.1
+Host: localhost:8080
+Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ```
 
 - Response
 
-```json
+```http
 HTTP/1.1 200 OK
 
 [
   {
     "couponId": 1,
-    "couponName": "오늘만 10%할인 쿠폰",
-    "minAmount": "15000",
+    "couponName": "1000원 할인 쿠폰",
+    "minAmount": 15000,
+    "discountAmount": 1000,
     "isPublished": false
   },
   {
     "couponId": 2,
-    "couponName": "사장님이 미쳤어요! 99%할인 쿠폰",
-    "minAmount": "999999999",
+    "couponName": "사장님이 미쳤어요! 99999원 할인 쿠폰",
+    "minAmount": 999999999,
+    "discountAmount": 99999,
     "isPublished": true
   },
   ...
 ]
 ```
 
-### 쿠폰 발급
+### 사용자별 쿠폰 발급
 
 - Request
 
-```json
-POST /coupons/{
-  id
-} HTTP/1.1
-Host: localhost: 8080
+```http
+POST /coupons/{id} HTTP/1.1
+Host: localhost:8080
 Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ...
 ```
 
 - Response
 
-```json
+```http
 HTTP/1.1 201 Created
 ```
 
@@ -79,27 +79,27 @@ HTTP/1.1 201 Created
 
 - Request
 
-```java
-GET/coupons/active?total=100000HTTP/1.1
-    Host:localhost:8080
-    Authorization:Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
+```http
+GET /coupons/active?total=100000 HTTP/1.1
+Host: localhost:8080
+Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ```
 
 - Response
 
-```json
+```http
 HTTP/1.1 200 OK
 
 [
   {
     "couponId": 1,
-    "couponName": "오늘만 10%할인 쿠폰",
-    "minAmount": "15000"
+    "couponName": "1000원 할인 쿠폰",
+    "minAmount": 15000
   },
   {
     "couponId": 2,
-    "couponName": "사장님이 미쳤어요! 99%할인 쿠폰",
-    "minAmount": "9999"
+    "couponName": "사장님이 미쳤어요! 99999원 할인 쿠폰",
+    "minAmount": 999999999
   },
   ...
 ]
@@ -109,29 +109,26 @@ HTTP/1.1 200 OK
 
 - Request
 
-```json
+```http
 GET /coupons/discount HTTP/1.1
-Host: localhost: 8080
+Host: localhost:8080
 Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ...
 
 {
-"totalAmount": 30000,
-"deliveryAmount": 2000,
-"couponId": 1
+  "couponId": 1,
+  "totalProductAmount": 30000
 }
 ```
 
 - Response
 
-```json
+```http
 HTTP/1.1 200 OK
 
 {
-  "totalAmount": 27000,
-  "deliveryAmount": 2000
+  "discountedProductAmount": 27000
 }
-
 ```
 
 ---
@@ -142,34 +139,33 @@ HTTP/1.1 200 OK
 
 - Request
 
-```json
+```http
 POST /orders HTTP/1.1
-Host: localhost: 8080
+Host: localhost:8080
 Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ...
 
 {
-"products": [
-{
-"id": 1,
-"quantity": 3,
-},
-{
-"id": 2,
-"quantity": 1,
-},
-]
-"totalProductAmount": 30000, // 배달비를 포함하지 않은 상품 금액만 전부 더한 금액?
-"deliveryAmount": 2000,
-"discountedProductAmount": 27000,
-"address": "서울특별시 송파구 ...",
-"couponId": 1
+  "products": [
+    {
+      "id": 1,
+      "quantity": 3,
+    },
+    {
+      "id": 2,
+      "quantity": 1,
+    },
+  ]
+  "totalProductAmount": 30000,
+  "deliveryAmount": 2000,
+  "address": "서울특별시 송파구 ...",
+  "couponId": 1
 }
 ```
 
 - Response
 
-```json
+```http
 HTTP/1.1 201 Created
 
 {
@@ -190,12 +186,9 @@ HTTP/1.1 201 Created
       "quantity": 2
     }
   ],
-  "totalProductAmount"
-  55000,
-  // 배달비를 포함하지 않은 상품 금액만 전부 더한 금액?
+  "totalProductAmount": 55000,
   "deliveryAmount": 2000,
   "discountedProductAmount": 3000,
-  // 할인 금액을 할 건지 or 할인된 총 금액을 할 건지
   "address": "서울특별시 송파구 ..."
 }
 ```
@@ -204,18 +197,16 @@ HTTP/1.1 201 Created
 
 - Request
 
-```json
-GET /orders/{
-  id
-} HTTP/1.1
-Host: localhost: 8080
+```http
+GET /orders/{id} HTTP/1.1
+Host: localhost:8080
 Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ...
 ```
 
 - Response
 
-```json
+```http
 HTTP/1.1 200 OK
 ...
 
@@ -238,10 +229,8 @@ HTTP/1.1 200 OK
     }
   ],
   "totalProductAmount": 55000,
-  // 배달비를 포함하지 않은 상품 금액만 전부 더한 금액?
   "deliveryAmount": 2000,
   "discountedProductAmount": 53000,
-  //할인된 총 금액을 할 건지
   "address": "서울특별시 송파구 ..."
 }
 ```
@@ -250,16 +239,16 @@ HTTP/1.1 200 OK
 
 - Request
 
-```json
+```http
 GET /orders HTTP/1.1
-Host: localhost: 8080
+Host: localhost:8080
 Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
 ...
 ```
 
 - Response
 
-```json
+```http
 HTTP/1.1 200 OK
 ...
 
@@ -282,8 +271,6 @@ HTTP/1.1 200 OK
         "quantity": 2
       }
     ]
-
-    // 여기에 추가로 총 상품 금액 등을 넣어도 되지만, Figma에 나와있는 시안대로만 했음
   },
   {
     "id": 2,
@@ -299,10 +286,9 @@ HTTP/1.1 200 OK
 
 Request
 
-```
+```http
 POST /cart-items HTTP/1.1
 Authorization: Basic ${credentials}
-Content-Type: application/json
 
 {
    "productId": 1,
@@ -312,7 +298,7 @@ Content-Type: application/json
 
 Response
 
-```
+```http
 HTTP/1.1 201 Created
 Location: /cart-items/{cartItemId}
 ```
@@ -321,7 +307,7 @@ Location: /cart-items/{cartItemId}
 
 Request
 
-```
+```http
 DELETE /cart-items
 Authorization: Basic ${credentials}
 
@@ -332,12 +318,6 @@ Authorization: Basic ${credentials}
 
 Response
 
-```
+```http
 HTTP/1.1 204 No Content
 ```
-
-## 고민
-
-- 상품 주문 중 금액이 바뀔 경우 어떻게 대처해야 되는가?
-- orderDao에서 비즈니스 로직을 호출하고 있음
-    - order.discountProductAmount().getValue()
