@@ -22,7 +22,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(MemberAuth.class);
+        return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
