@@ -1,9 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.Product;
+import cart.domain.*;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -71,6 +68,7 @@ public class OrderDao {
                 "m.id AS member_id, " +
                 "m.email, " +
                 "m.password, " +
+                "m.grade, " +
                 "op.quantity, " +
                 "p.id AS product_id, " +
                 "p.name, " +
@@ -83,7 +81,7 @@ public class OrderDao {
                 "WHERE o.id = ?;";
 
         final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, (rs, rowNum) -> {
-            final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"));
+            final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"), MemberGrade.of(rs.getString("grade")));
             final Product product = new Product(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url"));
             final CartItem item = new CartItem(member, product);
 
@@ -103,6 +101,7 @@ public class OrderDao {
                 "m.id AS member_id, " +
                 "m.email, " +
                 "m.password, " +
+                "m.grade, " +
                 "op.quantity, " +
                 "p.id AS product_id, " +
                 "p.name, " +
@@ -115,7 +114,7 @@ public class OrderDao {
                 "WHERE o.member_id = ?;";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-                    final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"));
+                    final Member member = new Member(rs.getLong("member_id"), rs.getString("email"), rs.getString("password"), MemberGrade.of(rs.getString("grade")));
                     final Product product = new Product(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url"));
                     final CartItem item = new CartItem(member, product);
 
