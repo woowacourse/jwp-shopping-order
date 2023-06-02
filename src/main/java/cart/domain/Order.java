@@ -94,4 +94,14 @@ public class Order {
                 .map(Product::getName)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", usedPoint=" + usedPoint +
+                ", orderedProducts=" + orderedProducts +
+                ", member=" + member +
+                '}';
+    }
 }
