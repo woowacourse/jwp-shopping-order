@@ -13,3 +13,11 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO coupon (amount, discount_policy) VALUES (2000, 'FIXED');
+INSERT INTO coupon (amount, discount_policy) VALUES (50, 'PERCENTAGE');
+
+INSERT INTO member_coupon (owner_id, coupon_id) VALUES (1, 1);
+INSERT INTO member_coupon (owner_id, coupon_id) VALUES (2, 1);
+INSERT INTO member_coupon (owner_id, coupon_id) VALUES (1, 2);
+INSERT INTO member_coupon (owner_id, coupon_id) VALUES (2, 2);

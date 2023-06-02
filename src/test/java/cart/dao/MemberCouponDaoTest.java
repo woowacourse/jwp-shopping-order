@@ -64,6 +64,7 @@ class MemberCouponDaoTest {
         MemberCouponDto selected = memberCouponDao.selectBy(id);
         assertThat(selected)
                 .usingRecursiveComparison()
+                .ignoringFields("id")
                 .isEqualTo(MemberCouponDto.of(MEMBER_A_COUPON_FIXED_2000()));
     }
 

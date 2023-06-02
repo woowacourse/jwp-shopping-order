@@ -43,6 +43,7 @@ class CouponDaoTest {
 
         assertThat(coupon)
                 .usingRecursiveComparison()
+                .ignoringFields("id")
                 .isEqualTo(COUPON_FIXED_2000());
     }
 

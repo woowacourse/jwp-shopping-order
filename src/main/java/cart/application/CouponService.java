@@ -48,8 +48,19 @@ public class CouponService {
         return memberCoupon;
     }
 
+    public Long giveCouponTo(Member member, Long couponId) {
+        Coupon coupon = getCouponBy(couponId);
+        MemberCoupon memberCoupon = new MemberCoupon(member, coupon);
+
+        return memberCouponDao.insert(memberCoupon);
+    }
+
     public Coupon getCouponBy(Long id) {
         return couponDao.selectBy(id);
+    }
+
+    public List<Coupon> getCoupons() {
+        return couponDao.selectAll();
     }
 
     private MemberCoupon toMemberCoupon(MemberCouponDto dto) {
