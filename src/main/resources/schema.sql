@@ -3,6 +3,8 @@ drop table member if exists;
 drop table cart_item if exists;
 drop table orders if exists;
 drop table order_item if exists;
+drop table coupon if exists;
+drop table member_coupon if exists;
 
 CREATE TABLE product
 (
