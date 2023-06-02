@@ -1,0 +1,23 @@
+### 주문 생성
+POST http://localhost:8080/orders
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+{
+  "usedPoint": 0,
+  "products": [
+    {
+      "productId": 1,
+      "Quantity": 3
+    },
+    {
+      "productId": 2,
+      "Quantity": 4
+    }
+  ]
+}
+
+### 페이지가 지정된 주문 조회
+GET http://localhost:8080/orders?page=1
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0

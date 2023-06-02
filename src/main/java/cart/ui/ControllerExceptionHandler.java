@@ -3,6 +3,8 @@ package cart.ui;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -15,6 +17,8 @@ import cart.exception.CartItemException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
@@ -37,7 +41,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<String> handleTheOtherExceptions(Exception e) {
-        System.out.println(e.getMessage());
+        logger.error("Exception: " + e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("잠시 후 다시 시도해 주세요");
     }
 }
