@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.Point;
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -37,6 +38,26 @@ public class PointHistoryDao {
         String sql = "insert into point_history(orders_id, point_id, used_point) values(?, ?, ?)";
 
         jdbcTemplate.update(sql, orderId, pointId, usedPoint);
+    }
+
+
+    public void saveAll(Long orderId, List<PointEntity> points) {
+        String sql = "insert into point_history(orders_id, point_id, used_point) values(?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(sql,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setLong(1, orderId);
+                        ps.setLong(2, points.get(i).getId());
+                        ps.setInt(3, points.get(i).getValue());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return points.size();
+                    }
+                });
     }
 
     public void deleteByOrderId(Long orderId) {

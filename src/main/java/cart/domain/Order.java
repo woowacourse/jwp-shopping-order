@@ -43,8 +43,8 @@ public class Order {
         return orderStatus;
     }
 
-    public int getUsedPoint() {
-        return usedPoint.getPoints();
+    public Points getPoints() {
+        return usedPoint;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -53,6 +53,10 @@ public class Order {
 
     public Member getMember() {
         return member;
+    }
+
+    public int getUsedPoint() {
+        return usedPoint.getPoints();
     }
 
     @Override

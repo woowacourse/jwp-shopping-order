@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,6 +78,19 @@ class PointHistoryDaoTest {
         Integer usedPoint = jdbcTemplate.queryForObject("select used_point from point_history where orders_id = 3 and point_id = 2", Integer.class);
 
         assertThat(usedPoint).isEqualTo(5000);
+    }
+
+    @DisplayName("포인트 사용 이력들을 저장할 수 있다.")
+    @Test
+    void saveAll() {
+        PointEntity pointEntity1 = new PointEntity(1L, 1000, "테스트 주문 포인트", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30));
+        PointEntity pointEntity2 = new PointEntity(2L, 1000, "테스트 주문 포인트", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30));
+
+        pointHistoryDao.saveAll(3L, List.of(pointEntity1, pointEntity2));
+
+        Integer usedPoint = jdbcTemplate.queryForObject("select sum(used_point) from point_history where orders_id = 3", Integer.class);
+
+        assertThat(usedPoint).isEqualTo(4000);
     }
 
     @DisplayName("주문 번호를 기준으로 포인트 사용 이력을 삭제할 수 있다.")

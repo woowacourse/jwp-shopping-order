@@ -6,11 +6,11 @@ import cart.domain.Product;
 import cart.entity.OrderEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Repository
 public class OrderDao {
@@ -29,7 +29,16 @@ public class OrderDao {
 
     public Long save(OrderEntity orderEntity) {
         String sql = "insert into orders(member_id, orders_status_id) values(?, ?)";
-        return jdbcTemplate.queryForObject(sql, Long.class, orderEntity.getMemberId(), orderEntity.getOrderStatusId());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1, orderEntity.getMemberId());
+            ps.setInt(2, orderEntity.getOrderStatusId());
+            return ps;
+        }, keyHolder);
+
+        return (Long) keyHolder.getKeys().get("ID");
     }
 
     private static class OrderRowMapper implements RowMapper<OrderEntity> {
