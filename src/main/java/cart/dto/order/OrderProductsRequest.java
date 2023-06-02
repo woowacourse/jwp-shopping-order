@@ -29,4 +29,12 @@ public class OrderProductsRequest {
     public int getUsedPoint() {
         return usedPoint;
     }
+
+    @Override
+    public String toString() {
+        return "OrderProductsRequest{" +
+                "cartItemIds=" + cartItemIds +
+                ", usedPoint=" + usedPoint +
+                '}';
+    }
 }

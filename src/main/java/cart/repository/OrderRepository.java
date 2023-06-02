@@ -8,6 +8,11 @@ import cart.repository.entity.OrderEntity;
 import cart.repository.entity.OrderItemEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
+
 @Repository
 public class OrderRepository {
 
@@ -48,5 +53,21 @@ public class OrderRepository {
                 .totalPayment(order.getPayment().getTotalPayment())
                 .usedPoint(order.getPayment().getUsedPoint())
                 .build();
+    }
+
+    // 사용자별 주문 내역
+    public OrderItems findOrderItemsByMemberId(long memberId) {
+        List<OrderItemEntity> orderEntities = orderDao.getOrdersByMemberId(memberId);
+        long orderId = orderEntities.get(0).getOrderId();
+        return orderEntities.stream()
+                .map(orderItemEntity -> new OrderItem.Builder()
+                        .id(orderItemEntity.getId())
+                        .orderId(orderItemEntity.getOrderId())
+                        .productName(orderItemEntity.getProductName())
+                        .productPrice(orderItemEntity.getProductPrice())
+                        .productImageUrl(orderItemEntity.getProductImageUrl())
+                        .quantity(orderItemEntity.getQuantity())
+                        .build()
+                ).collect(collectingAndThen(toList(), (orderItems) -> new OrderItems(orderId, orderItems)));
     }
 }

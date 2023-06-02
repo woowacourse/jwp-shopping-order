@@ -55,4 +55,14 @@ public class OrderApiController {
         long orderId = orderService.orderProducts(member, orderProductsRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
+
+    @GetMapping
+    public ResponseEntity<OrderItemsResponse> showOrder(Member member) {
+        OrderItems orderItems = orderService.getOrderByMember(member);
+        return ResponseEntity.ok(toOrderResponse(orderItems));
+    }
+
+    private OrderItemsResponse toOrderResponse(OrderItems orderItems) {
+        return new OrderItemsResponse(orderItems.getOrderId(), orderItems.getOrderItems());
+    }
 }

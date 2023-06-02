@@ -3,11 +3,9 @@ package cart.application;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
-import cart.domain.OrderHistory;
 import cart.domain.OrderItem;
 import cart.domain.OrderItems;
 import cart.domain.Payment;
-import cart.dto.order.OrderDetailResponse;
 import cart.dto.order.OrderProductsRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
@@ -25,13 +23,11 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
-    private final CartItemService cartItemService;
     private final MemberRepository memberRepository;
 
     public OrderService(OrderRepository orderRepository, CartItemRepository cartItemRepository, CartItemService cartItemService, MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
-        this.cartItemService = cartItemService;
         this.memberRepository = memberRepository;
     }
 
@@ -68,21 +64,16 @@ public class OrderService {
     private OrderItem toOrderItem(CartItem cartItem) {
         return new OrderItem.Builder()
                 .id(cartItem.getId())
-                .name(cartItem.getProduct().getName())
-                .price(cartItem.getProduct().getPrice())
-                .imageUrl(cartItem.getProduct().getImageUrl())
+                .productName(cartItem.getProduct().getName())
+                .productPrice(cartItem.getProduct().getPrice())
+                .productImageUrl(cartItem.getProduct().getImageUrl())
                 .quantity(cartItem.getQuantity())
                 .totalPayment(cartItem.getQuantity() * cartItem.getProduct().getPrice())
                 .build();
     }
 
-    public List<OrderHistory> getOrderItems(Member member) {
-        System.out.println("\n!!!! OrderService.getOrderItems() 반환값 변경 필요\n");
-        return null;
-    }
-
-    public List<OrderDetailResponse> getOrderItemDetailById(Member member, long id) {
-        System.out.println("\n!!!! OrderService.getOrderItemDetailById() 반환값 변경 필요\n");
-        return null;
+    // 사용자별 주문 내역
+    public OrderItems getOrderByMember(Member member) {
+        return orderRepository.findOrderItemsByMemberId(member.getId());
     }
 }

@@ -2,15 +2,17 @@ package cart.domain;
 
 public class OrderItem {
 
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
-    private int quantity;
-    private int totalPayment;
+    private final Long id;
+    private final long orderId;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
+    private final int quantity;
+    private final int totalPayment;
 
-    private OrderItem(Long id, String name, int price, String imageUrl, int quantity, int totalPayment) {
+    private OrderItem(Long id, long orderId, String name, int price, String imageUrl, int quantity, int totalPayment) {
         this.id = id;
+        this.orderId = orderId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -45,9 +47,10 @@ public class OrderItem {
     public static class Builder {
 
         private Long id;
-        private String name;
-        private int price;
-        private String imageUrl;
+        private long orderId;
+        private String productName;
+        private int productPrice;
+        private String productImageUrl;
         private int quantity;
         private int totalPayment;
 
@@ -56,18 +59,23 @@ public class OrderItem {
             return this;
         }
 
-        public Builder name(String name) {
-            this.name = name;
+        public Builder orderId(long orderId) {
+            this.orderId = orderId;
             return this;
         }
 
-        public Builder price(int price) {
-            this.price = price;
+        public Builder productName(String name) {
+            this.productName = name;
             return this;
         }
 
-        public Builder imageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
+        public Builder productPrice(int price) {
+            this.productPrice = price;
+            return this;
+        }
+
+        public Builder productImageUrl(String imageUrl) {
+            this.productImageUrl = imageUrl;
             return this;
         }
 
@@ -82,7 +90,7 @@ public class OrderItem {
         }
 
         public OrderItem build() {
-            return new OrderItem(id, name, price, imageUrl, quantity, totalPayment);
+            return new OrderItem(id, orderId, productName, productPrice, productImageUrl, quantity, totalPayment);
         }
     }
 }

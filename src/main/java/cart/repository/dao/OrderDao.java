@@ -3,11 +3,13 @@ package cart.repository.dao;
 import cart.repository.entity.OrderEntity;
 import cart.repository.entity.OrderItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -15,13 +17,23 @@ public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<OrderItemEntity> orderItemEntityRowMapper = (resultSet, rowNum) ->
+            new OrderItemEntity.Builder()
+                    .id(resultSet.getLong("id"))
+                    .orderId(resultSet.getLong("order_id"))
+                    .productName(resultSet.getString("product_name"))
+                    .productPrice(resultSet.getInt("product_price"))
+                    .productImageUrl(resultSet.getString("product_image_url"))
+                    .quantity(resultSet.getInt("quantity"))
+                    .build();
+
     public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public long insertOrder(OrderEntity orderEntity) {
-        final String query = "INSERT INTO orders (member_id, total_payment, used_point) VALUES (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO orders (member_id, total_payment, used_point) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(
@@ -36,8 +48,8 @@ public class OrderDao {
     }
 
     public long insertOrderItems(OrderItemEntity orderItemEntity) {
-        final String query = "INSERT INTO order_item (order_id, product_name, product_price, product_image_url, quantity) VALUES (?, ?, ?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO order_item (order_id, product_name, product_price, product_image_url, quantity) VALUES (?, ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(
@@ -51,5 +63,13 @@ public class OrderDao {
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey().longValue());
+    }
+
+    public List<OrderItemEntity> getOrdersByMemberId(long memberId) {
+        String query = "SELECT order_item.id, order_item.order_id, order_item.product_name, order_item.product_price, order_item.product_image_url, order_item.quantity " +
+                "FROM order_item " +
+                "JOIN orders ON orders.id = order_item.order_id " +
+                "WHERE orders.member_id = ?";
+        return jdbcTemplate.query(query, orderItemEntityRowMapper, memberId);
     }
 }

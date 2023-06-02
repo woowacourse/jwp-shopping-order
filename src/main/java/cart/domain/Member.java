@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 public class Member {
 
-    public static final int MINIMUM_PASSWORD_LENGTH = 1;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
     private static final int INITIAL_POINT = 1_000;
     private static final int MINIMUM_POINT = 0;
@@ -77,5 +76,15 @@ public class Member {
 
     public int getPoint() {
         return point;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", point=" + point +
+                '}';
     }
 }
