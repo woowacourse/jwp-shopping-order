@@ -35,7 +35,7 @@ public class CouponService {
     @Transactional(readOnly = true)
     public List<MemberCouponResponse> findAllByMemberId(final Long memberId) {
         return memberCouponRepository.findAllByMemberId(memberId).stream()
-                .map(memberCoupon -> MemberCouponResponse.of(memberCoupon.getCouponId(), memberCoupon.getCoupon()))
+                .map(memberCoupon -> MemberCouponResponse.of(memberCoupon.getId(), memberCoupon.getCoupon()))
                 .collect(toUnmodifiableList());
     }
 
