@@ -13,9 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
 import cart.domain.MemberCoupon;
+import cart.dto.request.DiscountRequest;
 import cart.dto.request.OrderCouponRequest;
 import cart.dto.request.OrderItemRequest;
 import cart.dto.request.OrderProductRequest;
+import cart.dto.request.OrderRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -30,7 +32,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("OrderApiController 통합 테스트은(는)")
-public class OrderIntegrationTest extends IntegrationTest{
+public class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -44,21 +46,22 @@ public class OrderIntegrationTest extends IntegrationTest{
         insertCoupon(천원_할인_쿠폰, jdbcTemplate);
         MemberCoupon 쿠폰원 = new MemberCoupon(1L, MEMBER.getId(), 천원_할인_쿠폰, false);
         insertMemberCoupon(쿠폰원, jdbcTemplate);
-        insertMemberCoupon(MEMBER, 천원_할인_쿠폰, jdbcTemplate);
-        List<OrderItemRequest> request = List.of(
-                new OrderItemRequest(
-                        new OrderProductRequest(1L, "치킨", 10_000, "www.naver.com"),
-                        1,
-                        List.of(new OrderCouponRequest(천원_할인_쿠폰.getId())),
-                        9000
-                ),
-                new OrderItemRequest(
-                        new OrderProductRequest(2L, "피자", 15_000, "www.kakao.com"),
-                        1,
-                        List.of(),
-                        14000
-                )
-        );
+        OrderRequest request =
+                new OrderRequest(3000,
+                        List.of(
+                                new OrderItemRequest(
+                                        new OrderProductRequest(1L, "치킨", 10_000, "www.naver.com"),
+                                        1,
+                                        List.of()
+                                ),
+                                new OrderItemRequest(
+                                        new OrderProductRequest(2L, "피자", 15_000, "www.kakao.com"),
+                                        1,
+                                        List.of(new OrderCouponRequest(쿠폰원.getId(), 쿠폰원.getCoupon().getName(),
+                                                new DiscountRequest(쿠폰원.getCoupon().getType().name(),
+                                                        쿠폰원.getCoupon().getDiscountAmount())))
+                                )
+                        ));
 
         // when
         ExtractableResponse<Response> response = 주문한다(request, MEMBER);
@@ -66,7 +69,6 @@ public class OrderIntegrationTest extends IntegrationTest{
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
-
 
     @Test
     void 주문을_조회한다() {
@@ -126,14 +128,14 @@ public class OrderIntegrationTest extends IntegrationTest{
 //        assertThat(첫번째_주문.getQuantity()).isEqualTo(치킨_주문.getQuantity());
 //    }
 
-    private long 주문하고_아이디를_반환한다(List<OrderItemRequest> 요청, Member 회원) {
+    private long 주문하고_아이디를_반환한다(OrderRequest 요청, Member 회원) {
         ExtractableResponse<Response> response = 주문한다(요청, 회원);
         String location = response.header("location");
         final String id = location.substring(location.lastIndexOf("/") + 1);
         return Long.parseLong(id);
     }
 
-    private ExtractableResponse<Response> 주문한다(List<OrderItemRequest> 요청, Member 회원) {
+    private ExtractableResponse<Response> 주문한다(OrderRequest 요청, Member 회원) {
         return given().log().all()
                 .auth().preemptive().basic(회원.getEmail(), 회원.getPassword())
                 .contentType(JSON)

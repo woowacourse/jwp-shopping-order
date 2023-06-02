@@ -44,7 +44,7 @@ class OrderItemDaoTest {
     void 전달받은_아이템을_모두_저장한다() {
         // given
         insertMember(MEMBER, jdbcTemplate);
-        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId());
+        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId(), 10000);
         insertOrder(orderEntity, jdbcTemplate);
         insertProduct(CHICKEN,jdbcTemplate);
         insertProduct(PIZZA, jdbcTemplate);
@@ -60,7 +60,7 @@ class OrderItemDaoTest {
     void 주문_아이디를_통해_아이템을_찾는다() {
         // given
         insertMember(MEMBER, jdbcTemplate);
-        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId());
+        OrderEntity orderEntity = new OrderEntity(1L, MEMBER.getId(), 10000);
         insertOrder(orderEntity, jdbcTemplate);
         insertProduct(CHICKEN, jdbcTemplate);
         insertProduct(PIZZA, jdbcTemplate);
@@ -85,6 +85,6 @@ class OrderItemDaoTest {
     }
 
     private OrderItemEntity getOrderItemEntity(Long orderId, Product product, int quantity) {
-        return new OrderItemEntity(orderId, product.getId(), quantity, product.getName(), product.getPrice(), product.getImageUrl(), 5000);
+        return new OrderItemEntity(orderId, product.getId(), quantity, product.getName(), product.getPrice(), product.getImageUrl(), 1000);
     }
 }

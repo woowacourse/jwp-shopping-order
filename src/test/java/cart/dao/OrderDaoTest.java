@@ -38,7 +38,7 @@ class OrderDaoTest {
     void 주문을_저장한다() {
         // given
         insertMember(MEMBER, jdbcTemplate);
-        OrderEntity orderEntity = new OrderEntity(MEMBER.getId());
+        OrderEntity orderEntity = new OrderEntity(MEMBER.getId(), 3000);
 
         // when
         Long actual = orderDao.save(orderEntity);
@@ -51,7 +51,7 @@ class OrderDaoTest {
     void 아이디를_통해_주문을_찾는다() {
         // given
         insertMember(MEMBER, jdbcTemplate);
-        OrderEntity orderEntity = new OrderEntity(MEMBER.getId());
+        OrderEntity orderEntity = new OrderEntity(MEMBER.getId(), 3000);
         Long orderId = orderDao.save(orderEntity);
 
         // when
@@ -77,13 +77,14 @@ class OrderDaoTest {
     void 멤버_아이디를_통해_모든_주문을_찾는다() {
         // given
         insertMember(MEMBER, jdbcTemplate);
-        orderDao.save(new OrderEntity(MEMBER.getId()));
-        orderDao.save(new OrderEntity(MEMBER.getId()));
-        orderDao.save(new OrderEntity(MEMBER.getId()));
+        orderDao.save(new OrderEntity(MEMBER.getId(), 3000));
+        orderDao.save(new OrderEntity(MEMBER.getId(), 3000));
+        orderDao.save(new OrderEntity(MEMBER.getId(), 3000));
 
         insertMember(new Member(MEMBER.getId() + 1, "email@naver.com", "password"), jdbcTemplate);
-        orderDao.save(new OrderEntity(MEMBER.getId()+1));
-        orderDao.save(new OrderEntity(MEMBER.getId()+1));
+        orderDao.save(new OrderEntity(MEMBER.getId()+1, 3000));
+        orderDao.save(new OrderEntity(MEMBER.getId()+1, 3000));
+
 
         // when
         List<OrderEntity> actual = orderDao.findAllByMemberId(MEMBER.getId());

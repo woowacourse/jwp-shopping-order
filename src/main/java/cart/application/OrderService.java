@@ -8,6 +8,7 @@ import cart.domain.OrderItem;
 import cart.domain.Product;
 import cart.dto.request.OrderCouponRequest;
 import cart.dto.request.OrderItemRequest;
+import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderResponse;
 import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;
@@ -26,24 +27,43 @@ public class OrderService {
         this.couponRepository = couponRepository;
     }
 
-    public Long order(List<OrderItemRequest> request, Long memberId) {
+    public Long order(OrderRequest request, Long memberId) {
         List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemRequest orderItemRequest : request) {
+        for (OrderItemRequest orderItemRequest : request.getOrderItemRequests()) {
             Product product = orderItemRequest.getProduct().toDomain();
             List<Long> couponIds = orderItemRequest.getCoupons().stream()
-                    .map(OrderCouponRequest::getId)
+                    .map(OrderCouponRequest::getCouponId)
                     .collect(toList());
 
             List<MemberCoupon> memberCoupons = couponRepository.findAllByMemberCouponIds(couponIds);
-            OrderItem orderItem = new OrderItem(product, orderItemRequest.getQuantity(), memberCoupons,
-                    orderItemRequest.getTotalPrice());
+            int totalPrice = applyCoupon(orderItemRequest, product, memberCoupons);
+
+            OrderItem orderItem = new OrderItem(product, orderItemRequest.getQuantity(), memberCoupons, totalPrice);
             orderItems.add(orderItem);
         }
-        return orderRepository.save(new Order(memberId, orderItems));
+        int totalPrice = orderItems.stream()
+                .mapToInt(OrderItem::getTotalPrice)
+                .sum();
+        return orderRepository.save(new Order(memberId, orderItems, totalPrice));
+    }
+
+    private int applyCoupon(OrderItemRequest orderItemRequest, Product product, List<MemberCoupon> memberCoupons) {
+        int price = product.getPrice() * orderItemRequest.getQuantity();
+        for (MemberCoupon memberCoupon : memberCoupons) {
+            memberCoupon.getCoupon().apply(price);
+        }
+        return price;
     }
 
     public OrderResponse findById(Long orderId) {
         Order order = orderRepository.findById(orderId);
         return OrderResponse.from(order);
+    }
+
+    public List<OrderResponse> findAllByMemberId(Long memberId) {
+        List<Order> orders = orderRepository.findAllByMemberId(memberId);
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(toList());
     }
 }

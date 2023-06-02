@@ -3,7 +3,6 @@ package cart.dto.response;
 import static java.util.stream.Collectors.toList;
 
 import cart.domain.Order;
-import cart.domain.OrderItem;
 import java.util.List;
 
 public class OrderResponse {
@@ -27,10 +26,8 @@ public class OrderResponse {
         List<OrderItemResponse> orderItems = order.getOrderItems().stream()
                 .map(OrderItemResponse::from)
                 .collect(toList());
-        int total = order.getOrderItems().stream()
-                .mapToInt(OrderItem::getTotalPrice)
-                .sum();
-        return new OrderResponse(order.getId(), orderItems, 3000, total);
+
+        return new OrderResponse(order.getId(), orderItems, 3000, order.getTotalPrice());
     }
 
     public Long getId() {

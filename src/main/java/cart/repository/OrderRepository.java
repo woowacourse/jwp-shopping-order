@@ -44,6 +44,10 @@ public class OrderRepository {
     public Order findById(Long id) {
         OrderEntity orderEntity = orderDao.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
+        return createOrder(id, orderEntity);
+    }
+
+    private Order createOrder(Long id, OrderEntity orderEntity) {
         List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderId(id);
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderItemEntity orderItemEntity : orderItemEntities) {
@@ -51,6 +55,16 @@ public class OrderRepository {
             orderItems.add(orderItemEntity.toDomain(memberCoupons));
         }
 
-        return new Order(orderEntity.getId(), orderEntity.getMemberId(), orderItems);
+        return new Order(orderEntity.getId(), orderEntity.getMemberId(), orderItems, orderEntity.getTotalPrice());
+    }
+
+    public List<Order> findAllByMemberId(Long memberId) {
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
+        List<Order> orders = new ArrayList<>();
+        for (OrderEntity orderEntity : orderEntities) {
+            orders.add(createOrder(orderEntity.getId(), orderEntity));
+        }
+
+        return orders;
     }
 }

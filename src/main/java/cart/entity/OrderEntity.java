@@ -6,18 +6,20 @@ public class OrderEntity {
 
     private Long id;
     private Long memberId;
+    private Integer totalPrice;
 
-    public OrderEntity(Long memberId) {
-        this(null, memberId);
+    public OrderEntity(Long memberId, Integer totalPrice) {
+        this(null, memberId, totalPrice);
     }
 
-    public OrderEntity(Long id, Long memberId) {
+    public OrderEntity(Long id, Long memberId, Integer totalPrice) {
         this.id = id;
         this.memberId = memberId;
+        this.totalPrice = totalPrice;
     }
 
     public static OrderEntity from(Order order) {
-        return new OrderEntity(order.getMemberId());
+        return new OrderEntity(order.getMemberId(), order.getTotalPrice());
     }
 
     public Long getId() {
@@ -26,5 +28,9 @@ public class OrderEntity {
 
     public Long getMemberId() {
         return memberId;
+    }
+
+    public Integer getTotalPrice() {
+        return totalPrice;
     }
 }

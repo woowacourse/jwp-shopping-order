@@ -7,17 +7,14 @@ public class OrderItemRequest {
     private OrderProductRequest product;
     private Integer quantity;
     private List<OrderCouponRequest> coupons;
-    private Integer totalPrice;
 
     public OrderItemRequest() {
     }
 
-    public OrderItemRequest(OrderProductRequest product, Integer quantity, List<OrderCouponRequest> coupons,
-                            Integer totalPrice) {
+    public OrderItemRequest(OrderProductRequest product, Integer quantity, List<OrderCouponRequest> coupons) {
         this.product = product;
         this.quantity = quantity;
         this.coupons = coupons;
-        this.totalPrice = totalPrice;
     }
 
     public OrderProductRequest getProduct() {
@@ -30,9 +27,5 @@ public class OrderItemRequest {
 
     public List<OrderCouponRequest> getCoupons() {
         return coupons;
-    }
-
-    public Integer getTotalPrice() {
-        return totalPrice;
     }
 }

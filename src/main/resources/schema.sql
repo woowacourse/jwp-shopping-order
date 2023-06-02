@@ -43,8 +43,9 @@ CREATE TABLE if not exists member_coupon
 
 CREATE TABLE if not exists orders
 (
-    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT NOT NULL,
+    id          BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id   BIGINT NOT NULL,
+    total_price BIGINT NOT NULL,
 
     FOREIGN KEY (member_id) REFERENCES member (id)
 );

@@ -17,7 +17,8 @@ public class OrderDao {
     private final static RowMapper<OrderEntity> rowMapper = (rs, rowNum) ->
             new OrderEntity(
                     rs.getLong("id"),
-                    rs.getLong("member_id")
+                    rs.getLong("member_id"),
+                    rs.getInt("total_price")
             );
 
     private final JdbcTemplate jdbcTemplate;
