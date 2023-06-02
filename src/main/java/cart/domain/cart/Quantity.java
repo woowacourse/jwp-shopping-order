@@ -8,9 +8,13 @@ public class Quantity {
 
     private int value;
 
-    public Quantity(final int quantity) {
-        validateQuantity(quantity);
-        this.value = quantity;
+    public Quantity(final Integer quantity) {
+        if (quantity == null) {
+            value = MINIMUM_QUANTITY;
+        } else {
+            validateQuantity(quantity);
+            this.value = quantity;
+        }
     }
 
     private void validateQuantity(final int quantity) {

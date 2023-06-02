@@ -45,8 +45,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
-        final CartItemRequest cartItemRequest = new CartItemRequest(product1.getId());
-        final ExtractableResponse<Response> response = requestAddCartItem(member1, cartItemRequest);
+        final CartItemRequest cartItemRequest = new CartItemRequest(product1.getId(), null);
+        final ExtractableResponse<Response> response = requestAddCartItem(member2, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -56,7 +56,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void addWithQuantityCartItem() {
         final int quantity = 10;
         final CartItemRequest cartItemRequest = new CartItemRequest(product1.getId(), quantity);
-        final ExtractableResponse<Response> response = requestAddCartItem(member1, cartItemRequest);
+        final ExtractableResponse<Response> response = requestAddCartItem(member2, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -70,7 +70,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 member1.getPassword() + "asdf",
                 member1.getPoint()
         );
-        final CartItemRequest cartItemRequest = new CartItemRequest(product1.getId());
+        final CartItemRequest cartItemRequest = new CartItemRequest(product1.getId(), null);
         final ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -112,7 +112,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 담긴 아이템의 수량을 0으로 변경하면, 장바구니에서 아이템이 삭제된다.")
     @Test
     void decreaseCartItemQuantityToZero() {
-        final Long cartItemId = requestAddCartItemAndGetId(member1, product1.getId());
+        final Long cartItemId = cartItem1.getId();
 
         final int quantity = 0;
         final ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member1, cartItemId, quantity);
@@ -132,7 +132,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
     @Test
     void updateOtherMembersCartItem() {
-        final Long cartItemId = requestAddCartItemAndGetId(member1, product1.getId());
+        final Long cartItemId = cartItem1.getId();
 
         final ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
 
@@ -142,7 +142,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
     @Test
     void removeCartItem() {
-        final Long cartItemId = requestAddCartItemAndGetId(member1, product1.getId());
+        final Long cartItemId = cartItem1.getId();
 
         final ExtractableResponse<Response> response = requestDeleteCartItem(cartItemId);
 
@@ -176,7 +176,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private Long requestAddCartItemAndGetId(final Member member, final Long productId) {
-        final ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
+        final ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId, null));
         return getIdFromCreatedResponse(response);
     }
 

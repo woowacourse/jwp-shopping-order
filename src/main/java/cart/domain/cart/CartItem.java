@@ -11,7 +11,7 @@ public class CartItem {
     private final Product product;
     private final Quantity quantity;
 
-    public CartItem(final Long id, final Member member, final Product product, final int quantity) {
+    public CartItem(final Long id, final Member member, final Product product, final Integer quantity) {
         this.id = id;
         this.member = member;
         this.product = product;

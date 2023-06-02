@@ -65,7 +65,7 @@ public class PayIntegrationTest extends IntegrationTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, -2, -100, -987654321})
     void minusPointPayment(final int point) {
-        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), point);
+        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L, null)), point);
 
         final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +85,7 @@ public class PayIntegrationTest extends IntegrationTest {
     @DisplayName("사용자의 보유 포인트보다 사용 포인트가 클 경우 bad request를 반환한다.")
     @Test
     void overPointUsePayment() {
-        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 100);
+        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L, null)), 100);
 
         final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -105,7 +105,7 @@ public class PayIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니 아이템을 담은 사용자와 결제 요청 사용자가 다를 경우 bad request를 반환한다.")
     @Test
     void differentMemberPayment() {
-        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 100);
+        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L, null)), 100);
 
         final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -125,7 +125,7 @@ public class PayIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 담긴 아이템을 결제한다.")
     @Test
     void paymentCartItems() {
-        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 0);
+        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L, null)), 0);
         final int expectPoint = 1_000;
 
         final ExtractableResponse<Response> response = given()
@@ -150,7 +150,7 @@ public class PayIntegrationTest extends IntegrationTest {
     @Test
     void paymentWithPoint() {
         final int expectPoint = 1400;
-        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L)), 100);
+        final PaymentRequest request = new PaymentRequest(List.of(new CartItemRequest(1L, null)), 100);
         member1.savePoint(500);
         memberDao.updatePoint(new MemberEntity(member1.getId(), null, null, member1.getPoint(), null));
 
