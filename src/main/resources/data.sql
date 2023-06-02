@@ -29,5 +29,9 @@ values (2, 2, false);
 INSERT INTO orders (delivery_fee, member_coupon_id, member_id)
 values (3000, 1, 1);
 
+UPDATE member_coupon
+set used = true
+where id = 1;
+
 INSERT INTO order_item (name, image_url, price, quantity, order_id)
 values ('도미노 치즈피자', 'https://cdn.dominos.co.kr/admin/upload/goods/20200311_TI57KvOH.jpg', 23900, 1, 1);
