@@ -11,6 +11,7 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
 import cart.domain.product.CartItem;
 import cart.domain.product.Product;
+import cart.exception.CartItemException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,6 @@ class OrderTest {
         final List<CartItem> cartItems = List.of(cartItem);
 
         assertThatThrownBy(() -> Order.of(MEMBER_2, cartItems, null))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CartItemException.class);
     }
-
 }
