@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.Or;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static cart.ProductFixture.product1;
@@ -19,7 +20,10 @@ class OrderTest {
     void calculateSavedPoint() {
         List<OrderItem> orderItems = List.of(new OrderItem(product1, 3, 30000),
                 new OrderItem(product2, 2, 40000));
-        Order order = new Order(10000, orderItems, new Member(1L, "kong@com", "1234"));
+        Points points = new Points(List.of(Point.of(10000, "구매 포인트", LocalDate.now())));
+        Member member = new Member(1L, "kong@com", "1234");
+
+        Order order = new Order(points, orderItems, member);
 
         Point point = order.calculateSavedPoint(new OrderPointAccumulationPolicy(new OrderPointExpirePolicy()));
 
