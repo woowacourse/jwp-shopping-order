@@ -42,7 +42,7 @@ public class OrderDao {
             return ps;
         }, keyHolder);
 
-        Long orderId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        Long orderId = Long.valueOf(String.valueOf(keyHolder.getKeys().get("id")));
 
         final String sql = "INSERT INTO order_detail(order_id, product_id, quantity) VALUES (?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
