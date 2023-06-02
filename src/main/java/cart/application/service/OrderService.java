@@ -12,6 +12,7 @@ import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
 import cart.exception.StoreException;
 import cart.exception.notfound.MemberCouponNotFoundException;
+import cart.exception.notfound.OrderNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,5 +65,14 @@ public class OrderService {
                 throw new StoreException("가격을 확인해주세요.");
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Order getOrderById(final Member member, final long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(OrderNotFoundException::new);
+        order.checkOwner(member);
+
+        return order;
     }
 }

@@ -3,8 +3,10 @@ package cart.domain.order;
 import cart.domain.Member;
 import cart.domain.cart.CartItems;
 import cart.domain.coupon.MemberCoupon;
+import cart.exception.forbidden.ForbiddenException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Order {
@@ -48,6 +50,12 @@ public class Order {
         int discountPrice = coupon.getDiscountPrice(cartItems);
         int totalProductPrice = cartItems.getTotalProductPrice();
         return totalProductPrice - discountPrice;
+    }
+
+    public void checkOwner(final Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new ForbiddenException();
+        }
     }
 
     public Long getId() {

@@ -34,3 +34,7 @@
 - DTO로 보내줄 땐, type이 AmountCoupond이면 discountPercent가 null이고 그런 구조..
 - Coupon을 추상클래스로 두고 이를 상속하며 각 쿠폰에게 필요한 필드를 추가하는 클래스로 설계를 했다.
 - 이 때, DTO에서 어떻게 넘겨주냐..?! DTO가 받는 타입은 추상클래스인 Coupon이다..
+
+## DTO inner class?
+
+- Request에서 DTO inner class를 활용하는것이 좋을까?
