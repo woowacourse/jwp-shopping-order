@@ -79,4 +79,9 @@ public class PointRepository {
         }
         return points;
     }
+
+    public void save(Long memberId, Long orderId, Point point) {
+        PointEntity pointEntity = new PointEntity(point.getId(), point.getValue(), point.getComment(), point.getCreateAt(), point.getExpiredAt());
+        pointDao.save(memberId, orderId, pointEntity);
+    }
 }

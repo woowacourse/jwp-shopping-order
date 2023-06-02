@@ -2,7 +2,7 @@ package cart.repository;
 
 import cart.dao.PointDao;
 import cart.dao.PointHistoryDao;
-import cart.domain.Point;
+import cart.domain.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +16,8 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDate;
 import java.util.List;
 
+import static cart.ProductFixture.product1;
+import static cart.ProductFixture.product2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +30,8 @@ class PointRepositoryTest {
     private PointDao pointDao;
     private PointHistoryDao pointHistoryDao;
     private JdbcTemplate jdbcTemplate;
+
+    private Member member;
 
     @Autowired
     public PointRepositoryTest(PointRepository pointRepository, PointDao pointDao, PointHistoryDao pointHistoryDao, JdbcTemplate jdbcTemplate) {
@@ -59,6 +63,8 @@ class PointRepositoryTest {
 
         jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(2, 1, 1000)");
         jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(3, 1, 2000)");
+
+        member = new Member(1L, "kong@com", "1234");
     }
 
     @DisplayName("한 유저에 대한 사용가능한 포인트 정보를 구할 수 있다.")
@@ -70,5 +76,15 @@ class PointRepositoryTest {
         Point point2 = Point.of(2L, 1300, "주문 포인트 적립", LocalDate.of(2023, 06, 15), LocalDate.of(2023, 9, 30));
 
         assertThat(points).containsExactly(point2, point1);
+    }
+
+    @DisplayName("한 주문에 대한 포인트를 저장할 수 있다.")
+    @Test
+    void save() {
+        pointRepository.save(member.getId(), 3L, Point.of(3000, "테스트 주문 포인트", LocalDate.of(2099, 03, 03)));
+
+        Integer point = jdbcTemplate.queryForObject("select earned_point from point where orders_id = 3 and comment = '테스트 주문 포인트'", Integer.class);
+
+        assertThat(point).isEqualTo(3000);
     }
 }
