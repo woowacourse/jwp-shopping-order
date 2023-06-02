@@ -13,7 +13,7 @@ import cart.domain.order.OrderItems;
 import cart.domain.product.Product;
 import cart.domain.vo.Money;
 import cart.domain.vo.Quantity;
-import cart.exception.OrderException;
+import cart.exception.MemberException;
 import cart.fixture.dao.CartItemDaoFixture;
 import cart.fixture.dao.MemberDaoFixture;
 import cart.fixture.dao.OrderDaoFixture;
@@ -72,7 +72,7 @@ class OrderServiceTest {
 
         // expect
         assertThatThrownBy(() -> orderService.createOrder(회원, 주문_장바구니_상품_식별자값_목록))
-                .isInstanceOf(OrderException.NotEnoughPoint.class);
+                .isInstanceOf(MemberException.NotEnoughPoint.class);
     }
 
     @Test
@@ -87,7 +87,7 @@ class OrderServiceTest {
 
         // then
         assertThatThrownBy(() -> orderService.createOrder(회원, 주문_장바구니_상품_식별자값_목록))
-                .isInstanceOf(OrderException.NotEnoughMoney.class);
+                .isInstanceOf(MemberException.NotEnoughMoney.class);
     }
 
     @Test

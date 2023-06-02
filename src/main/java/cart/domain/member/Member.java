@@ -35,32 +35,38 @@ public class Member {
         }
     }
 
-    public boolean isMoneyAffordable(Money otherMoney) {
-        return money.isEqualOrGreaterThan(otherMoney);
-    }
-
-    public boolean isPointAffordable(Money otherPoint) {
-        return point.isEqualOrGreaterThan(otherPoint);
-    }
-
-    public boolean isSamePassword(String password) {
+     public boolean isSamePassword(String password) {
         return this.password.equals(password);
-    }
-
-    public void spendPoint(Money usePoint) {
-        point = point.minus(usePoint);
-    }
-
-    public void spendMoney(Money totalPrice) {
-        money = money.minus(totalPrice);
-    }
-
-    public void accumulatePoint(Money newPoint) {
-        point = point.plus(newPoint);
     }
 
     public boolean isNotSame(Member otherMember) {
         return !this.equals(otherMember);
+    }
+
+    public void spendPoint(Money usePoint) {
+        checkPointAffordable(usePoint);
+        point = point.minus(usePoint);
+    }
+
+    private void checkPointAffordable(Money otherPoint) {
+        if (!point.isEqualOrGreaterThan(otherPoint)) {
+            throw new MemberException.NotEnoughPoint();
+        }
+    }
+
+    public void spendMoney(Money totalPrice) {
+        checkMoneyAffordable(totalPrice);
+        money = money.minus(totalPrice);
+    }
+
+    private void checkMoneyAffordable(Money otherMoney) {
+        if (!money.isEqualOrGreaterThan(otherMoney)) {
+            throw new MemberException.NotEnoughMoney();
+        }
+    }
+
+    public void accumulatePoint(Money newPoint) {
+        point = point.plus(newPoint);
     }
 
     public Long getId() {

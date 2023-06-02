@@ -40,4 +40,18 @@ public class MemberException extends RuntimeException {
             super("멤버 아이디를 입력해야 합니다.");
         }
     }
+
+    public static class NotEnoughMoney extends MemberException {
+
+        public NotEnoughMoney() {
+            super("회원의 금액이 부족합니다.");
+        }
+    }
+
+    public static class NotEnoughPoint extends MemberException {
+
+        public NotEnoughPoint() {
+            super("회원의 포인트가 부족합니다.");
+        }
+    }
 }

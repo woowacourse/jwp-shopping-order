@@ -4,7 +4,6 @@ import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.pay.PayPoint;
 import cart.domain.vo.Money;
-import cart.exception.OrderException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -33,8 +32,6 @@ public class Order {
 
     public static Order of(Member member, CartItems cartItems, Money usePoint, PayPoint payPoint) {
         Money currentTotalPrice = cartItems.totalPrice();
-        validatePointAffordable(member, usePoint);
-        validateMoneyAffordable(member, currentTotalPrice);
 
         member.spendMoney(currentTotalPrice);
         member.spendPoint(usePoint);
@@ -43,18 +40,6 @@ public class Order {
         member.accumulatePoint(payPoint.calculate(totalPay));
 
         return new Order(member, cartItems, usePoint);
-    }
-
-    private static void validatePointAffordable(Member member, Money usePoint) {
-        if (!member.isPointAffordable(usePoint)) {
-            throw new OrderException.NotEnoughPoint();
-        }
-    }
-
-    private static void validateMoneyAffordable(Member member, Money totalPrice) {
-        if (!member.isMoneyAffordable(totalPrice)) {
-            throw new OrderException.NotEnoughMoney();
-        }
     }
 
     public Long getId() {

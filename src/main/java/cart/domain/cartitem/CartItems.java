@@ -65,7 +65,7 @@ public class CartItems {
     }
 
     public Money totalPrice() {
-        Money money = Money.from(0);
+        Money money = Money.ZERO;
         for (CartItem cartItem : cartItems) {
             money = money.plus(cartItem.totalPrice());
         }
