@@ -62,7 +62,7 @@ class OrderServiceTest {
     void 상품을_주문한다() {
         // given
         final Product product1 = productRepository.save(상품_8900원);
-        final Product product2 = productRepository.save(상품_18900원);
+        final Product product2 = productRepository.save(상품_28900원);
         final Member member = memberRepository.save(사용자1);
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
@@ -91,14 +91,16 @@ class OrderServiceTest {
         final Product product2 = productRepository.save(상품_18900원);
         final Product product3 = productRepository.save(상품_28900원);
         final Member member = memberRepository.save(사용자1);
+        final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
+        final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon));
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final CartItem cartItem3 = cartItemRepository.save(new CartItem(member, product3));
         final Order order1 = orderRepository.save(
-                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem1, cartItem2))
+                new Order(memberCoupon, member.getId(), List.of(cartItem1, cartItem3))
         );
         final Order order2 = orderRepository.save(
-                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem3))
+                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem2))
         );
 
         // when
@@ -106,12 +108,12 @@ class OrderServiceTest {
 
         // then
         assertThat(result).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(List.of(
-                new OrderResponse(order1.getId(), 27800L, 0L, 3000L, List.of(
+                new OrderResponse(order1.getId(), 37800L, 2000L, 3000L, List.of(
                         new ItemDto(null, "pizza1", 8900L, "pizza1.png", 1),
-                        new ItemDto(null, "pizza2", 18900L, "pizza2.png", 1)
-                )),
-                new OrderResponse(order2.getId(), 28900L, 0L, 3000L, List.of(
                         new ItemDto(null, "pizza3", 28900L, "pizza3.png", 1)
+                )),
+                new OrderResponse(order2.getId(), 18900L, 0L, 3000L, List.of(
+                        new ItemDto(null, "pizza2", 18900L, "pizza2.png", 1)
                 ))
         ));
     }
