@@ -24,8 +24,8 @@ public class PointIntegrationTest extends IntegrationTest {
     @DisplayName("가용 포인트를 조회한다")
     @Test
     void getUserPoints() {
-        member = memberDao.getMemberByEmail("kangsj9665@gmail.com");
-        member2 = memberDao.getMemberByEmail("yis092521@gmail.com");
+        member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
+        member2 = memberDao.getMemberByEmail("yis092521@gmail.com").get();
 
         memberDao.updatePoints(300L, member);
 

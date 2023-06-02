@@ -39,8 +39,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("주문을 생성한다")
     @Test
     void createOrder() {
-        member = memberDao.getMemberByEmail("kangsj9665@gmail.com");
-        member2 = memberDao.getMemberByEmail("yis092521@gmail.com");
+        member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
+        member2 = memberDao.getMemberByEmail("yis092521@gmail.com").get();
 
         memberDao.updatePoints(300L, member);
 
@@ -50,8 +50,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("사용자의 전체 주문 목록을 불러온다")
     @Test
     void getAllOrders() {
-        member = memberDao.getMemberByEmail("kangsj9665@gmail.com");
-        member2 = memberDao.getMemberByEmail("yis092521@gmail.com");
+        member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
+        member2 = memberDao.getMemberByEmail("yis092521@gmail.com").get();
 
 
         memberDao.updatePoints(1000L, member);
@@ -66,7 +66,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("특정 주문의 상세정보를 불러온다")
     @Test
     void getOrderDetail() {
-        member = memberDao.getMemberByEmail("kangsj9665@gmail.com");
+        member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
 
         getOrderDetails(member, 22L);
     }

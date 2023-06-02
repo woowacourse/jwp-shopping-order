@@ -16,7 +16,6 @@ import java.util.Map;
 public class ShoppingOrderDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertAction;
-
     private RowMapper<OrderResponseEntity> detailOrderResponseEntityRowMapper = (rs, rowNum) -> {
         Long orderId = rs.getLong("id");
         LocalDateTime orderedAt = rs.getTimestamp("ordered_at").toLocalDateTime();

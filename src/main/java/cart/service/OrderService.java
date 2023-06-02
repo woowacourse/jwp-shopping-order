@@ -2,7 +2,11 @@ package cart.service;
 
 import cart.dao.*;
 import cart.domain.*;
-import cart.dto.*;
+import cart.dto.OrderItemResponse;
+import cart.dto.OrderRequest;
+import cart.dto.OrderResponse;
+import cart.dto.ProductResponse;
+import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.InvalidCardException;
 import org.springframework.stereotype.Service;
@@ -39,7 +43,7 @@ public class OrderService {
         Long orderId = shoppingOrderDao.save(order);
         List<Long> cartItemIds = orderRequest.getCartItemIds();
         for (Long cartItemId : cartItemIds) {
-            CartItem cartItem = cartItemDao.findById(cartItemId).orElseThrow(()->new CartItemException("장바구니 목록에서 조회할 수 없습니다"));
+            CartItem cartItem = cartItemDao.findById(cartItemId).orElseThrow(() -> new CartItemException("장바구니 목록에서 조회할 수 없습니다"));
             cartItem.checkOwner(member);
             Integer quantity = cartItem.getQuantity();
             Product product = cartItem.getProduct();
@@ -97,7 +101,7 @@ public class OrderService {
     }
 
     public OrderResponse findById(Member member, Long id) {
-        Member orderOwner = memberDao.findByOrderId(id);
+        Member orderOwner = memberDao.findByOrderId(id).orElseThrow(() -> new AuthenticationException());
         if (!orderOwner.equals(member)) {
             throw new IllegalArgumentException("로그인한 사용자의 주문 목록이 아닙니다");
         }
