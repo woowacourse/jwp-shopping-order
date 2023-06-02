@@ -1,17 +1,21 @@
 package cart.domain;
 
 import cart.exception.ProductException;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class ProductTest {
 
-    private Long validId = 1L;
-    private String validName = "validName";
-    private int validPrice = 1_000;
-    private String validImageUrl = "imageUrl";
+    private final Long validId = 1L;
+    private final String validName = "validName";
+    private final int validPrice = 1_000;
+    private final String validImageUrl = "imageUrl";
 
     @Test
     void 상품_가격이_1원보다_작으면_예외를_던진다() {

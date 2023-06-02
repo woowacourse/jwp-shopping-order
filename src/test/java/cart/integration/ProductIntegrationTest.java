@@ -2,6 +2,8 @@ package cart.integration;
 
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,10 +11,12 @@ import org.springframework.http.MediaType;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class ProductIntegrationTest extends IntegrationTest {
 
     @Test
-    void getProducts() {
+    void 모든_상품_정보를_조회한다() {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -24,7 +28,7 @@ class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void createProduct() {
+    void 상품을_생성한다() {
         var product = new ProductRequest("치킨", 10_000, "https://example.com/chicken.jpg");
 
         var response = given()
@@ -39,7 +43,7 @@ class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void getCreatedProduct() {
+    void 생성된_상품을_조회한다() {
         var product = new ProductRequest("피자", 15_000, "https://example.com/pizza.jpg");
 
         // create product

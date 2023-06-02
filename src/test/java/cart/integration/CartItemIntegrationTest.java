@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static cart.fixture.MemberFixture.메리;
+import static cart.fixture.MemberFixture.주노;
 import static cart.fixture.ProductFixture.치킨;
 import static cart.fixture.ProductFixture.피자;
 import static io.restassured.RestAssured.given;
@@ -42,8 +44,11 @@ class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(치킨.REQUEST);
         productId2 = createProduct(피자.REQUEST);
 
-        member = memberRepository.findById(1L).orElseGet(null);
-        member2 = memberRepository.findById(2L).orElseGet(null);
+        Long 유저_식별자 = memberRepository.create(주노.MEMBER);
+        member = memberRepository.findById(유저_식별자).orElseGet(null);
+
+        Long 유저_식별자2 = memberRepository.create(메리.MEMBER);
+        member2 = memberRepository.findById(유저_식별자2).orElseGet(null);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

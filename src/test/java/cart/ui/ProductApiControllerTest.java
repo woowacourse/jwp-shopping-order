@@ -3,15 +3,20 @@ package cart.ui;
 import cart.config.ControllerTestConfig;
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import static cart.fixture.ProductFixture.치킨;
 import static cart.fixture.ProductFixture.피자;
 import static com.epages.restdocs.apispec.RestAssuredRestDocumentationWrapper.document;
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class ProductApiControllerTest extends ControllerTestConfig {
 
     Long 상품_등록(Product product) {
@@ -19,7 +24,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
     }
 
     @Test
-    void getAllProducts() {
+    void 모든_상품을_조회한다() {
         상품_등록(피자.PRODUCT);
 
         given(spec)
@@ -39,8 +44,8 @@ class ProductApiControllerTest extends ControllerTestConfig {
     }
 
     @Test
-    void getProductById() {
-        상품_등록(피자.PRODUCT);
+    void 식별자로_상품을_조회한다() {
+        상품_등록(치킨.PRODUCT);
 
         given(spec)
                 .log().all()
@@ -60,7 +65,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
     }
 
     @Test
-    void createProduct() {
+    void 상품을_생성한다() {
         given(spec)
                 .log().all()
                 .filter(document("{method-name}",
@@ -78,7 +83,7 @@ class ProductApiControllerTest extends ControllerTestConfig {
     }
 
     @Test
-    void updateProduct() {
+    void 상품_정보를_수정한다() {
         final Long 피자_ID = 상품_등록(피자.PRODUCT);
 
         given(spec)

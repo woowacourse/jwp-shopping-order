@@ -14,12 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 class CartItemTest {
-
-    private final long validId = 1L;
-    private final int validQuantity = 2;
-    private final Product validProduct = new Product("상품 이름", 1_000, "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&quality=85&auto=format&fit=max&s=a52bbe202f57ac0f5ff7f47166906403");
-    private final Member validMember = new Member(1L, "a@a.com", "1234a!");
-
+    
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
     void 장바구니의_상품_개수가_0_이하면_예외(int quantity) {
@@ -39,6 +34,6 @@ class CartItemTest {
     void 회원이_없으면_예외() {
         assertThatThrownBy(() -> new CartItem(1L, 1, 치킨.PRODUCT, null))
                 .isInstanceOf(CartItemException.InvalidMember.class)
-                .hasMessageContaining("장바구니에 해당하는 회원이 존재하지 않습니다.");
+                .hasMessageContaining("해당 회원의 장바구니가 아닙니다. memberId : " + null);
     }
 }

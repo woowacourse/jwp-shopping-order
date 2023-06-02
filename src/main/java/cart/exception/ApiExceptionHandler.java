@@ -48,4 +48,20 @@ public class ApiExceptionHandler {
                 .status(HttpStatus.FORBIDDEN)
                 .build();
     }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(IllegalArgumentException e) {
+        logger.warn(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(IllegalStateException e) {
+        logger.warn(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
 }

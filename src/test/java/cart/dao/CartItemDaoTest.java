@@ -18,7 +18,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import static cart.fixture.MemberFixture.주노;
+import static cart.fixture.MemberFixture.헤나;
 import static cart.fixture.ProductFixture.치킨;
+import static cart.fixture.ProductFixture.핫도그;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -74,8 +76,8 @@ class CartItemDaoTest {
 
     @Test
     void 장바구니를_갱신한다() {
-        long 상품_식별자 = 상품_저장(치킨.ENTITY);
-        long 유저_식별자 = 유저_저장(주노.ENTITY);
+        long 상품_식별자 = 상품_저장(핫도그.ENTITY);
+        long 유저_식별자 = 유저_저장(헤나.ENTITY);
         CartItemEntity 장바구니 = new CartItemEntity(상품_식별자, 유저_식별자, 1);
 
         SqlParameterSource source = new BeanPropertySqlParameterSource(장바구니);

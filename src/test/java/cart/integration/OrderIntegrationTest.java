@@ -8,6 +8,7 @@ import cart.dto.request.ProductRequest;
 import cart.dto.response.CartItemResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cart.fixture.ProductFixture.*;
+import static cart.fixture.MemberFixture.*;
+import static cart.fixture.ProductFixture.치킨;
+import static cart.fixture.ProductFixture.피자;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,24 +31,27 @@ class OrderIntegrationTest extends IntegrationTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    private Long productId;
-    private Long productId2;
-    private Long productId3;
-
     private Long cartId;
     private Long cartId2;
-
     private Member member;
+    private Member noMoneyMember;
+    private Member noPointMember;
 
     @BeforeEach
     void setUp() {
         super.setUp();
 
-        productId = createProduct(치킨.REQUEST);
-        productId2 = createProduct(피자.REQUEST);
-        productId3 = createProduct(핫도그.REQUEST);
+        Long productId = createProduct(치킨.REQUEST);
+        Long productId2 = createProduct(피자.REQUEST);
 
-        member = memberRepository.findById(1L).orElseGet(null);
+        Long 유저_식별자 = memberRepository.create(주노.MEMBER);
+        member = memberRepository.findById(유저_식별자).orElseGet(null);
+
+        Long 유저_식별자2 = memberRepository.create(돈이없어요.MEMBER);
+        noMoneyMember = memberRepository.findById(유저_식별자2).orElseGet(null);
+
+        Long 유저_식별자3 = memberRepository.create(포인트가없어요.MEMBER);
+        noPointMember = memberRepository.findById(유저_식별자3).orElseGet(null);
 
         cartId = requestAddCartItem(member, new CartItemRequest(productId));
         cartId2 = requestAddCartItem(member, new CartItemRequest(productId2));
@@ -91,6 +97,20 @@ class OrderIntegrationTest extends IntegrationTest {
         assertThat(afterOrder.getPoint()).isEqualTo(prevPoint + point - usePoint);
     }
 
+    @DisplayName("주문을 할 때 사용자에게 남은 돈이 없다면 예외")
+    @Test
+    void noMoneyOrder() {
+        ExtractableResponse<Response> response = orderCartItemsWithOutStatusCode(noMoneyMember, 0, cartId, cartId2);
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("포인트를 사용할 때 사용자에게 남은 포인트가 없다면 예외")
+    @Test
+    void noPointOrder() {
+        ExtractableResponse<Response> response = orderCartItemsWithOutStatusCode(noPointMember, 100, cartId, cartId2);
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     private ExtractableResponse<Response> orderCartItems(Member member, Long... id) {
         List<Long> cartIds = Arrays.stream(id).collect(Collectors.toList());
 
@@ -120,6 +140,22 @@ class OrderIntegrationTest extends IntegrationTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value())
+                .extract();
+    }
+
+    private ExtractableResponse<Response> orderCartItemsWithOutStatusCode(Member member, Integer point, Long... id) {
+        List<Long> cartIds = Arrays.stream(id).collect(Collectors.toList());
+
+        return given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new OrderRequest(cartIds, point))
+                .when()
+                .log().all()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .post("/orders")
+                .then()
+                .log().all()
                 .extract();
     }
 

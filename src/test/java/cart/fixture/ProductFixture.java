@@ -5,6 +5,7 @@ import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.entity.ProductEntity;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class ProductFixture {
     public static final class 치킨 {
         private static final long ID = 1L;
