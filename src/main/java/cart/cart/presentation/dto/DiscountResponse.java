@@ -1,6 +1,7 @@
 package cart.cart.presentation.dto;
 
 import cart.cart.Cart;
+import cart.cart.domain.deliveryprice.DeliveryPrice;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class DiscountResponse {
         final var cartItemDiscountResponses = cart.getCartItems()
                 .stream().map(CartItemDiscountResponse::from)
                 .collect(Collectors.toList());
-        final var deliveryDiscountResponse = DeliveryDiscountResponse.from(cart.getDeliveryPrice().getPrice());
+        final var deliveryDiscountResponse = new DeliveryDiscountResponse(DeliveryPrice.DEFAULT_PRICE, cart.getDeliveryPrice().getPrice());
         final var discountFromTotalPrice = new DiscountFromTotalPrice(discountPriceFromTotalPrice);
         return new DiscountResponse(cartItemDiscountResponses, deliveryDiscountResponse, discountFromTotalPrice);
     }

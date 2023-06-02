@@ -20,7 +20,6 @@ public class OrdersScenarioTest extends OrderScenarioTest {
     private OrderRepository orderRepository;
 
     @Test
-    @Disabled
     void 전체_주문내역_페이지에_접속한다() {
         super.사용자가_결제하기_버튼을_누른다();
         final var order = orderRepository.findById(1L);
@@ -35,31 +34,29 @@ public class OrdersScenarioTest extends OrderScenarioTest {
 
         assertThat(결과.statusCode()).isEqualTo(HttpStatus.OK.value());
         final var jsonPath = 결과.jsonPath();
-        assertThat(jsonPath.getList("orders")).hasSize(1);
         assertAll(
-                () -> assertThat(jsonPath.getLong("orders[0].id")).isEqualTo(order.getId()),
-                () -> assertThat(jsonPath.getString("orders[0].orderedTime")).isEqualTo(new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderedTime())),
+                () -> assertThat(jsonPath.getLong("[0].id")).isEqualTo(order.getId()),
+                () -> assertThat(jsonPath.getString("[0].orderedTime")).isEqualTo(new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderedTime())),
 
-                () -> assertThat(jsonPath.getLong("orders[0].orderedItems[0].id")).isEqualTo(order.getOrderItems().get(0).getProductId()),
-                () -> assertThat(jsonPath.getString("orders[0].orderedItems[0].name")).isEqualTo(order.getOrderItems().get(0).getProductName()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[0].price")).isEqualTo(order.getOrderItems().get(0).getPrice()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[0].quantity")).isEqualTo(order.getOrderItems().get(0).getPrice()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[0].imageUrl")).isEqualTo(order.getOrderItems().get(0).getPrice()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[0].totalPrice")).isEqualTo(order.getOrderItems().get(0).getPrice()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[0].totalDiscountPrice")).isEqualTo(order.getOrderItems().get(0).getPrice()),
+                () -> assertThat(jsonPath.getLong("[0].orderedItems[0].id")).isEqualTo(order.getOrderItems().get(0).getProductId()),
+                () -> assertThat(jsonPath.getString("[0].orderedItems[0].name")).isEqualTo(order.getOrderItems().get(0).getProductName()),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[0].price")).isEqualTo(order.getOrderItems().get(0).getOriginalPrice()),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[0].quantity")).isEqualTo(order.getOrderItems().get(0).getQuantity()),
+                () -> assertThat(jsonPath.getString("[0].orderedItems[0].imageUrl")).isEqualTo(order.getOrderItems().get(0).getImgUri()),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[0].totalPrice")).isEqualTo(9000),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[0].totalDiscountPrice")).isEqualTo(1000),
 
-                () -> assertThat(jsonPath.getLong("orders[0].orderedItems[1].id")).isEqualTo(order.getOrderItems().get(0).getProductId()),
-                () -> assertThat(jsonPath.getString("orders[0].orderedItems[1].name")).isEqualTo(order.getOrderItems().get(0).getProductName()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[1].price")).isEqualTo(order.getOrderItems().get(0).getPrice()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[1].quantity")).isEqualTo(order.getOrderItems().get(0).getPrice()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[1].imageUrl")).isEqualTo(order.getOrderItems().get(0).getPrice()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[1].totalPrice")).isEqualTo(order.getOrderItems().get(0).getPrice()),
-                () -> assertThat(jsonPath.getInt("orders[0].orderedItems[1].totalDiscountPrice")).isEqualTo(order.getOrderItems().get(0).getPrice())
+                () -> assertThat(jsonPath.getLong("[0].orderedItems[1].id")).isEqualTo(order.getOrderItems().get(1).getProductId()),
+                () -> assertThat(jsonPath.getString("[0].orderedItems[1].name")).isEqualTo(order.getOrderItems().get(1).getProductName()),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[1].price")).isEqualTo(order.getOrderItems().get(1).getOriginalPrice()),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[1].quantity")).isEqualTo(order.getOrderItems().get(1).getQuantity()),
+                () -> assertThat(jsonPath.getString("[0].orderedItems[1].imageUrl")).isEqualTo(order.getOrderItems().get(1).getImgUri()),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[1].totalPrice")).isEqualTo(11700),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[1].totalDiscountPrice")).isEqualTo(1300)
         );
     }
 
     @Test
-    @Disabled
     void 상세_주문정보_페이지에_접속한다() {
         super.사용자가_결제하기_버튼을_누른다();
         final var order = orderRepository.findById(1L);
@@ -68,31 +65,35 @@ public class OrdersScenarioTest extends OrderScenarioTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/orders/{id}", 1)
-                .then()
+                .then().log().all()
                 .extract();
 
         assertThat(결과.statusCode()).isEqualTo(HttpStatus.OK.value());
         final var jsonPath = 결과.jsonPath();
 
         assertAll(
-                () -> assertThat(jsonPath.getLong("orderId")).isEqualTo(order.getId()),
+                () -> assertThat(jsonPath.getLong("id")).isEqualTo(order.getId()),
                 () -> assertThat(jsonPath.getString("orderedTime")).isEqualTo(new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderedTime())),
 
-                () -> assertThat(jsonPath.getLong("products[0].productId")).isEqualTo(order.getOrderItems().get(0).getProductId()),
-                () -> assertThat(jsonPath.getString("products[0].productName")).isEqualTo(order.getOrderItems().get(0).getProductName()),
-                () -> assertThat(jsonPath.getInt("products[0].price")).isEqualTo(order.getOrderItems().get(0).getPrice()),
+                () -> assertThat(jsonPath.getLong("orderedItems[0].id")).isEqualTo(order.getOrderItems().get(0).getProductId()),
+                () -> assertThat(jsonPath.getString("orderedItems[0].name")).isEqualTo(order.getOrderItems().get(0).getProductName()),
+                () -> assertThat(jsonPath.getInt("orderedItems[0].price")).isEqualTo(order.getOrderItems().get(0).getOriginalPrice()),
+                () -> assertThat(jsonPath.getInt("orderedItems[0].quantity")).isEqualTo(order.getOrderItems().get(0).getQuantity()),
+                () -> assertThat(jsonPath.getString("orderedItems[0].imageUrl")).isEqualTo(order.getOrderItems().get(0).getImgUri()),
+                () -> assertThat(jsonPath.getInt("orderedItems[0].totalPrice")).isEqualTo(9_000),
+                () -> assertThat(jsonPath.getInt("orderedItems[0].totalDiscountPrice")).isEqualTo(1_000),
 
-                () -> assertThat(jsonPath.getLong("products[1].productId")).isEqualTo(order.getOrderItems().get(1).getProductId()),
-                () -> assertThat(jsonPath.getString("products[1].productName")).isEqualTo(order.getOrderItems().get(1).getProductName()),
-                () -> assertThat(jsonPath.getInt("products[1].price")).isEqualTo(order.getOrderItems().get(1).getPrice()),
+                () -> assertThat(jsonPath.getLong("orderedItems[1].id")).isEqualTo(order.getOrderItems().get(1).getProductId()),
+                () -> assertThat(jsonPath.getString("orderedItems[1].name")).isEqualTo(order.getOrderItems().get(1).getProductName()),
+                () -> assertThat(jsonPath.getInt("orderedItems[1].price")).isEqualTo(order.getOrderItems().get(1).getOriginalPrice()),
+                () -> assertThat(jsonPath.getInt("orderedItems[1].quantity")).isEqualTo(order.getOrderItems().get(1).getQuantity()),
+                () -> assertThat(jsonPath.getString("orderedItems[1].imageUrl")).isEqualTo(order.getOrderItems().get(1).getImgUri()),
+                () -> assertThat(jsonPath.getInt("orderedItems[1].totalPrice")).isEqualTo(11_700),
+                () -> assertThat(jsonPath.getInt("orderedItems[1].totalDiscountPrice")).isEqualTo(1_300),
 
-                () -> assertThat(jsonPath.getInt("deliveryPrice.price")).isEqualTo(order.getDeliveryPrice()),
-
-                () -> assertThat(jsonPath.getLong("coupons[0].couponId")).isEqualTo(order.getOrderCoupons().get(0).getCouponId()),
-                () -> assertThat(jsonPath.getString("coupons[0].couponName")).isEqualTo(order.getOrderCoupons().get(0).getCouponName()),
-
-                () -> assertThat(jsonPath.getLong("coupons[1].couponId")).isEqualTo(order.getOrderCoupons().get(1).getCouponId()),
-                () -> assertThat(jsonPath.getString("coupons[1].couponName")).isEqualTo(order.getOrderCoupons().get(1).getCouponName())
+                () -> assertThat(jsonPath.getInt("deliveryPrice")).isEqualTo(order.getDeliveryPrice()),
+                () -> assertThat(jsonPath.getInt("discountFromTotalPrice")).isEqualTo(0)
         );
+
     }
 }

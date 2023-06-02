@@ -17,6 +17,7 @@ public class DiscountPolicyBuilder {
         targetPolicies.put(DiscountTarget.ALL, DiscountForAllProductsPolicy.class);
         targetPolicies.put(DiscountTarget.SPECIFIC, DiscountForSpecificProductsPolicy.class);
         targetPolicies.put(DiscountTarget.DELIVERY, DiscountForDeliveryPolicy.class);
+        targetPolicies.put(DiscountTarget.TOTAL, DiscountFromTotalPricePolicy.class);
 
         unitPolicies.put(DiscountUnit.PERCENTAGE, new PercentageDiscountPolicy());
         unitPolicies.put(DiscountUnit.ABSOLUTE, new AbsoluteDiscountPolicy());

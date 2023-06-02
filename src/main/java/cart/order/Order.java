@@ -56,4 +56,8 @@ public class Order {
     public Long getMemberId() {
         return memberId;
     }
+
+    public int getDiscountFromTotalPrice() {
+        return 0;
+    }
 }

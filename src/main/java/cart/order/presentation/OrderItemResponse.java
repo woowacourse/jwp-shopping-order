@@ -6,34 +6,61 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderItemResponse {
-    private long productId;
-    private String productName;
+    private Long id;
+    private String name;
     private int price;
+    private int quantity;
+    private String imageUrl;
+    private int totalPrice;
+    private int totalDiscountPrice;
 
-    public OrderItemResponse() {
-    }
-
-    public OrderItemResponse(long productId, String productName, int price) {
-        this.productId = productId;
-        this.productName = productName;
+    public OrderItemResponse(Long id, String name, int price, int quantity, String imageUrl, int totalPrice, int totalDiscountPrice) {
+        this.id = id;
+        this.name = name;
         this.price = price;
+        this.quantity = quantity;
+        this.imageUrl = imageUrl;
+        this.totalPrice = totalPrice;
+        this.totalDiscountPrice = totalDiscountPrice;
     }
 
-    public static List<OrderItemResponse> from(List<OrderItem> orderItems) {
-        return orderItems
-                .stream().map(orderItem -> new OrderItemResponse(orderItem.getProductId(), orderItem.getProductName(), orderItem.getPrice()))
-                .collect(Collectors.toList());
+    public static OrderItemResponse from(OrderItem orderItem) {
+        return new OrderItemResponse(
+                orderItem.getProductId(),
+                orderItem.getProductName(),
+                orderItem.getOriginalPrice(),
+                orderItem.getQuantity(),
+                orderItem.getImgUri(),
+                (orderItem.getOriginalPrice() - orderItem.getDiscountPrice()) * orderItem.getQuantity(),
+                orderItem.getDiscountPrice() * orderItem.getQuantity()
+        );
     }
 
-    public long getProductId() {
-        return productId;
+    public Long getId() {
+        return id;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getName() {
+        return name;
     }
 
     public int getPrice() {
         return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public int getTotalDiscountPrice() {
+        return totalDiscountPrice;
     }
 }

@@ -7,10 +7,9 @@ import cart.member.Member;
 import cart.order.Order;
 import cart.order.OrderCoupon;
 import cart.order.OrderItem;
-import cart.order.presentation.OrderCouponRequest;
+import cart.order.presentation.OrderDetailResponse;
 import cart.order.presentation.OrderRequest;
 import cart.order.presentation.OrderResponse;
-import cart.order.presentation.OrdersResponse;
 import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
 
@@ -88,19 +87,22 @@ public class OrderService {
         return new OrderItem(
                 cartItem.getProduct().getId(),
                 cartItem.getProduct().getName(),
-                (cartItem.getProduct().getPrice() - cartItem.getDiscountPrice()) * quantity,
+                cartItem.getProduct().getPrice(),
+                cartItem.getDiscountPrice(),
                 quantity,
                 cartItem.getProduct().getImageUrl()
         );
     }
 
-    public OrdersResponse findOrderHistories(Long memberId) {
+    public List<OrderResponse> findOrderHistories(Long memberId) {
         final var orders = orderRepository.findAllByMemberId(memberId);
-        return OrdersResponse.from(orders);
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
     }
 
-    public OrderResponse findOrderHistory(Long orderId) {
+    public OrderDetailResponse findOrderHistory(Long orderId) {
         final var order = orderRepository.findById(orderId);
-        return OrderResponse.from(order);
+        return OrderDetailResponse.from(order);
     }
 }

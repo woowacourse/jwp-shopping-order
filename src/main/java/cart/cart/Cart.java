@@ -2,15 +2,13 @@ package cart.cart;
 
 import cart.cart.domain.cartitem.CartItem;
 import cart.cart.domain.deliveryprice.DeliveryPrice;
-import cart.coupon.Coupon;
 
 import java.util.List;
 
 public class Cart {
-    public static final int DEFAULT_DELIVERY_PRICE = 3000;
-    public static final int FREE_DELIVERY_PRICE_LIMIT = 30000;
     private final List<CartItem> cartItems;
     private DeliveryPrice deliveryPrice;
+    private int discountFromTotalPrice;
 
     public Cart(List<CartItem> cartItems, DeliveryPrice deliveryPrice) {
         this.cartItems = cartItems;
@@ -25,7 +23,21 @@ public class Cart {
         return deliveryPrice;
     }
 
+    public int getDiscountFromTotalPrice() {
+        return discountFromTotalPrice;
+    }
+
+    public void setDiscountFromTotalPrice(int discountFromTotalPrice) {
+        this.discountFromTotalPrice = discountFromTotalPrice;
+    }
+
     public void setDeliveryPrice(DeliveryPrice deliveryPrice) {
         this.deliveryPrice = deliveryPrice;
+    }
+
+    public int calculateProductsTotalPrice() {
+        return this.cartItems
+                .stream().mapToInt(CartItem::getDiscountedPrice)
+                .sum();
     }
 }

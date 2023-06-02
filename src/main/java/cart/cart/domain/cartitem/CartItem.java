@@ -1,12 +1,9 @@
 package cart.cart.domain.cartitem;
 
 import cart.cart.domain.cartitem.application.exception.CartItemException;
-import cart.discountpolicy.DiscountPolicy;
-import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.member.Member;
 import cart.product.Product;
 
-import java.util.List;
 import java.util.Objects;
 
 public class CartItem {
@@ -67,6 +64,10 @@ public class CartItem {
 
     public void setDiscountPrice(int discountPrice) {
         this.discountPrice = discountPrice;
+    }
+
+    public int getDiscountedPrice() {
+        return this.product.getPrice() - this.discountPrice;
     }
 
     @Override

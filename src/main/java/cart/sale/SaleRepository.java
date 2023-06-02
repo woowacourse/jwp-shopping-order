@@ -1,5 +1,6 @@
 package cart.sale;
 
+import cart.discountpolicy.application.DiscountPolicyRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -20,6 +21,7 @@ public class SaleRepository {
     }
 
     public List<Sale> findAll() {
+        // TODO: dao에서 해결하기
         return new ArrayList<>(couponMap.values());
     }
 }

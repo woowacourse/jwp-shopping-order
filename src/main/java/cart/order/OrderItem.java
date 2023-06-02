@@ -3,14 +3,16 @@ package cart.order;
 public class OrderItem {
     private final Long productId;
     private final String productName;
-    private final Integer price;
+    private final Integer originalPrice;
+    private final Integer discountPrice;
     private final Integer quantity;
     private final String imgUri;
 
-    public OrderItem(Long productId, String productName, Integer price, Integer quantity, String imgUri) {
+    public OrderItem(Long productId, String productName, Integer originalPrice, Integer discountPrice, Integer quantity, String imgUri) {
         this.productId = productId;
         this.productName = productName;
-        this.price = price;
+        this.originalPrice = originalPrice;
+        this.discountPrice = discountPrice;
         this.quantity = quantity;
         this.imgUri = imgUri;
     }
@@ -23,8 +25,12 @@ public class OrderItem {
         return productName;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public Integer getDiscountPrice() {
+        return discountPrice;
     }
 
     public Integer getQuantity() {

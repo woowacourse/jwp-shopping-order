@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class OrderController {
@@ -23,13 +24,13 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<OrdersResponse> findOrders(@Auth Member member) {
+    public ResponseEntity<List<OrderResponse>> findOrders(@Auth Member member) {
         final var orderHistories = orderService.findOrderHistories(member.getId());
         return ResponseEntity.ok(orderHistories);
     }
 
     @GetMapping("/orders/{orderId}")
-    public ResponseEntity<OrderResponse> findOrder(@Auth Member member, @PathVariable long orderId) {
+    public ResponseEntity<OrderDetailResponse> findOrder(@Auth Member member, @PathVariable long orderId) {
         final var orderHistory = orderService.findOrderHistory(orderId);
         return ResponseEntity.ok(orderHistory);
     }
