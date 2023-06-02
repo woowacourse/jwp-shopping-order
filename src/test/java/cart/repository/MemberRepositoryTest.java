@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
-@Sql("classpath:test.sql")
+@Sql(value = "classpath:test_truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class MemberRepositoryTest {
 
     private static final MemberEntity MEMBER_ENTITY = new MemberEntity("huchu@woowahan.com", "1234567a!", 0);

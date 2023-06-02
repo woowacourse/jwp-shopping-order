@@ -1,9 +1,3 @@
-DROP TABLE IF EXISTS order_detail;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS cart_item;
-DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS member;
-
 CREATE TABLE if not exists product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,

@@ -25,7 +25,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
-@Sql("classpath:test.sql")
+@Sql(value = "classpath:test_truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class CartItemDaoTest {
 
     @Autowired
@@ -45,7 +45,8 @@ class CartItemDaoTest {
         product = new Product(1L, PRODUCT_NAME, 20000, PRODUCT_IMAGE);
         member = new Member(1L, EMAIL, PASSWORD, 1000);
 
-        memberDao.addMember(new MemberEntity(EMAIL, PASSWORD, 1000));
+        final Long memberID = memberDao.addMember(new MemberEntity(EMAIL, PASSWORD, 1000));
+        System.out.println(memberID);
         productDao.createProduct(product);
     }
 

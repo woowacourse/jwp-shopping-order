@@ -85,7 +85,10 @@ class OrderIntegrationTest extends IntegrationTest {
         final ExtractableResponse<Response> response = showCartItemByProductId(EMAIL, PASSWORD, productId);
 
         //then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertSoftly(softly -> {
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+            softly.assertThat(response.body().asString()).isEqualTo("회원의 장바구니에 해당 상품이 존재하지 않습니다; productId=1");
+        });
     }
 
     @Test
