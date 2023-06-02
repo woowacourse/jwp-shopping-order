@@ -1,8 +1,8 @@
 package cart.domain;
 
 import static cart.domain.fixture.DiscountPolicyFixture.defaultDiscountPolicy;
-import static cart.domain.fixture.OrderFixture.order;
 import static cart.domain.fixture.OrderFixture.orderUnderDiscountThreshold;
+import static cart.domain.fixture.OrderFixture.orderWithoutId;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -20,10 +20,10 @@ class PaymentTest {
         DiscountPolicy discountPolicy = defaultDiscountPolicy;
         DeliveryPolicy deliveryPolicy = new DefaultDeliveryPolicy();
         Payment payment = new Payment(List.of(discountPolicy), List.of(deliveryPolicy));
-        PaymentRecord expected = new PaymentRecord(order, Money.from(55_000),
+        PaymentRecord expected = new PaymentRecord(orderWithoutId, Money.from(55_000),
                 Map.of(discountPolicy, Money.from(5_500)), Map.of(deliveryPolicy, Money.from(3_500)));
         //when
-        PaymentRecord actual = payment.createPaymentRecord(order);
+        PaymentRecord actual = payment.createPaymentRecord(orderWithoutId);
         //then
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(expected);

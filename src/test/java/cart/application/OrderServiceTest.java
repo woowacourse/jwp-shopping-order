@@ -1,8 +1,9 @@
 package cart.application;
 
 import static cart.domain.fixture.OrderFixture.member;
-import static cart.domain.fixture.OrderFixture.order;
+import static cart.domain.fixture.OrderFixture.orderWithoutId;
 import static cart.exception.OrderException.EmptyItemInput;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.domain.Order;
@@ -53,7 +54,7 @@ class OrderServiceTest {
     @DisplayName("CartItem 아이디 리스트로 Order 객체를 생성하고 저장한다.")
     void createOrderAndSave() {
         //given
-        Order expected = order;
+        Order expected = orderWithoutId;
 
         //when
         Long createdOrderId = orderService.createOrderAndSave(member, CART_ITEM_IDS);
@@ -66,6 +67,30 @@ class OrderServiceTest {
                     .isEqualTo(expected);
             CART_ITEM_IDS.forEach(cartItemId -> softly.assertThat(cartItemRepository.findById(cartItemId)).isEmpty());
         });
+    }
+
+    @Test
+    @DisplayName("Order 아이디로 Order를 반환한다.")
+    void retrieveOrderById() {
+        //given
+        Long orderId = orderService.createOrderAndSave(member, CART_ITEM_IDS);
+        //when
+        Order order = orderService.retrieveOrderById(orderId);
+        //then
+        assertThat(order.getId()).isEqualTo(orderId);
+    }
+
+    @Test
+    @DisplayName("모든 Order를 반환한다.")
+    void retrieveAllOrders() {
+        //given
+        Long order1 = orderService.createOrderAndSave(member, List.of(1L, 2L));
+        Long order2 = orderService.createOrderAndSave(member, List.of(3L));
+        List<Long> orderIds = List.of(order1, order2);
+        //when
+        List<Order> orders = orderService.retrieveAllOrders();
+        //then
+        orders.forEach(order -> assertThat(order.getId()).isIn(orderIds));
     }
 
     @Test

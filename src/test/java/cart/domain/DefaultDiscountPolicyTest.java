@@ -1,8 +1,8 @@
 package cart.domain;
 
 import static cart.domain.fixture.DiscountPolicyFixture.defaultDiscountPolicy;
-import static cart.domain.fixture.OrderFixture.order;
 import static cart.domain.fixture.OrderFixture.orderUnderDiscountThreshold;
+import static cart.domain.fixture.OrderFixture.orderWithoutId;
 
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -33,7 +33,7 @@ class DefaultDiscountPolicyTest {
     void canApply_true() {
         //given
         //when
-        boolean actual = defaultDiscountPolicy.canApply(order);
+        boolean actual = defaultDiscountPolicy.canApply(orderWithoutId);
         //then
         Assertions.assertThat(actual).isTrue();
     }
