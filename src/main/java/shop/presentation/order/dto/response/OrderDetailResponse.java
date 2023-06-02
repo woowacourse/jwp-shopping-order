@@ -1,4 +1,4 @@
-package shop.ui.order.dto.response;
+package shop.presentation.order.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

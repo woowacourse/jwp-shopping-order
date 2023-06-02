@@ -1,4 +1,4 @@
-package shop.ui.order.dto.response;
+package shop.presentation.order.dto.response;
 
 public class OrderProductResponse {
     OrderProductDetailResponse product;

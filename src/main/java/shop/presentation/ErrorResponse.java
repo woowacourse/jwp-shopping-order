@@ -1,5 +1,5 @@
 
-package shop.ui;
+package shop.presentation;
 
 public class ErrorResponse {
     private String message;

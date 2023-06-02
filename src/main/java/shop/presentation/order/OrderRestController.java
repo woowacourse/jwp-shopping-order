@@ -1,4 +1,4 @@
-package shop.ui.order;
+package shop.presentation.order;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +11,8 @@ import shop.domain.member.Member;
 import shop.domain.order.Order;
 import shop.domain.order.OrderItem;
 import shop.domain.product.Product;
-import shop.ui.order.dto.request.OrderCreationRequest;
-import shop.ui.order.dto.response.*;
+import shop.presentation.order.dto.request.OrderCreationRequest;
+import shop.presentation.order.dto.response.*;
 
 import java.net.URI;
 import java.time.LocalDateTime;

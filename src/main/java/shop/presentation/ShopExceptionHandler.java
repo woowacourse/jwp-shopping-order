@@ -1,4 +1,4 @@
-package shop.ui;
+package shop.presentation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

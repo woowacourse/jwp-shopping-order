@@ -1,4 +1,4 @@
-package shop.ui;
+package shop.presentation;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;

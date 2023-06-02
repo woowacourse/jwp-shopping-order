@@ -1,9 +1,9 @@
-package shop.ui.cart;
+package shop.presentation.cart;
 
 import shop.application.cart.CartItemService;
 import shop.domain.member.Member;
-import shop.ui.cart.dto.CartQuantityUpdateDto;
-import shop.ui.cart.dto.CartItemRequest;
+import shop.presentation.cart.dto.CartQuantityUpdateDto;
+import shop.presentation.cart.dto.CartItemRequest;
 import shop.application.cart.dto.CartDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package shop.ui.order.dto.request;
+package shop.presentation.order.dto.request;
 
 import java.util.List;
 
