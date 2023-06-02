@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.db.dao.CartItemDao;
 import cart.db.dao.ProductDao;
+import cart.db.repository.ProductRepository;
 import cart.domain.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
@@ -18,10 +19,12 @@ import java.util.stream.Collectors;
 @Service
 public class CartItemService {
     private final ProductDao productDao;
+    private final ProductRepository productRepository;
     private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
+    public CartItemService(ProductDao productDao, final ProductRepository productRepository, CartItemDao cartItemDao) {
         this.productDao = productDao;
+        this.productRepository = productRepository;
         this.cartItemDao = cartItemDao;
     }
 
@@ -33,7 +36,7 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productDao.getProductById(cartItemRequest.getProductId());
+        Product product = productRepository.findById(cartItemRequest.getProductId());
         return cartItemDao.save(new CartItem(member, product));
     }
 

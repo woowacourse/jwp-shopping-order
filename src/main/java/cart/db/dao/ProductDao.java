@@ -1,6 +1,6 @@
 package cart.db.dao;
 
-import cart.domain.Product;
+import cart.db.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,42 +24,7 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
-    }
-
-    public List<Product> getProductsByIds(final List<Long> productIds) {
-        String sql = "SELECT * FROM product where id in (:ids)";
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("ids", productIds);
-        return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, (rs, rowNum) -> {
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
-    }
-
-
-    public Product getProductById(Long productId) {
-        String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
-    }
-
-    public Long createProduct(Product product) {
+    public Long create(final ProductEntity productEntity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -68,9 +33,9 @@ public class ProductDao {
                     Statement.RETURN_GENERATED_KEYS
             );
 
-            ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
-            ps.setString(3, product.getImageUrl());
+            ps.setString(1, productEntity.getName());
+            ps.setInt(2, productEntity.getPrice());
+            ps.setString(3, productEntity.getImageUrl());
 
             return ps;
         }, keyHolder);
@@ -78,12 +43,47 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+    public List<ProductEntity> findAll() {
+        String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new ProductEntity(productId, name, price, imageUrl);
+        });
     }
 
-    public void deleteProduct(Long productId) {
+    public List<ProductEntity> findByIds(final List<Long> productIds) {
+        String sql = "SELECT * FROM product where id in (:ids)";
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("ids", productIds);
+        return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, (rs, rowNum) -> {
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new ProductEntity(productId, name, price, imageUrl);
+        });
+    }
+
+
+    public ProductEntity findById(final Long productId) {
+        String sql = "SELECT * FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new ProductEntity(productId, name, price, imageUrl);
+        });
+    }
+
+    public void update(final Long productId, final ProductEntity productEntity) {
+        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productId);
+    }
+
+    public void delete(final Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }

@@ -2,11 +2,11 @@ package cart.application;
 
 import cart.db.repository.CouponRepository;
 import cart.db.repository.OrderRepository;
-import cart.db.dao.ProductDao;
-import cart.domain.coupon.Coupon;
+import cart.db.repository.ProductRepository;
 import cart.domain.Item;
-import cart.domain.order.Order;
 import cart.domain.Product;
+import cart.domain.coupon.Coupon;
+import cart.domain.order.Order;
 import cart.dto.ItemRequest;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
@@ -23,12 +23,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CouponRepository couponRepository;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public OrderService(final OrderRepository orderRepository, final CouponRepository couponRepository, final ProductDao productDao) {
+    public OrderService(final OrderRepository orderRepository, final CouponRepository couponRepository, final ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.couponRepository = couponRepository;
-        this.productDao = productDao;
+        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -37,7 +37,7 @@ public class OrderService {
                 .stream()
                 .collect(Collectors.toMap(ItemRequest::getProductId, ItemRequest::getQuantity));
 
-        List<Product> products = productDao.getProductsByIds(new ArrayList<>(orderRequestItems.keySet()));
+        List<Product> products = productRepository.findByIds(new ArrayList<>(orderRequestItems.keySet()));
         // TODO: 유효성 검증: 개수가 일치하는지 확인
 
         List<Item> items = products.stream()
