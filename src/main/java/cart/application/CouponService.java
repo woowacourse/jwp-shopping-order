@@ -7,6 +7,7 @@ import cart.dto.CouponResponse;
 import cart.dto.CouponsResponse;
 import cart.repository.CouponRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class CouponService {
         this.discountPolicyProvider = discountPolicyProvider;
     }
 
+    @Transactional
     public CouponsResponse getAllCoupons() {
         List<Coupon> coupons = couponRepository.findAll();
         List<CouponResponse> couponResponses = coupons.stream()
