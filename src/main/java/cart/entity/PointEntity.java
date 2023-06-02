@@ -52,14 +52,5 @@ public class PointEntity {
         return Objects.hash(id, value, comment, createAt, expiredAt);
     }
 
-    @Override
-    public String toString() {
-        return "PointEntity{" +
-                "id=" + id +
-                ", value=" + value +
-                ", comment='" + comment + '\'' +
-                ", createAt=" + createAt +
-                ", expiredAt=" + expiredAt +
-                '}';
-    }
+
 }

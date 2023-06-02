@@ -5,11 +5,11 @@ import cart.entity.OrderEntity;
 import cart.entity.PointEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -32,6 +32,24 @@ public class PointDao {
         String sql = "select id, earned_point, comment, create_at, expired_at from point where member_id = ?";
 
         return jdbcTemplate.query(sql, new PointRowMapper(), memberId);
+    }
+
+    public Long save(Long memberId, Long orderId, PointEntity pointEntity) {
+        String sql = "insert into point(member_id, orders_id, earned_point, comment, expired_at) values(?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1, memberId);
+            ps.setLong(2, orderId);
+            ps.setInt(3, pointEntity.getValue());
+            ps.setString(4, pointEntity.getComment());
+            ps.setTimestamp(5, Timestamp.valueOf(pointEntity.getExpiredAt().atStartOfDay()));
+            return ps;
+        }, keyHolder);
+
+        return (Long) keyHolder.getKeys().get("ID");
     }
 
     public void deleteByOrderId(Long orderId) {

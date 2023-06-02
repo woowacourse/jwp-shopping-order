@@ -72,6 +72,18 @@ class PointDaoTest {
         assertThat(points).containsExactlyInAnyOrder(expected1, expected2);
     }
 
+    @DisplayName("주문 번호와 멤버 아이디를 기준으로 포인트를 저장할 수 있다.")
+    @Test
+    void save() {
+        PointEntity pointEntity = new PointEntity(3L, 1000, "테스트 주문 포인트", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30));
+
+        pointDao.save(1L, 2L, pointEntity);
+
+        Integer point = jdbcTemplate.queryForObject("select earned_point from point where orders_id = 2 and comment = '테스트 주문 포인트'", Integer.class);
+
+        assertThat(point).isEqualTo(1000);
+    }
+
     @DisplayName("주문 번호를 기준으로 포인트를 삭제할 수 있다.")
     @Test
     void deleteByOrderId() {
