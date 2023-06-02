@@ -15,9 +15,10 @@ import java.util.List;
 @Repository
 public class CartItemRepository {
 
-    private static final String CART_ITEM_JOIN_MEMBER_SQL = "SELECT cart_item.id, cart_item.member_id, member.email, cart_item.product_id, cart_item.product_name, cart_item.price, cart_item.image_url, cart_item.quantity " +
+    private static final String CART_ITEM_JOIN_MEMBER_SQL = "SELECT cart_item.id, cart_item.member_id, member.email, cart_item.product_id, product.product_name, product.price, product.image_url, cart_item.quantity " +
             "FROM cart_item " +
-            "INNER JOIN member ON cart_item.member_id = member.id ";
+            "INNER JOIN member ON cart_item.member_id = member.id " +
+            "INNER JOIN product ON cart_item.product_id = product.id ";
     private static final String WHERE_MEMBER_ID = "WHERE cart_item.member_id = ?";
     private static final String WHERE_CART_ITEM_ID = "WHERE cart_item.id = ?";
 
