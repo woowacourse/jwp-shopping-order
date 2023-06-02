@@ -24,6 +24,7 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    // TODO: 장바구니 품목 예외 처리(남의 장바구니)
     public List<CartItemResponse> findAllCartItems(Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         return cartItems.stream()

@@ -5,11 +5,11 @@ public class OrderInfo {
     private final Long id;
     private final Product product;
     private final String name;
-    private final Integer price;
     private final String imageUrl;
-    private final Integer quantity;
+    private final long price;
+    private final long quantity;
 
-    public OrderInfo(Long id, Product product, String name, Integer price, String imageUrl, Integer quantity) {
+    public OrderInfo(Long id, Product product, String name, long price, String imageUrl, long quantity) {
         this.id = id;
         this.product = product;
         this.name = name;
@@ -30,7 +30,7 @@ public class OrderInfo {
         return name;
     }
 
-    public Integer getPrice() {
+    public long getPrice() {
         return price;
     }
 
@@ -38,7 +38,7 @@ public class OrderInfo {
         return imageUrl;
     }
 
-    public Integer getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 }

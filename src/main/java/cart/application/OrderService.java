@@ -45,7 +45,7 @@ public class OrderService {
     }
 
     private List<OrderInfo> makeOrderInfoFromRequest(OrderRequest request) {
-        return makeCartItemsFromIds(request.getOrder()).stream()
+        return makeCartItemsFromIds(request.getCartItemIds()).stream()
                 .map(this::makeCartItemToOrderInfo)
                 .collect(Collectors.toList());
     }
@@ -62,7 +62,7 @@ public class OrderService {
                 product.getImageUrl(), cartItem.getQuantity());
     }
 
-    private void subtractUserPoint(Member member, int usedPoint) {
+    private void subtractUserPoint(Member member, long usedPoint) {
         if (member.getPoint() - usedPoint < 0) {
             throw new PointExceedException();
         }

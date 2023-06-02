@@ -37,8 +37,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void setUp() {
         super.setUp();
 
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 0.0, false));
-        productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg", 0.0, false));
+        productId = createProduct(new ProductRequest("치킨", 10_000L, "http://example.com/chicken.jpg", 0.0, false));
+        productId2 = createProduct(new ProductRequest("피자", 15_000L, "http://example.com/pizza.jpg", 0.0, false));
 
         member = memberDao.findByEmail("a@a.com");
         member2 = memberDao.findByEmail("b@b.com");
@@ -193,7 +193,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
+    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, long quantity) {
         CartItemQuantityRequest quantityUpdateRequest = new CartItemQuantityRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

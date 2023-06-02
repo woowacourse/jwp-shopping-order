@@ -2,16 +2,16 @@ package cart.presentation.dto.request;
 
 public class CartItemQuantityRequest {
 
-    private int quantity;
+    private Long quantity;
 
     public CartItemQuantityRequest() {
     }
 
-    public CartItemQuantityRequest(int quantity) {
+    public CartItemQuantityRequest(Long quantity) {
         this.quantity = quantity;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 }

@@ -5,9 +5,9 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
-    private final int point;
+    private final long point;
 
-    public Member(Long id, String email, String password, int point) {
+    public Member(Long id, String email, String password, long point) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -26,7 +26,7 @@ public class Member {
         return password;
     }
 
-    public int getPoint() {
+    public long getPoint() {
         return point;
     }
 

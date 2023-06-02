@@ -3,12 +3,12 @@ package cart.presentation.dto.response;
 public class OrderDto {
 
     private final Long productId;
-    private final Integer price;
+    private final Long price;
     private final String name;
     private final String imageUrl;
-    private final Integer quantity;
+    private final Long quantity;
 
-    public OrderDto(Long productId, Integer price, String name, String imageUrl, Integer quantity) {
+    public OrderDto(Long productId, Long price, String name, String imageUrl, Long quantity) {
         this.productId = productId;
         this.price = price;
         this.name = name;
@@ -20,7 +20,7 @@ public class OrderDto {
         return productId;
     }
 
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
 
@@ -32,7 +32,7 @@ public class OrderDto {
         return imageUrl;
     }
 
-    public Integer getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 }

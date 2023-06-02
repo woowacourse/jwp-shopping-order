@@ -4,12 +4,12 @@ public class Product {
 
     private final Long id;
     private final String name;
-    private final int price;
+    private final long price;
     private final String imageUrl;
     private final double pointRatio;
     private final boolean pointAvailable;
 
-    public Product(Long id, String name, int price, String imageUrl, double pointRatio, boolean pointAvailable) {
+    public Product(Long id, String name, long price, String imageUrl, double pointRatio, boolean pointAvailable) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -26,7 +26,7 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 

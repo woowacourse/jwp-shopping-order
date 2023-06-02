@@ -6,12 +6,12 @@ public class SpecificOrderResponse {
 
     private final Long orderId;
     private final List<OrderDto> orderDto;
-    private final Integer originalPrice;
-    private final Integer usedPoint;
-    private final Integer pointToAdd;
+    private final Long originalPrice;
+    private final Long usedPoint;
+    private final Long pointToAdd;
 
     public SpecificOrderResponse(Long orderId, List<OrderDto> orderDto,
-                                 Integer originalPrice, Integer usedPoint, Integer pointToAdd) {
+                                 Long originalPrice, Long usedPoint, Long pointToAdd) {
         this.orderId = orderId;
         this.orderDto = orderDto;
         this.originalPrice = originalPrice;
@@ -27,15 +27,15 @@ public class SpecificOrderResponse {
         return orderDto;
     }
 
-    public Integer getOriginalPrice() {
+    public Long getOriginalPrice() {
         return originalPrice;
     }
 
-    public Integer getUsedPoint() {
+    public Long getUsedPoint() {
         return usedPoint;
     }
 
-    public Integer getPointToAdd() {
+    public Long getPointToAdd() {
         return pointToAdd;
     }
 }

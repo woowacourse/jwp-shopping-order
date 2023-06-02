@@ -67,7 +67,7 @@ class ProductServiceTest {
     void 상품을_생성할_수_있다() {
         // given
         when(productRepository.insert(any())).thenReturn(new Product(3L, "오이", 2000, "https://oi.com", 0.0, false));
-        ProductRequest request = new ProductRequest("오이", 2000, "https://oi.com", 0.0, false);
+        ProductRequest request = new ProductRequest("오이", 2000L, "https://oi.com", 0.0, false);
 
         // when
         Long productId = productService.createProduct(request);

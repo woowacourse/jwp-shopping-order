@@ -7,11 +7,11 @@ import java.util.Objects;
 public class CartItem {
 
     private final Long id;
-    private final int quantity;
+    private final long quantity;
     private final Product product;
     private final Member member;
 
-    public CartItem(Long id, int quantity, Product product, Member member) {
+    public CartItem(Long id, long quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -30,7 +30,7 @@ public class CartItem {
         return product;
     }
 
-    public int getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 

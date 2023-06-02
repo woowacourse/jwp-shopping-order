@@ -4,34 +4,34 @@ import java.util.List;
 
 public class OrderRequest {
 
-    private List<Long> order;
-    private Integer originalPrice;
-    private Integer usedPoint;
-    private Integer pointToAdd;
+    private List<Long> cartItemIds;
+    private Long originalPrice;
+    private Long usedPoint;
+    private Long pointToAdd;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(List<Long> order, Integer originalPrice, Integer usedPoint, Integer pointToAdd) {
-        this.order = order;
+    public OrderRequest(List<Long> cartItemIds, Long originalPrice, Long usedPoint, Long pointToAdd) {
+        this.cartItemIds = cartItemIds;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
     }
 
-    public List<Long> getOrder() {
-        return order;
+    public List<Long> getCartItemIds() {
+        return cartItemIds;
     }
 
-    public Integer getOriginalPrice() {
+    public Long getOriginalPrice() {
         return originalPrice;
     }
 
-    public Integer getUsedPoint() {
+    public Long getUsedPoint() {
         return usedPoint;
     }
 
-    public Integer getPointToAdd() {
+    public Long getPointToAdd() {
         return pointToAdd;
     }
 }

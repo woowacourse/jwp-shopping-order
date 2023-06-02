@@ -6,12 +6,12 @@ public class ProductResponse {
 
     private final Long id;
     private final String name;
-    private final int price;
+    private final Long price;
     private final String imageUrl;
-    private final double pointRatio;
-    private final boolean pointAvailable;
+    private final Double pointRatio;
+    private final Boolean pointAvailable;
 
-    private ProductResponse(Long id, String name, int price, String imageUrl,
+    private ProductResponse(Long id, String name, Long price, String imageUrl,
                             double pointRatio, boolean pointAvailable) {
         this.id = id;
         this.name = name;
@@ -34,7 +34,7 @@ public class ProductResponse {
         return name;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 
@@ -42,11 +42,11 @@ public class ProductResponse {
         return imageUrl;
     }
 
-    public double getPointRatio() {
+    public Double getPointRatio() {
         return pointRatio;
     }
 
-    public boolean isPointAvailable() {
+    public Boolean getPointAvailable() {
         return pointAvailable;
     }
 }
