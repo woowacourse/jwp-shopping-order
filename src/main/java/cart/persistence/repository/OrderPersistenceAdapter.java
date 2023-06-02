@@ -121,15 +121,7 @@ public class OrderPersistenceAdapter implements OrderRepository {
             do {
                 orderInfo.add(makeOrderInfo(rs));
             } while (rs.next());
-
-            orders.add(new Order(
-                    orderId,
-                    member,
-                    orderInfo,
-                    originalPrice,
-                    usedPoint,
-                    pointToAdd
-            ));
+            orders.add(new Order(orderId, member, orderInfo, originalPrice, usedPoint, pointToAdd));
         });
         return orders.stream()
                 .findAny()
