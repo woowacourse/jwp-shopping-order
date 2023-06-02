@@ -1,7 +1,6 @@
 package cart.ui;
 
 import cart.dto.ErrorResponse;
-import cart.dto.ErrorResponseWithErrorCode;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.OrderException;
@@ -17,31 +16,31 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public ErrorResponse handleAuthenticationException(AuthenticationException e) {
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(CartItemException.InvalidQuantity.class)
+    @ExceptionHandler({CartItemException.InvalidQuantity.class})
     public ErrorResponse handleBadRequest(RuntimeException e) {
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(OrderException.InvalidAmount.class)
-    public ErrorResponseWithErrorCode handleInvalidAmount(RuntimeException e) {
-        return new ErrorResponseWithErrorCode(4001, e.getMessage());
+    public ErrorResponse handleInvalidAmount(RuntimeException e) {
+        return new ErrorResponse(4001, e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(OrderException.EmptyCart.class)
-    public ErrorResponseWithErrorCode handleEmptyCart(RuntimeException e) {
-        return new ErrorResponseWithErrorCode(4002, e.getMessage());
+    public ErrorResponse handleEmptyCart(RuntimeException e) {
+        return new ErrorResponse(4002, e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(CartItemException.NoSuchIds.class)
+    @ExceptionHandler({CartItemException.NoSuchIds.class, OrderException.NoSuchId.class})
     public ErrorResponse handleNotFound(RuntimeException e) {
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)

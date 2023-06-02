@@ -3,7 +3,7 @@ package cart.domain;
 import cart.exception.CartItemException;
 import cart.exception.OrderException;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,29 +15,31 @@ public class Order {
     private final Long id;
     private final List<OrderItem> orderItems;
     private final Member member;
-    private final OffsetDateTime orderTime;
+    private final long priceAfterDiscount;
+    private final Timestamp orderTime;
 
-    private Order(Long id, List<OrderItem> orderItems, Member member, OffsetDateTime orderTime) {
+    private Order(Long id, List<OrderItem> orderItems, Member member, long priceAfterDiscount, Timestamp orderTime) {
         checkQuantityLimit(orderItems);
         checkItemExist(orderItems);
         this.id = id;
         this.orderItems = orderItems;
         this.member = member;
+        this.priceAfterDiscount = priceAfterDiscount;
         this.orderTime = orderTime;
     }
 
-    public static Order of(Long id, List<CartItem> cartItems, Member member, OffsetDateTime orderTime) {
+    public static Order of(Long id, List<OrderItem> orderItems, Member member, long priceAfterDiscount, Timestamp orderTime) {
+        return new Order(id, orderItems, member, priceAfterDiscount, orderTime);
+    }
+
+    public static Order of(Member member, List<CartItem> cartItems, long priceAfterDiscount) {
         checkOwner(cartItems, member);
 
         final List<OrderItem> orderItems = cartItems.stream()
                 .map(OrderItem::from)
                 .collect(Collectors.toList());
 
-        return new Order(id, orderItems, member, orderTime);
-    }
-
-    public static Order of(Member member, List<CartItem> cartItems) {
-        return of(null, cartItems, member, null);
+        return of(null, orderItems, member, priceAfterDiscount, null);
     }
 
     private static void checkOwner(List<CartItem> cartItems, Member member) {
@@ -62,10 +64,14 @@ public class Order {
                 .sum();
     }
 
-    public long getPricesSum() {
+    public long getPriceBeforeDiscount() {
         return orderItems.stream()
                 .mapToLong(OrderItem::getPrice)
                 .sum();
+    }
+
+    public long getPriceAfterDiscount() {
+        return priceAfterDiscount;
     }
 
     public Long getId() {
@@ -78,5 +84,9 @@ public class Order {
 
     public Member getOrderingMember() {
         return member;
+    }
+
+    public Timestamp getOrderTime() {
+        return orderTime;
     }
 }

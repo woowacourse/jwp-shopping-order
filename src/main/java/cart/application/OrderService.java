@@ -6,6 +6,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderCalculator;
 import cart.dto.OrderRequest;
+import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,7 @@ public class OrderService {
     @Transactional
     public Long add(Member member, OrderRequest orderRequest) {
         final List<CartItem> cartItems = cartItemService.findByIds(orderRequest.getCartItems());
-        final Order order = Order.of(member, cartItems);
+        final Order order = Order.of(member, cartItems, orderRequest.getPaymentAmount());
         orderCalculator.checkPaymentAmount(order, orderRequest.getPaymentAmount());
 
         cartItemService.remove(member, orderRequest.getCartItems());
@@ -35,8 +36,8 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<Order> findAll(Member member) {
-//        return orderDao.findByMember(member);
-        return null;
+    public Order findById(Member member, Long orderId) {
+        return orderDao.findById(orderId)
+                .orElseThrow(() -> new OrderException.NoSuchId(orderId));
     }
 }

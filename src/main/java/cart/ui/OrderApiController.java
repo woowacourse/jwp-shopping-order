@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
@@ -30,12 +28,10 @@ public class OrderApiController {
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
-    @GetMapping
-    public List<OrderResponse> getOrders(Member member) {
-        final List<Order> orders = orderService.findAll(member);
+    @GetMapping("/{orderId}")
+    public OrderResponse getOrders(Member member, @PathVariable Long orderId) {
+        final Order order = orderService.findById(member, orderId);
 
-        return orders.stream()
-                .map(OrderResponse::from)
-                .collect(Collectors.toUnmodifiableList());
+        return OrderResponse.from(order);
     }
 }

@@ -20,7 +20,7 @@ public class OrderCalculator {
     }
 
     public long calculatePaymentAmount(Order order) {
-        long pricesSum = order.getPricesSum();
+        long pricesSum = order.getPriceBeforeDiscount();
         if (MID_DISCOUNT_THRESHOLD <= pricesSum && pricesSum < HIGH_DISCOUNT_THRESHOLD) {
             return pricesSum - MID_DISCOUNT_AMOUNT;
         }

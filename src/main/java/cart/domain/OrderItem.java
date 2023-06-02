@@ -4,26 +4,30 @@ public class OrderItem {
 
     private final Long id;
     private final String name;
-    private final int price;
+    private final int productPrice;
     private final int quantity;
     private final String imageUrl;
 
-    public OrderItem(Long id, String name, int price, int quantity, String imageUrl) {
+    public OrderItem(Long id, String name, int productPrice, int quantity, String imageUrl) {
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.productPrice = productPrice;
         this.quantity = quantity;
         this.imageUrl = imageUrl;
     }
 
-    public OrderItem(String name, int price, int quantity, String imageUrl) {
-        this(null, name, price, quantity, imageUrl);
+    public OrderItem(String name, int productPrice, int quantity, String imageUrl) {
+        this(null, name, productPrice, quantity, imageUrl);
     }
 
     public static OrderItem from(CartItem cartItem) {
         final Product product = cartItem.getProduct();
 
         return new OrderItem(product.getName(), product.getPrice(), cartItem.getQuantity(), product.getImageUrl());
+    }
+
+    public int getPrice() {
+        return productPrice * quantity;
     }
 
     public Long getId() {
@@ -34,8 +38,8 @@ public class OrderItem {
         return name;
     }
 
-    public int getPrice() {
-        return price;
+    public int getProductPrice() {
+        return productPrice;
     }
 
     public int getQuantity() {
