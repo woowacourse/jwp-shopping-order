@@ -2,6 +2,7 @@ package cart.coupon.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cart.coupon.domain.Coupon;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,9 +34,9 @@ class CouponDaoTest {
     final List<Long> couponIds = List.of(1L, 2L, 4L);
 
     //when
-    final List<CouponEntity> couponEntities = couponDao.findByIdsIn(couponIds);
+    final List<Coupon> coupons = couponDao.findByIdsIn2(couponIds);
 
     //then
-    assertEquals(2, couponEntities.size());
+    assertEquals(2, coupons.size());
   }
 }

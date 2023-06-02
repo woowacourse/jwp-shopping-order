@@ -41,6 +41,20 @@ public class CouponDao {
     return namedParameterJdbcTemplate.query(sql, parameterSource, rowMapper);
   }
 
+  public List<Coupon> findByIdsIn2(final List<Long> couponIds) {
+    final String sql = "SELECT * FROM COUPON C WHERE C.id IN (:ids)";
+
+    final MapSqlParameterSource parameterSource =
+        new MapSqlParameterSource().addValue("ids", couponIds);
+
+    return namedParameterJdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> {
+      final long id = rs.getLong("id");
+      final String name = rs.getString("name");
+      final BigDecimal discountPrice = rs.getBigDecimal("discount_price");
+      return new FixDiscountCoupon(id, name, new Money(discountPrice));
+    });
+  }
+
   public Coupon findById(final Long couponId) {
     final String sql = "SELECT * FROM COUPON C WHERE C.id = ?";
 
