@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import anotation.RepositoryTest;
 import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
 import java.util.List;
@@ -17,7 +18,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-@JdbcTest
+@RepositoryTest
 class MemberCouponDaoTest {
 
     private final RowMapper<MemberCouponDto> memberCouponDtoRowMapper = (rs, rn) -> new MemberCouponDto(
@@ -85,6 +86,12 @@ class MemberCouponDaoTest {
         assertThat(memberCouponDtos).hasSize(2)
                 .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getCouponId)
                 .containsExactly(tuple(2L, 3L), tuple(2L, 4L));
+    }
+
+    @Test
+    @DisplayName("MemberCouponId 로 Member Coupon 을 삭제한다.")
+    void deleteById() {
+
     }
 
 }

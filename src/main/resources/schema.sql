@@ -25,7 +25,7 @@ create table if not exists orders
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
-    time_stamp VARCHAR(255) NOT NULL,
+    time_stamp DATETIME(9) NOT NULL,
     coupon_id  BIGINT NOT NULL
 );
 

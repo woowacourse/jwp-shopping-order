@@ -1,7 +1,18 @@
 package cart.repository;
 
+import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
+import static fixture.CouponFixture.COUPON_2_NOT_NULL_RATE;
+import static fixture.CouponFixture.COUPON_3_NULL;
+import static fixture.OrderFixture.ORDER_1;
+import static fixture.OrderFixture.ORDER_2;
+import static fixture.ProductFixture.PRODUCT_1;
+import static fixture.ProductFixture.PRODUCT_2;
+import static java.lang.System.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import anotation.RepositoryTest;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
@@ -9,66 +20,46 @@ import cart.dao.OrderProductDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
-import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
 import cart.domain.Product;
+import fixture.MemberFixture;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-@JdbcTest
+@RepositoryTest
 class OrderRepositoryTest {
 
-    private static final Member MEMBER = new Member(1L, "a@a", "1234");
-    private static final int PRICE = 1_000_000_000;
-    private static final Product HONG_HONG = new Product(1L, "홍홍", PRICE, "hognhong.com");
-    private static final Product HONG_SILE = new Product(2L, "홍실", PRICE, "hongsil.com");
-    private static final Optional<Coupon> NOT_NULL_DISCOUNT_RATE_COUPON = Optional.ofNullable(new Coupon("쿠폰", 2d, 0));
-    private static final Optional<Coupon> NOT_NULL_DISCOUNT_PRICE_COUPON = Optional.ofNullable(new Coupon("쿠폰", 0d, 5000));
-    private static final Optional<Coupon> NULL_COUPON = Optional.empty();
-
     @Autowired
-    private DataSource dataSource;
     private OrderRepository orderRepository;
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private CartItemDao cartItemDao;
+    @Autowired
     private MemberDao memberDao;
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
     private ProductDao productDao;
-
-    @BeforeEach
-    void beforeEach() {
-        jdbcTemplate = new JdbcTemplate(dataSource);
-        orderRepository = new OrderRepository(
-                new OrderDao(dataSource),
-                new OrderProductDao(dataSource),
-                new CartItemDao(dataSource)
-        );
-        memberDao = new MemberDao(dataSource);
-        productDao = new ProductDao(dataSource);
-    }
 
     @DisplayName("Order 를 저장한다.")
     @ParameterizedTest(name = "쿠폰이 {0} 인 경우")
     @MethodSource("validateCoupon")
     void saveOrder(String testName, Optional<Coupon> coupon, String couponName) {
-        initData();
-        CartItem hongHongCart = new CartItem(MEMBER, HONG_HONG);
-        CartItem hongSileCart = new CartItem(MEMBER, HONG_SILE);
-        Order order = Order.of(MEMBER, coupon, List.of(hongHongCart, hongSileCart));
+        CartItem hongHongCart = new CartItem(MemberFixture.MEMBER_1, PRODUCT_1);
+        CartItem hongSileCart = new CartItem(MemberFixture.MEMBER_1, PRODUCT_2);
+        Order order = Order.of(MemberFixture.MEMBER_1, coupon, List.of(hongHongCart, hongSileCart));
         Order orderAfterSave = orderRepository.save(order);
 
         assertThat(orderAfterSave)
                 .extracting(Order::getTimeStamp, Order::getMember, Order::getCoupon, Order::getCouponName)
-                .contains(order.getTimeStamp(), MEMBER, coupon, couponName);
+                .contains(order.getTimeStamp(), MemberFixture.MEMBER_1, coupon, couponName);
         assertThat(orderAfterSave.getOrderProducts())
                 .extracting(OrderProduct::getProduct)
                 .contains(hongHongCart.getProduct(), hongSileCart.getProduct());
@@ -76,16 +67,50 @@ class OrderRepositoryTest {
 
     private static Stream<Arguments> validateCoupon() {
         return Stream.of(
-            Arguments.of("NULL", NULL_COUPON, "적용된 쿠폰이 없습니다."),
-            Arguments.of("쿠폰이 Null 이 아닌 경우", NOT_NULL_DISCOUNT_RATE_COUPON, "쿠폰"),
-            Arguments.of("쿠폰이 Null 이 아닌 경우", NOT_NULL_DISCOUNT_PRICE_COUPON, "쿠폰")
+            Arguments.of("NULL", Optional.ofNullable(COUPON_3_NULL), "적용된 쿠폰이 없습니다."),
+            Arguments.of("쿠폰이 Null 이 아닌 경우", Optional.ofNullable(COUPON_1_NOT_NULL_PRICE), "정액 할인 쿠폰"),
+            Arguments.of("쿠폰이 Null 이 아닌 경우", Optional.ofNullable(COUPON_2_NOT_NULL_RATE), "할인율 쿠폰")
         );
     }
 
-    private void initData() {
-        memberDao.addMember(MEMBER);
-        productDao.createProduct(HONG_HONG);
-        productDao.createProduct(HONG_SILE);
+    @Test
+    @DisplayName("CartItems 에 들어있는 물품들을 삭제한다. (성공)")
+    void delete_success() {
+        out.println(cartItemDao.findAll());
+        orderRepository.deleteCartItems(List.of(1L, 2L));
+
+        List<CartItem> cartItemsAfterDelete = cartItemDao.findByMemberId(MemberFixture.MEMBER_1.getId());
+
+        assertThat(cartItemsAfterDelete).isEmpty();
+    }
+
+    @Test
+    @DisplayName("CartItems 에 들어있는 물품들을 삭제한다. (실패)")
+    void delete_fail() {
+        assertThatThrownBy(() -> orderRepository.deleteCartItems(List.of(100L, 101L, 102L)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    /*
+    INSERT INTO product (name, price, image_url) VALUES ('치킨', 10000, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
+    INSERT INTO product (name, price, image_url) VALUES ('샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80');
+    INSERT INTO product (name, price, image_url) VALUES ('피자', 13000, 'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
+
+    INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (1, CURRENT_TIMESTAMP, 1);
+    INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (1, CURRENT_TIMESTAMP, 2);
+
+    INSERT INTO order_product(order_id, product_id, quantity) VALUES (1, 1, 2);
+    INSERT INTO order_product(order_id, product_id, quantity) VALUES (1, 2, 2);
+    INSERT INTO order_product(order_id, product_id, quantity) VALUES (1, 3, 2);
+    INSERT INTO orders_product(order_id, product_id, quantity) VALUES (2, 1, 2);
+     */
+    @Test
+    @DisplayName("주문 내역을 조회한다.")
+    void findOrderByMember() {
+        List<Order> ordersByMember = orderRepository.findOrdersByMember(MemberFixture.MEMBER_1);
+
+        assertThat(ordersByMember).usingRecursiveComparison()
+                .isEqualTo(List.of(ORDER_1, ORDER_2));
     }
 
 }

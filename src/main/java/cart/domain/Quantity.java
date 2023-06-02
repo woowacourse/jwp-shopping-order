@@ -42,4 +42,11 @@ public class Quantity {
         return Objects.hash(value);
     }
 
+    @Override
+    public String toString() {
+        return "Quantity{" +
+                "value=" + value +
+                '}';
+    }
+
 }

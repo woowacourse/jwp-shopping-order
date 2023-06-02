@@ -2,6 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import anotation.RepositoryTest;
 import cart.dao.dto.OrderProductDto;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-@JdbcTest
+@RepositoryTest
 class OrderProductDaoTest {
 
     private static final RowMapper<OrderProductDto> orderProductDtoRowMapper = (rs, rn) -> new OrderProductDto(
@@ -31,7 +32,6 @@ class OrderProductDaoTest {
     void beforeEach() {
         jdbcTemplate = new JdbcTemplate(dataSource);
         orderProductDao = new OrderProductDao(dataSource);
-//        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
     }
 
     @Test
@@ -67,6 +67,11 @@ class OrderProductDaoTest {
                 .extracting(OrderProductDto::getId, OrderProductDto::getOrderId
                         , OrderProductDto::getProductId, OrderProductDto::getQuantity)
                 .contains(1L, 2L, 3L, 4);
+    }
+
+    @Test
+    @DisplayName("OrderId 로 OrderProduct 들을 찾는다.")
+    void findOrderProductByOrderId() {
 
     }
 
