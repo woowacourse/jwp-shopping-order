@@ -3,11 +3,11 @@ package cart.service;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.domain.Member;
+import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.vo.Price;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
-import cart.service.response.CouponResponse;
 import cart.service.response.DiscountPriceResponse;
 import cart.service.response.MemberCouponResponse;
 import java.util.List;
@@ -37,5 +37,11 @@ public class CouponService {
         final Price origin = new Price(originPrice);
         final Price discountPrice = memberCoupon.discount(origin);
         return DiscountPriceResponse.of(discountPrice, origin.subtract(discountPrice));
+    }
+
+    public Long issue(final Member member, final Long id) {
+        final Coupon coupon = couponRepository.findById(id);
+        final MemberCoupon memberCoupon = new MemberCoupon(coupon, member.getId());
+        return memberCouponRepository.insert(memberCoupon).getId();
     }
 }

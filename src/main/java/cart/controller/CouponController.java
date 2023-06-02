@@ -2,9 +2,9 @@ package cart.controller;
 
 import cart.domain.Member;
 import cart.service.CouponService;
-import cart.service.response.CouponResponse;
 import cart.service.response.DiscountPriceResponse;
 import cart.service.response.MemberCouponResponse;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +40,7 @@ public class CouponController {
 
     @PostMapping("/{id}/issue")
     public ResponseEntity<Void> issueCoupon(final Member member, @PathVariable final Long id) {
-        //couponService.issue(member, id);
-        return null;
+        final Long memberCouponId = couponService.issue(member, id);
+        return ResponseEntity.created(URI.create("/" + member.getId() + "/coupon/" + memberCouponId)).build();
     }
 }

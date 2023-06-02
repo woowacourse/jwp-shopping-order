@@ -6,6 +6,7 @@ import static cart.TestDataFixture.OBJECT_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.TestDataFixture;
@@ -64,5 +65,25 @@ class CouponIntegrationTest extends IntegrationTest {
         assertThat(response)
                 .extracting(DiscountPriceResponse::getDiscountPrice, DiscountPriceResponse::getTotalPrice)
                 .containsExactly(-5000, 5000);
+    }
+
+    @DisplayName("멤버에게 쿠폰을 추가한다.")
+    @Test
+    void issueCoupon() throws Exception {
+        final Coupon coupon = couponRepository.insert(TestDataFixture.DISCOUNT_50_PERCENT);
+
+        final String location = mockMvc
+                .perform(post("/coupons/{id}/issue", coupon.getId())
+                        .header("Authorization", MEMBER_1_AUTH_HEADER))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getHeader("Location");
+
+        final long memberCouponId = Long.parseLong(location.split("/" + MEMBER_1.getId() + "/coupon/")[1]);
+        final MemberCoupon memberCoupon = memberCouponRepository.findUnUsedCouponById(memberCouponId);
+
+        assertThat(memberCoupon.getCoupon())
+                .isEqualTo(coupon);
+        assertThat(memberCoupon.getMemberId())
+                .isEqualTo(MEMBER_1.getId());
     }
 }
