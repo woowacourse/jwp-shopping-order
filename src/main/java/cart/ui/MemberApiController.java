@@ -25,7 +25,8 @@ public class MemberApiController {
             memberDao.addMemberWithoutPoint(memberWithoutPoint);
             return ResponseEntity.ok().build();
         }
-        Member memberWithPoint = new Member(memberRequest.getEmail(), memberRequest.getPassword(), new Point(memberRequest.getPoint()));
+        Member memberWithPoint = new Member(memberRequest.getEmail(), memberRequest.getPassword(),
+                new Point(memberRequest.getPoint()));
         memberDao.addMemberWithPoint(memberWithPoint);
         return ResponseEntity.ok().build();
     }
