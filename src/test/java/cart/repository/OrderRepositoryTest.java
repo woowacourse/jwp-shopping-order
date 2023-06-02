@@ -7,7 +7,6 @@ import cart.domain.*;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.PointHistoryEntity;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,9 +77,9 @@ class OrderRepositoryTest {
         OrderItemEntity orderItemEntity2 = new OrderItemEntity(2L, product2, 3, 60000);
 
         List<OrderItem> orderItems = List.of(orderItem1, orderItem2);
-        Order order = new Order(points, orderItems, member);
+        Order order = new Order(points, orderItems);
 
-        orderRepository.save(order);
+        orderRepository.save(member.getId(), order);
 
         OrderEntity orderEntityDb = orderDao.findById(2L);
         List<OrderItemEntity> orderItemsDb = orderItemDao.findByOrderId(2L);
@@ -100,7 +99,7 @@ class OrderRepositoryTest {
     void findAllByMember() {
         OrderItem orderItem1 = new OrderItem(product1, 3, 30000);
         OrderItem orderItem2 = new OrderItem(product2, 2, 40000);
-        List<Order> orders = orderRepository.findAllByMember(member);
+        List<Order> orders = orderRepository.findAllByMemberId(member.getId());
 
         assertAll(
                 () -> assertThat(orders.size()).isEqualTo(1),

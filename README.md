@@ -112,11 +112,11 @@
 	"products": [
 		{
 			"productId": 1,
-			"Quantity": 100
+			"quantity": 100
 		},
 		{
 			"productId": 2,
-			"Quantity": 100
+			"quantity": 100
 		}
 	]
 }

@@ -10,7 +10,7 @@ import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Array;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +30,8 @@ public class OrderRepository {
         this.pointHistoryDao = pointHistoryDao;
     }
 
-    public Long save(Order order) { // TODO: Order Member 분리
-        OrderEntity orderEntity = new OrderEntity(order.getMember().getId(), order.getOrderStatus().getOrderStatusId());
+    public Long save(Long memberId, Order order) {
+        OrderEntity orderEntity = new OrderEntity(memberId, order.getOrderStatus().getOrderStatusId());
         Long orderId = orderDao.save(orderEntity);
 
         List<OrderItemEntity> orderItemEntities = getOrderItemEntities(order);
@@ -61,15 +61,15 @@ public class OrderRepository {
         orderDao.deleteById(orderId);
     }
 
-    public List<Order> findAllByMember(Member member) {
-        List<OrderEntity> orderEntities = orderDao.findByMemberId(member.getId());
+    public List<Order> findAllByMemberId(Long memberId) {
+        List<OrderEntity> orderEntities = orderDao.findByMemberId(memberId);
         List<Long> orderIds = getOrderIds(orderEntities);
 
         List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderIds(orderIds);
 
         Map<Long, List<OrderItemEntity>> itemsByOrder = getItemsByOrder(orderEntities, orderItemEntities);
 
-        return getOrders(member, orderEntities, itemsByOrder);
+        return getOrders(orderEntities, itemsByOrder);
     }
 
     private List<Long> getOrderIds(List<OrderEntity> orderEntities) {
@@ -91,19 +91,20 @@ public class OrderRepository {
         return itemsByOrder;
     }
 
-    private List<Order> getOrders(Member member, List<OrderEntity> orderEntities, Map<Long, List<OrderItemEntity>> itemsByOrder) {
+    private List<Order> getOrders(List<OrderEntity> orderEntities, Map<Long, List<OrderItemEntity>> itemsByOrder) {
         List<Order> orders = new ArrayList<>();
         for (OrderEntity orderEntity : orderEntities) {
             Long id = orderEntity.getId();
             OrderStatus orderStatus = OrderStatus.findOrderStatusById(orderEntity.getOrderStatusId());
             List<OrderItem> orderItems = getOrderItems(itemsByOrder, id);
             Points points = getPoints(id);
-            orders.add(new Order(id, orderStatus, points, orderItems, member));
+            LocalDate createAt = orderEntity.getCreateAt();
+            orders.add(new Order(id, orderStatus, points, orderItems, createAt));
         }
         return orders;
     }
 
-    private static List<OrderItem> getOrderItems(Map<Long, List<OrderItemEntity>> itemsByOrder, Long id) {
+    private List<OrderItem> getOrderItems(Map<Long, List<OrderItemEntity>> itemsByOrder, Long id) {
         return itemsByOrder.get(id).stream()
                 .map(orderItemEntity -> new OrderItem(orderItemEntity.getProduct(),
                         orderItemEntity.getQuantity(), orderItemEntity.getTotalPrice()))

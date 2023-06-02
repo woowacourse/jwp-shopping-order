@@ -20,9 +20,8 @@ class OrderTest {
         List<OrderItem> orderItems = List.of(new OrderItem(product1, 3, 30000),
                 new OrderItem(product2, 2, 40000));
         Points points = new Points(List.of(Point.of(10000, "구매 포인트", LocalDate.now())));
-        Member member = new Member(1L, "kong@com", "1234");
 
-        Order order = new Order(points, orderItems, member);
+        Order order = new Order(points, orderItems);
 
         Point point = order.calculateSavedPoint(new OrderPointAccumulationPolicy(new OrderPointExpirePolicy()));
 
