@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `cart_item`;
+DROP TABLE IF EXISTS `coupon`;
+DROP TABLE IF EXISTS `member_coupon`;
+DROP TABLE IF EXISTS `orders`;
+DROP TABLE IF EXISTS `orders_product`;

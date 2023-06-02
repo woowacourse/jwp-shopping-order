@@ -9,8 +9,8 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 
-INSERT INTO coupon (name, discount_rate, discount_price) VALUES ("정액 할인 쿠폰", 0, 5000);
-INSERT INTO coupon (name, discount_rate, discount_price) VALUES ("할인율 쿠폰",  10d, 0);
+INSERT INTO coupon (name, discount_rate, discount_price) VALUES ('정액 할인 쿠폰', 0.0, 5000);
+INSERT INTO coupon (name, discount_rate, discount_price) VALUES ('할인율 쿠폰',  10.0, 0);
 
 INSERT INTO member_coupon(member_id, coupon_id) VALUES (1, 1);
 INSERT INTO member_coupon(member_id, coupon_id) VALUES (1, 2);
@@ -22,9 +22,9 @@ INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (1, CURRENT_TIMESTAM
 INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (2, CURRENT_TIMESTAMP, 1);
 INSERT INTO orders(member_id, time_stamp, coupon_id) VALUES (2, CURRENT_TIMESTAMP, 2);
 
-INSERT INTO order_product(order_id, product_id, quantity) VALUES (1, 1, 2);
-INSERT INTO order_product(order_id, product_id, quantity) VALUES (1, 2, 2);
-INSERT INTO order_product(order_id, product_id, quantity) VALUES (1, 3, 2);
-INSERT INTO order_product(order_id, product_id, quantity) VALUES (2, 1, 2);
-INSERT INTO order_product(order_id, product_id, quantity) VALUES (3, 1, 2);
-INSERT INTO order_product(order_id, product_id, quantity) VALUES (4, 1, 2);
+INSERT INTO orders_product(order_id, product_id, quantity) VALUES (1, 1, 2);
+INSERT INTO orders_product(order_id, product_id, quantity) VALUES (1, 2, 2);
+INSERT INTO orders_product(order_id, product_id, quantity) VALUES (1, 3, 2);
+INSERT INTO orders_product(order_id, product_id, quantity) VALUES (2, 1, 2);
+INSERT INTO orders_product(order_id, product_id, quantity) VALUES (3, 1, 2);
+INSERT INTO orders_product(order_id, product_id, quantity) VALUES (4, 1, 2);
