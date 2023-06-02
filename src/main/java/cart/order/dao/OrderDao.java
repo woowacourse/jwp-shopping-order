@@ -6,6 +6,7 @@ import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
+import cart.order.exception.NotFoundOrderException;
 import cart.value_object.Money;
 import java.math.BigDecimal;
 import java.util.List;
@@ -88,7 +89,7 @@ public class OrderDao {
     }
   }
 
-  public Optional<Order> findByOrderId2(final Long orderId) {
+  public Order findByOrderId2(final Long orderId) {
     final String sql = "SELECT * FROM ORDERS O WHERE O.id = ?";
 
     try {
@@ -99,10 +100,10 @@ public class OrderDao {
         final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
         final long couponId = rs.getLong("coupon_id");
         final Coupon coupon = couponDao.findById(couponId);
-        return Optional.of(new Order(id, member, new Money(deliveryFee), coupon));
+        return new Order(id, member, new Money(deliveryFee), coupon);
       }, orderId);
     } catch (EmptyResultDataAccessException exception) {
-      return Optional.empty();
+      throw new NotFoundOrderException("해당 주문은 존재하지 않습니다.");
     }
   }
 

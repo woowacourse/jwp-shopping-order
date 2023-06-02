@@ -1,5 +1,6 @@
 package cart.order.dao;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,9 +16,10 @@ import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.dao.entity.OrderEntity;
 import cart.order.domain.Order;
+import cart.order.exception.NotFoundOrderException;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,13 +78,10 @@ class OrderDaoTest {
     final long orderId = 1L;
 
     //when
-    final Optional<Order> order = orderDao.findByOrderId2(orderId);
+    final Order order = orderDao.findByOrderId2(orderId);
 
     //then
-    assertAll(
-        () -> Assertions.assertThat(order).isPresent(),
-        () -> assertEquals(order.get().getId(), orderId)
-    );
+    assertEquals(order.getId(), orderId);
   }
 
   @Test
@@ -95,8 +94,7 @@ class OrderDaoTest {
     orderDao.deleteByOrderId(1L);
 
     //then
-    final Optional<Order> order = orderDao.findByOrderId2(orderId);
-
-    assertTrue(order.isEmpty());
+    assertThatThrownBy(() -> orderDao.findByOrderId2(orderId))
+        .isInstanceOf(NotFoundOrderException.class);
   }
 }

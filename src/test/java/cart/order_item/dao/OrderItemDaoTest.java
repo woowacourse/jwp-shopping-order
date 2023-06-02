@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.order_item.dao.entity.OrderItemEntity;
+import cart.order_item.domain.OrderItem;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,10 +59,10 @@ class OrderItemDaoTest {
     final Long orderId = 1L;
 
     //when
-    final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
+    final List<OrderItem> orderItems = orderItemDao.findByOrderId2(orderId);
 
     //then
-    assertEquals(3, orderItemEntities.size());
+    assertEquals(3, orderItems.size());
   }
 
   @Test
@@ -78,7 +79,7 @@ class OrderItemDaoTest {
     orderItemDao.deleteBatch(삭제할_주문아이템_아이디);
 
     //then
-    final List<OrderItemEntity> deletedOrderItems = orderItemDao.findByOrderId(orderId);
+    final List<OrderItem> deletedOrderItems = orderItemDao.findByOrderId2(orderId);
 
     assertEquals(0, deletedOrderItems.size());
   }
