@@ -6,12 +6,13 @@ import cart.dao.OrderItemDao;
 import cart.domain.member.MemberCoupon;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
-import cart.domain.product.Product;
+import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderRepository {
@@ -26,8 +27,8 @@ public class OrderRepository {
         this.orderCouponDao = orderCouponDao;
     }
 
-    public Long create(List<OrderItem> orderItems, Long memberId) {
-        Long orderId = orderDao.create(memberId);
+    public Long create(List<OrderItem> orderItems, OrderEntity orderEntity) {
+        Long orderId = orderDao.create(orderEntity.getMemberId(), orderEntity.getDeliveryFee());
 
         for (OrderItem orderItem : orderItems) {
             Long orderItemId = orderItemDao.create(orderId, orderItem.getProduct(), orderItem.getQuantity());
@@ -39,42 +40,31 @@ public class OrderRepository {
     }
 
     public List<Order> findAllByMemberId(Long memberId) {
-        List<Long> orderIds = orderDao.findAllByMemberId(memberId);
+        List<OrderEntity> findOrders = orderDao.findAllByMemberId(memberId);
 
-        List<Order> orders = new ArrayList<>();
-
-        for (Long orderId : orderIds) {
-            List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderId(orderId);
-            List<OrderItem> orderItems = new ArrayList<>();
-            for (OrderItemEntity orderItem : orderItemEntities) {
-                List<MemberCoupon> coupons = orderCouponDao.findCouponsByOrderItemId(orderItem.getId());
-                Product product = orderItem.getProduct();
-                orderItems.add(new OrderItem(
-                        orderItem.getId(),
-                        new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()),
-                        orderItem.getQuantity(),
-                        coupons
-                ));
-            }
-            orders.add(new Order(orderId, orderItems));
-        }
-        return orders;
+        return findOrders.stream()
+                .map(orderEntity -> orderEntity.toOrder(createOrderItems(orderEntity.getId())))
+                .collect(Collectors.toList());
     }
 
-    public Order findById(Long id) {
-        Long orderId = orderDao.findAllById(id);
+    private List<OrderItem> createOrderItems(final Long orderId) {
+        List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderId(orderId);
 
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemEntity orderItem : orderItemDao.findAllByOrderId(orderId)) {
-            List<MemberCoupon> coupons = orderCouponDao.findCouponsByOrderItemId(orderItem.getId());
-            Product product = orderItem.getProduct();
-            orderItems.add(new OrderItem(
-                    orderItem.getId(),
-                    new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()),
-                    orderItem.getQuantity(),
-                    coupons
-            ));
+        return orderItemEntities.stream()
+                .map(orderItemEntity -> new OrderItem(orderItemEntity, orderCouponDao.findByOrderItemId(orderItemEntity.getId())))
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Order> findById(Long id) {
+        Optional<OrderEntity> findOrder = orderDao.findById(id);
+
+        if (findOrder.isEmpty()) {
+            return Optional.empty();
         }
-        return new Order(orderId, orderItems);
+
+        OrderEntity order = findOrder.get();
+
+        List<OrderItem> orderItems = createOrderItems(order.getId());
+        return Optional.of(order.toOrder(orderItems));
     }
 }

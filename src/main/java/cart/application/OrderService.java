@@ -1,24 +1,26 @@
 package cart.application;
 
-import cart.dao.CartItemDao;
 import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupons;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
-import cart.domain.product.Product;
+import cart.dto.order.OrderItemRequest;
+import cart.dto.order.OrderItemsRequests;
 import cart.dto.order.OrderProductRequest;
-import cart.dto.order.OrderRequest;
+import cart.entity.OrderEntity;
 import cart.exception.MemberCouponNotFoundException;
 import cart.exception.OrderCartMismatchException;
+import cart.exception.OrderNotFoundException;
+import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,40 +28,35 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final MemberCouponRepository memberCouponRepository;
-    private final CartItemDao cartItemDao;
+    private final CartItemRepository cartItemRepository;
 
-    public OrderService(final OrderRepository orderRepository, final MemberCouponRepository memberCouponRepository, final CartItemDao cartItemDao) {
+    public OrderService(final OrderRepository orderRepository, final MemberCouponRepository memberCouponRepository, final CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
         this.memberCouponRepository = memberCouponRepository;
-        this.cartItemDao = cartItemDao;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @Transactional
-    public Long createOrder(List<OrderRequest> orderRequests, Member member) {
-        clearCartItems(orderRequests, member.getId());
-        List<OrderItem> orderItems = requestToOrderItems(orderRequests, member);
-        return orderRepository.create(orderItems, member.getId());
+    public Long createOrder(OrderItemsRequests request, Member member) {
+        clearCartItems(request.getOrderItemRequests(), member);
+        List<OrderItem> orderItems = requestToOrderItems(request.getOrderItemRequests(), member);
+        return orderRepository.create(orderItems, new OrderEntity(member.getId(), request.getDeliveryFee()));
     }
 
-    private List<OrderItem> requestToOrderItems(final List<OrderRequest> orderRequests, final Member member) {
+    private List<OrderItem> requestToOrderItems(final List<OrderItemRequest> orderItemRequests, final Member member) {
         List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderRequest orderRequest : orderRequests) {
-            MemberCoupons requestCoupons = usedCoupon(member, orderRequest);
+        for (OrderItemRequest orderItemRequest : orderItemRequests) {
+            MemberCoupons requestCoupons = usedCoupons(member, orderItemRequest);
 
-            OrderProductRequest productRequest = orderRequest.getProductRequest();
-            orderItems.add(new OrderItem(productRequest.toProduct(), orderRequest.getQuantity(), requestCoupons.getCoupons()));
+            OrderProductRequest productRequest = orderItemRequest.getProductRequest();
+            orderItems.add(new OrderItem(productRequest.toProduct(), orderItemRequest.getQuantity(), requestCoupons.getCoupons()));
         }
         return orderItems;
     }
 
-    private MemberCoupons usedCoupon(final Member member, final OrderRequest orderRequest) {
-        MemberCoupons requestCoupons = memberCouponRepository.findByIds(orderRequest.getMemberCouponIds());
+    private MemberCoupons usedCoupons(final Member member, final OrderItemRequest request) {
+        MemberCoupons requestCoupons = memberCouponRepository.findByIds(request.toMemberCouponIds());
         MemberCoupons memberCoupons = memberCouponRepository.findByMemberId(member.getId()).getUnUsedCoupons();
-
-        if (memberCoupons.isEmpty()){
-            System.out.println("empty");
-            return new MemberCoupons(Collections.emptyList());
-        }
 
         if (memberCoupons.isNotContains(requestCoupons)) {
             throw new MemberCouponNotFoundException();
@@ -69,32 +66,34 @@ public class OrderService {
         return requestCoupons;
     }
 
-    private void clearCartItems(final List<OrderRequest> orderRequests, final Long memberId) {
-        List<Product> memberCartProducts = cartItemDao.findByMemberId(memberId)
-                .stream()
-                .map(CartItem::getProduct)
-                .collect(Collectors.toList());
+    private void clearCartItems(final List<OrderItemRequest> orderItemRequests, final Member member) {
+        List<CartItem> memberCartItems = cartItemRepository.findByMemberId(member.getId());
 
-        List<Product> products = orderRequests.stream()
-                .map(orderRequest -> orderRequest.getProductRequest().toProduct())
+        List<Long> orderItemIds = orderItemRequests.stream()
+                .map(OrderItemRequest::getCartItemId)
                 .collect(Collectors.toList());
+        List<CartItem> requestCartItems = cartItemRepository.findByIds(orderItemIds);
 
-        if (!memberCartProducts.containsAll(products)) {
+        if (!memberCartItems.containsAll(requestCartItems)) {
             throw new OrderCartMismatchException();
         }
 
-        List<Long> productIds = products.stream()
-                .map(Product::getId)
-                .collect(Collectors.toList());
-
-        cartItemDao.delete(memberId, productIds);
+        cartItemRepository.deleteAll(requestCartItems);
     }
 
-    public List<Order> findAll(Long memberId) {
+    public List<Order> findAllByMemberId(Long memberId) {
         return orderRepository.findAllByMemberId(memberId);
     }
 
-    public Order findById(Long id) {
-        return orderRepository.findById(id);
+    public Order findById(Long id, Member member) {
+        Optional<Order> findOrder = orderRepository.findById(id);
+
+        if (findOrder.isEmpty()) {
+            throw new OrderNotFoundException();
+        }
+
+        Order order = findOrder.get();
+        order.checkOwner(member.getId());
+        return order;
     }
 }

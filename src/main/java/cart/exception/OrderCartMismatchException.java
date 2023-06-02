@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class OrderCartMismatchException extends ApplicationException{
     public OrderCartMismatchException() {
-        super("장바구니 내용이 변경되었습니다. 장바구니를 삭제한 후, 다시 추가해주세요.");
+        super("장바구니 내역과 주문 내역이 일치하지 않습니다. 다시 시도해 주세요.");
     }
 
     @Override

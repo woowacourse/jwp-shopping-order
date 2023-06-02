@@ -1,8 +1,9 @@
 package cart.domain.order;
 
 import cart.domain.coupon.Discount;
-import cart.domain.product.Product;
 import cart.domain.member.MemberCoupon;
+import cart.domain.product.Product;
+import cart.entity.OrderItemEntity;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class OrderItem {
     private final Product product;
     private final int quantity;
     private final List<MemberCoupon> coupons;
-    private final Integer total;
+    private final int total;
 
     public OrderItem(final Long id, final Product product, final int quantity, final List<MemberCoupon> coupons) {
         this.id = id;
@@ -24,6 +25,11 @@ public class OrderItem {
 
     public OrderItem(final Product product, final int quantity, final List<MemberCoupon> coupons) {
         this(null, product, quantity, coupons);
+    }
+
+    public OrderItem(final OrderItemEntity orderItemEntity, final List<MemberCoupon> coupons) {
+        this(orderItemEntity.getId(), orderItemEntity.getProduct(), orderItemEntity.getQuantity(), coupons);
+
     }
 
     private int calculateDiscountedAmount(final Product product, final int quantity, final List<MemberCoupon> coupons) {

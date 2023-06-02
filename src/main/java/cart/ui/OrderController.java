@@ -3,7 +3,7 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.dto.order.OrderRequests;
+import cart.dto.order.OrderItemsRequests;
 import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,23 +24,23 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findAll(Member member) {
-        List<Order> orders = orderService.findAll(member.getId());
+        List<Order> orders = orderService.findAllByMemberId(member.getId());
         List<OrderResponse> responses = orders.stream()
                 .map(OrderResponse::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponse> findById(@PathVariable final String orderId, Member member) {
-        Order orders = orderService.findById(member.getId());
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> findById(@PathVariable final Long id, Member member) {
+        Order order = orderService.findById(id, member);
 
-        return ResponseEntity.ok(OrderResponse.from(orders));
+        return ResponseEntity.ok(OrderResponse.from(order));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@RequestBody @Valid OrderRequests request, Member member) {
-        orderService.createOrder(request.getOrderRequests(), member);
+    public ResponseEntity<Void> addOrder(@RequestBody @Valid OrderItemsRequests request, Member member) {
+        orderService.createOrder(request, member);
         return ResponseEntity.noContent().build();
     }
 }

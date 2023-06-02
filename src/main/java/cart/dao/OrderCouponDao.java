@@ -22,7 +22,8 @@ public class OrderCouponDao {
 
     public OrderCouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("order_coupon");
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("order_coupon")
+                .usingGeneratedKeyColumns("id");
     }
 
     private static RowMapper<MemberCoupon> rowMapper() {
@@ -36,20 +37,19 @@ public class OrderCouponDao {
         );
     }
 
-    public void create(Long orderItemId, Long couponId) {
+    public Long create(Long orderItemId, Long memberCouponId) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("order_item_id", orderItemId)
-                .addValue("member_coupon_id", couponId);
+                .addValue("member_coupon_id", memberCouponId);
 
-        simpleJdbcInsert.execute(params);
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<MemberCoupon> findCouponsByOrderItemId(Long orderItemId) {
-        try{
-            String sql = "select * from order_coupon, member_coupon, coupon where order_coupon.member_coupon_id = member_coupon.coupon_id and member_coupon.coupon_id = coupon.id and order_item_id = ?";
-
+    public List<MemberCoupon> findByOrderItemId(Long orderItemId) {
+        try {
+            String sql = "SELECT * FROM order_coupon, member_coupon, coupon WHERE order_coupon.member_coupon_id = member_coupon.id AND member_coupon.coupon_id = coupon.id AND order_item_id = ?";
             return jdbcTemplate.query(sql, rowMapper(), orderItemId);
-        }catch (final EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             return Collections.emptyList();
         }
     }

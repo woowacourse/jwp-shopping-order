@@ -18,13 +18,13 @@ public class OrderItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public OrderItemDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+    public OrderItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("order_item")
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("order_item")
                 .usingGeneratedKeyColumns("id");
     }
 
-    private static RowMapper<OrderItemEntity> rowMapper() {
+    private RowMapper<OrderItemEntity> rowMapper() {
         return (rs, rowNum) -> new OrderItemEntity(
                 rs.getLong("id"),
                 rs.getLong("order_id"),
