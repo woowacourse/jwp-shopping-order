@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.OrderService;
+import cart.application.PayService;
 import cart.domain.Member;
 import cart.dto.request.PayRequest;
 import cart.dto.response.PayResponse;
@@ -15,9 +16,14 @@ import javax.validation.Valid;
 public class OrderApiController {
 
     private final OrderService orderService;
+    private final PayService payService;
 
-    public OrderApiController(final OrderService orderService) {
+    public OrderApiController(
+            final OrderService orderService,
+            final PayService payService
+    ) {
         this.orderService = orderService;
+        this.payService = payService;
     }
 
     @PostMapping("/pay")
@@ -25,7 +31,7 @@ public class OrderApiController {
             Member member,
             @Valid @RequestBody PayRequest request
     ) {
-        final PayResponse response = orderService.orderCartItems(member, request);
+        final PayResponse response = payService.orderCartItems(member, request);
         return ResponseEntity
                 .ok()
                 .body(response);

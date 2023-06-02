@@ -22,6 +22,6 @@ public class MemberOrderApiController {
 
     @GetMapping
     public ResponseEntity<List<OrderHistoryResponse>> getAllOrders(Member member) {
-        return ResponseEntity.ok(orderService.getAllOrdersOf(member));
+        return ResponseEntity.ok(orderService.getOrdersOf(member));
     }
 }

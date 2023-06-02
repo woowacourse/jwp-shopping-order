@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
-public class OrderAcceptanceTest extends AcceptanceTest {
+public class PayAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private MemberRepository memberRepository;
