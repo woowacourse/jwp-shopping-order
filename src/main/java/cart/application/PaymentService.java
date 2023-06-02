@@ -5,6 +5,7 @@ import cart.domain.DiscountPolicy;
 import cart.domain.Order;
 import cart.domain.Payment;
 import cart.domain.PaymentRecord;
+import cart.exception.PaymentException;
 import cart.repository.DeliveryPolicyRepository;
 import cart.repository.DiscountPolicyRepository;
 import cart.repository.PaymentRepository;
@@ -25,13 +26,11 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    // TODO: 2023/05/31 Custom Exception 만들기
     public PaymentRecord createDraftPaymentRecord(Order order) {
-        DiscountPolicy discountPolicy = discountPolicyRepository.findDefault()
-                .orElseThrow(); // TODO: 2023/06/02 CustomException 만들기
-        DeliveryPolicy deliveryPolicy = deliveryPolicyRepository.findDefault()
-                .orElseThrow(); // TODO: 2023/06/02 CustomException 만들기
-        Payment payment = new Payment(List.of(discountPolicy), List.of(deliveryPolicy));
+        List<DiscountPolicy> discountPolicies = discountPolicyRepository.findDefault();
+        List<DeliveryPolicy> deliveryPolicies = deliveryPolicyRepository.findDefault();
+
+        Payment payment = new Payment(discountPolicies, deliveryPolicies);
 
         return payment.createPaymentRecord(order);
     }
@@ -42,6 +41,7 @@ public class PaymentService {
     }
 
     public PaymentRecord findByOrder(Order order) {
-        return paymentRepository.findByOrder(order).orElseThrow(); // TODO: 2023/06/02 CustomException 만들기
+        return paymentRepository.findByOrder(order)
+                .orElseThrow(() -> new PaymentException.NotFound(order));
     }
 }

@@ -1,8 +1,8 @@
 package cart.repository;
 
 import cart.domain.DeliveryPolicy;
-import java.util.Optional;
+import java.util.List;
 
 public interface DeliveryPolicyRepository {
-    Optional<DeliveryPolicy> findDefault();
+    List<DeliveryPolicy> findDefault();
 }

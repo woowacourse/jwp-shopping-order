@@ -1,8 +1,8 @@
 package cart.repository;
 
 import cart.domain.DiscountPolicy;
-import java.util.Optional;
+import java.util.List;
 
 public interface DiscountPolicyRepository {
-    Optional<DiscountPolicy> findDefault();
+    List<DiscountPolicy> findDefault();
 }

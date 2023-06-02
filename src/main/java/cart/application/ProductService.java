@@ -3,6 +3,7 @@ package cart.application;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.ProductException;
 import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +25,8 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(); // TODO: 커스텀 예외 정의
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException.NotFound(productId));
         return ProductResponse.of(product);
     }
 

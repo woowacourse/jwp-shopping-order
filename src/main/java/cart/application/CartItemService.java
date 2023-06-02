@@ -6,6 +6,8 @@ import cart.domain.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
+import cart.exception.ProductException;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import java.util.List;
@@ -29,12 +31,14 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow();// TODO: 2023/06/02 커스텀 예외 만들기
+                .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
+
         return cartItemRepository.create(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemRepository.findById(id).orElseThrow(); // TODO: 2023/06/02 커스텀 예외 만들기
+        CartItem cartItem = cartItemRepository.findById(id)
+                .orElseThrow(() -> new CartItemException.NotFound(id));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -47,7 +51,9 @@ public class CartItemService {
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemRepository.findById(id).orElseThrow(); // TODO: 2023/06/02 커스텀 예외 만들기
+        CartItem cartItem = cartItemRepository.findById(id)
+                .orElseThrow(() -> new CartItemException.NotFound(id));
+
         cartItem.checkOwner(member);
 
         cartItemRepository.deleteById(id);

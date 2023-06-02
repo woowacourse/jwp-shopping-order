@@ -22,7 +22,6 @@ public class Payment {
                 .collect(toMap(discountPolicy -> discountPolicy,
                         discountPolicy -> discountPolicy.calculateDiscountAmount(order)));
 
-        // TODO: 적용되는 정책 필터링
         Map<DeliveryPolicy, Money> policyToDeliveryFees = deliveryPolicies.stream()
                 .collect(toMap(deliveryPolicy -> deliveryPolicy,
                         (DeliveryPolicy deliveryPolicy) -> deliveryPolicy.calculateDeliveryFee(order)));
