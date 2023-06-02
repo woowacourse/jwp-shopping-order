@@ -1,3 +1,10 @@
+drop table product;
+drop table member;
+drop table cart_item;
+drop table coupon;
+drop table orders;
+drop table order_item;
+
 CREATE TABLE if not exists product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
