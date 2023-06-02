@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -25,7 +26,7 @@ public class OrderRepository {
         this.orderProductDao = orderProductDao;
     }
 
-    public List<OrderHistoryEntity> findAll(){
+    public List<OrderHistoryEntity> findAll() {
         return orderHistoryDao.findAllOrderHistories();
     }
 
@@ -87,5 +88,10 @@ public class OrderRepository {
         }
 
         return orders;
+    }
+
+    public boolean isOrderOfMember(final Member member, final Long orderHistoryId) {
+        final Long memberId = orderHistoryDao.findMemberIdOf(orderHistoryId);
+        return Objects.equals(memberId, member.getId());
     }
 }

@@ -3,6 +3,8 @@ package cart.application;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.dto.response.OrderHistoryResponse;
+import cart.dto.response.OrderProductResponse;
+import cart.exception.AccessNonAvailableMemberException;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<OrderHistoryResponse> getOrdersOf(final Member member) {
+    public List<OrderHistoryResponse> getOrderHistoriesOf(final Member member) {
         final List<Order> orders = orderRepository.findOrdersOfMember(member);
 
         final List<OrderHistoryResponse> orderHistoryResponses = new ArrayList<>();
@@ -35,5 +37,13 @@ public class OrderService {
         }
 
         return orderHistoryResponses;
+    }
+
+    public List<OrderProductResponse> getOrderProductsOf(final Member member, final Long orderHistoryId) {
+        if (!orderRepository.isOrderOfMember(member, orderHistoryId)) {
+            throw new AccessNonAvailableMemberException("해당 주문 건의 사용자만 주문 건에 대한 상세조회에 접근할 수 있습니다!");
+        }
+
+        return null;
     }
 }
