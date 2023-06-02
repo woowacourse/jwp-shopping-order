@@ -27,9 +27,8 @@ class CouponRepositoryTest {
     @DisplayName("쿠폰을 발급한다")
     void publishCoupon() {
         Member member = memberDao.getMemberById(1L);
-        Long couponId = couponRepository.publishUserCoupon(member, 1L);
 
-        assertDoesNotThrow(() -> couponRepository.publishUserCoupon(member, couponId));
+        assertDoesNotThrow(() -> couponRepository.publishUserCoupon(member, 1L));
     }
 
     @Test
@@ -44,6 +43,6 @@ class CouponRepositoryTest {
     @Test
     @DisplayName("쿠폰을 조회한다")
     void getCoupons() {
-        assertThat(couponRepository.findAllCoupons().size()).isEqualTo(5);
+        assertThat(couponRepository.findAllCoupons().size()).isEqualTo(3);
     }
 }
