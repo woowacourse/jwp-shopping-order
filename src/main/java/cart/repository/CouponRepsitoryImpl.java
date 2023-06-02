@@ -31,7 +31,7 @@ public class CouponRepsitoryImpl implements CouponRepository {
             throw new CouponException("해당 쿠폰을 찾을 수 없습니다.");
         }
 
-        if(memberCouponDao.checkMemberCouponById(member.getId(),couponId)){
+        if (memberCouponDao.checkMemberCouponById(member.getId(), couponId)) {
             throw new CouponException("이미 존재하는 쿠폰입니다.");
         }
 
@@ -49,14 +49,6 @@ public class CouponRepsitoryImpl implements CouponRepository {
     public List<Coupon> findAllCoupons() {
         return couponDao.findAllCoupons().stream()
                 .map(this::toDomain).collect(Collectors.toList());
-    }
-
-    private CouponEntity toEntity(Coupon coupon) {
-        return new CouponEntity(coupon.getName(),
-                coupon.getCouponTypes().getCouponTypeName(),
-                coupon.getMinimumPrice(),
-                coupon.getDiscountPrice(),
-                coupon.getDiscountRate());
     }
 
     private Coupon toDomain(CouponEntity entity) {

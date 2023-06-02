@@ -8,11 +8,13 @@ import cart.dto.request.CouponCreateRequest;
 import cart.dto.response.CouponIssuableResponse;
 import cart.dto.response.CouponResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CouponService {
     private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
@@ -26,15 +28,17 @@ public class CouponService {
         return couponRepository.publishUserCoupon(member, request.getId());
     }
 
+    @Transactional(readOnly = true)
     public List<CouponResponse> getUserCoupon(Member member) {
         return couponRepository.getUserCoupon(member).stream()
                 .map(it -> new CouponResponse(it.getId(), it.getName(),
                         it.getCouponTypes().getCouponTypeName(),
-                        it.getMinimumPrice(), it.getDiscountRate(),it.getDiscountPrice()
+                        it.getMinimumPrice(), it.getDiscountRate(), it.getDiscountPrice()
                 ))
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<CouponIssuableResponse> getCoupons(Member member) {
         List<Coupon> coupons = couponRepository.findAllCoupons();
         List<Coupon> memberCoupons = memberCouponRepository.findMemberCoupons(member);

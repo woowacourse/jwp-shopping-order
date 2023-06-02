@@ -44,7 +44,7 @@ public class MemberCouponDao {
                     "WHERE member_coupon.member_id = ? and member_coupon.id = ? and availability = ?";
 
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId, couponId, true));
-        } catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
@@ -72,7 +72,7 @@ public class MemberCouponDao {
                 "INNER JOIN coupon ON member_coupon.coupon_id = coupon.id " +
                 " where member_id = ? and availability = ?";
 
-        return jdbcTemplate.query(sql,rowMapper,memberId,true);
+        return jdbcTemplate.query(sql, rowMapper, memberId, true);
     }
 
     public void changeUserUnUsedCouponAvailability(Long memberCouponId) {

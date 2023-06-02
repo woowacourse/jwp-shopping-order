@@ -50,9 +50,9 @@ public class OrderService {
 
         Long orderSavedId = orderRepository.saveOrder(order);
         cartItemRepository.deleteByMemberCartItemIds(member.getId(), cartItems);
-        orderProductRepository.saveOrderProductsByOrderId(orderSavedId,order);
+        orderProductRepository.saveOrderProductsByOrderId(orderSavedId, order);
         memberCouponRepository.changeUserUsedCouponAvailability(order.getCoupon());
-        orderCouponRepository.saveOrderCoupon(orderSavedId,order);
+        orderCouponRepository.saveOrderCoupon(orderSavedId, order);
         return orderSavedId;
     }
 
@@ -74,11 +74,11 @@ public class OrderService {
     }
 
     public void cancelOrder(Member member, Long orderId) {
-        if(orderRepository.checkConfirmState(orderId)){
+        if (orderRepository.checkConfirmState(orderId)) {
             throw new OrderException("주문 확정 주문은 취소할 수 없습니다.");
         }
         Long memberCouponId = orderCouponRepository.deleteOrderCoupon(orderId);
-        if(memberCouponId != null) {
+        if (memberCouponId != null) {
             memberCouponRepository.changeUserUnUsedCouponAvailability(member, memberCouponId);
         }
         orderRepository.deleteOrder(orderId);
@@ -87,8 +87,8 @@ public class OrderService {
     public CouponConfirmResponse confirmOrder(Member member, Long orderId) {
         orderRepository.confirmOrder(orderId, member);
         Coupon coupon = memberCouponRepository.publishBonusCoupon(orderId, member);
-        return new CouponConfirmResponse(new CouponResponse(coupon.getId(),coupon.getName(),
-                coupon.getCouponTypes().getCouponTypeName(),coupon.getMinimumPrice(),coupon.getDiscountRate(),
+        return new CouponConfirmResponse(new CouponResponse(coupon.getId(), coupon.getName(),
+                coupon.getCouponTypes().getCouponTypeName(), coupon.getMinimumPrice(), coupon.getDiscountRate(),
                 coupon.getDiscountPrice()));
     }
 }

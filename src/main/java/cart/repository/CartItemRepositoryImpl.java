@@ -43,7 +43,7 @@ public class CartItemRepositoryImpl implements CartItemRepository {
     @Override
     public CartItem findById(Long id) {
         return toDomain(cartItemDao.findById(id)
-                .orElseThrow(()->new CartItemException("존재하지 않는 장바구니 상품입니다.")));
+                .orElseThrow(() -> new CartItemException("존재하지 않는 장바구니 상품입니다.")));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class CartItemRepositoryImpl implements CartItemRepository {
 
     private CartItem toDomain(CartItemEntity entity) {
         ProductEntity productEntity = productDao.getProductById(entity.getProductId())
-                .orElseThrow(()->new ProductException("잘못된 상품 입니다."));
+                .orElseThrow(() -> new ProductException("잘못된 상품 입니다."));
 
         Product product = new Product(productEntity.getId(), productEntity.getName(),
                 productEntity.getPrice(), productEntity.getImageUrl());

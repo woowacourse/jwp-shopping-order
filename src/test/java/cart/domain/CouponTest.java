@@ -1,5 +1,7 @@
-package cart.domain.coupon;
+package cart.domain;
 
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.DiscountType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -33,7 +33,7 @@ public class OrderCouponDao {
     public Long findByOrderId(Long orderId) {
         String sql = "select member_coupon_id from order_coupon where order_id = ?";
 
-        return jdbcTemplate.queryForObject(sql,Long.class,orderId);
+        return jdbcTemplate.queryForObject(sql, Long.class, orderId);
     }
 
     public boolean checkOrderCouponByOrderId(Long orderId) {

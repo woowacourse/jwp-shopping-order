@@ -7,8 +7,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository {
-    List<Product> findByIds(List<Long> productIds);
-
     List<Product> getAllProducts();
 
     Product getProductById(Long productId);

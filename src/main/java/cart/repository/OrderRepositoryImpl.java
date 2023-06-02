@@ -42,7 +42,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Order findByOrderId(Member member, Long orderId) {
-        return toDomain(orderDao.findByOrderId(member.getId(),orderId).orElseThrow(() -> new OrderException("주문 상세정보를 찾을 수 없습니다.")));
+        return toDomain(orderDao.findByOrderId(member.getId(), orderId).orElseThrow(() -> new OrderException("주문 상세정보를 찾을 수 없습니다.")));
     }
 
     @Override

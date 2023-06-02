@@ -6,11 +6,6 @@ public class MemberCouponEntity {
     private final Long memberId;
     private final Boolean availability;
 
-    public static final MemberCouponEntity EMPTY = new MemberCouponEntity(
-            null,
-            null, null, true
-    );
-
     public MemberCouponEntity(Long couponId, Long memberId, Boolean availability) {
         this(null,couponId,memberId,availability);
     }

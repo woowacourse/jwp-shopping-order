@@ -12,8 +12,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class OrderTest {
-
-
     @Test
     @DisplayName("주문시 카트 상품이 비어있지 않게 생성한다.")
     void createOrder() {

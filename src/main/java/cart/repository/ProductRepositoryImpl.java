@@ -19,11 +19,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findByIds(List<Long> productIds) {
-        return productDao.findByIds(productIds).stream().map(this::toDomain).collect(Collectors.toList());
-    }
-
-    @Override
     public List<Product> getAllProducts() {
         return productDao.getAllProducts().stream().map(this::toDomain).collect(Collectors.toList());
     }
@@ -31,7 +26,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Product getProductById(Long productId) {
         return toDomain(productDao.getProductById(productId)
-                .orElseThrow(()->new ProductException("잘못된 상품입니다.")));
+                .orElseThrow(() -> new ProductException("잘못된 상품입니다.")));
     }
 
     @Override

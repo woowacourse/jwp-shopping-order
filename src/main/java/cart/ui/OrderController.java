@@ -34,19 +34,19 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrder(Member member, @PathVariable("id") Long id){
+    public ResponseEntity<OrderResponse> getOrder(Member member, @PathVariable("id") Long id) {
         OrderResponse order = orderService.findByOrderId(member, id);
         return ResponseEntity.ok(order);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> cancelOrder(Member member, @PathVariable("id") Long id){
-        orderService.cancelOrder(member,id);
+    public ResponseEntity<Void> cancelOrder(Member member, @PathVariable("id") Long id) {
+        orderService.cancelOrder(member, id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/confirm")
-    public ResponseEntity<CouponConfirmResponse> confirmOrder(Member member, @PathVariable("id") Long id){
+    public ResponseEntity<CouponConfirmResponse> confirmOrder(Member member, @PathVariable("id") Long id) {
         CouponConfirmResponse response = orderService.confirmOrder(member, id);
         return ResponseEntity.ok(response);
     }
