@@ -21,6 +21,7 @@ public class OrderDao {
             new OrderProductEntity.Builder()
                     .id(resultSet.getLong("id"))
                     .orderId(resultSet.getLong("order_id"))
+                    .productId(resultSet.getLong("product_id"))
                     .productName(resultSet.getString("product_name"))
                     .productPrice(resultSet.getInt("product_price"))
                     .productImageUrl(resultSet.getString("product_image_url"))
@@ -60,7 +61,7 @@ public class OrderDao {
     }
 
     public long insertOrderItems(OrderProductEntity orderProductEntity) {
-        String query = "INSERT INTO order_item (order_id, product_name, product_price, product_image_url, quantity) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity) VALUES (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -68,10 +69,11 @@ public class OrderDao {
                     query, new String[]{"ID"}
             );
             preparedStatement.setLong(1, orderProductEntity.getOrderId());
-            preparedStatement.setString(2, orderProductEntity.getProductName());
-            preparedStatement.setInt(3, orderProductEntity.getProductPrice());
-            preparedStatement.setString(4, orderProductEntity.getProductImageUrl());
-            preparedStatement.setInt(5, orderProductEntity.getQuantity());
+            preparedStatement.setLong(2, orderProductEntity.getProductId());
+            preparedStatement.setString(3, orderProductEntity.getProductName());
+            preparedStatement.setInt(4, orderProductEntity.getProductPrice());
+            preparedStatement.setString(5, orderProductEntity.getProductImageUrl());
+            preparedStatement.setInt(6, orderProductEntity.getQuantity());
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey().longValue());

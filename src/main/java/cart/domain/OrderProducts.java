@@ -25,11 +25,19 @@ public class OrderProducts {
                 .orElseGet(() -> DEFAULT_PAYMENT);
     }
 
-    public List<OrderProduct> getOrderItems() {
+    public List<OrderProduct> getOrderProducts() {
         return orderProducts;
     }
 
     public long getOrderId() {
         return orderId;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderProducts{" +
+                "orderId=" + orderId +
+                ", orderProducts=" + orderProducts +
+                '}';
     }
 }

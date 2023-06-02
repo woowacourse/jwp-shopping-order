@@ -4,14 +4,16 @@ public class OrderProductEntity {
 
     private final Long id;
     private final long orderId;
+    private final long productId;
     private final String productName;
     private final int productPrice;
     private final String productImageUrl;
     private final int quantity;
 
-    private OrderProductEntity(Long id, long orderId, String productName, int productPrice, String productImageUrl, int quantity) {
+    private OrderProductEntity(Long id, long orderId, long productId, String productName, int productPrice, String productImageUrl, int quantity) {
         this.id = id;
         this.orderId = orderId;
+        this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
@@ -24,6 +26,10 @@ public class OrderProductEntity {
 
     public long getOrderId() {
         return orderId;
+    }
+
+    public long getProductId() {
+        return productId;
     }
 
     public String getProductName() {
@@ -42,10 +48,24 @@ public class OrderProductEntity {
         return quantity;
     }
 
+    @Override
+    public String toString() {
+        return "OrderProductEntity{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                ", productImageUrl='" + productImageUrl + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
+
     public static class Builder {
 
         private long id;
         private long orderId;
+        private long productId;
         private String productName;
         private int productPrice;
         private String productImageUrl;
@@ -58,6 +78,11 @@ public class OrderProductEntity {
 
         public Builder orderId(long orderId) {
             this.orderId = orderId;
+            return this;
+        }
+
+        public Builder productId(long productId) {
+            this.productId = productId;
             return this;
         }
 
@@ -82,7 +107,7 @@ public class OrderProductEntity {
         }
 
         public OrderProductEntity build() {
-            return new OrderProductEntity(id, orderId, productName, productPrice, productImageUrl, quantity);
+            return new OrderProductEntity(id, orderId, productId, productName, productPrice, productImageUrl, quantity);
         }
     }
 }

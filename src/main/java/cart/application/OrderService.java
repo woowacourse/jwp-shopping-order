@@ -25,7 +25,7 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
 
-    public OrderService(OrderRepository orderRepository, CartItemRepository cartItemRepository, CartItemService cartItemService, MemberRepository memberRepository) {
+    public OrderService(OrderRepository orderRepository, CartItemRepository cartItemRepository, MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
         this.memberRepository = memberRepository;
@@ -33,7 +33,7 @@ public class OrderService {
 
     public long orderProducts(Member member, OrderProductsRequest orderProductsRequest) {
         List<CartItem> cartItems = toCartItems(orderProductsRequest.getCartItemIds());
-        OrderProducts orderProducts = toOrderItems(cartItems);
+        OrderProducts orderProducts = toOrderProducts(cartItems);
         Payment payment = new Payment(orderProducts.calculateTotalPayment(), orderProductsRequest.getUsedPoint());
         Order order = new Order(member, orderProducts, payment);
         // 장바구니에서 삭제
@@ -55,7 +55,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private OrderProducts toOrderItems(List<CartItem> cartItems) {
+    private OrderProducts toOrderProducts(List<CartItem> cartItems) {
         return cartItems.stream()
                 .map(this::toOrderItem)
                 .collect(collectingAndThen(toList(), OrderProducts::new));
@@ -63,7 +63,7 @@ public class OrderService {
 
     private OrderProduct toOrderItem(CartItem cartItem) {
         return new OrderProduct.Builder()
-                .id(cartItem.getId())
+                .productId(cartItem.getProduct().getId())
                 .productName(cartItem.getProduct().getName())
                 .productPrice(cartItem.getProduct().getPrice())
                 .productImageUrl(cartItem.getProduct().getImageUrl())
@@ -74,7 +74,7 @@ public class OrderService {
 
     // 사용자별 주문 내역
     public List<OrderProducts> getOrderByMember(Member member) {
-        return orderRepository.findOrderItemsByMemberId(member.getId());
+        return orderRepository.findOrderProductsByMemberId(member.getId());
     }
 
     // 주문 상세

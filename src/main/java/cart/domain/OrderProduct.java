@@ -3,6 +3,7 @@ package cart.domain;
 public class OrderProduct {
 
     private final Long id;
+    private final long productId;
     private final long orderId;
     private final String name;
     private final int price;
@@ -10,8 +11,9 @@ public class OrderProduct {
     private final int quantity;
     private final int totalPrice;
 
-    private OrderProduct(Long id, long orderId, String name, int price, String imageUrl, int quantity, int totalPrice) {
+    private OrderProduct(Long id, long productId, long orderId, String name, int price, String imageUrl, int quantity, int totalPrice) {
         this.id = id;
+        this.productId = productId;
         this.orderId = orderId;
         this.name = name;
         this.price = price;
@@ -22,6 +24,14 @@ public class OrderProduct {
 
     public Long getId() {
         return id;
+    }
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public long getProductId() {
+        return productId;
     }
 
     public String getName() {
@@ -44,10 +54,25 @@ public class OrderProduct {
         return totalPrice;
     }
 
+    @Override
+    public String toString() {
+        return "OrderProduct{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", orderId=" + orderId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", quantity=" + quantity +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
+
     public static class Builder {
 
         private Long id;
         private long orderId;
+        private long productId;
         private String productName;
         private int productPrice;
         private String productImageUrl;
@@ -61,6 +86,11 @@ public class OrderProduct {
 
         public Builder orderId(long orderId) {
             this.orderId = orderId;
+            return this;
+        }
+
+        public Builder productId(long productId) {
+            this.productId = productId;
             return this;
         }
 
@@ -90,7 +120,7 @@ public class OrderProduct {
         }
 
         public OrderProduct build() {
-            return new OrderProduct(id, orderId, productName, productPrice, productImageUrl, quantity, totalPayment);
+            return new OrderProduct(id, productId, orderId, productName, productPrice, productImageUrl, quantity, totalPayment);
         }
     }
 }

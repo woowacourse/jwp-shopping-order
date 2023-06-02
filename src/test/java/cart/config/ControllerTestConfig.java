@@ -16,6 +16,8 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.jdbc.Sql;
 
+import javax.sql.DataSource;
+
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -31,6 +33,9 @@ public abstract class ControllerTestConfig {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    DataSource dataSource;
 
     protected MemberDao memberDao;
     protected ProductDao productDao;

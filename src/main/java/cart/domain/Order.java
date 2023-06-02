@@ -32,7 +32,7 @@ public class Order {
         return member;
     }
 
-    public OrderProducts getOrderItems() {
+    public OrderProducts getOrderProducts() {
         return orderProducts;
     }
 

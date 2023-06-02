@@ -3,9 +3,11 @@ package cart.ui;
 import cart.application.OrderService;
 import cart.domain.Member;
 import cart.domain.Order;
+import cart.domain.OrderProduct;
 import cart.domain.OrderProducts;
-import cart.dto.order.OrderItemsResponse;
+import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderProductsRequest;
+import cart.dto.order.OrderProductsResponse;
 import cart.dto.order.OrderResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,15 +39,27 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderItemsResponse>> showOrder(Member member) {
+    public ResponseEntity<List<OrderProductsResponse>> showOrder(Member member) {
         List<OrderProducts> orderItems = orderService.getOrderByMember(member);
         return ResponseEntity.ok(toOrderResponse(orderItems));
     }
 
-    private List<OrderItemsResponse> toOrderResponse(List<OrderProducts> orderItems) {
-        return orderItems.stream()
-                .map(orderItem -> new OrderItemsResponse(orderItem.getOrderId(), orderItem.getOrderItems()))
+    private List<OrderProductsResponse> toOrderResponse(List<OrderProducts> orderProducts) {
+        return orderProducts.stream()
+                .map(orderProduct -> new OrderProductsResponse(orderProduct.getOrderId(), toOrderProductResponse(orderProduct.getOrderProducts())))
                 .collect(Collectors.toList());
+    }
+
+    private List<OrderProductResponse> toOrderProductResponse(List<OrderProduct> orderProducts) {
+        return orderProducts.stream()
+                .map(orderProduct -> new OrderProductResponse(
+                        orderProduct.getProductId(),
+                        orderProduct.getName(),
+                        orderProduct.getPrice(),
+                        orderProduct.getImageUrl(),
+                        orderProduct.getQuantity(),
+                        orderProduct.getTotalPrice()
+                )).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -57,7 +71,7 @@ public class OrderApiController {
     private OrderResponse toOrderDetailResponse(Order order) {
         return new OrderResponse(
                 order.getId(),
-                order.getOrderItems(),
+                order.getOrderProducts(),
                 order.getPayment().getTotalPayment(),
                 order.getPayment().getUsedPoint(),
                 order.getCreatedAt()
