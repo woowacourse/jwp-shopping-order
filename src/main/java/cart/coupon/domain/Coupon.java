@@ -10,5 +10,4 @@ public class Coupon {
 
   private Money discountPrice;
 
-  private boolean isUsed;
 }

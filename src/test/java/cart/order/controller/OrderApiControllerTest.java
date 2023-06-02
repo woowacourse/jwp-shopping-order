@@ -72,10 +72,6 @@ class OrderApiControllerTest extends IntegrationTestHelper {
             .jsonPath()
             .getList(".", OrderResponse.class);
 
-    for (final OrderResponse orderRespons : orderResponses) {
-      System.out.println(orderRespons.getOrderId());
-    }
-
     //then
     assertAll(
         () -> assertEquals(3, orderResponses.size()),

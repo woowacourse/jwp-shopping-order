@@ -24,10 +24,8 @@ public class CouponQueryService {
 
   public List<CouponResponse> searchCoupons(final Member member) {
 
-    //member_coupon 에서 member가 가지고 있는 쿠폰을 조회
     final List<Long> couponIds = memberCouponQueryService.searchCouponsIdOwenByMember(member);
 
-    //그 아이디를 통해서 쿠폰들의 정보를 조회
     List<CouponEntity> couponEntities = couponDao.findByIdsIn(couponIds);
 
     return couponEntities.stream()
