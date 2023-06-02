@@ -34,6 +34,12 @@ public class PointDao {
         return jdbcTemplate.query(sql, new PointRowMapper(), memberId);
     }
 
+    public void deleteByOrderId(Long orderId) {
+        String sql = "delete from point where orders_id = ?";
+
+        jdbcTemplate.update(sql, orderId);
+    }
+
     private static class PointRowMapper implements RowMapper<PointEntity> {
 
         @Override

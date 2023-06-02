@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Sql({"classpath:test_init.sql"})
@@ -68,5 +70,14 @@ class PointDaoTest {
         List<PointEntity> points = pointDao.findByMemberId(1L);
 
         assertThat(points).containsExactlyInAnyOrder(expected1, expected2);
+    }
+
+    @DisplayName("주문 번호를 기준으로 포인트를 삭제할 수 있다.")
+    @Test
+    void deleteByOrderId() {
+        pointDao.deleteByOrderId(1L);
+
+        assertThatThrownBy(() -> jdbcTemplate.queryForObject("select id from point where orders_id = 1 ", Long.class))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }
