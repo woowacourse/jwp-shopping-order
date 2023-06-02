@@ -88,4 +88,36 @@ public class OrderService {
                 order.calculateTotalPrice()
         );
     }
+
+    public List<OrderShowResponse> showAllOrders(final Member member) {
+        final List<OrderShowResponse> orderShowResponses = new ArrayList<>();
+
+        final List<Order> orders = orderRepository.findAllByMember(member);
+        for (final Order order : orders) {
+            final List<OrderItem> orderItems = orderRepository.findAllOrderItemsByIdAndMemberId(order.getId(),
+                    member.getId());
+            final List<OrderItemDto> orderItemDtos = orderItems.stream()
+                    .map(orderItem -> new OrderItemDto(
+                                    orderItem.getId(),
+                                    orderItem.getName(),
+                                    orderItem.getPrice(),
+                                    orderItem.getImageUrl(),
+                                    orderItem.getQuantity(),
+                                    orderItem.getDiscountRate(),
+                                    orderItem.calculateDiscountedPrice()
+                            )
+                    ).collect(Collectors.toList());
+            orderShowResponses.add(new OrderShowResponse(
+                    orderItemDtos,
+                    order.getOrderedAt(),
+                    order.calculateTotalItemDiscountAmount(orderItems),
+                    order.calculateTotalMemberDiscountAmount(orderItems),
+                    order.calculateTotalItemPrice(),
+                    order.calculateDiscountedTotalItemPrice(),
+                    order.getShippingFee(),
+                    order.calculateTotalPrice())
+            );
+        }
+        return orderShowResponses;
+    }
 }

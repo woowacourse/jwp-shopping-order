@@ -53,6 +53,11 @@ public class OrderItemDao {
         simpleJdbcInsert.executeBatch(parameterSources);
     }
 
+    public List<OrderItemEntity> findAllByOrderId(final Long orderId) {
+        final String sql = "select * from order_item where order_id = ?";
+        return jdbcTemplate.query(sql, orderItemRowMapper, orderId);
+    }
+
     public List<OrderItemEntity> findAllOrderItemsByOrderIdAndMemberId(final Long orderId, final Long memberId) {
         final String sql = "select * from order_item where id = ? and (select member_id from orders where id = ?) = ?";
         return jdbcTemplate.query(sql, orderItemRowMapper, orderId, orderId, memberId);

@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.OrderEntity;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -41,6 +42,11 @@ public class OrderDao {
                 orderEntity.getOrderedAt(),
                 orderEntity.getMemberId()
         );
+    }
+
+    public List<OrderEntity> findAllByMemberId(final Long memberId) {
+        final String sql = "select * from orders where member_id = ?";
+        return jdbcTemplate.query(sql, orderItemRowMapper, memberId);
     }
 
     public OrderEntity findById(final Long id) {
