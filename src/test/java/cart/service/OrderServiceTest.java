@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -10,7 +9,7 @@ import cart.domain.PointPolicy;
 import cart.domain.common.Money;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.dto.OrderInfo;
+import cart.dto.OrderItemDto;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.OrderedProduct;
@@ -54,8 +53,6 @@ class OrderServiceTest {
     @Mock
     private CartItemDao cartItemDao;
     @Mock
-    private ProductDao productDao;
-    @Mock
     private PointPolicy pointPolicy;
 
     @Test
@@ -63,13 +60,12 @@ class OrderServiceTest {
         //given
         final Product product = new Product(1L, PRODUCT_NAME, 20000, PRODUCT_IMAGE);
         final Member member = new Member(1L, EMAIL, PASSWORD, 1000);
-        final OrderRequest orderRequest = new OrderRequest(List.of(new OrderInfo(product.getId(), 1)), 19000, 1000);
+        final CartItem cartItem = new CartItem(1L, 1, product, member);
 
-        when(cartItemDao.findByMemberId(member.getId()))
-                .thenReturn(List.of(new CartItem(member, product)));
+        final OrderRequest orderRequest = new OrderRequest(List.of(new OrderItemDto(cartItem.getId())), new PaymentDto(20000, 19000, 1000));
 
-        when(productDao.getProductById(product.getId()))
-                .thenReturn(product);
+        when(cartItemDao.findById(cartItem.getId()))
+                .thenReturn(cartItem);
 
         when(pointPolicy.save(Money.valueOf(19000)))
                 .thenReturn(Point.valueOf(1900));
@@ -84,6 +80,8 @@ class OrderServiceTest {
         assertThat(id).isEqualTo(1L);
         verify(memberRepository, times(1))
                 .updateMemberPoint(new Member(1L, EMAIL, PASSWORD, 1900));
+        verify(cartItemDao, times(1))
+                .deleteById(cartItem.getId());
     }
 
     @Test

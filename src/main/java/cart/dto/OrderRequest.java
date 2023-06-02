@@ -4,28 +4,22 @@ import java.util.List;
 
 public class OrderRequest {
 
-    private List<OrderInfo> orderInfos;
-    private Integer payment;
-    private Integer point;
+    private List<OrderItemDto> orderItems;
+    private PaymentDto payment;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(final List<OrderInfo> orderInfos, final Integer payment, final Integer point) {
-        this.orderInfos = orderInfos;
+    public OrderRequest(final List<OrderItemDto> orderItems, final PaymentDto payment) {
+        this.orderItems = orderItems;
         this.payment = payment;
-        this.point = point;
     }
 
-    public List<OrderInfo> getOrderInfos() {
-        return orderInfos;
+    public List<OrderItemDto> getOrderItems() {
+        return orderItems;
     }
 
-    public Integer getPayment() {
+    public PaymentDto getPayment() {
         return payment;
-    }
-
-    public Integer getPoint() {
-        return point;
     }
 }

@@ -3,7 +3,7 @@ package cart.integration;
 import cart.dao.MemberDao;
 import cart.dao.MemberEntity;
 import cart.dto.CartItemRequest;
-import cart.dto.OrderInfo;
+import cart.dto.OrderItemDto;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.OrderedProduct;
@@ -28,7 +28,8 @@ import static cart.common.fixture.DomainFixture.EMAIL;
 import static cart.common.fixture.DomainFixture.PASSWORD;
 import static cart.common.fixture.DomainFixture.PRODUCT_IMAGE;
 import static cart.common.fixture.DomainFixture.PRODUCT_NAME;
-import static cart.common.step.CartItemStep.addCartItem;
+import static cart.common.step.CartItemStep.addCartItemAndGetId;
+import static cart.common.step.CartItemStep.showCartItemByProductId;
 import static cart.common.step.OrderStep.addOrder;
 import static cart.common.step.OrderStep.addOrderAndGetId;
 import static cart.common.step.ProductStep.addProductAndGetId;
@@ -42,6 +43,7 @@ class OrderIntegrationTest extends IntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private Long cartItemId;
     private Long productId;
 
 
@@ -52,13 +54,13 @@ class OrderIntegrationTest extends IntegrationTest {
 
         new MemberDao(jdbcTemplate).addMember(new MemberEntity(EMAIL, PASSWORD, 1000));
         productId = addProductAndGetId(new ProductRequest("chicken", 20000, "chicken.jpeg"));
-        addCartItem(EMAIL, PASSWORD, new CartItemRequest(productId));
+        cartItemId = addCartItemAndGetId(EMAIL, PASSWORD, new CartItemRequest(productId));
     }
 
     @Test
     void 주문한다() {
         //given
-        final OrderRequest orderRequest = new OrderRequest(List.of(new OrderInfo(productId, 1)), 19000, 1000);
+        final OrderRequest orderRequest = new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000));
 
         //when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -75,9 +77,21 @@ class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void 주문한_상품은_장바구니에서_삭제된다() {
+        //given
+        addOrder(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000)));
+
+        //when
+        final ExtractableResponse<Response> response = showCartItemByProductId(EMAIL, PASSWORD, productId);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
     void 전체_주문을_조회한다() {
         //given
-        addOrder(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderInfo(productId, 1)), 19000, 1000));
+        addOrder(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000)));
 
         //when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -106,7 +120,7 @@ class OrderIntegrationTest extends IntegrationTest {
     @Test
     void 특정_주문을_조회한다() {
         //given
-        final Long orderId = addOrderAndGetId(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderInfo(productId, 1)), 19000, 1000));
+        final Long orderId = addOrderAndGetId(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000)));
 
         //when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
