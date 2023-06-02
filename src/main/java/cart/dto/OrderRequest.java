@@ -1,6 +1,5 @@
 package cart.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.List;
 
 public class OrderRequest {
@@ -10,7 +9,6 @@ public class OrderRequest {
     public OrderRequest() {
     }
 
-    @JsonCreator
     public OrderRequest(List<Long> cartItemIds) {
         this.cartItemIds = cartItemIds;
     }
