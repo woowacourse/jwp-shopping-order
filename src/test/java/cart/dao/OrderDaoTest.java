@@ -47,8 +47,7 @@ class OrderDaoTest {
         final Product savedProduct1 = new Product(product1Id, "product1", Amount.of(10_000), "imageUrl1");
         final Product savedProduct2 = new Product(product2Id, "product2", Amount.of(20_000), "imageUrl2");
         final Order order = new Order(new Products(List.of(savedProduct1, savedProduct2)), savedCoupon,
-            Amount.of(3_000),
-            "address");
+            Amount.of(3_000), "address");
 
         //when
         final Order savedOrder = orderDao.save(order, savedMember.getId());

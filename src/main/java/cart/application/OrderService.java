@@ -58,16 +58,20 @@ public class OrderService {
                 return product.getAmount().multiply(it.getQuantity());
             })
             .collect(Collectors.toList());
+        checkTotalAmount(orderRequest.getTotalAmount(), amounts);
+        return products;
+    }
+
+    private static void checkTotalAmount(final int totalAmount, final List<Amount> amounts) {
         final Amount sum = Amount.of(amounts);
-        if (!sum.equals(Amount.of(orderRequest.getTotalAmount()))) {
+        if (!sum.equals(Amount.of(totalAmount))) {
             throw new BusinessException("상품 금액이 변경되었습니다.");
         }
-        return products;
     }
 
     private List<OrderProductResponse> makeOrderProductResponses(final OrderRequest orderRequest,
         final List<Product> products) {
-        final List<OrderProductResponse> orderProductResponses = new ArrayList<OrderProductResponse>();
+        final List<OrderProductResponse> orderProductResponses = new ArrayList<>();
         for (int index = 0; index < products.size(); index++) {
             final Product product = products.get(index);
             final CartItemRequest cartItemRequest = orderRequest.getProducts().get(index);
