@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public class CartItemRepository {
 
+    private static final int QUANTITY_EMPTY_VALUE = 0;
+
     private final CartItemDao cartItemDao;
 
     public CartItemRepository(CartItemDao cartItemDao) {
@@ -24,7 +26,7 @@ public class CartItemRepository {
 
     public CartItem findByCartItemId(Long cartItemId) {
         return cartItemDao.findByCartItemId(cartItemId)
-                .orElseThrow(CartItemException.CartItemNotExists::new);
+                .orElseThrow(CartItemException.NotExists::new);
     }
 
     public CartItems findByCartItemIds(List<Long> cartItemIds) {
@@ -38,7 +40,7 @@ public class CartItemRepository {
     }
 
     public void updateQuantityOrDelete(CartItemEntity cartItemEntity) {
-        if (cartItemEntity.getQuantity() == 0) {
+        if (cartItemEntity.getQuantity() == QUANTITY_EMPTY_VALUE) {
             cartItemDao.deleteByCartItemId(cartItemEntity.getId());
             return;
         }
