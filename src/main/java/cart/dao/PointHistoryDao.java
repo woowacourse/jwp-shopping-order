@@ -39,6 +39,12 @@ public class PointHistoryDao {
         jdbcTemplate.update(sql, orderId, pointId, usedPoint);
     }
 
+    public void deleteByOrderId(Long orderId) {
+        String sql = "delete from point_history where orders_id = ?";
+
+        jdbcTemplate.update(sql, orderId);
+    }
+
     private static class PointHistoryRowMapper implements RowMapper<PointHistoryEntity> {
 
         @Override

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -14,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -74,5 +76,14 @@ class PointHistoryDaoTest {
         Integer usedPoint = jdbcTemplate.queryForObject("select used_point from point_history where orders_id = 3 and point_id = 2", Integer.class);
 
         assertThat(usedPoint).isEqualTo(5000);
+    }
+
+    @DisplayName("주문 번호를 기준으로 포인트 사용 이력을 삭제할 수 있다.")
+    @Test
+    void deleteByOrderId() {
+        pointHistoryDao.deleteByOrderId(2L);
+
+        assertThatThrownBy(() -> jdbcTemplate.queryForObject("select id from point_history where orders_id = 2 ", Long.class))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }
