@@ -8,7 +8,8 @@ import cart.dao.MemberDao;
 import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.vo.Amount;
-import cart.dto.CouponResponse;
+import cart.dto.CouponDiscountRequest;
+import cart.dto.CouponDiscountResponse;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -90,8 +91,25 @@ class CouponApiControllerTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    private CouponResponse makeCouponResponse(final Coupon coupon) {
-        return new CouponResponse(coupon.getId(), coupon.getName(), coupon.getMinAmount().getValue(),
-            coupon.getDiscountAmount().getValue(), coupon.isUsed());
+    @Test
+    @DisplayName("쿠폰 할인 금액을 조회한다.")
+    void testCalculateDiscount() {
+        //given
+        final CouponDiscountRequest request = new CouponDiscountRequest(coupon1.getId(), 15_000);
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .body(request)
+            .when()
+            .get("/coupons/discount")
+            .then()
+            .log().all()
+            .extract();
+        final CouponDiscountResponse couponDiscountResponse = response.as(CouponDiscountResponse.class);
+
+        //then
+        assertThat(couponDiscountResponse.getDiscountedProductAmount()).isEqualTo(12_000);
     }
 }
