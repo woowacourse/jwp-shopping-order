@@ -23,7 +23,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedOrigins(
                         "https://kyw0716.github.io",
-                        "https://gyeongza.github.io"
+                        "https://gyeongza.github.io",
+                        "http://localhost:3000"
                 )
                 .exposedHeaders("Location")
                 .allowCredentials(true);
