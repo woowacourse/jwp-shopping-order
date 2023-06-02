@@ -220,6 +220,70 @@ public class OrderIntegrationTest extends IntegrationTest {
         }
 
         @Test
+        @DisplayName("성공 - 3만원 이상 5만원 미만 주문")
+        void success_when_between_30000_and_50000() {
+            // given
+            final int paymentAmount = 33_000;
+            final long productId3 = createProduct(mainProductRequest);
+            final long cartItemId3 = requestAddCartItemAndGetId(member, productId3);
+            final OrderRequest request = new OrderRequest(List.of(cartItemId1, cartItemId2, cartItemId3), paymentAmount);
+            final long id = getIdFromCreatedResponse(requestAddOrder(member, request));
+
+            // when
+            final ExtractableResponse<Response> response = given()
+                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                    .when().get("/orders/{id}", id)
+                    .then()
+                    .extract();
+
+            // then
+            final Configuration conf = Configuration.defaultConfiguration();
+            final DocumentContext documentContext = JsonPath.using(conf).parse(response.asString());
+
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                    () -> assertThat(documentContext.read("$.priceBeforeDiscount", Integer.class)).isEqualTo(35_000),
+                    () -> assertThat(documentContext.read("$.priceAfterDiscount", Integer.class)).isEqualTo(33_000),
+                    () -> assertThat(documentContext.read("$.orderItems.size()", Integer.class))
+                            .isEqualTo(request.getCartItems().size()),
+                    () -> assertThat(documentContext.read("$.orderItems[0].name", String.class)).isEqualTo("치킨"),
+                    () -> assertThat(documentContext.read("$.orderItems[1].name", String.class)).isEqualTo("피자"),
+                    () -> assertThat(documentContext.read("$.orderItems[2].name", String.class)).isEqualTo("치킨")
+            );
+        }
+
+        @Test
+        @DisplayName("성공 - 5만원 이상 주문")
+        void success_when_over_50000() {
+            // given
+            final int paymentAmount = 55_000;
+            final long productId = createProduct(new ProductRequest("치킨", 60_000, "http://example.com/chicken.jpg"));
+            final long cartItemId = requestAddCartItemAndGetId(member, productId);
+            final OrderRequest request = new OrderRequest(List.of(cartItemId), paymentAmount);
+            final long id = getIdFromCreatedResponse(requestAddOrder(member, request));
+
+            // when
+            final ExtractableResponse<Response> response = given()
+                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                    .when().get("/orders/{id}", id)
+                    .then()
+                    .extract();
+
+            // then
+            final Configuration conf = Configuration.defaultConfiguration();
+            final DocumentContext documentContext = JsonPath.using(conf).parse(response.asString());
+
+            assertAll(
+                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                    () -> assertThat(documentContext.read("$.priceBeforeDiscount", Integer.class)).isEqualTo(60_000),
+                    () -> assertThat(documentContext.read("$.priceAfterDiscount", Integer.class)).isEqualTo(55_000),
+                    () -> assertThat(documentContext.read("$.orderItems.size()", Integer.class))
+                            .isEqualTo(request.getCartItems().size()),
+                    () -> assertThat(documentContext.read("$.orderItems[0].name", String.class)).isEqualTo("치킨")
+            );
+        }
+
+        @Test
         @DisplayName("실패 - 다른 유저의 주문")
         void fail_when_not_members_order() {
             // given
