@@ -17,7 +17,7 @@ public class OrderRequest {
         return cartItemIds;
     }
 
-    public int getPrice() {
+    public int getTotalPrice() {
         return totalPrice;
     }
 

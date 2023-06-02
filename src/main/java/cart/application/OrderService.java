@@ -33,7 +33,7 @@ public class OrderService {
     @Transactional
     public long order(Member member, OrderRequest orderRequest) {
         List<CartItem> cartItems = cartItemDao.findItemsByIds(orderRequest.getCartItemIds());
-        Order order = Order.of(cartItems, member, orderRequest.getPrice());
+        Order order = Order.of(cartItems, member, orderRequest.getTotalPrice());
 
         Money deliveryFee = deliveryPolicy.calculate(order);
         Money discounting = couponService.apply(order, orderRequest.getCouponId());

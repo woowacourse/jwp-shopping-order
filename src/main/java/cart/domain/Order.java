@@ -46,11 +46,6 @@ public class Order {
                 .reduce(Money.from(0), Money::plus);
 
         Money calculated = totalPrice.minus(discountingPrice).plus(deliveryFee);
-        System.out.println("total" + totalPrice.toInt() + "!!!!!!!!");
-        System.out.println("discount" +discountingPrice.toInt() + "!!!!!!!!");
-        System.out.println("calculate" +calculated.toInt() + "!!!!!!!!");
-        System.out.println("!!!!!!!!" + this.price.toInt());
-
         if (!this.price.equals(calculated)) {
             throw new RuntimeException("주문 금액과 실제 계산예정금액이 불일치합니다.");
         }
@@ -76,6 +71,4 @@ public class Order {
     enum OrderState {
         ORDERED, CONFIRMED
     }
-
-
 }
