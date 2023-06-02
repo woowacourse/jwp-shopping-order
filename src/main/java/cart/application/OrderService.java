@@ -46,8 +46,8 @@ public class OrderService {
 
         List<CartItem> itemsToOrder = new ArrayList<>();
         for (OrderRequest request : requests) {
-            CartItem item = cartItemService.getItemBy(request.getCartItemId());
-            List<MemberCoupon> coupons = couponService.getMemberCouponsBy(member, request.getCouponIds());
+            CartItem item = cartItemService.getItemByProductId(request.getProduct().getId());
+            List<MemberCoupon> coupons = couponService.getMemberCouponsBy(member, request.getCouponId());
             cart.applyCouponsOn(item, coupons);
 
             itemsToOrder.add(item);

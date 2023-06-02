@@ -1,7 +1,6 @@
 package cart.controller;
 
 import static cart.fixture.TestFixture.AUTHORIZATION_HEADER_MEMBER_A;
-import static cart.fixture.TestFixture.CART_ITEM_샐러드_MEMBER_A;
 import static cart.fixture.TestFixture.COUPON_FIXED_2000;
 import static cart.fixture.TestFixture.MEMBER_A;
 import static cart.fixture.TestFixture.ORDER_ONE_MEMBER_A;
@@ -67,7 +66,7 @@ public class OrderControllerTest extends ControllerTestWithDocs {
     void 주문요청() throws Exception {
         List<OrderRequest> orderRequest = List.of(
                 new OrderRequest(
-                        CART_ITEM_샐러드_MEMBER_A().getId(),
+                        // CART_ITEM_샐러드_MEMBER_A().getId(),
                         new ProductRequest.WithId(
                                 샐러드.getId(),
                                 샐러드.getName(),
@@ -96,7 +95,7 @@ public class OrderControllerTest extends ControllerTestWithDocs {
     void 주문요청_쿠폰사용() throws Exception {
         List<OrderRequest> orderRequest = List.of(
                 new OrderRequest(
-                        CART_ITEM_샐러드_MEMBER_A().getId(),
+                        // CART_ITEM_샐러드_MEMBER_A().getId(),
                         new ProductRequest.WithId(
                                 샐러드.getId(),
                                 샐러드.getName(),

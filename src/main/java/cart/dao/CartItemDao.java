@@ -61,6 +61,12 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public CartItem findByProductId(Long productId) {
+        String sql = "SELECT id from cart_item where product_id = ?";
+        Long cartItemId = jdbcTemplate.queryForObject(sql, Long.class, productId);
+        return findById(cartItemId);
+    }
+
     public CartItem findById(Long id) {
         String sql = "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
                 "FROM cart_item " +

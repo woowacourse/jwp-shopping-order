@@ -4,23 +4,17 @@ import java.util.List;
 
 public class OrderRequest {
 
-    private Long cartItemId;
     private ProductRequest.WithId product;
     private Integer quantity;
-    private List<Long> couponIds;
+    private List<Long> couponId;
 
     private OrderRequest() {
     }
 
-    public OrderRequest(Long cartItemId, ProductRequest.WithId product, Integer quantity, List<Long> couponIds) {
-        this.cartItemId = cartItemId;
+    public OrderRequest(ProductRequest.WithId product, Integer quantity, List<Long> couponId) {
         this.product = product;
         this.quantity = quantity;
-        this.couponIds = couponIds;
-    }
-
-    public Long getCartItemId() {
-        return cartItemId;
+        this.couponId = couponId;
     }
 
     public ProductRequest.WithId getProduct() {
@@ -31,7 +25,7 @@ public class OrderRequest {
         return quantity;
     }
 
-    public List<Long> getCouponIds() {
-        return couponIds;
+    public List<Long> getCouponId() {
+        return couponId;
     }
 }

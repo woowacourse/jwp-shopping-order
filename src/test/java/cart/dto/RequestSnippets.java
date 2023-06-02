@@ -35,10 +35,10 @@ public enum RequestSnippets {
     )),
     ORDER(OrderRequest.class, () -> join(
             Map.of(
-                    "cartItemId", "장바구니 항목 id",
+                    // "cartItemId", "장바구니 항목 id",
                     "product", "제품",
                     "quantity", "수량",
-                    "couponIds", "쿠폰 id(들)"
+                    "couponId", "쿠폰 id(들)"
             ),
             withPrefix("product.", PRODUCT_WITH_ID.fieldsSupplier.get())
     ));
