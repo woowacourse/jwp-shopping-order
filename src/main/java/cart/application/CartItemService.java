@@ -1,7 +1,6 @@
 package cart.application;
 
-import cart.db.dao.CartItemDao;
-import cart.db.dao.ProductDao;
+import cart.db.repository.CartItemRepository;
 import cart.db.repository.ProductRepository;
 import cart.domain.Product;
 import cart.domain.cart.CartItem;
@@ -18,18 +17,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartItemService {
-    private final ProductDao productDao;
     private final ProductRepository productRepository;
-    private final CartItemDao cartItemDao;
+    private final CartItemRepository cartItemRepository;
 
-    public CartItemService(ProductDao productDao, final ProductRepository productRepository, CartItemDao cartItemDao) {
-        this.productDao = productDao;
+    public CartItemService(final ProductRepository productRepository, final CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
-        this.cartItemDao = cartItemDao;
+        this.cartItemRepository = cartItemRepository;
     }
 
     public List<CartItemResponse> findByMember(Member member) {
-        List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+        List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         return cartItems.stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toList());
@@ -37,42 +34,43 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId());
-        return cartItemDao.save(new CartItem(member, product));
+        // TODO: 에러 처리
+        return cartItemRepository.save(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+            cartItemRepository.deleteById(id);
             return;
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemRepository.updateQuantity(cartItem);
     }
 
     public void remove(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
-        cartItemDao.deleteById(id);
+        cartItemRepository.deleteById(id);
     }
 
     public void removeById(Member member, Long id) {
-        CartItem cartItem = cartItemDao.findById(id);
+        CartItem cartItem = cartItemRepository.findById(id);
         cartItem.checkOwner(member);
 
-        cartItemDao.deleteById(id);
+        cartItemRepository.deleteById(id);
     }
 
     @Transactional
     public void removeItems(final Member member, final List<Long> ids) {
-        Long count = cartItemDao.countByIdsAndMemberId(member.getId(), ids);
+        Long count = cartItemRepository.countByIdsAndMemberId(member.getId(), ids);
         if (count != ids.size()) {
             throw new CartItemException("유효하지 않은 상품 ID 입니다.");
         }
-        cartItemDao.deleteByIdsAndMemberId(member.getId(), ids);
+        cartItemRepository.deleteByIds(member.getId(), ids);
     }
 }

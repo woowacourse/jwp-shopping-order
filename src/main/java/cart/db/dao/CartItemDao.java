@@ -1,115 +1,62 @@
 package cart.db.dao;
 
-import cart.domain.cart.CartItem;
-import cart.domain.member.Member;
-import cart.domain.Product;
+import cart.db.entity.CartItemDetailEntity;
+import cart.db.entity.CartItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.name, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+    public Long create(final CartItemEntity cartItemEntity) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("member_id", cartItemEntity.getMemberId());
+        params.put("product_id", cartItemEntity.getProductId());
+        params.put("quantity", cartItemEntity.getQuantity());
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public List<CartItemDetailEntity> findByMemberId(final Long memberId) {
+        String sql = "SELECT cart_item.id, cart_item.quantity, " +
+                "member.id, member.name, member.password, " +
+                "product.id, product.name, product.price, product.image_url " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("name");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("product.name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
+        return jdbcTemplate.query(sql, new CartItemDetailEntityRowMapper(), memberId);
     }
 
-    public Long save(CartItem cartItem) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO cart_item (member_id, product_id, quantity) VALUES (?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            ps.setLong(1, cartItem.getMember().getId());
-            ps.setLong(2, cartItem.getItem().getProduct().getId());
-            ps.setInt(3, cartItem.getItem().getQuantity());
-
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    public CartItem findById(Long id) {
-        String sql = "SELECT cart_item.id, cart_item.member_id, member.name, product.id, product.name, product.price, product.image_url, cart_item.quantity " +
+    public List<CartItemDetailEntity> findById(final Long id) {
+        String sql = "SELECT cart_item.id, cart_item.quantity, " +
+                "member.id, member.name, member.password, " +
+                "product.id, product.name, product.price, product.image_url " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
-            Long memberId = rs.getLong("member_id");
-            String email = rs.getString("member.name");
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
-        return cartItems.isEmpty() ? null : cartItems.get(0);
-    }
-
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    public void updateQuantity(CartItem cartItem) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getItem().getQuantity(), cartItem.getId());
-    }
-
-    public void deleteByIdsAndMemberId(final Long memberId, final List<Long> ids) {
-        String sql = "DELETE FROM cart_item WHERE cart_item.id IN "
-                + " (SELECT cart_item.id FROM cart_item JOIN member ON cart_item.member_id = member.id and cart_item.id in (:ids) AND member.id = (:memberId))";
-
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("ids", ids);
-        mapSqlParameterSource.addValue("memberId", memberId);
-        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
+        return jdbcTemplate.query(sql, new CartItemDetailEntityRowMapper(), id);
     }
 
     public Long countByIdsAndMemberId(final Long memberId, List<Long> ids) {
@@ -122,6 +69,39 @@ public class CartItemDao {
         mapSqlParameterSource.addValue("ids", ids);
         mapSqlParameterSource.addValue("memberId", memberId);
         return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Long.class);
+    }
+
+    public void updateQuantity(final CartItemEntity cartItemEntity) {
+        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
+    }
+
+    public void deleteById(final Long id) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByIdsAndMemberId(final Long memberId, final List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE cart_item.id IN "
+                + " (SELECT cart_item.id FROM cart_item JOIN member ON cart_item.member_id = member.id and cart_item.id in (:ids) AND member.id = (:memberId))";
+
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("ids", ids);
+        mapSqlParameterSource.addValue("memberId", memberId);
+        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
+    }
+
+
+    private static class CartItemDetailEntityRowMapper implements RowMapper<CartItemDetailEntity> {
+        @Override
+        public CartItemDetailEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new CartItemDetailEntity(
+                    rs.getLong("cart_item.id"),
+                    rs.getLong("member.id"), rs.getString("member.name"), rs.getString("member.password"),
+                    rs.getLong("product.id"), rs.getString("product.name"), rs.getInt("product.price"), rs.getString("product.image_url"),
+                    rs.getInt("cart_item.quantity")
+            );
+        }
     }
 }
 
