@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,9 +18,11 @@ import org.springframework.stereotype.Repository;
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
@@ -53,7 +57,7 @@ public class CartItemDao {
             );
 
             ps.setLong(1, cartItem.getMember().getId());
-            ps.setLong(2, cartItem.getProduct().getId());
+            ps.setLong(2, cartItem.getProductId());
             ps.setInt(3, cartItem.getQuantity());
 
             return ps;
@@ -100,5 +104,13 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public void deleteAll(Long memberId, List<Long> cartItemIds) {
+        String sql = "DELETE FROM cart_item WHERE member_id = (:memberId) AND id IN (:ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("ids", cartItemIds);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 }
