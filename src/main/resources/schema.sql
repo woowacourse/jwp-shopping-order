@@ -34,7 +34,8 @@ CREATE TABLE orders
     id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id    BIGINT NOT NULL,
     delivery_fee BIGINT NOT NULL,
-    coupon_id    BIGINT
+    coupon_id    BIGINT,
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE order_item
