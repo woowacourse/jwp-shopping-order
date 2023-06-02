@@ -3,6 +3,7 @@ package cart.domain.order;
 import cart.domain.CartItem;
 import cart.domain.Money;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class OrderItems {
     public Money sumPrice() {
         return orderItems.stream()
                 .map(OrderItem::priceWithQuantity)
-                .reduce(new Money(0), Money::sum);
+                .reduce(new Money(BigDecimal.ZERO), Money::sum);
     }
 
     public int size() {

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -43,7 +44,7 @@ class MemberCouponDaoTest {
     void 사용자_쿠폰을_저장한다() {
         // given
         final MemberEntity memberEntity = new MemberEntity("pizza@pizza.com", "password");
-        final CouponEntity couponEntity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
+        final CouponEntity couponEntity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
         final MemberEntity member = memberDao.insert(memberEntity);
         final CouponEntity coupon = couponDao.insert(couponEntity);
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(member.getId(), coupon.getId(), false);
@@ -64,7 +65,7 @@ class MemberCouponDaoTest {
     void 사용자_쿠폰을_수정한다() {
         // given
         final MemberEntity memberEntity = new MemberEntity("pizza@pizza.com", "password");
-        final CouponEntity couponEntity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
+        final CouponEntity couponEntity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
         final MemberEntity member = memberDao.insert(memberEntity);
         final CouponEntity coupon = couponDao.insert(couponEntity);
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(member.getId(), coupon.getId(), false);
@@ -88,7 +89,7 @@ class MemberCouponDaoTest {
         // given
         final MemberEntity memberEntity1 = new MemberEntity("pizza1@pizza.com", "password");
         final MemberEntity memberEntity2 = new MemberEntity("pizza2@pizza.com", "password");
-        final CouponEntity couponEntity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
+        final CouponEntity couponEntity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
         final MemberEntity member1 = memberDao.insert(memberEntity1);
         final MemberEntity member2 = memberDao.insert(memberEntity2);
         final CouponEntity coupon = couponDao.insert(couponEntity);
@@ -107,7 +108,7 @@ class MemberCouponDaoTest {
     void 아이디에_해당하는_사용자_쿠폰을_조회한다() {
         // given
         final MemberEntity memberEntity = new MemberEntity("pizza1@pizza.com", "password");
-        final CouponEntity couponEntity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
+        final CouponEntity couponEntity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
         final MemberEntity insertedMemberEntity = memberDao.insert(memberEntity);
         final CouponEntity insertedCouponEntity = couponDao.insert(couponEntity);
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(insertedMemberEntity.getId(), insertedCouponEntity.getId(), false);

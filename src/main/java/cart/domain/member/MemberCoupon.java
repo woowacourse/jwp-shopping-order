@@ -4,6 +4,8 @@ import cart.domain.Money;
 import cart.domain.coupon.Coupon;
 import cart.exception.CouponAlreadyUsedException;
 
+import java.math.BigDecimal;
+
 public class MemberCoupon {
 
     private final Long id;
@@ -60,12 +62,12 @@ public class MemberCoupon {
 
         @Override
         public Money discount(final Money money) {
-            return new Money(0);
+            return new Money(BigDecimal.ZERO);
         }
 
         @Override
         public Money discountDeliveryFee(final Money orderPrice, final Money deliveryFee) {
-            return new Money(0);
+            return new Money(BigDecimal.ZERO);
         }
 
         @Override

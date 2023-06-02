@@ -3,6 +3,8 @@ package cart.dto;
 import cart.domain.member.MemberCoupon;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.math.BigDecimal;
+
 @Schema(description = "사용자 쿠폰")
 public class MemberCouponResponse {
 
@@ -13,11 +15,11 @@ public class MemberCouponResponse {
     @Schema(description = "쿠폰 종류", example = "price")
     private final String type;
     @Schema(description = "할인 가격", example = "3000")
-    private final long value;
+    private final BigDecimal value;
     @Schema(description = "최소 금액", example = "50000")
-    private final long minimumPrice;
+    private final BigDecimal minimumPrice;
 
-    public MemberCouponResponse(final Long id, final String name, final String type, final long value, final long minimumPrice) {
+    public MemberCouponResponse(final Long id, final String name, final String type, final BigDecimal value, final BigDecimal minimumPrice) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -47,11 +49,11 @@ public class MemberCouponResponse {
         return type;
     }
 
-    public long getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public long getMinimumPrice() {
+    public BigDecimal getMinimumPrice() {
         return minimumPrice;
     }
 }

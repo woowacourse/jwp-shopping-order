@@ -5,6 +5,7 @@ import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,14 +15,14 @@ public class OrderResponse {
     @Schema(description = "주문 id", example = "1")
     private final Long id;
     @Schema(description = "총 금액", example = "50000")
-    private final long totalItemPrice;
+    private final BigDecimal totalItemPrice;
     @Schema(description = "할인 금액", example = "3000")
-    private final long discountPrice;
+    private final BigDecimal discountPrice;
     @Schema(description = "배달비", example = "3000")
-    private final long deliveryFee;
+    private final BigDecimal deliveryFee;
     private final List<OrderItemDto> orderItems;
 
-    public OrderResponse(final Long id, final long totalItemPrice, final long discountPrice, final long deliveryFee, final List<OrderItemDto> orderItems) {
+    public OrderResponse(final Long id, final BigDecimal totalItemPrice, final BigDecimal discountPrice, final BigDecimal deliveryFee, final List<OrderItemDto> orderItems) {
         this.id = id;
         this.totalItemPrice = totalItemPrice;
         this.discountPrice = discountPrice;
@@ -49,15 +50,15 @@ public class OrderResponse {
         return id;
     }
 
-    public long getTotalItemPrice() {
+    public BigDecimal getTotalItemPrice() {
         return totalItemPrice;
     }
 
-    public long getDiscountPrice() {
+    public BigDecimal getDiscountPrice() {
         return discountPrice;
     }
 
-    public long getDeliveryFee() {
+    public BigDecimal getDeliveryFee() {
         return deliveryFee;
     }
 

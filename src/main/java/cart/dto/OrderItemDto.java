@@ -3,6 +3,8 @@ package cart.dto;
 import cart.domain.order.OrderItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.math.BigDecimal;
+
 @Schema(description = "주문 상품")
 public class OrderItemDto {
 
@@ -11,13 +13,13 @@ public class OrderItemDto {
     @Schema(description = "이름", example = "치즈피자")
     private final String name;
     @Schema(description = "가격", example = "8900")
-    private final long price;
+    private final BigDecimal price;
     @Schema(description = "이미지", example = "치즈피자.png")
     private final String imageUrl;
     @Schema(description = "수량", example = "4")
     private final long quantity;
 
-    public OrderItemDto(final Long orderItemsId, final String name, final long price, final String imageUrl, final long quantity) {
+    public OrderItemDto(final Long orderItemsId, final String name, final BigDecimal price, final String imageUrl, final long quantity) {
         this.orderItemId = orderItemsId;
         this.name = name;
         this.price = price;
@@ -43,7 +45,7 @@ public class OrderItemDto {
         return name;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

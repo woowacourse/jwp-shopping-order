@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -55,7 +56,7 @@ class OrderRepositoryTest {
         cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
         cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
         cartItem3 = cartItemRepository.save(new CartItem(member.getId(), product3));
-        coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), 3000L, new Money(30000L)));
+        coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), BigDecimal.valueOf(3000L), new Money(30000L)));
         memberCoupon = new MemberCoupon(member, coupon, false);
     }
 

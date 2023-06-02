@@ -3,6 +3,7 @@ package cart.domain.coupon;
 import cart.domain.Money;
 import cart.domain.coupon.discountPolicy.DiscountPolicy;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Coupon {
@@ -10,10 +11,10 @@ public class Coupon {
     private final Long id;
     private final String name;
     private final DiscountPolicy discountPolicy;
-    private final long value;
+    private final BigDecimal value;
     private final Money minimumPrice;
 
-    public Coupon(final Long id, final String name, final DiscountPolicy discountPolicy, final long value, final Money minimumPrice) {
+    public Coupon(final Long id, final String name, final DiscountPolicy discountPolicy, final BigDecimal value, final Money minimumPrice) {
         this.id = id;
         this.name = name;
         this.discountPolicy = discountPolicy;
@@ -21,7 +22,7 @@ public class Coupon {
         this.minimumPrice = minimumPrice;
     }
 
-    public Coupon(final String name, final DiscountPolicy discountPolicy, final long value, final Money minimumPrice) {
+    public Coupon(final String name, final DiscountPolicy discountPolicy, final BigDecimal value, final Money minimumPrice) {
         this(null, name, discountPolicy, value, minimumPrice);
     }
 
@@ -29,14 +30,14 @@ public class Coupon {
         if (money.isMoreThan(minimumPrice)) {
             return discountPolicy.discount(money, value);
         }
-        return new Money(0);
+        return new Money(BigDecimal.ZERO);
     }
 
     public Money discountDeliveryFee(final Money orderPrice, final Money deliveryFee) {
         if (orderPrice.isMoreThan(minimumPrice)) {
             return deliveryFee;
         }
-        return new Money(0);
+        return new Money(BigDecimal.ZERO);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class Coupon {
         return discountPolicy;
     }
 
-    public long getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 

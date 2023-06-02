@@ -11,6 +11,8 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -30,7 +32,7 @@ class MemberCouponRepositoryTest {
     void 사용자_쿠폰을_저장한다() {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "pizza"));
-        final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), 3000L, new Money(30000L)));
+        final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), BigDecimal.valueOf(3000L), new Money(30000L)));
         final MemberCoupon memberCoupon = new MemberCoupon(member, coupon, false);
 
         // when
@@ -49,7 +51,7 @@ class MemberCouponRepositoryTest {
     void 사용자_쿠폰을_조회한다() {
         // given
         final Member member = memberRepository.save(new Member("pizza1@pizza.com", "pizza"));
-        final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), 3000L, new Money(30000L)));
+        final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), BigDecimal.valueOf(3000L), new Money(30000L)));
         final MemberCoupon memberCoupon = new MemberCoupon(member, coupon, false);
         final MemberCoupon save = memberCouponRepository.save(memberCoupon);
 

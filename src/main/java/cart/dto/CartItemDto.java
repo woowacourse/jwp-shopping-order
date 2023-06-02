@@ -10,16 +10,16 @@ public class CartItemDto {
     private Long id;
     @Schema(description = "장바구니 상품 수량", example = "1")
     private Integer quantity;
-    private ProductDto product;
+    private ProductResponse product;
 
-    public CartItemDto(final Long id, final Integer quantity, final ProductDto product) {
+    public CartItemDto(final Long id, final Integer quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
     }
 
     public static CartItemDto from(final CartItem cartItem) {
-        final ProductDto productDto = ProductDto.from(cartItem.getProduct());
+        final ProductResponse productDto = ProductResponse.from(cartItem.getProduct());
         return new CartItemDto(cartItem.getId(), cartItem.getQuantity(), productDto);
     }
 
@@ -31,7 +31,7 @@ public class CartItemDto {
         return quantity;
     }
 
-    public ProductDto getProduct() {
+    public ProductResponse getProduct() {
         return product;
     }
 }

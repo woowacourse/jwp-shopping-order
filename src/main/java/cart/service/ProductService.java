@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.domain.Money;
 import cart.domain.Product;
-import cart.dto.ProductDto;
+import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
 import cart.exception.ProductNotFoundException;
@@ -30,17 +30,17 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> findAll() {
+    public List<ProductResponse> findAll() {
         return productRepository.findAll().stream()
-                .map(ProductDto::from)
+                .map(ProductResponse::from)
                 .collect(toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
-    public ProductDto findById(final Long id) {
+    public ProductResponse findById(final Long id) {
         final Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
-        return ProductDto.from(product);
+        return ProductResponse.from(product);
     }
 
     public void update(final Long id, final ProductUpdateRequest request) {

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
+import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
 import cart.exception.ExceptionResponse;
@@ -42,11 +42,11 @@ public class ProductController {
     @ApiResponse(
             responseCode = "200",
             description = "전체 상품 조회 성공.",
-            content = @Content(schema = @Schema(implementation = ProductDto.class))
+            content = @Content(schema = @Schema(implementation = ProductResponse.class))
     )
     @GetMapping
-    public ResponseEntity<List<ProductDto>> findAll() {
-        final List<ProductDto> productDtos = productService.findAll();
+    public ResponseEntity<List<ProductResponse>> findAll() {
+        final List<ProductResponse> productDtos = productService.findAll();
         return ResponseEntity.ok(productDtos);
     }
 
@@ -55,7 +55,7 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "단일 상품 조회 성공.",
-                    content = @Content(schema = @Schema(implementation = ProductDto.class))
+                    content = @Content(schema = @Schema(implementation = ProductResponse.class))
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -64,10 +64,10 @@ public class ProductController {
             )
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> findById(
+    public ResponseEntity<ProductResponse> findById(
             @Parameter(description = "상품 Id") @PathVariable final Long id
     ) {
-        final ProductDto productDto = productService.findById(id);
+        final ProductResponse productDto = productService.findById(id);
         return ResponseEntity.ok(productDto);
     }
 

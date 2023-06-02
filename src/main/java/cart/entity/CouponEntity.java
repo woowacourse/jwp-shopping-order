@@ -8,20 +8,22 @@ import cart.domain.coupon.discountPolicy.PercentPolicy;
 import cart.domain.coupon.discountPolicy.PolicyType;
 import cart.domain.coupon.discountPolicy.PricePolicy;
 
+import java.math.BigDecimal;
+
 public class CouponEntity {
 
     private final Long id;
     private final String name;
     private final String policyType;
-    private final long discountValue;
-    private final long minimumPrice;
+    private final BigDecimal discountValue;
+    private final BigDecimal minimumPrice;
 
     public CouponEntity(
             final Long id,
             final String name,
             final String policyType,
-            final long value,
-            final long minimumPrice
+            final BigDecimal value,
+            final BigDecimal minimumPrice
     ) {
         this.id = id;
         this.name = name;
@@ -33,8 +35,8 @@ public class CouponEntity {
     public CouponEntity(
             final String name,
             final String policyType,
-            final long value,
-            final long minimumPrice
+            final BigDecimal value,
+            final BigDecimal minimumPrice
     ) {
         this(null, name, policyType, value, minimumPrice);
     }
@@ -82,11 +84,11 @@ public class CouponEntity {
         return policyType;
     }
 
-    public long getMinimumPrice() {
+    public BigDecimal getMinimumPrice() {
         return minimumPrice;
     }
 
-    public long getDiscountValue() {
+    public BigDecimal getDiscountValue() {
         return discountValue;
     }
 }

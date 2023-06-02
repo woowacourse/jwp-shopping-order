@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.domain.Money;
 import cart.domain.Product;
-import cart.dto.ProductDto;
+import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
 import cart.exception.ProductNotFoundException;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +36,7 @@ class ProductServiceTest {
     @Test
     void 상품을_저장한다() {
         // given
-        final ProductSaveRequest request = new ProductSaveRequest("허브티", "tea.jpg", 1000L);
+        final ProductSaveRequest request = new ProductSaveRequest("허브티", "tea.jpg", BigDecimal.valueOf(1000L));
 
         // when
         final Long id = productService.save(request);
@@ -51,36 +52,36 @@ class ProductServiceTest {
     @Test
     void 모든_상품을_조회한다() {
         // given
-        final ProductSaveRequest request1 = new ProductSaveRequest("허브티", "tea.jpg", 99L);
-        final ProductSaveRequest request2 = new ProductSaveRequest("블랙켓티", "bk_tea.jpg", 100L);
+        final ProductSaveRequest request1 = new ProductSaveRequest("허브티", "tea.jpg", BigDecimal.valueOf(99L));
+        final ProductSaveRequest request2 = new ProductSaveRequest("블랙켓티", "bk_tea.jpg", BigDecimal.valueOf(100L));
         final Long id1 = productService.save(request1);
         final Long id2 = productService.save(request2);
 
         // when
-        final List<ProductDto> result = productService.findAll();
+        final List<ProductResponse> result = productService.findAll();
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new ProductDto(id1, request1.getName(), request1.getImageUrl(), request1.getPrice()),
-                new ProductDto(id2, request2.getName(), request2.getImageUrl(), request2.getPrice())
+                new ProductResponse(id1, request1.getName(), request1.getImageUrl(), request1.getPrice()),
+                new ProductResponse(id2, request2.getName(), request2.getImageUrl(), request2.getPrice())
         ));
     }
 
     @Test
     void 단일_상품을_조회한다() {
         // given
-        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", 99L);
+        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", BigDecimal.valueOf(99L));
         final Long id = productService.save(product);
 
         // when
-        final ProductDto productDto = productService.findById(id);
+        final ProductResponse productDto = productService.findById(id);
 
         // then
         assertAll(
                 () -> assertThat(productDto.getId()).isEqualTo(id),
                 () -> assertThat(productDto.getName()).isEqualTo("허브티"),
                 () -> assertThat(productDto.getImageUrl()).isEqualTo("tea.jpg"),
-                () -> assertThat(productDto.getPrice()).isEqualTo(99L)
+                () -> assertThat(productDto.getPrice().longValue()).isEqualTo(99L)
         );
     }
 
@@ -95,9 +96,9 @@ class ProductServiceTest {
     @Test
     void 상품을_수정한다() {
         // given
-        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", 99L);
+        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", BigDecimal.valueOf(99L));
         final Long id = productService.save(product);
-        final ProductUpdateRequest request = new ProductUpdateRequest("블랙캣", "cat.jpg", 100L);
+        final ProductUpdateRequest request = new ProductUpdateRequest("블랙캣", "cat.jpg", BigDecimal.valueOf(100L));
 
         // when
         productService.update(id, request);
@@ -115,7 +116,7 @@ class ProductServiceTest {
     @Test
     void 상품을_삭제한다() {
         // given
-        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", 99L);
+        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", BigDecimal.valueOf(99L));
         final Long id = productService.save(product);
 
         // when

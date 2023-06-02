@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.List;
 
@@ -114,7 +115,7 @@ class OrderControllerTest {
     @Test
     void 사용자의_모든_주문을_조회한다() throws Exception {
         // given
-        final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), 3000L, new Money(30000L)));
+        final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), BigDecimal.valueOf(3000L), new Money(30000L)));
         final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member, coupon, false));
         final Order order = Order.createFromCartItems(List.of(cartItem1, cartItem2), new Money(3000L), memberCoupon, member.getId());
         orderRepository.save(order);
@@ -131,7 +132,7 @@ class OrderControllerTest {
     @Test
     void 아이디에_해당하는_사용자의_주문을_조회한다() throws Exception {
         // given
-        final Coupon coupon = couponRepository.save(new Coupon("10000원 이상 1000원 할인 쿠폰", new PricePolicy(), 1000L, new Money(10000L)));
+        final Coupon coupon = couponRepository.save(new Coupon("10000원 이상 1000원 할인 쿠폰", new PricePolicy(), BigDecimal.valueOf(1000L), new Money(10000L)));
         final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member, coupon, false));
         final Order order = Order.createFromCartItems(List.of(cartItem1, cartItem2), new Money(3000L), memberCoupon, member.getId());
         final Order saved = orderRepository.save(order);

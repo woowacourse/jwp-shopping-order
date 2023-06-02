@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +24,8 @@ public class CouponDao {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String policyType = rs.getString("policy_type");
-        final long discountValue = rs.getLong("discount_value");
-        final long minimumPrice = rs.getLong("minimum_price");
+        final BigDecimal discountValue = rs.getBigDecimal("discount_value");
+        final BigDecimal minimumPrice = rs.getBigDecimal("minimum_price");
         return new CouponEntity(id, name, policyType, discountValue, minimumPrice);
     };
 

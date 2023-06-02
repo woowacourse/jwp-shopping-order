@@ -38,8 +38,8 @@ public class CouponAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(couponResponse.getId()).isEqualTo(1),
                 () -> assertThat(couponResponse.getName()).isEqualTo("30000원 이상 3000원 할인 쿠폰"),
                 () -> assertThat(couponResponse.getType()).isEqualTo("price"),
-                () -> assertThat(couponResponse.getValue()).isEqualTo(3000),
-                () -> assertThat(couponResponse.getMinimumPrice()).isEqualTo(30000)
+                () -> assertThat(couponResponse.getValue().longValue()).isEqualTo(3000),
+                () -> assertThat(couponResponse.getMinimumPrice().longValue()).isEqualTo(30000)
         );
     }
 }

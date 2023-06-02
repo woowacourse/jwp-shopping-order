@@ -3,18 +3,20 @@ package cart.entity;
 import cart.domain.Money;
 import cart.domain.Product;
 
+import java.math.BigDecimal;
+
 public class ProductEntity {
 
     private final Long id;
     private final String name;
     private final String imageUrl;
-    private final long price;
+    private final BigDecimal price;
 
-    public ProductEntity(final String name, final String imageUrl, final long price) {
+    public ProductEntity(final String name, final String imageUrl, final BigDecimal price) {
         this(null, name, imageUrl, price);
     }
 
-    public ProductEntity(final Long id, final String name, final String imageUrl, final long price) {
+    public ProductEntity(final Long id, final String name, final String imageUrl, final BigDecimal price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -41,7 +43,7 @@ public class ProductEntity {
         return imageUrl;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 }

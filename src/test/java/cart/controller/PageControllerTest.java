@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
@@ -53,11 +55,11 @@ class PageControllerTest {
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generateProductPropertiesMatcher(product1.getId(), "허브티", "tea.jpg", 1000L))
+                        hasItem(generateProductPropertiesMatcher(product1.getId(), "허브티", "tea.jpg", BigDecimal.valueOf(1000)))
                 ))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generateProductPropertiesMatcher(product2.getId(), "고양이", "cat.jpg", 1000000L))
+                        hasItem(generateProductPropertiesMatcher(product2.getId(), "고양이", "cat.jpg", BigDecimal.valueOf(1000000)))
                 ))
                 .andDo(print());
     }
@@ -66,7 +68,7 @@ class PageControllerTest {
             final Long id,
             final String name,
             final String imageUrl,
-            final long price
+            final BigDecimal price
     ) {
         return allOf(
                 hasProperty("id", is(id)),

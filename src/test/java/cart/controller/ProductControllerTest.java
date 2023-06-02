@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -86,7 +88,7 @@ class ProductControllerTest {
     @Test
     void 상품을_저장한다() throws Exception {
         // given
-        final ProductSaveRequest dto = new ProductSaveRequest("허브티", "tea.jpg", 1000L);
+        final ProductSaveRequest dto = new ProductSaveRequest("허브티", "tea.jpg", BigDecimal.valueOf(1000L));
         final String request = objectMapper.writeValueAsString(dto);
 
         // when
@@ -113,7 +115,7 @@ class ProductControllerTest {
     void 상품을_수정한다() throws Exception {
         // given
         final Product product = productRepository.save(new Product("허브티", "tea.jpg", new Money(1000L)));
-        final ProductUpdateRequest updateRequestDto = new ProductUpdateRequest("고양이", "cat.jpg", 1000000L);
+        final ProductUpdateRequest updateRequestDto = new ProductUpdateRequest("고양이", "cat.jpg", BigDecimal.valueOf(1000000L));
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
         // when
@@ -151,7 +153,7 @@ class ProductControllerTest {
     @Test
     void 이름이_100자_이상인_상품_등록을_요청하면_400_BadRequest_를_응답한다() throws Exception {
         // given
-        final ProductSaveRequest dto = new ProductSaveRequest("허".repeat(101), "tea.jpg", 1000L);
+        final ProductSaveRequest dto = new ProductSaveRequest("허".repeat(101), "tea.jpg", BigDecimal.valueOf(1000L));
         final String request = objectMapper.writeValueAsString(dto);
 
         // expect
@@ -165,7 +167,7 @@ class ProductControllerTest {
     @Test
     void 가격이_음수인_상품_등록을_요청하면_400_BadRequest_를_응답한다() throws Exception {
         // given
-        final ProductSaveRequest dto = new ProductSaveRequest("허브티", "tea.jpg", -1L);
+        final ProductSaveRequest dto = new ProductSaveRequest("허브티", "tea.jpg", BigDecimal.valueOf(-1L));
         final String request = objectMapper.writeValueAsString(dto);
 
         // expect

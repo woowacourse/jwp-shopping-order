@@ -18,6 +18,7 @@ import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class OrderService {
         final List<CartItem> cartItems = cartItemRepository.findAllByMemberId(memberId);
 
         final MemberCoupon usedCoupon = useCouponIfExist(request.getCouponId());
-        final Order order = Order.createFromCartItems(cartItems, new Money(3000L), usedCoupon, memberId);
+        final Order order = Order.createFromCartItems(cartItems, new Money(BigDecimal.valueOf(3000L)), usedCoupon, memberId);
 
         cartItemRepository.deleteAll(cartItems);
         return orderRepository.save(order).getId();

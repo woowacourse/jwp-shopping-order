@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Base64;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -50,7 +51,7 @@ class MemberCouponControllerTest {
         // given
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
         final Member member = memberRepository.save(new Member("pizza@pizza.com", "password"));
-        final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), 3000L, new Money(30000L)));
+        final Coupon coupon = couponRepository.save(new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), BigDecimal.valueOf(3000L), new Money(30000L)));
         memberCouponRepository.save(new MemberCoupon(member, coupon, false));
         memberCouponRepository.save(new MemberCoupon(member, coupon, false));
 

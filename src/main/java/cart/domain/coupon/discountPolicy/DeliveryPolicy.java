@@ -2,10 +2,12 @@ package cart.domain.coupon.discountPolicy;
 
 import cart.domain.Money;
 
+import java.math.BigDecimal;
+
 public class DeliveryPolicy implements DiscountPolicy {
 
     @Override
-    public Money discount(final Money deliveryFee, final long value) {
+    public Money discount(final Money deliveryFee, final BigDecimal value) {
         return deliveryFee;
     }
 

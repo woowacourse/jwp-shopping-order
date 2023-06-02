@@ -83,7 +83,7 @@ public class OrderRepository {
     private Order mapToOrder(final OrderEntity orderEntity) {
         final List<OrderItem> orderItems = getOrderItems(orderEntity.getId());
         final Member member = getMember(orderEntity.getMemberId());
-        final MemberCoupon memberCoupon = getMemberCoupon(orderEntity.getCouponId(), member);
+        final MemberCoupon memberCoupon = getMemberCoupon(orderEntity.getMemberCouponId(), member);
         return new Order(orderEntity.getId(), new OrderItems(orderItems), new Money(orderEntity.getDeliveryFee()), memberCoupon, orderEntity.getMemberId());
     }
 

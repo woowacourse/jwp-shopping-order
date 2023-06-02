@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +19,8 @@ public class OrderDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) -> {
         final Long id = rs.getLong("id");
-        final long deliveryFee = rs.getLong("delivery_fee");
-        final Long couponId = rs.getLong("coupon_id");
+        final BigDecimal deliveryFee = rs.getBigDecimal("delivery_fee");
+        final Long couponId = rs.getLong("member_coupon_id");
         final Long memberId = rs.getLong("member_id");
         return new OrderEntity(id, deliveryFee, couponId, memberId);
     };
@@ -28,13 +29,13 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders")
-                .usingColumns("delivery_fee", "coupon_id", "member_id")
+                .usingColumns("delivery_fee", "member_coupon_id", "member_id")
                 .usingGeneratedKeyColumns("id");
     }
 
     public void update(final OrderEntity orderEntity) {
-        String sql = "UPDATE orders SET delivery_fee = ?, coupon_id = ?, member_id = ? WHERE id = ?";
-        jdbcTemplate.update(sql, orderEntity.getDeliveryFee(), orderEntity.getCouponId(), orderEntity.getMemberId(), orderEntity.getId());
+        String sql = "UPDATE orders SET delivery_fee = ?, member_coupon_id = ?, member_id = ? WHERE id = ?";
+        jdbcTemplate.update(sql, orderEntity.getDeliveryFee(), orderEntity.getMemberCouponId(), orderEntity.getMemberId(), orderEntity.getId());
     }
 
     public OrderEntity insert(final OrderEntity orderEntity) {
@@ -43,7 +44,7 @@ public class OrderDao {
         return new OrderEntity(
                 id,
                 orderEntity.getDeliveryFee(),
-                orderEntity.getCouponId(),
+                orderEntity.getMemberCouponId(),
                 orderEntity.getMemberId()
         );
     }

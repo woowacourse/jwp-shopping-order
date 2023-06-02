@@ -24,6 +24,6 @@ class OrderItemsTest {
         final Money sumPrice = orderItems.sumPrice();
 
         // then
-        assertThat(sumPrice.getValue()).isEqualTo(1800);
+        assertThat(sumPrice.getValue().longValue()).isEqualTo(1800);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -40,13 +41,13 @@ class OrderDaoTest {
     @Test
     void 주문을_저장한다() {
         // given
-        final CouponEntity couponEntity = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", 1000L, 10000L);
+        final CouponEntity couponEntity = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(1000L), BigDecimal.valueOf(10000L));
         final CouponEntity coupon = couponDao.insert(couponEntity);
 
         final MemberEntity memberEntity = new MemberEntity("pizza@pizza.com", "password");
         final MemberEntity member = memberDao.insert(memberEntity);
 
-        final OrderEntity orderEntity = new OrderEntity(3000L, coupon.getId(), member.getId());
+        final OrderEntity orderEntity = new OrderEntity(BigDecimal.valueOf(3000L), coupon.getId(), member.getId());
 
         // when
         final OrderEntity order = orderDao.insert(orderEntity);
@@ -55,7 +56,7 @@ class OrderDaoTest {
         final OrderEntity result = orderDao.findById(order.getId()).get();
         assertAll(
                 () -> assertThat(result.getDeliveryFee()).isEqualTo(order.getDeliveryFee()),
-                () -> assertThat(result.getCouponId()).isEqualTo(order.getCouponId()),
+                () -> assertThat(result.getMemberCouponId()).isEqualTo(order.getMemberCouponId()),
                 () -> assertThat(result.getMemberId()).isEqualTo(order.getMemberId())
         );
     }
@@ -63,13 +64,13 @@ class OrderDaoTest {
     @Test
     void 아이디에_해당하는_주문을_조회한다() {
         // given
-        final CouponEntity couponEntity = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", 1000L, 10000L);
+        final CouponEntity couponEntity = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(1000L), BigDecimal.valueOf(10000L));
         final CouponEntity coupon = couponDao.insert(couponEntity);
 
         final MemberEntity memberEntity = new MemberEntity("pizza@pizza.com", "password");
         final MemberEntity member = memberDao.insert(memberEntity);
 
-        final OrderEntity orderEntity = new OrderEntity(3000L, coupon.getId(), member.getId());
+        final OrderEntity orderEntity = new OrderEntity(BigDecimal.valueOf(3000L), coupon.getId(), member.getId());
         final OrderEntity order = orderDao.insert(orderEntity);
 
         // when
@@ -78,7 +79,7 @@ class OrderDaoTest {
         // then
         assertAll(
                 () -> assertThat(result.getDeliveryFee()).isEqualTo(order.getDeliveryFee()),
-                () -> assertThat(result.getCouponId()).isEqualTo(order.getCouponId()),
+                () -> assertThat(result.getMemberCouponId()).isEqualTo(order.getMemberCouponId()),
                 () -> assertThat(result.getMemberId()).isEqualTo(order.getMemberId())
         );
     }
@@ -86,15 +87,15 @@ class OrderDaoTest {
     @Test
     void 주문을_수정한다() {
         // given
-        final CouponEntity couponEntity = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", 1000L, 10000L);
+        final CouponEntity couponEntity = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(1000L), BigDecimal.valueOf(10000L));
         final CouponEntity coupon = couponDao.insert(couponEntity);
 
         final MemberEntity memberEntity = new MemberEntity("pizza@pizza.com", "password");
         final MemberEntity member = memberDao.insert(memberEntity);
 
-        final OrderEntity orderEntity = new OrderEntity(3000L, coupon.getId(), member.getId());
+        final OrderEntity orderEntity = new OrderEntity(BigDecimal.valueOf(3000L), coupon.getId(), member.getId());
         final OrderEntity order = orderDao.insert(orderEntity);
-        final OrderEntity updatedOrderEntity = new OrderEntity(order.getId(), order.getDeliveryFee(), order.getCouponId(), order.getMemberId());
+        final OrderEntity updatedOrderEntity = new OrderEntity(order.getId(), order.getDeliveryFee(), order.getMemberCouponId(), order.getMemberId());
 
         // when
         orderDao.update(updatedOrderEntity);
@@ -103,7 +104,7 @@ class OrderDaoTest {
         final OrderEntity result = orderDao.findById(order.getId()).get();
         assertAll(
                 () -> assertThat(result.getDeliveryFee()).isEqualTo(updatedOrderEntity.getDeliveryFee()),
-                () -> assertThat(result.getCouponId()).isEqualTo(updatedOrderEntity.getCouponId()),
+                () -> assertThat(result.getMemberCouponId()).isEqualTo(updatedOrderEntity.getMemberCouponId()),
                 () -> assertThat(result.getMemberId()).isEqualTo(updatedOrderEntity.getMemberId())
         );
     }
@@ -111,7 +112,7 @@ class OrderDaoTest {
     @Test
     void 멤버_아이디에_해당하는_주문을_조회한다() {
         // given
-        final CouponEntity couponEntity = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", 1000L, 10000L);
+        final CouponEntity couponEntity = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(1000L), BigDecimal.valueOf(10000L));
         final CouponEntity coupon = couponDao.insert(couponEntity);
 
         final MemberEntity memberEntity1 = new MemberEntity("pizza1@pizza.com", "password");
@@ -119,9 +120,9 @@ class OrderDaoTest {
         final MemberEntity member1 = memberDao.insert(memberEntity1);
         final MemberEntity member2 = memberDao.insert(memberEntity2);
 
-        final OrderEntity orderEntity1 = new OrderEntity(1000L, coupon.getId(), member1.getId());
-        final OrderEntity orderEntity2 = new OrderEntity(2000L, coupon.getId(), member1.getId());
-        final OrderEntity orderEntity3 = new OrderEntity(3000L, coupon.getId(), member2.getId());
+        final OrderEntity orderEntity1 = new OrderEntity(BigDecimal.valueOf(1000L), coupon.getId(), member1.getId());
+        final OrderEntity orderEntity2 = new OrderEntity(BigDecimal.valueOf(2000L), coupon.getId(), member1.getId());
+        final OrderEntity orderEntity3 = new OrderEntity(BigDecimal.valueOf(3000L), coupon.getId(), member2.getId());
         orderDao.insert(orderEntity1);
         orderDao.insert(orderEntity2);
         orderDao.insert(orderEntity3);

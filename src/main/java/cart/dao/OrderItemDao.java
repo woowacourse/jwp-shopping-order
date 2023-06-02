@@ -20,7 +20,7 @@ public class OrderItemDao {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getString("image_url"),
-            rs.getLong("price"),
+            rs.getBigDecimal("price"),
             rs.getInt("quantity"),
             rs.getLong("order_id")
     );

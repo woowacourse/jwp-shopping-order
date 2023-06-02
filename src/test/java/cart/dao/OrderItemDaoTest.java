@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -44,10 +45,10 @@ class OrderItemDaoTest {
         final MemberEntity memberEntity = new MemberEntity("pizza1@pizza.com", "pizza");
         final MemberEntity member = memberDao.insert(memberEntity);
 
-        final OrderEntity orderEntity = new OrderEntity(3000L, null, member.getId());
+        final OrderEntity orderEntity = new OrderEntity(BigDecimal.valueOf(3000L), null, member.getId());
         final OrderEntity order = orderDao.insert(orderEntity);
 
-        final OrderItemEntity orderItemEntity = new OrderItemEntity("치즈피자", "치즈피자.png", 8900L, 3, order.getId());
+        final OrderItemEntity orderItemEntity = new OrderItemEntity("치즈피자", "치즈피자.png", BigDecimal.valueOf(8900L), 3, order.getId());
 
         // when
         orderItemDao.insert(orderItemEntity);
@@ -63,13 +64,13 @@ class OrderItemDaoTest {
         final MemberEntity memberEntity = new MemberEntity("pizza1@pizza.com", "pizza");
         final MemberEntity member = memberDao.insert(memberEntity);
 
-        final OrderEntity orderEntity = new OrderEntity(3000L, null, member.getId());
+        final OrderEntity orderEntity = new OrderEntity(BigDecimal.valueOf(3000L), null, member.getId());
         final OrderEntity order = orderDao.insert(orderEntity);
 
-        final OrderItemEntity orderItemEntity = new OrderItemEntity("치즈피자", "치즈피자.png", 8900L, 3, order.getId());
+        final OrderItemEntity orderItemEntity = new OrderItemEntity("치즈피자", "치즈피자.png", BigDecimal.valueOf(8900L), 3, order.getId());
         final OrderItemEntity orderItem = orderItemDao.insert(orderItemEntity);
 
-        final OrderItemEntity updatedEntity = new OrderItemEntity(orderItem.getId(), "불고기피자", "불고기피자.png", 7900L, 2, order.getId());
+        final OrderItemEntity updatedEntity = new OrderItemEntity(orderItem.getId(), "불고기피자", "불고기피자.png", BigDecimal.valueOf(7900L), 2, order.getId());
 
         // when
         orderItemDao.update(updatedEntity);
@@ -92,12 +93,12 @@ class OrderItemDaoTest {
         final MemberEntity memberEntity = new MemberEntity("pizza1@pizza.com", "pizza");
         final MemberEntity member = memberDao.insert(memberEntity);
 
-        final OrderEntity orderEntity = new OrderEntity(3000L, null, member.getId());
+        final OrderEntity orderEntity = new OrderEntity(BigDecimal.valueOf(3000L), null, member.getId());
         final OrderEntity order = orderDao.insert(orderEntity);
 
-        final OrderItemEntity orderItemEntity1 = new OrderItemEntity("치즈피자", "치즈피자.png", 8900L, 3, order.getId());
-        final OrderItemEntity orderItemEntity2 = new OrderItemEntity("불고기피자", "불고기피자.png", 7900L, 1, order.getId());
-        final OrderItemEntity orderItemEntity3 = new OrderItemEntity("페페로니피자", "페페로니피자.png", 9900L, 2, order.getId());
+        final OrderItemEntity orderItemEntity1 = new OrderItemEntity("치즈피자", "치즈피자.png", BigDecimal.valueOf(8900L), 3, order.getId());
+        final OrderItemEntity orderItemEntity2 = new OrderItemEntity("불고기피자", "불고기피자.png", BigDecimal.valueOf(7900L), 1, order.getId());
+        final OrderItemEntity orderItemEntity3 = new OrderItemEntity("페페로니피자", "페페로니피자.png", BigDecimal.valueOf(9900L), 2, order.getId());
         orderItemDao.insert(orderItemEntity1);
         orderItemDao.insert(orderItemEntity2);
         orderItemDao.insert(orderItemEntity3);

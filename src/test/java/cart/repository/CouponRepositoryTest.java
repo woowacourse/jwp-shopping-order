@@ -11,6 +11,8 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -24,7 +26,7 @@ class CouponRepositoryTest {
     @Test
     void save() {
         // given
-        final Coupon coupon = new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), 3000L, new Money(30000L));
+        final Coupon coupon = new Coupon("30000원 이상 3000원 할인 쿠폰", new PricePolicy(), BigDecimal.valueOf(3000L), new Money(BigDecimal.valueOf(30000L)));
 
         // when
         couponRepository.save(coupon);
@@ -36,9 +38,9 @@ class CouponRepositoryTest {
     @Test
     void findAll() {
         // given
-        final Coupon coupon1 = new Coupon("10000원 이상 1000원 할인 쿠폰", new PricePolicy(), 1000L, new Money(10000L));
-        final Coupon coupon2 = new Coupon("30000원 이상 10% 할인 쿠폰", new PercentPolicy(), 2000L, new Money(30000L));
-        final Coupon coupon3 = new Coupon("50000원 이상 배달비 할인 쿠폰", new DeliveryPolicy(), 0, new Money(50000L));
+        final Coupon coupon1 = new Coupon("10000원 이상 1000원 할인 쿠폰", new PricePolicy(), BigDecimal.valueOf(1000L), new Money(BigDecimal.valueOf(10000L)));
+        final Coupon coupon2 = new Coupon("30000원 이상 10% 할인 쿠폰", new PercentPolicy(), BigDecimal.valueOf(2000L), new Money(BigDecimal.valueOf(30000L)));
+        final Coupon coupon3 = new Coupon("50000원 이상 배달비 할인 쿠폰", new DeliveryPolicy(), BigDecimal.ZERO, new Money(BigDecimal.valueOf(50000L)));
 
         // when
         couponRepository.save(coupon1);

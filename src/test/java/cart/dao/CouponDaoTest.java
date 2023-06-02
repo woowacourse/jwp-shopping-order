@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -32,7 +33,7 @@ class CouponDaoTest {
     @Test
     void 쿠폰을_저장한다() {
         // given
-        final CouponEntity entity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
+        final CouponEntity entity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
 
         // when
         final CouponEntity result = couponDao.insert(entity);
@@ -44,7 +45,7 @@ class CouponDaoTest {
     @Test
     void 단일_쿠폰을_조회한다() {
         // given
-        final CouponEntity entity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
+        final CouponEntity entity = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
         final CouponEntity insert = couponDao.insert(entity);
 
         // when
@@ -62,9 +63,9 @@ class CouponDaoTest {
     @Test
     void 입력받은_아이디에_대한_쿠폰을_조회한다() {
         // given
-        final CouponEntity entity1 = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", 1000L, 10000L);
-        final CouponEntity entity2 = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
-        final CouponEntity entity3 = new CouponEntity("50000원 이상 5000원 할인 쿠폰", "PRICE", 5000L, 50000L);
+        final CouponEntity entity1 = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(1000L), BigDecimal.valueOf(10000L));
+        final CouponEntity entity2 = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
+        final CouponEntity entity3 = new CouponEntity("50000원 이상 5000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(5000L), BigDecimal.valueOf(50000L));
         final CouponEntity insert1 = couponDao.insert(entity1);
         final CouponEntity insert2 = couponDao.insert(entity2);
         final CouponEntity insert3 = couponDao.insert(entity3);
@@ -79,9 +80,9 @@ class CouponDaoTest {
     @Test
     void 모든_쿠폰을_조회한다() {
         // given
-        final CouponEntity entity1 = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", 1000L, 10000L);
-        final CouponEntity entity2 = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
-        final CouponEntity entity3 = new CouponEntity("50000원 이상 5000원 할인 쿠폰", "PRICE", 5000L, 50000L);
+        final CouponEntity entity1 = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(1000L), BigDecimal.valueOf(10000L));
+        final CouponEntity entity2 = new CouponEntity("30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
+        final CouponEntity entity3 = new CouponEntity("50000원 이상 5000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(5000L), BigDecimal.valueOf(50000L));
         final CouponEntity insert1 = couponDao.insert(entity1);
         final CouponEntity insert2 = couponDao.insert(entity2);
         final CouponEntity insert3 = couponDao.insert(entity3);
@@ -96,9 +97,9 @@ class CouponDaoTest {
     @Test
     void 쿠폰을_수정한다() {
         // given
-        final CouponEntity entity1 = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", 1000L, 10000L);
+        final CouponEntity entity1 = new CouponEntity("10000원 이상 1000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(1000L), BigDecimal.valueOf(10000L));
         final CouponEntity insert1 = couponDao.insert(entity1);
-        final CouponEntity update = new CouponEntity(insert1.getId(), "30000원 이상 3000원 할인 쿠폰", "PRICE", 3000L, 30000L);
+        final CouponEntity update = new CouponEntity(insert1.getId(), "30000원 이상 3000원 할인 쿠폰", "PRICE", BigDecimal.valueOf(3000L), BigDecimal.valueOf(30000L));
         // when
         couponDao.update(update);
 

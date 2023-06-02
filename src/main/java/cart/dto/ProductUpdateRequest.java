@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
+import java.math.BigDecimal;
 
 @Schema(description = "상품 수정 Request")
 public class ProductUpdateRequest {
@@ -21,10 +22,10 @@ public class ProductUpdateRequest {
 
     @Schema(description = "상품 가격", example = "36500")
     @Range(message = "가격은 최소 {min}원 이상, {max}원 이하여야 합니다.")
-    private final long price;
+    private final BigDecimal price;
 
     @ConstructorProperties({"name", "imageUrl", "price"})
-    public ProductUpdateRequest(final String name, final String imageUrl, final long price) {
+    public ProductUpdateRequest(final String name, final String imageUrl, final BigDecimal price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
@@ -38,7 +39,7 @@ public class ProductUpdateRequest {
         return imageUrl;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 }

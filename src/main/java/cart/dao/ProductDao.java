@@ -25,7 +25,7 @@ public class ProductDao {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("image_url"),
-            resultSet.getLong("price")
+            resultSet.getBigDecimal("price")
     );
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
