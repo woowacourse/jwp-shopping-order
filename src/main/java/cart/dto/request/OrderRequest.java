@@ -8,14 +8,14 @@ public class OrderRequest {
     private int totalProductAmount;
     private int deliveryAmount;
     private String address;
-    private long couponId;
+    private Long couponId;
 
     public OrderRequest() {
     }
 
     public OrderRequest(final List<CartItemRequest> products, final int totalProductAmount, final int deliveryAmount,
         final String address,
-        final long couponId) {
+        final Long couponId) {
         this.products = products;
         this.totalProductAmount = totalProductAmount;
         this.deliveryAmount = deliveryAmount;
@@ -39,7 +39,7 @@ public class OrderRequest {
         return address;
     }
 
-    public long getCouponId() {
+    public Long getCouponId() {
         return couponId;
     }
 }
