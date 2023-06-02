@@ -1,13 +1,14 @@
 package com.woowahan.techcourse.cart.dao;
 
+import static com.woowahan.techcourse.cart.domain.CartItemFixture.CART_ITEM1;
+import static com.woowahan.techcourse.cart.domain.CartItemFixture.CART_ITEM2;
+import static com.woowahan.techcourse.cart.domain.CartItemFixture.CART_ITEM3;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.woowahan.techcourse.cart.domain.CartItem;
-import com.woowahan.techcourse.member.dao.MemberDao;
-import com.woowahan.techcourse.member.domain.Member;
-import com.woowahan.techcourse.product.dao.ProductDao;
-import com.woowahan.techcourse.product.domain.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -17,33 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@SuppressWarnings({"NonAsciiCharacters", "SpellCheckingInspection"})
+@SuppressWarnings({"NonAsciiCharacters"})
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @JdbcTest
 class CartItemDaoTest {
 
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
-    private final MemberDao memberDao;
-
-    private long memberId;
-    private Member member;
-    private long productId;
-    private Product product;
 
     @Autowired
     CartItemDaoTest(JdbcTemplate jdbcTemplate) {
         cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
-        memberDao = new MemberDao(jdbcTemplate);
-    }
-
-    @BeforeEach
-    void setMemberAndProduct() {
-        memberId = memberDao.addMember(new Member(null, "a@a.com", "1234"));
-        member = new Member(memberId, "a@a.com", "1234");
-        productId = productDao.createProduct(new Product("hello", 1, "asfd@naver.com"));
-        product = new Product(productId, "hello", 1, "asfd@naver.com");
     }
 
     @Nested
@@ -52,7 +36,7 @@ class CartItemDaoTest {
         @Test
         void 카트_아이템_추가_테스트() {
             // given
-            long cartItemId = cartItemDao.save(new CartItem(productId, memberId));
+            long cartItemId = cartItemDao.save(CART_ITEM1);
 
             // when
             // then
@@ -62,7 +46,7 @@ class CartItemDaoTest {
         @Test
         void 없는_것을_조회하면_빈_결과가_나옴() {
             // given
-            long cartItemId = cartItemDao.save(new CartItem(productId, memberId));
+            long cartItemId = cartItemDao.save(CART_ITEM1);
 
             // when
             // then
@@ -73,20 +57,37 @@ class CartItemDaoTest {
     @Nested
     class 카트_아이템_저장이_필요한_테스트 {
 
+        private long cartItemId;
+
+        @BeforeEach
+        void setCartItem() {
+            cartItemId = cartItemDao.save(CART_ITEM1);
+        }
+
         @Test
         void 카트_전부_제거_테스트() {
             // given
-            long cartItemId = cartItemDao.save(new CartItem(productId, memberId));
-            long cartItemId2 = cartItemDao.save(new CartItem(productId, memberId));
-            long cartItemId3 = cartItemDao.save(new CartItem(productId, memberId));
+            long cartItemId2 = cartItemDao.save(CART_ITEM2);
+            long cartItemId3 = cartItemDao.save(CART_ITEM3);
 
             // when
-            cartItemDao.deleteAll(memberId, List.of(cartItemId, cartItemId2, cartItemId3));
+            cartItemDao.deleteAll(CART_ITEM1.getMemberId(), List.of(cartItemId, cartItemId2, cartItemId3));
 
             // then
             assertThat(cartItemDao.findById(cartItemId)).isEmpty();
             assertThat(cartItemDao.findById(cartItemId2)).isEmpty();
             assertThat(cartItemDao.findById(cartItemId3)).isEmpty();
+        }
+
+        @Test
+        void 존재하는_카트_아이템을_조회하면_잘_나온다() {
+            Optional<CartItem> result = cartItemDao.findById(cartItemId);
+
+            assertSoftly(softly -> {
+                softly.assertThat(result).isPresent();
+                softly.assertThat(result.get().getMemberId()).isEqualTo(CART_ITEM1.getMemberId());
+                softly.assertThat(result.get().getProductId()).isEqualTo(CART_ITEM1.getProductId());
+            });
         }
     }
 }
