@@ -11,6 +11,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
+    private static final int EMAIL_CREDNTIAL_INDEX = 0;
+    private static final int PASSWORD_CREDENTIAL_EXIST = 1;
     private final MemberQueryService memberQueryService;
 
     public AuthInterceptor(MemberQueryService memberQueryService) {
@@ -22,12 +24,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (isPreflightRequest(request)) {
             return true;
         }
-        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String[] credentials = AuthExtractor.extract(authorization);
-        String email = credentials[0];
-        String password = credentials[1];
-
-        memberQueryService.findByEmailAndPassword(email, password).orElseThrow(AuthenticationException::new);
+        validateUserExist(request);
         return true;
     }
 
@@ -49,5 +46,17 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private boolean hasOrigin(HttpServletRequest request) {
         return Objects.nonNull(request.getHeader("Origin"));
+    }
+
+    private void validateUserExist(HttpServletRequest request) {
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String[] credentials = BasicAuthExtractor.extractDecodedCredentials(authorization);
+        validateCredentialUserExist(credentials);
+    }
+
+    private void validateCredentialUserExist(String[] credentials) {
+        String email = credentials[EMAIL_CREDNTIAL_INDEX];
+        String password = credentials[PASSWORD_CREDENTIAL_EXIST];
+        memberQueryService.findByEmailAndPassword(email, password).orElseThrow(AuthenticationException::new);
     }
 }
