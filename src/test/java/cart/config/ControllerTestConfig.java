@@ -1,6 +1,7 @@
 package cart.config;
 
 import cart.dao.*;
+import cart.fixture.dao.*;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
@@ -37,6 +38,13 @@ public abstract class ControllerTestConfig {
     protected CartItemDao cartItemDao;
     protected OrderDao orderDao;
     protected OrderItemDao orderItemDao;
+
+    protected MemberDaoFixture memberDaoFixture;
+    protected ProductDaoFixture productDaoFixture;
+    protected CartItemDaoFixture cartItemDaoFixture;
+    protected OrderDaoFixture orderDaoFixture;
+    protected OrderItemDaoFixture orderItemDaoFixture;
+
     protected RequestSpecification spec;
 
     @BeforeEach
@@ -46,6 +54,12 @@ public abstract class ControllerTestConfig {
         cartItemDao = new CartItemDao(jdbcTemplate);
         orderDao = new OrderDao(jdbcTemplate);
         orderItemDao = new OrderItemDao(jdbcTemplate);
+
+        memberDaoFixture = new MemberDaoFixture(memberDao);
+        productDaoFixture = new ProductDaoFixture(productDao);
+        cartItemDaoFixture = new CartItemDaoFixture(cartItemDao);
+        orderDaoFixture = new OrderDaoFixture(orderDao);
+        orderItemDaoFixture = new OrderItemDaoFixture(orderItemDao);
 
         RestAssured.port = port;
 
