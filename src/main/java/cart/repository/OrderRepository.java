@@ -41,7 +41,7 @@ public class OrderRepository {
                 .orElseThrow(InvalidOrder::new);
         Member member = memberDao.getMemberById(orderEntity.getMemberId());
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderId);
-        return new Order(orderId, member, orderEntity.getShippingFee(), orderEntity.getTotalProductsPrice(), orderEntity.getUsedPoint(), orderItems, orderEntity.getCreatedAt());
+        return Order.of(member, orderEntity, orderItems);
     }
 
     public List<Order> findByMemberId(final long memberId) {
@@ -53,15 +53,7 @@ public class OrderRepository {
         }
         for (OrderEntity orderEntity : orderEntities) {
             List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderEntity.getId());
-            orders.add(new Order(
-                    orderEntity.getId(),
-                    member,
-                    orderEntity.getShippingFee(),
-                    orderEntity.getTotalProductsPrice(),
-                    orderEntity.getUsedPoint(),
-                    orderItems,
-                    orderEntity.getCreatedAt()
-            ));
+            orders.add(Order.of(member, orderEntity, orderItems));
         }
         return orders;
     }

@@ -42,6 +42,18 @@ public class Order {
         return new Order(null, member, shippingFee, totalProductPrice, usedPoint, orderItems, null);
     }
 
+    public static Order of(final Member member, final OrderEntity orderEntity, final List<OrderItem> orderItems){
+        return new Order(
+                orderEntity.getId(),
+                member,
+                orderEntity.getShippingFee(),
+                orderEntity.getTotalProductsPrice(),
+                orderEntity.getUsedPoint(),
+                orderItems,
+                orderEntity.getCreatedAt()
+        );
+    }
+
     public OrderEntity toEntity() {
         return OrderEntity.of(member.getId(), shippingFee, totalProductsPrice, usedPoint);
     }
