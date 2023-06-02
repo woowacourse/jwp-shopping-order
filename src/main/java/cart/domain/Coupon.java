@@ -30,6 +30,14 @@ public class Coupon {
         return id;
     }
 
+    public int getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public String getCouponInfo() {
+        return couponInfo;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
