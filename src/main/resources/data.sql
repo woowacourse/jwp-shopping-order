@@ -18,3 +18,12 @@ INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 1);
 INSERT INTO member_coupon (member_id, coupon_id) VALUES (1, 3);
 INSERT INTO member_coupon (member_id, coupon_id) VALUES (2, 1);
 INSERT INTO member_coupon (member_id, coupon_id) VALUES (2, 2);
+
+INSERT INTO `order` (member_id, delivery_fee, payed_price, order_date) VALUES (1, 3000, 55000, '2023-06-01 12:34:56');
+INSERT INTO order_coupon (order_id, coupon_id) VALUES (1, 3);
+INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity) VALUES (1, 2, '샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80', 3);
+INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity) VALUES (1, 3, '피자', 13000, 'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80', 2);
+
+INSERT INTO `order` (member_id, delivery_fee, payed_price, order_date) VALUES (1, 3000, 28000, '2023-06-01 13:57:09');
+INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity) VALUES (2, 2, '샐러드', 20000, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80', 1);
+INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity) VALUES (2, 3, '피자', 13000, 'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80', 1);
