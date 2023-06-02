@@ -16,10 +16,10 @@ public class ProductCommandService {
         this.productDao = productDao;
     }
 
-    public Long createProduct(ProductRequest productRequest) {
+    public long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productDao.insert(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {

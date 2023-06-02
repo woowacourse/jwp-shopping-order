@@ -5,7 +5,7 @@ import com.woowahan.techcourse.cart.domain.CartItem;
 import com.woowahan.techcourse.cart.dto.CartItemQuantityUpdateRequest;
 import com.woowahan.techcourse.cart.dto.CartItemRequest;
 import com.woowahan.techcourse.cart.exception.CartItemNotFoundException;
-import com.woowahan.techcourse.product.dao.ProductDao;
+import com.woowahan.techcourse.product.application.ProductQueryService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CartCommandService {
 
-    private final ProductDao productDao;
+    private final ProductQueryService productQueryService;
     private final CartItemDao cartItemDao;
 
-    public CartCommandService(ProductDao productDao, CartItemDao cartItemDao) {
-        this.productDao = productDao;
+    public CartCommandService(ProductQueryService productQueryService, CartItemDao cartItemDao) {
+        this.productQueryService = productQueryService;
         this.cartItemDao = cartItemDao;
     }
 
     public Long add(long memberId, CartItemRequest cartItemRequest) {
+        productQueryService.findById(cartItemRequest.getProductId());
         return cartItemDao.save(new CartItem(cartItemRequest.getProductId(), memberId));
     }
 

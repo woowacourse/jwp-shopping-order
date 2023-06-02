@@ -41,7 +41,7 @@ public class ProductApiController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        Long id = productCommandService.createProduct(productRequest);
+        long id = productCommandService.createProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
@@ -56,5 +56,4 @@ public class ProductApiController {
         productCommandService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }

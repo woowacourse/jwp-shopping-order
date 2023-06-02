@@ -2,6 +2,7 @@ package com.woowahan.techcourse.product.application;
 
 import com.woowahan.techcourse.product.dao.ProductDao;
 import com.woowahan.techcourse.product.domain.Product;
+import com.woowahan.techcourse.product.exception.ProductNotFoundException;
 import com.woowahan.techcourse.product.ui.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,5 +27,10 @@ public class ProductQueryService {
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
         return ProductResponse.of(product);
+    }
+
+    public Product findById(long productId) {
+        return productDao.findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
     }
 }
