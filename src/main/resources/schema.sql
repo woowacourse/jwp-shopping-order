@@ -1,12 +1,12 @@
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS product
 (
-    id        BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id        BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name      VARCHAR(255) NOT NULL,
     price     INT          NOT NULL,
     image_url VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE coupon
+CREATE TABLE IF NOT EXISTS coupon
 (
     id          BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
@@ -14,14 +14,14 @@ CREATE TABLE coupon
     coupon_type VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE member
+CREATE TABLE IF NOT EXISTS member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE member_coupon
+CREATE TABLE IF NOT EXISTS member_coupon
 (
     id        BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT  NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE member_coupon
     FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cart_item
+CREATE TABLE IF NOT EXISTS cart_item
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
-CREATE TABLE orders
+CREATE TABLE IF NOT EXISTS orders
 (
     id               BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id        BIGINT    NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE orders
     FOREIGN KEY (member_coupon_id) REFERENCES member_coupon (id)
 );
 
-CREATE TABLE orders_product
+CREATE TABLE IF NOT EXISTS orders_product
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id   BIGINT NOT NULL,

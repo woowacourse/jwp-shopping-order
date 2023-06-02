@@ -25,9 +25,10 @@ class OrderRepositoryTest {
     void saveOrder() {
         final CartItem cartItem1 = new CartItem(MEMBER_1, PRODUCT_1);
         final CartItem cartItem2 = new CartItem(MEMBER_1, PRODUCT_2);
-        final Order order = Order.of(MEMBER_1, List.of(cartItem1, cartItem2));
+        final List<CartItem> cartItems = List.of(cartItem1, cartItem2);
+        final Order order = Order.of(MEMBER_1, cartItems);
 
-        final Order orderAfterSave = orderRepository.save(order);
+        final Order orderAfterSave = orderRepository.save(order, cartItems);
 
         assertThat(orderAfterSave)
                 .extracting(Order::getTimeStamp, Order::getMemberId)
@@ -42,9 +43,10 @@ class OrderRepositoryTest {
     void findById() {
         final CartItem cartItem1 = new CartItem(MEMBER_1, PRODUCT_1);
         final CartItem cartItem2 = new CartItem(MEMBER_1, PRODUCT_2);
-        final Order order = Order.of(MEMBER_1, List.of(cartItem1, cartItem2));
+        final List<CartItem> cartItems = List.of(cartItem1, cartItem2);
+        final Order order = Order.of(MEMBER_1, cartItems);
 
-        final Long orderId = orderRepository.save(order).getId();
+        final Long orderId = orderRepository.save(order, cartItems).getId();
 
         final Order orderAfterSave = orderRepository.findById(orderId);
 

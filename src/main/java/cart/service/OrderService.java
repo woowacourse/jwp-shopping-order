@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.dao.CartItemDao;
 import cart.domain.Member;
+import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
 import cart.domain.product.CartItem;
 import cart.repository.MemberCouponRepository;
@@ -11,6 +12,7 @@ import cart.repository.OrderRepository;
 import cart.service.request.OrderRequestDto;
 import cart.service.response.OrderResponseDto;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,16 +39,19 @@ public class OrderService {
         final List<CartItem> cartItems = requestDto.getCartItemIds().stream()
                 .map(cartItemDao::findById)
                 .collect(toUnmodifiableList());
-        //주문하기
-        final Order order = Order.of(member, cartItems);
+        final Order order = createOrder(member, requestDto, cartItems);
+        return orderRepository.save(order, cartItems).getId();
+    }
 
-        final Order savedOrder = orderRepository.save(order);
-        for (final CartItem cartItem : cartItems) {
-            cartItemDao.delete(cartItem.getMemberId(), cartItem.getProduct().getId());
+    private Order createOrder(final Member member, final OrderRequestDto orderRequestDto,
+                              final List<CartItem> cartItems) {
+        final Optional<Long> couponIdOption = orderRequestDto.getOptionalCouponId();
+        if (couponIdOption.isPresent()) {
+            final Long couponId = couponIdOption.get();
+            final MemberCoupon memberCoupon = memberCouponRepository.findUnUsedCouponById(couponId);
+            return Order.of(member, cartItems, memberCoupon);
         }
-        order.getMemberCoupon().ifPresent(memberCouponRepository::useMemberCoupon);
-
-        return savedOrder.getId();
+        return Order.of(member, cartItems);
     }
 
     public List<OrderResponseDto> findOrders(final Member member) {
