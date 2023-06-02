@@ -27,9 +27,9 @@ public class OrderDao {
         return jdbcTemplate.queryForObject(sql, new OrderRowMapper(), orderId);
     }
 
-    public void save(OrderEntity orderEntity) {
+    public Long save(OrderEntity orderEntity) {
         String sql = "insert into orders(member_id, orders_status_id) values(?, ?)";
-        jdbcTemplate.update(sql, orderEntity.getMemberId(), orderEntity.getOrderStatusId());
+        return jdbcTemplate.queryForObject(sql, Long.class, orderEntity.getMemberId(), orderEntity.getOrderStatusId());
     }
 
     private static class OrderRowMapper implements RowMapper<OrderEntity> {

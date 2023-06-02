@@ -7,18 +7,18 @@ public class Order {
 
     private Long id;
     private final OrderStatus orderStatus;
-    private final int usedPoint;
+    private final Points usedPoint;
     private final List<OrderItem> orderItems;
     private final Member member;
 
-    public Order(int usedPoint, List<OrderItem> orderItems, Member member) {
+    public Order(Points usedPoints, List<OrderItem> orderItems, Member member) {
         this.orderStatus = OrderStatus.PENDING;
-        this.usedPoint = usedPoint;
+        this.usedPoint = usedPoints;
         this.orderItems = orderItems;
         this.member = member;
     }
 
-    public Order(Long id, OrderStatus orderStatus, int usedPoint, List<OrderItem> orderItems, Member member) {
+    public Order(Long id, OrderStatus orderStatus, Points usedPoint, List<OrderItem> orderItems, Member member) {
         this.id = id;
         this.orderStatus = orderStatus;
         this.usedPoint = usedPoint;
@@ -29,7 +29,7 @@ public class Order {
     public Point calculateSavedPoint(PointAccumulationPolicy pointAccumulationPolicy) {
         int totalCost = orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
-                .sum() - usedPoint;
+                .sum() - usedPoint.getPoints();
 
         return pointAccumulationPolicy
                 .calculateAccumulationPoint(totalCost);
@@ -44,7 +44,7 @@ public class Order {
     }
 
     public int getUsedPoint() {
-        return usedPoint;
+        return usedPoint.getPoints();
     }
 
     public List<OrderItem> getOrderItems() {
