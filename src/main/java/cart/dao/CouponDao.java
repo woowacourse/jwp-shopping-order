@@ -17,13 +17,19 @@ public class CouponDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-
-    private final RowMapper<Coupon> rowMapper = (rs, rowNum) -> new Coupon(
+    private final RowMapper<Coupon> defaultRowMapper = (rs, rowNum) -> new Coupon(
         rs.getLong("id"),
         rs.getString("name"),
         Amount.of(rs.getInt("discount_amount")),
         Amount.of(rs.getInt("min_amount")),
         rs.getBoolean("is_used")
+    );
+    private final RowMapper<Coupon> onlyCouponRowMapper = (rs, rowNum) -> new Coupon(
+        rs.getLong("id"),
+        rs.getString("name"),
+        Amount.of(rs.getInt("discount_amount")),
+        Amount.of(rs.getInt("min_amount")),
+        false
     );
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
@@ -60,7 +66,7 @@ public class CouponDao {
                 + "FROM member_coupon as mc "
                 + "INNER JOIN coupon c on mc.coupon_id = c.id "
                 + "WHERE coupon_id = ?";
-        final List<Coupon> coupons = jdbcTemplate.query(sql, rowMapper, couponId);
+        final List<Coupon> coupons = jdbcTemplate.query(sql, defaultRowMapper, couponId);
         return coupons.stream().findAny();
     }
 
@@ -70,7 +76,7 @@ public class CouponDao {
                 + "FROM member_coupon as mc "
                 + "INNER JOIN coupon c on mc.coupon_id = c.id "
                 + "WHERE member_id = ? AND coupon_id = ?";
-        final List<Coupon> coupons = jdbcTemplate.query(sql, rowMapper, memberId, couponId);
+        final List<Coupon> coupons = jdbcTemplate.query(sql, defaultRowMapper, memberId, couponId);
         return coupons.stream().findAny();
     }
 
@@ -88,12 +94,33 @@ public class CouponDao {
             usedCoupon.getId());
     }
 
-    public List<Coupon> findAllByMember(final Member member) {
+    public List<Coupon> findAll() {
         final String sql =
-            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount, mc.is_used as is_used "
-                + "FROM member_coupon as mc "
-                + "INNER JOIN coupon c on mc.coupon_id = c.id "
-                + "WHERE member_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, member.getId());
+            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount, "
+                + "FROM coupon c";
+        return jdbcTemplate.query(sql, onlyCouponRowMapper);
+    }
+
+    public List<Coupon> findAllByMemberWhereIsNotUsed(final Member member) {
+        final String sql =
+            "SELECT       c.id  as coupon_id, "
+                + "       c.name            as  coupon_name, "
+                + "       c.min_amount      as min_amount, "
+                + "       c.discount_amount as discount_amount, "
+                + "       mc.is_used        as is_used "
+                + "FROM coupon as c "
+                + "         JOIN member_coupon mc on c.id = mc.coupon_id "
+                + "WHERE coupon_id = ? "
+                + "  AND is_used = false";
+        return jdbcTemplate.query(sql, defaultRowMapper, member.getId());
+    }
+
+    public boolean exists(final Coupon coupon, final Long memberId) {
+        final String sql = "SELECT count(*) "
+            + "FROM member_coupon "
+            + "WHERE coupon_id = ? "
+            + "  AND member_id = ?; ";
+        final Integer count = jdbcTemplate.queryForObject(sql, Integer.class, coupon.getId(), memberId);
+        return count != 0;
     }
 }
