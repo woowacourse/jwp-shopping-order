@@ -31,7 +31,8 @@ CREATE TABLE cart_item
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
+    UNIQUE KEY `member_product_id` (`member_id`, `product_id`)
 );
 
 CREATE TABLE order_history
@@ -58,6 +59,7 @@ CREATE TABLE order_product
     FOREIGN KEY (order_id) REFERENCES order_history (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
+
 
 
 INSERT INTO product (name, price, image_url)
