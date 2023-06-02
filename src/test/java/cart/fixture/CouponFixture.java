@@ -9,12 +9,12 @@ public class CouponFixture {
 
     public static class 금액_10000원이상_1000원할인 {
 
-        public static final String NAME = "1000원 할인쿠폰";
-        public static final int MIN_ORDER_PRICE = 10_000;
-        public static final int MAX_DISCOUNT_PRICE = 10_000;
-        public static final CouponType TYPE = CouponType.AMOUNT;
-        public static final Integer DISCOUNT_AMOUNT = 1000;
-        public static final Double DISCOUNT_PERCENT = null;
+        private static final String NAME = "1000원 할인쿠폰";
+        private static final int MIN_ORDER_PRICE = 10_000;
+        private static final int MAX_DISCOUNT_PRICE = 10_000;
+        private static final CouponType TYPE = CouponType.AMOUNT;
+        private static final Integer DISCOUNT_AMOUNT = 1000;
+        private static final Double DISCOUNT_PERCENT = null;
 
         public static final CouponEntity ENTITY = new CouponEntity(NAME, MIN_ORDER_PRICE,
                 MAX_DISCOUNT_PRICE, TYPE, DISCOUNT_AMOUNT, DISCOUNT_PERCENT);
