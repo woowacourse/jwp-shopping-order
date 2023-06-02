@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -31,6 +32,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(final IllegalArgumentException e) {
+        final ErrorResponse errorResponse = toResponse(BAD_REQUEST, e);
+        return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final BindException e) {
         final ErrorResponse errorResponse = toResponse(BAD_REQUEST, e);
         return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
     }

@@ -3,7 +3,9 @@ package cart;
 import cart.dao.MemberDao;
 import cart.ui.LoggingRequestUrlInterceptor;
 import cart.ui.MemberArgumentResolver;
+import cart.ui.MemberGradeConverter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -28,5 +30,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberArgumentResolver(memberDao));
+    }
+
+    @Override
+    public void addFormatters(final FormatterRegistry registry) {
+        registry.addConverter(new MemberGradeConverter());
     }
 }
