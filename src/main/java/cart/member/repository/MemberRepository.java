@@ -13,7 +13,8 @@ public class MemberRepository {
     }
     
     public Member getMemberByEmail(final String memberEmail) {
-        return memberDao.getMemberByEmail(memberEmail);
+        final MemberEntity memberEntity = memberDao.getMemberByEmail(memberEmail);
+        return Member.from(memberEntity);
     }
     
     public Member getMemberById(final long id) {

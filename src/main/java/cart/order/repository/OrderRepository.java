@@ -1,6 +1,7 @@
 package cart.order.repository;
 
 import cart.member.dao.MemberDao;
+import cart.member.repository.MemberEntity;
 import cart.order.dao.OrderDao;
 import cart.order.dao.OrderInfoDao;
 import cart.order.domain.Order;
@@ -31,9 +32,9 @@ public class OrderRepository {
     }
     
     public Long save(final Member member, final Order order) {
-        memberDao.updateMember(member);
-        final Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
-        final Long memberId = memberByEmail.getId();
+        final MemberEntity memberEntity = new MemberEntity(member.getId(), member.getEmail(), member.getPassword(), member.getPoint());
+        memberDao.updateMember(memberEntity);
+        final Long memberId = memberEntity.getId();
         final OrderEntity orderEntity = new OrderEntity(memberId, order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());
         
         final Long orderId = orderDao.insert(orderEntity);
@@ -44,8 +45,8 @@ public class OrderRepository {
     }
     
     public List<Order> findByMember(final Member member) {
-        final Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
-        final List<OrderEntity> orderEntities = orderDao.findByMemberId(memberByEmail.getId());
+        final MemberEntity memberEntity = memberDao.getMemberByEmail(member.getEmail());
+        final List<OrderEntity> orderEntities = orderDao.findByMemberId(memberEntity.getId());
         
         return orderEntities.stream()
                 .map(orderEntity -> {
@@ -54,7 +55,7 @@ public class OrderRepository {
                     final List<OrderInfo> orderInfos = getOrderInfos(orderInfoEntities);
                     return new Order(
                             orderId,
-                            memberByEmail,
+                            Member.from(memberEntity),
                             orderInfos,
                             orderEntity.getOriginalPrice(),
                             orderEntity.getUsedPoint(),
@@ -79,12 +80,12 @@ public class OrderRepository {
     }
     
     public Order findByMemberAndId(final Member member, final Long orderId) {
-        final Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
-        return orderDao.findByMemberId(memberByEmail.getId()).stream()
+        final MemberEntity memberEntity = memberDao.getMemberByEmail(member.getEmail());
+        return orderDao.findByMemberId(memberEntity.getId()).stream()
                 .filter(orderEntity -> Objects.equals(orderEntity.getId(), orderId))
                 .map(orderEntity -> new Order(
                         orderId,
-                        memberByEmail,
+                        Member.from(memberEntity),
                         getOrderInfos(orderId),
                         orderEntity.getOriginalPrice(),
                         orderEntity.getUsedPoint(),

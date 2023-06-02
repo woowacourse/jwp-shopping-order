@@ -2,6 +2,8 @@ package cart.product.dto;
 
 import cart.product.domain.Product;
 
+import java.util.Objects;
+
 public class ProductResponse {
     private Long id;
     private String name;
@@ -45,5 +47,30 @@ public class ProductResponse {
     
     public Boolean getPointAvailable() {
         return pointAvailable;
+    }
+    
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final ProductResponse that = (ProductResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(pointRatio, that.pointRatio) && Objects.equals(pointAvailable, that.pointAvailable);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl, pointRatio, pointAvailable);
+    }
+    
+    @Override
+    public String toString() {
+        return "ProductResponse{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", pointRatio=" + pointRatio +
+                ", pointAvailable=" + pointAvailable +
+                '}';
     }
 }

@@ -43,13 +43,14 @@ public class CartItemRepository {
     }
     
     public Long save(final CartItem cartItem) {
-        final Member memberByEmail = memberDao.getMemberByEmail(cartItem.getMember().getEmail());
-        final CartItemEntity cartItemEntity = new CartItemEntity(null, memberByEmail.getId(), cartItem.getProduct().getId(), cartItem.getQuantity());
+        final MemberEntity memberEntity = memberDao.getMemberByEmail(cartItem.getMember().getEmail());
+        final CartItemEntity cartItemEntity = new CartItemEntity(null, memberEntity.getId(), cartItem.getProduct().getId(), cartItem.getQuantity());
         return cartItemDao.save(cartItemEntity);
     }
     
     public CartItem findById(final Long id) {
         final CartItemEntity cartItemEntity = cartItemDao.findById(id);
+        System.out.println("cartItemEntity = " + cartItemEntity);
         final ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId());
         final MemberEntity memberEntity = memberDao.getMemberById(cartItemEntity.getMemberId());
         return new CartItem(

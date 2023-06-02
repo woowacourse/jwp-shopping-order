@@ -3,6 +3,8 @@ package cart.cartitem.dto;
 import cart.cartitem.domain.CartItem;
 import cart.product.dto.ProductResponse;
 
+import java.util.Objects;
+
 public class CartItemResponse {
     private Long id;
     private Long quantity;
@@ -32,5 +34,27 @@ public class CartItemResponse {
 
     public ProductResponse getProduct() {
         return product;
+    }
+    
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final CartItemResponse that = (CartItemResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(quantity, that.quantity) && Objects.equals(product, that.product);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, quantity, product);
+    }
+    
+    @Override
+    public String toString() {
+        return "CartItemResponse{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                '}';
     }
 }

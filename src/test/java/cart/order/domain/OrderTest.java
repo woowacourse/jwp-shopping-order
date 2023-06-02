@@ -1,17 +1,16 @@
 package cart.order.domain;
 
-import cart.member.domain.Member;
-import cart.order.domain.Order;
-import cart.order.domain.OrderInfo;
-import cart.product.domain.Product;
 import cart.exception.DiscordException;
+import cart.member.domain.Member;
+import cart.product.domain.Product;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderTest {

@@ -37,20 +37,19 @@ public class MemberDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public Member getMemberByEmail(String email) {
+    public MemberEntity getMemberByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
-        List<Member> members = jdbcTemplate.query(sql, new Object[]{email}, new MemberRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        return jdbcTemplate.queryForObject(sql, rowMapper, email);
     }
 
-    public void addMember(Member member) {
+    public void addMember(MemberEntity memberEntity) {
         String sql = "INSERT INTO member (email, password, point) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint());
+        jdbcTemplate.update(sql, memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getPoint());
     }
 
-    public void updateMember(Member member) {
+    public void updateMember(MemberEntity memberEntity) {
         String sql = "UPDATE member SET email = ?, password = ?, point = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getPoint(), member.getId());
+        jdbcTemplate.update(sql, memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getPoint(), memberEntity.getId());
     }
 
     public void deleteMember(Long id) {

@@ -1,5 +1,7 @@
 package cart.cartitem.repository;
 
+import java.util.Objects;
+
 public class CartItemEntity {
     private final Long id;
     private final Long memberId;
@@ -28,7 +30,20 @@ public class CartItemEntity {
     public Long getQuantity() {
         return quantity;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartItemEntity that = (CartItemEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(memberId, that.memberId) && Objects.equals(productId, that.productId) && Objects.equals(quantity, that.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, memberId, productId, quantity);
+    }
+
     @Override
     public String toString() {
         return "CartItemEntity{" +

@@ -37,12 +37,12 @@ public class CartItemService {
         return cartItemRepository.save(new CartItem(member, product));
     }
 
-    public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemRepository.findById(id);
+    public void updateQuantity(Member member, Long cartId, CartItemQuantityUpdateRequest request) {
+        CartItem cartItem = cartItemRepository.findById(cartId);
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
-            cartItemRepository.removeById(id);
+            cartItemRepository.removeById(cartId);
             return;
         }
 
@@ -50,10 +50,10 @@ public class CartItemService {
         cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(Member member, Long id) {
-        final CartItem cartItem = cartItemRepository.findById(id);
+    public void remove(Member member, Long cartId) {
+        final CartItem cartItem = cartItemRepository.findById(cartId);
         cartItem.checkOwner(member);
 
-        cartItemRepository.removeById(id);
+        cartItemRepository.removeById(cartId);
     }
 }
