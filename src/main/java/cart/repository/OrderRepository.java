@@ -58,7 +58,7 @@ public class OrderRepository {
                 order.getMemberId()
         );
         final OrderEntity savedOrderEntity = orderDao.insert(orderEntity);
-        useMemberCoupon(savedOrderEntity);
+        useMemberCoupon(savedOrderEntity, order.getMemberCoupon().getCouponId());
         saveOrderItems(order, savedOrderEntity);
         deleteCartItems(order);
         return new Order(
@@ -70,10 +70,11 @@ public class OrderRepository {
         );
     }
 
-    private void useMemberCoupon(final OrderEntity orderEntity) {
+    private void useMemberCoupon(final OrderEntity orderEntity, final Long couponId) {
         final MemberCouponEntity memberCouponEntity = new MemberCouponEntity(
                 orderEntity.getMemberCouponId(),
                 orderEntity.getMemberId(),
+                couponId,
                 true
         );
         memberCouponDao.update(memberCouponEntity);

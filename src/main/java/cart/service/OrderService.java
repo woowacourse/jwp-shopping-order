@@ -38,6 +38,7 @@ public class OrderService {
         final List<CartItem> items = cartItemRepository.findAllByIdsAndMemberId(request.getOrderItemIds(), memberId);
 
         if (Objects.nonNull(request.getCouponId())) {
+            System.out.println(request.getCouponId());
             final MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
                     .orElseThrow(MemberCouponNotFoundException::new);
             final Order order = orderRepository.save(new Order(memberCoupon, memberId, items));
