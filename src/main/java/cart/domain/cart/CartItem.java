@@ -52,7 +52,7 @@ public class CartItem {
         return quantity;
     }
 
-    public int getTotalPrice() {
+    public int getTotalProductPrice() {
         return product.getPrice() * quantity;
     }
 }

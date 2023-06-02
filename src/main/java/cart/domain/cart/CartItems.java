@@ -17,7 +17,7 @@ public class CartItems {
 
     public int getTotalProductPrice() {
         return cartItems.stream()
-                .map(CartItem::getTotalPrice)
+                .map(CartItem::getTotalProductPrice)
                 .reduce(0, Integer::sum);
     }
 
