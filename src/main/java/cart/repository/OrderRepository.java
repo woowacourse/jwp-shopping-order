@@ -62,7 +62,7 @@ public class OrderRepository {
     }
 
     public Long insert(Order order) {
-        OrderEntity orderEntity = new OrderEntity(order.getId(), order.getOrderAt(), order.getPayAmount(),
+        OrderEntity orderEntity = new OrderEntity(order.getMember().getId(), order.getOrderAt(), order.getPayAmount(),
             order.getOrderStatus().getDisplayName());
         Long orderId = orderDao.insert(orderEntity);
         List<QuantityAndProduct> quantityAndProducts = order.getQuantityAndProducts();
