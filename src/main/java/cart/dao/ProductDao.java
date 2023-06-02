@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
-import cart.exception.ProductNotFoundException;
+import cart.exception.notfound.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -41,7 +41,7 @@ public class ProductDao {
             return new Product(productId, name, price, imageUrl);
         }, productId);
         if (product.isEmpty()) {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(productId);
         }
         return product.get(0);
     }
@@ -67,11 +67,17 @@ public class ProductDao {
 
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        final int affected = jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        if (affected == 0) {
+            throw new ProductNotFoundException(productId);
+        }
     }
 
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        final int affected = jdbcTemplate.update(sql, productId);
+        if (affected == 0) {
+            throw new ProductNotFoundException(productId);
+        }
     }
 }

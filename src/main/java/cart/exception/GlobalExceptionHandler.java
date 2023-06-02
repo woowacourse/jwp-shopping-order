@@ -1,12 +1,14 @@
 package cart.exception;
 
+import cart.exception.notfound.NotFoundException;
+import cart.exception.notfound.NotFoundResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
-public class ControllerExceptionHandler {
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
@@ -23,9 +25,9 @@ public class ControllerExceptionHandler {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<Void> handleProductNotFoundException() {
-        return ResponseEntity.notFound().build();
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<NotFoundResponse> handleProductNotFoundException(NotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new NotFoundResponse(exception.getId(), exception.getName()));
     }
 
     @ExceptionHandler({

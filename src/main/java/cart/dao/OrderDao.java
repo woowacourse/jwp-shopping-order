@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.entity.OrderEntity;
+import cart.exception.notfound.OrderNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -64,7 +65,11 @@ public class OrderDao {
 
     public OrderEntity findById(final Long id, final Long memberId) {
         String sql = "SELECT * FROM orders WHERE id = ? AND member_id = ?";
-        return jdbcTemplate.queryForObject(sql, orderRowMapper, id, memberId);
+        final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, orderRowMapper, id, memberId);
+        if (orderEntities.isEmpty()) {
+            throw new OrderNotFoundException(id);
+        }
+        return orderEntities.get(0);
     }
 
     public List<OrderEntity> findAll(final Long memberId) {
