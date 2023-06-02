@@ -4,11 +4,13 @@ import java.util.Objects;
 
 public class Quantity {
 
+    private static final int MINIMUM_QUANTITY = 0;
+
     private final int quantity;
 
     public Quantity(final int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("수량은 0 이하 일 수 없습니다.");
+        if (quantity <= MINIMUM_QUANTITY) {
+            throw new IllegalArgumentException(String.format("수량은 %s 이하 일 수 없습니다.", MINIMUM_QUANTITY));
         }
 
         this.quantity = quantity;

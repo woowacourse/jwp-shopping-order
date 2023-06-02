@@ -4,11 +4,13 @@ import java.util.Objects;
 
 public class Price {
 
+    private static final int MINIMUM_PRICE = 0;
+
     private final int price;
 
     private Price(final int price) {
-        if (price <= 0) {
-            throw new IllegalArgumentException("가격은 0 이하 일 수 없습니다.");
+        if (price <= MINIMUM_PRICE) {
+            throw new IllegalArgumentException(String.format("가격은 %s 이하 일 수 없습니다.", MINIMUM_PRICE));
         }
 
         this.price = price;
