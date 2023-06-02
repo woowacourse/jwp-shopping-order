@@ -49,10 +49,7 @@ public class OrderService {
     private Set<CartItem> getCartItems(final OrderRequest orderRequest) {
         return orderRequest.getCartItems().stream()
                 .map(CartItemOrderRequest::getCartItemId)
-                .map(aLong -> {
-                    final CartItem cartItem = cartItemRepository.findById(aLong);
-                    return cartItem;
-                })
+                .map(cartItemRepository::findById)
                 .collect(Collectors.toUnmodifiableSet());
     }
     
