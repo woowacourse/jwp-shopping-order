@@ -67,6 +67,7 @@ public class OrderService {
         Payment payment = order.calculatePayment(new Point(orderRequest.getUsePoint()));
         validatePayment(orderRequest, payment);
 
+        // TODO : point 적립
         // 주문 성공시 -> cart_item 싹 지우기, member(point) 업데이트, product 싹 업데이트, order 저장, order_item 싹 저장, payment저장
         List<Long> cartItemIds = cartItems.stream()
                 .map(it -> it.getCartItemId())
@@ -97,10 +98,21 @@ public class OrderService {
         Payment payment = paymentDao.findByOrderId(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 결제 내역이 존재하지 않습니다."));
 
-        return OrderDto.of(order.getId(), order.getOrderDateTime(), order.getOrderItems(), payment.getTotalPrice());
+        return toDto(order, payment);
     }
 
     public List<OrderDto> getOrderList(Member member) {
-        return null;
+        List<OrderDto> orderDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByMemberId(member.getId());
+        for (Order order : orders) {
+            Payment payment = paymentDao.findByOrderId(order.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 결제 내역이 존재하지 않습니다."));
+            orderDtos.add(toDto(order, payment));
+        }
+        return orderDtos;
+    }
+
+    public OrderDto toDto(Order order, Payment payment) {
+        return OrderDto.of(order.getId(), order.getOrderDateTime(), order.getOrderItems(), payment.getTotalPrice());
     }
 }
