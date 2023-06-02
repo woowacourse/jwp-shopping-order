@@ -20,13 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 @Sql(value = {"classpath:test_init.sql"})
-class OrderItemDaoTest {
+class PointHistoryEntityDaoTest {
 
     private JdbcTemplate jdbcTemplate;
     private OrderItemDao orderItemDao;
 
     @Autowired
-    public OrderItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public PointHistoryEntityDaoTest(JdbcTemplate jdbcTemplate) {
         this.orderItemDao = new OrderItemDao(jdbcTemplate);
         this.jdbcTemplate = jdbcTemplate;
     }

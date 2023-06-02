@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.domain.Point;
-import cart.entity.PointEntity;
+import cart.entity.PointHistoryEntity;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,23 +11,23 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql({"classpath:test_init.sql"})
 @ActiveProfiles("test")
-class PointDaoTest {
+class PointHistoryDaoTest {
 
     private JdbcTemplate jdbcTemplate;
-    private PointDao pointDao;
+    private PointHistoryDao pointHistoryDao;
 
     @Autowired
-    public PointDaoTest(JdbcTemplate jdbcTemplate, PointDao pointDao) {
+    public PointHistoryDaoTest(JdbcTemplate jdbcTemplate, PointHistoryDao pointHistoryDao) {
         this.jdbcTemplate = jdbcTemplate;
-        this.pointDao = pointDao;
+        this.pointHistoryDao = pointHistoryDao;
     }
 
     @BeforeEach
@@ -40,33 +40,29 @@ class PointDaoTest {
 
         jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
         jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
+        jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
 
         jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(1, 1, 3, 30000)");
         jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(1, 2, 2, 40000)");
         jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(2, 3, 2, 26000)");
+        jdbcTemplate.update("insert into orders_item(orders_id, product_id, quantity, total_price) values(1, 1, 3, 30000)");
 
         jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 1, 5600, '주문 포인트 적립', '2023-06-02', '2023-09-30')");
-        jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 2, 1300, '주문 포인트 적립', '2023-06-15', '2023-09-30')");
+        jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 2, 1250, '주문 포인트 적립', '2023-06-15', '2023-09-30')");
+        jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 3, 1400, '주문 포인트 적립', '2023-06-15', '2023-09-30')");
+
+        jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(2, 1, 1000)");
+        jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(2, 1, 2000)");
     }
 
-    @DisplayName("주문 번호를 기준으로 포인트를 조회할 수 있다.")
+    @DisplayName("")
     @Test
-    void findByOrderId() {
-        PointEntity expected = new PointEntity(1L, 5600, "주문 포인트 적립", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30));
+    void findByPointIds() {
+        PointHistoryEntity expected1 = new PointHistoryEntity(1L, 2L, 1L, 1000);
+        PointHistoryEntity expected2 = new PointHistoryEntity(2L, 3L, 1L, 2000);
 
-        PointEntity point = pointDao.findByOrderId(1L);
+        List<PointHistoryEntity> pointHistoryEntities = pointHistoryDao.findByPointIds(List.of(1L));
 
-        assertThat(point).isEqualTo(expected);
-    }
-
-    @DisplayName("주문 번호를 기준으로 포인트를 조회할 수 있다.")
-    @Test
-    void findByMemberId() {
-        PointEntity expected1 = new PointEntity(1L, 5600, "주문 포인트 적립", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30));
-        PointEntity expected2 = new PointEntity(2L, 1300, "주문 포인트 적립", LocalDate.of(2023, 06, 15), LocalDate.of(2023, 9, 30));
-
-        List<PointEntity> points = pointDao.findByMemberId(1L);
-
-        assertThat(points).containsAnyOf(expected1, expected2);
+        assertThat(pointHistoryEntities).containsAnyOf(expected1, expected2);
     }
 }
