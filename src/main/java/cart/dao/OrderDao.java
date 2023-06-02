@@ -3,7 +3,7 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.entity.OrderEntity;
-
+import cart.exception.notfound.OrderNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,6 +27,7 @@ public class OrderDao {
 	private final SimpleJdbcInsert orderInsert;
 	private final SimpleJdbcInsert orderItemInsert;
 
+
 	public OrderDao(final JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.orderInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -37,12 +38,17 @@ public class OrderDao {
 			.usingGeneratedKeyColumns("id");
 	}
 
-	public Long createOrder(final int usedPoints, final List<CartItem> cartItems, final int savingRate,
-		final Member member) {
 
-		final long id = orderInsert.executeAndReturnKey(
-			Map.of("member_id", member.getId(), "used_points", usedPoints, "saving_rate", savingRate)).longValue();
+	public Long createOrder(final int usedPoints, final List<CartItem> cartItems, final int savingRate, final Member member) {
 
+		final long id = orderInsert.executeAndReturnKey(Map.of("member_id", member.getId(), "used_points", usedPoints, "saving_rate", savingRate)).longValue();
+
+		batchInsertCartItems(cartItems, id);
+
+		return id;
+	}
+
+	private void batchInsertCartItems(final List<CartItem> cartItems, final long id) {
 		List<Map<String, Object>> batchValues = new ArrayList<>();
 		for (final CartItem cartItem : cartItems) {
 			Map<String, Object> batchMap = new HashMap<>();
@@ -55,13 +61,15 @@ public class OrderDao {
 			batchValues.add(batchMap);
 		}
 		orderItemInsert.executeBatch(batchValues.toArray(new Map[0]));
-
-		return id;
 	}
 
 	public OrderEntity findById(final Long id, final Long memberId) {
 		String sql = "SELECT * FROM orders WHERE id = ? AND member_id = ?";
-		return jdbcTemplate.queryForObject(sql, orderRowMapper, id, memberId);
+		final List<OrderEntity> orderEntities = jdbcTemplate.query(sql, orderRowMapper, id, memberId);
+		if (orderEntities.isEmpty()) {
+			throw new OrderNotFoundException(id);
+		}
+		return orderEntities.get(0);
 	}
 
 	public List<OrderEntity> findAll(final Long memberId) {

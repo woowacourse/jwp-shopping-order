@@ -6,6 +6,8 @@ import cart.exception.IllegalPointUsageException;
 import cart.exception.InvalidOrderCheckedException;
 import cart.exception.InvalidOrderProductException;
 import cart.exception.InvalidOrderQuantityException;
+import cart.exception.notfound.NotFoundException;
+import cart.exception.notfound.NotFoundResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ControllerExceptionHandler {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -31,6 +34,11 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
 		return ResponseEntity.badRequest().body(exception.getMessage());
+	}
+
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<NotFoundResponse> handleProductNotFoundException(NotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new NotFoundResponse(exception.getId(), exception.getName()));
 	}
 
 	@ExceptionHandler({
