@@ -35,7 +35,7 @@ public class OrderDao {
     private static final RowMapper<OrderEntity> rowMapper = (resultSet, rowNum) ->
             new OrderEntity(
                     resultSet.getLong(ID),
-                    resultSet.getTimestamp(DATE_TIME).toLocalDateTime(),
+                    resultSet.getTimestamp(DATE_TIME).toString(),
                     resultSet.getLong(MEMBER_ID),
                     resultSet.getLong(PRODUCT_ID),
                     resultSet.getString(PRODUCT_NAME),

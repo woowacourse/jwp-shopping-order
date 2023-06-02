@@ -1,6 +1,5 @@
 package cart.domain;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Getter;
 public class OrderEntity {
 
     private final Long id;
-    private final LocalDateTime dateTime;
+    private final String dateTime;
     private final Long memberId;
     private final Long productId;
     private final String productName;
@@ -22,9 +21,19 @@ public class OrderEntity {
     private final int usePoint;
     private final int totalPrice;
 
-    public OrderEntity(final LocalDateTime dateTime, final Long memberId, final Long productId, final String productName,
-                       final int productPrice, final String productImageUrl, final int quantity, final int totalProductPrice,
-                       final int totalDeliveryFee, final int usePoint, final int totalPrice) {
+    public OrderEntity(
+            final String dateTime,
+            final Long memberId,
+            final Long productId,
+            final String productName,
+            final int productPrice,
+            final String productImageUrl,
+            final int quantity,
+            final int totalProductPrice,
+            final int totalDeliveryFee,
+            final int usePoint,
+            final int totalPrice
+    ) {
         this(null, dateTime, memberId, productId, productName, productPrice, productImageUrl, quantity, totalProductPrice, totalDeliveryFee, usePoint, totalPrice);
     }
 

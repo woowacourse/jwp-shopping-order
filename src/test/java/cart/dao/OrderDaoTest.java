@@ -8,7 +8,7 @@ import cart.domain.MemberEntity;
 import cart.domain.OrderEntity;
 import cart.domain.Product;
 import cart.exception.OrderNotFoundException;
-import java.time.LocalDateTime;
+import cart.util.CurrentTimeUtil;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class OrderDaoTest extends DaoTest {
 
         this.orderEntity = new OrderEntity(
                 1L,
-                LocalDateTime.now(),
+                CurrentTimeUtil.asString(),
                 memberEntity.getId(),
                 product.getId(),
                 product.getName(),
