@@ -9,6 +9,7 @@ import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberCouponEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderEntity;
+import cart.persistence.entity.OrderItemEntity;
 import cart.persistence.entity.ProductEntity;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -171,4 +172,28 @@ public class RowMapperHelper {
             return new OrderDetailDTO(order, member, memberCoupon);
         };
     }
+
+    public static RowMapper<OrderItemEntity> orderItemRowMapper() {
+        return getOrderItemRowMapper(false);
+    }
+
+    private static RowMapper<OrderItemEntity> orderItemRowMapperWithTable() {
+        return getOrderItemRowMapper(true);
+    }
+
+    private static RowMapper<OrderItemEntity> getOrderItemRowMapper(boolean withTable) {
+        return (rs, rowNum) -> {
+            String prefix = withTable ? "order_item." : "";
+            return new OrderItemEntity(
+                    rs.getLong(prefix + "id"),
+                    rs.getLong(prefix + "order_id"),
+                    rs.getLong(prefix + "product_id"),
+                    rs.getString(prefix + "name"),
+                    rs.getInt(prefix + "price"),
+                    rs.getString(prefix + "image_url"),
+                    rs.getInt(prefix + "quantity")
+            );
+        };
+    }
+
 }
