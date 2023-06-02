@@ -1,4 +1,6 @@
-DROP TABLE IF EXISTS order_history;
+DROP TABLE IF EXISTS orders_orderItem;
+DROP TABLE IF EXISTS order_item;
+DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS cart_item;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS member;
@@ -13,7 +15,7 @@ CREATE TABLE member
 
 CREATE TABLE product
 (
-    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id        BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name      VARCHAR(255)  NOT NULL,
     price     INT           NOT NULL,
     image_url VARCHAR(2083) NOT NULL,
@@ -31,7 +33,6 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
 
-## 테이블 변경함. DAO부터 다시 기능 구현하기..!
 CREATE TABLE orders
 (
     id                  BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -45,16 +46,6 @@ CREATE TABLE orders
     FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
 );
 
-CREATE TABLE orders_orderItem
-(
-    id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_history_id BIGINT NOT NULL,
-    order_item       BIGINT NOT NULL,
-
-    FOREIGN KEY (order_history_id) REFERENCES orders (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY (order_item) REFERENCES order_item (id) ON DELETE NO ACTION ON UPDATE NO ACTION
-);
-
 CREATE TABLE order_item
 (
     id                BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -64,5 +55,15 @@ CREATE TABLE order_item
     product_image_url VARCHAR(2083) NOT NULL,
     quantity          INT           NOT NULL,
 
-    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
+);
+
+CREATE TABLE orders_orderItem
+(
+    id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    orders_id     BIGINT NOT NULL,
+    order_item_id BIGINT NOT NULL,
+
+    FOREIGN KEY (orders_id) REFERENCES orders (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (order_item_id) REFERENCES order_item (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
