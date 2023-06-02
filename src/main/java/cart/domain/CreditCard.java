@@ -17,8 +17,8 @@ public class CreditCard {
         // 검증 api 호출
     }
 
-    public void payWithPoint(final int totalPrice, final int usingPoint) {
-        if (totalPrice < usingPoint) {
+    public void payWithPoint(final int totalPrice, final Point usingPoint) {
+        if (usingPoint.getValue() > totalPrice) {
             throw new InvalidPointException("결제 금액보다 많은 포인트를 사용할 수 없습니다.");
         }
         // 결제 api 호출

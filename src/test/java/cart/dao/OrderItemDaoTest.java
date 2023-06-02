@@ -3,7 +3,6 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
-import cart.domain.Product;
 import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
@@ -42,7 +41,7 @@ class OrderItemDaoTest {
         //given
         final List<ProductEntity> products = productDao.findAll();
         final Member member = MemberEntity.toDomain(memberDao.findByEmail("kangsj9665@gmail.com").get());
-        final Long orderId = orderDao.create(OrderEntity.toCreate(member.getId(), 300, 400));
+        final Long orderId = orderDao.save(new OrderEntity(null, member.getId(), null, 300, 400));
         final List<OrderItemEntity> orderItemEntities = products.stream()
                 .map(product -> OrderItemEntity.toCreate(
                         orderId,
@@ -55,7 +54,7 @@ class OrderItemDaoTest {
                 .collect(Collectors.toUnmodifiableList());
 
         //when
-        orderItemDao.create(orderItemEntities);
+        orderItemDao.saveAll(orderItemEntities);
 
         //then
         final List<OrderItemEntity> savedOrderEntities = orderItemDao.findByOrderId(orderId);

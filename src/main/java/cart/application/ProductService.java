@@ -1,11 +1,9 @@
 package cart.application;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.entity.ProductEntity;
-import cart.exception.ResourceNotFoundException;
+import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -15,46 +13,47 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @Transactional
-    public Long createProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-                productRequest.getImageUrl());
-        return productDao.create(ProductEntity.from(product));
+    public Long createProduct(final ProductRequest request) {
+        final Product product = new Product(
+                request.getName(),
+                request.getPrice(),
+                request.getImageUrl()
+        );
+        return productRepository.save(product);
     }
 
     public List<ProductResponse> findAllProducts() {
-        final List<Product> products = productDao.findAll().stream()
-                .map(ProductEntity::toDomain)
-                .collect(Collectors.toUnmodifiableList());
+        final List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(ProductResponse::of)
+                .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public ProductResponse findProductById(Long productId) {
-        Product product = ProductEntity.toDomain(productDao.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("아이디에 해당하는 상품이 없습니다.")));
-        return ProductResponse.of(product);
+    public ProductResponse findProductById(final Long id) {
+        Product product = productRepository.findById(id);
+        return ProductResponse.from(product);
     }
 
     @Transactional
-    public void updateProduct(Long productId, ProductRequest productRequest) {
-        ProductEntity productEntity = new ProductEntity(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImageUrl()
+    public void updateProduct(final Long id, final ProductRequest request) {
+        final Product product = new Product(
+                id,
+                request.getName(),
+                request.getPrice(),
+                request.getImageUrl()
         );
-        productDao.update(productId, productEntity);
+        productRepository.update(product);
     }
 
     @Transactional
-    public void deleteProduct(Long productId) {
-        productDao.deleteById(productId);
+    public void deleteProduct(final Long productId) {
+        productRepository.deleteById(productId);
     }
 }

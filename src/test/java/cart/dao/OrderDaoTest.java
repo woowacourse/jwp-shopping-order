@@ -33,10 +33,10 @@ class OrderDaoTest {
     void create() {
         //given
         final Member member = MemberEntity.toDomain(memberDao.findByEmail("kangsj9665@gmail.com").get());
-        final OrderEntity orderEntity = OrderEntity.toCreate(member.getId(), 300, 400);
+        final OrderEntity orderEntity = new OrderEntity(null, member.getId(), null, 300, 400);
 
         //when
-        final Long id = orderDao.create(orderEntity);
+        final Long id = orderDao.save(orderEntity);
 
         //then
         final OrderEntity savedOrder = orderDao.findById(id).get();

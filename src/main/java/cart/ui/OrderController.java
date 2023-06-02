@@ -29,13 +29,13 @@ public class OrderController {
             Member member,
             @RequestBody OrderCreateRequest orderCreateRequest
     ) {
-        Long orderId = orderService.createOrder(member, orderCreateRequest);
+        Long orderId = orderService.saveOrder(member, orderCreateRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
     @GetMapping
     public ResponseEntity<List<OrderDetailResponse>> findOrders(Member member) {
-        final List<OrderDetailResponse> response = orderService.findOrders(member);
+        final List<OrderDetailResponse> response = orderService.findOrdersByMember(member);
         return ResponseEntity.ok(response);
     }
 

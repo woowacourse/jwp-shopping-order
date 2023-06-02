@@ -21,7 +21,7 @@ public class OrderItemResponse {
                 .map(orderItem -> new OrderItemResponse(
                         orderItem.getId(),
                         orderItem.getQuantity(),
-                        ProductResponse.of(orderItem.getProduct())
+                        ProductResponse.from(orderItem.getProduct())
                 ))
                 .collect(Collectors.toUnmodifiableList());
     }

@@ -1,8 +1,6 @@
 package cart.entity;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
 
 public class CartItemEntity {
 
@@ -40,25 +38,6 @@ public class CartItemEntity {
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
         this.quantity = quantity;
-    }
-
-    public static CartItem toDomain(final CartItemEntity cartItemEntity) {
-        return new CartItem(
-                cartItemEntity.id,
-                cartItemEntity.quantity,
-                new Product(
-                        cartItemEntity.productId,
-                        cartItemEntity.productName,
-                        cartItemEntity.productPrice,
-                        cartItemEntity.productImageUrl)
-                ,
-                new Member(
-                        cartItemEntity.memberId,
-                        cartItemEntity.memberEmail,
-                        cartItemEntity.memberPassword,
-                        cartItemEntity.memberPoint
-                )
-        );
     }
 
     public static CartItemEntity from(final CartItem cartItem) {

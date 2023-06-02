@@ -41,14 +41,20 @@ public class ProductDao {
         }
     }
 
-    public Long create(ProductEntity productEntity) {
+    public Long save(ProductEntity productEntity) {
         return jdbcTemplate.executeAndReturnKey(new BeanPropertySqlParameterSource(productEntity)).longValue();
     }
 
-    public void update(Long productId, ProductEntity productEntity) {
+    public void update(ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.getJdbcTemplate()
-                .update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productId);
+                .update(
+                        sql,
+                        productEntity.getName(),
+                        productEntity.getPrice(),
+                        productEntity.getImageUrl(),
+                        productEntity.getId()
+                );
     }
 
     public void deleteById(Long productId) {

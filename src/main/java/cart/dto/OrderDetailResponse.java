@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.Order;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,6 +27,16 @@ public class OrderDetailResponse {
         this.savedPoint = savedPoint;
         this.orderedAt = orderedAt;
         this.products = products;
+    }
+
+    public static OrderDetailResponse from(Order order) {
+        return new OrderDetailResponse(
+                order.getId(),
+                order.getUsedPoint(),
+                order.getSavedPoint(),
+                order.getOrderedAt(),
+                OrderItemResponse.from(order.getOrderItems())
+        );
     }
 
     public Long getId() {

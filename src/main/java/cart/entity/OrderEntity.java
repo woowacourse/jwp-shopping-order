@@ -24,10 +24,6 @@ public class OrderEntity {
         this.savedPoint = savedPoint;
     }
 
-    public static OrderEntity toCreate(final Long memberId, final int usedPoint, final int savedPoint) {
-        return new OrderEntity(null, memberId, null, usedPoint, savedPoint);
-    }
-
     public Long getId() {
         return id;
     }

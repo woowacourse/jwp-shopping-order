@@ -67,7 +67,7 @@ public class CartItemDao {
         }
     }
 
-    public Long create(CartItemEntity cartItemEntity) {
+    public Long save(CartItemEntity cartItemEntity) {
         return jdbcTemplate.executeAndReturnKey(new BeanPropertySqlParameterSource(cartItemEntity)).longValue();
     }
 
@@ -76,9 +76,15 @@ public class CartItemDao {
         jdbcTemplate.getJdbcTemplate().update(sql, id);
     }
 
-    public void updateQuantity(CartItemEntity cartItemEntity) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.getJdbcTemplate().update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
+    public void update(CartItemEntity cartItemEntity) {
+        String sql = "UPDATE cart_item SET member_id = ?, product_id = ? ,quantity = ? WHERE id = ?";
+        jdbcTemplate.getJdbcTemplate().update(
+                sql,
+                cartItemEntity.getMemberId(),
+                cartItemEntity.getProductId(),
+                cartItemEntity.getQuantity(),
+                cartItemEntity.getId()
+        );
     }
 
     private static RowMapper<CartItemEntity> cartEntityMapper() {

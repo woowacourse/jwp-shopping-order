@@ -29,6 +29,13 @@ public class OrderItemDao {
                 );
     }
 
+    public void saveAll(final List<OrderItemEntity> orderItemEntities) {
+        final SqlParameterSource[] sqlParameterSources = orderItemEntities.stream()
+                .map(BeanPropertySqlParameterSource::new)
+                .toArray(SqlParameterSource[]::new);
+        jdbcTemplate.executeBatch(sqlParameterSources);
+    }
+
     public List<OrderItemEntity> findByOrderId(Long orderId) {
         final String sql = "SELECT * FROM ordered_item WHERE order_id = ?";
         try {
@@ -47,12 +54,5 @@ public class OrderItemDao {
                 rs.getString("product_image_url_at_order"),
                 rs.getInt("quantity")
         );
-    }
-
-    public void create(final List<OrderItemEntity> orderItemEntities) {
-        final SqlParameterSource[] sqlParameterSources = orderItemEntities.stream()
-                .map(BeanPropertySqlParameterSource::new)
-                .toArray(SqlParameterSource[]::new);
-        jdbcTemplate.executeBatch(sqlParameterSources);
     }
 }

@@ -56,7 +56,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void createOrder() throws JsonProcessingException {
         final List<ProductEntity> products = productDao.findAll();
         final List<Long> cartItemIds = products.stream()
-                .map(product -> cartItemDao.create(new CartItemEntity(member.getId(), product.getId())))
+                .map(product -> cartItemDao.save(new CartItemEntity(member.getId(), product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
         final OrderCreateRequest request = new OrderCreateRequest(
@@ -89,7 +89,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         final List<ProductEntity> products = productDao.findAll();
 
         final List<Long> cartItemIds = products.stream()
-                .map(product -> cartItemDao.create(new CartItemEntity(member.getId(), product.getId())))
+                .map(product -> cartItemDao.save(new CartItemEntity(member.getId(), product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
         final List<ProductEntity> productsWithoutPizza = products.stream()
@@ -97,7 +97,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .collect(Collectors.toUnmodifiableList());
 
         final List<Long> cartItemsForAnotherOrder = productsWithoutPizza.stream()
-                .map(product -> cartItemDao.create(new CartItemEntity(member.getId(), product.getId())))
+                .map(product -> cartItemDao.save(new CartItemEntity(member.getId(), product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
         final OrderCreateRequest request = new OrderCreateRequest(

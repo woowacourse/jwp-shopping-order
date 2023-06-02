@@ -11,6 +11,12 @@ public class Order {
     private final Point savedPoint;
     private final LocalDateTime orderedAt;
 
+    public Order(final List<OrderItem> orderItems,
+                 final Point usedPoint,
+                 final Point savedPoint) {
+        this(null, orderItems, usedPoint, savedPoint, null);
+    }
+
     public Order(
             final Long id,
             final List<OrderItem> orderItems,
@@ -18,10 +24,20 @@ public class Order {
             final int savedPoint,
             final LocalDateTime orderedAt
     ) {
+        this(id, orderItems, new Point(usedPoint), new Point(savedPoint), orderedAt);
+    }
+
+    public Order(
+            final Long id,
+            final List<OrderItem> orderItems,
+            final Point usedPoint,
+            final Point savedPoint,
+            final LocalDateTime orderedAt
+    ) {
         this.id = id;
         this.orderItems = orderItems;
-        this.usedPoint = new Point(usedPoint);
-        this.savedPoint = new Point(savedPoint);
+        this.usedPoint = usedPoint;
+        this.savedPoint = savedPoint;
         this.orderedAt = orderedAt;
     }
 
@@ -33,12 +49,12 @@ public class Order {
         return orderItems;
     }
 
-    public Point getUsedPoint() {
-        return usedPoint;
+    public int getUsedPoint() {
+        return usedPoint.getValue();
     }
 
-    public Point getSavedPoint() {
-        return savedPoint;
+    public int getSavedPoint() {
+        return savedPoint.getValue();
     }
 
     public LocalDateTime getOrderedAt() {

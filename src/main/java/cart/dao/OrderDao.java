@@ -23,7 +23,7 @@ public class OrderDao {
                 .usingColumns("member_id", "used_point", "saved_point");
     }
 
-    public Long create(OrderEntity orderEntity) {
+    public Long save(OrderEntity orderEntity) {
         return jdbcTemplate.executeAndReturnKey(new BeanPropertySqlParameterSource(orderEntity)).longValue();
     }
 

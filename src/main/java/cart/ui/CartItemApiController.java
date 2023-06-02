@@ -28,7 +28,7 @@ public class CartItemApiController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItems(Member member, @RequestBody CartItemRequest cartItemRequest) {
-        Long cartItemId = cartItemService.create(member, cartItemRequest);
+        Long cartItemId = cartItemService.save(member, cartItemRequest);
 
         return ResponseEntity.created(URI.create("/cart-items/" + cartItemId)).build();
     }
@@ -42,7 +42,7 @@ public class CartItemApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCartItems(Member member, @PathVariable Long id) {
-        cartItemService.remove(member, id);
+        cartItemService.deleteById(member, id);
 
         return ResponseEntity.noContent().build();
     }
