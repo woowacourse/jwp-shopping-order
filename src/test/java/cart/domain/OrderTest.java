@@ -15,7 +15,7 @@ class OrderTest {
         //given
         Order order = Order.of(List.of(new CartItem(1L, 2, product, member)), member, 3000);
 
-        //when
+        //when 1000*2 + 1500 - 500 = 3000
         Order confirmed = order.confirmOrder(Money.from(1500), Money.from(500));
 
         //then

@@ -68,6 +68,38 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(price).isEqualTo(102000);
     }
 
+    @DisplayName("장바구니의 아이템들을 주문한다. - 성공")
+    @Test
+    void orderItems_success2() {
+        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+        requestAddCartItem(member, cartItemRequest);
+
+        OrderRequest orderRequest = new OrderRequest(List.of(1L), 22000, 1L);
+
+        ExtractableResponse<Response> orderResponse = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(orderRequest)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .extract();
+
+        ExtractableResponse<Response> findOrderResponse = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get(orderResponse.header("Location"))
+                .then()
+                .log().all()
+                .extract();
+
+        assertThat(orderResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        int price = findOrderResponse.body().jsonPath().getInt("totalPrice");
+        assertThat(price).isEqualTo(22000);
+    }
+
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
