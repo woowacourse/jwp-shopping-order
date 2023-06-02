@@ -17,10 +17,10 @@ public class JdbcTemplateOrderItemDao implements OrderItemDao {
 
     @Override
     public List<OrderItem> findOrderItemsByOrderId(Long orderId) {
-        String sql = "SELECT od.id, od.product_id, od.product_name, od.product_price, od.product_image_url, od.order_quantity " +
-                "FROM order_detail as od " +
-                "INNER JOIN orders as o ON o.id = od.orders_id " +
-                "WHERE od.orders_id = ?";
+        String sql = "SELECT order_detail.id, order_detail.product_id, order_detail.product_name, order_detail.product_price, order_detail.product_image_url, order_detail.order_quantity " +
+                "FROM order_detail " +
+                "INNER JOIN orders ON orders.id = order_detail.orders_id " +
+                "WHERE order_detail.orders_id = ?";
         return jdbcTemplate.query(sql, new Object[]{orderId}, (rs, rowNum) -> {
             Long id = rs.getLong("order_detail.id");
             Long productId = rs.getLong("order_detail.product_id");

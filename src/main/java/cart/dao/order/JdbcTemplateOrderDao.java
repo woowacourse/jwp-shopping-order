@@ -25,10 +25,10 @@ public class JdbcTemplateOrderDao implements OrderDao {
 
     @Override
     public Optional<Order> findOrderById(Long id) {
-        String sql = "SELECT o.earned_point, o.used_point, o.created_at, m.id, m.email " +
-                "FROM orders as o " +
-                "INNER JOIN member as m ON o.member_id = m.id " +
-                "WHERE o.id = ?";
+        String sql = "SELECT orders.earned_point, orders.used_point, orders.created_at, member.id, member.email " +
+                "FROM orders " +
+                "INNER JOIN member ON orders.member_id = member.id " +
+                "WHERE orders.id = ?";
         List<Order> orders = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
             Long memberId = rs.getLong("member.id");
             String email = rs.getString("member.email");
@@ -46,10 +46,10 @@ public class JdbcTemplateOrderDao implements OrderDao {
 
     @Override
     public List<Order> findAllOrdersByMemberId(Long memberId) {
-        String sql = "SELECT o.id, o.earned_point, o.used_point, o.created_at, m.email " +
-                "FROM orders as o " +
-                "INNER JOIN member as m ON o.member_id = m.id " +
-                "WHERE o.member_id = ?";
+        String sql = "SELECT orders.id, orders.earned_point, orders.used_point, orders.created_at, member.email " +
+                "FROM orders " +
+                "INNER JOIN member ON orders.member_id = member.id " +
+                "WHERE orders.member_id = ?";
         return jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
             Long id = rs.getLong("orders.id");
             String email = rs.getString("member.email");
