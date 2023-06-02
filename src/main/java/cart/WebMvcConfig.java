@@ -26,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("http://localhost:3000", "http://eddy-web.s3-website.ap-northeast-2.amazonaws.com", "http://rulu-pg.s3-website.ap-northeast-2.amazonaws.com")
                 .allowCredentials(true)
                 .allowedHeaders("Content-Type", "Authorization")
                 .exposedHeaders("Location");
