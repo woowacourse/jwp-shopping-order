@@ -16,7 +16,7 @@ public class Coupon {
     }
 
     public boolean isApplicable(final CartItems cartItems) {
-        return couponInfo.getMinOrderPrice() <= cartItems.getTotalProductPrice();
+        return couponInfo.getMinOrderPrice() <= cartItems.calculateTotalProductPrice();
     }
 
     public int getDiscountPrice(final CartItems cartItems) {

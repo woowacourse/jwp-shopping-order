@@ -17,6 +17,6 @@ public class AmountDiscountPolicy implements DiscountPolicy {
 
     @Override
     public int calculateDiscountPrice(final int discountAmount, final CartItems cartItems) {
-        return Math.min(discountAmount, cartItems.getTotalProductPrice());
+        return Math.min(discountAmount, cartItems.calculateTotalProductPrice());
     }
 }

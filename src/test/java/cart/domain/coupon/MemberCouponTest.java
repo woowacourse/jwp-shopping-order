@@ -58,7 +58,7 @@ class MemberCouponTest {
                     LocalDateTime.MAX,
                     LocalDateTime.now());
             CartItems cartItems = Mockito.mock(CartItems.class);
-            given(cartItems.getTotalProductPrice()).willReturn(2000);
+            given(cartItems.calculateTotalProductPrice()).willReturn(2000);
 
             // then
             boolean applicable = memberCoupon.isApplicable(cartItems);
@@ -74,7 +74,7 @@ class MemberCouponTest {
                     LocalDateTime.MAX,
                     LocalDateTime.now());
             CartItems cartItems = Mockito.mock(CartItems.class);
-            given(cartItems.getTotalProductPrice()).willReturn(10000);
+            given(cartItems.calculateTotalProductPrice()).willReturn(10000);
 
             // then
             boolean applicable = memberCoupon.isApplicable(cartItems);

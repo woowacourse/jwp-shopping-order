@@ -68,7 +68,7 @@ class AmountDiscountPolicyTest {
     void 할인_금액_계산시_쿠폰의_할인금액과_총가격중_작은_값이_반환(int couponDiscountAmount, int totalPrice, int discountPrice) {
         // given
         CartItems cartItems = Mockito.mock(CartItems.class);
-        given(cartItems.getTotalProductPrice()).willReturn(totalPrice);
+        given(cartItems.calculateTotalProductPrice()).willReturn(totalPrice);
 
         // when
         int result = discountPolicy.calculateDiscountPrice(couponDiscountAmount, cartItems);

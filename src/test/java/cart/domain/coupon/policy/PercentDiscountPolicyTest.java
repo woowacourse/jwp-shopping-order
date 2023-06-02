@@ -61,7 +61,7 @@ class PercentDiscountPolicyTest {
     void 할인_금액이_반환된다() {
         // given
         CartItems cartItems = Mockito.mock(CartItems.class);
-        given(cartItems.getTotalProductPrice()).willReturn(10000);
+        given(cartItems.calculateTotalProductPrice()).willReturn(10000);
 
         // when
         int result = discountPolicy.calculateDiscountPrice(10, cartItems);

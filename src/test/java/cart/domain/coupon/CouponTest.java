@@ -20,7 +20,7 @@ class CouponTest {
         // given
         // TODO: 실제 가격으로 대체
         CartItems cartItems = Mockito.mock(CartItems.class);
-        given(cartItems.getTotalProductPrice()).willReturn(totalPrice);
+        given(cartItems.calculateTotalProductPrice()).willReturn(totalPrice);
         CouponInfo couponInfo = new CouponInfo(1L, "1000원할인", minOrderPrice, 2000);
         Coupon coupon = new Coupon(couponInfo, 1000, CouponType.AMOUNT);
 

@@ -16,7 +16,7 @@ public class PercentDiscountPolicy implements DiscountPolicy {
 
     @Override
     public int calculateDiscountPrice(final int percent, final CartItems cartItems) {
-        int totalPrice = cartItems.getTotalProductPrice();
+        int totalPrice = cartItems.calculateTotalProductPrice();
         return totalPrice * percent / PERCENT_BASE;
     }
 }

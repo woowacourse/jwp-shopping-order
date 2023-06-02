@@ -48,8 +48,12 @@ public class Order {
 
     private static int calculateTotalOrderAmount(final CartItems cartItems, final MemberCoupon coupon) {
         int discountPrice = coupon.getDiscountPrice(cartItems);
-        int totalProductPrice = cartItems.getTotalProductPrice();
+        int totalProductPrice = cartItems.calculateTotalProductPrice();
         return totalProductPrice - discountPrice;
+    }
+
+    private static void validateCoupon(final Member member, final MemberCoupon memberCoupon) {
+        
     }
 
     public void checkOwner(final Member member) {

@@ -2,6 +2,7 @@ package cart.persistence.dao;
 
 import static cart.fixture.MemberCouponFixture.유효한_멤버쿠폰_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.fixture.CouponFixture.금액_10000원이상_1000원할인;
 import cart.fixture.MemberFixture;
@@ -10,7 +11,6 @@ import cart.persistence.entity.MemberCouponEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderEntity;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -58,7 +58,7 @@ class OrderDaoTest {
         Optional<OrderDetailDTO> result = orderDao.findById(id);
 
         // then
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(result).isPresent(),
                 () -> assertThat(result.get().getMemberEntity())
                         .usingRecursiveComparison()
