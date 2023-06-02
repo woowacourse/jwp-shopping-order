@@ -28,8 +28,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) {
-        final Credential credential = credentialThreadLocal.get();
-        credentialThreadLocal.clear();
-        return credential;
+        return credentialThreadLocal.getAndClear();
     }
 }

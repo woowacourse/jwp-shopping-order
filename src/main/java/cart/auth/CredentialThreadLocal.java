@@ -11,11 +11,9 @@ public class CredentialThreadLocal {
         local.set(credential);
     }
 
-    public Credential get() {
-        return local.get();
-    }
-
-    public void clear() {
+    public Credential getAndClear() {
+        final Credential credential = local.get();
         local.remove();
+        return credential;
     }
 }
