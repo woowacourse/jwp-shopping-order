@@ -20,7 +20,7 @@ public class OrderEntity {
     }
 
     public OrderEntity(final long memberId, final int originalPrice, final int discountPrice) {
-        this(null, memberId, originalPrice, discountPrice, LocalDateTime.now());
+        this(null, memberId, originalPrice, discountPrice, null);
     }
 
     public Long getId() {
