@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.InvalidOrderCalculationException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +49,7 @@ public class Order {
 
         Money calculated = totalPrice.minus(discountingPrice).plus(deliveryFee);
         if (!this.price.equals(calculated)) {
-            throw new RuntimeException("주문 금액과 실제 계산예정금액이 불일치합니다.");
+            throw new InvalidOrderCalculationException();
         }
         return new Order(this.cartItems, this.member, this.price, OrderState.CONFIRMED);
     }
