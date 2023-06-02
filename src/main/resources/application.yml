@@ -1,3 +1,24 @@
 spring:
+  profiles:
+    active:
+      - local
   config:
     import: classpath:/order-submodule/application-prod.yml
+
+---
+
+spring:
+  sql:
+    init:
+      mode: always
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+  h2:
+    console:
+      enabled: true
+server:
+  port: 8080
