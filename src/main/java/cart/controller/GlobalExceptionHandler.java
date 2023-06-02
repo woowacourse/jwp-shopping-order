@@ -21,26 +21,31 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthorizationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ExceptionResponse handleAuthorization(AuthorizationException e) {
-        return new ExceptionResponse(e.getMessage());
+        return new ExceptionResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
     }
 
     @ExceptionHandler(NotOwnerException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handleNotOwner(NotOwnerException e) {
-        return new ExceptionResponse(e.getMessage());
+        return new ExceptionResponse(HttpStatus.FORBIDDEN.value(), e.getMessage());
     }
 
     @ExceptionHandler({MemberNotFoundException.class, ProductNotFoundException.class,
             CartItemNotFoundException.class, OrderNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionResponse handleNotFound(IllegalArgumentException e) {
-        return new ExceptionResponse(e.getMessage());
+        return new ExceptionResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
 
-    @ExceptionHandler({PaymentAmountNotEqualException.class, NotEnoughQuantityException.class,
-            IdTypeException.class})
+    @ExceptionHandler({NotEnoughQuantityException.class, IdTypeException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleBadRequest(IllegalArgumentException e) {
-        return new ExceptionResponse(e.getMessage());
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+    }
+
+    @ExceptionHandler(PaymentAmountNotEqualException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handlePaymentAmountNotEqual(PaymentAmountNotEqualException e) {
+        return new ExceptionResponse(4001, e.getMessage());
     }
 }
