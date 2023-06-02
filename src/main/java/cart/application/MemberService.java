@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.domain.member.Email;
 import cart.domain.member.Member;
-import cart.dto.MemberResponse;
+import cart.dto.request.MemberResponse;
 import cart.repository.MemberRepository;
 import java.util.List;
 import java.util.stream.Collectors;
