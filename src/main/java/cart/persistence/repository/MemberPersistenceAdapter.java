@@ -45,7 +45,7 @@ public class MemberPersistenceAdapter implements MemberRepository {
 
     @Override
     public void update(Member updatedMember) {
-        String sql = "UPDATE cart_item SET email = :email, password = :password, point = :point WHERE id = :id";
+        String sql = "UPDATE member SET email = :email, password = :password, point = :point WHERE id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("email", updatedMember.getEmail())
                 .addValue("password", updatedMember.getPassword())

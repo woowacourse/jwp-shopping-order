@@ -8,6 +8,8 @@ import cart.application.repository.OrderRepository;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -26,13 +28,13 @@ public class OrderPersistenceAdapter implements OrderRepository {
 
     @Override
     public Order insert(Order order) {
-        insertIntoOrder(order);
-        insertIntoOrderInfo(order.getOrderInfo());
+        Long orderId = insertIntoOrder(order);
+        insertIntoOrderInfo(order.getOrderInfo(), orderId);
         return order;
     }
 
-    private void insertIntoOrder(Order order) {
-        String sql = "INSERT (member_id, original_price, used_point, point_to_add) INTO order " +
+    private Long insertIntoOrder(Order order) {
+        String sql = "INSERT INTO orders (member_id, original_price, used_point, point_to_add) " +
                 "VALUES (:member_id, :original_price, :used_point, :point_to_add)";
 
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -40,33 +42,36 @@ public class OrderPersistenceAdapter implements OrderRepository {
                 .addValue("original_price", order.getOriginalPrice())
                 .addValue("used_point", order.getUsedPoint())
                 .addValue("point_to_add", order.getPointToAdd());
-        namedParameterJdbcTemplate.update(sql, namedParameters);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(sql, namedParameters, keyHolder);
+        return keyHolder.getKeyAs(Long.class);
     }
 
-    private void insertIntoOrderInfo(List<OrderInfo> orderInfo) {
-        String sql = "INSERT (order_id, product_id, name, price, image_url, quantity) INTO order_info " +
-                "VALUES :order_id and :product_id and :name and :price and :image_url and :quantity";
+    private void insertIntoOrderInfo(List<OrderInfo> orderInfo, Long orderId) {
+        String sql = "INSERT INTO order_info (order_id, product_id, name, price, image_url, quantity) " +
+                "VALUES (:order_id, :product_id, :name, :price, :image_url, :quantity)";
         SqlParameterSource[] namedParameters = new SqlParameterSource[orderInfo.size()];
 
-        for (OrderInfo info : orderInfo) {
+        for (int i = 0; i < orderInfo.size(); i++) {
             MapSqlParameterSource parameters = new MapSqlParameterSource();
-            parameters.addValue("order_id", info.getId());
-            parameters.addValue("product_id", info.getProduct().getId());
-            parameters.addValue("name", info.getName());
-            parameters.addValue("price", info.getPrice());
-            parameters.addValue("image_url", info.getImageUrl());
-            parameters.addValue("quantity", info.getQuantity());
+            parameters.addValue("order_id", orderId);
+            parameters.addValue("product_id", orderInfo.get(i).getProduct().getId());
+            parameters.addValue("name", orderInfo.get(i).getName());
+            parameters.addValue("price", orderInfo.get(i).getPrice());
+            parameters.addValue("image_url", orderInfo.get(i).getImageUrl());
+            parameters.addValue("quantity", orderInfo.get(i).getQuantity());
+            namedParameters[i] = parameters;
         }
         namedParameterJdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
     public List<Order> findByMemberId(Long id) {
-        String sql = "SELECT (member.id, member.email, member.password, product.id, product.name, product.price," +
+        String sql = "SELECT (member.id, member.email, member.password, member.point, product.id, product.name, product.price," +
                 "product.image_url, product.point_ratio, product.point_available, order_info.id, order_info.name, " +
-                "order_info.price, order_info.image_url, order.order_id, order_info.quantity, order.original_price, " +
-                "order.used_point, order.point_to_add) " +
-                "FROM order " +
+                "order_info.price, order_info.image_url, orders.order_id, order_info.quantity, orders.original_price, " +
+                "orders.used_point, orders.point_to_add) " +
+                "FROM orders " +
                 "INNER JOIN member ON order.member_id = member.id " +
                 "INNER JOIN order_info ON order_info.order_id = order.id " +
                 "WHERE member.id = :id";
@@ -97,21 +102,22 @@ public class OrderPersistenceAdapter implements OrderRepository {
 
     @Override
     public Order findById(Long id) {
-        String sql = "SELECT (member.id, member.email, member.password, product.id, product.name, product.price," +
-                "product.image_url, product.point_ratio, product.point_available, order_info.id, order_info.name, " +
-                "order_info.price, order_info.image_url, order.order_id, order_info.quantity, order.original_price, " +
-                "order.used_point, order.point_to_add) " +
-                "FROM order " +
-                "INNER JOIN member ON order.member_id = member.id " +
-                "INNER JOIN order_info ON order_info.order_id = order.id " +
-                "WHERE order.id = :id";
+        String sql = "SELECT *" +
+                "FROM orders " +
+                "INNER JOIN member ON orders.member_id = member.id " +
+                "INNER JOIN order_info ON order_info.order_id = orders.id " +
+                "INNER JOIN product ON order_info.product_id = product.id " +
+                "WHERE member.id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
         List<Order> orders = new ArrayList<>();
 
         namedParameterJdbcTemplate.query(sql, namedParameters, rs -> {
-            long orderId = rs.getLong("order.order_id");
+            long orderId = rs.getLong("orders.id");
             Member member = makeMember(rs);
             List<OrderInfo> orderInfo = new ArrayList<>();
+            Integer originalPrice = rs.getInt("orders.original_price");
+            Integer usedPoint = rs.getInt("orders.used_point");
+            Integer pointToAdd = rs.getInt("orders.point_to_add");
             do {
                 orderInfo.add(makeOrderInfo(rs));
             } while (rs.next());
@@ -120,9 +126,9 @@ public class OrderPersistenceAdapter implements OrderRepository {
                     orderId,
                     member,
                     orderInfo,
-                    rs.getInt("order.original_price"),
-                    rs.getInt("order.used_point"),
-                    rs.getInt("order.point_to_add")
+                    originalPrice,
+                    usedPoint,
+                    pointToAdd
             ));
         });
         return orders.stream()
@@ -145,7 +151,7 @@ public class OrderPersistenceAdapter implements OrderRepository {
                 makeProduct(rs),
                 rs.getString("order_info.name"),
                 rs.getInt("order_info.price"),
-                rs.getString("order_info_image_url"),
+                rs.getString("order_info.image_url"),
                 rs.getInt("order_info.quantity")
         );
     }
