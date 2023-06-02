@@ -6,6 +6,7 @@ import cart.dto.OrderCouponResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,17 +22,19 @@ public class CouponService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    @Transactional(readOnly = true)
     public AllOrderCouponResponse calculateCouponForCarts(final Member member, final List<Long> selectedCartItemIds) {
-        List<CartItem> cartItems = cartItemRepository.findByMember(member);
-        // TODO: 5/30/23 이거 도메인 로직으로 빼기
-        List<CartItem> selectedCartItems = cartItems.stream()
-                .filter(cartItem -> selectedCartItemIds.contains(cartItem.getId()))
-                .collect(Collectors.toList());
-        // TODO: 5/30/23 이거 도메인 로직으로 뺴기
-        int totalPrice = selectedCartItems.stream()
-                .mapToInt(cartItem -> cartItem.getProduct().getPrice() * cartItem.getQuantity())
-                .sum();
-        List<Coupon> coupons = couponRepository.findCouponByMember(member);
+        List<CartItem> cartItemsByMember = cartItemRepository.findByMember(member);
+        List<Coupon> coupons = couponRepository.findUsableByMember(member);
+
+        CartItems cartItems = new CartItems(cartItemsByMember);
+        CartItems selectedCartItems = cartItems.filterByIds(selectedCartItemIds);
+        Integer totalPrice = selectedCartItems.calculateTotalPrice();
+
+        return convertToAllOrderCouponResponse(coupons, totalPrice);
+    }
+
+    private AllOrderCouponResponse convertToAllOrderCouponResponse(final List<Coupon> coupons, final int totalPrice) {
         List<OrderCouponResponse> orderCouponResponses = coupons.stream()
                 .map(coupon -> convertToOrderResponse(coupon, totalPrice))
                 .collect(Collectors.toList());

@@ -22,7 +22,7 @@ public class CouponRepository {
         this.memberCouponDao = memberCouponDao;
     }
 
-    public List<Coupon> findCouponByMember(final Member member) {
+    public List<Coupon> findUsableByMember(final Member member) {
         // TODO: 5/30/23 JOIN 사용할지 고민해보기
         Map<Long, CouponEntity> allCouponsById = couponDao.findAll().stream()
                 .collect(Collectors.toMap(CouponEntity::getId, couponEntity -> couponEntity));

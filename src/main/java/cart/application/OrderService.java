@@ -27,22 +27,17 @@ public class OrderService {
     @Transactional
     public Long createOrder(final Member member, final OrderRequest request) {
         Coupon coupon = findCouponIfExist(request.getCouponId());
+        CartItems cartItems = new CartItems(findCartItemsRequest(request));
+        CartItems selectedCartItems = new CartItems(convertToCartItems(member, request));
 
-        List<CartItem> currentCartItems = findCartItemsRequest(request);
-        List<CartItem> selectedCartItems = convertToCartItems(member, request);
+        cartItems.checkStatus(selectedCartItems, member);
+        Order order = cartItems.order(member, coupon);
 
-        validateOrder(member, currentCartItems, selectedCartItems);
-
-        List<OrderItem> orderItems = currentCartItems.stream()
-                .map(CartItem::toOrderItem)
-                .collect(Collectors.toList());
-        Order order = Order.of(null, orderItems, member, coupon);
-
-        Long savedId = orderRepository.save(order);
-        couponRepository.update(coupon);
-        cartItemRepository.deleteAll(currentCartItems);
-
-        return savedId;
+        if (coupon != Coupon.EMPTY_COUPON) {
+            couponRepository.update(coupon);
+        }
+        cartItemRepository.deleteAll(cartItems.getCartItems());
+        return orderRepository.save(order);
     }
 
     @Transactional(readOnly = true)
@@ -53,6 +48,10 @@ public class OrderService {
             order.checkOwner(member);
         }
 
+        return convertToAllOrderResponse(allOrders);
+    }
+
+    private AllOrderResponse convertToAllOrderResponse(final List<Order> allOrders) {
         List<OrderResponse> orderResponses = allOrders.stream()
                 .map(this::convertToOrderResponse)
                 .collect(Collectors.toList());
@@ -75,7 +74,7 @@ public class OrderService {
         return couponRepository.findById(couponId);
     }
 
-    private List<CartItem> findCartItemsRequest(final OrderRequest request) {
+    private List<CartItem>  findCartItemsRequest(final OrderRequest request) {
         List<Long> currentCartIds = request.getProducts().stream()
                 .map(OrderCartItemRequest::getCartItemId)
                 .collect(Collectors.toList());
@@ -83,27 +82,9 @@ public class OrderService {
     }
 
     private List<CartItem> convertToCartItems(final Member member, final OrderRequest request) {
-        List<CartItem> selectedCartItems = request.getProducts().stream()
+        return request.getProducts().stream()
                 .map(orderCartItemRequest -> convertToCartItem(orderCartItemRequest, member))
                 .collect(Collectors.toList());
-        return selectedCartItems;
-    }
-
-    private void validateOrder(final Member member, final List<CartItem> currentCartItems, final List<CartItem> selectedCartItems) {
-        for (CartItem cartItem : currentCartItems) {
-            cartItem.checkOwner(member);
-            // TODO: 6/1/23 2중 포문 해결
-            validateValue(cartItem, selectedCartItems);
-        }
-    }
-
-    private void validateValue(final CartItem currentCartItem, final List<CartItem> selectedCartItems) {
-        CartItem selectedCartItem = selectedCartItems.stream()
-                .filter(cartItem -> cartItem.equals(currentCartItem))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품은 선택되지 않았습니다."));
-
-        currentCartItem.checkValue(selectedCartItem);
     }
 
     // TODO: 6/1/23 request에 id 받아와야 될지 고민해보기

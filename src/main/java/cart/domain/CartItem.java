@@ -28,9 +28,13 @@ public class CartItem {
         return new OrderItem(null, product, quantity);
     }
 
+    public Integer calculatePrice() {
+        return product.getPrice() * quantity;
+    }
+
     public void checkValue(final CartItem other) {
         if (!Objects.equals(this.quantity, other.quantity)) {
-            throw new IllegalArgumentException("카드 수량이 변경되었습니다.");
+            throw new IllegalArgumentException("카트 수량이 변경되었습니다.");
         }
         this.product.checkValue(other.product);
     }
