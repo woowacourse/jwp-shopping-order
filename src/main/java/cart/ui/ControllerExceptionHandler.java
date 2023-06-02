@@ -3,6 +3,14 @@ package cart.ui;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.CartItemNotFoundException;
+import cart.exception.NegativePointException;
+import cart.exception.NegativePriceException;
+import cart.exception.NegativeStockException;
+import cart.exception.NotEnoughPointException;
+import cart.exception.NotEnoughStockException;
+import cart.exception.OrderNotFoundException;
+import cart.exception.OrderOwnerException;
+import cart.exception.PriceNotMatchException;
 import cart.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +19,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
+    @ExceptionHandler
+    private ResponseEntity<String> handleException(final Exception e) {
+        return ResponseEntity.internalServerError().body("예상치 못한 예외가 발생했습니다.");
+    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Void> handlerAuthenticationException(final AuthenticationException e) {
@@ -22,13 +35,53 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleException(final ProductNotFoundException e) {
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<String> handleException(final CartItemNotFoundException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(CartItemNotFoundException.class)
-    public ResponseEntity<String> handleException(final CartItemNotFoundException e) {
+    @ExceptionHandler(NegativePointException.class)
+    public ResponseEntity<String> handleException(final NegativePointException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(NegativePriceException.class)
+    public ResponseEntity<String> handleException(final NegativePriceException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(NegativeStockException.class)
+    public ResponseEntity<String> handleException(final NegativeStockException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotEnoughPointException.class)
+    public ResponseEntity<String> handleException(final NotEnoughPointException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotEnoughStockException.class)
+    public ResponseEntity<String> handleException(final NotEnoughStockException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<String> handleException(final OrderNotFoundException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(OrderOwnerException.class)
+    public ResponseEntity<String> handleException(final OrderOwnerException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(PriceNotMatchException.class)
+    public ResponseEntity<String> handleException(final PriceNotMatchException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<String> handleException(final ProductNotFoundException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
