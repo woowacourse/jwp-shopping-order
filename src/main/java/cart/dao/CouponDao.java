@@ -37,8 +37,13 @@ public class CouponDao {
     }
 
 
-    public void deleteUserCoupon(final Member member, final Long couponId) {
+    public void deleteUserCoupon(final Member member, final long couponId) {
         final String sql = "delete from user_coupon where coupon_id = ? AND member_id = ?";
         jdbcTemplate.update(sql, couponId, member.getId());
+    }
+
+    public void issue(final long memberId, final int couponId) {
+        final String sql = "INSERT INTO user_coupon (member_Id, coupon_Id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, memberId, couponId);
     }
 }

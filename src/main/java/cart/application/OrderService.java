@@ -34,12 +34,14 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final CartItemDao cartItemDao;
     private final CouponDao couponDao;
+    private final CouponService couponService;
     private final OrderDao orderDao;
     private final ProductDao productDao;
 
-    public OrderService(final CartItemDao cartItemDao, final CouponDao couponDao, final OrderDao orderDao, final ProductDao productDao) {
+    public OrderService(final CartItemDao cartItemDao, final CouponDao couponDao, final CouponService couponService, final OrderDao orderDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.couponDao = couponDao;
+        this.couponService = couponService;
         this.orderDao = orderDao;
         this.productDao = productDao;
     }
@@ -102,6 +104,7 @@ public class OrderService {
 
     private long completeOrder(final Member member, final OrderRequestDto orderRequestDto, final Order order) {
         cartItemDao.deleteByIds(orderRequestDto.getCartItemIds());
+        couponService.issueCoupon(member, order);
         return orderDao.save(member, order);
     }
 
