@@ -1,5 +1,7 @@
 package cart.domain.value;
 
+import java.util.Objects;
+
 public class Money {
 
     private final int money;
@@ -15,19 +17,40 @@ public class Money {
         }
     }
 
-    public int multiply(final double percent) {
-        return (int) (money * percent);
+    public Money multiply(final double percent) {
+        return new Money((int) (money * percent));
     }
 
-    public int plus(int consumptionAmount) {
-        return money + consumptionAmount;
+    public Money plus(final Money consumptionAmount) {
+        return new Money(money + consumptionAmount.getMoney());
     }
 
-    public boolean isSame(final int otherMoney) {
-        return this.money == otherMoney;
+    public Money minus(final Money otherMoney) {
+        return new Money(money - otherMoney.getMoney());
+    }
+
+    public boolean isOver(final Money otherMoney) {
+        return money >= otherMoney.getMoney();
+    }
+
+    public boolean isLower(final Money otherMoney) {
+        return money < otherMoney.getMoney();
     }
 
     public int getMoney() {
         return money;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Money money1 = (Money) o;
+        return money == money1.money;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(money);
     }
 }

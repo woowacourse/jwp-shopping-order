@@ -43,8 +43,8 @@ public class OrderResponse {
         return new OrderResponse(
                 orderItemDtos,
                 order.getGenerateTime(),
-                order.getOrderItems().getItemBenefit(),
-                order.getOrderItems().getMemberBenefit(member),
+                order.getOrderItems().getItemBenefit().getMoney(),
+                order.getOrderItems().getMemberBenefit(member).getMoney(),
                 order.getPurchaseItemPrice(),
                 order.getDiscountPurchaseItemPrice(),
                 order.getShippingFee(),

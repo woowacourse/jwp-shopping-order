@@ -34,7 +34,7 @@ public class OrderItemDto {
                 orderItem.getImageUrl(),
                 orderItem.getQuantity(),
                 orderItem.getDiscountRate(),
-                orderItem.getItemDiscountedPrice()
+                orderItem.getItemDiscountedPrice().getMoney()
         );
     }
 

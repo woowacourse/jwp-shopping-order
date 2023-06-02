@@ -1,6 +1,7 @@
 package cart.domain.order;
 
 import cart.domain.member.Member;
+import cart.domain.value.Money;
 
 import java.util.List;
 
@@ -12,45 +13,51 @@ public class OrderItems {
         this.orderItems = orderItems;
     }
 
-    public int getTotalPrinciplePrice() {
-        return orderItems.stream()
-                .mapToInt(OrderItem::getPrinciplePrice)
+    public Money getTotalPrinciplePrice() {
+        int totalPrinciplePrice = orderItems.stream()
+                .map(OrderItem::getPrinciplePrice)
+                .mapToInt(Money::getMoney)
                 .sum();
+        return new Money(totalPrinciplePrice);
     }
 
-    public int getTotalDiscountedPrice(final Member member) {
+    public Money getTotalDiscountedPrice(final Member member) {
         int discountedPrice = calculateItemDiscount() + calculateMemberDiscount(member);
-        return discountedPrice;
+        return new Money(discountedPrice);
     }
 
-    public int getItemBenefit() {
+    public Money getItemBenefit() {
         int discountedItemPrinciplePrice = orderItems.stream()
                 .filter(OrderItem::isDiscount)
-                .mapToInt(OrderItem::getPrinciplePrice)
+                .map(OrderItem::getPrinciplePrice)
+                .mapToInt(Money::getMoney)
                 .sum();
-        return discountedItemPrinciplePrice - calculateItemDiscount();
+        return new Money(discountedItemPrinciplePrice - calculateItemDiscount());
     }
 
-    public int getMemberBenefit(final Member member) {
+    public Money getMemberBenefit(final Member member) {
         int discountedItemPrinciplePrice = orderItems.stream()
                 .filter(OrderItem::isNotDiscount)
-                .mapToInt(OrderItem::getPrinciplePrice)
+                .map(OrderItem::getPrinciplePrice)
+                .mapToInt(Money::getMoney)
                 .sum();
 
-        return discountedItemPrinciplePrice - calculateMemberDiscount(member);
+        return new Money(discountedItemPrinciplePrice - calculateMemberDiscount(member));
     }
 
     private int calculateItemDiscount() {
         return orderItems.stream()
                 .filter(OrderItem::isDiscount)
-                .mapToInt(OrderItem::getItemDiscountedPrice)
+                .map(OrderItem::getItemDiscountedPrice)
+                .mapToInt(Money::getMoney)
                 .sum();
     }
 
     private int calculateMemberDiscount(final Member member) {
         return orderItems.stream()
                 .filter(OrderItem::isNotDiscount)
-                .mapToInt(orderitem -> orderitem.getMemberDiscountedPrice(member))
+                .map(orderitem -> orderitem.getMemberDiscountedPrice(member))
+                .mapToInt(Money::getMoney)
                 .sum();
     }
 

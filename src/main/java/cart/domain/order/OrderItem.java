@@ -63,17 +63,17 @@ public class OrderItem {
         );
     }
 
-    public int getItemDiscountedPrice() {
+    public Money getItemDiscountedPrice() {
         double discountedPercent = discountRate.getDiscountedPercent();
-        return price.multiply(discountedPercent) * getQuantity();
+        return price.multiply(discountedPercent).multiply(getQuantity());
     }
 
-    public int getMemberDiscountedPrice(final Member member) {
-        return member.discountPrice(getPrice()) * getQuantity();
+    public Money getMemberDiscountedPrice(final Member member) {
+        return member.discountPrice(price).multiply(getQuantity());
     }
 
-    public int getPrinciplePrice() {
-        return getPrice() * getQuantity();
+    public Money getPrinciplePrice() {
+        return price.multiply(quantity.getQuantity());
     }
 
     public boolean isDiscount() {

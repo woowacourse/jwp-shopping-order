@@ -42,8 +42,8 @@ public class Order {
     }
 
     public void calculatePrice() {
-        purchaseItemPrice = new Money(orderItems.getTotalPrinciplePrice());
-        discountPurchaseItemPrice = new Money(orderItems.getTotalDiscountedPrice(member));
+        purchaseItemPrice = orderItems.getTotalPrinciplePrice();
+        discountPurchaseItemPrice = orderItems.getTotalDiscountedPrice(member);
         determineShippingFee(discountPurchaseItemPrice.getMoney());
     }
 
@@ -73,11 +73,11 @@ public class Order {
                               final int totalMemberDiscountAmount,
                               final int shippingFee
     ) {
-        return purchaseItemPrice.isSame(totalItemPrice)
-                && discountPurchaseItemPrice.isSame(discountedTotalItemPrice)
-                && this.shippingFee.isSame(shippingFee)
-                && orderItems.getItemBenefit() == totalItemDiscountAmount
-                && orderItems.getMemberBenefit(member) == totalMemberDiscountAmount;
+        return purchaseItemPrice.equals(new Money(totalItemPrice))
+                && discountPurchaseItemPrice.equals(new Money(discountedTotalItemPrice))
+                && this.shippingFee.equals(new Money(shippingFee))
+                && orderItems.getItemBenefit().getMoney() == totalItemDiscountAmount
+                && orderItems.getMemberBenefit(member).getMoney() == totalMemberDiscountAmount;
     }
 
     public Long getId() {

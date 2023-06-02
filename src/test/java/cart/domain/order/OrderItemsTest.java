@@ -2,6 +2,7 @@ package cart.domain.order;
 
 import cart.domain.member.Member;
 import cart.domain.member.Rank;
+import cart.domain.value.Money;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,10 +21,10 @@ class OrderItemsTest {
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10)));
 
-        int expect = 35_000;
+        Money expect = new Money(35_000);
 
         // when
-        int result = orderItems.getTotalDiscountedPrice(member);
+        Money result = orderItems.getTotalDiscountedPrice(member);
 
         // then
         assertThat(result).isEqualTo(expect);
@@ -37,10 +38,10 @@ class OrderItemsTest {
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10)));
 
-        int expect = 40_000;
+        Money expect = new Money(40_000);
 
         // when
-        int result = orderItems.getTotalPrinciplePrice();
+        Money result = orderItems.getTotalPrinciplePrice();
 
         // then
         assertThat(result).isEqualTo(expect);
@@ -56,10 +57,10 @@ class OrderItemsTest {
                 new OrderItem(1L, "포카칩", 1000, "이미지", 10, 0),
                 new OrderItem(2L, "스윙칩", 2000, "이미지", 15, 10)));
 
-        int expect = 2000;
+        Money expect = new Money(2000);
 
         // when
-        int result = orderItems.getMemberBenefit(member);
+        Money result = orderItems.getMemberBenefit(member);
 
         // then
         assertThat(result).isEqualTo(expect);

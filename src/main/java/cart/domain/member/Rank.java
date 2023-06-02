@@ -1,5 +1,7 @@
 package cart.domain.member;
 
+import cart.domain.value.Money;
+
 import java.util.Comparator;
 import java.util.stream.Stream;
 
@@ -21,13 +23,13 @@ public enum Rank {
         this.korean = korean;
     }
 
-    public int getDiscountPrice(final int price) {
-        return (int) (price * (1 - (double) discountRate / 100));
+    public Money getDiscountPrice(final Money price) {
+        return (price.multiply((1 - (double) discountRate / 100)));
     }
 
-    public static Rank findRank(final int totalPurchaseAmount) {
+    public static Rank findRank(final Money totalPurchaseAmount) {
         return Stream.of(Rank.values())
-                .filter(rank -> rank.standard < totalPurchaseAmount)
+                .filter(rank -> rank.standard < totalPurchaseAmount.getMoney())
                 .max(Comparator.comparing(Rank::getStandard))
                 .orElseThrow();
     }

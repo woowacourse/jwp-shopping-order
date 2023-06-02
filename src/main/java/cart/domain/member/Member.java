@@ -23,17 +23,17 @@ public class Member {
         this(id, new Email(email), new Password(password), rank, new Money(totalPurchaseAmount));
     }
 
-    public int discountPrice(final int itemPrice) {
+    public Money discountPrice(final Money itemPrice) {
         return rank.getDiscountPrice(itemPrice);
     }
 
     public void update(final int money) {
-        int updateMoney = totalPurchaseAmount.plus(money);
+        Money updateMoney = totalPurchaseAmount.plus(new Money(money));
         Rank updatedRank = Rank.findRank(updateMoney);
         if (rank != updatedRank) {
             rank = updatedRank;
         }
-        totalPurchaseAmount = new Money(updateMoney);
+        totalPurchaseAmount = updateMoney;
     }
 
     public Long getId() {
