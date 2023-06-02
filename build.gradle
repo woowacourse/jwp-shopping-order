@@ -27,6 +27,7 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
     runtimeOnly 'com.h2database:h2'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
 
     asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
