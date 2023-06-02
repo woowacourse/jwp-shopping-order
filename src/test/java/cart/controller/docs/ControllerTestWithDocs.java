@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.docs;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -11,9 +11,6 @@ import org.junit.jupiter.api.TestInfo;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.snippet.Snippet;
-
-import cart.dto.RequestSnippets;
-import cart.dto.ResponseSnippets;
 
 @AutoConfigureRestDocs
 public abstract class ControllerTestWithDocs {

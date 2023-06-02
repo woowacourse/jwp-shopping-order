@@ -18,6 +18,8 @@ import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
+import cart.dto.MemberCouponRequest;
+import cart.dto.OrderItemRequest;
 import cart.dto.OrderRequest;
 
 @Service
@@ -41,13 +43,17 @@ public class OrderService {
     }
 
     @Transactional
-    public void order(Member member, List<OrderRequest> requests) {
+    public void order(Member member, OrderRequest request) {
         Cart cart = cartService.getCartOf(member);
 
         List<CartItem> itemsToOrder = new ArrayList<>();
-        for (OrderRequest request : requests) {
-            CartItem item = cartItemService.getItemByProductId(request.getProduct().getId());
-            List<MemberCoupon> coupons = couponService.getMemberCouponsBy(member, request.getCouponId());
+        for (OrderItemRequest orderItemRequest : request.getOrderItems()) {
+            CartItem item = cartItemService.getItemByProductId(orderItemRequest.getProduct().getId());
+            List<Long> couponIds = orderItemRequest.getCoupons()
+                    .stream()
+                    .map(MemberCouponRequest::getCouponId)
+                    .collect(Collectors.toList());
+            List<MemberCoupon> coupons = couponService.getMemberCouponsBy(member, couponIds);
             cart.applyCouponsOn(item, coupons);
 
             itemsToOrder.add(item);

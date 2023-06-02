@@ -4,28 +4,19 @@ import java.util.List;
 
 public class OrderRequest {
 
-    private ProductRequest.WithId product;
-    private Integer quantity;
-    private List<Long> couponId;
+    private Integer deliveryFee;
+    private List<OrderItemRequest> orderItems;
 
-    private OrderRequest() {
+    public OrderRequest(Integer deliveryFee, List<OrderItemRequest> orderItems) {
+        this.deliveryFee = deliveryFee;
+        this.orderItems = orderItems;
     }
 
-    public OrderRequest(ProductRequest.WithId product, Integer quantity, List<Long> couponId) {
-        this.product = product;
-        this.quantity = quantity;
-        this.couponId = couponId;
+    public Integer getDeliveryFee() {
+        return deliveryFee;
     }
 
-    public ProductRequest.WithId getProduct() {
-        return product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public List<Long> getCouponId() {
-        return couponId;
+    public List<OrderItemRequest> getOrderItems() {
+        return orderItems;
     }
 }

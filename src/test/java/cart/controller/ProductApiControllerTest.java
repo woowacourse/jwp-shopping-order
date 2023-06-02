@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cart.WebMvcConfig;
 import cart.application.ProductService;
+import cart.controller.docs.ControllerTestWithDocs;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.ui.ProductApiController;

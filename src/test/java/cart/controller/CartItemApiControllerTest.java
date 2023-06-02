@@ -39,6 +39,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cart.application.CartItemService;
+import cart.controller.docs.ControllerTestWithDocs;
 import cart.dao.MemberDao;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;

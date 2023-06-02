@@ -25,19 +25,19 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<Void> order(Member member, @RequestBody List<OrderRequest> requests) {
-        orderService.order(member, requests);
+    public ResponseEntity<Void> order(Member member, @RequestBody OrderRequest request) {
+        orderService.order(member, request);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<OrderResponse>> order(Member member) {
+    public ResponseEntity<List<OrderResponse>> showOrdersOf(Member member) {
         List<Order> orders = orderService.getBy(member);
         return ResponseEntity.ok(OrderResponse.of(orders));
     }
 
     @GetMapping("/orders/{id}")
-    public ResponseEntity<OrderResponse> order(Member member, @PathVariable Long id) {
+    public ResponseEntity<OrderResponse> showOrderBy(Member member, @PathVariable Long id) {
         Order order = orderService.getBy(member, id);
         return ResponseEntity.ok(OrderResponse.of(order));
     }

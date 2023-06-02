@@ -1,8 +1,9 @@
 package cart.controller;
 
 import static cart.fixture.TestFixture.AUTHORIZATION_HEADER_MEMBER_A;
-import static cart.fixture.TestFixture.COUPON_FIXED_2000;
+import static cart.fixture.TestFixture.CART_ITEM_샐러드_MEMBER_A;
 import static cart.fixture.TestFixture.MEMBER_A;
+import static cart.fixture.TestFixture.MEMBER_A_COUPON_FIXED_2000;
 import static cart.fixture.TestFixture.ORDER_ONE_MEMBER_A;
 import static cart.fixture.TestFixture.ORDER_TWO_MEMBER_A;
 import static cart.fixture.TestFixture.샐러드;
@@ -35,8 +36,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cart.application.OrderService;
+import cart.controller.docs.ControllerTestWithDocs;
 import cart.dao.MemberDao;
 import cart.domain.Order;
+import cart.dto.MemberCouponRequest;
+import cart.dto.OrderItemRequest;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.ProductRequest;
@@ -64,17 +68,20 @@ public class OrderControllerTest extends ControllerTestWithDocs {
 
     @Test
     void 주문요청() throws Exception {
-        List<OrderRequest> orderRequest = List.of(
-                new OrderRequest(
-                        // CART_ITEM_샐러드_MEMBER_A().getId(),
-                        new ProductRequest.WithId(
-                                샐러드.getId(),
-                                샐러드.getName(),
-                                샐러드.getPrice().getValue(),
-                                샐러드.getImageUrl()
-                        ),
-                        10,
-                        Collections.emptyList()
+        OrderRequest orderRequest = new OrderRequest(
+                3000,
+                List.of(
+                        new OrderItemRequest(
+                                CART_ITEM_샐러드_MEMBER_A().getId(),
+                                new ProductRequest.WithId(
+                                        샐러드.getId(),
+                                        샐러드.getName(),
+                                        샐러드.getPrice().getValue(),
+                                        샐러드.getImageUrl()
+                                ),
+                                10,
+                                Collections.emptyList()
+                        )
                 )
         );
         String body = objectMapper.writeValueAsString(orderRequest);
@@ -88,22 +95,28 @@ public class OrderControllerTest extends ControllerTestWithDocs {
         result
                 .andExpect(status().isNoContent())
                 .andDo(print())
-                .andDo(documentationOf(orderRequest));
+                .andDo(documentationOf(
+                        orderRequest,
+                        requestHeaders(headerWithName("Authorization").description("인증 정보"))
+                ));
     }
 
     @Test
     void 주문요청_쿠폰사용() throws Exception {
-        List<OrderRequest> orderRequest = List.of(
-                new OrderRequest(
-                        // CART_ITEM_샐러드_MEMBER_A().getId(),
-                        new ProductRequest.WithId(
-                                샐러드.getId(),
-                                샐러드.getName(),
-                                샐러드.getPrice().getValue(),
-                                샐러드.getImageUrl()
-                        ),
-                        10,
-                        List.of(COUPON_FIXED_2000().getId())
+        OrderRequest orderRequest = new OrderRequest(
+                3000,
+                List.of(
+                        new OrderItemRequest(
+                                CART_ITEM_샐러드_MEMBER_A().getId(),
+                                new ProductRequest.WithId(
+                                        샐러드.getId(),
+                                        샐러드.getName(),
+                                        샐러드.getPrice().getValue(),
+                                        샐러드.getImageUrl()
+                                ),
+                                10,
+                                List.of(MemberCouponRequest.of(MEMBER_A_COUPON_FIXED_2000()))
+                        )
                 )
         );
         String body = objectMapper.writeValueAsString(orderRequest);
