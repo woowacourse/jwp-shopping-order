@@ -27,7 +27,7 @@ public class OrderRequest {
         return products;
     }
 
-    public int getTotalAmount() {
+    public int getTotalProductAmount() {
         return totalProductAmount;
     }
 

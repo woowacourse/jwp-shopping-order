@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
+import cart.dao.CartItemDao;
 import cart.dao.CouponDao;
 import cart.dao.OrderDao;
 import cart.dao.ProductDao;
@@ -46,6 +47,8 @@ class OrderServiceTest {
     private ProductDao productDao;
     @Mock
     private CouponDao couponDao;
+    @Mock
+    private CartItemDao cartItemDao;
     @InjectMocks
     private OrderService orderService;
 
@@ -70,7 +73,7 @@ class OrderServiceTest {
             product1.getName(), product1.getAmount().getValue(), product1.getImageUrl(), 5);
         final OrderProductResponse orderProductResponse2 = new OrderProductResponse(product2.getId(),
             product2.getName(), product2.getAmount().getValue(), product2.getImageUrl(), 10);
-        final OrderResponse expectedResponse = new OrderResponse(order.getId(), request.getTotalAmount(),
+        final OrderResponse expectedResponse = new OrderResponse(order.getId(), request.getTotalProductAmount(),
             order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
             List.of(orderProductResponse1, orderProductResponse2));
 

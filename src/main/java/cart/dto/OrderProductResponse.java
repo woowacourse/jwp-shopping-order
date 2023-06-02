@@ -2,11 +2,14 @@ package cart.dto;
 
 public class OrderProductResponse {
 
-    private final Long id;
-    private final String name;
-    private final int price;
-    private final String imageUrl;
-    private final int quantity;
+    private Long id;
+    private String name;
+    private int price;
+    private String imageUrl;
+    private int quantity;
+
+    public OrderProductResponse() {
+    }
 
     public OrderProductResponse(final Long id, final String name, final int price, final String imageUrl,
         final int quantity) {

@@ -2,8 +2,6 @@ package cart.dao;
 
 import cart.domain.Coupon;
 import cart.domain.vo.Amount;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,18 +17,13 @@ public class CouponDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    private final RowMapper<Coupon> rowMapper = new RowMapper<Coupon>() {
-        @Override
-        public Coupon mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-            return new Coupon(
-                rs.getLong("id"),
-                rs.getString("name"),
-                Amount.of(rs.getInt("min_amount")),
-                Amount.of(rs.getInt("discount_amount")),
-                rs.getBoolean("is_used")
-            );
-        }
-    };
+    private final RowMapper<Coupon> rowMapper = (rs, rowNum) -> new Coupon(
+        rs.getLong("id"),
+        rs.getString("name"),
+        Amount.of(rs.getInt("discount_amount")),
+        Amount.of(rs.getInt("min_amount")),
+        rs.getBoolean("is_used")
+    );
 
     public CouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -54,7 +47,7 @@ public class CouponDao {
 
     public Optional<Coupon> findByCouponIdAndMemberId(final long couponId, final long memberId) {
         final String sql =
-            "SELECT c.id as id, c.name as name, c.min_amount as min_amount, c.discount_amount as discount_amount, mc.is_used as is_used "
+            "SELECT c.id as id, c.name as name, c.discount_amount as discount_amount, c.min_amount as min_amount, mc.is_used as is_used "
                 + "FROM member_coupon as mc "
                 + "INNER JOIN coupon c on mc.coupon_id = c.id "
                 + "WHERE member_id = ? AND coupon_id = ?";
