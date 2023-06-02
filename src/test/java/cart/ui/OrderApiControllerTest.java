@@ -72,7 +72,7 @@ class OrderApiControllerTest {
         mockMvc.perform(get("/orders"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                
+
                 .andExpect(jsonPath("$[0].orderId", is(1)))
                 .andExpect(jsonPath("$[0].createAt", is("2023-05-31 10:00:00.0")))
                 .andExpect(jsonPath("$[0].orderItems", hasSize(2)))
@@ -114,24 +114,25 @@ class OrderApiControllerTest {
     }
 
     @Test
-    void getOrder() throws Exception {
+    void getOrderById() throws Exception {
+        given(orderService.getOrderById(any(), any())).willReturn(OrderResponseFixture.ORDER1_RESPONSE);
         mockMvc.perform(get("/orders/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderId", is(1)))
-                .andExpect(jsonPath("$.createAt", is("2023-05-26")))
+                .andExpect(jsonPath("$.createAt", is("2023-05-31 10:00:00.0")))
                 .andExpect(jsonPath("$.orderItems", hasSize(2)))
-                .andExpect(jsonPath("$.orderItems[0].productId", is(10)))
-                .andExpect(jsonPath("$.orderItems[0].productName", is("새우깡")))
-                .andExpect(jsonPath("$.orderItems[0].quantity", is(3)))
-                .andExpect(jsonPath("$.orderItems[0].price", is(1500)))
-                .andExpect(jsonPath("$.orderItems[0].imageUrl", is("http://example.com/dfdf")))
-                .andExpect(jsonPath("$.orderItems[1].productId", is(22)))
-                .andExpect(jsonPath("$.orderItems[1].productName", is("감자깡")))
+                .andExpect(jsonPath("$.orderItems[0].productId", is(1)))
+                .andExpect(jsonPath("$.orderItems[0].productName", is("치킨")))
+                .andExpect(jsonPath("$.orderItems[0].quantity", is(1)))
+                .andExpect(jsonPath("$.orderItems[0].price", is(10000)))
+                .andExpect(jsonPath("$.orderItems[0].imageUrl", is("http://example.com/chicken.jpg")))
+                .andExpect(jsonPath("$.orderItems[1].productId", is(2)))
+                .andExpect(jsonPath("$.orderItems[1].productName", is("피자")))
                 .andExpect(jsonPath("$.orderItems[1].quantity", is(1)))
-                .andExpect(jsonPath("$.orderItems[1].price", is(1200)))
-                .andExpect(jsonPath("$.orderItems[1].imageUrl", is("http://example.com/abcd")))
-                .andExpect(jsonPath("$.totalPrice", is(15000)))
-                .andExpect(jsonPath("$.usedPoint", is(1700)))
-                .andExpect(jsonPath("$.earnedPoint", is(300)));
+                .andExpect(jsonPath("$.orderItems[1].price", is(15000)))
+                .andExpect(jsonPath("$.orderItems[1].imageUrl", is("http://example.com/pizza.jpg")))
+                .andExpect(jsonPath("$.totalPrice", is(25000)))
+                .andExpect(jsonPath("$.usedPoint", is(100)))
+                .andExpect(jsonPath("$.earnedPoint", is(50)));
     }
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.OrderItemResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import org.springframework.http.ResponseEntity;
@@ -39,17 +38,8 @@ public class OrderApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrder(@PathVariable final Long id) {
-        return ResponseEntity.ok().body(new OrderResponse(
-                1L,
-                "2023-05-26",
-                List.of(
-                        new OrderItemResponse(10L, "새우깡", 3, 1500, "http://example.com/dfdf"),
-                        new OrderItemResponse(22L, "감자깡", 1, 1200, "http://example.com/abcd")
-                ),
-                15000,
-                1700,
-                300
-        ));
+    public ResponseEntity<OrderResponse> getOrderById(final Member member, @PathVariable final Long id) {
+        final OrderResponse orderResponse = orderService.getOrderById(member, id);
+        return ResponseEntity.ok().body(orderResponse);
     }
 }
