@@ -51,8 +51,8 @@ public class ShoppingOrderDao {
 
     public List<OrderResponseEntity> findAll(Long id) {
         String sql = "SELECT so.id, so.ordered_at, so.used_point, oi.id as orderitem_id, oi.quantity, oi.product_id, p.name, p.price, p.image_url\n" +
-                "FROM ordered_item oi\n" +
-                "JOIN shopping_order so ON oi.order_id = so.id\n" +
+                "FROM shopping_order so\n" +
+                "JOIN ordered_item oi ON so.id = oi.order_id\n" +
                 "JOIN product p ON oi.product_id = p.id\n" +
                 "WHERE member_id = ?";
         return jdbcTemplate.query(sql, detailOrderResponseEntityRowMapper, id);
