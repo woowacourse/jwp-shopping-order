@@ -2,16 +2,16 @@
 package shop.web.handler;
 
 public class ErrorResponse {
-    private String message;
+    private String errorMessage;
 
     private ErrorResponse() {
     }
 
-    public ErrorResponse(String message) {
-        this.message = message;
+    public ErrorResponse(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
-    public String getMessage() {
-        return message;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

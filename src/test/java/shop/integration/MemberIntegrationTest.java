@@ -1,13 +1,5 @@
 package shop.integration;
 
-import shop.domain.coupon.Coupon;
-import shop.domain.coupon.CouponType;
-import shop.domain.member.Member;
-import shop.domain.repository.CouponRepository;
-import shop.domain.repository.MemberRepository;
-import shop.application.member.dto.MemberJoinDto;
-import shop.application.member.dto.MemberLoginDto;
-import shop.util.Encryptor;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -17,6 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.Base64Utils;
+import shop.application.member.dto.MemberJoinDto;
+import shop.application.member.dto.MemberLoginDto;
+import shop.domain.coupon.Coupon;
+import shop.domain.coupon.CouponType;
+import shop.domain.member.Member;
+import shop.domain.repository.CouponRepository;
+import shop.domain.repository.MemberCouponRepository;
+import shop.domain.repository.MemberRepository;
+import shop.util.Encryptor;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class MemberIntegrationTest extends IntegrationTest {
 
     @Autowired
     private CouponRepository couponRepository;
+    @Autowired
+    private MemberCouponRepository memberCouponRepository;
 
     @DisplayName("회원가입을 할 수 있다.")
     @Test
@@ -123,6 +126,32 @@ public class MemberIntegrationTest extends IntegrationTest {
         List<Integer> discountRates = response.jsonPath().getList("discountRate", Integer.class);
         assertThat(names).containsExactly(CouponType.WELCOME_JOIN.getName());
         assertThat(discountRates).containsExactly(CouponType.WELCOME_JOIN.getDiscountRate());
+    }
 
+    @DisplayName("중복된 이름으로 회원가입을 할 수 없다.")
+    @Test
+    void joinWithDuplicateNameTest() {
+        //given
+        Member member = new Member("testMember", "password");
+        MemberJoinDto request = new MemberJoinDto("testMember", "asdf1234");
+        Coupon coupon = new Coupon(CouponType.WELCOME_JOIN);
+
+        couponRepository.save(coupon);
+        memberRepository.save(member);
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .body(request)
+                .post("/users/join")
+                .then()
+                .log().all().extract();
+
+        //then
+        String errorMessage = response.jsonPath().getString("errorMessage");
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorMessage).isEqualTo("중복되는 이름입니다. 입력한 회원 이름 : testMember");
     }
 }
