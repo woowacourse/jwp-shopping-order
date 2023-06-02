@@ -6,6 +6,7 @@ import com.woowahan.techcourse.cart.dto.CartItemQuantityUpdateRequest;
 import com.woowahan.techcourse.cart.dto.CartItemRequest;
 import com.woowahan.techcourse.member.domain.Member;
 import com.woowahan.techcourse.product.dao.ProductDao;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,5 +44,9 @@ public class CartCommandService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    public void removeAllByCartIds(Long memberId, List<Long> cartItemIds) {
+        cartItemDao.deleteAll(memberId, cartItemIds);
     }
 }
