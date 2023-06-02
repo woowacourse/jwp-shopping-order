@@ -17,8 +17,8 @@ public class OrderDao {
     private final RowMapper<OrderEntity> rowMapper = (rs, rowNum) -> {
         long orderId = rs.getLong("id");
         long memberId = rs.getLong("member_id");
-        long spendPoint = rs.getLong("spend_point");
         LocalDateTime orderCreatedAt = rs.getTimestamp("created_at").toLocalDateTime();
+        long spendPoint = rs.getLong("spend_point");
         return new OrderEntity(orderId, memberId, orderCreatedAt, spendPoint);
     };
 

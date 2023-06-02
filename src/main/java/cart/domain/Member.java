@@ -3,9 +3,9 @@ package cart.domain;
 import java.util.Objects;
 
 public class Member {
-    private Long id;
-    private String email;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String password;
     private Point point;
 
     public Member(Long id, String email, String password, long point) {

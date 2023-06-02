@@ -16,17 +16,19 @@ public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<CartItem> rowMapper = (rs, rowNum) -> {
-        long memberId = rs.getLong("member_id");
-        String email = rs.getString("email");
         Long productId = rs.getLong("p_id");
         String name = rs.getString("name");
         int price = rs.getInt("price");
         String imageUrl = rs.getString("image_url");
-        Long cartItemId = rs.getLong("ci_id");
-        int quantity = rs.getInt("quantity");
+        Product product = new Product(productId, name, price, imageUrl);
+
+        long memberId = rs.getLong("member_id");
+        String email = rs.getString("email");
         long point = rs.getLong("point");
         Member member = new Member(memberId, email, null, point);
-        Product product = new Product(productId, name, price, imageUrl);
+
+        Long cartItemId = rs.getLong("ci_id");
+        int quantity = rs.getInt("quantity");
         return new CartItem(cartItemId, quantity, product, member);
     };
 

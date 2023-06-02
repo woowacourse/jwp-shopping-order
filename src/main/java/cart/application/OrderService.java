@@ -79,7 +79,8 @@ public class OrderService {
                 .map(this::convertToItemResponse)
                 .collect(Collectors.toList());
 
-        return new OrderDetailResponse(order.getId(),
+        return new OrderDetailResponse(
+                order.getId(),
                 order.calculateTotalPrice().getAmount(),
                 order.getSpendPoint().getAmount(),
                 order.calculateSpendPrice().getAmount(),

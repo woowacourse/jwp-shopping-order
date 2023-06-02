@@ -4,6 +4,7 @@ import cart.domain.Product;
 import cart.dao.ProductDao;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
+import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-
     private final ProductDao productDao;
 
     public ProductService(ProductDao productDao) {
@@ -25,7 +25,7 @@ public class ProductService {
 
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.findById(productId)
-                .orElseThrow(IllegalArgumentException::new); // TODO
+                .orElseThrow(() -> new ProductNotFoundException("해당 상품을 찾을 수 없습니다."));
         return ProductResponse.of(product);
     }
 

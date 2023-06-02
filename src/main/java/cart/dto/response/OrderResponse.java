@@ -14,8 +14,7 @@ public class OrderResponse {
     }
 
     public OrderResponse(Long orderId, String thumbnail, String firstProductName,
-                         Integer totalCount,
-                         Long spendPrice, LocalDateTime createdAt) {
+                         Integer totalCount, Long spendPrice, LocalDateTime createdAt) {
         this.orderId = orderId;
         this.thumbnail = thumbnail;
         this.firstProductName = firstProductName;

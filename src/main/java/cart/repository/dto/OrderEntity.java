@@ -4,7 +4,6 @@ import cart.domain.Order;
 import java.time.LocalDateTime;
 
 public class OrderEntity {
-
     private final Long id;
     private final Long memberId;
     private final LocalDateTime createdAt;

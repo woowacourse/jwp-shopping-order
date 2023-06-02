@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderRepository {
-
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
     private final MemberDao memberDao;
@@ -32,7 +31,8 @@ public class OrderRepository {
         for (OrderItem orderItem : order.getOrderItems()) {
             orderItemDao.save(orderId, orderItem);
         }
-        return new Order(orderId, order.getMember(), order.getOrderItems(), order.getSpendPoint().getAmount(),
+        return new Order(orderId, order.getMember(), order.getOrderItems(),
+                order.getSpendPoint().getAmount(),
                 order.getCreatedAt());
     }
 
@@ -42,16 +42,19 @@ public class OrderRepository {
         List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
         Member member = memberDao.findById(orderEntity.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException("해당 회원을 찾을 수 없습니다."));
-        return new Order(orderId, member, orderItems, orderEntity.getSpendPoint(), orderEntity.getCreatedAt());
+        return new Order(orderId, member, orderItems, orderEntity.getSpendPoint(),
+                orderEntity.getCreatedAt());
     }
 
     public List<Order> findAllByMember(Member member) {
         List<Order> orders = new ArrayList<>();
         List<OrderEntity> orderEntities = orderDao.findAllByMember(member.getId());
         for (OrderEntity orderEntity : orderEntities) {
-            Long orderId = orderEntity.getId();
-            orders.add(new Order(orderId, member, orderItemDao.findByOrderId(orderId), orderEntity.getSpendPoint(),
-                    orderEntity.getCreatedAt()));
+            Order order = new Order(orderEntity.getId(), member,
+                    orderItemDao.findByOrderId(orderEntity.getId()), orderEntity.getSpendPoint(),
+                    orderEntity.getCreatedAt()
+            );
+            orders.add(order);
         }
         return orders;
     }

@@ -3,10 +3,10 @@ package cart.domain;
 import java.util.Objects;
 
 public class OrderItem {
-    private Long id;
-    private Product product;
-    private Quantity quantity;
-    private Price price;
+    private final Long id;
+    private final Product product;
+    private final Quantity quantity;
+    private final Price price;
 
     public OrderItem(Long id, Product product, int quantity, long price) {
         this.id = id;

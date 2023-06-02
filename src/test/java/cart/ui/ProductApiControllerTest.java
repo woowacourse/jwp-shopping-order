@@ -13,6 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedR
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.application.ProductService;
@@ -124,6 +125,58 @@ class ProductApiControllerTest {
     }
 
     @Test
+    void 상품을_생성할때_상품의_이름이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        // given
+        ProductRequest request = new ProductRequest(null, 10_000L, "http://image.com/image.png");
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.name").value("상품 이름은 반드시 포함되어야 합니다."));
+    }
+
+    @Test
+    void 상품을_생성할때_상품의_가격이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        // given
+        ProductRequest request = new ProductRequest("사과", null, "http://image.com/image.png");
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.price").value("가격은 반드시 포함되어야 합니다."));
+    }
+
+    @Test
+    void 상품을_생성할때_상품의_가격이_음수이면_400_상태코드가_반환된다() throws Exception {
+        // given
+        ProductRequest request = new ProductRequest("사과", -1L, "http://image.com/image.png");
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.price").value("가격은 음수가 될 수 없습니다."));
+    }
+
+    @Test
+    void 상품을_생성할때_상품의_이미지가_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        // given
+        ProductRequest request = new ProductRequest("사과", 10_000L, null);
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.imageUrl").value("상품 이미지는 반드시 포함되어야 합니다."));
+    }
+
+    @Test
     void 상품을_수정한다() throws Exception {
         // given
         ProductRequest request = new ProductRequest("치킨", 10_000L, "http://image.com/image.png");
@@ -138,6 +191,58 @@ class ProductApiControllerTest {
                                 parameterWithName("id").description("상품 ID")
                         )
                 ));
+    }
+
+    @Test
+    void 상품을_수정할때_상품의_이름이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        // given
+        ProductRequest request = new ProductRequest(null, 10_000L, "http://image.com/image.png");
+
+        // expect
+        mockMvc.perform(put("/products/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.name").value("상품 이름은 반드시 포함되어야 합니다."));
+    }
+
+    @Test
+    void 상품을_수정할때_상품의_가격이_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        // given
+        ProductRequest request = new ProductRequest("사과", null, "http://image.com/image.png");
+
+        // expect
+        mockMvc.perform(put("/products/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.price").value("가격은 반드시 포함되어야 합니다."));
+    }
+
+    @Test
+    void 상품을_수정할때_상품의_가격이_음수이면_400_상태코드가_반환된다() throws Exception {
+        // given
+        ProductRequest request = new ProductRequest("사과", -1L, "http://image.com/image.png");
+
+        // expect
+        mockMvc.perform(put("/products/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.price").value("가격은 음수가 될 수 없습니다."));
+    }
+
+    @Test
+    void 상품을_수정할때_상품의_이미지가_포함되지_않으면_400_상태코드가_반환된다() throws Exception {
+        // given
+        ProductRequest request = new ProductRequest("사과", 10_000L, null);
+
+        // expect
+        mockMvc.perform(put("/products/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result.imageUrl").value("상품 이미지는 반드시 포함되어야 합니다."));
     }
 
     @Test

@@ -11,11 +11,11 @@ import java.util.Objects;
 public class Order {
     private static final String EMPTY_IMAGE_URL = "";
 
-    private Long id;
-    private Member member;
-    private List<OrderItem> orderItems;
-    private Point spendPoint;
-    private LocalDateTime createdAt;
+    private final Long id;
+    private final Member member;
+    private final List<OrderItem> orderItems;
+    private final Point spendPoint;
+    private final LocalDateTime createdAt;
 
     public Order(Long id, Member member, List<OrderItem> orderItems, long spendPoint, LocalDateTime createdAt) {
         validateEmptyOrderItems(orderItems);
