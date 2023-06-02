@@ -56,7 +56,7 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
 
         final List<ProductResponse> products = ProductResponse.from(pagedProducts);
-        final int lastPage = allProducts.size() / unitSize + 1;
+        final int lastPage = (int) Math.ceil((double) allProducts.size() / unitSize);
         final PaginationInfoDto paginationInfo = new PaginationInfoDto(allProducts.size(), unitSize, page, lastPage);
 
         return new PagedProductsResponse(products, paginationInfo);

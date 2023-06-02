@@ -69,7 +69,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         int unitSize = 5;
         int page = 2;
         var allProducts = productService.getAllProducts();
-        int expectedTotalPage = allProducts.size() / unitSize + 1;
+        int expectedTotalPage = 4;
 
         // when
         final ExtractableResponse<Response> response = given().log().all()

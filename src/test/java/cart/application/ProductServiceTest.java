@@ -53,7 +53,7 @@ class ProductServiceTest {
         assertThat(pagedProducts.getPagination().getCurrentPage()).isEqualTo(page);
         assertThat(pagedProducts.getPagination().getPerPage()).isEqualTo(unitSize);
         assertThat(pagedProducts.getPagination().getTotal()).isEqualTo(products.size());
-        assertThat(pagedProducts.getPagination().getLastPage()).isEqualTo(products.size() / unitSize + 1);
+        assertThat(pagedProducts.getPagination().getLastPage()).isEqualTo(4);
     }
 
     @DisplayName("마지막 페이지는 unitSize보다 작은 개수의 Product를 포함할 수 있다")
