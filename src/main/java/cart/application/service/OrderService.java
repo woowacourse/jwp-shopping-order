@@ -47,7 +47,7 @@ public class OrderService {
                 .orElseThrow(MemberCouponNotFoundException::new);
         memberCoupon.checkOwner(member);
 
-        Order order = Order.order(member, cartItems, memberCoupon);
+        Order order = Order.of(member, cartItems, memberCoupon);
 
         cartItemRepository.deleteAll(cartItems);
         memberCouponRepository.use(memberCoupon);

@@ -3,6 +3,7 @@ package cart.domain.order;
 import cart.domain.Member;
 import cart.domain.cart.CartItems;
 import cart.domain.coupon.MemberCoupon;
+import cart.exception.StoreException;
 import cart.exception.forbidden.ForbiddenException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +36,10 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public static Order order(final Member member, final CartItems cartItems, final MemberCoupon memberCoupon) {
+    public static Order of(final Member member, final CartItems cartItems, final MemberCoupon memberCoupon) {
+        cartItems.checkOwner(member);
+        validateCoupon(member, cartItems, memberCoupon);
+
         List<OrderItem> orderItems = cartItems.getCartItems().stream()
                 .map(OrderItem::of)
                 .collect(Collectors.toList());
@@ -46,14 +50,18 @@ public class Order {
         return new Order(member, memberCoupon, orderItems, shippingFee, totalOrderAmount);
     }
 
+    private static void validateCoupon(final Member member, final CartItems cartItems,
+            final MemberCoupon memberCoupon) {
+        memberCoupon.checkOwner(member);
+        if (!memberCoupon.isApplicable(cartItems)) {
+            throw new StoreException("적용할 수 없는 쿠폰입니다.");
+        }
+    }
+
     private static int calculateTotalOrderAmount(final CartItems cartItems, final MemberCoupon coupon) {
         int discountPrice = coupon.getDiscountPrice(cartItems);
         int totalProductPrice = cartItems.calculateTotalProductPrice();
         return totalProductPrice - discountPrice;
-    }
-
-    private static void validateCoupon(final Member member, final MemberCoupon memberCoupon) {
-        
     }
 
     public void checkOwner(final Member member) {
