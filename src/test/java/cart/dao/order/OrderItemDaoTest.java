@@ -3,8 +3,10 @@ package cart.dao.order;
 import cart.dao.member.MemberDao;
 import cart.domain.bill.Bill;
 import cart.domain.member.Member;
+import cart.domain.member.Rank;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
+import cart.entity.MemberEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +41,16 @@ class OrderItemDaoTest {
     void clean() {
         Long akoId = memberDao.addMember(ako);
 
-        member = memberDao.getMemberById(akoId);
+        MemberEntity memberbyId = memberDao.getMemberById(akoId).get();
+        member = makeMember(memberbyId);
+    }
+
+    private Member makeMember(final MemberEntity memberEntity) {
+        return new Member(memberEntity.getId(),
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                Rank.valueOf(memberEntity.getGrade()),
+                memberEntity.getTotalPurchaseAmount());
     }
 
 

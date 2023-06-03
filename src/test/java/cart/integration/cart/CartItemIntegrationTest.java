@@ -1,5 +1,6 @@
 package cart.integration.cart;
 
+import cart.dao.cart.CartItemDao;
 import cart.dao.member.MemberDao;
 import cart.domain.member.Member;
 import cart.domain.member.Rank;
@@ -7,6 +8,7 @@ import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
 import cart.dto.product.ProductRequest;
+import cart.entity.MemberEntity;
 import cart.integration.IntegrationTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -33,6 +35,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
+    @Autowired
+    private CartItemDao cartItemDao;
 
     private Long productId;
     private Long productId2;
@@ -47,8 +51,18 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         Long akoId = memberDao.addMember(ako);
         Long ddoringId = memberDao.addMember(ddoring);
-        member = memberDao.getMemberById(akoId);
-        member2 = memberDao.getMemberById(ddoringId);
+        MemberEntity member1ById = memberDao.getMemberById(akoId).get();
+        MemberEntity member2ById = memberDao.getMemberById(ddoringId).get();
+        member = makeMember(member1ById);
+        member2 = makeMember(member2ById);
+    }
+
+    private Member makeMember(final MemberEntity memberEntity) {
+        return new Member(memberEntity.getId(),
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                Rank.valueOf(memberEntity.getGrade()),
+                memberEntity.getTotalPurchaseAmount());
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

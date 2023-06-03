@@ -24,7 +24,7 @@ public class Bill {
             final Money totalPrice
     ) {
         validateTotalPrice(totalPrice, discountedTotalItemPrice, shippingFee);
-        validateTotalDiscountPrice(totalItemPrice, discountedTotalItemPrice, totalMemberDiscountAmount, totalItemDiscountAmount );
+        validateTotalDiscountPrice(totalItemPrice, discountedTotalItemPrice, totalMemberDiscountAmount, totalItemDiscountAmount);
         validateShippingFee(discountedTotalItemPrice, shippingFee);
         this.totalItemDiscountAmount = totalItemDiscountAmount;
         this.totalMemberDiscountAmount = totalMemberDiscountAmount;
@@ -35,10 +35,10 @@ public class Bill {
     }
 
     public void validateRequest(final int totalItemPrice,
-                           final int discountedTotalItemPrice,
-                           final int totalItemDiscountAmount,
-                           final int totalMemberDiscountAmount,
-                           final int shippingFee
+                                final int discountedTotalItemPrice,
+                                final int totalItemDiscountAmount,
+                                final int totalMemberDiscountAmount,
+                                final int shippingFee
     ) {
         if (!checkBill(totalItemPrice, discountedTotalItemPrice, totalItemDiscountAmount, totalMemberDiscountAmount, shippingFee)) {
             throw new IllegalArgumentException("주문 요청 정보가 올바르지 않습니다.");

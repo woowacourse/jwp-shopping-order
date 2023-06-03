@@ -3,14 +3,15 @@ package cart.integration.order;
 import cart.dao.cart.CartItemDao;
 import cart.dao.member.MemberDao;
 import cart.dao.product.ProductDao;
-import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
+import cart.domain.member.Rank;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
+import cart.entity.CartItemEntity;
+import cart.entity.MemberEntity;
 import cart.integration.IntegrationTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,13 +48,23 @@ public class OrderIntegrationTest extends IntegrationTest {
         fork = generateFork(forkId); // 13500 멤버할인
 
 
-        Long id = memberDao.addMember(ako);
-        member = new Member(id, ako.getEmail(), ako.getPassword(), ako.getRank(), ako.getTotalPurchaseAmount());
-        memberDao.updateMember(member);
-        Long cartItem1 = cartItemDao.save(new CartItem(member, chicken));
-        Long cartItem2 = cartItemDao.save(new CartItem(member, fork));
+        Long akoId = memberDao.addMember(ako);
+        MemberEntity updateMemberEntity = new MemberEntity(akoId, ako.getEmail(), ako.getPassword(), ako.getGrade(), ako.getTotalPurchaseAmount());
+        memberDao.updateMember(updateMemberEntity);
+        Long cartItem1 = cartItemDao.save(new CartItemEntity(1, akoId, chickenId));
+        Long cartItem2 = cartItemDao.save(new CartItemEntity(1, akoId, forkId));
 
         cartItemIds = List.of(cartItem1, cartItem2);
+
+        member = makeMember(updateMemberEntity);
+    }
+
+    private Member makeMember(final MemberEntity memberEntity) {
+        return new Member(memberEntity.getId(),
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                Rank.valueOf(memberEntity.getGrade()),
+                memberEntity.getTotalPurchaseAmount());
     }
 
     @Test

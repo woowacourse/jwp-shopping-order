@@ -1,6 +1,6 @@
 package cart;
 
-import cart.dao.member.MemberDao;
+import cart.application.member.MemberService;
 import cart.ui.member.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -12,15 +12,15 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final MemberDao memberDao;
+    private final MemberService memberService;
 
-    public WebMvcConfig(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public WebMvcConfig(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberDao));
+        resolvers.add(new MemberArgumentResolver(memberService));
     }
 
     @Override

@@ -1,9 +1,9 @@
 package cart.application.product;
 
-import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
+import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,33 +12,33 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
+        List<Product> products = productRepository.findAll();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+    public ProductResponse getProductById(final Long productId) {
+        Product product = productRepository.findById(productId);
         return ProductResponse.of(product);
     }
 
-    public Long createProduct(ProductRequest productRequest) {
+    public Long createProduct(final ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.isDiscounted(), productRequest.getDiscountRate());
-        return productDao.createProduct(product);
+        return productRepository.create(product);
     }
 
-    public void updateProduct(Long productId, ProductRequest productRequest) {
+    public void updateProduct(final Long productId, final ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.isDiscounted(), productRequest.getDiscountRate());
-        productDao.updateProduct(productId, product);
+        productRepository.update(productId, product);
     }
 
-    public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+    public void deleteProduct(final Long productId) {
+        productRepository.delete(productId);
     }
 }

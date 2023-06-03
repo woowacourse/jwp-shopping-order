@@ -2,7 +2,9 @@ package cart.integration.member;
 
 import cart.dao.member.MemberDao;
 import cart.domain.member.Member;
+import cart.domain.member.Rank;
 import cart.dto.member.MemberResponse;
+import cart.entity.MemberEntity;
 import cart.integration.IntegrationTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -29,8 +31,17 @@ public class MemberIntegrationTest extends IntegrationTest {
     protected void setUp() {
         super.setUp();
         Long id = memberDao.addMember(ako);
-        member = new Member(id, ako.getEmail(), ako.getPassword(), ako.getRank(), ako.getTotalPurchaseAmount());
-        memberDao.updateMember(member);
+        MemberEntity updateMemberEntity = new MemberEntity(id, ako.getEmail(), ako.getPassword(), ako.getGrade(), ako.getTotalPurchaseAmount());
+        memberDao.updateMember(updateMemberEntity);
+        member = makeMember(updateMemberEntity);
+    }
+
+    private Member makeMember(final MemberEntity memberEntity) {
+        return new Member(memberEntity.getId(),
+                memberEntity.getEmail(),
+                memberEntity.getPassword(),
+                Rank.valueOf(memberEntity.getGrade()),
+                memberEntity.getTotalPurchaseAmount());
     }
 
     @Test

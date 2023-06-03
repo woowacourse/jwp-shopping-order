@@ -6,7 +6,7 @@ import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
-import cart.repository.OrderRepository;
+import cart.repository.order.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
