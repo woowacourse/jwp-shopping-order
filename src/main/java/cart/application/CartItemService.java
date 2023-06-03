@@ -9,7 +9,7 @@ import cart.repository.ProductRepository;
 import cart.ui.dto.cartitem.CartItemIdsRequest;
 import cart.ui.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.ui.dto.cartitem.CartItemRequest;
-import cart.ui.dto.order.PaymentInfoResponse;
+import cart.ui.dto.order.CartItemsPriceResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,10 +74,10 @@ public class CartItemService {
         cartItemRepository.deleteAll(cartItems);
     }
 
-    public PaymentInfoResponse getPaymentInfo(final Member member, final List<Long> cartItemIds) {
+    public CartItemsPriceResponse getPaymentInfo(final Member member, final List<Long> cartItemIds) {
         final CartItems cartItems = new CartItems(cartItemRepository.findAllByIds(cartItemIds));
         cartItems.checkOwner(member);
 
-        return new PaymentInfoResponse(cartItems.getTotalPrice(), cartItems.getDeliveryFee());
+        return new CartItemsPriceResponse(cartItems.getTotalPrice(), cartItems.getDeliveryFee());
     }
 }

@@ -6,7 +6,7 @@ import cart.ui.dto.cartitem.CartItemIdsRequest;
 import cart.ui.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.ui.dto.cartitem.CartItemRequest;
 import cart.ui.dto.cartitem.CartItemResponse;
-import cart.ui.dto.order.PaymentInfoResponse;
+import cart.ui.dto.order.CartItemsPriceResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,9 +71,9 @@ public class CartItemApiController {
     }
 
     @GetMapping("/price")
-    public ResponseEntity<PaymentInfoResponse> getPaymentInfo(Member member,
-                                                              @RequestParam List<Long> item) {
-        final PaymentInfoResponse response = cartItemService.getPaymentInfo(member, item);
+    public ResponseEntity<CartItemsPriceResponse> getCartItemsPrice(Member member,
+                                                                    @RequestParam List<Long> item) {
+        final CartItemsPriceResponse response = cartItemService.getPaymentInfo(member, item);
         return ResponseEntity.ok(response);
     }
 }

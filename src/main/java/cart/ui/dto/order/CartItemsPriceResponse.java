@@ -1,11 +1,11 @@
 package cart.ui.dto.order;
 
-public class PaymentInfoResponse {
+public class CartItemsPriceResponse {
 
     private final Integer totalPrice;
     private final Integer deliveryFee;
 
-    public PaymentInfoResponse(final Integer totalPrice, final Integer deliveryFee) {
+    public CartItemsPriceResponse(final Integer totalPrice, final Integer deliveryFee) {
         this.totalPrice = totalPrice;
         this.deliveryFee = deliveryFee;
     }

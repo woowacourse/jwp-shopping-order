@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 
 public class CartItems {
 
-    private static final int DELIVERY_FEE = 3000;
+    private static final int DELIVERY_FEE = 3_000;
     private static final int SALE_THRESHOLD = 50_000;
     private static final double SALE_RATE = 0.1;
 

@@ -7,7 +7,7 @@ import cart.domain.cartitem.Quantity;
 import cart.domain.member.Member;
 import cart.exception.notfound.MemberNotFoundException;
 import cart.ui.dto.cartitem.CartItemRequest;
-import cart.ui.dto.order.PaymentInfoResponse;
+import cart.ui.dto.order.CartItemsPriceResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ public class CartItemServiceTest {
         final List<Long> cartItemIds = List.of(1L, 2L, 3L);
 
         // when
-        final PaymentInfoResponse response = cartItemService.getPaymentInfo(member, cartItemIds);
+        final CartItemsPriceResponse response = cartItemService.getPaymentInfo(member, cartItemIds);
 
         // then
         assertAll(
@@ -77,7 +77,7 @@ public class CartItemServiceTest {
         final List<Long> cartItemIds = List.of(1L);
 
         // when
-        final PaymentInfoResponse response = cartItemService.getPaymentInfo(member, cartItemIds);
+        final CartItemsPriceResponse response = cartItemService.getPaymentInfo(member, cartItemIds);
 
         // then
         assertAll(
