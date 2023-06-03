@@ -84,7 +84,7 @@ public class OrderService {
     private int applyCoupon(OrderItemRequest orderItemRequest, Product product, List<MemberCoupon> memberCoupons) {
         int price = product.getPrice() * orderItemRequest.getQuantity();
         for (MemberCoupon memberCoupon : memberCoupons) {
-            memberCoupon.getCoupon().apply(price);
+            memberCoupon.apply(price);
         }
         return price;
     }

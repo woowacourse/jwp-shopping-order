@@ -18,6 +18,10 @@ public class MemberCoupon {
         this.used = used;
     }
 
+    public int apply(int paymentAmount) {
+        return coupon.apply(paymentAmount);
+    }
+
     public Long getId() {
         return id;
     }

@@ -53,4 +53,12 @@ public class OrderItemDao {
         String sql = "select * from order_item where order_id = ?";
         return jdbcTemplate.query(sql, rowMapper, orderId);
     }
+
+    public List<OrderItemEntity> findAllByMemberId(Long memberId) {
+        String sql = "SELECT oi.id, oi.order_id, oi.product_id, oi.quantity, oi.product_name, oi.product_price, oi.product_image_url, oi.total_price " +
+                "FROM order_item oi " +
+                "JOIN orders o ON oi.order_id = o.id " +
+                "WHERE o.member_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
 }

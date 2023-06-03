@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
 
-
     private static final RowMapper<ProductEntity> productRowMapper = (rs, rowNum) -> new ProductEntity(
             rs.getLong("id"),
             rs.getString("name"),
@@ -28,7 +27,6 @@ public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
