@@ -14,6 +14,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(MoneyException.DecimalMoney.class)
+    public ResponseEntity<ExceptionResponse> handleDecimalMoneyException(MoneyException.DecimalMoney ex) {
+        logger.fatal("", ex);
+
+        return ResponseEntity
+                .internalServerError()
+                .body(new ExceptionResponse(ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
         logger.error("", ex);
@@ -23,22 +32,13 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ExceptionResponse("예상치 못한 문제가 발생했습니다."));
     }
 
-    @ExceptionHandler(MoneyException.DecimalMoney.class)
-    public ResponseEntity<ExceptionResponse> handleDecimalMoneyException(MoneyException.DecimalMoney ex) {
-        logger.error("", ex);
-
-        return ResponseEntity
-                .internalServerError()
-                .body(new ExceptionResponse(ex.getMessage()));
-    }
-
     @ExceptionHandler({
             AuthenticationException.InvalidTokenFormat.class,
             AuthenticationException.ForbiddenMember.class,
             AuthenticationException.InvalidMember.class,
     })
     public ResponseEntity<ExceptionResponse> handlerAuthenticationException(AuthenticationException ex) {
-        logger.info("", ex);
+        logger.warn("", ex);
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -50,7 +50,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             OrderException.IllegalMember.class
     })
     public ResponseEntity<ExceptionResponse> handleForbiddenException(RuntimeException ex) {
-        logger.info("", ex);
+        logger.warn("", ex);
 
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
@@ -69,7 +69,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             PointException.InvalidPolicy.class,
     })
     public ResponseEntity<ExceptionResponse> handleBadRequestException(RuntimeException ex) {
-        logger.info("", ex);
+        logger.warn("", ex);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -82,7 +82,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             OrderException.NotFound.class
     })
     public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex) {
-        logger.info("", ex);
+        logger.warn("", ex);
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -95,7 +95,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
-        logger.info("", ex);
+        logger.warn("", ex);
 
         String fieldErrorMessage = ex.getBindingResult().getFieldErrors()
                 .stream()
