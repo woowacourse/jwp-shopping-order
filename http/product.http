@@ -1,0 +1,28 @@
+### 상품을 추가한다
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "코코닥",
+  "price": 100000,
+  "imageUrl": "kokodak"
+}
+
+### 특정 상품을 조회한다
+GET http://localhost:8080/products/4
+
+### 상품을 수정한다
+PUT http://localhost:8080/products/4
+Content-Type: application/json
+
+{
+  "name": "꼬꼬닭",
+  "price": 300,
+  "imageUrl": "kadokok"
+}
+
+### 상품을 삭제한다
+DELETE http://localhost:8080/products/4
+
+### 모든 상품을 조회한다
+GET http://localhost:8080/products

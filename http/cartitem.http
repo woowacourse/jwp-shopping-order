@@ -1,0 +1,25 @@
+### 회원의 장바구니 목록을 조회한다
+GET http://localhost:8080/cart-items
+Authorization: Basic YUBhLmNvbToxMjM0=
+
+### 장바구니에 상품을 추가한다
+POST http://localhost:8080/cart-items
+Authorization: Basic YUBhLmNvbToxMjM0=
+Content-Type: application/json
+
+{
+  "productId": 3
+}
+
+### 장바구니에 담긴 상품의 수량을 수정한다
+PATCH http://localhost:8080/cart-items/3
+Authorization: Basic YUBhLmNvbToxMjM0=
+Content-Type: application/json
+
+{
+  "quantity": 10
+}
+
+### 장바구니에 담긴 상품을 삭제한다
+DELETE http://localhost:8080/cart-items/3
+Authorization: Basic YUBhLmNvbToxMjM0=
