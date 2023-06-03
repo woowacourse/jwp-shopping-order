@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
-import cart.domain.CartItem;
+import cart.domain.product.CartItem;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;

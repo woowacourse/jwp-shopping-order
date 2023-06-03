@@ -1,8 +1,8 @@
 package cart.repository;
 
-import cart.domain.CartItem;
+import cart.domain.product.CartItem;
 import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
