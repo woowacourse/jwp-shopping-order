@@ -2,6 +2,7 @@ package cart.domain;
 
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.exception.OrderException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class OrderTest {
 
         //expect
         assertThatThrownBy(() -> Order.from(1L, MEMBER, 21000, 1001, orderItems))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(OrderException.IllegalPoint.class)
                 .hasMessage("가용 포인트를 초과했습니다.");
     }
 
@@ -49,7 +50,7 @@ class OrderTest {
 
         //expect
         assertThatThrownBy(() -> Order.from(1L, MEMBER, 21001, 1000, orderItems))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(OrderException.IllegalPayment.class)
                 .hasMessage("총 결제 금액이 총 상품 가격과 맞지 않습니다.");
     }
 

@@ -2,6 +2,7 @@ package cart.domain;
 
 import cart.domain.common.Money;
 import cart.domain.member.Member;
+import cart.exception.OrderException;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +35,7 @@ public class Order {
 
     private void validatePointAvailability(final Member member, final Point point) {
         if (!member.canUsePoint(point)) {
-            throw new IllegalArgumentException("가용 포인트를 초과했습니다.");
+            throw new OrderException.IllegalPoint();
         }
     }
 
@@ -44,7 +45,7 @@ public class Order {
                 .sum());
         final Money totalPayment = payment.add(point.getMoney());
         if (!totalPrice.equals(totalPayment)) {
-            throw new IllegalArgumentException("총 결제 금액이 총 상품 가격과 맞지 않습니다.");
+            throw new OrderException.IllegalPayment();
         }
     }
 
