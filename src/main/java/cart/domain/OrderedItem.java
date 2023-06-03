@@ -17,7 +17,6 @@ public class OrderedItem {
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
-        //this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
     }
 
@@ -27,7 +26,6 @@ public class OrderedItem {
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
-        //this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
     }
 
@@ -62,10 +60,6 @@ public class OrderedItem {
     public int getQuantity() {
         return quantity;
     }
-
-//    public boolean getIsDiscounted() {
-//        return isDiscounted;
-//    }
 
     public int getDiscountRate() {
         return discountRate;

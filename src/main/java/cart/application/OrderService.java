@@ -54,24 +54,14 @@ public class OrderService {
         int shippingFee = findShippingFee(orderCreateRequest, totalItemPrice);
         int totalPrice = discountedTotalItemPrice + shippingFee;
 
+        return order(member, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
+    }
+
+    private Long order(Member member, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, int totalPrice) {
         Order order = new Order(totalItemPrice, discountedTotalItemPrice, shippingFee, member.getId());
         member.createOrder(totalPrice);
-        Long orderId = orderDao.createOrder(member.getId(), order);
-        return orderId;
-    }
 
-    private List<CartItem> createOrderedItems(OrderCreateRequest orderCreateRequest, Long orderId) {
-        List<CartItem> cartItems = getCartItems(orderCreateRequest);
-        cartItems.forEach(cartItem -> {
-            Product product = cartItem.getProduct();
-            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity(), product.getDiscountRate());
-            orderItemDao.createOrderedItems(orderId, orderedItem);
-        });
-        return cartItems;
-    }
-
-    private void deleteCartItemsInCart(Member member, List<CartItem> cartItems) {
-        cartItems.forEach(cartItem -> cartItemDao.delete(member.getId(), cartItem.getId()));
+        return orderDao.createOrder(member.getId(), order);
     }
 
     private int findTotalItemPrice(OrderCreateRequest orderCreateRequest) {
@@ -88,31 +78,17 @@ public class OrderService {
         throw new PriceValidationException();
     }
 
+    public int calculateTotalItemPrice(OrderCreateRequest orderCreateRequest) {
+        List<CartItem> cartItems = getCartItems(orderCreateRequest);
+
+        return Price.calculateTotalItemPrice(cartItems);
+    }
+
     private int findDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest) {
         int price = calculateDiscountedTotalItemPrice(member, orderCreateRequest);
         int requestPrice = orderCreateRequest.getDiscountedTotalItemPrice();
 
         return isSamePrice(price, requestPrice);
-    }
-
-    private int findShippingFee(OrderCreateRequest orderCreateRequest, int totalItemPrice) {
-        int shippingFee = Price.calculateShippingFee(totalItemPrice);
-        int requestFee = orderCreateRequest.getShippingFee();
-
-        return isSamePrice(shippingFee, requestFee);
-    }
-
-    public List<CartItem> getCartItems(OrderCreateRequest orderCreateRequest) {
-        return orderCreateRequest.getCartItemIds()
-                .stream()
-                .map(cartItemId -> cartItemDao.findById(cartItemId))
-                .collect(Collectors.toList());
-    }
-
-    public int calculateTotalItemPrice(OrderCreateRequest orderCreateRequest) {
-        List<CartItem> cartItems = getCartItems(orderCreateRequest);
-
-        return Price.calculateTotalItemPrice(cartItems);
     }
 
     public int calculateDiscountedTotalItemPrice(Member member, OrderCreateRequest orderCreateRequest) {
@@ -122,29 +98,41 @@ public class OrderService {
         return Price.calculateDiscountedTotalItemPrice(cartItems, memberDiscount);
     }
 
-    private int calculateTotalItemDiscountAmount(OrderCreateRequest orderCreateRequest) {
-        List<CartItem> cartItems = getCartItems(orderCreateRequest);
+    private int findShippingFee(OrderCreateRequest orderCreateRequest, int totalItemPrice) {
+        int shippingFee = Price.calculateShippingFee(totalItemPrice);
+        int requestFee = orderCreateRequest.getShippingFee();
 
-        return Price.calculateTotalItemDiscountAmount(cartItems);
+        return isSamePrice(shippingFee, requestFee);
     }
+
+    private void deleteCartItemsInCart(Member member, List<CartItem> cartItems) {
+        cartItems.forEach(cartItem -> cartItemDao.delete(member.getId(), cartItem.getId()));
+    }
+
+
+    private List<CartItem> createOrderedItems(OrderCreateRequest orderCreateRequest, Long orderId) {
+        List<CartItem> cartItems = getCartItems(orderCreateRequest);
+        cartItems.forEach(cartItem -> {
+            Product product = cartItem.getProduct();
+            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity(), product.getDiscountRate());
+            orderItemDao.createOrderedItems(orderId, orderedItem);
+        });
+        return cartItems;
+    }
+
+    public List<CartItem> getCartItems(OrderCreateRequest orderCreateRequest) {
+        return orderCreateRequest.getCartItemIds()
+                .stream()
+                .map(cartItemId -> cartItemDao.findById(cartItemId))
+                .collect(Collectors.toList());
+    }
+
 
     public OrderResponse getOrderByIds(Long memberId, Long orderId) {
         Order order = orderDao.findByIds(memberId, orderId);
         List<OrderedItem> orderedItems = orderItemDao.findByOrderId(order.getId());
 
         return createOrderResponse(order, orderedItems);
-    }
-
-    public List<OrderResponse> getAllOrders(Long memberId) {
-        List<Order> orders = orderDao.findAllByMemberId(memberId);
-
-        List<OrderResponse> orderResponses = new ArrayList<>();
-        orders.forEach(order -> {
-            List<OrderedItem> orderedItems = orderItemDao.findByOrderId(order.getId());
-            orderResponses.add(createOrderResponse(order, orderedItems));
-        });
-
-        return orderResponses;
     }
 
     private OrderResponse createOrderResponse(Order order, List<OrderedItem> orderedItems) {
@@ -156,8 +144,15 @@ public class OrderService {
                 order.getDiscountedTotalItemPrice() + order.getShippingFee());
     }
 
-    private int calculateTotalMemberDiscountAmountForOrder(Order order, int totalItemDiscountedAmount) {
-        return order.getTotalItemPrice() - order.getDiscountedTotalItemPrice() - totalItemDiscountedAmount;
+    public List<OrderedItemResponse> convertToResponse(List<OrderedItem> orderedItems) {
+        return orderedItems.stream()
+                .map(this::createOrderedItemResponse)
+                .collect(Collectors.toList());
+    }
+
+    private OrderedItemResponse createOrderedItemResponse(OrderedItem orderedItem) {
+        return new OrderedItemResponse(orderedItem.getId(), orderedItem.getName(), orderedItem.getPrice(), orderedItem.getImageUrl(), orderedItem.getQuantity(),
+                orderedItem.getDiscountRate(), orderedItem.calculateDiscountedPrice());
     }
 
     private int calculateTotalItemDiscountedPriceForOrder(List<OrderedItem> orderedItems) {
@@ -176,14 +171,19 @@ public class OrderService {
         }
     }
 
-    public List<OrderedItemResponse> convertToResponse(List<OrderedItem> orderedItems) {
-        return orderedItems.stream()
-                .map(this::createOrderedItemResponse)
-                .collect(Collectors.toList());
+    private int calculateTotalMemberDiscountAmountForOrder(Order order, int totalItemDiscountedAmount) {
+        return order.getTotalItemPrice() - order.getDiscountedTotalItemPrice() - totalItemDiscountedAmount;
     }
 
-    private OrderedItemResponse createOrderedItemResponse(OrderedItem orderedItem) {
-        return new OrderedItemResponse(orderedItem.getId(), orderedItem.getName(), orderedItem.getPrice(), orderedItem.getImageUrl(), orderedItem.getQuantity(),
-                orderedItem.getDiscountRate(), orderedItem.calculateDiscountedPrice());
+    public List<OrderResponse> getAllOrders(Long memberId) {
+        List<Order> orders = orderDao.findAllByMemberId(memberId);
+
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        orders.forEach(order -> {
+            List<OrderedItem> orderedItems = orderItemDao.findByOrderId(order.getId());
+            orderResponses.add(createOrderResponse(order, orderedItems));
+        });
+
+        return orderResponses;
     }
 }

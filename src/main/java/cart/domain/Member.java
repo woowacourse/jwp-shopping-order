@@ -29,35 +29,11 @@ public class Member {
 
     public void createOrder(int totalPrice){
         this.totalPurchaseAmount += totalPrice;
-        setGrade();
-    }
-
-    public void setGrade() {
-        if (totalPurchaseAmount == 0) {
-            this.grade = "일반";
-        }else if(totalPurchaseAmount <= 100_000){
-            this.grade = "silver";
-        }else if(totalPurchaseAmount <= 200_000){
-            this.grade = "gold";
-        }else if(totalPurchaseAmount <= 300_000){
-            this.grade = "platinum";
-        }else{
-            this.grade = "diamond";
-        }
+        this.grade = Grade.findGrade(totalPurchaseAmount);
     }
 
     public int findDiscountedPercentage() {
-        if (grade.equals("일반")) {
-            return 0;
-        }else if(grade.equals("silver")){
-            return 5;
-        }else if(grade.equals("gold")){
-            return 10;
-        }else if(grade.equals("platinum")){
-            return 15;
-        }else{
-            return 20;
-        }
+        return Grade.findGradeDiscount(grade);
     }
 
     public Long getId() {

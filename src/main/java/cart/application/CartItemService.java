@@ -5,11 +5,9 @@ import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.Price;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
-import cart.dto.CostResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,18 +53,5 @@ public class CartItemService {
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
-    }
-
-    public CostResponse getCosts(Long memberId) {
-        int memberDiscount = memberDao.getMemberById(memberId).findDiscountedPercentage();
-
-        int totalItemPrice = Price.calculateTotalItemPrice(cartItemDao.findByMemberId(memberId));
-        int discountedTotalItemPrice = Price.calculateDiscountedTotalItemPrice(cartItemDao.findByMemberId(memberId), memberDiscount);
-        int shippingFee = Price.calculateShippingFee(totalItemPrice);
-        int totalPrice = discountedTotalItemPrice + shippingFee;
-        int totalItemDiscountAmount = Price.calculateTotalItemDiscountAmount(cartItemDao.findByMemberId(memberId));
-        int totalMemberDiscountAmount = Price.calculateTotalMemberDiscountAmount(cartItemDao.findByMemberId(memberId), memberDiscount);
-
-        return new CostResponse(totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
     }
 }
