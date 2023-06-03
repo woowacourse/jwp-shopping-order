@@ -38,7 +38,7 @@ public class CouponResponse {
         return fixedCoupon;
     }
 
-    static class RateCouponResponse {
+    public static class RateCouponResponse {
 
         private final Long id;
         private final String name;
@@ -87,7 +87,7 @@ public class CouponResponse {
         }
     }
 
-    static class FixedCouponResponse {
+    public static class FixedCouponResponse {
 
         private final Long id;
         private final String name;
