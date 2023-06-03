@@ -24,14 +24,36 @@ CREATE TABLE cart_item
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
 
+CREATE TABLE coupon
+(
+    id              BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name            VARCHAR(255) NOT NULL,
+    type            VARCHAR(255) NOT NULL,
+    discount_value  BIGINT       NOT NULL,
+    min_order_price BIGINT       NOT NULL
+);
+
+CREATE TABLE member_coupon
+(
+    id           BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id    BIGINT    NOT NULL,
+    coupon_id    BIGINT    NOT NULL,
+    expired_date DATE NOT NULL,
+    is_used      BOOL DEFAULT false,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE
+);
+
 CREATE TABLE orders
 (
-    id           BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    member_id    BIGINT       NOT NULL,
+    id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id     BIGINT       NOT NULL,
+    coupon_id     BIGINT,
     orders_number VARCHAR(255) NOT NULL,
-    delivery_fee INT          NOT NULL,
-    created_at   TIMESTAMP    NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
+    delivery_fee  INT          NOT NULL,
+    created_at    TIMESTAMP    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE
 );
 
 CREATE TABLE orders_product

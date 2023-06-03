@@ -43,4 +43,24 @@ public class Coupon {
     public boolean isCoupon() {
         return couponType != CouponType.NONE;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public CouponType getCouponType() {
+        return couponType;
+    }
+
+    public BigDecimal getDiscountValue() {
+        return discountValue;
+    }
+
+    public Money getMinOrderPrice() {
+        return minOrderPrice;
+    }
 }

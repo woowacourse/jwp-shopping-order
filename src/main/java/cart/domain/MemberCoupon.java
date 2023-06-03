@@ -67,4 +67,8 @@ public class MemberCoupon {
     public LocalDate getExpiredDate() {
         return expiredDate;
     }
+
+    public boolean isExists() {
+        return coupon.isCoupon();
+    }
 }

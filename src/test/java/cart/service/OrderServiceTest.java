@@ -1,6 +1,7 @@
 package cart.service;
 
 import static cart.fixture.TestFixture.밀리;
+import static cart.fixture.TestFixture.밀리_쿠폰_10퍼센트;
 import static cart.fixture.TestFixture.박스터;
 import static cart.fixture.TestFixture.장바구니_밀리_치킨_10개;
 import static cart.fixture.TestFixture.장바구니_밀리_피자_1개;
@@ -23,6 +24,7 @@ import cart.dto.OrderResponse;
 import cart.exception.IllegalMemberException;
 import cart.exception.IncorrectPriceException;
 import cart.repository.CartItemRepository;
+import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.Optional;
@@ -48,16 +50,22 @@ class OrderServiceTest {
     @Mock
     private CartItemRepository cartItemRepository;
 
+    @Mock
+    private MemberCouponRepository memberCouponRepository;
+
     @Test
     void 주문을_등록한다() {
         given(cartItemRepository.findById(anyLong()))
                 .willReturn(Optional.of(장바구니_밀리_치킨_10개), Optional.of(장바구니_밀리_피자_1개));
         given(orderRepository.save(any()))
                 .willReturn(주문_밀리_치킨_피자_3000원);
+        given(memberCouponRepository.findById(anyLong()))
+                .willReturn(Optional.of(밀리_쿠폰_10퍼센트));
 
-        Long id = orderService.register(new OrderRequest(of(1L, 2L), 3000, valueOf(123000)), 밀리);
+        Long id = orderService.register(new OrderRequest(of(1L, 2L), 1L, 3000, valueOf(111000)), 밀리);
 
         verify(cartItemRepository, times(2)).deleteById(any());
+        verify(memberCouponRepository, times(1)).delete(any());
         assertThat(id).isEqualTo(1L);
     }
 
@@ -68,7 +76,8 @@ class OrderServiceTest {
 
         verify(orderRepository, never()).save(any());
         verify(cartItemRepository, never()).deleteById(any());
-        assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L, 2L), 3000, valueOf(12000)), 밀리))
+        verify(memberCouponRepository, never()).delete(any());
+        assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L, 2L), -1L, 3000, valueOf(12000)), 밀리))
                 .isInstanceOf(IncorrectPriceException.class);
     }
 

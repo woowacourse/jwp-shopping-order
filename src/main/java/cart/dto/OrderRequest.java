@@ -6,14 +6,16 @@ import java.util.List;
 public class OrderRequest {
 
     private List<Long> cartItemIds;
+    private Long couponId;
     private int deliveryFee;
     private BigDecimal totalOrderPrice;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(List<Long> cartItemIds, int deliveryFee, BigDecimal totalOrderPrice) {
+    public OrderRequest(List<Long> cartItemIds, Long couponId, int deliveryFee, BigDecimal totalOrderPrice) {
         this.cartItemIds = cartItemIds;
+        this.couponId = couponId;
         this.deliveryFee = deliveryFee;
         this.totalOrderPrice = totalOrderPrice;
     }
@@ -22,6 +24,9 @@ public class OrderRequest {
         return cartItemIds;
     }
 
+    public Long getCouponId() {
+        return couponId;
+    }
 
     public int getDeliveryFee() {
         return deliveryFee;

@@ -2,8 +2,10 @@ package cart.service;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.MemberCoupon;
 import cart.domain.Money;
 import cart.domain.Order;
+import cart.domain.coupon.Coupon;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -11,6 +13,7 @@ import cart.exception.IncorrectPriceException;
 import cart.exception.NonExistCartItemException;
 import cart.exception.NonExistOrderException;
 import cart.repository.CartItemRepository;
+import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,10 +26,13 @@ public class OrderService {
 
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
+    private final MemberCouponRepository memberCouponRepository;
 
-    public OrderService(CartItemRepository cartItemRepository, OrderRepository orderRepository) {
+    public OrderService(CartItemRepository cartItemRepository, OrderRepository orderRepository,
+                        MemberCouponRepository memberCouponRepository) {
         this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
+        this.memberCouponRepository = memberCouponRepository;
     }
 
     public Long register(OrderRequest orderRequest, Member member) {
@@ -34,7 +40,9 @@ public class OrderService {
                 .map(this::getCartItem)
                 .collect(Collectors.toList());
 
-        Order order = Order.of(member, cartItems, orderRequest.getDeliveryFee());
+        MemberCoupon memberCoupon = getMemberCoupon(orderRequest.getCouponId(), member);
+
+        Order order = Order.of(member, cartItems, orderRequest.getDeliveryFee(), memberCoupon);
 
         Money totalPrice = order.calculateTotalPrice();
         if (totalPrice.isNotSameValue(orderRequest.getTotalOrderPrice())) {
@@ -42,14 +50,25 @@ public class OrderService {
         }
 
         Order savedOrder = orderRepository.save(order);
-        deleteOrdered(cartItems);
+        deleteOrdered(cartItems, memberCoupon);
         return savedOrder.getId();
     }
 
-    private void deleteOrdered(List<CartItem> cartItems) {
+    private MemberCoupon getMemberCoupon(Long couponId, Member member) {
+        if (couponId == -1L) {
+            return new MemberCoupon(member, Coupon.NONE);
+        }
+        return memberCouponRepository.findById(couponId)
+                .orElseThrow();
+    }
+
+    private void deleteOrdered(List<CartItem> cartItems, MemberCoupon memberCoupon) {
         cartItems.stream()
                 .map(CartItem::getId)
                 .forEach(cartItemRepository::deleteById);
+        if (memberCoupon.isExists()) {
+            memberCouponRepository.delete(memberCoupon);
+        }
     }
 
     private CartItem getCartItem(Long cartItemId) {

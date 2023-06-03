@@ -1,5 +1,6 @@
 package cart.repository;
 
+import cart.dao.CouponDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderProductDao;
@@ -8,6 +9,8 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.Product;
+import cart.domain.coupon.Coupon;
+import cart.entity.CouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
 import cart.exception.NonExistMemberException;
@@ -22,11 +25,14 @@ public class OrderRepository {
     private final OrderDao orderDao;
     private final OrderProductDao orderProductDao;
     private final MemberDao memberDao;
+    private final CouponDao couponDao;
 
-    public OrderRepository(OrderDao orderDao, OrderProductDao orderProductDao, MemberDao memberDao) {
+    public OrderRepository(OrderDao orderDao, OrderProductDao orderProductDao, MemberDao memberDao,
+                           CouponDao couponDao) {
         this.orderDao = orderDao;
         this.orderProductDao = orderProductDao;
         this.memberDao = memberDao;
+        this.couponDao = couponDao;
     }
 
     public Order save(Order order) {
@@ -37,13 +43,14 @@ public class OrderRepository {
         List<OrderProductEntity> orderProductEntities = toEntities(order, savedOrderId);
         orderProductDao.saveAll(orderProductEntities);
         return new Order(savedOrderId, member, order.getItems(), deliveryFee, order.getOrderDate(),
-                order.getOrderNumber());
+                order.getOrderNumber(), order.getCoupon());
     }
 
     private OrderEntity toEntity(Order order) {
         Member member = order.getMember();
         Money deliveryFee = order.getDeliveryFee();
-        return new OrderEntity(member.getId(), deliveryFee.getValue().intValue(), order.getOrderNumber(),
+        Long couponId = order.getCoupon().getId();
+        return new OrderEntity(member.getId(), couponId, deliveryFee.getValue().intValue(), order.getOrderNumber(),
                 order.getOrderDate());
     }
 
@@ -87,15 +94,25 @@ public class OrderRepository {
     private Order toOrder(OrderEntity orderEntity, Member member) {
         List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(orderEntity.getId());
         List<Item> items = toItems(orderProductEntities);
-
+        Coupon coupon = toCoupon(orderEntity.getCouponId());
         return new Order(
                 orderEntity.getId(),
                 member,
                 items,
                 new Money(orderEntity.getDeliveryFee()),
                 orderEntity.getCreatedAt(),
-                orderEntity.getOrderNumber()
+                orderEntity.getOrderNumber(),
+                coupon
         );
+    }
+
+    private Coupon toCoupon(Long couponId) {
+        if (couponId == 0) {
+            return Coupon.NONE;
+        }
+        return couponDao.findById(couponId)
+                .map(CouponEntity::toDomain)
+                .orElseThrow();
     }
 
     private Member getMember(OrderEntity order) {
