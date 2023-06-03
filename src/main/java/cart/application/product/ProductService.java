@@ -29,12 +29,12 @@ public class ProductService {
     }
 
     public Long createProduct(final ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.isDiscounted(), productRequest.getDiscountRate());
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.getIsDiscounted(), productRequest.getDiscountRate());
         return productRepository.create(product);
     }
 
     public void updateProduct(final Long productId, final ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.isDiscounted(), productRequest.getDiscountRate());
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), productRequest.getIsDiscounted(), productRequest.getDiscountRate());
         productRepository.update(productId, product);
     }
 

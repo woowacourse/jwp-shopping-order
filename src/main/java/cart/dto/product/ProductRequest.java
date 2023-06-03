@@ -30,7 +30,7 @@ public class ProductRequest {
         return imageUrl;
     }
 
-    public boolean isDiscounted() {
+    public boolean getIsDiscounted() {
         return isDiscounted;
     }
 

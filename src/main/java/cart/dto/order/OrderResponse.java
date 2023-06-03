@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class OrderResponse {
 
+    private Long id;
     private List<OrderItemDto> orderedItems;
     private LocalDateTime orderedAt;
     private int totalItemDiscountAmount;
@@ -20,6 +21,7 @@ public class OrderResponse {
     private int totalPrice;
 
     public OrderResponse(
+            final Long id,
             final List<OrderItemDto> orderedItems,
             final LocalDateTime orderedAt,
             final int totalItemDiscountAmount,
@@ -29,6 +31,7 @@ public class OrderResponse {
             final int shippingFee,
             final int totalPrice
     ) {
+        this.id = id;
         this.orderedItems = orderedItems;
         this.orderedAt = orderedAt;
         this.totalItemDiscountAmount = totalItemDiscountAmount;
@@ -42,6 +45,7 @@ public class OrderResponse {
     public static OrderResponse from(final Order order, final Member member, final Bill bill) {
         List<OrderItemDto> orderItemDtos = orderItemsToOrderItemDtos(order);
         return new OrderResponse(
+                order.getId(),
                 orderItemDtos,
                 order.getGenerateTime(),
                 order.getOrderItems().getItemBenefit().getMoney(),
@@ -57,6 +61,10 @@ public class OrderResponse {
         return order.getOrderItems().getOrderItems().stream()
                 .map(OrderItemDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public List<OrderItemDto> getOrderedItems() {
