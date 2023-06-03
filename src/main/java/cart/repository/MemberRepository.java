@@ -4,6 +4,7 @@ import cart.dao.MemberDao;
 import cart.domain.member.Email;
 import cart.domain.member.Member;
 import cart.entity.MemberEntity;
+import cart.exception.MemberException;
 import cart.repository.mapper.MemberMapper;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,14 +21,14 @@ public class MemberRepository {
 
     public Member getMemberById(final Long id) {
         final MemberEntity memberEntity = memberDao.getMemberById(id)
-                .orElseThrow(() -> new IllegalArgumentException(id + "id 에 해당하는 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberException.NotFound(id));
 
         return MemberMapper.toMember(memberEntity);
     }
 
     public Member getMemberByEmail(final Email email) {
         final MemberEntity memberEntity = memberDao.getMemberByEmail(email.email())
-                .orElseThrow(() -> new IllegalArgumentException(email.email() + " 이메일을 가진 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberException.NotFound(email));
 
         return MemberMapper.toMember(memberEntity);
     }

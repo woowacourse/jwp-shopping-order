@@ -9,6 +9,9 @@ import cart.domain.member.Member;
 import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
+import cart.exception.CartItemException;
+import cart.exception.MemberException;
+import cart.exception.ProductException;
 import cart.repository.mapper.CartItemMapper;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +39,7 @@ public class CartRepository {
         final List<CartItemEntity> cartItems = cartItemDao.findByMemberId(member.getId());
 
         final MemberEntity memberEntity = memberDao.getMemberById(member.getId())
-                .orElseThrow(() -> new IllegalArgumentException(member.getId() + "를 가진 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberException.NotFound(member.getId()));
 
         final List<Long> productIds = cartItems.stream()
                 .map(CartItemEntity::getProductId)
@@ -53,13 +56,13 @@ public class CartRepository {
 
     public CartItem findById(final Long id) {
         final CartItemEntity cartItemEntity = cartItemDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(id + "id를 가진 장바구니 목록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CartItemException.NotFound(id));
 
         final ProductEntity productEntity = productDao.getProductById(cartItemEntity.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException(id + "id를 가진 상품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ProductException.NotFoundProduct(cartItemEntity.getProductId()));
 
         final MemberEntity memberEntity = memberDao.getMemberById(cartItemEntity.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException(id + "id를 가진 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberException.NotFound(cartItemEntity.getMemberId()));
 
         return CartItemMapper.toCartItem(cartItemEntity, productEntity, memberEntity);
     }

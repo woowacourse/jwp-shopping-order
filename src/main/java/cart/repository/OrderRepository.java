@@ -11,6 +11,9 @@ import cart.entity.MemberEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.ProductEntity;
+import cart.exception.MemberException;
+import cart.exception.OrderException;
+import cart.exception.UnKnownException;
 import cart.repository.mapper.OrderMapper;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,8 +44,7 @@ public class OrderRepository {
 
     public Orders findByMember(final Member member) {
         final MemberEntity orderOwner = memberDao.getMemberById(member.getId()).orElseThrow(
-                () -> new IllegalArgumentException(member.getId() + "id를 가진 멤버를 찾을 수 없습니다.")
-        );
+                () -> new MemberException.NotFound(member.getId()));
         final List<OrderEntity> orderEntities = orderDao.findOrderByMemberId(member.getId());
 
         if (orderEntities.isEmpty()) {
@@ -80,7 +82,7 @@ public class OrderRepository {
 
     public Order findByOrderId(final Long orderId) {
         final OrderEntity orderEntity = orderDao.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException(orderId + "id를 가진 주문을 찾을 수 없습니다."));
+                .orElseThrow(() -> new OrderException.NotFound(orderId));
 
         final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
 
@@ -88,7 +90,7 @@ public class OrderRepository {
         final Map<Long, ProductEntity> productGroupById = productDao.getProductGroupById(productIds);
 
         final MemberEntity memberEntity = memberDao.getMemberById(orderEntity.getMemberId())
-                .orElseThrow(() -> new IllegalStateException("알 수 없는 오류 발생"));
+                .orElseThrow(UnKnownException::new);
 
         return OrderMapper.toOrder(
                 orderEntity,
