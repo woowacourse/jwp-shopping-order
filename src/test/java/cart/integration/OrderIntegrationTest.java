@@ -7,9 +7,12 @@ import cart.application.dto.coupon.IssueCouponRequest;
 import cart.application.dto.order.CreateOrderByCartItemsRequest;
 import cart.application.dto.order.FindOrderCouponsResponse;
 import cart.application.dto.order.FindOrderDetailResponse;
+import cart.application.dto.order.FindOrdersResponse;
 import cart.application.dto.order.OrderCouponResponse;
 import cart.application.dto.order.OrderDetailProductResponse;
 import cart.application.dto.order.OrderProductRequest;
+import cart.application.dto.order.OrderProductResponse;
+import cart.application.dto.order.OrderResponse;
 import cart.application.dto.product.ProductRequest;
 import cart.domain.Member;
 import cart.domain.coupon.CouponType;
@@ -117,5 +120,39 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
                 .isEqualTo(expected);
+    }
+
+    @Test
+    void 전체_주문목록을_조회한다() {
+        LocalDateTime futureDate = LocalDateTime.of(9999, 12, 31, 0, 0);
+        requestUpdateCartItemQuantity(member, cartItemId1, 3);
+        long memberCouponId1 = issueCoupon(member, couponId1, new IssueCouponRequest(futureDate));
+
+        CreateOrderByCartItemsRequest request1 = new CreateOrderByCartItemsRequest(
+                memberCouponId1,
+                List.of(new OrderProductRequest(cartItemId1, 3, "치킨", 10_000, "http://example.com/chicken.jpg"))
+        );
+
+        CreateOrderByCartItemsRequest request2 = new CreateOrderByCartItemsRequest(
+                null,
+                List.of(new OrderProductRequest(cartItemId2, 1, "피자", 15_000, "http://example.com/pizza.jpg"))
+        );
+
+        long orderId1 = orderCartItems(member, request1);
+        long orderId2 = orderCartItems(member, request2);
+
+        FindOrdersResponse response = findOrders(member);
+        FindOrdersResponse expected = new FindOrdersResponse(List.of(
+                new OrderResponse(orderId1,
+                        List.of(new OrderProductResponse(productId, "치킨", 10_000, "http://example.com/chicken.jpg",
+                                3))),
+                new OrderResponse(orderId2,
+                        List.of(new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 1)))
+        ));
+
+        assertThat(response.getOrders())
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .isEqualTo(expected.getOrders());
     }
 }

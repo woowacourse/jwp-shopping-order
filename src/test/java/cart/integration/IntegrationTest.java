@@ -10,6 +10,7 @@ import cart.application.dto.coupon.IssueCouponRequest;
 import cart.application.dto.order.CreateOrderByCartItemsRequest;
 import cart.application.dto.order.FindOrderCouponsResponse;
 import cart.application.dto.order.FindOrderDetailResponse;
+import cart.application.dto.order.FindOrdersResponse;
 import cart.application.dto.product.ProductRequest;
 import cart.domain.Member;
 import io.restassured.RestAssured;
@@ -163,6 +164,7 @@ public class IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .body(request)
+                .log().all()
                 .when()
                 .post("/orders")
                 .then()
@@ -185,4 +187,16 @@ public class IntegrationTest {
                 .extract().as(FindOrderDetailResponse.class);
     }
 
+    protected FindOrdersResponse findOrders(final Member member) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .log().all()
+                .when()
+                .get("/orders/")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(FindOrdersResponse.class);
+    }
 }
