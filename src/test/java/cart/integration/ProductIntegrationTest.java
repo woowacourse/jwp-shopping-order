@@ -1,26 +1,56 @@
 package cart.integration;
 
+import cart.domain.product.Product;
+import cart.dto.PageInfo;
+import cart.dto.PagingProductResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
+    @Sql("classpath:testData.sql")
     @Test
     public void getProducts() {
-        var result = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        //when
+        var result = given().log().all()
+                .param("page", 1)
+                .param("size", 10)
                 .when()
                 .get("/products")
                 .then()
                 .extract();
 
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+        //then
+        final PagingProductResponse response = result.as(PagingProductResponse.class);
+
+        assertSoftly(softly -> {
+            softly.assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(response.getPageInfo()).usingRecursiveComparison()
+                    .isEqualTo(new PageInfo(1, 10, 21, 3));
+            softly.assertThat(response.getProducts()).usingRecursiveComparison()
+                    .isEqualTo(List.of(
+                            ProductResponse.of(new Product(1L, "1", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(2L, "2", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(3L, "3", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(4L, "4", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(5L, "5", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(6L, "6", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(7L, "7", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(8L, "8", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(9L, "9", 1000, "image.jpeg")),
+                            ProductResponse.of(new Product(10L, "10", 1000, "image.jpeg"))
+                    ));
+        });
     }
 
     @Test

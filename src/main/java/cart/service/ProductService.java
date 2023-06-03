@@ -2,6 +2,8 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
+import cart.dto.PageRequest;
+import cart.dto.PagingProductResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,14 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productDao.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+    public PagingProductResponse getAllProducts(final PageRequest pageRequest) {
+        final Paging paging = new Paging(pageRequest);
+
+        List<Product> products = productDao.getAllProductsBy(paging.getStart(), paging.getSize());
+        final List<ProductResponse> productResponses = products.stream().map(ProductResponse::of).collect(Collectors.toList());
+
+        final Integer count = productDao.countAllProduct();
+        return new PagingProductResponse(paging.getPageInfo(count), productResponses);
     }
 
     public ProductResponse getProductById(Long productId) {
