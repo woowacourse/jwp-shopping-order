@@ -43,8 +43,8 @@ public class Point {
         return Money.from(value);
     }
 
-    public boolean isLessOrEqualThan(Point other) {
-        return this.value <= other.value;
+    public boolean isGreaterThan(Point other) {
+        return this.value > other.value;
     }
 
     @Override

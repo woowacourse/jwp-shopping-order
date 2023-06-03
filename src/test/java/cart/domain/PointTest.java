@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 class PointTest {
 
@@ -48,18 +47,18 @@ class PointTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {500, 499})
-    @DisplayName("포인트가 다른 포인트보다 작거나 같음을 확인할 수 있다.")
-    void isLessOrEqualThan(int standardValue) {
+    @CsvSource(value = {"501:true", "500:false"}, delimiter = ':')
+    @DisplayName("포인트가 다른 포인트보다 큼을 확인할 수 있다.")
+    void isGreaterThan(int standardValue, boolean expected) {
         // given
         Point standard = new Point(standardValue);
         Point other = new Point(500);
 
         // when
-        boolean result = standard.isLessOrEqualThan(other);
+        boolean result = standard.isGreaterThan(other);
 
         // then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
