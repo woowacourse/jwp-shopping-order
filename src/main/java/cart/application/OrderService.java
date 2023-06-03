@@ -8,6 +8,7 @@ import cart.dto.response.OrderProductResponse;
 import cart.exception.AccessNonAvailableMemberException;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<OrderHistoryResponse> getOrderHistoriesOf(final Member member) {
         final List<Order> orders = orderRepository.findOrdersOfMember(member);
 
@@ -40,6 +42,7 @@ public class OrderService {
         return orderHistoryResponses;
     }
 
+    @Transactional(readOnly = true)
     public List<OrderProductResponse> getOrderProductsOf(final Member member, final Long orderHistoryId) {
         if (!orderRepository.isAccessibleToOrder(member, orderHistoryId)) {
             throw new AccessNonAvailableMemberException("해당 주문 건의 사용자만 주문 건에 대한 상세조회에 접근할 수 있습니다!");

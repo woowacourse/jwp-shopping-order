@@ -7,6 +7,7 @@ import cart.dto.response.MemberPointQueryResponse;
 import cart.dto.response.MemberQueryResponse;
 import cart.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,19 +21,23 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public MemberCreateResponse join(final MemberCreateRequest request) {
         final Member member = memberRepository.addMember(new Member(request.getEmail(), request.getPassword()), JOIN_EVENT_POINT);
         return MemberCreateResponse.from(member);
     }
 
+    @Transactional(readOnly = true)
     public MemberPointQueryResponse findPointsOf(final Member member) {
         return new MemberPointQueryResponse(memberRepository.findPointOf(member));
     }
 
+    @Transactional
     public void addPoints(final Member member, final int points) {
         memberRepository.addPoint(member, points);
     }
 
+    @Transactional(readOnly = true)
     public List<MemberQueryResponse> findAllMembers() {
         final List<Member> members = memberRepository.findAllMembers();
         return members.stream()
@@ -40,6 +45,7 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public MemberQueryResponse findMemberById(final Long id) {
         return MemberQueryResponse.from(memberRepository.findMemberById(id));
     }

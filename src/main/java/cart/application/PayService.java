@@ -11,6 +11,7 @@ import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class PayService {
         this.orderRepository = orderRepository;
     }
 
+    @Transactional
     public PayResponse orderCartItems(final Member member, final PayRequest request) {
         final int savedPoint = memberRepository.findPointOf(member);
         final int usedPoint = request.getPoints();
@@ -66,6 +68,7 @@ public class PayService {
         return new PayResponse(orderHistoryId);
     }
 
+    @Transactional(readOnly = true)
     private Map<Product, Integer> findProductQuantity(final PayRequest request) {
         return request.getCartItemIds().stream()
                 .collect(Collectors.toMap(
