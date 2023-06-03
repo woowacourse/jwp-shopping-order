@@ -2,7 +2,7 @@ package cart.integration;
 
 import static io.restassured.RestAssured.given;
 
-import cart.dto.ProductRequest;
+import cart.ui.dto.request.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

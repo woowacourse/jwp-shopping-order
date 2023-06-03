@@ -1,6 +1,7 @@
-package cart.dto;
+package cart.ui.dto.request;
 
 public class ProductRequest {
+
     private String name;
     private int price;
     private String imageUrl;
@@ -8,7 +9,7 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, int price, String imageUrl) {
+    public ProductRequest(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
