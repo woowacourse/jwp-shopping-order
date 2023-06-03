@@ -92,7 +92,9 @@ class OrderServiceTest {
         final Product product3 = productRepository.save(상품_28900원);
         final Member member = memberRepository.save(사용자1);
         final Coupon coupon = couponRepository.save(_3만원_이상_2천원_할인_쿠폰);
-        final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon));
+        final MemberCoupon memberCoupon = memberCouponRepository.save(
+                new MemberCoupon(null, member.getId(), coupon, true)
+        );
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
         final CartItem cartItem3 = cartItemRepository.save(new CartItem(member.getId(), product3));

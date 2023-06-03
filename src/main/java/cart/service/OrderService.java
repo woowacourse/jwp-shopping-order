@@ -41,6 +41,7 @@ public class OrderService {
             final MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
                     .orElseThrow(MemberCouponNotFoundException::new);
             final Order order = Order.of(memberCoupon, memberId, items);
+            order.useCoupon();
             final Order saveOrder = orderRepository.save(order);
             return saveOrder.getId();
         }

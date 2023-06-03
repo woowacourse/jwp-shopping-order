@@ -76,7 +76,7 @@ public class Order {
 
     public void checkOwner(final Long memberId) {
         if (!this.memberId.equals(memberId)) {
-            throw new InvalidOrderException("주문의 소유주가 아닙니다.");
+            throw new InvalidOrderException("주문의 소유자가 아닙니다.");
         }
     }
 
@@ -98,6 +98,10 @@ public class Order {
 
     public Money calculateDeliveryFee() {
         return memberCoupon.calculateDeliveryFee(deliveryFee);
+    }
+
+    public void useCoupon() {
+        memberCoupon.use();
     }
 
     @Override

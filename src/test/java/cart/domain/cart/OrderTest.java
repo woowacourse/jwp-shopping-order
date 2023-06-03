@@ -1,6 +1,5 @@
 package cart.domain.cart;
 
-import static cart.domain.cart.Order.of;
 import static cart.fixture.CouponFixture._20만원_할인_쿠폰;
 import static cart.fixture.CouponFixture._20프로_할인_쿠폰;
 import static cart.fixture.CouponFixture._3만원_이상_배달비_3천원_할인_쿠폰;
@@ -40,11 +39,22 @@ class OrderTest {
     }
 
     @Test
+    void 주문한_사용자가_아니라면_예외를_던진다() {
+        final MemberCoupon memberCoupon = new MemberCoupon(1L, _20프로_할인_쿠폰);
+        final CartItem cartItem = new CartItem(1L, 3, 2L, 상품_8900원);
+        final Order order = Order.of(memberCoupon, 1L, of(cartItem));
+
+        assertThatThrownBy(() -> order.checkOwner(Long.MAX_VALUE))
+                .isInstanceOf(InvalidOrderException.class)
+                .hasMessage("주문의 소유자가 아닙니다.");
+    }
+
+    @Test
     void 주문_상품의_총합을_계산한다() {
         // given
         final CartItem cartItem1 = new CartItem(1L, 3, 1L, 상품_8900원);
         final CartItem cartItem2 = new CartItem(1L, 4, 1L, 상품_18900원);
-        final Order order = of(null, 1L, of(cartItem1, cartItem2));
+        final Order order = Order.of(null, 1L, of(cartItem1, cartItem2));
 
         // when
         final Money result = order.calculateTotalPrice();
@@ -59,7 +69,7 @@ class OrderTest {
         final CartItem cartItem1 = new CartItem(1L, 3, 1L, 상품_8900원);
         final CartItem cartItem2 = new CartItem(1L, 4, 1L, 상품_18900원);
         final MemberCoupon memberCoupon = new MemberCoupon(1L, _20프로_할인_쿠폰);
-        final Order order = of(memberCoupon, 1L, of(cartItem1, cartItem2));
+        final Order order = Order.of(memberCoupon, 1L, of(cartItem1, cartItem2));
 
         // when
         final Money result = order.calculateDiscountPrice();
@@ -74,7 +84,7 @@ class OrderTest {
         final CartItem cartItem1 = new CartItem(1L, 3, 1L, 상품_8900원);
         final CartItem cartItem2 = new CartItem(1L, 4, 1L, 상품_18900원);
         final MemberCoupon memberCoupon = new MemberCoupon(1L, _20만원_할인_쿠폰);
-        final Order order = of(memberCoupon, 1L, of(cartItem1, cartItem2));
+        final Order order = Order.of(memberCoupon, 1L, of(cartItem1, cartItem2));
 
         // when
         final Money result = order.calculateDiscountPrice();
@@ -88,12 +98,26 @@ class OrderTest {
         // given
         final CartItem cartItem1 = new CartItem(1L, 3, 1L, 상품_18900원);
         final MemberCoupon memberCoupon = new MemberCoupon(1L, _3만원_이상_배달비_3천원_할인_쿠폰);
-        final Order order = of(memberCoupon, 1L, of(cartItem1));
+        final Order order = Order.of(memberCoupon, 1L, of(cartItem1));
 
         // when
         final Money result = order.calculateDeliveryFee();
 
         // then
         assertThat(result).isEqualTo(Money.ZERO);
+    }
+
+    @Test
+    void 쿠폰을_사용하면_쿠폰_사용_완료_상태가_된다() {
+        // given
+        final CartItem cartItem = new CartItem(1L, 3, 1L, 상품_18900원);
+        final MemberCoupon memberCoupon = new MemberCoupon(1L, _3만원_이상_배달비_3천원_할인_쿠폰);
+        final Order order = Order.of(memberCoupon, 1L, of(cartItem));
+
+        // when
+        order.useCoupon();
+
+        // then
+        assertThat(memberCoupon.isUsed()).isEqualTo(true);
     }
 }
