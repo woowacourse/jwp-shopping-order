@@ -31,14 +31,15 @@ public class OrdersTaker {
         final int originalPrice = calculateCartItemsOriginalPrice(cartIds);
         final int discountPrice = calculateDiscountPrice(memberId, originalPrice, coupons);
         final long orderId = ordersRepository.takeOrders(memberId, discountPrice);
-        cartItemRepository.changeCartItemToOrdersItem(orderId, cartIds);
+        List<ProductQuantity> productIdQuantity = cartItemRepository.changeCartItemToOrdersItemAndGetProductQuantities(cartIds);
+        ordersRepository.createOrdersCartItems(orderId,productIdQuantity);
         couponRepository.addOrdersCoupon(orderId, coupons);
         return orderId;
     }
 
     private int calculateCartItemsOriginalPrice(final List<Long> cartIds) {
         return cartIds.stream()
-                .map(id -> cartItemRepository.findTotalPriceByCartId(id))
+                .map(cartItemRepository::findTotalPriceByCartId)
                 .reduce(0, Integer::sum);
     }
 
@@ -49,7 +50,7 @@ public class OrdersTaker {
     private int calculateDiscountPrice(final long memberId, final int originalPrice, final List<Long> couponIds) {
         int discountPrice = originalPrice;
         List<Coupon> coupons = couponIds.stream()
-                .map(id -> couponRepository.findById(id))
+                .map(couponRepository::findById)
                 .collect(Collectors.toList());
         for (Coupon coupon : coupons) {
             couponRepository.withDrawCouponWithId(memberId, coupon);

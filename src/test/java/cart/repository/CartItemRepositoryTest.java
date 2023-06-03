@@ -16,12 +16,12 @@ class CartItemRepositoryTest extends RepositoryTest {
     @Autowired
     private CartItemRepositoryTest(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
-        this.cartItemRepository = new CartItemRepository(cartItemDao, ordersCartItemDao, productDao);
+        this.cartItemRepository = new CartItemRepository(cartItemDao, productDao);
     }
 
     @Test
     void changeCartItemToOrdersItem() {
-        cartItemRepository.changeCartItemToOrdersItem(1L, List.of(1L, 2L));
+        cartItemRepository.changeCartItemToOrdersItemAndGetProductQuantities(List.of(1L, 2L));
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(cartItemDao.findById(1L)).isNull();
             softly.assertThat(cartItemDao.findById(2L)).isNull();

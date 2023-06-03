@@ -7,6 +7,7 @@ import cart.dao.entity.OrdersEntity;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Orders;
+import cart.domain.ProductQuantity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,6 +28,11 @@ public class OrdersRepository {
 
     public long takeOrders(final Long memberId, final int discountPrice) {
         return ordersDao.createOrders(memberId, discountPrice);
+    }
+    public void createOrdersCartItems(final long orders, final List<ProductQuantity> productQuantities){
+        for(ProductQuantity productQuantity: productQuantities){
+            ordersCartItemDao.createOrdersIdCartItemId(orders,productQuantity.getProductId(),productQuantity.getQuantity());
+        }
     }
 
     public List<Orders> findAllOrdersByMember(final Member member) {
@@ -58,13 +64,10 @@ public class OrdersRepository {
     }
 
     private Optional<Orders> rendering(Optional<OrdersEntity> orders) {
-        if (orders.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(new Orders(
-                orders.get().getId(),
-                orders.get().getPrice(),
-                orders.get().getConfirmState()
+        return orders.map(ordersEntity -> new Orders(
+                ordersEntity.getId(),
+                ordersEntity.getPrice(),
+                ordersEntity.getConfirmState()
         ));
     }
 
