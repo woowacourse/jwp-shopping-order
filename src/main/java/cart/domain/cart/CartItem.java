@@ -3,9 +3,11 @@ package cart.domain.cart;
 import cart.domain.Item;
 import cart.domain.Product;
 import cart.domain.member.Member;
-import cart.exception.CartItemException;
+import cart.exception.AuthorizationException;
 
 import java.util.Objects;
+
+import static cart.exception.ErrorCode.NOT_AUTHORIZATION_MEMBER;
 
 public class CartItem {
     private final Long id;
@@ -26,7 +28,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new AuthorizationException(NOT_AUTHORIZATION_MEMBER);
         }
     }
 

@@ -12,7 +12,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import static cart.exception.ErrorCode.NOT_AUTHENTICATION_MEMBER;
+
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private static final String AUTH_TYPE = "basic";
+
     private final MemberDao memberDao;
 
     public MemberArgumentResolver(MemberDao memberDao) {
@@ -32,7 +37,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         }
 
         String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
+        if (!authHeader[0].equalsIgnoreCase(AUTH_TYPE)) {
             return null;
         }
 
@@ -47,7 +52,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         MemberEntity memberEntity = memberDao.findByName(email);
         Member member = new Member(memberEntity.getId(), memberEntity.getName(), memberEntity.getPassword());
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException("사용자 인증에 실패하였습니다.");
+            throw new AuthenticationException(NOT_AUTHENTICATION_MEMBER);
         }
         return member;
     }

@@ -8,12 +8,14 @@ import cart.domain.member.Member;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
 import cart.dto.cart.CartItemResponse;
-import cart.exception.CartItemException;
+import cart.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static cart.exception.ErrorCode.INVALID_PRODUCT_ID;
 
 @Service
 public class CartItemService {
@@ -69,7 +71,7 @@ public class CartItemService {
     public void removeItems(final Member member, final List<Long> ids) {
         Long count = cartItemRepository.countByIdsAndMemberId(member.getId(), ids);
         if (count != ids.size()) {
-            throw new CartItemException("유효하지 않은 상품 ID 입니다.");
+            throw new BadRequestException(INVALID_PRODUCT_ID);
         }
         cartItemRepository.deleteByIds(member.getId(), ids);
     }

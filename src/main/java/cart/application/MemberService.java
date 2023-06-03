@@ -8,6 +8,9 @@ import cart.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static cart.exception.ErrorCode.DUPLICATED_NAME;
+import static cart.exception.ErrorCode.NOT_AUTHENTICATION_MEMBER;
+
 @Service
 public class MemberService {
 
@@ -22,7 +25,7 @@ public class MemberService {
     @Transactional
     public void add(final MemberRequest memberRequest) {
         if (memberRepository.existsByName(memberRequest.getName())) {
-            throw new AuthenticationException("중복된 아이디입니다. 다른 아이디를 입력해주세요.");
+            throw new AuthenticationException(DUPLICATED_NAME);
         }
         Long memberId = memberRepository.save(new Member(memberRequest.getName(), memberRequest.getPassword()));
         Member newMember = new Member(memberId, memberRequest.getName(), memberRequest.getPassword());
@@ -32,7 +35,7 @@ public class MemberService {
     public TokenResponse generateMemberToken(final MemberRequest memberRequest) {
         Member member = new Member(memberRequest.getName(), memberRequest.getPassword());
         if (!memberRepository.existsByMember(member)) {
-            throw new AuthenticationException("아이디/비밀번호가 일치하지 않습니다.");
+            throw new AuthenticationException(NOT_AUTHENTICATION_MEMBER);
         }
         return new TokenResponse(member.generateToken());
     }
