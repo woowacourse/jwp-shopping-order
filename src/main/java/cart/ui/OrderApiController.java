@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.dto.order.FindOrderCouponsResponse;
 import cart.application.dto.order.FindOrderDetailResponse;
+import cart.application.dto.order.FindOrdersResponse;
 import cart.application.service.MemberCouponService;
 import cart.application.service.OrderService;
 import cart.domain.Member;
@@ -34,6 +35,11 @@ public class OrderApiController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FindOrderDetailResponse> findOrderDetail(Member member, @PathVariable Long id) {
-        return ResponseEntity.ok(orderService.getOrderById(member, id));
+        return ResponseEntity.ok(orderService.findOrderById(member, id));
+    }
+
+    @GetMapping
+    public ResponseEntity<FindOrdersResponse> findAllOrders(Member member) {
+        return ResponseEntity.ok(orderService.findOrders(member));
     }
 }

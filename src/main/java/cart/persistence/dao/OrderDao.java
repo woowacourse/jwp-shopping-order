@@ -4,6 +4,7 @@ import cart.persistence.dto.OrderDetailDTO;
 import cart.persistence.entity.OrderEntity;
 import java.sql.PreparedStatement;
 import java.sql.Types;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,5 +51,14 @@ public class OrderDao {
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<OrderDetailDTO> findByMemberId(final long memberId) {
+        String sql = "SELECT * FROM `order` "
+                + "INNER JOIN member ON `order`.member_id = member.id "
+                + "INNER JOIN member_coupon ON `order`.member_coupon_id = member_coupon.id "
+                + "INNER JOIN coupon ON member_coupon.id = coupon.id "
+                + "WHERE order.member_id = ? ";
+        return jdbcTemplate.query(sql, RowMapperHelper.orderDetailRowMapper(), memberId);
     }
 }

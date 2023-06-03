@@ -1,6 +1,7 @@
 package cart.persistence;
 
 import cart.application.repository.OrderRepository;
+import cart.domain.Member;
 import cart.domain.order.Order;
 import cart.persistence.dao.OrderDao;
 import cart.persistence.dao.OrderItemDao;
@@ -11,7 +12,9 @@ import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderEntity;
 import cart.persistence.entity.OrderItemEntity;
 import cart.persistence.mapper.OrderMapper;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -51,6 +54,30 @@ public class OrderJdbcRepository implements OrderRepository {
 
         Order order = toOrderDomain(orderDetail, orderItemEntities);
         return Optional.of(order);
+    }
+
+    @Override
+    public List<Order> findByMember(final Member member) {
+        List<OrderDetailDTO> orderDetails = orderDao.findByMemberId(member.getId());
+        if (orderDetails.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> orderIds = orderDetails.stream()
+                .map(orderDetail -> orderDetail.getOrderEntity().getId())
+                .collect(Collectors.toList());
+        List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderIds(orderIds);
+        return toOrders(orderDetails, orderItemEntities);
+    }
+
+    private List<Order> toOrders(final List<OrderDetailDTO> orderDetails,
+            final List<OrderItemEntity> orderItemEntities) {
+        Map<Long, List<OrderItemEntity>> orderIdToItems = orderItemEntities.stream()
+                .collect(Collectors.groupingBy(OrderItemEntity::getOrderId));
+
+        return orderDetails.stream()
+                .map(orderDetail -> toOrderDomain(orderDetail,
+                        orderIdToItems.get(orderDetail.getOrderEntity().getId())))
+                .collect(Collectors.toList());
     }
 
     private Order toOrderDomain(final OrderDetailDTO orderDetail, final List<OrderItemEntity> orderItemEntities) {

@@ -6,6 +6,7 @@ import static cart.exception.noexist.NoExistErrorType.COUPON_NO_EXIST;
 import static cart.exception.noexist.NoExistErrorType.ORDER_NO_EXIST;
 
 import cart.application.dto.order.FindOrderDetailResponse;
+import cart.application.dto.order.FindOrdersResponse;
 import cart.application.dto.order.OrderCartItemProductRequest;
 import cart.application.dto.order.OrderCartItemsRequest;
 import cart.application.repository.CartItemRepository;
@@ -19,6 +20,7 @@ import cart.domain.order.Order;
 import cart.exception.badrequest.BadRequestException;
 import cart.exception.noexist.NoExistException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -78,11 +80,18 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public FindOrderDetailResponse getOrderById(final Member member, final long orderId) {
+    public FindOrderDetailResponse findOrderById(final Member member, final long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NoExistException(ORDER_NO_EXIST));
         order.checkOwner(member);
 
         return FindOrderDetailResponse.from(order);
+    }
+
+    @Transactional(readOnly = true)
+    public FindOrdersResponse findOrders(final Member member) {
+        List<Order> orders = orderRepository.findByMember(member);
+
+        return FindOrdersResponse.from(orders);
     }
 }

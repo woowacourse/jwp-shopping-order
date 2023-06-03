@@ -6,20 +6,20 @@ import java.sql.SQLException;
 import java.util.List;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderItemDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public OrderItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("order_item")
-                .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public void createAll(final List<OrderItemEntity> orderItems) {
@@ -49,5 +49,13 @@ public class OrderItemDao {
                 + "WHERE order_id = ?";
 
         return jdbcTemplate.query(sql, RowMapperHelper.orderItemRowMapper(), orderId);
+    }
+
+    public List<OrderItemEntity> findByOrderIds(final List<Long> orderIds) {
+        String sql = "SELECT * FROM order_item "
+                + "WHERE order_id IN (:orderIds)";
+
+        SqlParameterSource parameters = new MapSqlParameterSource("orderIds", orderIds);
+        return namedParameterJdbcTemplate.query(sql, parameters, RowMapperHelper.orderItemRowMapper());
     }
 }
