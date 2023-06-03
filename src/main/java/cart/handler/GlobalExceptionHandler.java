@@ -96,7 +96,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
 
-    @ExceptionHandler(Exception.class)
+//    @ExceptionHandler(Exception.class)
     public ResponseEntity<String> internalServerErrorHandler(final Exception exception) {
         Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
         logger.error("Server error : " + exception.getMessage());

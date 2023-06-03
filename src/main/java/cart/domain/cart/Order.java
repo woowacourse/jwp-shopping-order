@@ -1,7 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.member.Member;
+import cart.domain.coupon.MemberCoupons;
 import cart.dto.coupon.CouponResponse;
 import cart.dto.history.OrderedProductHistory;
 import cart.dto.order.OrderResponse;
@@ -16,21 +16,20 @@ import java.util.stream.Collectors;
 public class Order {
 
     private final Timestamp timestamp;
-    private final Member member;
+    private final MemberCoupons memberCoupons;
     private final Cart cart;
 
-    public Order(final Member member, final Cart cart) {
+    public Order(final MemberCoupons memberCoupons, final Cart cart) {
         this.timestamp = Timestamp.valueOf(LocalDateTime.now());
-        this.member = member;
+        this.memberCoupons = memberCoupons;
         this.cart = cart;
     }
 
     public OrderResponse pay(final List<Long> productIds, final List<Integer> quantities, final List<Long> couponsId) {
         cart.validateBuying(productIds, quantities);
-        member.validateHasCoupons(couponsId);
 
         List<OrderedProductHistory> productHistories = cart.buy(productIds, quantities);
-        List<Coupon> coupons = member.getCouponsByIds(couponsId);
+        List<Coupon> coupons = memberCoupons.getCoupons().findCouponsByIds(couponsId);
         applyCoupon(productHistories, coupons);
 
         return generateOrderHistory(productHistories, coupons);

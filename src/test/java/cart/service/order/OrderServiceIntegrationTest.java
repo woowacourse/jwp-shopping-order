@@ -1,5 +1,6 @@
 package cart.service.order;
 
+import cart.domain.coupon.MemberCoupons;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
 import cart.dto.order.OrderResponse;
@@ -53,11 +54,11 @@ public class OrderServiceIntegrationTest {
     void find_orders() {
         // given
         Member member = memberRepository.findMemberById(1);
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
 
         // when
-        paymentService.pay(member, req);
+        paymentService.pay(memberCoupons, req);
         OrdersResponse orders = orderService.findOrders(member);
 
         // then
@@ -72,11 +73,11 @@ public class OrderServiceIntegrationTest {
     void find_order() {
         // given
         Member member = memberRepository.findMemberById(1);
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
 
         // when
-        long orderId = paymentService.pay(member, req);
+        long orderId = paymentService.pay(memberCoupons, req);
         OrderResponse order = orderService.findOrder(member, orderId);
 
         // then

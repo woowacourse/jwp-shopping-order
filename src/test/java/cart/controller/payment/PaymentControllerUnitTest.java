@@ -1,6 +1,8 @@
 package cart.controller.payment;
 
 import cart.config.auth.guard.order.MemberOrderArgumentResolver;
+import cart.domain.coupon.Coupons;
+import cart.domain.coupon.MemberCoupons;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
 import cart.dto.payment.PaymentRequest;
@@ -29,6 +31,7 @@ import static cart.fixture.CouponFixture.createCoupons;
 import static cart.fixture.MemberFixture.createMember;
 import static cart.helper.RestDocsHelper.customDocument;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -66,23 +69,25 @@ class PaymentControllerUnitTest {
     private ObjectMapper objectMapper;
 
     private Member member;
+    private MemberCoupons memberCoupons;
 
     @BeforeEach
     void init() {
+        Coupons coupons = createCoupons();
         member = createMember();
-        member.initCoupons(createCoupons());
+        memberCoupons = new MemberCoupons(member, coupons);
 
         given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
         given(memberRepository.findByEmail(any())).willReturn(member);
-        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(member);
+        given(memberArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(memberCoupons);
     }
 
     @DisplayName("구매 페이지를 조회한다.")
     @Test
     void find_payment_page() throws Exception {
         // given
-        PaymentResponse paymentResponse = PaymentResponse.from(member, createSimpleCart());
-        when(paymentService.findPaymentPage(any(Member.class))).thenReturn(paymentResponse);
+        PaymentResponse paymentResponse = PaymentResponse.from(memberCoupons, createSimpleCart());
+        when(paymentService.findPaymentPage(any(MemberCoupons.class))).thenReturn(paymentResponse);
 
         // when & then
         mockMvc.perform(get("/payments")
@@ -122,7 +127,7 @@ class PaymentControllerUnitTest {
         // given
         List<Long> ids = List.of(1L);
         PaymentUsingCouponsResponse response = PaymentUsingCouponsResponse.from(createCart(), createCoupons().getCoupons());
-        when(paymentService.applyCoupons(member, ids)).thenReturn(response);
+        when(paymentService.applyCoupons(any(MemberCoupons.class), eq(ids))).thenReturn(response);
 
         // when & then
         mockMvc.perform(get("/payments/coupons")
@@ -142,11 +147,11 @@ class PaymentControllerUnitTest {
                                 parameterWithName("couponsId").description("쿠폰 ID 리스트")
                         ),
                         responseFields(
-                                fieldWithPath("products[0].productId").description("1"),
-                                fieldWithPath("products[0].originalPrice").description("20000"),
-                                fieldWithPath("products[0].discountPrice").description("2900"),
-                                fieldWithPath("deliveryPrice.originalPrice").description("3000"),
-                                fieldWithPath("deliveryPrice.discountPrice").description("0")
+                                fieldWithPath("products[0].productId").description("상품의 id"),
+                                fieldWithPath("products[0].originalPrice").description("상품의 가격"),
+                                fieldWithPath("products[0].discountPrice").description("할인되는 상품의 가격"),
+                                fieldWithPath("deliveryPrice.originalPrice").description("배달료"),
+                                fieldWithPath("deliveryPrice.discountPrice").description("할인되는 배달료")
                         )
                 ));
     }
@@ -168,10 +173,10 @@ class PaymentControllerUnitTest {
                                 headerWithName("Authorization").description("Basic Auth")
                         ),
                         requestFields(
-                                fieldWithPath("products[0].id").description("1"),
-                                fieldWithPath("products[0].quantity").description("10"),
-                                fieldWithPath("coupons[0].id").description("1"),
-                                fieldWithPath("coupons[1].id").description("2")
+                                fieldWithPath("products[0].id").description("상품의 id"),
+                                fieldWithPath("products[0].quantity").description("상품의 수량"),
+                                fieldWithPath("coupons[0].id").description("쿠폰의 id"),
+                                fieldWithPath("coupons[1].id").description("쿠폰의 id")
                         )));
     }
 }

@@ -1,5 +1,6 @@
 package cart.controller.payment;
 
+import cart.domain.coupon.MemberCoupons;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
 import cart.dto.payment.PaymentRequest;
@@ -47,9 +48,9 @@ public class PaymentControllerIntegrationTest {
     void find_payment_page() {
         // given
         Member member = memberRepository.findMemberById(1);
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
-        paymentService.pay(member, req);
+        paymentService.pay(memberCoupons, req);
 
         // when & then
         Response response = given()

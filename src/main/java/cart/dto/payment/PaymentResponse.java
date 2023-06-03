@@ -1,7 +1,7 @@
 package cart.dto.payment;
 
 import cart.domain.cart.Cart;
-import cart.domain.member.Member;
+import cart.domain.coupon.MemberCoupons;
 import cart.dto.coupon.CouponResponse;
 import cart.dto.product.DeliveryFeeResponse;
 import cart.dto.product.ProductPayResponse;
@@ -21,14 +21,14 @@ public class PaymentResponse {
         this.coupons = coupons;
     }
 
-    public static PaymentResponse from(final Member member, final Cart cart) {
+    public static PaymentResponse from(final MemberCoupons memberCoupons, final Cart cart) {
         List<ProductPayResponse> productPayResponses = cart.getCartItems().stream()
                 .map(cartItem -> ProductPayResponse.from(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(Collectors.toList());
 
         DeliveryFeeResponse deliveryPrice = DeliveryFeeResponse.from(cart.getDeliveryFee());
 
-        List<CouponResponse> coupons = member.getCoupons().stream()
+        List<CouponResponse> coupons = memberCoupons.getCoupons().getCoupons().stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
 

@@ -1,10 +1,5 @@
 package cart.domain.member;
 
-import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Coupons;
-
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 public class Member {
@@ -12,35 +7,20 @@ public class Member {
     private Long id;
     private final Email email;
     private final Password password;
-    private Coupons coupons;
 
     public Member(final Long id, final String email, final String password) {
         this.id = id;
         this.email = new Email(email);
         this.password = new Password(password);
-        this.coupons = null;
     }
 
     public Member(final String email, final String password) {
         this.email = new Email(email);
         this.password = new Password(password);
-        this.coupons = null;
-    }
-
-    public void initCoupons(final Coupons coupons) {
-        this.coupons = coupons;
     }
 
     public boolean checkPassword(final String password) {
         return this.password.isPassed(password);
-    }
-
-    public void validateHasCoupons(final List<Long> couponsId) {
-        coupons.validateHasCoupons(couponsId);
-    }
-
-    public List<Coupon> getCouponsByIds(final List<Long> couponsIds) {
-        return Collections.unmodifiableList(coupons.findCouponsByIds(couponsIds));
     }
 
     public Long getId() {
@@ -53,10 +33,6 @@ public class Member {
 
     public String getPassword() {
         return password.getPassword();
-    }
-
-    public List<Coupon> getCoupons() {
-        return coupons.getCoupons();
     }
 
     @Override

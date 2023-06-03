@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static cart.fixture.CouponFixture.createCoupons;
 import static cart.fixture.MemberFixture.createMember;
 import static cart.helper.RestDocsHelper.customDocument;
 import static org.mockito.ArgumentMatchers.any;
@@ -61,7 +60,6 @@ public class OrderControllerUnitTest {
     @BeforeEach
     void init() {
         Member member = createMember();
-        member.initCoupons(createCoupons());
 
         given(memberArgumentResolver.supportsParameter(any())).willReturn(true);
         given(memberRepository.findByEmail(any())).willReturn(member);

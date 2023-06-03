@@ -1,6 +1,7 @@
 package cart.config.auth.guard.order;
 
 import cart.domain.coupon.Coupons;
+import cart.domain.coupon.MemberCoupons;
 import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import cart.repository.coupon.CouponRepository;
@@ -54,9 +55,8 @@ public class MemberOrderArgumentResolver implements HandlerMethodArgumentResolve
         validateMember(password, member);
 
         Coupons coupons = couponRepository.findAllByMemberId(member.getId());
-        member.initCoupons(coupons);
 
-        return member;
+        return new MemberCoupons(member, coupons);
     }
 
     private void validateNullAuthorization(final String authorization) {

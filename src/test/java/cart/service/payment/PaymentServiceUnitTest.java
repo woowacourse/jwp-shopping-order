@@ -3,6 +3,7 @@ package cart.service.payment;
 import cart.domain.cart.Cart;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Coupons;
+import cart.domain.coupon.MemberCoupons;
 import cart.domain.discount.PolicyDiscount;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
@@ -52,14 +53,13 @@ class PaymentServiceUnitTest {
     void find_payment_page() {
         // given
         Member member = createMember();
-        Coupons coupons = createCoupons();
-        member.initCoupons(coupons);
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
         Cart cart = createCart();
 
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
 
         // when
-        PaymentResponse result = paymentService.findPaymentPage(member);
+        PaymentResponse result = paymentService.findPaymentPage(memberCoupons);
 
         // then
         assertAll(
@@ -73,16 +73,15 @@ class PaymentServiceUnitTest {
     void apply_coupon_and_returns_price() {
         // given
         Member member = createMember();
-        Coupons coupons = createCoupons();
         Coupons reqCoupons = new Coupons(List.of(new Coupon(1L, "쿠폰", new PolicyDiscount(1000))));
-        member.initCoupons(coupons);
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
         Cart cart = createCart();
 
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
         given(couponRepository.findAllByCouponIds(List.of(1L))).willReturn(reqCoupons);
 
         // when
-        PaymentUsingCouponsResponse result = paymentService.applyCoupons(member, List.of(1L));
+        PaymentUsingCouponsResponse result = paymentService.applyCoupons(memberCoupons, List.of(1L));
 
         // then
         assertAll(
@@ -98,12 +97,12 @@ class PaymentServiceUnitTest {
         Member member = createMember();
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
         Cart cart = createCart();
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
 
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
 
         // when
-        paymentService.pay(member, req);
+        paymentService.pay(memberCoupons, req);
 
         // then
         verify(orderRepository).save(any(), any(OrderResponse.class));

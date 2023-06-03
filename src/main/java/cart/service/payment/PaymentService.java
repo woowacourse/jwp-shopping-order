@@ -4,7 +4,7 @@ import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Order;
 import cart.domain.coupon.Coupons;
-import cart.domain.member.Member;
+import cart.domain.coupon.MemberCoupons;
 import cart.dto.coupon.CouponIdRequest;
 import cart.dto.coupon.CouponResponse;
 import cart.dto.order.OrderResponse;
@@ -35,16 +35,16 @@ public class PaymentService {
     }
 
     @Transactional(readOnly = true)
-    public PaymentResponse findPaymentPage(final Member member) {
-        Cart cart = cartRepository.findCartByMemberId(member.getId());
-        return PaymentResponse.from(member, cart);
+    public PaymentResponse findPaymentPage(final MemberCoupons memberCoupons) {
+        Cart cart = cartRepository.findCartByMemberId(memberCoupons.getMember().getId());
+        return PaymentResponse.from(memberCoupons, cart);
     }
 
     @Transactional(readOnly = true)
-    public PaymentUsingCouponsResponse applyCoupons(final Member member, final List<Long> request) {
-        Cart cart = cartRepository.findCartByMemberId(member.getId());
+    public PaymentUsingCouponsResponse applyCoupons(final MemberCoupons memberCoupons, final List<Long> request) {
+        Cart cart = cartRepository.findCartByMemberId(memberCoupons.getMember().getId());
         Coupons requestCoupons = couponRepository.findAllByCouponIds(request);
-        member.validateHasCoupons(request);
+        memberCoupons.validateHasCoupons(request);
 
         return PaymentUsingCouponsResponse.from(cart, requestCoupons.getCoupons());
     }
@@ -56,17 +56,17 @@ public class PaymentService {
     }
 
     @Transactional
-    public long pay(final Member member, final PaymentRequest paymentRequest) {
-        Cart cart = cartRepository.findCartByMemberId(member.getId());
-        member.validateHasCoupons(parseCouponRequestIds(paymentRequest.getCoupons()));
+    public long pay(final MemberCoupons memberCoupons, final PaymentRequest paymentRequest) {
+        Cart cart = cartRepository.findCartByMemberId(memberCoupons.getMember().getId());
+        memberCoupons.validateHasCoupons(parseCouponRequestIds(paymentRequest.getCoupons()));
 
-        Order order = new Order(member, cart);
+        Order order = new Order(memberCoupons, cart);
         OrderResponse orderHistory = order.pay(parseProductIds(paymentRequest.getProducts()), parseProductQuantities(paymentRequest.getProducts()), parseCouponRequestIds(paymentRequest.getCoupons()));
 
         updateCartItems(order);
         deleteUsedCoupons(orderHistory);
 
-        return orderRepository.save(member, orderHistory);
+        return orderRepository.save(memberCoupons.getMember(), orderHistory);
     }
 
     private List<Long> parseProductIds(final List<ProductIdRequest> productIds) {

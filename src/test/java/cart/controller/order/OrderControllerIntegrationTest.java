@@ -1,5 +1,6 @@
 package cart.controller.order;
 
+import cart.domain.coupon.MemberCoupons;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
 import cart.dto.payment.PaymentRequest;
@@ -48,9 +49,9 @@ class OrderControllerIntegrationTest {
     @Test
     void find_orders() {
         Member member = memberRepository.findMemberById(1);
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
-        paymentService.pay(member, req);
+        paymentService.pay(memberCoupons, req);
 
         // when & then
         Response response = RestAssured.given()
@@ -74,9 +75,9 @@ class OrderControllerIntegrationTest {
     @Test
     void find_order() {
         Member member = memberRepository.findMemberById(1);
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
-        long orderId = paymentService.pay(member, req);
+        long orderId = paymentService.pay(memberCoupons, req);
 
         // when & then
         Response response = RestAssured.given()

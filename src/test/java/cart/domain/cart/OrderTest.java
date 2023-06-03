@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupons;
+import cart.domain.coupon.MemberCoupons;
 import cart.domain.member.Member;
 import cart.dto.order.OrderResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -34,9 +35,9 @@ class OrderTest {
         Cart cart = createCart();
         Member member = createMember();
         Coupons coupons = createCouponsWithDeliveryFree();
-        member.initCoupons(coupons);
+        MemberCoupons memberCoupons = new MemberCoupons(member, coupons);
 
-        Order order = new Order(member, cart);
+        Order order = new Order(memberCoupons, cart);
         List<Long> productIds = List.of(1L, 2L);
         List<Integer> quantities = List.of(1, 2);
         List<Long> couponIds = List.of(1L, 2L, 3L);

@@ -1,5 +1,6 @@
 package cart.service.payment;
 
+import cart.domain.coupon.MemberCoupons;
 import cart.domain.member.Member;
 import cart.dto.coupon.CouponIdRequest;
 import cart.dto.history.OrderHistory;
@@ -58,10 +59,10 @@ class PaymentIntegrationServiceTest {
     void find_payment_page() {
         // given
         Member member = memberRepository.findMemberById(1);
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
 
         // when
-        PaymentResponse result = paymentService.findPaymentPage(member);
+        PaymentResponse result = paymentService.findPaymentPage(memberCoupons);
 
         // then
         assertThat(result.getProducts().size()).isEqualTo(3);
@@ -72,10 +73,10 @@ class PaymentIntegrationServiceTest {
     void apply_coupons() {
         // given
         Member member = memberRepository.findMemberById(1);
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
 
         // when
-        PaymentUsingCouponsResponse result = paymentService.applyCoupons(member, List.of(1L));
+        PaymentUsingCouponsResponse result = paymentService.applyCoupons(memberCoupons, List.of(1L));
 
         // then
         assertAll(
@@ -89,11 +90,11 @@ class PaymentIntegrationServiceTest {
     void pay() {
         // given
         Member member = memberRepository.findMemberById(1);
-        member.initCoupons(createCoupons());
+        MemberCoupons memberCoupons = new MemberCoupons(member, createCoupons());
         PaymentRequest req = new PaymentRequest(List.of(new ProductIdRequest(1L, 1)), List.of(new CouponIdRequest(1L)));
 
         // when
-        paymentService.pay(member, req);
+        paymentService.pay(memberCoupons, req);
 
         List<OrderHistory> result = orderRepository.findAllByMemberId(member.getId());
 
