@@ -48,8 +48,4 @@ public class CouponDao {
                 + "WHERE member_id = ? ";
         return jdbcTemplate.query(sql, ROW_MAPPER, memberId);
     }
-
-    // TODO findByMember
-
-    // TODO add, findAll, remove (admin)
 }
