@@ -10,7 +10,7 @@ spring:
     username: sa
   profiles:
     active: ${profile}
-#  sql:
-#    init:
-#      data-locations: classpath:resources/schema.sql
-#      mode: always
+  sql:
+    init:
+      data-locations: classpath:resources/schema.sql
+      mode: always

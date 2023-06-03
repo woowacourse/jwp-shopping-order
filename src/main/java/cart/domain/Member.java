@@ -4,7 +4,7 @@ public class Member {
     private Long id;
     private String email;
     private String password;
-    private String rank;
+    private String member_rank;
     private int totalPrice;
 
     public Member(Long id, String email, String password) {
@@ -13,18 +13,18 @@ public class Member {
         this.password = password;
     }
 
-    public Member(Long id, String email, String password, String rank, int totalPrice) {
+    public Member(Long id, String email, String password, String member_rank, int totalPrice) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.rank = rank;
+        this.member_rank = member_rank;
         this.totalPrice = totalPrice;
     }
 
-    public Member(String email, String password, String rank) {
+    public Member(String email, String password, String member_rank) {
         this.email = email;
         this.password = password;
-        this.rank = rank;
+        this.member_rank = member_rank;
     }
 
     public void createOrder(int totalPrice){
@@ -32,29 +32,28 @@ public class Member {
         setRank();
     }
 
-    //TODO: 상품 주문할 때 마다 rank를 calculate해줘야한다
     public void setRank() {
         if (totalPrice == 0) {
-            this.rank = "일반";
+            this.member_rank = "일반";
         }else if(totalPrice <= 100_000){
-            this.rank = "silver";
+            this.member_rank = "silver";
         }else if(totalPrice <= 200_000){
-            this.rank = "gold";
+            this.member_rank = "gold";
         }else if(totalPrice <= 300_000){
-            this.rank = "platinum";
+            this.member_rank = "platinum";
         }else{
-            this.rank = "diamond";
+            this.member_rank = "diamond";
         }
     }
 
     public int findDiscountedPercentage() {
-        if (rank.equals("일반")) {
+        if (member_rank.equals("일반")) {
             return 0;
-        }else if(rank.equals("silver")){
+        }else if(member_rank.equals("silver")){
             return 5;
-        }else if(rank.equals("gold")){
+        }else if(member_rank.equals("gold")){
             return 10;
-        }else if(rank.equals("platinum")){
+        }else if(member_rank.equals("platinum")){
             return 15;
         }else{
             return 20;
@@ -77,8 +76,8 @@ public class Member {
         return this.password.equals(password);
     }
 
-    public String getRank() {
-        return rank;
+    public String getMemberRank() {
+        return member_rank;
     }
 
     public int getTotalPrice() {

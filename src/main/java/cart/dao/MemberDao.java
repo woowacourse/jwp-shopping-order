@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -32,13 +31,13 @@ public class MemberDao {
     }
 
     public void addMember(Member member) {
-        String sql = "INSERT INTO member (email, password, rank, total_price) VALUES (?, ?, ? ,?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getRank(), member.getTotalPrice());
+        String sql = "INSERT INTO member (email, password, member_rank, total_price) VALUES (?, ?, ? ,?)";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getMemberRank(), member.getTotalPrice());
     }
 
     public void updateMember(Member member) {
-        String sql = "UPDATE member SET email = ?, password = ?, rank = ?, total_price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getRank(), member.getTotalPrice(), member.getId());
+        String sql = "UPDATE member SET email = ?, password = ?, member_rank = ?, total_price = ? WHERE id = ?";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), member.getMemberRank(), member.getTotalPrice(), member.getId());
     }
 
     public void deleteMember(Long id) {
@@ -55,7 +54,7 @@ public class MemberDao {
         @Override
         public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"),
-                    rs.getString("rank"), rs.getInt("total_price"));
+                    rs.getString("member_rank"), rs.getInt("total_price"));
         }
     }
 }

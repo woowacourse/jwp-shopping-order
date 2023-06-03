@@ -14,6 +14,6 @@ public class MemberService {
 
     public MemberResponse getRankById(Long id) {
         Member member = memberDao.getMemberById(id);
-        return new MemberResponse(id, member.getRank(), member.findDiscountedPercentage());
+        return new MemberResponse(id, member.getMemberRank(), member.findDiscountedPercentage());
     }
 }

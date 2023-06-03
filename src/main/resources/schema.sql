@@ -17,7 +17,7 @@ CREATE TABLE member (
      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) NOT NULL UNIQUE,
      password VARCHAR(255) NOT NULL,
-     rank VARCHAR(255),
+     member_rank VARCHAR(255),
      total_price BIGINT NOT NULL
 );
 
