@@ -5,11 +5,14 @@ import cart.domain.Product;
 
 public class OrderItemResponse {
 
-    private final Long productId;
-    private final String name;
-    private final String imageUrl;
-    private final int price;
-    private final int quantity;
+    private Long productId;
+    private String name;
+    private String imageUrl;
+    private int price;
+    private int quantity;
+
+    private OrderItemResponse() {
+    }
 
     private OrderItemResponse(
             Long productId,

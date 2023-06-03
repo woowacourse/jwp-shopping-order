@@ -8,10 +8,13 @@ import java.util.stream.Collectors;
 
 public class SortedOrdersResponse {
 
-    private final List<OrderResponse> orders;
+    private List<OrderResponse> orders;
 
     @JsonInclude(Include.NON_NULL)
-    private final Long lastOrderId;
+    private Long lastOrderId;
+
+    private SortedOrdersResponse() {
+    }
 
     private SortedOrdersResponse(List<OrderResponse> orders, Long lastOrderId) {
         this.orders = orders;

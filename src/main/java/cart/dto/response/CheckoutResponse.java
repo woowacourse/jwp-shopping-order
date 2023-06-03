@@ -10,14 +10,22 @@ import java.util.List;
 
 public class CheckoutResponse {
 
-    private final List<CartItemResponse> cartItems;
-    private final int totalPrice;
-    private final int currentPoints;
-    private final int earnedPoints;
-    private final int availablePoints;
+    private List<CartItemResponse> cartItems;
+    private int totalPrice;
+    private int currentPoints;
+    private int earnedPoints;
+    private int availablePoints;
 
-    private CheckoutResponse(List<CartItemResponse> cartItems, int totalPrice, int currentPoints, int earnedPoints,
-            int availablePoints) {
+    private CheckoutResponse() {
+    }
+
+    private CheckoutResponse(
+            List<CartItemResponse> cartItems,
+            int totalPrice,
+            int currentPoints,
+            int earnedPoints,
+            int availablePoints
+    ) {
         this.cartItems = cartItems;
         this.totalPrice = totalPrice;
         this.currentPoints = currentPoints;
@@ -25,8 +33,12 @@ public class CheckoutResponse {
         this.availablePoints = availablePoints;
     }
 
-    public static CheckoutResponse of(List<CartItem> checkedCartItems, Member member,
-            PointDiscountPolicy pointDiscountPolicy, PointEarnPolicy pointEarnPolicy) {
+    public static CheckoutResponse of(
+            List<CartItem> checkedCartItems,
+            Member member,
+            PointDiscountPolicy pointDiscountPolicy,
+            PointEarnPolicy pointEarnPolicy
+    ) {
         List<CartItemResponse> cartItemResponses = new ArrayList<>();
         Money totalPrice = new Money(0);
 
