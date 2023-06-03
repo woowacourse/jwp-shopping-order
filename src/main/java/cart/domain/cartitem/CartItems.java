@@ -1,7 +1,6 @@
 package cart.domain.cartitem;
 
-import cart.domain.Member;
-import cart.ui.order.CreateOrderItemDto;
+import cart.application.service.order.dto.CreateOrderItemDto;
 
 import java.util.List;
 
@@ -20,19 +19,17 @@ public class CartItems {
     }
 
     public void validate(final List<CreateOrderItemDto> createOrderItemDtos, final Long memberId) {
-        for (CreateOrderItemDto createOrderItemDto : createOrderItemDtos) {
-            cartItems.forEach(cartItem ->
-                    cartItem.validate(
-                            createOrderItemDto.getProductId(),
-                            memberId,
-                            createOrderItemDto.getQuantity())
-            );
-        }
-    }
+        final boolean isValid = cartItems.stream()
+                .allMatch(cartItem -> createOrderItemDtos.stream()
+                        .anyMatch(createOrderItemDto -> {
+                            cartItem.validateProduct(createOrderItemDto.getProductId(), memberId);
+                            cartItem.validateQuantity(createOrderItemDto.getQuantity());
+                            return true;
+                        }));
 
-    public boolean isNotOwnedMember(final Member member) {
-        return cartItems.stream()
-                .anyMatch(cartItem -> cartItem.isNotOwnedByMember(member));
+        if (!isValid) {
+            throw new IllegalArgumentException("장바구니 정보가 일치하지 않습니다.");
+        }
     }
 
     public List<CartItem> getCartItems() {

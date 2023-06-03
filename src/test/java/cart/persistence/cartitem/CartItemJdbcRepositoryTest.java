@@ -1,12 +1,12 @@
 package cart.persistence.cartitem;
 
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.MemberRepository;
-import cart.application.repository.ProductRepository;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.application.repository.cartItem.CartItemRepository;
+import cart.application.repository.member.MemberRepository;
+import cart.application.repository.product.ProductRepository;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.persistence.member.MemberJdbcRepository;
 import cart.persistence.product.ProductJdbcRepository;
 import org.junit.jupiter.api.BeforeEach;
