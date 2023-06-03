@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.dto.PageInfo;
 import cart.domain.Product;
 import cart.entity.ProductEntity;
 import java.sql.PreparedStatement;
@@ -72,5 +73,24 @@ public class ProductDao {
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public List<ProductEntity> findProductsInCurrentPage(int size, int page) {
+        String sql = "SELECT * FROM product LIMIT ? OFFSET ? ";
+        int offset = (page - 1) * size;
+        return jdbcTemplate.query(sql, productEntityRowMapper(), size, offset);
+    }
+
+    public PageInfo findPageInfo(int size, int page) {
+        String sql = "SELECT COUNT(*) as total, ? as perPage, ? as currentPage, CEILING(COUNT(*) / CAST(? AS DECIMAL(10, 2))) as lastPage FROM product;";
+        return jdbcTemplate.queryForObject(sql, pageInfoRowMapper(), size, page, size);
+    }
+
+    private RowMapper<PageInfo> pageInfoRowMapper() {
+        return (rs, rowNum) -> new PageInfo(
+                rs.getInt("total"),
+                rs.getInt("perPage"),
+                rs.getInt("currentPage"),
+                rs.getInt("lastPage"));
     }
 }

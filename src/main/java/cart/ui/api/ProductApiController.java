@@ -3,12 +3,19 @@ package cart.ui.api;
 import cart.application.ProductService;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
+import cart.dto.product.ProductsResponse;
+import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
@@ -21,8 +28,9 @@ public class ProductApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<ProductsResponse> getAllProducts(@RequestParam("unit-size") int size,
+                                                           @RequestParam("page") int page) {
+        return ResponseEntity.ok(productService.getProducts(size, page));
     }
 
     @GetMapping("/{id}")
