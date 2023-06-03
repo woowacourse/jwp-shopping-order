@@ -11,10 +11,10 @@ CURRENT_PID=$(pgrep -f ${APPNAME}.jar)
 
 if [ ! -z ${CURRENT_PID} ]; then
         echo "기존 애플리케이션이 실행중이므로 종료합니다."
-        kill -9 ${CURRENT_PID}
+        kill -15 ${CURRENT_PID}
         sleep 5
 fi
 
 echo "애플리케이션을 실행합니다."
 
-nohup java -jar ${ABSDIR}/${APPNAME}.jar --spring.config.location=file:./application.yml -Dlog=${ABSDIR}/log 1>> build.log 2>> build_error.log &
+nohup java -jar ${ABSDIR}/${APPNAME}.jar --spring.profiles.active=prod 1>> build.log 2>> build_error.log &
