@@ -44,7 +44,7 @@ public class Order {
                 .map(OrderItem::of)
                 .collect(Collectors.toList());
 
-        int totalOrderPrice = calculatetotalOrderPrice(cartItems, memberCoupon);
+        int totalOrderPrice = calculateTotalOrderPrice(cartItems, memberCoupon);
         ShippingFee shippingFee = ShippingFee.fromtotalOrderPrice(totalOrderPrice);
 
         return new Order(member, memberCoupon, orderItems, shippingFee, totalOrderPrice);
@@ -58,7 +58,7 @@ public class Order {
         }
     }
 
-    private static int calculatetotalOrderPrice(final CartItems cartItems, final MemberCoupon coupon) {
+    private static int calculateTotalOrderPrice(final CartItems cartItems, final MemberCoupon coupon) {
         int discountPrice = coupon.getDiscountPrice(cartItems);
         int totalProductPrice = cartItems.calculateTotalProductPrice();
         return totalProductPrice - discountPrice;
