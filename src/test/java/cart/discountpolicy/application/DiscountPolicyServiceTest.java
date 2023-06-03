@@ -2,7 +2,6 @@ package cart.discountpolicy.application;
 
 import cart.cart.Cart;
 import cart.cartitem.CartItem;
-import cart.deliveryprice.DeliveryPrice;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.discountpolicy.discountcondition.DiscountUnit;
@@ -13,9 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

@@ -1,15 +1,13 @@
 package cart.coupon.application;
 
 import cart.cart.Cart;
-import cart.cart.presentation.dto.CouponResponse;
+import cart.controller.cart.dto.dto.CouponResponse;
 import cart.coupon.Coupon;
 import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
-import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.order.OrderCoupon;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

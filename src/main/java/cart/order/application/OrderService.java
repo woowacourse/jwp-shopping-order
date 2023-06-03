@@ -6,9 +6,9 @@ import cart.coupon.application.CouponService;
 import cart.order.Order;
 import cart.order.OrderCoupon;
 import cart.order.OrderItem;
-import cart.presentation.presentation.OrderDetailResponse;
-import cart.presentation.presentation.OrderRequest;
-import cart.presentation.presentation.OrderResponse;
+import cart.controller.order.dto.OrderDetailResponse;
+import cart.controller.order.dto.OrderRequest;
+import cart.controller.order.dto.OrderResponse;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;

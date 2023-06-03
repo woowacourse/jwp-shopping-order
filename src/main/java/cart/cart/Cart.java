@@ -1,11 +1,13 @@
 package cart.cart;
 
 import cart.cartitem.CartItem;
-import cart.deliveryprice.DeliveryPrice;
 
 import java.util.List;
 
 public class Cart {
+    public static final int DEFAULT_DELIVERY_PRICE = 3_000;
+    public static final int MAN_FREE_DELIVERY_PRICE = 30_000;
+
     private final List<CartItem> cartItems;
     private int originalDeliveryPrice;
     private int discountDeliveryPrice;
@@ -13,7 +15,7 @@ public class Cart {
 
     public Cart(List<CartItem> cartItems) {
         this.cartItems = cartItems;
-        this.originalDeliveryPrice = DeliveryPrice.DEFAULT_PRICE;
+        this.originalDeliveryPrice = DEFAULT_DELIVERY_PRICE;
         this.discountFromTotalPrice = 0;
     }
 

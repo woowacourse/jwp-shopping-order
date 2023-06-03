@@ -34,6 +34,28 @@ public class CartItem {
         this.memberId = memberId;
     }
 
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.memberId, member.getId())) {
+            throw new CartItemException.IllegalMember(this, member);
+        }
+    }
+
+    public void addDiscountPrice(int discountPrice) {
+        this.discountPrice += discountPrice;
+    }
+
+    public void changeQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public boolean isOnSale() {
+        return this.discountPrice != 0;
+    }
+
+    public int getDiscountedPrice() {
+        return this.originalPrice - this.discountPrice;
+    }
+
     public Long getId() {
         return id;
     }
@@ -64,28 +86,6 @@ public class CartItem {
 
     public Long getMemberId() {
         return memberId;
-    }
-
-    public void checkOwner(Member member) {
-        if (!Objects.equals(this.memberId, member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
-        }
-    }
-
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public boolean isOnSale() {
-        return this.discountPrice != 0;
-    }
-
-    public void setDiscountPrice(int discountPrice) {
-        this.discountPrice = discountPrice;
-    }
-
-    public int getDiscountedPrice() {
-        return this.originalPrice - this.discountPrice;
     }
 
     @Override

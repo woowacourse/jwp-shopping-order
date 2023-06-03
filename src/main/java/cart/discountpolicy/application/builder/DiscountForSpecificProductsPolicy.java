@@ -13,7 +13,7 @@ public class DiscountForSpecificProductsPolicy extends DiscountTargetPolicy {
     public void discount(Cart cart) {
         for (CartItem cartItem : cart.getCartItems()) {
             if (discountCondition.getDiscountTargetProductIds().contains(cartItem.getProductId())) {
-                cartItem.setDiscountPrice(discountUnitPolicy.calculateDiscountPrice(discountCondition.getDiscountValue(), cartItem.getOriginalPrice()));
+                cartItem.addDiscountPrice(discountUnitPolicy.calculateDiscountPrice(discountCondition.getDiscountValue(), cartItem.getOriginalPrice()));
             }
         }
     }

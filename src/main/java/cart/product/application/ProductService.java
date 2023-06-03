@@ -1,12 +1,11 @@
 package cart.product.application;
 
 import cart.product.Product;
-import cart.product.presentation.dto.ProductRequest;
-import cart.product.presentation.dto.ProductResponse;
+import cart.controller.presentation.dto.ProductRequest;
+import cart.controller.presentation.dto.ProductResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {

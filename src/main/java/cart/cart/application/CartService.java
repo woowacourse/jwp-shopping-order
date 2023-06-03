@@ -1,16 +1,15 @@
 package cart.cart.application;
 
 import cart.cart.Cart;
-import cart.cart.presentation.dto.CartItemResponse;
-import cart.cart.presentation.dto.DeliveryResponse;
-import cart.cart.presentation.dto.DiscountResponse;
+import cart.controller.cart.dto.dto.CartItemResponse;
+import cart.controller.cart.dto.dto.DeliveryResponse;
+import cart.controller.cart.dto.dto.DiscountResponse;
 import cart.cartitem.application.CartItemRepository;
 import cart.coupon.application.CouponService;
-import cart.deliveryprice.DeliveryPrice;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.member.Member;
 import cart.order.application.OrderService;
-import cart.presentation.presentation.OrderRequest;
+import cart.controller.order.dto.OrderRequest;
 import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +47,7 @@ public class CartService {
 
         applyDiscountPolicy(cart);
 
-        return new DeliveryResponse(cart.calculateFinalDeliveryPrice(), DeliveryPrice.FREE_LIMIT);
+        return new DeliveryResponse(cart.calculateFinalDeliveryPrice(), Cart.MAN_FREE_DELIVERY_PRICE);
     }
 
     public DiscountResponse discountWithCoupons(Member member, List<Long> couponIds) {
