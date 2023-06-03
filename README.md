@@ -96,15 +96,9 @@ HTTP/1.1 200 OK
 - Request
 
 ```json
-GET /coupons/discount HTTP/1.1
+GET /coupons/{id}/discount?total=30000 HTTP/1.1
 Host: localhost:8080
 Authorization: Basic bWFuZ29Ad29vdGVjby5jb206bWFuZ29wYXNzd29yZA==
-...
-
-{
-  "couponId": 1,
-  "totalProductAmount": 30000
-}
 ```
 
 - Response
@@ -174,7 +168,7 @@ HTTP/1.1 201 Created
   ],
   "totalProductAmount": 55000,
   "deliveryAmount": 2000,
-  "discountedProductAmount": 3000,
+  "discountedProductAmount": 52000,
   "address": "서울특별시 송파구 ..."
 }
 ```
