@@ -16,3 +16,25 @@
     - 브론즈 : 1% 할인
     - 실버 : 3% 할인
     - 골드 : 5% 할인
+
+# API
+
+### discount
+| HTTP Method | URL                                           | 설명       | HTTP Status |
+|-------------|-----------------------------------------------|----------|-------------|
+| get         | /discount?price=price&memberGrade=memberGrade | 최단 경로 조회 | 200         |
+
+### member
+| HTTP Method | URL      | 설명          | HTTP Status |
+|-------------|----------|-------------|------------|
+| get         | /members | 전체 사용자 조회   | 200        |
+
+### order
+| HTTP Method | URL               | 설명        | HTTP Status |
+|-------------|-------------------|-----------|-------------|
+| post        | /orders           | 장바구니 상품 주문 | 201         |
+| get         | /orders/{orderId} | 주문 정보 조회  | 200         |
+| get         | /orders           | 주문 전체 조회  | 200         |
+
+
+```
