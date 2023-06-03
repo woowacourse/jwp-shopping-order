@@ -1,7 +1,7 @@
 package cart.persistence.mapper;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.coupon.CouponWithId;
 import cart.persistence.dao.dto.MemberCouponDto;
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.CouponEntity;

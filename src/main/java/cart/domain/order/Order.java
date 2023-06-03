@@ -1,8 +1,8 @@
 package cart.domain.order;
 
-import cart.domain.cartitem.dto.CartItemWithId;
-import cart.domain.coupon.dto.CouponWithId;
-import cart.domain.member.dto.MemberWithId;
+import cart.domain.cartitem.CartItemWithId;
+import cart.domain.coupon.CouponWithId;
+import cart.domain.member.MemberWithId;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,4 +25,5 @@ public interface Order {
     BigDecimal getDiscountedTotalPrice();
 
     Boolean isValid();
+    boolean isOwner(final String memberName);
 }

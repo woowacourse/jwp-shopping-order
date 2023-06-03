@@ -1,6 +1,5 @@
-package cart.domain.coupon.dto;
+package cart.domain.coupon;
 
-import cart.domain.coupon.Coupon;
 import java.time.LocalDateTime;
 
 public class CouponWithId {

@@ -6,7 +6,7 @@ import static cart.persistence.mapper.CouponMapper.convertCouponWithId;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
-import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.coupon.CouponWithId;
 import cart.exception.DBException;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;

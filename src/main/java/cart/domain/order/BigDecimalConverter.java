@@ -1,4 +1,4 @@
-package cart.domain.price;
+package cart.domain.order;
 
 import java.math.BigDecimal;
 

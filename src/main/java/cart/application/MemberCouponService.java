@@ -5,7 +5,7 @@ import static cart.domain.coupon.CouponType.FIRST_ORDER_COUPON;
 import static cart.domain.coupon.CouponType.JOIN_MEMBER_COUPON;
 
 import cart.domain.coupon.CouponRepository;
-import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.coupon.CouponWithId;
 import cart.domain.event.FirstOrderCouponEvent;
 import cart.domain.event.JoinMemberCouponEvent;
 import cart.domain.member.MemberCoupon;

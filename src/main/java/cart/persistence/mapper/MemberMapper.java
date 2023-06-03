@@ -4,7 +4,7 @@ import static cart.persistence.mapper.MemberCouponMapper.convertMemberCoupons;
 
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
-import cart.domain.member.dto.MemberWithId;
+import cart.domain.member.MemberWithId;
 import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.dao.dto.MemberCouponDto;
 import cart.persistence.dao.dto.OrderDto;

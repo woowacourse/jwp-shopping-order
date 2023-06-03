@@ -3,7 +3,7 @@ package cart.persistence.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-import cart.domain.price.BigDecimalConverter;
+import cart.domain.order.BigDecimalConverter;
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderCouponEntity;

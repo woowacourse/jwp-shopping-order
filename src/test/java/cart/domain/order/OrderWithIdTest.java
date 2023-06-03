@@ -1,37 +1,27 @@
-package cart.domain.refund;
+package cart.domain.order;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import cart.domain.cartitem.CartItemWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberWithId;
-import cart.domain.order.BasicOrder;
-import cart.domain.order.BigDecimalConverter;
 import cart.domain.product.Product;
 import cart.domain.product.ProductWithId;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-class FullRefundPolicyTest {
+class OrderWithIdTest {
 
-    private FullRefundPolicy fullRefundPolicy;
-
-    @BeforeEach
-    void setUp() {
-        fullRefundPolicy = new FullRefundPolicy();
-    }
-
-    @ParameterizedTest(name = "주문한 지 3일 이내인지 확인한다.")
-    @CsvSource(value = {"0:true", "2:true", "3:false", "4:false"}, delimiter = ':')
-    void isAvailable(final int day, final boolean expected) {
+    @ParameterizedTest(name = "주문에 존재하는 사용자 이름과 요청받은 사용자의 이름이 같으면 true, 아니면 false를 반환한다.")
+    @CsvSource(value = {"journey:true", "raon:false"}, delimiter = ':')
+    void isNotOwner(final String name, final boolean expected) {
         // given
         final MemberWithId 져니 = new MemberWithId(1L,
             Member.create("journey", EncryptedPassword.create("password")));
@@ -39,26 +29,15 @@ class FullRefundPolicyTest {
             new Product("치킨", 20000, "chicken_image_url", false)));
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
             new Product("피자", 30000, "pizza_image_url", false)));
-        final BasicOrder 주문 = new BasicOrder(져니, 3000, LocalDateTime.now().minusDays(day),
+        final BasicOrder 주문 = new BasicOrder(져니, 3000, LocalDateTime.now(),
             List.of(치킨_장바구니_아이템, 피자_장바구니_아이템), true);
-        final LocalDateTime currentTime = LocalDateTime.now();
+        final OrderWithId 아이디가_존재하는_주문 = new OrderWithId(1L, 주문);
 
         // when
-        final boolean result = fullRefundPolicy.isAvailable(주문, currentTime);
-
-        // then
-        Assertions.assertThat(result)
-            .isSameAs(expected);
-    }
-
-    @Test
-    @DisplayName("할인 금액을 전체 금액 그대로 반환한다.")
-    void calculatePrice() {
-        // when
-        final BigDecimal result = fullRefundPolicy.calculatePrice(BigDecimalConverter.convert(10000));
+        final boolean result = 아이디가_존재하는_주문.isNotOwner(name);
 
         // then
         assertThat(result)
-            .isEqualTo(BigDecimalConverter.convert(10000));
+            .isSameAs(expected);
     }
 }

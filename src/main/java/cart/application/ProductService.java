@@ -8,7 +8,7 @@ import cart.application.dto.product.ProductResponse;
 import cart.application.mapper.ProductMapper;
 import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
-import cart.domain.product.dto.ProductWithId;
+import cart.domain.product.ProductWithId;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

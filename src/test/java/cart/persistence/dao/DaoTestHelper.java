@@ -1,6 +1,6 @@
 package cart.persistence.dao;
 
-import cart.domain.price.BigDecimalConverter;
+import cart.domain.order.BigDecimalConverter;
 import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberCouponEntity;

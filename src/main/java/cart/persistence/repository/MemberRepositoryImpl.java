@@ -5,7 +5,7 @@ import static cart.persistence.mapper.MemberMapper.convertMemberWithId;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
-import cart.domain.member.dto.MemberWithId;
+import cart.domain.member.MemberWithId;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
 import cart.persistence.dao.MemberCouponDao;

@@ -12,19 +12,19 @@ import cart.application.dto.order.OrderResponse;
 import cart.application.mapper.OrderMapper;
 import cart.domain.cartitem.Cart;
 import cart.domain.cartitem.CartRepository;
-import cart.domain.cartitem.dto.CartItemWithId;
-import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.cartitem.CartItemWithId;
+import cart.domain.coupon.CouponWithId;
 import cart.domain.event.FirstOrderCouponEvent;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberCouponRepository;
 import cart.domain.member.MemberRepository;
-import cart.domain.member.dto.MemberWithId;
+import cart.domain.member.MemberWithId;
 import cart.domain.order.BasicOrder;
 import cart.domain.order.CouponOrder;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.domain.order.OrderWithId;
-import cart.domain.price.BigDecimalConverter;
+import cart.domain.order.BigDecimalConverter;
 import cart.domain.refund.RefundPolicy;
 import cart.domain.refund.RefundPolicyComposite;
 import cart.exception.BadRequestException;
@@ -85,7 +85,7 @@ public class OrderService {
 
     public OrderResponse getOrderById(final String memberName, final Long id) {
         final OrderWithId orderWithId = orderRepository.getById(id);
-        if (!orderWithId.isOwner(memberName)) {
+        if (orderWithId.isNotOwner(memberName)) {
             throw new ForbiddenException(ErrorCode.FORBIDDEN);
         }
         return convertOrderResponse(orderWithId);
@@ -101,7 +101,7 @@ public class OrderService {
     @Transactional
     public OrderRefundResponse cancelOrder(final String memberName, final Long id) {
         final OrderWithId orderWithId = orderRepository.getById(id);
-        if (!orderWithId.isOwner(memberName)) {
+        if (orderWithId.isNotOwner(memberName)) {
             throw new ForbiddenException(ErrorCode.FORBIDDEN);
         }
 

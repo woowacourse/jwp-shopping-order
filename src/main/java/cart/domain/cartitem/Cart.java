@@ -1,6 +1,5 @@
 package cart.domain.cartitem;
 
-import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.member.Member;
 import cart.exception.ErrorCode;
 import cart.exception.ForbiddenException;

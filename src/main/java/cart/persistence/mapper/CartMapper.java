@@ -4,9 +4,9 @@ import static cart.persistence.mapper.ProductMapper.convertProductWithId;
 
 import cart.application.dto.order.OrderProductRequest;
 import cart.domain.cartitem.Cart;
-import cart.domain.cartitem.dto.CartItemWithId;
+import cart.domain.cartitem.CartItemWithId;
 import cart.domain.member.Member;
-import cart.domain.product.dto.ProductWithId;
+import cart.domain.product.ProductWithId;
 import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.MemberEntity;

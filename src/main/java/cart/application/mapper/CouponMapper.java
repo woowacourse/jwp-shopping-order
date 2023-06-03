@@ -2,7 +2,7 @@ package cart.application.mapper;
 
 import cart.application.dto.coupon.CouponResponse;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.coupon.CouponWithId;
 
 public class CouponMapper {
 

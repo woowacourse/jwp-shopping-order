@@ -1,7 +1,7 @@
 package cart.persistence.mapper;
 
 import cart.domain.product.Product;
-import cart.domain.product.dto.ProductWithId;
+import cart.domain.product.ProductWithId;
 import cart.persistence.dao.dto.CartItemDto;
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.ProductEntity;

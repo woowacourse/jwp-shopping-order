@@ -2,7 +2,7 @@ package cart.persistence.mapper;
 
 import static cart.persistence.mapper.CouponMapper.convertCoupon;
 
-import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.coupon.CouponWithId;
 import cart.domain.member.MemberCoupon;
 import cart.persistence.dao.dto.MemberCouponDto;
 import java.util.List;

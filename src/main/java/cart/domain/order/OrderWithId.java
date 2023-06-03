@@ -1,7 +1,5 @@
 package cart.domain.order;
 
-import cart.domain.member.dto.MemberWithId;
-
 public class OrderWithId {
 
     private final Long orderId;
@@ -12,9 +10,8 @@ public class OrderWithId {
         this.order = order;
     }
 
-    public boolean isOwner(final String memberName) {
-        final MemberWithId memberWithId = order.getMember();
-        return memberWithId.getMember().name().equals(memberName);
+    public boolean isNotOwner(final String memberName) {
+        return !order.isOwner(memberName);
     }
 
     public Long getOrderId() {

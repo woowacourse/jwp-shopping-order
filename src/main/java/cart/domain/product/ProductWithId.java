@@ -1,6 +1,4 @@
-package cart.domain.product.dto;
-
-import cart.domain.product.Product;
+package cart.domain.product;
 
 public class ProductWithId {
 

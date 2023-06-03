@@ -1,6 +1,6 @@
 package cart.domain.member;
 
-import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.coupon.CouponWithId;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import java.time.LocalDateTime;

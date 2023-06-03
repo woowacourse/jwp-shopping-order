@@ -1,6 +1,5 @@
 package cart.domain.member;
 
-import cart.domain.member.dto.MemberWithId;
 import java.util.List;
 
 public interface MemberRepository {

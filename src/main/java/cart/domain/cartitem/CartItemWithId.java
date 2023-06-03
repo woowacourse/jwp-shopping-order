@@ -1,6 +1,6 @@
-package cart.domain.cartitem.dto;
+package cart.domain.cartitem;
 
-import cart.domain.product.dto.ProductWithId;
+import cart.domain.product.ProductWithId;
 import java.util.Objects;
 
 public class CartItemWithId {

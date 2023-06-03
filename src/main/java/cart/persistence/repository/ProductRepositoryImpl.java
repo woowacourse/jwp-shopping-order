@@ -5,7 +5,7 @@ import static cart.persistence.mapper.ProductMapper.convertProductEntity;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
-import cart.domain.product.dto.ProductWithId;
+import cart.domain.product.ProductWithId;
 import cart.exception.DBException;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;

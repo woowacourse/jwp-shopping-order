@@ -3,12 +3,12 @@ package cart.application.mapper;
 import cart.application.dto.member.MemberCouponResponse;
 import cart.application.dto.member.MemberJoinRequest;
 import cart.application.dto.member.MemberResponse;
-import cart.domain.coupon.dto.CouponWithId;
+import cart.domain.coupon.CouponWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.NaturalPassword;
-import cart.domain.member.dto.MemberWithId;
+import cart.domain.member.MemberWithId;
 import cart.domain.security.SHA256Service;
 import java.time.LocalDateTime;
 

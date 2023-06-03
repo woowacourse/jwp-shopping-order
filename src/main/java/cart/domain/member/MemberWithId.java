@@ -1,6 +1,4 @@
-package cart.domain.member.dto;
-
-import cart.domain.member.Member;
+package cart.domain.member;
 
 public class MemberWithId {
 
@@ -18,5 +16,9 @@ public class MemberWithId {
 
     public Member getMember() {
         return member;
+    }
+
+    public boolean isSameName(final String memberName) {
+        return member.isSameName(memberName);
     }
 }

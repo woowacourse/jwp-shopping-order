@@ -1,6 +1,5 @@
 package cart.domain.coupon;
 
-import cart.domain.coupon.dto.CouponWithId;
 import java.util.List;
 
 public interface CouponRepository {

@@ -1,6 +1,5 @@
 package cart.domain.product;
 
-import cart.domain.product.dto.ProductWithId;
 import java.util.List;
 
 public interface ProductRepository {

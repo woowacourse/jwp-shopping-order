@@ -3,7 +3,7 @@ package cart.application.mapper;
 import cart.application.dto.product.ProductRequest;
 import cart.application.dto.product.ProductResponse;
 import cart.domain.product.Product;
-import cart.domain.product.dto.ProductWithId;
+import cart.domain.product.ProductWithId;
 
 public class ProductMapper {
 

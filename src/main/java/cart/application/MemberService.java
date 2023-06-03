@@ -15,7 +15,7 @@ import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberRepository;
-import cart.domain.member.dto.MemberWithId;
+import cart.domain.member.MemberWithId;
 import cart.domain.security.SHA256Service;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;

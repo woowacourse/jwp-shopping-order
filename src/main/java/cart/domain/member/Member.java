@@ -24,6 +24,10 @@ public class Member {
         return new Member(MemberName.create(name), password, memberCoupons);
     }
 
+    public boolean isSameName(final String memberName) {
+        return name.equals(MemberName.create(memberName));
+    }
+
     public String name() {
         return name.getName();
     }
