@@ -2,6 +2,7 @@ package cart.order.application;
 
 import cart.cartitem.dao.CartItemDao;
 import cart.cartitem.domain.CartItem;
+import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.order.application.dto.OrderDto;
 import cart.order.application.dto.OrderItemDto;
@@ -22,11 +23,13 @@ public class OrderService {
     private final CartItemDao cartItemDao;
     private final CartOrderDao cartOrderDao;
     private final OrderItemDao orderItemDao;
+    private final MemberDao memberDao;
 
-    public OrderService(final CartItemDao cartItemDao, final CartOrderDao cartOrderDao, final OrderItemDao orderItemDao) {
+    public OrderService(final CartItemDao cartItemDao, final CartOrderDao cartOrderDao, final OrderItemDao orderItemDao, final MemberDao memberDao) {
         this.cartItemDao = cartItemDao;
         this.cartOrderDao = cartOrderDao;
         this.orderItemDao = orderItemDao;
+        this.memberDao = memberDao;
     }
 
     @Transactional(readOnly = true)
@@ -65,6 +68,7 @@ public class OrderService {
             cartItemDao.deleteById(orderCartItemDto.getCartItemId());
         }
         member.withdraw(totalPrice);
+        memberDao.updateMember(member);
 
         return cartOrderId;
     }

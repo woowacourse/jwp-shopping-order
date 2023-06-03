@@ -1,7 +1,11 @@
 package cart.product.application;
 
+import cart.cartitem.dao.CartItemDao;
+import cart.cartitem.domain.CartItem;
+import cart.product.application.dto.ProductCartItemDto;
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
+import cart.product.exception.NotFoundProductException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -13,12 +17,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
+import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PANCAKE;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static cart.fixtures.ProductFixtures.SALAD;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -33,6 +41,9 @@ class ProductServiceTest {
 
     @Mock
     ProductDao productDao;
+
+    @Mock
+    CartItemDao cartItemDao;
 
     @Test
     void 모든_상품을_가져온다() {
@@ -52,22 +63,36 @@ class ProductServiceTest {
         });
     }
 
-    @Test
-    void 상품_id를_통해_상품을_가져오다() {
-        // given
-        when(productDao.getProductById(1L)).thenReturn(CHICKEN.ENTITY);
-        when(productDao.countById(1L)).thenReturn(1L);
+    @Nested
+    class getProductById_테스트 {
 
-        // when
-        final Product product = productService.getProductById(1L);
+        @Test
+        void 상품_id를_통해_상품을_가져오다() {
+            // given
+            when(productDao.countById(1L)).thenReturn(1L);
+            when(productDao.getProductById(1L)).thenReturn(CHICKEN.ENTITY);
 
-        // then
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(product.getId()).isEqualTo(CHICKEN.ID);
-            softAssertions.assertThat(product.getName()).isEqualTo(CHICKEN.NAME);
-            softAssertions.assertThat(product.getPrice()).isEqualTo(CHICKEN.PRICE);
-            softAssertions.assertThat(product.getImageUrl()).isEqualTo(CHICKEN.IMAGE_URL);
-        });
+            // when
+            final Product product = productService.getProductById(1L);
+
+            // then
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(product.getId()).isEqualTo(CHICKEN.ID);
+                softAssertions.assertThat(product.getName()).isEqualTo(CHICKEN.NAME);
+                softAssertions.assertThat(product.getPrice()).isEqualTo(CHICKEN.PRICE);
+                softAssertions.assertThat(product.getImageUrl()).isEqualTo(CHICKEN.IMAGE_URL);
+            });
+        }
+
+        @Test
+        void 존재하지_않는_상품_id를_조회하면_예외를_반환하다() {
+            // given
+            when(productDao.countById(1L)).thenReturn(0L);
+
+            // when, then
+            assertThatThrownBy(() -> productService.getProductById(1L))
+                    .isInstanceOf(NotFoundProductException.class);
+        }
     }
 
     @Nested
@@ -152,24 +177,94 @@ class ProductServiceTest {
         assertThat(productId).isEqualTo(5L);
     }
 
-    @Test
-    void 상품_정보를_수정하다() {
-        // given
-        final Product product = Product.of("test", 10000, "www.test.com");
-        when(productDao.countById(1L)).thenReturn(1L);
-        doNothing().when(productDao).updateProduct(1L, product);
+    @Nested
+    class updateProduct_테스트 {
 
-        // when, then
-        assertDoesNotThrow(() -> productService.updateProduct(1L, product));
+        @Test
+        void 상품_정보를_수정하다() {
+            // given
+            final Product product = Product.of("test", 10000, "www.test.com");
+            when(productDao.countById(1L)).thenReturn(1L);
+            doNothing().when(productDao).updateProduct(1L, product);
+
+            // when, then
+            assertDoesNotThrow(() -> productService.updateProduct(1L, product));
+        }
+
+        @Test
+        void 존재하지_않는_상품을_수정하면_예외를_반환하다() {
+            // given
+            when(productDao.countById(1L)).thenReturn(0L);
+
+            // when, then
+            assertThatThrownBy(() -> productService.updateProduct(1L, CHICKEN.ENTITY))
+                    .isInstanceOf(NotFoundProductException.class);
+        }
     }
 
-    @Test
-    void 상품을_삭제하다() {
-        // given
-        doNothing().when(productDao).deleteProduct(1L);
-        when(productDao.countById(1L)).thenReturn(1L);
+    @Nested
+    class deleteProduct_테스트 {
 
-        // when, then
-        assertDoesNotThrow(() -> productService.deleteProduct(1L));
+        @Test
+        void 상품을_삭제하다() {
+            // given
+            doNothing().when(productDao).deleteProduct(1L);
+            when(productDao.countById(1L)).thenReturn(1L);
+
+            // when, then
+            assertDoesNotThrow(() -> productService.deleteProduct(1L));
+        }
+
+        @Test
+        void 존재하지_않는_상품을_삭제하면_예외를_반환하다() {
+            // given
+            when(productDao.countById(1L)).thenReturn(0L);
+
+            // when, then
+            assertThatThrownBy(() -> productService.deleteProduct(1L))
+                    .isInstanceOf(NotFoundProductException.class);
+        }
+    }
+
+    @Nested
+    class getProductCartItemsByProduct_테스트 {
+
+        @Test
+        void 장바구니에_존재하는_상품을_가져오다() {
+            // given
+            final Optional<CartItem> cartItem = Optional.of(MemberA_CartItem1.ENTITY);
+            when(cartItemDao.findByMemberIdAndProductId(1L, 1L))
+                    .thenReturn(cartItem);
+
+            // when
+            final List<ProductCartItemDto> productCartItemDtos
+                    = productService.getProductCartItemsByProduct(Member_Dooly.ENTITY, List.of(CHICKEN.ENTITY));
+
+            // then
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(productCartItemDtos).hasSize(1);
+                softAssertions.assertThat(productCartItemDtos.get(0).getProduct()).isEqualTo(CHICKEN.ENTITY);
+                softAssertions.assertThat(productCartItemDtos.get(0).getCartItem()).isEqualTo(MemberA_CartItem1.ENTITY);
+            });
+        }
+
+        @Test
+        void 장바구니에_존재하지_않는_상품을_가져오다() {
+            // given
+            final Optional<CartItem> cartItem = Optional.empty();
+            when(cartItemDao.findByMemberIdAndProductId(1L, 1L))
+                    .thenReturn(cartItem);
+
+            // when
+            final List<ProductCartItemDto> productCartItemDtos
+                    = productService.getProductCartItemsByProduct(Member_Dooly.ENTITY, List.of(CHICKEN.ENTITY));
+
+            // then
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(productCartItemDtos).hasSize(1);
+                softAssertions.assertThat(productCartItemDtos.get(0).getProduct()).isEqualTo(CHICKEN.ENTITY);
+                softAssertions.assertThat(productCartItemDtos.get(0).getCartItem()).isNull();
+            });
+        }
     }
 }

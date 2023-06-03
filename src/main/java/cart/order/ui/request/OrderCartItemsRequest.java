@@ -4,16 +4,16 @@ import java.util.List;
 
 public class OrderCartItemsRequest {
 
-    private List<OrderCartItemRequest> orderCartItems;
+    private List<OrderCartItemRequest> orderCartItemDtos;
 
     public OrderCartItemsRequest() {
     }
 
     public OrderCartItemsRequest(final List<OrderCartItemRequest> orderCartItems) {
-        this.orderCartItems = orderCartItems;
+        this.orderCartItemDtos = orderCartItems;
     }
 
-    public List<OrderCartItemRequest> getOrderCartItems() {
-        return orderCartItems;
+    public List<OrderCartItemRequest> getOrderCartItemDtos() {
+        return orderCartItemDtos;
     }
 }

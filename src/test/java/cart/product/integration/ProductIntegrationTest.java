@@ -54,7 +54,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 멤버와_상품_id를_통해_장바구니를_가져오다() {
+    void 유저와_상품_id를_통해_장바구니를_가져오다() {
         final ExtractableResponse<Response> response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())

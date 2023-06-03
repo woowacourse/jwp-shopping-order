@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static cart.fixtures.MemberFixtures.MemberA;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.doNothing;
@@ -59,12 +59,12 @@ class MemberServiceTest {
     @Test
     void 현재_캐시를_확인하다() {
         // given
-        when(memberDao.getMemberByEmail(MemberA.EMAIL)).thenReturn(MemberA.ENTITY);
+        when(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).thenReturn(Member_Dooly.ENTITY);
 
         // when
-        final Long totalCash = memberService.findCash(MemberA.ENTITY);
+        final Long totalCash = memberService.findCash(Member_Dooly.ENTITY);
 
         // then
-        assertThat(totalCash).isEqualTo(MemberA.CASH);
+        assertThat(totalCash).isEqualTo(Member_Dooly.CASH);
     }
 }

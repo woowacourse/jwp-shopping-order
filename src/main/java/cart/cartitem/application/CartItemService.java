@@ -15,6 +15,7 @@ import java.util.Optional;
 public class CartItemService {
 
     private static final int NOT_EXIST_CART_ITEM = 0;
+
     private final CartItemDao cartItemDao;
 
     public CartItemService(final CartItemDao cartItemDao) {
@@ -28,15 +29,16 @@ public class CartItemService {
 
     @Transactional(readOnly = true)
     public CartItem findByMemberAndProduct(final Member member, final Product product) {
-        return cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId());
+        return cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId())
+                .orElse(null);
     }
 
     @Transactional
     public Long add(final CartItem cartItem) {
         final Member member = cartItem.getMember();
         final Product product = cartItem.getProduct();
-        final Optional<CartItem> nullableCartItem = Optional.ofNullable(
-                cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId()));
+
+        final Optional<CartItem> nullableCartItem = cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId());
 
         if (nullableCartItem.isPresent()) {
             return addQuantity(nullableCartItem.get());
@@ -45,8 +47,6 @@ public class CartItemService {
     }
 
     private Long addQuantity(final CartItem cartItem) {
-        validateExistCartItem(cartItem.getId());
-
         cartItem.addQuantity(cartItem.getQuantity());
         cartItemDao.updateQuantity(cartItem);
         return cartItem.getId();

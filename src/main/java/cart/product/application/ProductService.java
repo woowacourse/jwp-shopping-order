@@ -1,7 +1,6 @@
 package cart.product.application;
 
 import cart.cartitem.dao.CartItemDao;
-import cart.cartitem.domain.CartItem;
 import cart.member.domain.Member;
 import cart.product.application.dto.ProductCartItemDto;
 import cart.product.dao.ProductDao;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private static final int NOT_EXIST_PRODUCT = 0;
+
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -84,12 +84,12 @@ public class ProductService {
     }
 
     private ProductCartItemDto getProductCartItemByProduct(final Member member, final Product product) {
-        try {
-            final CartItem cartItem = cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId());
-            return new ProductCartItemDto(product, cartItem);
-        } catch (final NullPointerException e) {
-            return new ProductCartItemDto(product, null);
-        }
+        final Long memberId = member.getId();
+        final Long productId = product.getId();
+
+        return cartItemDao.findByMemberIdAndProductId(memberId, productId)
+                .map(cartItem -> new ProductCartItemDto(product, cartItem))
+                .orElse(new ProductCartItemDto(product, null));
     }
 
     private void validateExistProduct(final Long productId) {

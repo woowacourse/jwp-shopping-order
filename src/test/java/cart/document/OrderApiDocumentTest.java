@@ -33,7 +33,7 @@ import org.springframework.util.Base64Utils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static cart.fixtures.MemberFixtures.MemberA;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PIZZA;
 import static org.mockito.ArgumentMatchers.any;
@@ -91,13 +91,13 @@ public class OrderApiDocumentTest {
         // given
         final List<OrderedProductDto> orderedProductDtos = List.of(new OrderedProductDto(CHICKEN.ENTITY, 3),
                 new OrderedProductDto(PIZZA.ENTITY, 2));
-        final CartOrder cartOrder = new CartOrder(1L, MemberA.ENTITY, 56000L, LocalDateTime.now());
+        final CartOrder cartOrder = new CartOrder(1L, Member_Dooly.ENTITY, 56000L, LocalDateTime.now());
         final OrderDto orderDto = new OrderDto(cartOrder, orderedProductDtos);
 
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        given(orderService.findAllByMemberId(MemberA.ID))
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
+        given(orderService.findAllByMemberId(Member_Dooly.ID))
                 .willReturn(List.of(orderDto));
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/orders")
@@ -128,13 +128,13 @@ public class OrderApiDocumentTest {
         // given
         final List<OrderedProductDto> orderedProductDtos = List.of(new OrderedProductDto(CHICKEN.ENTITY, 3),
                 new OrderedProductDto(PIZZA.ENTITY, 2));
-        final CartOrder cartOrder = new CartOrder(1L, MemberA.ENTITY, 56000L, LocalDateTime.now());
+        final CartOrder cartOrder = new CartOrder(1L, Member_Dooly.ENTITY, 56000L, LocalDateTime.now());
         final OrderDto orderDto = new OrderDto(cartOrder, orderedProductDtos);
 
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         given(orderService.findByCartOrderId(cartOrder.getId()))
                 .willReturn(orderDto);
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/orders/{cartOrderId}", cartOrder.getId())
@@ -171,10 +171,10 @@ public class OrderApiDocumentTest {
         final List<OrderCartItemRequest> orderCartItemDtos = List.of(oneDto, twoDto);
         final OrderCartItemsRequest request = new OrderCartItemsRequest(orderCartItemDtos);
 
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         given(orderService.addCartOrder(any(), any()))
                 .willReturn(1L);
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(post("/orders")
@@ -189,11 +189,11 @@ public class OrderApiDocumentTest {
                                         headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
                                 ),
                                 requestFields(
-                                        fieldWithPath("orderCartItems").type(JsonFieldType.ARRAY).description("주문하려는 장바구니 목록"),
-                                        fieldWithPath("orderCartItems.[].cartItemId").type(JsonFieldType.NUMBER).description("장바구니 ID"),
-                                        fieldWithPath("orderCartItems.[].orderCartItemName").type(JsonFieldType.STRING).description("주문 시점의 상품 이름"),
-                                        fieldWithPath("orderCartItems.[].orderCartItemPrice").type(JsonFieldType.NUMBER).description("주문 시점의 상품 가격"),
-                                        fieldWithPath("orderCartItems.[].orderCartItemImageUrl").type(JsonFieldType.STRING).description("주문 시점의 상품 이미지 경로")
+                                        fieldWithPath("orderCartItemDtos").type(JsonFieldType.ARRAY).description("주문하려는 장바구니 목록"),
+                                        fieldWithPath("orderCartItemDtos.[].cartItemId").type(JsonFieldType.NUMBER).description("장바구니 ID"),
+                                        fieldWithPath("orderCartItemDtos.[].orderCartItemName").type(JsonFieldType.STRING).description("주문 시점의 상품 이름"),
+                                        fieldWithPath("orderCartItemDtos.[].orderCartItemPrice").type(JsonFieldType.NUMBER).description("주문 시점의 상품 가격"),
+                                        fieldWithPath("orderCartItemDtos.[].orderCartItemImageUrl").type(JsonFieldType.STRING).description("주문 시점의 상품 이미지 경로")
                                 )
                         )
                 );

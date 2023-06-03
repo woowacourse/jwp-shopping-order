@@ -79,4 +79,11 @@ class ProductDaoTest extends DaoTest {
     void 상품을_삭제하다() {
         assertDoesNotThrow(() -> productDao.deleteProduct(1L));
     }
+
+    @Test
+    void 상품_id를_통해_상품이_몇_개_존재하는지_확인하다() {
+        final Long count = productDao.countById(1L);
+
+        assertThat(count).isOne();
+    }
 }

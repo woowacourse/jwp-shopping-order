@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 
-import static cart.fixtures.MemberFixtures.MemberA;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -76,10 +76,10 @@ public class MemberApiDocumentTest {
     @Test
     void 캐시_충전_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        given(memberService.depositCash(MemberA.ENTITY, 5000L))
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
+        given(memberService.depositCash(Member_Dooly.ENTITY, 5000L))
                 .willReturn(15000L);
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
         final DepositRequest request = DepositRequest.from(5000L);
 
         // when, then
@@ -108,9 +108,9 @@ public class MemberApiDocumentTest {
     @Test
     void 캐시_확인_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        given(memberService.findCash(MemberA.ENTITY)).willReturn(MemberA.CASH);
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
+        given(memberService.findCash(Member_Dooly.ENTITY)).willReturn(Member_Dooly.CASH);
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/members/cash")

@@ -55,7 +55,7 @@ public class OrderApiController {
     @PostMapping
     public ResponseEntity<Void> postOrder(Member member,
                                           @RequestBody final OrderCartItemsRequest request) {
-        final List<OrderCartItemRequest> orderCartItemDtos = request.getOrderCartItems();
+        final List<OrderCartItemRequest> orderCartItemDtos = request.getOrderCartItemDtos();
 
         final Long cartOrderId = orderService.addCartOrder(member, orderCartItemDtos);
 

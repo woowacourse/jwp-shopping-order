@@ -25,7 +25,7 @@ import java.util.List;
 
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem2;
-import static cart.fixtures.MemberFixtures.MemberA;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PANCAKE;
 import static cart.fixtures.ProductFixtures.PIZZA;
@@ -111,7 +111,7 @@ public class ProductApiDocumentTest {
                 .willReturn(productCartItems);
         given(productService.hasLastProduct(3L, 2))
                 .willReturn(true);
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/products/cart-items")
@@ -165,7 +165,7 @@ public class ProductApiDocumentTest {
     }
 
     @Nested
-    class 멤버와_상품_id를_통한_상품과_장바구니_조회_문서화 {
+    class 유저와_상품_id를_통한_상품과_장바구니_조회_문서화 {
 
         @Test
         void 특정_상품이_장바구니에_존재할_때의_문서화() throws Exception {
@@ -174,7 +174,7 @@ public class ProductApiDocumentTest {
                     .willReturn(CHICKEN.ENTITY);
             given(cartItemService.findByMemberAndProduct(any(), any()))
                     .willReturn(MemberA_CartItem1.ENTITY);
-            final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+            final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
             // when, then
             mockMvc.perform(get("/products/{productId}/cart-items", CHICKEN.ID)
@@ -209,7 +209,7 @@ public class ProductApiDocumentTest {
                     .willReturn(PANCAKE.ENTITY);
             given(cartItemService.findByMemberAndProduct(any(), any()))
                     .willReturn(null);
-            final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+            final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
             // when, then
             mockMvc.perform(get("/products/{productId}/cart-items", PANCAKE.ID)

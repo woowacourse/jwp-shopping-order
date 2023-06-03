@@ -1,13 +1,12 @@
-package cart.product.domain;
+package cart.member.domain;
 
-import cart.member.domain.Member;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static cart.fixtures.MemberFixtures.MemberA;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -21,12 +20,12 @@ class MemberTest {
 
         @Test
         void 비밀번호가_같으면_True를_반환하는지_확인하다() {
-            assertThat(MemberA.ENTITY.checkPassword("1234")).isTrue();
+            assertThat(Member_Dooly.ENTITY.checkPassword("1234")).isTrue();
         }
 
         @Test
         void 비밀번호가_다르면_False를_반환하는지_확인하다() {
-            assertThat(MemberA.ENTITY.checkPassword("4321")).isFalse();
+            assertThat(Member_Dooly.ENTITY.checkPassword("4321")).isFalse();
         }
     }
 

@@ -34,7 +34,7 @@ import java.util.List;
 
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem1;
 import static cart.fixtures.CartItemFixtures.MemberA_CartItem2;
-import static cart.fixtures.MemberFixtures.MemberA;
+import static cart.fixtures.MemberFixtures.Member_Dooly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -94,10 +94,10 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_목록_조회_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        given(cartItemService.findByMember(MemberA.ENTITY))
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
+        given(cartItemService.findByMember(Member_Dooly.ENTITY))
                 .willReturn(List.of(MemberA_CartItem1.ENTITY, MemberA_CartItem2.ENTITY));
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(get("/cart-items")
@@ -124,11 +124,11 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_추가_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         final CartItemRequest request = CartItemRequest.from(ProductFixtures.CHICKEN.ID);
         given(cartItemService.add(any(CartItem.class)))
                 .willReturn(MemberA_CartItem1.ID);
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(post("/cart-items")
@@ -152,10 +152,10 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_수정_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
         final CartItemQuantityUpdateRequest request = CartItemQuantityUpdateRequest.from(10);
-        willDoNothing().given(cartItemService).updateQuantity(MemberA.ENTITY, MemberA_CartItem1.ID, request.getQuantity());
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        willDoNothing().given(cartItemService).updateQuantity(Member_Dooly.ENTITY, MemberA_CartItem1.ID, request.getQuantity());
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(patch("/cart-items/{id}", MemberA_CartItem1.ID)
@@ -181,9 +181,9 @@ public class CartItemApiDocumentTest {
     @Test
     void 특정_유저의_장바구니_상품_삭제_문서화() throws Exception {
         // given
-        given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
-        willDoNothing().given(cartItemService).remove(MemberA.ENTITY, MemberA_CartItem1.ID);
-        final String encodeAuthInfo = Base64Utils.encodeToString((MemberA.EMAIL + ":" + MemberA.PASSWORD).getBytes());
+        given(memberDao.getMemberByEmail(Member_Dooly.EMAIL)).willReturn(Member_Dooly.ENTITY);
+        willDoNothing().given(cartItemService).remove(Member_Dooly.ENTITY, MemberA_CartItem1.ID);
+        final String encodeAuthInfo = Base64Utils.encodeToString((Member_Dooly.EMAIL + ":" + Member_Dooly.PASSWORD).getBytes());
 
         // when, then
         mockMvc.perform(delete("/cart-items/{id}", MemberA_CartItem1.ID)

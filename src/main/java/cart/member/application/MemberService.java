@@ -18,7 +18,7 @@ public class MemberService {
     public Long depositCash(final Member member, final Long cash) {
         final Member memberEntity = memberDao.getMemberByEmail(member.getEmail());
         memberEntity.deposit(cash);
-        memberDao.updateMember(member);
+        memberDao.updateMember(memberEntity);
 
         return memberEntity.getCash();
     }
