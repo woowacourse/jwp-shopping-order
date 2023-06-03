@@ -59,27 +59,28 @@ Content-Type: application/json
   "password": "gitchan_coding"
 }
 
-## Cart Item API
+### Cart Item API
 
 ### 장바구니 아이템 목록 조회
 
 GET http://localhost:8080/cart-items
-Authorization: Basic ${credentials}
+Authorization: Basic YUBhLmNvbToxMjM0
 
 ### 장바구니 아이템 추가
 
 POST http://localhost:8080/cart-items
-Authorization: Basic ${credentials}
+Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
 
 {
-  "productId": 1
+  "productId": 4,
+  "quantity": 3
 }
 
 ### 장바구니 아이템 수량 변경
 
 PATCH http://localhost:8080/cart-items/1
-Authorization: Basic ${credentials}
+Authorization: Basic YUBhLmNvbToxMjM0
 Content-Type: application/json
 
 {
@@ -89,4 +90,25 @@ Content-Type: application/json
 ### 장바구니 아이템 삭제
 
 DELETE http://localhost:8080/cart-items/1
-Authorization: Basic ${credentials}성
+Authorization: Basic YUBhLmNvbToxMjM0
+
+
+### 장바구니 내 아이템 구매
+
+POST http://localhost:8080/pay
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+  "cartItemIds": [
+    {
+      "cartItemId": 1
+    },
+    {
+      "cartItemId": 3
+    }
+  ],
+  "originalPrice": 26000,
+  "points": 100
+}
+
