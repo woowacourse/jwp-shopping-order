@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.OrderDao;
-import cart.dao.OrderedItemDao;
+import cart.dao.OrderItemDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -29,7 +29,7 @@ public class OrderService {
     @Autowired
     private CartItemDao cartItemDao;
     @Autowired
-    private OrderedItemDao orderedItemDao;
+    private OrderItemDao orderItemDao;
 
     public Long createOrder(Member member, OrderCreateRequest orderCreateRequest) {
         Long orderId = makeOrder(member, orderCreateRequest);
@@ -48,10 +48,8 @@ public class OrderService {
         int discountedTotalItemPrice = findDiscountedTotalItemPrice(member, orderCreateRequest);
         int shippingFee = findShippingFee(orderCreateRequest, totalItemPrice);
         int totalPrice = discountedTotalItemPrice + shippingFee;
-        int totalItemDiscountAmount = findTotalItemDiscountAmount(orderCreateRequest);
-        int totalMemberDiscountAmount = findTotalMemberDiscountAmount(member, orderCreateRequest);
 
-        Order order = new Order(member.getId(), null, totalItemDiscountAmount, totalMemberDiscountAmount, totalItemPrice, discountedTotalItemPrice, shippingFee, totalPrice);
+        Order order = new Order(totalItemPrice, discountedTotalItemPrice, shippingFee, member.getId());
         member.createOrder(totalPrice);
         Long orderId = orderDao.createOrder(member.getId(), order);
         return orderId;
@@ -65,8 +63,8 @@ public class OrderService {
         List<CartItem> cartItems = getCartItems(orderCreateRequest);
         cartItems.forEach(cartItem -> {
             Product product = cartItem.getProduct();
-            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity(), product.getIsDiscounted(), product.getDiscountRate());
-            orderedItemDao.createOrderedItems(orderId, orderedItem);
+            OrderedItem orderedItem = new OrderedItem(orderId, product.getName(), product.getPrice(), product.getImageUrl(), cartItem.getQuantity(), product.getDiscountRate());
+            orderItemDao.createOrderedItems(orderId, orderedItem);
         });
         return cartItems;
     }
@@ -148,7 +146,7 @@ public class OrderService {
 
     public OrderResponse getOrderByIds(Long memberId, Long orderId) {
         Order order = orderDao.findByIds(memberId, orderId);
-        List<OrderedItem> orderedItems = orderedItemDao.findByOrderId(order.getId());
+        List<OrderedItem> orderedItems = orderItemDao.findByOrderId(order.getId());
 
         return createOrderResponse(order, orderedItems);
     }
@@ -160,9 +158,9 @@ public class OrderService {
     }
 
     private OrderedItemResponse createOrderedItemResponse(OrderedItem orderedItem) {
-        return new OrderedItemResponse(orderedItem.getProductQuantity(),
-                new ProductResponse(orderedItem.getProductName(), orderedItem.getProductPrice(), orderedItem.getProductImageUrl(),
-                        orderedItem.getIsDiscounted(), orderedItem.getDiscountedRate(), orderedItem.calculateDiscountedPrice()));
+        return new OrderedItemResponse(orderedItem.getQuantity(),
+                new ProductResponse(orderedItem.getName(), orderedItem.getOrice(), orderedItem.getImageUrl(),
+                        orderedItem.getDiscountRate(), orderedItem.calculateDiscountedPrice()));
     }
 
     public List<OrderResponse> getAllOrders(Long memberId) {
@@ -170,7 +168,7 @@ public class OrderService {
 
         List<OrderResponse> orderResponses = new ArrayList<>();
         orders.forEach(order -> {
-            List<OrderedItem> orderedItems = orderedItemDao.findByOrderId(order.getId());
+            List<OrderedItem> orderedItems = orderItemDao.findByOrderId(order.getId());
             orderResponses.add(createOrderResponse(order, orderedItems));
         });
 

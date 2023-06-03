@@ -6,36 +6,26 @@ import java.util.List;
 public class Order {
 
     private Long id;
-    private Long memberId;
-    private LocalDateTime orderedAt;
-    private int totalItemDiscountAmount;
-    private int totalMemberDiscountAmount;
     private int totalItemPrice;
     private int discountedTotalItemPrice;
     private int shippingFee;
-    private int totalPrice;
+    private LocalDateTime orderedAt;
+    private Long memberId;
 
-    public Order(Long id, Long memberId, LocalDateTime orderedAt, int totalItemDiscountAmount, int totalMemberDiscountAmount, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, int totalPrice) {
+    public Order(Long id, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, LocalDateTime orderedAt, Long memberId) {
         this.id = id;
-        this.memberId = memberId;
-        this.orderedAt = orderedAt;
-        this.totalItemDiscountAmount = totalItemDiscountAmount;
-        this.totalMemberDiscountAmount = totalMemberDiscountAmount;
         this.totalItemPrice = totalItemPrice;
         this.discountedTotalItemPrice = discountedTotalItemPrice;
         this.shippingFee = shippingFee;
-        this.totalPrice = totalPrice;
+        this.orderedAt = orderedAt;
+        this.memberId = memberId;
     }
 
-    public Order(Long memberId, LocalDateTime orderedAt, int totalItemDiscountAmount, int totalMemberDiscountAmount, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, int totalPrice) {
-        this.memberId = memberId;
-        this.orderedAt = orderedAt;
-        this.totalItemDiscountAmount = totalItemDiscountAmount;
-        this.totalMemberDiscountAmount = totalMemberDiscountAmount;
+    public Order(int totalItemPrice, int discountedTotalItemPrice, int shippingFee, Long memberId) {
         this.totalItemPrice = totalItemPrice;
         this.discountedTotalItemPrice = discountedTotalItemPrice;
         this.shippingFee = shippingFee;
-        this.totalPrice = totalPrice;
+        this.memberId = memberId;
     }
 
     public static int calculatePriceSum(List<Integer> prices){
@@ -46,22 +36,6 @@ public class Order {
 
     public Long getId() {
         return id;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public LocalDateTime getOrderedAt() {
-        return orderedAt;
-    }
-
-    public int getTotalItemDiscountAmount() {
-        return totalItemDiscountAmount;
-    }
-
-    public int getTotalMemberDiscountAmount() {
-        return totalMemberDiscountAmount;
     }
 
     public int getTotalItemPrice() {
@@ -76,7 +50,11 @@ public class Order {
         return shippingFee;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
+    }
+
+    public Long getMemberId() {
+        return memberId;
     }
 }
