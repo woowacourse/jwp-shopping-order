@@ -26,7 +26,6 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    // TODO: 장바구니 품목 예외 처리(남의 장바구니)
     @Transactional(readOnly = true)
     public List<CartItemResponse> findAllCartItems(Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
@@ -42,12 +41,12 @@ public class CartItemService {
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityRequest request) {
+        CartItem cartItem = cartItemRepository.findById(id);
+        cartItem.validateIsOwnedBy(member);
         if (request.getQuantity() == 0) {
             cartItemRepository.deleteById(id);
             return;
         }
-        CartItem cartItem = cartItemRepository.findById(id);
-        cartItem.validateIsOwnedBy(member);
         cartItem.updateQuantity(request.getQuantity());
         cartItemRepository.update(cartItem);
     }

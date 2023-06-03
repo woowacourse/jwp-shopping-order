@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderService {
 
-    // TODO: MEMBER 검증로직 추가(service에서 할지, resolver에서 할지)
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
@@ -92,6 +91,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public SpecificOrderResponse getSpecificOrder(Member member, Long orderId) {
         Order order = orderRepository.findById(orderId);
+        order.validateIsIssuedBy(member);
         return new SpecificOrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo()),
                 order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());
     }

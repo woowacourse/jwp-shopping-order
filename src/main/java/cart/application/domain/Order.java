@@ -1,6 +1,9 @@
 package cart.application.domain;
 
 import cart.application.exception.ExceedAvailablePointException;
+import cart.application.exception.IllegalMemberException;
+
+import java.util.Objects;
 
 public class Order {
 
@@ -36,6 +39,12 @@ public class Order {
     public void earnPoint() {
         long earnedPoint = orderInfos.calculateEarnedPoint();
         member.addPoint(earnedPoint);
+    }
+
+    public void validateIsIssuedBy(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new IllegalMemberException();
+        }
     }
 
     public Long getId() {
