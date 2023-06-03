@@ -19,12 +19,8 @@ public class ProductIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
-        databaseSetting.createTables();
-    }
-
-    @AfterEach
-    void clear() {
         databaseSetting.clearDatabase();
+        databaseSetting.createTables();
     }
 
     @Test

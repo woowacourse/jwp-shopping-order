@@ -26,14 +26,10 @@ public class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
+        databaseSetting.clearDatabase();
         databaseSetting.createTables();
         databaseSetting.addMembers();
         databaseSetting.addProducts();
-    }
-
-    @AfterEach
-    void clear() {
-        databaseSetting.clearDatabase();
     }
 
     @Test

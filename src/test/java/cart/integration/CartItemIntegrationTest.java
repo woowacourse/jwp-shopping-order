@@ -36,6 +36,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
+        databaseSetting.clearDatabase();
         databaseSetting.createTables();
         databaseSetting.addMembers();
 

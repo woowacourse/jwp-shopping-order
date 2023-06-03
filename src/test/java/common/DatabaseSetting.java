@@ -51,25 +51,23 @@ public class DatabaseSetting {
                 "    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
                 "    member_id BIGINT NOT NULL,\n" +
                 "    product_id BIGINT NOT NULL,\n" +
-                "    quantity INT NOT NULL,\n" +
-                "    FOREIGN KEY (member_id) REFERENCES members(id),\n" +
-                "    FOREIGN KEY (product_id) REFERENCES products(id)\n" +
-                ");\n" +
+                "    quantity INT NOT NULL\n" +
+                ");" +
                 "\n" +
                 "CREATE TABLE if not exists orders (\n" +
                 "    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
                 "    member_id BIGINT NOT NULL,\n" +
-                "    order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-                "    FOREIGN KEY(member_id) REFERENCES members(id)\n" +
-                ");\n" +
+                "    price_after_discount BIGINT NOT NULL,\n" +
+                "    order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP\n" +
+                ");" +
                 "\n" +
                 "CREATE TABLE if not exists order_items (\n" +
                 "    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
                 "    order_id BIGINT NOT NULL,\n" +
-                "    product_id BIGINT NOT NULL,\n" +
+                "    name VARCHAR(255) NOT NULL,\n" +
+                "    product_price INT NOT NULL,\n" +
                 "    quantity INT NOT NULL,\n" +
-                "    FOREIGN KEY (order_id) REFERENCES orders(id),\n" +
-                "    FOREIGN KEY (product_id) REFERENCES products(id)\n" +
+                "    image_url VARCHAR(255) NOT NULL\n" +
                 ");");
     }
 
