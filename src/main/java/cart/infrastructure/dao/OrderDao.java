@@ -16,8 +16,9 @@ public class OrderDao {
     public OrderDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-            .withTableName("order")
-            .usingGeneratedKeyColumns("id");
+                .withTableName("`order`")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("member_id", "discounted_amount", "address", "delivery_amount");
     }
 
     public Long create(final OrderEntity order, final Long memberId) {

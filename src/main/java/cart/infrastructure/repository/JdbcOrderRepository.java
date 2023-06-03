@@ -28,7 +28,7 @@ public class JdbcOrderRepository implements OrderRepository {
         for (final Product product : products.getValue()) {
             productOrderDao.create(ProductOrderEntity.of(product.getId(), orderId));
         }
-        return new Order(orderId, order.getProducts(), order.getCoupon(), order.getDeliveryAmount(),
-                order.getAddress());
+        return new Order(orderId, order.getProducts(), order.getCoupon(), order.getTotalProductAmount(),
+                order.getDeliveryAmount(), order.getAddress());
     }
 }

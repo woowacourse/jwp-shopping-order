@@ -41,21 +41,23 @@ public class OrderService {
             final Coupon emptyCoupon = new Coupon("", Amount.of(0), Amount.of(0));
             final Order order = orderRepository.create(
                     new Order(new Products(products), new MemberCoupon(member.getId(), emptyCoupon),
+                            Amount.of(orderRequest.getTotalProductAmount()),
                             Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
-            return new OrderResponse(order.getId(), orderRequest.getTotalAmount(), order.getDeliveryAmount().getValue(),
-                    order.discountProductAmount().getValue(), order.getAddress(),
+            return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
+                    order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
                     makeOrderProductResponses(orderRequest, products));
         }
         final MemberCoupon coupon = memberCouponRepository.findByCouponIdAndMemberId(orderRequest.getCouponId(),
                 member.getId());
         final Order order = orderRepository.create(
-                new Order(new Products(products), coupon, Amount.of(orderRequest.getDeliveryAmount()),
-                        orderRequest.getAddress()), member.getId());
+                new Order(new Products(products), coupon, Amount.of(orderRequest.getTotalProductAmount()),
+                        Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
         coupon.use();
         memberCouponRepository.update(coupon, member.getId());
         final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest, products);
-        return new OrderResponse(order.getId(), orderRequest.getTotalAmount(), order.getDeliveryAmount().getValue(),
-                order.discountProductAmount().getValue(), order.getAddress(), orderProductResponses);
+        return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
+                order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
+                orderProductResponses);
     }
 
     private List<Product> findProducts(final OrderRequest orderRequest) {
@@ -68,7 +70,7 @@ public class OrderService {
                 })
                 .collect(Collectors.toList());
         final Amount sum = Amount.of(amounts);
-        if (!sum.equals(Amount.of(orderRequest.getTotalAmount()))) {
+        if (!sum.equals(Amount.of(orderRequest.getTotalProductAmount()))) {
             throw new BusinessException("상품 금액이 변경되었습니다.");
         }
         return products;
@@ -76,7 +78,7 @@ public class OrderService {
 
     private List<OrderProductResponse> makeOrderProductResponses(final OrderRequest orderRequest,
                                                                  final List<Product> products) {
-        final List<OrderProductResponse> orderProductResponses = new ArrayList<OrderProductResponse>();
+        final List<OrderProductResponse> orderProductResponses = new ArrayList<>();
         for (int index = 0; index < products.size(); index++) {
             final Product product = products.get(index);
             final CartItemRequest cartItemRequest = orderRequest.getProducts().get(index);

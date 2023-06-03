@@ -26,7 +26,7 @@ public class OrderResponse {
         return id;
     }
 
-    public Integer getTotalAmount() {
+    public Integer getTotalProductAmount() {
         return totalProductAmount;
     }
 
@@ -34,7 +34,7 @@ public class OrderResponse {
         return deliveryAmount;
     }
 
-    public Integer getDiscountedAmount() {
+    public Integer getDiscountedProductAmount() {
         return discountedProductAmount;
     }
 

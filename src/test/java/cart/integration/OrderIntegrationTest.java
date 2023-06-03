@@ -8,7 +8,6 @@ import cart.dto.request.CartItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.OrderResponse;
-import cart.dto.response.ProductResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -57,8 +56,8 @@ public class OrderIntegrationTest extends IntegrationTest {
         // then
         final OrderResponse orderResponse = response.as(OrderResponse.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(orderResponse.getTotalAmount()).isEqualTo(65_000);
-        assertThat(orderResponse.getDiscountedAmount()).isEqualTo(65_000);
+        assertThat(orderResponse.getTotalProductAmount()).isEqualTo(65_000);
+        assertThat(orderResponse.getDiscountedProductAmount()).isEqualTo(65_000);
         assertThat(orderResponse.getDeliveryAmount()).isEqualTo(2_000);
     }
 
@@ -68,7 +67,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .body(productRequest1)
                 .when().post("/products")
                 .then().extract();
-        return response.as(ProductResponse.class).getId();
+        return Long.valueOf(response.header("Location").split("/")[2]);
     }
 
     private void createCartItem(final CartItemRequest cartItemRequest) {
