@@ -11,7 +11,7 @@ public class OrderItems {
 
     public int calculateOrderItemsPrice() {
         return orderItems.stream()
-                .mapToInt(OrderItem::getProductPrice)
+                .mapToInt(OrderItem::totalProductPrice)
                 .sum();
     }
 

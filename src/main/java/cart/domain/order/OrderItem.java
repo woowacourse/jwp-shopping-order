@@ -32,6 +32,10 @@ public class OrderItem {
         );
     }
 
+    public int totalProductPrice() {
+        return productPrice * productQuantity;
+    }
+
     public Long getId() {
         return id;
     }
