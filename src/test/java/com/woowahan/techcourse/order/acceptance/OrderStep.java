@@ -2,9 +2,9 @@ package com.woowahan.techcourse.order.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto;
-import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto.CreateOrderCartItemRequestDto;
-import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto.CreateOrderCartItemRequestDto.CreateOrderProductRequestDto;
+import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequest;
+import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequest.CreateOrderCartItemRequest;
+import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequest.CreateOrderCartItemRequest.CreateOrderProductRequest;
 import com.woowahan.techcourse.order.ui.dto.response.OrdersResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -16,11 +16,11 @@ import java.util.List;
 public class OrderStep {
 
     public static ExtractableResponse<Response> 주문_생성_요청1(String email, String password) {
-        var request = new CreateOrderRequestDto(List.of(
-                new CreateOrderCartItemRequestDto(7L, 5,
-                        new CreateOrderProductRequestDto(1L, 10000, "치킨", "http://example.com/chicken.jpg")),
-                new CreateOrderCartItemRequestDto(8L, 2,
-                        new CreateOrderProductRequestDto(2L, 24000, "피자", "http://example.com/pizza.jpg"))
+        var request = new CreateOrderRequest(List.of(
+                new CreateOrderCartItemRequest(7L, 5,
+                        new CreateOrderProductRequest(1L, 10000, "치킨", "http://example.com/chicken.jpg")),
+                new CreateOrderCartItemRequest(8L, 2,
+                        new CreateOrderProductRequest(2L, 24000, "피자", "http://example.com/pizza.jpg"))
         ), List.of(1L));
         return RestAssured.given()
                 .body(request)

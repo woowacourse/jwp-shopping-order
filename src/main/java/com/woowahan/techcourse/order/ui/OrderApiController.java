@@ -4,7 +4,7 @@ import com.woowahan.techcourse.member.domain.Member;
 import com.woowahan.techcourse.order.domain.Order;
 import com.woowahan.techcourse.order.service.OrderCommandService;
 import com.woowahan.techcourse.order.service.OrderQueryService;
-import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto;
+import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequest;
 import com.woowahan.techcourse.order.ui.dto.response.OrderIdResponse;
 import com.woowahan.techcourse.order.ui.dto.response.OrderResponse;
 import com.woowahan.techcourse.order.ui.dto.response.OrdersResponse;
@@ -43,7 +43,7 @@ public class OrderApiController {
 
     @PostMapping("/orders")
     public ResponseEntity<OrderIdResponse> create(Member member,
-            @RequestBody @Valid CreateOrderRequestDto requestDto) {
+            @RequestBody @Valid CreateOrderRequest requestDto) {
         Long orderId = orderCommandService.createOrder(member.getId(), requestDto);
         return ResponseEntity.created(URI.create("/orders/" + orderId))
                 .body(new OrderIdResponse(orderId));

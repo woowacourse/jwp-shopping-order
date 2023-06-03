@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.order.coupon;
 
 import com.woowahan.techcourse.coupon.application.CouponCommandService;
-import com.woowahan.techcourse.coupon.application.dto.CouponExpireRequestDto;
+import com.woowahan.techcourse.coupon.application.dto.CouponExpireRequest;
 import com.woowahan.techcourse.order.domain.CouponExpire;
 import com.woowahan.techcourse.order.domain.Order;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class CouponExpireImpl implements CouponExpire {
 
     @Override
     public void makeExpired(Order order) {
-        CouponExpireRequestDto request = new CouponExpireRequestDto(order.getMemberId(), order.getCouponIds());
+        CouponExpireRequest request = new CouponExpireRequest(order.getMemberId(), order.getCouponIds());
         couponCommandService.expireCoupon(request);
     }
 }

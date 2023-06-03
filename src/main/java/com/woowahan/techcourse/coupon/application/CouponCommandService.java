@@ -1,6 +1,6 @@
 package com.woowahan.techcourse.coupon.application;
 
-import com.woowahan.techcourse.coupon.application.dto.CouponExpireRequestDto;
+import com.woowahan.techcourse.coupon.application.dto.CouponExpireRequest;
 import com.woowahan.techcourse.coupon.db.dao.CouponDao;
 import com.woowahan.techcourse.coupon.db.dao.CouponMemberDao;
 import com.woowahan.techcourse.coupon.domain.Coupon;
@@ -30,7 +30,7 @@ public class CouponCommandService {
         couponMemberDao.update(couponMember);
     }
 
-    public void expireCoupon(CouponExpireRequestDto requestDto) {
+    public void expireCoupon(CouponExpireRequest requestDto) {
         CouponMember couponMember = couponMemberDao.findByMemberId(requestDto.getMemberId())
                 .orElseThrow(CouponMemberNotFoundException::new);
         couponMember.expireCouponIds(requestDto.getCouponIds());

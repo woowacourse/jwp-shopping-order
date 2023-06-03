@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.coupon.application;
 
-import com.woowahan.techcourse.coupon.application.dto.CalculateActualPriceRequestDto;
-import com.woowahan.techcourse.coupon.application.dto.CalculateActualPriceResponseDto;
+import com.woowahan.techcourse.coupon.application.dto.CalculateActualPriceRequest;
+import com.woowahan.techcourse.coupon.application.dto.CalculateActualPriceResponse;
 import com.woowahan.techcourse.coupon.db.dao.CouponDao;
 import com.woowahan.techcourse.coupon.domain.Coupon;
 import com.woowahan.techcourse.coupon.domain.Coupons;
@@ -31,16 +31,16 @@ public class CouponQueryService {
     }
 
     //todo 리팩토링
-    public CalculateActualPriceResponseDto calculateActualPrice(
-            CalculateActualPriceRequestDto calculateActualPriceRequestDto) {
-        Coupons coupons = findCoupons(calculateActualPriceRequestDto.getCouponIds());
+    public CalculateActualPriceResponse calculateActualPrice(
+            CalculateActualPriceRequest calculateActualPriceRequest) {
+        Coupons coupons = findCoupons(calculateActualPriceRequest.getCouponIds());
 
         OriginalAmount originalAmount = new OriginalAmount(
-                calculateActualPriceRequestDto.getOrderRequest().getOriginalPrice());
+                calculateActualPriceRequest.getOrderRequest().getOriginalPrice());
 
         Money money = coupons.calculateActualPrice(originalAmount);
 
-        return new CalculateActualPriceResponseDto(money.getValue());
+        return new CalculateActualPriceResponse(money.getValue());
     }
 
     private Coupons findCoupons(List<Long> couponIds) {

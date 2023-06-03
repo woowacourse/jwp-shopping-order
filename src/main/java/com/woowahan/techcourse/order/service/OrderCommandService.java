@@ -6,8 +6,8 @@ import com.woowahan.techcourse.order.domain.CouponExpire;
 import com.woowahan.techcourse.order.domain.Order;
 import com.woowahan.techcourse.order.domain.OrderCoupon;
 import com.woowahan.techcourse.order.domain.OrderItem;
-import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto;
-import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequestDto.CreateOrderCartItemRequestDto;
+import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequest;
+import com.woowahan.techcourse.order.service.dto.request.CreateOrderRequest.CreateOrderCartItemRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -28,25 +28,25 @@ public class OrderCommandService {
         this.couponExpire = couponExpire;
     }
 
-    public Long createOrder(long memberId, CreateOrderRequestDto requestDto) {
+    public Long createOrder(long memberId, CreateOrderRequest requestDto) {
         Order order = toOrder(memberId, requestDto);
         couponExpire.makeExpired(order);
         return orderDao.insert(order);
     }
 
-    private Order toOrder(long memberId, CreateOrderRequestDto requestDto) {
+    private Order toOrder(long memberId, CreateOrderRequest requestDto) {
         List<OrderItem> orderItems = toOrderItems(requestDto.getCartItems());
         List<OrderCoupon> orderCoupons = toOrderCoupons(requestDto.getCouponIds());
         return new Order(memberId, orderItems, orderCoupons, actualPriceCalculator);
     }
 
-    private List<OrderItem> toOrderItems(List<CreateOrderCartItemRequestDto> requestDtos) {
+    private List<OrderItem> toOrderItems(List<CreateOrderCartItemRequest> requestDtos) {
         return requestDtos.stream()
                 .map(this::toOrderItem)
                 .collect(Collectors.toList());
     }
 
-    private OrderItem toOrderItem(CreateOrderCartItemRequestDto requestDto) {
+    private OrderItem toOrderItem(CreateOrderCartItemRequest requestDto) {
         return new OrderItem(requestDto.getId(),
                 requestDto.getQuantity(),
                 requestDto.getProduct().getId(),

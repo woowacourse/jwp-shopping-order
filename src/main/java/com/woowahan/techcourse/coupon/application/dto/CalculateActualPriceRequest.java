@@ -3,12 +3,12 @@ package com.woowahan.techcourse.coupon.application.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class CalculateActualPriceRequestDto {
+public class CalculateActualPriceRequest {
 
     private final OrderRequest orderRequest;
     private final List<Long> couponIds;
 
-    public CalculateActualPriceRequestDto(OrderRequest orderRequest, List<Long> couponIds) {
+    public CalculateActualPriceRequest(OrderRequest orderRequest, List<Long> couponIds) {
         this.orderRequest = orderRequest;
         this.couponIds = couponIds;
     }

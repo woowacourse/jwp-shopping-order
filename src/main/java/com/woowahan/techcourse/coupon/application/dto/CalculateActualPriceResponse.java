@@ -2,11 +2,11 @@ package com.woowahan.techcourse.coupon.application.dto;
 
 import java.math.BigDecimal;
 
-public class CalculateActualPriceResponseDto {
+public class CalculateActualPriceResponse {
 
     private final BigDecimal actualPrice;
 
-    public CalculateActualPriceResponseDto(BigDecimal actualPrice) {
+    public CalculateActualPriceResponse(BigDecimal actualPrice) {
         this.actualPrice = actualPrice;
     }
 

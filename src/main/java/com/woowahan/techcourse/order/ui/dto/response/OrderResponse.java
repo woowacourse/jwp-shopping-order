@@ -11,9 +11,9 @@ public class OrderResponse {
     private final long id;
     private final BigDecimal originalPrice;
     private final BigDecimal actualPrice;
-    private final List<OrderItemDto> cartItems;
+    private final List<OrderItemResponse> cartItems;
 
-    public OrderResponse(long id, BigDecimal originalPrice, BigDecimal actualPrice, List<OrderItemDto> cartItems) {
+    public OrderResponse(long id, BigDecimal originalPrice, BigDecimal actualPrice, List<OrderItemResponse> cartItems) {
         this.id = id;
         this.originalPrice = originalPrice;
         this.actualPrice = actualPrice;
@@ -25,7 +25,7 @@ public class OrderResponse {
                 orderResult.getOrderId(),
                 orderResult.getOriginalPrice(),
                 orderResult.getActualPrice(),
-                OrderItemDto.from(orderResult.getOrderItems())
+                OrderItemResponse.from(orderResult.getOrderItems())
         );
     }
 
@@ -41,30 +41,30 @@ public class OrderResponse {
         return actualPrice;
     }
 
-    public List<OrderItemDto> getCartItems() {
+    public List<OrderItemResponse> getCartItems() {
         return cartItems;
     }
 
-    private static class OrderItemDto {
+    private static class OrderItemResponse {
 
         private final long id;
         private final long quantity;
         private final ProductDto product;
 
-        private OrderItemDto(long id, long quantity, ProductDto product) {
+        private OrderItemResponse(long id, long quantity, ProductDto product) {
             this.id = id;
             this.quantity = quantity;
             this.product = product;
         }
 
-        public static List<OrderItemDto> from(List<OrderItem> orderItems) {
+        public static List<OrderItemResponse> from(List<OrderItem> orderItems) {
             return orderItems.stream()
-                    .map(OrderItemDto::from)
+                    .map(OrderItemResponse::from)
                     .collect(Collectors.toList());
         }
 
-        private static OrderItemDto from(OrderItem orderItem) {
-            return new OrderItemDto(
+        private static OrderItemResponse from(OrderItem orderItem) {
+            return new OrderItemResponse(
                     orderItem.getCartItemId(),
                     orderItem.getQuantity(),
                     new ProductDto(

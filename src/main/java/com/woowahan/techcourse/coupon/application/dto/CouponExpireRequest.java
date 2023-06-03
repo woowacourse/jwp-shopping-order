@@ -2,12 +2,12 @@ package com.woowahan.techcourse.coupon.application.dto;
 
 import java.util.List;
 
-public class CouponExpireRequestDto {
+public class CouponExpireRequest {
 
     private final long memberId;
     private final List<Long> couponIds;
 
-    public CouponExpireRequestDto(long memberId, List<Long> couponIds) {
+    public CouponExpireRequest(long memberId, List<Long> couponIds) {
         this.memberId = memberId;
         this.couponIds = couponIds;
     }
