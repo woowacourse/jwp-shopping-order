@@ -4,8 +4,11 @@ import cart.domain.MemberCoupon;
 
 public class CouponResponseDto {
 
-    private final Long memberCouponId;
-    private final String name;
+    private Long memberCouponId;
+    private String name;
+
+    private CouponResponseDto() {
+    }
 
     private CouponResponseDto(final Long memberCouponId,
                               final String name) {

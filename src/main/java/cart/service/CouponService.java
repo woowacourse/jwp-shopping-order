@@ -26,4 +26,12 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
+    public List<CouponResponseDto> findAll(final Member member) {
+        List<MemberCoupon> memberCouponByMember = couponRepository.findMemberCouponByMember(member);
+
+        return memberCouponByMember.stream()
+                .map(CouponResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 class OrderIntegrationTest extends IntegrationTest {
 
@@ -38,18 +39,15 @@ class OrderIntegrationTest extends IntegrationTest {
 
     private Member member;
 
-    @BeforeEach
-    void setUp() {
-        super.setUp();
+    @DisplayName("장바구니에 있는 품목을 주문한다.")
+    @Test
+    @Sql("/truncate-test.sql")
+    void orderProducts() {
         memberDao.addMember(new Member("a@a", "1234"));
         couponDao.insert(new CouponDto("정액 할인 쿠폰", 0d, 5000));
         couponDao.insert(new CouponDto("할인율 쿠폰", 10d, 0));
         member = memberDao.getMemberById(1L);
-    }
 
-    @DisplayName("장바구니에 있는 품목을 주문한다.")
-    @Test
-    void orderProducts() {
         // given
         // 물품들이 등록되어 있다.
         int PRICE = 1_000_000_000;
@@ -71,6 +69,10 @@ class OrderIntegrationTest extends IntegrationTest {
                         .findFirst()
                         .map(CouponResponseDto::getMemberCouponId)
         );
+
+        ExtractableResponse<Response> cc = requestGetCartItems(member);
+        List<CartItemResponse> cir = cc.as(new TypeRef<>() {});
+        System.out.println("cart item !!!!!!!!!!!!!!!!!!!!!!!! : " + cir);
 
         // when
         // 사용자는 장바구니에 있는 물품들을 선택해서 주문한다.
@@ -114,14 +116,16 @@ class OrderIntegrationTest extends IntegrationTest {
                 .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
 
         // 사용한 쿠폰은 삭제된다.
-        given().log().all()
+        List<CouponResponseDto> couponResponseDtos = given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().get("/coupon")
                 .then().statusCode(HttpStatus.OK.value())
-                .extract().as(CouponResponseDto.class);
+                .extract().as(new TypeRef<>() {});
 
-        // 여기서 memberCoupon.get(0).getId() 삭제되었는지만 확인하면됨
+        assertThat(couponResponseDtos)
+                .hasSize(1)
+                .noneMatch(couponResponseDto -> couponResponseDto.getName().equals("정액 할인 쿠폰"));
 
     }
 

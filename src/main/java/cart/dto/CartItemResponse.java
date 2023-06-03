@@ -29,11 +29,21 @@ public class CartItemResponse {
         return id;
     }
 
+    public ProductResponseDto getProduct() {
+        return product;
+    }
+
     public int getQuantity() {
         return quantity;
     }
 
-    public ProductResponseDto getProduct() {
-        return product;
+    @Override
+    public String toString() {
+        return "CartItemResponse{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                '}';
     }
+
 }
