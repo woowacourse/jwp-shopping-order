@@ -18,6 +18,10 @@ public class OrderItem {
         return new OrderItem(null, cartItem.getProduct(), cartItem.getQuantity());
     }
 
+    public int getTotalPrice() {
+        return product.getPrice() * quantity;
+    }
+
     public Long getId() {
         return id;
     }

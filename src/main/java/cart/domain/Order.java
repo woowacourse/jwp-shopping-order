@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.IllegalOrderException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +19,7 @@ public class Order {
     public Order(Long id, List<OrderItem> orderItems, Member member,
                  Coupon coupon, int deliveryFee, int finalPrice,
                  LocalDateTime orderTime) {
+        validate(orderItems, coupon, deliveryFee, finalPrice);
         this.id = id;
         this.orderItems = orderItems;
         this.member = member;
@@ -24,6 +27,19 @@ public class Order {
         this.deliveryFee = deliveryFee;
         this.finalPrice = finalPrice;
         this.orderTime = orderTime;
+    }
+
+    private void validate(List<OrderItem> orderItems, Coupon coupon, int deliveryFee, int finalPrice) {
+        int sumOfProductsPrice = orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
+        int couponPrice = 0;
+        if (coupon != null) {
+            couponPrice = coupon.getDiscountValue();
+        }
+        int expectFinalPrice = sumOfProductsPrice + deliveryFee - couponPrice;
+
+        if (expectFinalPrice != finalPrice) {
+            throw new IllegalOrderException();
+        }
     }
 
     public Long getId() {
