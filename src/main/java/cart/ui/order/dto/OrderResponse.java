@@ -19,7 +19,11 @@ public class OrderResponse {
         this.createdAt = createdAt;
     }
 
-    public OrderResponse(final Long orderId, final List<OrderItemResponse> orderItems, final List<CouponResponse> usedCoupons, final int usedPoint, final int paymentPrice,
+    public OrderResponse(final Long orderId,
+                         final List<OrderItemResponse> orderItems,
+                         final List<CouponResponse> usedCoupons,
+                         final int usedPoint,
+                         final int paymentPrice,
                          String createdAt) {
         this.orderId = orderId;
         this.orderItems = orderItems;

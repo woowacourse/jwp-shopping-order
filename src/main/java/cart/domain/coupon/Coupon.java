@@ -6,16 +6,17 @@ public class Coupon {
 
     private final long id;
     private final String couponName;
+    private final int minAmount;
     private final int discountPercent;
     private final int discountAmount;
-    private final int minAmount;
 
-    public Coupon(final Long id, final String couponName, final Integer discountPercent, final int discountAmount, final Integer minAmount) {
+    public Coupon(final Long id, final String couponName, final Integer minAmount, final Integer discountPercent,
+                  final int discountAmount) {
         this.id = id;
         this.couponName = couponName;
+        this.minAmount = minAmount;
         this.discountPercent = discountPercent;
         this.discountAmount = discountAmount;
-        this.minAmount = minAmount;
     }
 
     public int applyDiscount(final int amount) {
@@ -33,6 +34,10 @@ public class Coupon {
         return couponName;
     }
 
+    public Integer getMinAmount() {
+        return minAmount;
+    }
+
     public Integer getDiscountPercent() {
         return discountPercent;
     }
@@ -41,8 +46,5 @@ public class Coupon {
         return discountAmount;
     }
 
-    public Integer getMinAmount() {
-        return minAmount;
-    }
 
 }

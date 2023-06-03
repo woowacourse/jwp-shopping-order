@@ -6,28 +6,32 @@ public class CouponResponse {
 
     private final Long id;
     private final String couponName;
+    private final Integer minAmount;
     private final Integer discountPercent;
     private final Integer discountAmount;
-    private final Integer minAmount;
 
-    public CouponResponse(final Long id, final String couponName, final Integer discountPercent, final Integer discountAmount, final Integer minAmount) {
+    private CouponResponse(final Long id,
+                           final String couponName,
+                           final Integer minAmount,
+                           final Integer discountPercent,
+                           final Integer discountAmount
+    ) {
         this.id = id;
         this.couponName = couponName;
+        this.minAmount = minAmount;
         this.discountPercent = discountPercent;
         this.discountAmount = discountAmount;
-        this.minAmount = minAmount;
     }
 
     public static CouponResponse from(final CouponResultDto couponResultDto) {
         return new CouponResponse(
                 couponResultDto.getId(),
                 couponResultDto.getCouponName(),
+                couponResultDto.getMinAmount(),
                 couponResultDto.getDiscountPercent(),
-                couponResultDto.getDiscountAmount(),
-                couponResultDto.getMinAmount()
+                couponResultDto.getDiscountAmount()
         );
     }
-
 
     public Long getId() {
         return id;
@@ -37,16 +41,16 @@ public class CouponResponse {
         return couponName;
     }
 
+    public Integer getMinAmount() {
+        return minAmount;
+    }
+
     public Integer getDiscountPercent() {
         return discountPercent;
     }
 
     public Integer getDiscountAmount() {
         return discountAmount;
-    }
-
-    public Integer getMinAmount() {
-        return minAmount;
     }
 
 }

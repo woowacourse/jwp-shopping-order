@@ -38,5 +38,4 @@ out/
 
 !**/src/main/resources/application.properties
 
-data.sql
 application.properties

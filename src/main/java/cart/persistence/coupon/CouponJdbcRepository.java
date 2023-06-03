@@ -119,4 +119,5 @@ public class CouponJdbcRepository implements CouponRepository {
 
         return simpleOrderedCouponInsert.executeAndReturnKey(parameters).longValue();
     }
+
 }
