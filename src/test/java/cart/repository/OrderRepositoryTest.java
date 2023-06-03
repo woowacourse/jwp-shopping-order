@@ -50,8 +50,8 @@ class OrderRepositoryTest {
         final Member member = memberRepository.save(사용자1);
         final Product product1 = productRepository.save(상품_8900원);
         final Product product2 = productRepository.save(상품_28900원);
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
         final Order order = Order.of(null, member.getId(), List.of(cartItem1, cartItem2));
 
         // when
@@ -70,8 +70,8 @@ class OrderRepositoryTest {
         final Member member = memberRepository.save(사용자1);
         final Product product1 = productRepository.save(상품_8900원);
         final Product product2 = productRepository.save(상품_28900원);
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
         final Order order1 = orderRepository.save(Order.of(null, member.getId(), List.of(cartItem1, cartItem2)));
         final Order order2 = orderRepository.save(Order.of(null, member.getId(), List.of(cartItem1, cartItem2)));
 
@@ -87,7 +87,7 @@ class OrderRepositoryTest {
         // given
         final Member member = memberRepository.save(사용자1);
         final Product product = productRepository.save(상품_8900원);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final Coupon coupon = couponRepository.save(배달비_3천원_할인_쿠폰);
         final MemberCoupon memberCoupon = memberCouponRepository.save(new MemberCoupon(member.getId(), coupon));
         final Order order = orderRepository.save(Order.of(memberCoupon, member.getId(), List.of(cartItem)));

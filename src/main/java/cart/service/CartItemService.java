@@ -4,13 +4,11 @@ import static java.util.stream.Collectors.toList;
 
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Product;
-import cart.domain.member.Member;
 import cart.dto.cart.CartItemDto;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemSaveRequest;
 import cart.exception.cart.CartItemNotFoundException;
 import cart.exception.cart.ProductNotFoundException;
-import cart.exception.member.MemberNotFoundException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
@@ -37,12 +35,10 @@ public class CartItemService {
     }
 
     public Long save(final Long memberId, final CartItemSaveRequest request) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
         final Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(ProductNotFoundException::new);
 
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(memberId, product);
         return cartItemRepository.save(cartItem).getId();
     }
 
@@ -56,10 +52,8 @@ public class CartItemService {
     public void delete(final Long cartItemId, final Long memberId) {
         final CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(CartItemNotFoundException::new);
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
 
-        cartItem.checkOwner(member);
+        cartItem.checkOwner(memberId);
         cartItemRepository.deleteById(cartItemId);
     }
 
@@ -70,10 +64,8 @@ public class CartItemService {
     ) {
         final CartItem item = cartItemRepository.findById(cartItemId)
                 .orElseThrow(CartItemNotFoundException::new);
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
 
-        item.checkOwner(member);
+        item.checkOwner(memberId);
         if (request.getQuantity() == 0) {
             cartItemRepository.deleteById(cartItemId);
             return;

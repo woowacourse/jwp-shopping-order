@@ -1,25 +1,24 @@
 package cart.domain.cart;
 
 import cart.domain.VO.Money;
-import cart.domain.member.Member;
 import cart.exception.cart.InvalidCartItemOwnerException;
 import java.util.Objects;
 
 public class CartItem {
 
     private final Long id;
-    private final Member member;
+    private final Long memberId;
     private final Product product;
     private Integer quantity;
 
-    public CartItem(final Member member, final Product product) {
-        this(null, 1, member, product);
+    public CartItem(final Long memberId, final Product product) {
+        this(null, 1, memberId, product);
     }
 
-    public CartItem(final Long id, final Integer quantity, final Member member, final Product product) {
+    public CartItem(final Long id, final Integer quantity, final Long memberId, final Product product) {
         this.id = id;
         this.quantity = quantity;
-        this.member = member;
+        this.memberId = memberId;
         this.product = product;
     }
 
@@ -27,8 +26,8 @@ public class CartItem {
         return product.getPrice().times(quantity);
     }
 
-    public void checkOwner(final Member member) {
-        if (!this.member.equals(member)) {
+    public void checkOwner(final Long memberId) {
+        if (!Objects.equals(this.memberId, memberId)) {
             throw new InvalidCartItemOwnerException();
         }
     }
@@ -62,8 +61,8 @@ public class CartItem {
         return quantity;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Product getProduct() {

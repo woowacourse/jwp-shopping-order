@@ -45,7 +45,7 @@ public class CartItemServiceTest {
         // given
         final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(member.getId(), product);
 
         // when
         cartItemRepository.save(cartItem);
@@ -61,8 +61,8 @@ public class CartItemServiceTest {
         final Product product1 = productRepository.save(상품_8900원);
         final Product product2 = productRepository.save(상품_18900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
 
         // when
         final List<CartItemDto> result = cartItemService.findAll(member.getId());
@@ -79,7 +79,7 @@ public class CartItemServiceTest {
         // given
         final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
 
         // when
         cartItemService.delete(cartItem.getId(), member.getId());
@@ -93,7 +93,7 @@ public class CartItemServiceTest {
         // given
         final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(2);
 
         // when
@@ -109,7 +109,7 @@ public class CartItemServiceTest {
         // given
         final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final CartItemQuantityUpdateRequest request = new CartItemQuantityUpdateRequest(0);
 
         // when

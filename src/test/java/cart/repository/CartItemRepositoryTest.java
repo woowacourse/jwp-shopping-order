@@ -36,7 +36,7 @@ class CartItemRepositoryTest {
         // given
         final Member member = memberRepository.save(사용자1);
         final Product product = productRepository.save(상품_8900원);
-        final CartItem cartItem = new CartItem(member, product);
+        final CartItem cartItem = new CartItem(member.getId(), product);
 
         // when
         cartItemRepository.save(cartItem);
@@ -54,9 +54,9 @@ class CartItemRepositoryTest {
         final Product product2 = productRepository.save(상품_18900원);
         final Product product3 = productRepository.save(상품_28900원);
 
-        cartItemRepository.save(new CartItem(member1, product1));
-        cartItemRepository.save(new CartItem(member1, product2));
-        cartItemRepository.save(new CartItem(member2, product3));
+        cartItemRepository.save(new CartItem(member1.getId(), product1));
+        cartItemRepository.save(new CartItem(member1.getId(), product2));
+        cartItemRepository.save(new CartItem(member2.getId(), product3));
 
         // when
         final List<CartItem> result = cartItemRepository.findAllByMemberId(member1.getId());
@@ -73,9 +73,9 @@ class CartItemRepositoryTest {
         final Product product2 = productRepository.save(상품_18900원);
         final Product product3 = productRepository.save(상품_28900원);
 
-        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member, product1));
-        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
-        final CartItem cartItem3 = cartItemRepository.save(new CartItem(member, product3));
+        final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
+        final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
+        final CartItem cartItem3 = cartItemRepository.save(new CartItem(member.getId(), product3));
 
         // when
         final List<CartItem> result = cartItemRepository.findAllByIdsAndMemberId(
@@ -92,7 +92,7 @@ class CartItemRepositoryTest {
         // given
         final Member member = memberRepository.save(사용자1);
         final Product product = productRepository.save(상품_8900원);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
 
         // when
         cartItemRepository.deleteById(cartItem.getId());
@@ -106,9 +106,14 @@ class CartItemRepositoryTest {
         // given
         final Member member = memberRepository.save(사용자1);
         final Product product = productRepository.save(상품_8900원);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
 
-        final CartItem updatedCartItem = new CartItem(cartItem.getId(), 2, cartItem.getMember(), cartItem.getProduct());
+        final CartItem updatedCartItem = new CartItem(
+                cartItem.getId(),
+                2,
+                cartItem.getMemberId(),
+                cartItem.getProduct()
+        );
 
         // when
         final CartItem result = cartItemRepository.save(updatedCartItem);

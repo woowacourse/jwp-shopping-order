@@ -85,8 +85,8 @@ public class CartItemControllerTest {
         final Product product2 = productRepository.save(상품_18900원);
         final Member member = memberRepository.save(사용자1);
 
-        cartItemRepository.save(new CartItem(member, product1));
-        cartItemRepository.save(new CartItem(member, product2));
+        cartItemRepository.save(new CartItem(member.getId(), product1));
+        cartItemRepository.save(new CartItem(member.getId(), product2));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect
@@ -103,7 +103,7 @@ public class CartItemControllerTest {
         // given
         final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        cartItemRepository.save(new CartItem(member, product));
+        cartItemRepository.save(new CartItem(member.getId(), product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // when
@@ -122,7 +122,7 @@ public class CartItemControllerTest {
         // given
         final Product product = productRepository.save(상품_8900원);
         final Member member = memberRepository.save(사용자1);
-        final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
+        final CartItem cartItem = cartItemRepository.save(new CartItem(member.getId(), product));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
         final CartItemQuantityUpdateRequest updateRequest = new CartItemQuantityUpdateRequest(2);
 
