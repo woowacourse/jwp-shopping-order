@@ -41,7 +41,7 @@ class MemberCouponRepositoryTest {
 
         assertAll(
                 () -> assertThat(coupon.getName()).isEqualTo("주문확정_1000원_할인_보너스쿠폰"),
-                () -> assertThat(coupon.getCouponTypes().getCouponTypeName()).isEqualTo("reduction"),
+                () -> assertThat(coupon.getCouponTypes().getCouponTypeName()).isEqualTo("deduction"),
                 () -> assertThat(coupon.getDiscountPrice()).isEqualTo(1000)
         );
     }
@@ -68,7 +68,7 @@ class MemberCouponRepositoryTest {
 
         assertAll(
                 () -> assertThat(coupons.get(0).getName()).isEqualTo("5000원 할인 쿠폰"),
-                () -> assertThat(coupons.get(0).getCouponTypes().getCouponTypeName()).isEqualTo("reduction"),
+                () -> assertThat(coupons.get(0).getCouponTypes().getCouponTypeName()).isEqualTo("deduction"),
                 () -> assertThat(coupons.get(0).getDiscountPrice()).isEqualTo(5000)
         );
     }
@@ -85,7 +85,7 @@ class MemberCouponRepositoryTest {
         Coupon memberCoupon = memberCouponRepository.findAvailableCouponByMember(member, couponId);
         assertAll(
                 () -> assertThat(memberCoupon.getName()).isEqualTo("5000원 할인 쿠폰"),
-                () -> assertThat(memberCoupon.getCouponTypes().getCouponTypeName()).isEqualTo("reduction"),
+                () -> assertThat(memberCoupon.getCouponTypes().getCouponTypeName()).isEqualTo("deduction"),
                 () -> assertThat(memberCoupon.getDiscountPrice()).isEqualTo(5000)
         );
     }
@@ -102,7 +102,7 @@ class MemberCouponRepositoryTest {
 
         assertAll(
                 () -> assertThat(memberCoupon.getName()).isEqualTo("주문확정_1000원_할인_보너스쿠폰"),
-                () -> assertThat(memberCoupon.getCouponTypes().getCouponTypeName()).isEqualTo("reduction"),
+                () -> assertThat(memberCoupon.getCouponTypes().getCouponTypeName()).isEqualTo("deduction"),
                 () -> assertThat(memberCoupon.getDiscountPrice()).isEqualTo(1000)
         );
     }

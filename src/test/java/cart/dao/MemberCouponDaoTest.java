@@ -36,7 +36,7 @@ class MemberCouponDaoTest {
         CouponEntity coupon = memberCouponDao.findAvailableCouponByMember(1L, userCouponId).get();
         assertAll(
                 () -> assertThat(coupon.getName()).isEqualTo("5000원 할인 쿠폰"),
-                () -> assertThat(coupon.getDiscountType()).isEqualTo("reduction"),
+                () -> assertThat(coupon.getDiscountType()).isEqualTo("deduction"),
                 () -> assertThat(coupon.getDiscountPrice()).isEqualTo(5000)
         );
     }
@@ -65,7 +65,7 @@ class MemberCouponDaoTest {
         CouponEntity coupon = memberCouponDao.findCouponByMemberId(1L).get(0);
         assertAll(
                 () -> assertThat(coupon.getName()).isEqualTo("5000원 할인 쿠폰"),
-                () -> assertThat(coupon.getDiscountType()).isEqualTo("reduction"),
+                () -> assertThat(coupon.getDiscountType()).isEqualTo("deduction"),
                 () -> assertThat(coupon.getDiscountPrice()).isEqualTo(5000)
         );
     }
@@ -78,7 +78,7 @@ class MemberCouponDaoTest {
         CouponEntity coupon = coupons.get(0);
         assertAll(
                 () -> assertThat(coupon.getName()).isEqualTo("5000원 할인 쿠폰"),
-                () -> assertThat(coupon.getDiscountType()).isEqualTo("reduction"),
+                () -> assertThat(coupon.getDiscountType()).isEqualTo("deduction"),
                 () -> assertThat(coupon.getDiscountPrice()).isEqualTo(5000)
         );
     }

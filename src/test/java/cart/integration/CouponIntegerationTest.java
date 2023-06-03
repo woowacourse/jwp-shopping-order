@@ -86,7 +86,7 @@ class CouponIntegerationTest extends IntegrationTest {
 
         assertAll(
                 () -> assertThat(couponResponses.get(0).getName()).isEqualTo("5000원 할인 쿠폰"),
-                () -> assertThat(couponResponses.get(0).getDiscountType()).isEqualTo("reduction")
+                () -> assertThat(couponResponses.get(0).getDiscountType()).isEqualTo("deduction")
         );
     }
 }

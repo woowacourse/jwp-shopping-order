@@ -13,7 +13,7 @@ class CouponTest {
     @Test
     @DisplayName("고정 할인 쿠폰 가격을 적용할 수 있다.")
     void applyReductionCouponPrice() {
-        Coupon coupon = new Coupon("5000원 할인 쿠폰", DiscountType.from("reduction"), 10000, 5000, 0);
+        Coupon coupon = new Coupon("5000원 할인 쿠폰", DiscountType.from("deduction"), 10000, 5000, 0);
         assertThat(coupon.applyCouponPrice(10000)).isEqualTo(5000);
     }
 
