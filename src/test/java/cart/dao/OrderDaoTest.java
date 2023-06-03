@@ -46,8 +46,9 @@ class OrderDaoTest {
         final Long product2Id = productDao.createProduct(product2);
         final Product savedProduct1 = new Product(product1Id, "product1", Amount.of(10_000), "imageUrl1");
         final Product savedProduct2 = new Product(product2Id, "product2", Amount.of(20_000), "imageUrl2");
-        final Order order = new Order(new Products(List.of(savedProduct1, savedProduct2)), savedCoupon,
-            Amount.of(3_000), Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), "address");
+        final Order order = new Order(new Products(List.of(savedProduct1, savedProduct2)),
+            Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), Amount.of(29_000),
+            Amount.of(3_000), "address");
 
         //when
         final Order savedOrder = orderDao.save(order, savedMember.getId());
@@ -69,8 +70,9 @@ class OrderDaoTest {
         final Product savedProduct1 = new Product(product1Id, "product1", Amount.of(10_000), "imageUrl1");
         final Product savedProduct2 = new Product(product2Id, "product2", Amount.of(20_000), "imageUrl2");
         final List<Product> savedProducts = List.of(savedProduct1, savedProduct2);
-        final Order order = new Order(new Products(savedProducts), savedCoupon,
-            Amount.of(3_000), Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), "address");
+        final Order order = new Order(new Products(List.of(savedProduct1, savedProduct2)),
+            Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), Amount.of(29_000),
+            Amount.of(3_000), "address");
         final Order savedOrder = orderDao.save(order, savedMember.getId());
 
         //when

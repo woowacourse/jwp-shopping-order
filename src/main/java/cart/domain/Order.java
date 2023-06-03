@@ -6,30 +6,24 @@ public class Order {
 
     private final Long id;
     private final Products products;
-    // todo : Coupon 의존성 제거
-    private final Coupon coupon;
     private final Amount totalAmount;
+    private final Amount discountedAmount;
     private final Amount deliveryAmount;
     private final String address;
 
-    public Order(final Products products, final Coupon coupon, final Amount deliveryAmount, final Amount totalAmount,
-        final String address) {
-        this(null, products, coupon, deliveryAmount, totalAmount, address);
+    public Order(final Products products, final Amount totalAmount, final Amount discountedAmount,
+        final Amount deliveryAmount, final String address) {
+        this(null, products, totalAmount, discountedAmount, deliveryAmount, address);
     }
 
-    public Order(final Long id, final Products products, final Coupon coupon, final Amount totalAmount,
-        final Amount deliveryAmount, final String address) {
+    public Order(final Long id, final Products products, final Amount totalAmount,
+        final Amount discountedAmount, final Amount deliveryAmount, final String address) {
         this.id = id;
         this.products = products;
-        this.coupon = coupon;
         this.totalAmount = totalAmount;
+        this.discountedAmount = discountedAmount;
         this.deliveryAmount = deliveryAmount;
         this.address = address;
-    }
-
-    public Amount discountProductAmount() {
-        final Amount productAmount = products.calculateTotalAmount();
-        return coupon.calculateProduct(productAmount);
     }
 
     public Long getId() {
@@ -38,10 +32,6 @@ public class Order {
 
     public Products getProducts() {
         return products;
-    }
-
-    public Coupon getCoupon() {
-        return coupon;
     }
 
     public Amount getDeliveryAmount() {
@@ -54,5 +44,9 @@ public class Order {
 
     public Amount getTotalAmount() {
         return totalAmount;
+    }
+
+    public Amount getDiscountedAmount() {
+        return discountedAmount;
     }
 }

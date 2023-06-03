@@ -51,8 +51,9 @@ public class OrderConverter {
                 it.getProductImageUrl()))
             .collect(Collectors.toList());
         final OrderProductJoinDto dto = sameOrderKeyDtos.get(0);
-        return new Order(dto.getId(), new Products(products), null,
-            Amount.of(dto.getDeliveryAmount()), Amount.of(dto.getTotalAmount()), dto.getAddress());
+        return new Order(dto.getId(), new Products(products), Amount.of(dto.getTotalAmount()),
+            Amount.of(dto.getDiscountedAmount()), Amount.of(dto.getDeliveryAmount()),
+            dto.getAddress());
     }
 
 }

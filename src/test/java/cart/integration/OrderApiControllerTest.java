@@ -57,6 +57,20 @@ class OrderApiControllerTest extends IntegrationTest {
             "address", coupon.getId());
 
         //when
+        final ExtractableResponse<Response> response = order(request);
+        final OrderResponse orderResponse = response.as(OrderResponse.class);
+
+        //then
+        final List<OrderProductResponse> products = List.of(
+            new OrderProductResponse(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 3),
+            new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3));
+        final OrderResponse expectedResponse = new OrderResponse(orderResponse.getId(), request.getTotalProductAmount(),
+            72_000, request.getDeliveryAmount(), request.getAddress(), products);
+
+        assertThat(orderResponse).usingRecursiveComparison().isEqualTo(expectedResponse);
+    }
+
+    private ExtractableResponse<Response> order(final OrderRequest request) {
         final ExtractableResponse<Response> response = given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(member.getEmail(), member.getPassword())
@@ -66,15 +80,42 @@ class OrderApiControllerTest extends IntegrationTest {
             .then()
             .log().all()
             .extract();
-        final OrderResponse orderResponse = response.as(OrderResponse.class);
+        return response;
+    }
+
+    @Test
+    @DisplayName("주문을 조회한다.")
+    void testFindOrder() {
+        //given
+        final CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 3);
+        final CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 3);
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2), 75_000, 3_000,
+            "address", coupon.getId());
+        final OrderResponse orderResponse = order(orderRequest).as(OrderResponse.class);
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .get("/orders/" + orderResponse.getId())
+            .then()
+            .log().all()
+            .extract();
+        final OrderResponse result = response.as(OrderResponse.class);
 
         //then
         final List<OrderProductResponse> products = List.of(
             new OrderProductResponse(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 3),
+            new OrderProductResponse(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 3),
+            new OrderProductResponse(productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 3),
+            new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3),
+            new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3),
             new OrderProductResponse(productId2, "피자", 15_000, "http://example.com/pizza.jpg", 3));
-        final OrderResponse expectedResponse = new OrderResponse(orderResponse.getId(), request.getTotalProductAmount(),
-            request.getDeliveryAmount(), 72_000, request.getAddress(), products);
+        final OrderResponse expectedResponse = new OrderResponse(orderResponse.getId(),
+            orderRequest.getTotalProductAmount(), 72_000, orderRequest.getDeliveryAmount(), orderRequest.getAddress(),
+            products);
 
-        assertThat(orderResponse).usingRecursiveComparison().isEqualTo(expectedResponse);
+        assertThat(result).usingRecursiveComparison().isEqualTo(expectedResponse);
     }
 }

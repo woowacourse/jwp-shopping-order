@@ -24,7 +24,6 @@ import cart.dto.OrderResponse;
 import cart.exception.BusinessException;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,8 +39,9 @@ class OrderServiceTest {
     private final Product product2 = new Product(2L, "product2", Amount.of(20_000), "imageUrl2");
     private final Coupon coupon = new Coupon(1L, "name", Amount.of(1_000), Amount.of(10_000), false);
     private final List<CartItemRequest> products = List.of(new CartItemRequest(1L, 5), new CartItemRequest(2L, 10));
-    private final Order order = new Order(1L, new Products(List.of(product1, product2)), coupon, Amount.of(3_000),
-        Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), "address");
+    private final Order order = new Order(1L, new Products(List.of(product1, product2)),
+        Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), Amount.of(29_000),
+        Amount.of(3_000), "address");
 
     @Mock
     private OrderDao orderDao;
@@ -78,7 +78,7 @@ class OrderServiceTest {
         final OrderProductResponse orderProductResponse2 = new OrderProductResponse(product2.getId(),
             product2.getName(), product2.getAmount().getValue(), product2.getImageUrl(), 10);
         final OrderResponse expectedResponse = new OrderResponse(order.getId(), request.getTotalProductAmount(),
-            order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
+            order.getDiscountedAmount().getValue(), order.getDeliveryAmount().getValue(), order.getAddress(),
             List.of(orderProductResponse1, orderProductResponse2));
 
         assertThat(response).usingRecursiveComparison().isEqualTo(expectedResponse);
@@ -145,7 +145,7 @@ class OrderServiceTest {
 
         //when
         //then
-        Assertions.assertThatThrownBy(() -> orderService.findOrder(3L))
+        assertThatThrownBy(() -> orderService.findOrder(3L))
             .isInstanceOf(BusinessException.class);
     }
 }

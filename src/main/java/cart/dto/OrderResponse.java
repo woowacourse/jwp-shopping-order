@@ -6,21 +6,21 @@ public class OrderResponse {
 
     private Long id;
     private Integer totalProductAmount;
-    private Integer deliveryAmount;
     private Integer discountedProductAmount;
+    private Integer deliveryAmount;
     private String address;
     private List<OrderProductResponse> products;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(final Long id, final Integer totalProductAmount, final Integer deliveryAmount,
-        final Integer discountedProductAmount,
+    public OrderResponse(final Long id, final Integer totalProductAmount, final Integer discountedProductAmount,
+        final Integer deliveryAmount,
         final String address, final List<OrderProductResponse> products) {
         this.id = id;
         this.totalProductAmount = totalProductAmount;
-        this.deliveryAmount = deliveryAmount;
         this.discountedProductAmount = discountedProductAmount;
+        this.deliveryAmount = deliveryAmount;
         this.address = address;
         this.products = products;
     }

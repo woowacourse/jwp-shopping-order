@@ -20,7 +20,7 @@ public class OrderDao {
     private final RowMapper<OrderProductJoinDto> orderProductJoinDtoRowMapper = (rs, rowNum) -> {
         return new OrderProductJoinDto(
             rs.getLong("id"),
-            rs.getInt("discount_amount"),
+            rs.getInt("discounted_amount"),
             rs.getInt("delivery_amount"),
             rs.getInt("total_amount"),
             rs.getString("address"),
@@ -42,7 +42,7 @@ public class OrderDao {
     public Order save(final Order order, final Long memberId) {
         final Map<String, Object> params = new HashMap<>();
         params.put("member_id", memberId);
-        params.put("discounted_amount", order.discountProductAmount().getValue());
+        params.put("discounted_amount", order.getDiscountedAmount().getValue());
         params.put("address", order.getAddress());
         params.put("delivery_amount", order.getDeliveryAmount().getValue());
         params.put("total_amount", order.getTotalAmount().getValue());
@@ -54,14 +54,14 @@ public class OrderDao {
         for (final Product product : products.getValue()) {
             jdbcTemplate.update(productOrderSql, product.getId(), orderId);
         }
-        return new Order(orderId, order.getProducts(), order.getCoupon(), order.getDeliveryAmount(),
-            order.getTotalAmount(), order.getAddress());
+        return new Order(orderId, order.getProducts(), order.getTotalAmount(), order.getDiscountedAmount(),
+            order.getDeliveryAmount(), order.getAddress());
     }
 
     public Optional<Order> findById(final Long id) {
         final String sql =
             "SELECT o.id                as id, "
-                + "       o.discounted_amount as discount_amount, "
+                + "       o.discounted_amount as discounted_amount, "
                 + "       o.delivery_amount   as delivery_amount, "
                 + "       o.address           as address, "
                 + "       o.total_amount      as total_amount, "

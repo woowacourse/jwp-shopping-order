@@ -3,7 +3,7 @@ package cart.dao;
 public class OrderProductJoinDto {
 
     private final Long id;
-    private final int discountAmount;
+    private final int discountedAmount;
     private final int deliveryAmount;
     private final int totalAmount;
     private final String address;
@@ -12,11 +12,12 @@ public class OrderProductJoinDto {
     private final int productAmount;
     private final String productImageUrl;
 
-    public OrderProductJoinDto(final Long id, final int discountAmount, final int deliveryAmount, final int totalAmount,
+    public OrderProductJoinDto(final Long id, final int discountedAmount, final int deliveryAmount,
+        final int totalAmount,
         final String address,
         final Long productId, final String productName, final int productAmount, final String productImageUrl) {
         this.id = id;
-        this.discountAmount = discountAmount;
+        this.discountedAmount = discountedAmount;
         this.deliveryAmount = deliveryAmount;
         this.totalAmount = totalAmount;
         this.address = address;
@@ -30,8 +31,8 @@ public class OrderProductJoinDto {
         return id;
     }
 
-    public int getDiscountAmount() {
-        return discountAmount;
+    public int getDiscountedAmount() {
+        return discountedAmount;
     }
 
     public int getDeliveryAmount() {

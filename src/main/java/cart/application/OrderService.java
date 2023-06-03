@@ -44,15 +44,17 @@ public class OrderService {
         final Coupon coupon = couponDao.findByCouponIdAndMemberId(orderRequest.getCouponId(), member.getId())
             .orElseThrow(() -> new BusinessException("존재하지 않는 쿠폰입니다."));
         final Order order = orderDao.save(
-            new Order(new Products(products), coupon, Amount.of(orderRequest.getDeliveryAmount()),
-                Amount.of(orderRequest.getTotalProductAmount()), orderRequest.getAddress()), member.getId());
+            new Order(new Products(products), Amount.of(orderRequest.getTotalProductAmount()),
+                coupon.calculateProduct(Amount.of(orderRequest.getTotalProductAmount())),
+                Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()),
+            member.getId());
         final Coupon usedCoupon = coupon.use();
         couponDao.update(usedCoupon, member.getId());
         deleteCartItem(orderRequest, member.getId());
         final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest,
             products);
         return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
-            order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
+            order.getDiscountedAmount().getValue(), order.getDeliveryAmount().getValue(), order.getAddress(),
             orderProductResponses);
     }
 
@@ -111,7 +113,7 @@ public class OrderService {
             .orElseThrow(() -> new BusinessException("존재하지 않는 주문입니다."));
         final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(order);
         return new OrderResponse(order.getId(), order.getTotalAmount().getValue(),
-            order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
+            order.getDiscountedAmount().getValue(), order.getDeliveryAmount().getValue(), order.getAddress(),
             orderProductResponses);
     }
 

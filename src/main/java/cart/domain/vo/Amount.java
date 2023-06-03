@@ -50,12 +50,12 @@ public class Amount {
             return false;
         }
         final Amount amount = (Amount) o;
-        return value == amount.value;
+        return getValue() == amount.getValue();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(getValue());
     }
 
     public int getValue() {
