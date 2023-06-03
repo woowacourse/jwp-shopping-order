@@ -19,6 +19,8 @@ public class OrderProductDao {
             rs.getLong("id"),
             rs.getLong("order_id"),
             rs.getLong("product_id"),
+            rs.getString("name"),
+            rs.getString("image_url"),
             rs.getInt("purchased_price"),
             rs.getInt("quantity")
     );
@@ -40,6 +42,8 @@ public class OrderProductDao {
                         .addValue("product_id", orderProductEntity.getProductId())
                         .addValue("purchased_price", orderProductEntity.getPurchasedPrice())
                         .addValue("quantity", orderProductEntity.getQuantity())
+                        .addValue("name", orderProductEntity.getName())
+                        .addValue("image_url", orderProductEntity.getImageUrl())
                 ).toArray(SqlParameterSource[]::new);
         jdbcInsert.executeBatch(sources);
     }

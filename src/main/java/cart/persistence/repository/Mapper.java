@@ -78,6 +78,8 @@ class Mapper {
                 orderProduct.getId(),
                 orderId,
                 orderProduct.getProduct().getId(),
+                orderProduct.getProduct().getName(),
+                orderProduct.getProduct().getImageUrl(),
                 orderProduct.getPurchasedPrice(),
                 orderProduct.getQuantity()
         );
