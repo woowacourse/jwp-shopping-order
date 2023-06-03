@@ -110,4 +110,19 @@ public class OrderIntegrationTest extends IntegrationTest {
         // then
         assertThat(주문_상세_정보.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
+
+    @Test
+    void 주문이_접근불가능할_경우_403을_응답한다() {
+        // given
+        상품을_장바구니에_담는다(A_치킨_1.요청, 멤버_A);
+        final List<Long> cartItems = List.of(1L);
+        final long price = (long) (A_치킨_1.객체.getProduct().getPrice() * A_치킨_1.객체.getQuantity());
+        final ExtractableResponse<Response> 상품_주문_응답 = 장바구니의_상품을_주문한다(new OrderRequest(cartItems, price), 멤버_A);
+
+        // when
+        final ExtractableResponse<Response> 주문_상세_정보 = 주문_상세정보를_가져온다(멤버_B, 상품_주문_응답.header(HttpHeaders.LOCATION));
+
+        // then
+        assertThat(주문_상세_정보.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
 }

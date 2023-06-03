@@ -28,7 +28,9 @@ public class OrderService {
     @Transactional
     public Long add(Member member, OrderRequest orderRequest) {
         final List<CartItem> cartItems = cartItemService.findByIds(orderRequest.getCartItems());
-        final Order order = Order.of(member, cartItems, orderRequest.getPaymentAmount());
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+
+        final Order order = Order.of(cartItems, member, orderRequest.getPaymentAmount());
         orderCalculator.checkPaymentAmount(order, orderRequest.getPaymentAmount());
 
         cartItemService.remove(member, orderRequest.getCartItems());
@@ -37,7 +39,10 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Order findById(Member member, Long orderId) {
-        return orderDao.findById(orderId)
+        final Order order = orderDao.findById(orderId)
                 .orElseThrow(() -> new OrderException.NoSuchId(orderId));
+        order.checkOwner(member);
+
+        return order;
     }
 }

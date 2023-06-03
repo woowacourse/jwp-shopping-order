@@ -38,9 +38,9 @@ public class Fixtures {
 
     public static class 주문_A_치킨_1 {
         public static final Member 멤버 = 멤버_A;
-        public static final Order 객체 = Order.of(멤버_A, List.of(A_치킨_1.객체), 치킨.getPrice());
+        public static final Order 객체 = Order.of(List.of(A_치킨_1.객체), 멤버_A, 치킨.getPrice());
     }
 
-    public static final Order 주문_A_치킨_1_샐러드_1 = Order.of(멤버_A, List.of(A_치킨_1.객체, A_샐러드_1.객체), -1);
-    public static final Order 주문_A_치킨_1_샐러드_2 = Order.of(멤버_A, List.of(A_치킨_1.객체, A_샐러드_2.객체), -1);
+    public static final Order 주문_A_치킨_1_샐러드_1 = Order.of(List.of(A_치킨_1.객체, A_샐러드_1.객체), 멤버_A, -1);
+    public static final Order 주문_A_치킨_1_샐러드_2 = Order.of(List.of(A_치킨_1.객체, A_샐러드_2.객체), 멤버_A, -1);
 }

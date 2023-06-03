@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
+import cart.exception.IllegalMemberException;
 
 import java.util.Objects;
 
@@ -39,7 +40,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new CartItemException.IllegalMember(this, member);
+            throw new IllegalMemberException("접근할 수 없는 자원입니다 현재 사용자: " + member.getId() + " 장바구니 상품: " + id);
         }
     }
 

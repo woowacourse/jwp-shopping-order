@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.CartItemException;
+import cart.exception.IllegalMemberException;
 import cart.exception.OrderException;
 
 import java.sql.Timestamp;
@@ -32,18 +33,12 @@ public class Order {
         return new Order(id, orderItems, member, priceAfterDiscount, orderTime);
     }
 
-    public static Order of(Member member, List<CartItem> cartItems, long priceAfterDiscount) {
-        checkOwner(cartItems, member);
-
+    public static Order of(List<CartItem> cartItems, Member member, long priceAfterDiscount) {
         final List<OrderItem> orderItems = cartItems.stream()
                 .map(OrderItem::from)
                 .collect(Collectors.toList());
 
         return of(null, orderItems, member, priceAfterDiscount, null);
-    }
-
-    private static void checkOwner(List<CartItem> cartItems, Member member) {
-        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }
 
     private void checkQuantityLimit(List<OrderItem> orderItems) {
@@ -62,6 +57,12 @@ public class Order {
         return cartItems.stream()
                 .mapToInt(OrderItem::getQuantity)
                 .sum();
+    }
+
+    public void checkOwner(Member other) {
+        if (!member.equals(other)) {
+            throw new IllegalMemberException("접근할 수 없는 자원입니다. 현재 사용자: " + member.getId() + " 접근하려는 사용자: " + other.getId());
+        }
     }
 
     public long getPriceBeforeDiscount() {
