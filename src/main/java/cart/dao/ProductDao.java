@@ -40,7 +40,7 @@ public class ProductDao {
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
             return new Product(productId, name, price, imageUrl);
-        });
+        }, productId);
     }
 
     public Long createProduct(Product product) {
