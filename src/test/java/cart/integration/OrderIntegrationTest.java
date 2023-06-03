@@ -1,10 +1,9 @@
 package cart.integration;
 
-import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
-import cart.dao.ProductDao;
-import cart.dao.ShoppingOrderDao;
 import cart.domain.Member;
+import cart.domain.Product;
+import cart.dto.OrderResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
@@ -17,22 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberDao memberDao;
 
-    @Autowired
-    private ProductDao productDao;
-
-    @Autowired
-    private CartItemDao cartItemDao;
-
-    @Autowired
-    private ShoppingOrderDao shoppingOrderDao;
-
-    private Long productId;
-    private Long productId2;
     private Member member;
     private Member member2;
 
@@ -40,7 +32,6 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void createOrder() {
         member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
-        member2 = memberDao.getMemberByEmail("yis092521@gmail.com").get();
 
         memberDao.updatePoints(300L, member);
 
@@ -51,17 +42,15 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void getAllOrders() {
         member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
-        member2 = memberDao.getMemberByEmail("yis092521@gmail.com").get();
-
 
         memberDao.updatePoints(1000L, member);
-        memberDao.updatePoints(300L, member2);
 
         createOrder(member, List.of(1, 2), 400);
         createOrder(member, List.of(4), 100);
         createOrder(member, List.of(3), 10);
 
-        getOrders(member);
+        ExtractableResponse<Response> orders = getOrders(member);
+        assertThat(orders.jsonPath().getList("$").size()).isEqualTo(3);
     }
 
     @DisplayName("특정 주문의 상세정보를 불러온다")
@@ -69,7 +58,34 @@ public class OrderIntegrationTest extends IntegrationTest {
     void getOrderDetail() {
         member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
 
-        getOrderDetails(member, 1L);
+        createOrder(member, List.of(1, 2), 400);
+
+        OrderResponse orderDetails = getOrderDetails(member, 1L);
+
+        assertThat(orderDetails.getId()).isEqualTo(1L);
+        assertThat(orderDetails.getProducts().size()).isEqualTo(2);
+        assertThat(orderDetails.getUsedPoint()).isEqualTo(400);
+        assertThat(orderDetails.getSavedPoint()).isEqualTo(996);
+    }
+
+    @DisplayName("사용자의 주문 목록이 아니면 에러가 발생한다")
+    @Test
+    void getOrderDetailWithInvalidMember() {
+        member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
+        member2 = memberDao.getMemberByEmail("yis092521@gmail.com").get();
+
+        createOrder(member, List.of(1, 2), 400);
+
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member2.getEmail(), member2.getPassword())
+                .when()
+                .get("/orders/" + 1L)
+                .then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
     }
 
     private void createOrder(Member member, List<Integer> cartItemIds, int point) {
@@ -104,7 +120,7 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> getOrderDetails(Member member, Long id) {
+    private OrderResponse getOrderDetails(Member member, Long id) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -113,6 +129,6 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .get("/orders/" + id)
                 .then()
                 .log().all()
-                .extract();
+                .extract().as(OrderResponse.class);
     }
 }
