@@ -13,6 +13,10 @@ public class Coupons {
     public Money calculateActualPrice(Order order) {
         Money originalPrice = order.getOriginalPrice();
         Money discountAmount = calculateDiscountAmount(order);
+        return calculateSubtractOrZero(originalPrice, discountAmount);
+    }
+
+    private Money calculateSubtractOrZero(Money originalPrice, Money discountAmount) {
         if (discountAmount.isBiggerThan(originalPrice)) {
             return Money.ZERO;
         }
