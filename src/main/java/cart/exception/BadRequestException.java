@@ -1,9 +1,9 @@
 package cart.exception;
 
-public class AuthenticationException extends RuntimeException{
+public class BadRequestException extends RuntimeException{
     private final ExceptionType exceptionType;
 
-    public AuthenticationException(ExceptionType exceptionType) {
+    public BadRequestException(ExceptionType exceptionType) {
         this.exceptionType = exceptionType;
     }
 

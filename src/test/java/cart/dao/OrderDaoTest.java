@@ -39,7 +39,8 @@ public class OrderDaoTest {
     void addOrder_ShouldAddOrderAndReturnGeneratedId() {
         Member member = new Member(1L, "a@a.com", "1234", "라잇");
         Coupon coupon = new Coupon(1L, "10프로 할인", 1000, CouponType.FIXED_PERCENTAGE, null, 0.1, 1000);
-        List<CartItem> cartItems = Collections.singletonList(new CartItem(1L, 2,
+        List<CartItem> cartItems = Collections.singletonList(
+            new CartItem(1L, 2,
             new Product(1L, "지구", 1000, "https://cdn.pixabay.com/photo/2011/12/13/14/28/earth-11009__480.jpg"),
             member));
         Order order = new Order(member, cartItems, coupon);

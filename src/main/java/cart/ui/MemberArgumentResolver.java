@@ -11,6 +11,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
+import cart.exception.ExceptionType;
 
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     private final MemberDao memberDao;
@@ -47,7 +48,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         // 본인 여부 확인
         Member member = memberDao.getMemberByEmail(email);
         if (!member.checkPassword(password)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException(ExceptionType.UNAUTHORIZED);
         }
         return member;
     }

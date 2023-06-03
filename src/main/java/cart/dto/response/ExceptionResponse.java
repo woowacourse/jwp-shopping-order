@@ -1,9 +1,11 @@
-package cart.exception;
+package cart.dto.response;
 
-public class AuthenticationException extends RuntimeException{
+import cart.exception.ExceptionType;
+
+public class ExceptionResponse {
     private final ExceptionType exceptionType;
 
-    public AuthenticationException(ExceptionType exceptionType) {
+    public ExceptionResponse(ExceptionType exceptionType) {
         this.exceptionType = exceptionType;
     }
 

@@ -1,16 +1,18 @@
 package cart.dto.response;
 
+import java.time.LocalDateTime;
+
 import cart.domain.MemberCoupon;
 import cart.domain.Money;
 
 public class MemberCouponResponse {
     private final Long id;
     private final String name;
-    private final int minOrderPrice;
-    private final int maxDiscountPrice;
+    private final Integer minOrderPrice;
+    private final Integer maxDiscountPrice;
     private final boolean isAvailable;
-    private final int discountPrice;
-    private final String expiredAt;
+    private final Integer discountPrice;
+    private final LocalDateTime expiredAt;
 
     public MemberCouponResponse(MemberCoupon memberCoupon, Money price) {
         this.id = memberCoupon.getId();
@@ -46,7 +48,7 @@ public class MemberCouponResponse {
         return discountPrice;
     }
 
-    public String getExpiredAt() {
+    public LocalDateTime getExpiredAt() {
         return expiredAt;
     }
 }

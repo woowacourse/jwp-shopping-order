@@ -1,20 +1,19 @@
 package cart.domain;
 
-import cart.domain.Coupon;
-import cart.domain.Member;
-import cart.domain.Money;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class MemberCoupon {
     private final Long id;
     private final Member member;
     private final Coupon coupon;
-    private final String expiredAt;
+    private final LocalDateTime expiredAt;
 
-    public MemberCoupon(Long id, Member member, Coupon coupon, String expiredAt) {
+    public MemberCoupon(Long id, Member member, Coupon coupon, Timestamp expiredAt) {
         this.id = id;
         this.member = member;
         this.coupon = coupon;
-        this.expiredAt = expiredAt;
+        this.expiredAt = expiredAt.toLocalDateTime();
     }
 
     public Long getId() {
@@ -29,7 +28,7 @@ public class MemberCoupon {
         return coupon;
     }
 
-    public String getExpiredAt() {
+    public LocalDateTime getExpiredAt() {
         return expiredAt;
     }
 

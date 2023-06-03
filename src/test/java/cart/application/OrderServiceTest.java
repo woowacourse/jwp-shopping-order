@@ -1,66 +1,89 @@
 package cart.application;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
+import cart.application.OrderService;
 import cart.dao.CartItemDao;
-import cart.dao.CouponDao;
+import cart.dao.MemberCouponDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.domain.CartItem;
 import cart.domain.Coupon;
 import cart.domain.CouponType;
 import cart.domain.Member;
-import cart.domain.Order;
+import cart.domain.MemberCoupon;
+import cart.domain.Money;
+import cart.domain.PriceCalculator;
 import cart.domain.Product;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.MemberCouponResponse;
+import cart.dto.response.MemberCouponsResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+public class OrderServiceTest {
 
     @Mock
-    OrderDao orderDao;
+    private OrderDao orderDao;
     @Mock
-    OrderItemDao orderItemDao;
+    private OrderItemDao orderItemDao;
     @Mock
-    CartItemDao cartItemDao;
+    private CartItemDao cartItemDao;
     @Mock
-    CouponDao couponDao;
+    private MemberCouponDao memberCouponDao;
 
-    @InjectMocks
-    OrderService orderService;
+    private OrderService orderService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        orderService = new OrderService(orderDao, orderItemDao, cartItemDao, memberCouponDao);
+    }
 
     @Test
-    void add() {
-        // 준비
-        Member member = new Member(1L, "aa@aa.aa", "aa", "aa");
-        List<Long> cartItemIds = List.of(1L, 2L);
-        OrderRequest orderRequest = new OrderRequest(cartItemIds, 1L);
+    public void testGetMemberCoupons() {
+        Member member = new Member(1L, "a@a.com", "1234", "라잇");
+        Product product1 = new Product(1L, "1", 1000, "http://www.aa.aa");
+        Product product2 = new Product(1L, "1", 1000, "http://www.aa.aa");
+        Coupon coupon1 = new Coupon(1L, "10프로 할인", 1000, CouponType.FIXED_PERCENTAGE, null, 0.1, 10000);
+        Coupon coupon2 = new Coupon(1L, "5000원 할인", 5000, CouponType.FIXED_AMOUNT, 5000, null, null);
 
-        List<CartItem> cartItems = List.of(
-            new CartItem(1L, 3, new Product(1L, "치킨", 10_000, "http://example.com/chicken.jpg"), member),
-            new CartItem(2L, 4, new Product(2L, "피자", 20_000, "http://example.com/pizza.jpg"), member)
+        List<Long> cartItemIds = Arrays.asList(1L, 2L);
+        List<CartItem> cartItems = Arrays.asList(
+            new CartItem(1L, 2, product1, member),
+            new CartItem(2L, 4, product2, member)
         );
-        Coupon coupon = new Coupon(1L, "할인쿠폰", 100, CouponType.FIXED_PERCENTAGE, null, 0.1, 10000);
+
+        Money price = new Money(10000);
+
+        List<MemberCoupon> memberCoupons = Arrays.asList(
+            new MemberCoupon(1L, member, coupon1, new Timestamp(2023, 6, 30, 0, 0, 0, 0)),
+            new MemberCoupon(1L, member, coupon2, new Timestamp(2023, 6, 30, 0, 0, 0, 0))
+        );
 
         when(cartItemDao.findByIds(cartItemIds)).thenReturn(cartItems);
-        when(couponDao.findById(anyLong())).thenReturn(coupon);
-        when(orderDao.addOrder(any(Order.class))).thenReturn(1L);
+        when(memberCouponDao.findByMemberId(member.getId())).thenReturn(memberCoupons);
 
-        Long orderId = orderService.add(member, orderRequest);
+        MemberCouponsResponse expectedResponse = new MemberCouponsResponse(Arrays.asList(
+            new MemberCouponResponse(memberCoupons.get(0), price),
+            new MemberCouponResponse(memberCoupons.get(1), price)
+        ));
 
-        assertNotNull(orderId);
-        verify(orderItemDao).saveAllItems(eq(1L), any(Order.class));
-        verify(cartItemDao).deleteByIds(cartItemIds);
+        MemberCouponsResponse actualResponse = orderService.getMemberCoupons(member, cartItemIds);
+
+        assertEquals(expectedResponse.getCoupons().get(0).getId(), actualResponse.getCoupons().get(0).getId());
+        assertEquals(expectedResponse.getCoupons().get(1).getId(), actualResponse.getCoupons().get(1).getId());
+
+        verify(cartItemDao, times(1)).findByIds(cartItemIds);
+        verify(memberCouponDao, times(1)).findByMemberId(member.getId());
     }
 }
+

@@ -1,11 +1,6 @@
 package cart.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,6 +20,7 @@ public class MemberCouponDao {
     public MemberCouponDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     public List<MemberCoupon> findByMemberId(Long memberId) {
         String query = "SELECT mc.id, m.id AS member_id, m.email, m.password, m.nickname, " +
             "c.id AS coupon_id, c.name, c.min_order_price, c.max_discount_price, c.type, " +
@@ -47,7 +43,7 @@ public class MemberCouponDao {
             String couponType = resultSet.getString("type");
             Integer discountAmount = resultSet.getInt("discount_amount");
             Double discountPercentage = resultSet.getDouble("discount_percentage");
-            String expiredAt = resultSet.getString("expired_at");
+            Timestamp expiredAt = resultSet.getTimestamp("expired_at");
 
             Member member = new Member(memberCouponMemberId, memberEmail, memberPassword, memberNickname);
             Coupon coupon = new Coupon(memberCouponCouponId, couponName, minOrderPrice, CouponType.valueOf(couponType),

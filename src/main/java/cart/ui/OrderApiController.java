@@ -1,7 +1,6 @@
 package cart.ui;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.response.MemberCouponsResponse;
 import cart.dto.request.OrderRequest;
+import cart.dto.response.MemberCouponsResponse;
 
 @RestController
 @RequestMapping("/orders")
@@ -34,7 +33,8 @@ public class OrderApiController {
     }
 
     @GetMapping("/coupons")
-    public ResponseEntity<MemberCouponsResponse> getAllCouponOfMember(Member member, @RequestParam("cartItemId") List<Long> cartItemIds) {
+    public ResponseEntity<MemberCouponsResponse> getAllCouponOfMember(Member member,
+        @RequestParam("cartItemId") List<Long> cartItemIds) {
         MemberCouponsResponse memberCouponsResponse = orderService.getMemberCoupons(member, cartItemIds);
         return ResponseEntity.ok().body(memberCouponsResponse);
     }

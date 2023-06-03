@@ -32,3 +32,7 @@ INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
 
 INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage) VALUES ('10프로 할인', 1000, 10000, 'FIXED_PERCENTAGE', null, 0.1);
 INSERT INTO coupon (name, min_order_price, max_discount_price, type, discount_amount, discount_percentage) VALUES ('5000원 할인', 5000, null, 'FIXED_AMOUNT', 5000, null);
+
+INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 1L, '2020-02-02 00:00:00');
+INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (1L, 2L, '2020-02-02 00:00:00');
+INSERT INTO member_coupon (member_id, coupon_id, expired_at) VALUES (2L, 1L, '2020-02-02 00:00:00');
