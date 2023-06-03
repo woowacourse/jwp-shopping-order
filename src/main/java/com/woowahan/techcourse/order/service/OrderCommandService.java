@@ -47,8 +47,7 @@ public class OrderCommandService {
     }
 
     private OrderItem toOrderItem(CreateOrderCartItemRequest requestDto) {
-        return new OrderItem(requestDto.getId(),
-                requestDto.getQuantity(),
+        return new OrderItem(requestDto.getQuantity(),
                 requestDto.getProduct().getId(),
                 requestDto.getProduct().getPrice(),
                 requestDto.getProduct().getName(),

@@ -14,7 +14,7 @@ class OrderItemTest {
     @CsvSource(value = {"1, 1000, 1000", "2, 1000, 2000", "3, 1000, 3000"})
     void 주문_상품_총액_계산_테스트(int quantity, int price, long expected) {
         // given
-        OrderItem orderItem = new OrderItem(1L, quantity, 1L, price, "name", "imageUrl");
+        OrderItem orderItem = new OrderItem(quantity, 1L, price, "name", "imageUrl");
 
         // when
         long actual = orderItem.calculateOriginalPrice();

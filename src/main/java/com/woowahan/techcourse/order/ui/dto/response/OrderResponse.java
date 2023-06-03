@@ -65,7 +65,7 @@ public class OrderResponse {
 
         private static OrderItemResponse from(OrderItem orderItem) {
             return new OrderItemResponse(
-                    orderItem.getCartItemId(),
+                    orderItem.getId(),
                     orderItem.getQuantity(),
                     new ProductDto(
                             orderItem.getProductId(),

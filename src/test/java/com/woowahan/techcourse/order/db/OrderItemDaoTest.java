@@ -34,26 +34,28 @@ class OrderItemDaoTest {
 
     @Test
     void 여러개_저장하고_가져오는_기능이_정상적으로_작동한다() {
-        OrderItem orderItem1 = new OrderItem(1L, 2, 10000L, 20000, "name1", "image");
-        OrderItem orderItem2 = new OrderItem(1L, 2, 10000L, 20000, "name2", "image");
+        OrderItem orderItem1 = new OrderItem(2, 10000L, 20000, "name1", "image");
+        OrderItem orderItem2 = new OrderItem(2, 10000L, 20000, "name2", "image");
 
         orderItemDao.insertAll(1L, List.of(orderItem1, orderItem2));
 
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(1L);
         assertSoftly(softly -> {
             softly.assertThat(orderItems).hasSize(2);
-            softly.assertThat(orderItems).usingRecursiveComparison().isEqualTo(List.of(orderItem1, orderItem2));
+            softly.assertThat(orderItems).usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .isEqualTo(List.of(orderItem1, orderItem2));
         });
     }
 
     @Test
     void 없는_주문_번호일_경우_빈_데이터가_나온다() {
-        OrderItem orderItem1 = new OrderItem(1L, 2, 10000L, 20000, "name1", "image");
-        OrderItem orderItem2 = new OrderItem(1L, 2, 10000L, 20000, "name2", "image");
+        OrderItem orderItem1 = new OrderItem(2, 10000L, 20000, "name1", "image");
+        OrderItem orderItem2 = new OrderItem(2, 10000L, 20000, "name2", "image");
 
         orderItemDao.insertAll(1L, List.of(orderItem1, orderItem2));
 
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(2L);
-        assertThat(orderItems).hasSize(0);
+        assertThat(orderItems).isEmpty();
     }
 }

@@ -2,15 +2,15 @@ package com.woowahan.techcourse.order.domain;
 
 public class OrderItem {
 
-    private final Long cartItemId;
+    private final Long id;
     private final int quantity;
     private final long productId;
     private final int price;
     private final String name;
     private final String imageUrl;
 
-    public OrderItem(Long cartItemId, int quantity, long productId, int price, String name, String imageUrl) {
-        this.cartItemId = cartItemId;
+    public OrderItem(Long id, int quantity, long productId, int price, String name, String imageUrl) {
+        this.id = id;
         this.quantity = quantity;
         this.productId = productId;
         this.price = price;
@@ -18,8 +18,8 @@ public class OrderItem {
         this.imageUrl = imageUrl;
     }
 
-    public Long getCartItemId() {
-        return cartItemId;
+    public OrderItem(int quantity, long productId, int price, String name, String imageUrl) {
+        this(null, quantity, productId, price, name, imageUrl);
     }
 
     public int getQuantity() {
@@ -44,5 +44,9 @@ public class OrderItem {
 
     public long calculateOriginalPrice() {
         return (long) price * quantity;
+    }
+
+    public long getId() {
+        return id;
     }
 }

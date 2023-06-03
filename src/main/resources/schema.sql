@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS  orders
 CREATE TABLE IF NOT EXISTS  order_item
 (
     id            BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    cart_item_id  BIGINT       NOT NULL,
     order_id      BIGINT       NOT NULL,
     product_id    BIGINT       NOT NULL,
     product_name  VARCHAR(255) NOT NULL,

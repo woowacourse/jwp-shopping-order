@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 public class OrderItemDao {
 
     private static final RowMapper<OrderItem> ROW_MAPPER = (rs, rowNum) -> new OrderItem(
-            rs.getLong("cart_item_id"),
+            rs.getLong("id"),
             rs.getInt("quantity"),
             rs.getLong("product_id"),
             rs.getInt("product_price"),
@@ -42,7 +42,6 @@ public class OrderItemDao {
     private MapSqlParameterSource orderItemToParameters(long orderId, OrderItem orderItem) {
         return new MapSqlParameterSource()
                 .addValue("order_id", orderId)
-                .addValue("cart_item_id", orderItem.getCartItemId())
                 .addValue("product_id", orderItem.getProductId())
                 .addValue("quantity", orderItem.getQuantity())
                 .addValue("product_price", orderItem.getPrice())
