@@ -1,9 +1,6 @@
 package cart.application;
 
-import cart.domain.Coupon;
-import cart.domain.Member;
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.*;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -57,7 +54,7 @@ public class OrderService {
             coupon = couponRepository.findById(couponId);
         }
 
-        return new Order(null, orderItems, member, coupon, 3000, orderRequest.getTotalPrice(), LocalDateTime.now());
+        return new Order(null, new OrderItems(orderItems), member, coupon, 3000, orderRequest.getTotalPrice(), LocalDateTime.now());
     }
 
     public List<OrderResponse> findByMember(Member member) {

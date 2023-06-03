@@ -9,14 +9,14 @@ import java.util.Objects;
 public class Order {
 
     private final Long id;
-    private final List<OrderItem> orderItems;
+    private final OrderItems orderItems;
     private final Member member;
     private final Coupon coupon;
     private final int deliveryFee;
     private final int finalPrice;
     private final LocalDateTime orderTime;
 
-    public Order(Long id, List<OrderItem> orderItems, Member member,
+    public Order(Long id, OrderItems orderItems, Member member,
                  Coupon coupon, int deliveryFee, int finalPrice,
                  LocalDateTime orderTime) {
         validate(orderItems, coupon, deliveryFee, finalPrice);
@@ -29,13 +29,13 @@ public class Order {
         this.orderTime = orderTime;
     }
 
-    private void validate(List<OrderItem> orderItems, Coupon coupon, int deliveryFee, int finalPrice) {
-        int sumOfProductsPrice = orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
+    private void validate(OrderItems orderItems, Coupon coupon, int deliveryFee, int finalPrice) {
+        int orderItemsTotalPrice = orderItems.getTotalPrice();
         int couponPrice = 0;
         if (coupon != null) {
             couponPrice = coupon.getDiscountValue();
         }
-        int expectFinalPrice = sumOfProductsPrice + deliveryFee - couponPrice;
+        int expectFinalPrice = orderItemsTotalPrice + deliveryFee - couponPrice;
 
         if (expectFinalPrice != finalPrice) {
             throw new IllegalOrderException();
@@ -47,7 +47,7 @@ public class Order {
     }
 
     public List<OrderItem> getOrderItems() {
-        return orderItems;
+        return orderItems.getOrderItems();
     }
 
     public Member getMember() {

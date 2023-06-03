@@ -118,7 +118,7 @@ public class DBOrderRepository implements OrderRepository {
                 isOrderExist = true;
                 if (orderId == null || rs.getLong("order_id") != orderId) {
                     if (orderId != null) {
-                        orders.add(new Order(orderId, orderItems, member, coupon, deliveryFee, finalPrice, orderTime));
+                        orders.add(new Order(orderId, new OrderItems(orderItems), member, coupon, deliveryFee, finalPrice, orderTime));
                     }
                     orderId = rs.getLong("order_id");
                     orderItems = new ArrayList<>();
@@ -141,7 +141,7 @@ public class DBOrderRepository implements OrderRepository {
             }
 
             if (isOrderExist) {
-                orders.add(new Order(orderId, orderItems, member, coupon, deliveryFee, finalPrice, orderTime));
+                orders.add(new Order(orderId, new OrderItems(orderItems), member, coupon, deliveryFee, finalPrice, orderTime));
             }
 
             return orders;
@@ -218,7 +218,7 @@ public class DBOrderRepository implements OrderRepository {
                 orderItems.add(orderItem);
             } while (rs.next() && rs.getLong("order_id") == orderId);
 
-            return new Order(orderId, orderItems, member, coupon, deliveryFee, finalPrice, orderTime);
+            return new Order(orderId, new OrderItems(orderItems), member, coupon, deliveryFee, finalPrice, orderTime);
         }, orderId);
     }
 }
