@@ -11,7 +11,6 @@ import shop.persistence.entity.CouponEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO: 2023-06-01 CouponRepository + MemberCouponRepository 합치기 ?
 @Repository
 public class CouponRepositoryImpl implements CouponRepository {
     private final CouponDao couponDao;

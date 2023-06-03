@@ -26,7 +26,6 @@ public class OrderRestController {
         this.orderService = orderService;
     }
 
-    // TODO: 2023-06-02 장바구니에서 상품 삭제하는 이벤트 추가
     @PostMapping
     public ResponseEntity<Void> createOrder(Member member, @RequestBody OrderCreationRequest request) {
         List<OrderProductDto> orderProductDtos = toOrderProducts(request.getItems());

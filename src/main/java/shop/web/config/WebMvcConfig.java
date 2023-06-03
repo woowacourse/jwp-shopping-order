@@ -34,7 +34,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(new MemberArgumentResolver(memberRepository));
     }
 
-    // TODO: 2023-05-28 localhost8080 빼도 될 듯
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")

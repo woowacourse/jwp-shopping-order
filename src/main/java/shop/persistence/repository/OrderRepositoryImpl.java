@@ -160,27 +160,38 @@ public class OrderRepositoryImpl implements OrderRepository {
     public List<Order> findAllByMember(Member member) {
         List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
 
-        List<Long> orderIds = orderEntities.stream()
+        return toOrders(member, orderEntities);
+    }
+
+    private List<Order> toOrders(Member member, List<OrderEntity> orderEntities) {
+        List<Long> orderIds = getOrderIds(orderEntities);
+        Map<Long, List<OrderProductDetail>> orderProductDetailsById
+                = getAllOrderProductDetails(orderIds);
+
+        return orderIds.stream()
+                .map(orderId -> {
+                    OrderEntity orderEntity = getOrderEntityById(orderEntities, orderId);
+                    List<OrderProductDetail> orderProductDetail = orderProductDetailsById.get(orderId);
+                    return toOrder(member, orderEntity, orderProductDetail);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private OrderEntity getOrderEntityById(List<OrderEntity> orderEntities, Long orderId) {
+        return orderEntities.stream()
+                .filter(entity -> Objects.equals(entity.getId(), orderId))
+                .findFirst()
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    private Map<Long, List<OrderProductDetail>> getAllOrderProductDetails(List<Long> orderIds) {
+        return orderProductDao.findAllByOrderIds(orderIds).stream()
+                .collect(Collectors.groupingBy(OrderProductDetail::getOrderId));
+    }
+
+    private List<Long> getOrderIds(List<OrderEntity> orderEntities) {
+        return orderEntities.stream()
                 .map(OrderEntity::getId)
                 .collect(Collectors.toList());
-
-        Map<Long, List<OrderProductDetail>> orderProductDetailsByOrderId =
-                orderProductDao.findAllByOrderIds(orderIds).stream()
-                        .collect(Collectors.groupingBy(OrderProductDetail::getOrderId));
-
-        List<Order> orders = new ArrayList<>();
-        for (Long orderId : orderIds) {
-            OrderEntity orderEntity = orderEntities.stream()
-                    .filter(entity -> Objects.equals(entity.getId(), orderId))
-                    .findFirst()
-                    .get();
-            // TODO: 2023-06-01  너무나 자명해서 예외를 던져야하나 ..?
-
-            List<OrderProductDetail> orderProductDetails = orderProductDetailsByOrderId.get(orderId);
-
-            orders.add(toOrder(member, orderEntity, orderProductDetails));
-        }
-
-        return orders;
     }
 }
