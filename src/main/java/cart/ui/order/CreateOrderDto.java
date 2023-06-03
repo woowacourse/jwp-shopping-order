@@ -1,5 +1,6 @@
 package cart.ui.order;
 
+import cart.ui.order.dto.CreateOrderDiscountRequest;
 import cart.ui.order.dto.CreateOrderRequest;
 
 import java.util.List;
@@ -8,11 +9,13 @@ import java.util.stream.Collectors;
 public class CreateOrderDto {
 
     private final List<CreateOrderItemDto> createOrderItemDtos;
-    private final CreateOrderDiscountDto createOrderDiscountDto;
+    private final List<Long> couponIds;
+    private final Integer point;
 
-    public CreateOrderDto(final List<CreateOrderItemDto> createOrderItemDtos, final CreateOrderDiscountDto createOrderDiscountDto) {
+    private CreateOrderDto(final List<CreateOrderItemDto> createOrderItemDtos, List<Long> couponIds, Integer point) {
         this.createOrderItemDtos = createOrderItemDtos;
-        this.createOrderDiscountDto = createOrderDiscountDto;
+        this.couponIds = couponIds;
+        this.point = point;
     }
 
     public static CreateOrderDto from(final CreateOrderRequest createOrderRequest) {
@@ -21,16 +24,21 @@ public class CreateOrderDto {
                 .collect(Collectors.toUnmodifiableList());
 
         CreateOrderDiscountDto createOrderDiscounts = CreateOrderDiscountDto.from(createOrderRequest.getOrderDiscounts());
+        CreateOrderDiscountRequest orderDiscounts = createOrderRequest.getOrderDiscounts();
+        List<Long> couponIds1 = orderDiscounts.getCouponIds();
 
-        return new CreateOrderDto(createOrderItems, createOrderDiscounts);
+        return new CreateOrderDto(createOrderItems, orderDiscounts.getCouponIds(), orderDiscounts.getPoint());
     }
 
     public List<CreateOrderItemDto> getCreateOrderItemDtos() {
         return createOrderItemDtos;
     }
 
-    public CreateOrderDiscountDto getCreateOrderDiscountDto() {
-        return createOrderDiscountDto;
+    public List<Long> getCouponIds() {
+        return couponIds;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
 }
