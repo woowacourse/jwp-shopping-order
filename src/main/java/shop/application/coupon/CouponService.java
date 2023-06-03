@@ -1,5 +1,8 @@
 package shop.application.coupon;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import shop.application.member.dto.MemberCouponDto;
 import shop.domain.coupon.Coupon;
 import shop.domain.coupon.CouponType;
 import shop.domain.coupon.MemberCoupon;
@@ -7,8 +10,6 @@ import shop.domain.member.Member;
 import shop.domain.repository.CouponRepository;
 import shop.domain.repository.MemberCouponRepository;
 import shop.domain.repository.MemberRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,22 +27,6 @@ public class CouponService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
-//    @Transactional
-//    public Long createCoupon(Coupon coupon) {
-//        return couponRepository.save(coupon);
-//    }
-
-//    private Coupon toCoupon(CouponDto couponDto) {
-//        return new Coupon(
-//                couponDto.getId(),
-//                couponDto.getName(),
-//                couponDto.getDiscountRate(),
-//                couponDto.getPeriod(),
-//                couponDto.getExpiredAt()
-//        );
-//    }
-
-    // TODO: 2023-05-31 couponType 어떻게 하지 ?
     @Transactional
     public Long issueCoupon(Long memberId, CouponType couponType) {
         Member member = memberRepository.findById(memberId);
@@ -52,7 +37,9 @@ public class CouponService {
         return memberCouponRepository.save(memberCoupon);
     }
 
-    public List<MemberCoupon> getAllCouponsOfMember(Member member) {
-        return memberCouponRepository.findAllByMemberId(member.getId());
+    public List<MemberCouponDto> getAllCouponsOfMember(Member member) {
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByMemberId(member.getId());
+
+        return MemberCouponDto.of(memberCoupons);
     }
 }

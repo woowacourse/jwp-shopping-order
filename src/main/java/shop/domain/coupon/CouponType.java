@@ -7,11 +7,11 @@ public enum CouponType {
             LocalDateTime.of(2023, 12, 31, 23, 59, 59));
 
     private final String name;
-    private final Integer discountRate;
-    private final Integer period;
+    private final int discountRate;
+    private final int period;
     private final LocalDateTime expiredAt;
 
-    CouponType(String name, Integer discountRate, Integer period, LocalDateTime expiredAt) {
+    CouponType(String name, int discountRate, int period, LocalDateTime expiredAt) {
         this.name = name;
         this.discountRate = discountRate;
         this.period = period;
@@ -22,11 +22,11 @@ public enum CouponType {
         return name;
     }
 
-    public Integer getDiscountRate() {
+    public int getDiscountRate() {
         return discountRate;
     }
 
-    public Integer getPeriod() {
+    public int getPeriod() {
         return period;
     }
 

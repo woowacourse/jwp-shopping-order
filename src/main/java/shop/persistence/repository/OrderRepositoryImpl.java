@@ -1,11 +1,11 @@
 package shop.persistence.repository;
 
 import org.springframework.stereotype.Repository;
-import shop.application.order.dto.OrderDetailDto;
 import shop.domain.cart.Quantity;
 import shop.domain.coupon.Coupon;
 import shop.domain.member.Member;
 import shop.domain.order.Order;
+import shop.domain.order.OrderDetail;
 import shop.domain.order.OrderItem;
 import shop.domain.order.OrderPrice;
 import shop.domain.product.Product;
@@ -84,7 +84,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public OrderDetailDto findDetailsByMemberAndOrderId(Member member, Long orderId) {
+    public OrderDetail findDetailsByMemberAndOrderId(Member member, Long orderId) {
         OrderEntity orderEntity = orderDao.findById(orderId);
 
         List<OrderProductDetail> orderProducts = orderProductDao.findAllByOrderId(orderId);
@@ -136,14 +136,14 @@ public class OrderRepositoryImpl implements OrderRepository {
         );
     }
 
-    private OrderDetailDto toOrderDetail(Optional<OrderCouponDetail> orderCouponDetail, Order order) {
+    private OrderDetail toOrderDetail(Optional<OrderCouponDetail> orderCouponDetail, Order order) {
         if (orderCouponDetail.isEmpty()) {
-            return new OrderDetailDto(order, null);
+            return new OrderDetail(order, null);
         }
 
         Coupon coupon = toCoupon(orderCouponDetail.get());
 
-        return new OrderDetailDto(order, coupon);
+        return new OrderDetail(order, coupon);
     }
 
     private Coupon toCoupon(OrderCouponDetail orderCouponDetail) {

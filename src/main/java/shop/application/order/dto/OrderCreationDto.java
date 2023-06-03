@@ -6,12 +6,16 @@ public class OrderCreationDto {
     private List<OrderProductDto> orderProductDtos;
     private Long couponId;
 
-    private OrderCreationDto(){
+    private OrderCreationDto() {
     }
 
-    public OrderCreationDto(List<OrderProductDto> orderProductDtos, Long couponId) {
+    private OrderCreationDto(List<OrderProductDto> orderProductDtos, Long couponId) {
         this.orderProductDtos = orderProductDtos;
         this.couponId = couponId;
+    }
+
+    public static OrderCreationDto of(List<OrderProductDto> orderProductDtos, Long couponId) {
+        return new OrderCreationDto(orderProductDtos, couponId);
     }
 
     public List<OrderProductDto> getOrderItemDtos() {

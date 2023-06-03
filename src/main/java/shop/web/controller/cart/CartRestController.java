@@ -1,16 +1,15 @@
 package shop.web.controller.cart;
 
-import shop.application.cart.CartItemService;
-import shop.domain.member.Member;
-import shop.web.controller.cart.dto.CartQuantityUpdateRequest;
-import shop.web.controller.cart.dto.CartItemRequest;
-import shop.application.cart.dto.CartDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shop.application.cart.CartItemService;
+import shop.application.cart.dto.CartDto;
+import shop.domain.member.Member;
+import shop.web.controller.cart.dto.CartItemRequest;
+import shop.web.controller.cart.dto.CartQuantityUpdateRequest;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart-items")
@@ -23,9 +22,7 @@ public class CartRestController {
 
     @GetMapping
     public ResponseEntity<List<CartDto>> showCartItems(Member member) {
-        List<CartDto> responses = cartItemService.findByMember(member).stream()
-                .map(CartDto::of)
-                .collect(Collectors.toList());
+        List<CartDto> responses = cartItemService.findByMember(member);
 
         return ResponseEntity.ok(responses);
     }

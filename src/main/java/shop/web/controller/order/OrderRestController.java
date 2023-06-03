@@ -3,19 +3,17 @@ package shop.web.controller.order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.application.order.OrderService;
-import shop.application.order.dto.OrderDetailDto;
 import shop.application.order.dto.OrderCreationDto;
+import shop.application.order.dto.OrderDetailDto;
+import shop.application.order.dto.OrderDto;
 import shop.application.order.dto.OrderProductDto;
-import shop.domain.coupon.Coupon;
 import shop.domain.member.Member;
-import shop.domain.order.Order;
-import shop.domain.order.OrderItem;
-import shop.domain.product.Product;
 import shop.web.controller.order.dto.request.OrderCreationRequest;
-import shop.web.controller.order.dto.response.*;
+import shop.web.controller.order.dto.request.OrderItemRequest;
+import shop.web.controller.order.dto.response.OrderDetailResponse;
+import shop.web.controller.order.dto.response.OrderHistoryResponse;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,82 +26,37 @@ public class OrderRestController {
         this.orderService = orderService;
     }
 
+    // TODO: 2023-06-02 장바구니에서 상품 삭제하는 이벤트 추가
     @PostMapping
     public ResponseEntity<Void> createOrder(Member member, @RequestBody OrderCreationRequest request) {
-        List<OrderProductDto> orderProductDtos = request.getItems().stream()
-                .map(item -> new OrderProductDto(item.getProductId(), item.getQuantity()))
-                .collect(Collectors.toList());
-        OrderCreationDto orderCreationDto = new OrderCreationDto(orderProductDtos, request.getCouponId());
+        List<OrderProductDto> orderProductDtos = toOrderProducts(request.getItems());
+        OrderCreationDto orderCreationDto = OrderCreationDto.of(orderProductDtos, request.getCouponId());
 
         Long orderId = orderService.order(member, orderCreationDto);
 
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
+    private List<OrderProductDto> toOrderProducts(List<OrderItemRequest> orderItmes) {
+        return orderItmes.stream()
+                .map(item -> new OrderProductDto(item.getProductId(), item.getQuantity()))
+                .collect(Collectors.toList());
+    }
+
     @GetMapping
     public ResponseEntity<List<OrderHistoryResponse>> getAllOrderHistory(Member member) {
-        List<Order> orders = orderService.getAllOrderHistoryOfMember(member);
+        List<OrderDto> orders = orderService.getAllOrderHistoryOfMember(member);
 
-        List<OrderHistoryResponse> orderHistoryResponses = orders.stream()
-                .map(this::toOrderHistoryResponse)
-                .collect(Collectors.toList());
+        List<OrderHistoryResponse> orderHistoryResponses = OrderHistoryResponse.of(orders);
 
         return ResponseEntity.ok(orderHistoryResponses);
-    }
-
-    private OrderHistoryResponse toOrderHistoryResponse(Order order) {
-        List<OrderItem> orderItems = order.getOrderItems();
-
-        List<OrderProductResponse> orderProductResponses = orderItems.stream()
-                .map(this::toOrderProductResponse)
-                .collect(Collectors.toList());
-
-        return new OrderHistoryResponse(order.getId(), orderProductResponses, order.getOrderedAt());
-    }
-
-    private OrderProductResponse toOrderProductResponse(OrderItem orderItem) {
-        return new OrderProductResponse(
-                toProductDetailResponse(orderItem.getProduct()),
-                orderItem.getQuantity()
-        );
-    }
-
-    private OrderProductDetailResponse toProductDetailResponse(Product product) {
-        return new OrderProductDetailResponse(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl()
-        );
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDetailResponse> getOrderDetails(Member member, @PathVariable Long orderId) {
         OrderDetailDto orderDetailDto = orderService.getOrderDetailsOfMember(member, orderId);
-        Order order = orderDetailDto.getOrder();
-        Coupon coupon = orderDetailDto.getCoupon();
 
-        UsingCouponResponse usingCouponResponse =
-                new UsingCouponResponse(coupon.getName(), coupon.getDiscountRate());
-        Long totalPrice = order.getOrderPrice();
-        int discountRate = coupon.getDiscountRate();
-        Long discountedTotalPrice = totalPrice * (100 + discountRate) / 100;
-        Long discountPrice = totalPrice - discountedTotalPrice;
-        Integer deliveryPrice = order.getDeliveryPrice();
-        LocalDateTime orderedAt = order.getOrderedAt();
-
-        OrderDetailResponse orderDetailResponse = new OrderDetailResponse(
-                orderId,
-                usingCouponResponse,
-                order.getOrderItems().stream()
-                        .map(this::toOrderProductResponse)
-                        .collect(Collectors.toList()),
-                totalPrice,
-                discountedTotalPrice,
-                discountPrice,
-                deliveryPrice,
-                orderedAt
-        );
+        OrderDetailResponse orderDetailResponse = OrderDetailResponse.of(orderDetailDto);
 
         return ResponseEntity.ok(orderDetailResponse);
     }

@@ -18,7 +18,7 @@ public class AuthService {
     public void authenticate(String name, String password) {
         Member member = memberRepository.findByName(name);
 
-        if (member.checkPassword(password)) {
+        if (member.isMatchingPassword(password)) {
             return;
         }
 

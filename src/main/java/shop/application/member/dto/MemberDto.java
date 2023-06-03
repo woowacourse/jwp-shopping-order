@@ -2,6 +2,9 @@ package shop.application.member.dto;
 
 import shop.domain.member.Member;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class MemberDto {
     private Long id;
     private String name;
@@ -18,6 +21,12 @@ public class MemberDto {
 
     public static MemberDto of(Member member) {
         return new MemberDto(member.getId(), member.getName(), member.getPassword());
+    }
+
+    public static List<MemberDto> of(List<Member> members) {
+        return members.stream()
+                .map(MemberDto::of)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

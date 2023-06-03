@@ -49,9 +49,15 @@ public class MemberIntegrationTest extends IntegrationTest {
         String name = "testMember";
         String password = "test1234";
         MemberLoginDto request = new MemberLoginDto(name, password);
-        Member member = new Member(new MemberName(name), new NaturalPassword(password));
 
-        memberRepository.save(member);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .body(request)
+                .post("/users/join")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.OK.value());
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()

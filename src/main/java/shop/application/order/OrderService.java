@@ -2,14 +2,16 @@ package shop.application.order;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.application.order.dto.OrderDetailDto;
 import shop.application.order.dto.OrderCreationDto;
+import shop.application.order.dto.OrderDetailDto;
+import shop.application.order.dto.OrderDto;
 import shop.application.order.dto.OrderProductDto;
 import shop.domain.cart.Quantity;
 import shop.domain.coupon.Coupon;
 import shop.domain.coupon.MemberCoupon;
 import shop.domain.member.Member;
 import shop.domain.order.Order;
+import shop.domain.order.OrderDetail;
 import shop.domain.order.OrderItem;
 import shop.domain.order.OrderPrice;
 import shop.domain.product.Product;
@@ -67,25 +69,27 @@ public class OrderService {
             return OrderPrice.createFromItems(orderItems);
         }
 
-        MemberCoupon memberCoupon = memberCouponRepository.findByMemberIdAndCouponId(member.getId(), couponId);
+        MemberCoupon memberCoupon =
+                memberCouponRepository.findByMemberIdAndCouponId(member.getId(), couponId);
         memberCoupon.checkAvailability();
 
         Coupon coupon = couponRepository.findById(couponId);
         memberCouponRepository.updateCouponUsingStatus(memberCoupon.getId(), true);
+
         return OrderPrice.createFromItemsWithCoupon(orderItems, coupon);
     }
 
-    public List<Order> getAllOrderHistoryOfMember(Member member) {
+    public List<OrderDto> getAllOrderHistoryOfMember(Member member) {
         List<Order> orders = orderRepository.findAllByMember(member);
         orders.forEach(order -> order.checkOwner(member));
 
-        return orders;
+        return OrderDto.of(orders);
     }
 
     public OrderDetailDto getOrderDetailsOfMember(Member member, Long orderId) {
-        OrderDetailDto orderDetailDto = orderRepository.findDetailsByMemberAndOrderId(member, orderId);
-        orderDetailDto.getOrder().checkOwner(member);
+        OrderDetail orderDetail = orderRepository.findDetailsByMemberAndOrderId(member, orderId);
+        orderDetail.getOrder().checkOwner(member);
 
-        return orderDetailDto;
+        return OrderDetailDto.of(orderDetail);
     }
 }

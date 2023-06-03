@@ -16,7 +16,6 @@ import shop.exception.ShoppingException;
 import shop.util.Encryptor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -54,7 +53,7 @@ public class MemberService {
         Member findMember = memberRepository.findByName(memberDto.getName());
         String encryptedPassword = Encryptor.encrypt(memberDto.getPassword());
 
-        if (!findMember.checkPassword(encryptedPassword)) {
+        if (!findMember.isMatchingPassword(encryptedPassword)) {
             throw new AuthenticationException("Name 및 Password에 일치하는 회원이 없습니다.");
         }
 
@@ -64,9 +63,6 @@ public class MemberService {
     public List<MemberDto> getAllMembers() {
         List<Member> members = memberRepository.findAll();
 
-        return members.stream()
-                .map(MemberDto::of)
-                .collect(Collectors.toList());
+        return MemberDto.of(members);
     }
-
 }

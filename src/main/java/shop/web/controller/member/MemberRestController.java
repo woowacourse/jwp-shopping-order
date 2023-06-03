@@ -12,7 +12,6 @@ import shop.domain.member.Member;
 import shop.web.controller.member.dto.MemberLoginResponse;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("/users")
 @RestController
@@ -44,9 +43,7 @@ public class MemberRestController {
 
     @GetMapping("/me/coupons")
     public ResponseEntity<List<MemberCouponDto>> getCouponsOfMember(Member member) {
-        List<MemberCouponDto> responses = couponService.getAllCouponsOfMember(member).stream()
-                .map(MemberCouponDto::of)
-                .collect(Collectors.toList());
+        List<MemberCouponDto> responses = couponService.getAllCouponsOfMember(member);
 
         return ResponseEntity.ok(responses);
     }

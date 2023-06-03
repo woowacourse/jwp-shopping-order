@@ -1,14 +1,17 @@
 package shop.application.cart.dto;
 
-import shop.domain.cart.CartItem;
 import shop.application.product.dto.ProductDto;
+import shop.domain.cart.CartItem;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CartDto {
     private Long id;
     private int quantity;
     private ProductDto product;
 
-    private CartDto(){
+    private CartDto() {
     }
 
     private CartDto(Long id, int quantity, ProductDto product) {
@@ -23,6 +26,12 @@ public class CartDto {
                 cartItem.getQuantity(),
                 ProductDto.of(cartItem.getProduct())
         );
+    }
+
+    public static List<CartDto> of(List<CartItem> cartItem) {
+        return cartItem.stream()
+                .map(CartDto::of)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

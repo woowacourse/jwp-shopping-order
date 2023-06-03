@@ -1,22 +1,29 @@
 package shop.application.order.dto;
 
-import shop.domain.coupon.Coupon;
-import shop.domain.order.Order;
+import shop.application.coupon.dto.CouponDto;
+import shop.domain.order.OrderDetail;
 
 public class OrderDetailDto {
-    private final Order order;
-    private final Coupon coupon;
+    private final OrderDto order;
+    private final CouponDto coupon;
 
-    public OrderDetailDto(Order order,Coupon coupon) {
+    private OrderDetailDto(OrderDto order, CouponDto coupon) {
         this.order = order;
         this.coupon = coupon;
     }
 
-    public Order getOrder() {
+    public static OrderDetailDto of(OrderDetail orderDetail) {
+        return new OrderDetailDto(
+                OrderDto.of(orderDetail.getOrder()),
+                CouponDto.of(orderDetail.getCoupon())
+        );
+    }
+
+    public OrderDto getOrder() {
         return order;
     }
 
-    public Coupon getCoupon() {
+    public CouponDto getCoupon() {
         return coupon;
     }
 }

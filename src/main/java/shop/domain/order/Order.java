@@ -40,6 +40,10 @@ public class Order {
         return Collections.unmodifiableList(orderItems);
     }
 
+    public OrderPrice getOrderPrice() {
+        return orderPrice;
+    }
+
     public int getDeliveryPrice() {
         return orderPrice.getDeliveryPrice();
     }

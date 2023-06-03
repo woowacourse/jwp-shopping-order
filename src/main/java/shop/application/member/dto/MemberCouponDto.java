@@ -3,6 +3,8 @@ package shop.application.member.dto;
 import shop.domain.coupon.MemberCoupon;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MemberCouponDto {
     private Long id;
@@ -10,7 +12,8 @@ public class MemberCouponDto {
     private Integer discountRate;
     private LocalDateTime expiredAt;
 
-    private MemberCouponDto(){}
+    private MemberCouponDto() {
+    }
 
     private MemberCouponDto(Long id, String name, Integer discountRate, LocalDateTime expiredAt) {
         this.id = id;
@@ -26,6 +29,12 @@ public class MemberCouponDto {
                 memberCoupon.getDiscountRate(),
                 memberCoupon.getMemberCouponExpiredAt()
         );
+    }
+
+    public static List<MemberCouponDto> of(List<MemberCoupon> memberCoupons) {
+        return memberCoupons.stream()
+                .map(MemberCouponDto::of)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

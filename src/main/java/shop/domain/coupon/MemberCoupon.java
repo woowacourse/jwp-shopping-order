@@ -12,10 +12,10 @@ public class MemberCoupon {
     private final Coupon coupon;
     private final LocalDateTime issuedAt;
     private final LocalDateTime expiredAt;
-    private final Boolean isUsed;
+    private final boolean isUsed;
 
     public MemberCoupon(Long id, Member owner, Coupon coupon, LocalDateTime issuedAt,
-                        LocalDateTime expiredAt, Boolean isUsed) {
+                        LocalDateTime expiredAt, boolean isUsed) {
         this.id = id;
         this.owner = owner;
         this.coupon = coupon;
@@ -30,6 +30,20 @@ public class MemberCoupon {
         LocalDateTime expiredAt = LocalDateTime.now().plusDays(period);
 
         return new MemberCoupon(null, owner, coupon, issuedAt, expiredAt, Boolean.FALSE);
+    }
+
+    public void checkAvailability() {
+        if (isUsed) {
+            throw new ShoppingException("이미 사용한 쿠폰입니다.");
+        }
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isAfter(expiredAt)) {
+            String expiredDate = expiredAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS"));
+
+            throw new ShoppingException("사용 기간이 만료된 쿠폰입니다. " +
+                    "사용 만료 기간 : " + expiredDate);
+        }
     }
 
     public Long getId() {
@@ -60,21 +74,7 @@ public class MemberCoupon {
         return expiredAt;
     }
 
-    public Boolean isUsed() {
+    public boolean isUsed() {
         return isUsed;
-    }
-
-    public void checkAvailability() {
-        if (isUsed) {
-            throw new ShoppingException("이미 사용한 쿠폰입니다.");
-        }
-        LocalDateTime now = LocalDateTime.now();
-
-        if (now.isAfter(expiredAt)) {
-            String expiredDate = expiredAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS"));
-
-            throw new ShoppingException("사용 기간이 만료된 쿠폰입니다. " +
-                    "사용 만료 기간 : " + expiredDate);
-        }
     }
 }

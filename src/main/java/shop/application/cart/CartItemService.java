@@ -1,12 +1,13 @@
 package shop.application.cart;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import shop.application.cart.dto.CartDto;
 import shop.domain.cart.CartItem;
 import shop.domain.member.Member;
 import shop.domain.product.Product;
 import shop.domain.repository.CartRepository;
 import shop.domain.repository.ProductRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,8 +29,10 @@ public class CartItemService {
         return cartRepository.save(new CartItem(member, product));
     }
 
-    public List<CartItem> findByMember(Member member) {
-        return cartRepository.findAllByMemberId(member.getId());
+    public List<CartDto> findByMember(Member member) {
+        List<CartItem> cartItems = cartRepository.findAllByMemberId(member.getId());
+
+        return CartDto.of(cartItems);
     }
 
     @Transactional

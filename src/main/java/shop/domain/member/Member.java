@@ -6,7 +6,6 @@ public class Member {
     private final Long id;
     private final MemberName name;
     private final Password password;
-//    private Cart cart;
 
     public Member(Long id, MemberName name, Password password) {
         this.id = id;
@@ -16,6 +15,10 @@ public class Member {
 
     public Member(MemberName name, Password password) {
         this(null, name, password);
+    }
+
+    public boolean isMatchingPassword(String password) {
+        return Objects.equals(this.password.getPassword(), password);
     }
 
     public Long getId() {
@@ -28,9 +31,5 @@ public class Member {
 
     public String getPassword() {
         return password.getPassword();
-    }
-
-    public boolean checkPassword(String password) {
-        return Objects.equals(this.password.getPassword(), password);
     }
 }

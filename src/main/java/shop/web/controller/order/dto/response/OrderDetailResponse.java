@@ -1,5 +1,9 @@
 package shop.web.controller.order.dto.response;
 
+import shop.application.coupon.dto.CouponDto;
+import shop.application.order.dto.OrderDetailDto;
+import shop.application.order.dto.OrderDto;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +17,7 @@ public class OrderDetailResponse {
     private Integer deliveryPrice;
     private LocalDateTime orderedAt;
 
-    public OrderDetailResponse() {
+    private OrderDetailResponse() {
     }
 
     public OrderDetailResponse(Long orderId, UsingCouponResponse coupon, List<OrderProductResponse> items,
@@ -27,6 +31,28 @@ public class OrderDetailResponse {
         this.couponDiscountPrice = couponDiscountPrice;
         this.deliveryPrice = deliveryPrice;
         this.orderedAt = orderedAt;
+    }
+
+    public static OrderDetailResponse of(OrderDetailDto orderDetailDto) {
+        OrderDto order = orderDetailDto.getOrder();
+        CouponDto coupon = orderDetailDto.getCoupon();
+
+        Long totalPrice = order.getOrderPrice().getTotalPrice();
+        int discountRate = coupon.getDiscountRate();
+        Long discountedTotalPrice = totalPrice * (100 - discountRate) / 100;
+        Long discountPrice = totalPrice - discountedTotalPrice;
+        Integer deliveryPrice = order.getOrderPrice().getDeliveryPrice();
+
+        return new OrderDetailResponse(
+                order.getId(),
+                UsingCouponResponse.of(coupon),
+                OrderProductResponse.of(order.getOrderItems()),
+                totalPrice,
+                discountedTotalPrice,
+                discountPrice,
+                deliveryPrice,
+                order.getOrderedAt()
+        );
     }
 
     public Long getOrderId() {
