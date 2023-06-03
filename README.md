@@ -14,7 +14,6 @@
 
 - [x] 장바구니에 아이템 추가 POST `/cart-items` 201
 - [x] 장바구니 조회 GET `/cart-items` 200
-- [x] 장바구니 아이템 조회 GET `/cart-items/{cartItemId}` 200
 - [x] 장바구니 아이템 수정 PATCH `/cart-items/{cartItemId}` 200
 - [x] 장바구니 아이템 삭제 DELETE `/cart-items/{cartItemId}` 204
 

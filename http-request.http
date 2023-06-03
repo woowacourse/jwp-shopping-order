@@ -1,0 +1,54 @@
+### 장바구니 조회 요청
+GET http://localhost:8080/cart-items
+Authorization: Basic YUBhLmNvbToxMjM0
+
+### 장바구니에 아이템 담기 요청
+POST http://localhost:8080/cart-items
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+    "productId": 15
+}
+
+### 장바구니 아이템 수량 수정 요청
+PATCH http://localhost:8080/cart-items/4
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+    "quantity": 3
+}
+
+### 포인트 조회 요청
+GET http://localhost:8080/point
+Authorization: Basic YUBhLmNvbToxMjM0
+
+### 주문 등록 요청
+POST http://localhost:8080/orders
+Authorization: Basic YUBhLmNvbToxMjM0
+Content-Type: application/json
+
+{
+    "totalProductsPrice": 170000,
+    "shippingFee": 0,
+    "usedPoint": 0,
+    "order": [
+        {
+            "cartItemId": 4,
+            "quantity": 3
+        },
+        {
+            "cartItemId": 2,
+            "quantity": 4
+        }
+    ]
+}
+
+### 주문 목록 확인 요청
+GET http://localhost:8080/orders
+Authorization: Basic YUBhLmNvbToxMjM0
+
+### 주문 상세 확인 요청
+GET http://localhost:8080/orders/1
+Authorization: Basic YUBhLmNvbToxMjM0
