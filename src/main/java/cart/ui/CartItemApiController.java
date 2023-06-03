@@ -1,8 +1,8 @@
 package cart.ui;
 
-import cart.application.dto.CartItemQuantityUpdateRequest;
-import cart.application.dto.CartItemRequest;
-import cart.application.dto.CartItemResponse;
+import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.application.dto.cartitem.CartItemRequest;
+import cart.application.dto.cartitem.CartItemResponse;
 import cart.application.service.CartItemService;
 import cart.domain.Member;
 import java.net.URI;

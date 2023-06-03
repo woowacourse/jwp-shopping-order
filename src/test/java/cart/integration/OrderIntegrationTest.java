@@ -2,7 +2,6 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.application.dto.ProductRequest;
 import cart.application.dto.coupon.CreateCouponRequest;
 import cart.application.dto.coupon.IssueCouponRequest;
 import cart.application.dto.order.CreateOrderByCartItemsRequest;
@@ -11,6 +10,7 @@ import cart.application.dto.order.FindOrderDetailResponse;
 import cart.application.dto.order.OrderCouponResponse;
 import cart.application.dto.order.OrderDetailProductResponse;
 import cart.application.dto.order.OrderProductRequest;
+import cart.application.dto.product.ProductRequest;
 import cart.domain.Member;
 import cart.domain.coupon.CouponType;
 import cart.persistence.dao.MemberCouponDao;

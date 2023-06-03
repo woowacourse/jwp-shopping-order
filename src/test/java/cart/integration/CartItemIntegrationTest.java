@@ -2,9 +2,9 @@ package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.application.dto.CartItemRequest;
-import cart.application.dto.CartItemResponse;
-import cart.application.dto.ProductRequest;
+import cart.application.dto.cartitem.CartItemRequest;
+import cart.application.dto.cartitem.CartItemResponse;
+import cart.application.dto.product.ProductRequest;
 import cart.domain.Member;
 import cart.persistence.dao.MemberDao;
 import io.restassured.response.ExtractableResponse;

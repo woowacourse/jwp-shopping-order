@@ -2,15 +2,15 @@ package cart.integration;
 
 import static io.restassured.RestAssured.given;
 
-import cart.application.dto.CartItemQuantityUpdateRequest;
-import cart.application.dto.CartItemRequest;
-import cart.application.dto.ProductRequest;
+import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.application.dto.cartitem.CartItemRequest;
 import cart.application.dto.coupon.CreateCouponRequest;
 import cart.application.dto.coupon.FindCouponsResponse;
 import cart.application.dto.coupon.IssueCouponRequest;
 import cart.application.dto.order.CreateOrderByCartItemsRequest;
 import cart.application.dto.order.FindOrderCouponsResponse;
 import cart.application.dto.order.FindOrderDetailResponse;
+import cart.application.dto.product.ProductRequest;
 import cart.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

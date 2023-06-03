@@ -3,9 +3,9 @@ package cart.application.service;
 import static cart.exception.noexist.NoExistErrorType.CART_ITEM_NO_EXIST;
 import static cart.exception.noexist.NoExistErrorType.PRODUCT_NO_EXIST;
 
-import cart.application.dto.CartItemQuantityUpdateRequest;
-import cart.application.dto.CartItemRequest;
-import cart.application.dto.CartItemResponse;
+import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
+import cart.application.dto.cartitem.CartItemRequest;
+import cart.application.dto.cartitem.CartItemResponse;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.ProductRepository;
 import cart.domain.Member;

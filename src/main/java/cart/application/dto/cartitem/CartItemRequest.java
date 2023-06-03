@@ -1,4 +1,4 @@
-package cart.application.dto;
+package cart.application.dto.cartitem;
 
 public class CartItemRequest {
 

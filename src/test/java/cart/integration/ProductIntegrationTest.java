@@ -3,8 +3,8 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.application.dto.ProductRequest;
-import cart.application.dto.ProductResponse;
+import cart.application.dto.product.ProductRequest;
+import cart.application.dto.product.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

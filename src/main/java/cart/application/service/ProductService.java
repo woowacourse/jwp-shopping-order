@@ -2,8 +2,8 @@ package cart.application.service;
 
 import static cart.exception.noexist.NoExistErrorType.PRODUCT_NO_EXIST;
 
-import cart.application.dto.ProductRequest;
-import cart.application.dto.ProductResponse;
+import cart.application.dto.product.ProductRequest;
+import cart.application.dto.product.ProductResponse;
 import cart.application.repository.ProductRepository;
 import cart.domain.Product;
 import cart.exception.noexist.NoExistException;
