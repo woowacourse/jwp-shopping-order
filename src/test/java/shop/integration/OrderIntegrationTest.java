@@ -10,17 +10,18 @@ import org.springframework.http.MediaType;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
 import shop.domain.coupon.CouponType;
+import shop.web.controller.cart.dto.CartItemRequest;
 import shop.web.controller.order.dto.request.OrderCreationRequest;
 import shop.web.controller.order.dto.request.OrderItemRequest;
 
 import java.util.List;
 
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderIntegrationTest extends IntegrationTest {
     private static final String name = "test1234";
     private static final String password = "test";
-
 
     @DisplayName("주문을 할 수 있다.")
     @Test
@@ -212,6 +213,58 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(discountedTotalPrice).isEqualTo(72000); // 80,000 - 8,000 = 72,000
     }
 
+    @DisplayName("주문시, 해당 상품들이 장바구니에서 삭제된다")
+    @Test
+    void deleteCartItemsAfterOrderTest() {
+        //given
+        join();
+        String token = login();
+        addCartItem(token, 1L);
+        addCartItem(token, 2L);
+        addCartItem(token, 3L);
+
+        List<OrderItemRequest> orderItemRequests = List.of(
+                new OrderItemRequest(1L, 2),
+                new OrderItemRequest(2L, 3)
+        );
+
+        OrderCreationRequest request = new OrderCreationRequest(orderItemRequests, 1L);
+
+        //when
+        ExtractableResponse<Response> responseBeforeOrder = RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .when().get("/cart-items")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        List<Long> productIdsBeforeOrder =
+                responseBeforeOrder.jsonPath().getList("product.id.flatten()", Long.class);
+        assertThat(productIdsBeforeOrder).containsExactlyInAnyOrder(1L, 2L, 3L);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .body(request)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        //then
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .when().get("/cart-items")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        List<Long> productIds = response.jsonPath().getList("product.id.flatten()", Long.class);
+
+        assertThat(productIds).containsExactlyInAnyOrder(3L);
+    }
+
     private void join() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -235,5 +288,19 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .extract();
 
         return response.jsonPath().getString("token");
+    }
+
+    private void addCartItem(String userToken, Long productId) {
+        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + userToken)
+                .body(cartItemRequest)
+                .when()
+                .post("/cart-items")
+                .then()
+                .log().all();
+
     }
 }
