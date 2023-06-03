@@ -1,6 +1,5 @@
 package cart.persistence.mapper;
 
-import static cart.persistence.mapper.ProductMapper.convertProduct;
 import static cart.persistence.mapper.ProductMapper.convertProductWithId;
 
 import cart.application.dto.order.OrderProductRequest;

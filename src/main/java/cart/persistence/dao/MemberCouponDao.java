@@ -93,4 +93,10 @@ public class MemberCouponDao {
             + "WHERE member_id = ? and coupon_id = ?";
         return jdbcTemplate.update(sql, memberId, couponId);
     }
+
+    public int updateNotUsed(final Long memberId, final Long couponId) {
+        final String sql = "UPDATE member_coupon SET is_used = 0 "
+            + "WHERE member_id = ? and coupon_id = ?";
+        return jdbcTemplate.update(sql, memberId, couponId);
+    }
 }

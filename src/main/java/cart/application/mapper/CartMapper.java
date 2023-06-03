@@ -7,6 +7,7 @@ import cart.domain.product.Product;
 import cart.domain.product.dto.ProductWithId;
 
 public class CartMapper {
+
     public static CartResponse convertCartItemResponse(final CartItemWithId cartItemWithId) {
         final ProductWithId productWithId = cartItemWithId.getProduct();
         final Product product = productWithId.getProduct();

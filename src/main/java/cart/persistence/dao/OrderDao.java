@@ -101,4 +101,9 @@ public class OrderDao {
             + "WHERE m.name = ?";
         return jdbcTemplate.query(sql, orderDtoRowMapper, memberName);
     }
+
+    public int updateNotValidById(final Long id) {
+        final String sql = "UPDATE `order` SET is_valid = 0 WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }

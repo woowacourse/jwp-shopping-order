@@ -9,4 +9,6 @@ public interface MemberCouponRepository {
     MemberCoupon findByMemberIdAndCouponId(final Long memberId, final Long couponId);
 
     void updateUsed(final Long memberId, final Long couponId);
+
+    void updateNotUsed(final Long memberId, final Long couponId);
 }

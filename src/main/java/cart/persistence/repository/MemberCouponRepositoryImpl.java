@@ -48,4 +48,12 @@ public class MemberCouponRepositoryImpl implements MemberCouponRepository {
             throw new DBException(ErrorCode.DB_UPDATE_ERROR);
         }
     }
+
+    @Override
+    public void updateNotUsed(final Long memberId, final Long couponId) {
+        int updatedCount = memberCouponDao.updateNotUsed(memberId, couponId);
+        if (updatedCount != 1) {
+            throw new DBException(ErrorCode.DB_UPDATE_ERROR);
+        }
+    }
 }

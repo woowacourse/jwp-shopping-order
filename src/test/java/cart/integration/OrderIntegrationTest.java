@@ -17,6 +17,7 @@ import cart.application.dto.member.MemberLoginRequest;
 import cart.application.dto.order.OrderProductRequest;
 import cart.application.dto.order.OrderRequest;
 import cart.application.dto.product.ProductRequest;
+import cart.exception.ErrorCode;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -84,7 +85,8 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("items[1].product.id", equalTo(2))
             .body("items[1].product.name", equalTo("피자"))
             .body("items[1].product.price", equalTo(15_000))
-            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"))
+            .body("isValid", equalTo(true));
 
         /** 첫 주문 감사 쿠폰이 발급되었는지 확인한다. */
         given()
@@ -157,7 +159,8 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("items[1].product.id", equalTo(2))
             .body("items[1].product.name", equalTo("피자"))
             .body("items[1].product.price", equalTo(15_000))
-            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"))
+            .body("isValid", equalTo(true));
 
         /** 첫 주문 감사 쿠폰이 발급되었는지 확인한다. */
         given()
@@ -354,6 +357,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("discountedTotalPrice", equalTo(140_000))
             .body("couponDiscountPrice", equalTo(35_000))
             .body("deliveryPrice", equalTo(3_000))
+            .body("isValid", equalTo(true))
             .body("coupon.id", equalTo(1))
             .body("coupon.name", equalTo("신규 가입 축하 쿠폰"))
             .body("coupon.discountRate", equalTo(20))
@@ -424,6 +428,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("[0].discountedTotalPrice", equalTo(140_000))
             .body("[0].couponDiscountPrice", equalTo(35_000))
             .body("[0].deliveryPrice", equalTo(3_000))
+            .body("[0].isValid", equalTo(true))
             .body("[0].coupon.id", equalTo(1))
             .body("[0].coupon.name", equalTo("신규 가입 축하 쿠폰"))
             .body("[0].coupon.discountRate", equalTo(20))
@@ -436,13 +441,14 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("[0].items[1].product.id", equalTo(2))
             .body("[0].items[1].product.name", equalTo("피자"))
             .body("[0].items[1].product.price", equalTo(15_000))
-            .body("[1].items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"))
+            .body("[0].items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"))
             /** 두 번째 주문 검증 */
             .body("[1].orderId", equalTo(2))
             .body("[1].totalPrice", equalTo(175_000))
             .body("[1].discountedTotalPrice", equalTo(175_000))
             .body("[1].couponDiscountPrice", equalTo(0))
             .body("[1].deliveryPrice", equalTo(3_000))
+            .body("[1].isValid", equalTo(true))
             .body("[1].coupon.id", equalTo(null))
             .body("[1].coupon.name", equalTo(null))
             .body("[1].coupon.discountRate", equalTo(null))
@@ -456,6 +462,158 @@ public class OrderIntegrationTest extends IntegrationTest {
             .body("[1].items[1].product.name", equalTo("피자"))
             .body("[1].items[1].product.price", equalTo(15_000))
             .body("[1].items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+    }
+
+    @Test
+    @DisplayName("주문한 지 3일 이내에 주문을 취소하면 전액 환불된다.")
+    void cancelOrder_before_3day() {
+        // given
+        쿠폰을_저장한다();
+        상품을_저장한다();
+        사용자를_저장한다();
+
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        장바구니에_상품을_추가한다(져니_로그인_요청);
+        final LocalDateTime orderTime = LocalDateTime.now().minusDays(2);
+        특정_시간에_쿠폰과_함께_상품을_주문한다(orderTime);
+
+        // when
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .post("/orders/cancel/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("refundPrice", equalTo(143_000));
+
+        // then
+        /** 주문 상태가 취소인지 확인한다 */
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/orders/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("orderId", equalTo(1))
+            .body("totalPrice", equalTo(175_000))
+            .body("discountedTotalPrice", equalTo(140_000))
+            .body("couponDiscountPrice", equalTo(35_000))
+            .body("deliveryPrice", equalTo(3_000))
+            .body("isValid", equalTo(false))
+            .body("coupon.id", equalTo(1))
+            .body("coupon.name", equalTo("신규 가입 축하 쿠폰"))
+            .body("coupon.discountRate", equalTo(20))
+            .body("items[0].quantity", equalTo(10))
+            .body("items[0].product.id", equalTo(1))
+            .body("items[0].product.name", equalTo("치킨"))
+            .body("items[0].product.price", equalTo(10_000))
+            .body("items[0].product.imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("items[1].quantity", equalTo(5))
+            .body("items[1].product.id", equalTo(2))
+            .body("items[1].product.name", equalTo("피자"))
+            .body("items[1].product.price", equalTo(15_000))
+            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+
+        /** 쿠폰이 사용 가능한 상태로 변경되었는지 확인한다 */
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/users/me/coupons")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("size", is(1))
+            .body("[0].id", equalTo(1))
+            .body("[0].name", equalTo("신규 가입 축하 쿠폰"))
+            .body("[0].discountRate", equalTo(20))
+            .body("[0].isUsed", equalTo(false));
+    }
+
+    @Test
+    @DisplayName("주문한 지 7일 이내에 주문을 취소하면 반액 환불된다.")
+    void cancelOrder_before_7day() {
+        // given
+        쿠폰을_저장한다();
+        상품을_저장한다();
+        사용자를_저장한다();
+
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        장바구니에_상품을_추가한다(져니_로그인_요청);
+        final LocalDateTime orderTime = LocalDateTime.now().minusDays(6);
+        특정_시간에_쿠폰과_함께_상품을_주문한다(orderTime);
+
+        // when
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .post("/orders/cancel/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("refundPrice", equalTo(73_000));
+
+        // then
+        /** 주문 상태가 취소인지 확인한다 */
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/orders/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("orderId", equalTo(1))
+            .body("totalPrice", equalTo(175_000))
+            .body("discountedTotalPrice", equalTo(140_000))
+            .body("couponDiscountPrice", equalTo(35_000))
+            .body("deliveryPrice", equalTo(3_000))
+            .body("isValid", equalTo(false))
+            .body("coupon.id", equalTo(1))
+            .body("coupon.name", equalTo("신규 가입 축하 쿠폰"))
+            .body("coupon.discountRate", equalTo(20))
+            .body("items[0].quantity", equalTo(10))
+            .body("items[0].product.id", equalTo(1))
+            .body("items[0].product.name", equalTo("치킨"))
+            .body("items[0].product.price", equalTo(10_000))
+            .body("items[0].product.imageUrl", equalTo("http://example.com/chicken.jpg"))
+            .body("items[1].quantity", equalTo(5))
+            .body("items[1].product.id", equalTo(2))
+            .body("items[1].product.name", equalTo("피자"))
+            .body("items[1].product.price", equalTo(15_000))
+            .body("items[1].product.imageUrl", equalTo("http://example.com/pizza.jpg"));
+
+        /** 쿠폰이 사용 가능한 상태로 변경되었는지 확인한다 */
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .get("/users/me/coupons")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("size", is(1))
+            .body("[0].id", equalTo(1))
+            .body("[0].name", equalTo("신규 가입 축하 쿠폰"))
+            .body("[0].discountRate", equalTo(20))
+            .body("[0].isUsed", equalTo(false));
+    }
+
+    @Test
+    @DisplayName("주문한 지 7일 이후라면 예외가 발생한다.")
+    void cancelOrder_expired() {
+        // given
+        쿠폰을_저장한다();
+        상품을_저장한다();
+        사용자를_저장한다();
+
+        final MemberLoginRequest 져니_로그인_요청 = new MemberLoginRequest("journey", "password");
+        장바구니에_상품을_추가한다(져니_로그인_요청);
+        final LocalDateTime orderTime = LocalDateTime.now().minusDays(8);
+        특정_시간에_쿠폰과_함께_상품을_주문한다(orderTime);
+
+        // when
+        given()
+            .auth().preemptive().basic(져니_로그인_요청.getName(), 져니_로그인_요청.getPassword())
+            .when()
+            .post("/orders/cancel/{id}", 1)
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body("errorCode", equalTo(ErrorCode.ORDER_CANNOT_CANCEL.name()))
+            .body("errorMessage", equalTo("주문 취소 기간이 지나 취소가 불가능합니다."));
     }
 
     private void 장바구니에_상품을_추가한다(final MemberLoginRequest 져니_로그인_요청) {
@@ -528,5 +686,19 @@ public class OrderIntegrationTest extends IntegrationTest {
             new OrderProductRequest(2L, 5));
         final OrderRequest 주문_요청 = new OrderRequest(null, 주문할_상품들);
         주문_저장(져니_로그인_요청, 주문_요청);
+    }
+
+    private void 특정_시간에_쿠폰과_함께_상품을_주문한다(final LocalDateTime orderTime) {
+        final String 주문_저장_SQL = "INSERT INTO `order`(member_id, total_price, discounted_total_price, "
+            + "delivery_price, ordered_at, is_valid) VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(주문_저장_SQL, 1, 170_000, 140_000, 3_000, orderTime, true);
+
+        final String 주문_상품_저장_SQL = "INSERT INTO order_product(order_id, product_id, ordered_product_price, quantity) "
+            + "VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(주문_상품_저장_SQL, 1, 1, 10000, 10);
+        jdbcTemplate.update(주문_상품_저장_SQL, 1, 2, 15000, 5);
+
+        final String 주문_쿠폰_저장_SQL = "INSERT INTO order_coupon(order_id, coupon_id) VALUES (?, ?)";
+        jdbcTemplate.update(주문_쿠폰_저장_SQL, 1, 1);
     }
 }

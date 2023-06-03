@@ -3,14 +3,17 @@ package cart.application;
 import static cart.application.mapper.OrderMapper.converBasicOrder;
 import static cart.application.mapper.OrderMapper.convertCouponOrder;
 import static cart.application.mapper.OrderMapper.convertOrderResponse;
+import static cart.persistence.mapper.CartMapper.convertCartItemWithId;
 
 import cart.application.dto.order.OrderProductRequest;
+import cart.application.dto.order.OrderRefundResponse;
 import cart.application.dto.order.OrderRequest;
 import cart.application.dto.order.OrderResponse;
 import cart.application.mapper.OrderMapper;
 import cart.domain.cartitem.Cart;
-import cart.domain.cartitem.CartItemWithId;
 import cart.domain.cartitem.CartRepository;
+import cart.domain.cartitem.dto.CartItemWithId;
+import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.event.FirstOrderCouponEvent;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberCouponRepository;
@@ -18,8 +21,11 @@ import cart.domain.member.MemberRepository;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.order.BasicOrder;
 import cart.domain.order.CouponOrder;
+import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.domain.order.OrderWithId;
+import cart.domain.refund.RefundPolicy;
+import cart.domain.refund.RefundPolicyComposite;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import cart.exception.ForbiddenException;
@@ -43,15 +49,19 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final MemberCouponRepository memberCouponRepository;
+    private final RefundPolicyComposite refundPolicyComposite;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public OrderService(final CartRepository cartRepository, final OrderRepository orderRepository,
-                        final MemberRepository memberRepository, final MemberCouponRepository memberCouponRepository,
+                        final MemberRepository memberRepository,
+                        final MemberCouponRepository memberCouponRepository,
+                        final RefundPolicyComposite refundPolicyComposite,
                         final ApplicationEventPublisher applicationEventPublisher) {
         this.cartRepository = cartRepository;
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
         this.memberCouponRepository = memberCouponRepository;
+        this.refundPolicyComposite = refundPolicyComposite;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -88,6 +98,34 @@ public class OrderService {
             .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional
+    public OrderRefundResponse cancelOrder(final String memberName, final Long id) {
+        final OrderWithId orderWithId = orderRepository.getById(id);
+        if (!orderWithId.isOwner(memberName)) {
+            throw new ForbiddenException(ErrorCode.FORBIDDEN);
+        }
+        final Order order = orderWithId.getOrder();
+        final LocalDateTime currentTime = LocalDateTime.now();
+        final RefundPolicy refundPolicy = refundPolicyComposite.getRefundPolicies(order, currentTime);
+        orderRepository.updateNotValidById(orderWithId.getOrderId());
+        final int paymentPrice = changeCouponUnUsedIfExist(order);
+        final int refundPrice = refundPolicy.calculatePrice(paymentPrice) + order.getDeliveryPrice();
+        return new OrderRefundResponse(refundPrice);
+    }
+
+    private int changeCouponUnUsedIfExist(final Order order) {
+        if (order.getCoupon().isEmpty()) {
+            return order.getTotalPrice();
+        }
+        final CouponWithId coupon = order.getCoupon().get();
+        final Long memberId = order.getMember().getMemberId();
+        if (coupon.isNotExpired(LocalDateTime.now())) {
+            memberCouponRepository.updateNotUsed(memberId, coupon.getCouponId());
+            return order.getDiscountedTotalPrice();
+        }
+        return order.getTotalPrice();
+    }
+
     private void validateOrderQuantity(final OrderRequest orderRequest) {
         final int totalQuantity = orderRequest.getItems().stream()
             .mapToInt(OrderProductRequest::getQuantity)
@@ -95,12 +133,6 @@ public class OrderService {
         if (totalQuantity > MAX_ORDER_QUANTITY) {
             throw new BadRequestException(ErrorCode.ORDER_QUANTITY_EXCEED);
         }
-    }
-
-    private List<Long> getExistProductIds(final List<CartItemWithId> cartItems) {
-        return cartItems.stream()
-            .map(cartItemWithId -> cartItemWithId.getProduct().getProductId())
-            .collect(Collectors.toUnmodifiableList());
     }
 
     private List<Long> getRequestProductIds(final OrderRequest orderRequest) {
@@ -116,15 +148,24 @@ public class OrderService {
         }
     }
 
+    private List<Long> getExistProductIds(final List<CartItemWithId> cartItems) {
+        return cartItems.stream()
+            .map(cartItemWithId -> cartItemWithId.getProduct().getProductId())
+            .collect(Collectors.toUnmodifiableList());
+    }
+
     private List<CartItemWithId> getOrderRequestCartItems(final OrderRequest orderRequest,
                                                           final List<CartItemWithId> cartItems) {
         return cartItems.stream()
             .flatMap(cartItemWithId -> orderRequest.getItems().stream()
-                .filter(orderProductRequest -> Objects.equals(
-                    cartItemWithId.getProduct().getProductId(), orderProductRequest.getProductId()))
-                .map(orderProductRequest -> new CartItemWithId(cartItemWithId.getCartId(),
-                    orderProductRequest.getQuantity(), cartItemWithId.getProduct())))
+                .filter(orderProductRequest -> isSameProductId(cartItemWithId, orderProductRequest))
+                .map(orderProductRequest -> convertCartItemWithId(cartItemWithId, orderProductRequest)))
             .collect(Collectors.toList());
+    }
+
+    private boolean isSameProductId(final CartItemWithId cartItemWithId,
+                                    final OrderProductRequest orderProductRequest) {
+        return Objects.equals(cartItemWithId.getProduct().getProductId(), orderProductRequest.getProductId());
     }
 
     private void validateDeletedProductExistence(final List<CartItemWithId> requestCartItems) {

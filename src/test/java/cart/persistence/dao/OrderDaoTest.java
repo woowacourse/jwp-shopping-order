@@ -38,10 +38,11 @@ class OrderDaoTest extends DaoTestHelper {
         // then
         final List<OrderDto> 저장된_주문_정보 = orderDao.findById(저장된_주문_아이디);
         assertThat(저장된_주문_정보)
-            .extracting(OrderDto::getOrderId, OrderDto::getTotalPrice, OrderDto::getDiscountedTotalPrice,
-                OrderDto::getDeliveryPrice, OrderDto::getMemberId, OrderDto::getMemberName, OrderDto::getMemberPassword)
+            .extracting(OrderDto::getOrderId, OrderDto::getOrderedAt, OrderDto::getTotalPrice,
+                OrderDto::getDiscountedTotalPrice, OrderDto::getDeliveryPrice, OrderDto::getMemberId,
+                OrderDto::getMemberName, OrderDto::getMemberPassword, OrderDto::getIsValid)
             .containsExactly(
-                tuple(저장된_주문_아이디, 10000, 9000, 3000, 저장된_져니_아이디, "journey", "password")
+                tuple(저장된_주문_아이디, 주문_시간, 10000, 9000, 3000, 저장된_져니_아이디, "journey", "password", true)
             );
     }
 
@@ -85,20 +86,20 @@ class OrderDaoTest extends DaoTestHelper {
                 OrderDto::getCouponId, OrderDto::getCouponName, OrderDto::getCouponDiscountRate,
                 OrderDto::getCouponPeriod, OrderDto::getCouponExpiredAt, OrderDto::getMemberId,
                 OrderDto::getMemberName, OrderDto::getMemberPassword, OrderDto::getProductId,
-                OrderDto::getProductName, OrderDto::getProductPrice, OrderDto::getProductImageUrl)
+                OrderDto::getProductName, OrderDto::getProductPrice, OrderDto::getProductImageUrl, OrderDto::getIsValid)
             .containsExactly(
                 tuple(저장된_주문_아이디, 주문_시간, 10,
                     350_000, 280_000, 3_000,
                     저장된_주문_쿠폰_아이디, "신규 가입 축하 쿠폰", 20,
                     10, 주문_시간.plusDays(10), 저장된_져니_아이디,
                     "journey", "password", 저장된_상품_아이디들.get(0),
-                    "치킨", 20000, "chicken_image_url"),
+                    "치킨", 20000, "chicken_image_url", true),
                 tuple(저장된_주문_아이디, 주문_시간, 5,
                     350_000, 280_000, 3_000,
                     저장된_주문_쿠폰_아이디, "신규 가입 축하 쿠폰", 20,
                     10, 주문_시간.plusDays(10), 저장된_져니_아이디,
                     "journey", "password", 저장된_상품_아이디들.get(1),
-                    "피자", 30000, "pizza_image_url")
+                    "피자", 30000, "pizza_image_url", true)
             );
     }
 
@@ -127,20 +128,45 @@ class OrderDaoTest extends DaoTestHelper {
                 OrderDto::getCouponId, OrderDto::getCouponName, OrderDto::getCouponDiscountRate,
                 OrderDto::getCouponPeriod, OrderDto::getCouponExpiredAt, OrderDto::getMemberId,
                 OrderDto::getMemberName, OrderDto::getMemberPassword, OrderDto::getProductId,
-                OrderDto::getProductName, OrderDto::getProductPrice, OrderDto::getProductImageUrl)
+                OrderDto::getProductName, OrderDto::getProductPrice, OrderDto::getProductImageUrl, OrderDto::getIsValid)
             .containsExactly(
                 tuple(저장된_주문_아이디, 주문_시간, 10,
                     350_000, 280_000, 3_000,
                     저장된_주문_쿠폰_아이디, "신규 가입 축하 쿠폰", 20,
                     10, 주문_시간.plusDays(10), 저장된_져니_아이디,
                     "journey", "password", 저장된_상품_아이디들.get(0),
-                    "치킨", 20000, "chicken_image_url"),
+                    "치킨", 20000, "chicken_image_url", true),
                 tuple(저장된_주문_아이디, 주문_시간, 5,
                     350_000, 280_000, 3_000,
                     저장된_주문_쿠폰_아이디, "신규 가입 축하 쿠폰", 20,
                     10, 주문_시간.plusDays(10), 저장된_져니_아이디,
                     "journey", "password", 저장된_상품_아이디들.get(1),
-                    "피자", 30000, "pizza_image_url")
+                    "피자", 30000, "pizza_image_url", true)
+            );
+    }
+
+    @Test
+    @DisplayName("주문의 상태를 유효하지 않음으로 변경한다.")
+    void updateNotValidById() {
+        // given
+        final LocalDateTime 주문_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
+        final Long 저장된_져니_아이디 = 져니_저장();
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 350_000, 280_000, 3_000, 주문_시간);
+        final Long 저장된_주문_아이디 = orderDao.insert(주문_엔티티);
+
+        // when
+        final int updatedCount = orderDao.updateNotValidById(저장된_주문_아이디);
+
+        // then
+        assertThat(updatedCount)
+            .isSameAs(1);
+        final List<OrderDto> 저장된_주문_정보 = orderDao.findById(저장된_주문_아이디);
+        assertThat(저장된_주문_정보)
+            .extracting(OrderDto::getOrderId, OrderDto::getOrderedAt, OrderDto::getTotalPrice,
+                OrderDto::getDiscountedTotalPrice, OrderDto::getDeliveryPrice, OrderDto::getMemberId,
+                OrderDto::getMemberName, OrderDto::getMemberPassword, OrderDto::getIsValid)
+            .containsExactly(
+                tuple(저장된_주문_아이디, 주문_시간, 350_000, 280_000, 3000, 저장된_져니_아이디, "journey", "password", false)
             );
     }
 

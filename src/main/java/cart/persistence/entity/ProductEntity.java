@@ -12,7 +12,8 @@ public class ProductEntity {
         this(null, name, imageUrl, price, isDeleted);
     }
 
-    public ProductEntity(final Long id, final String name, final String imageUrl, final Integer price, final Boolean isDeleted) {
+    public ProductEntity(final Long id, final String name, final String imageUrl, final Integer price,
+                         final Boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;

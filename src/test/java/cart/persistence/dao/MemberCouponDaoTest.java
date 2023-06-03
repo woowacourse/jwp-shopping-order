@@ -163,4 +163,32 @@ class MemberCouponDaoTest extends DaoTestHelper {
                 10, 20, true, LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(10),
                 LocalDateTime.of(2023, 6, 1, 13, 0, 0));
     }
+
+    @Test
+    @DisplayName("쿠폰의 사용 정보를 0으로 (사용하지 않음) 업데이트한다.")
+    void updateNotUsed() {
+        // given
+        final long 저장된_져니_아이디 = 져니_저장();
+        final Long 저장된_신규_가입_축하_쿠폰_아이디 = 신규_가입_쿠폰_저장();
+        져니_쿠폰_저장(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
+        memberCouponDao.updateUsed(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
+
+        // when
+        final int updatedCount = memberCouponDao.updateNotUsed(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
+
+        // then
+        final MemberCouponDto memberCouponDto = memberCouponDao.findByMemberIdAndCouponId(저장된_져니_아이디,
+            저장된_신규_가입_축하_쿠폰_아이디).get();
+
+        assertThat(updatedCount)
+            .isSameAs(1);
+        assertThat(memberCouponDto)
+            .extracting(MemberCouponDto::getMemberId, MemberCouponDto::getMemberName,
+                MemberCouponDto::getMemberPassword, MemberCouponDto::getCouponId, MemberCouponDto::getCouponName,
+                MemberCouponDto::getCouponPeriod, MemberCouponDto::getDiscountRate,
+                MemberCouponDto::isUsed, MemberCouponDto::getExpiredAt, MemberCouponDto::getIssuedAt)
+            .containsExactly(저장된_져니_아이디, "journey", "password", 저장된_신규_가입_축하_쿠폰_아이디, "신규 가입 축하 쿠폰",
+                10, 20, false, LocalDateTime.of(2023, 6, 1, 13, 0, 0).plusDays(10),
+                LocalDateTime.of(2023, 6, 1, 13, 0, 0));
+    }
 }

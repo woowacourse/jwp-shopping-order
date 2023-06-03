@@ -13,4 +13,6 @@ public interface OrderRepository {
     OrderWithId getById(final Long id);
 
     List<OrderWithId> findByMemberName(final String memberName);
+
+    void updateNotValidById(final Long id);
 }

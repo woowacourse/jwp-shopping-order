@@ -1,6 +1,7 @@
 package cart.ui;
 
 import cart.application.OrderService;
+import cart.application.dto.order.OrderRefundResponse;
 import cart.application.dto.order.OrderRequest;
 import cart.application.dto.order.OrderResponse;
 import cart.common.auth.MemberName;
@@ -42,5 +43,12 @@ public class OrderController {
     public ResponseEntity<List<OrderResponse>> getOrders(@MemberName final String memberName) {
         final List<OrderResponse> orderResponses = orderService.getOrders(memberName);
         return ResponseEntity.ok(orderResponses);
+    }
+
+    @PostMapping("/cancel/{id}")
+    public ResponseEntity<OrderRefundResponse> cancelOrder(@MemberName final String memberName,
+                                                           @PathVariable final Long id) {
+        final OrderRefundResponse orderRefundResponse = orderService.cancelOrder(memberName, id);
+        return ResponseEntity.ok(orderRefundResponse);
     }
 }

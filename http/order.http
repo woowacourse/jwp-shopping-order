@@ -38,3 +38,7 @@ Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
 ### 사용자 주문 전체 조회
 GET {{host}}/orders
 Authorization: Basic am91cm5leTp0ZXN0MTIzNA==
+
+### 주문 취소
+POST {{host}}/orders/cancel/1
+Authorization: Basic am91cm5leTp0ZXN0MTIzNA==

@@ -22,5 +22,6 @@ public interface Order {
     Integer getTotalPrice();
 
     Integer getDiscountedTotalPrice();
+
     Boolean isValid();
 }

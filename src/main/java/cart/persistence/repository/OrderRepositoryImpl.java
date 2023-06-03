@@ -4,12 +4,13 @@ import static cart.persistence.mapper.OrderMapper.convertOrderEntity;
 import static cart.persistence.mapper.OrderMapper.convertOrderProductEntities;
 import static cart.persistence.mapper.OrderMapper.convertOrderWithId;
 
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.domain.order.OrderWithId;
+import cart.exception.DBException;
 import cart.exception.ErrorCode;
 import cart.exception.NotFoundException;
 import cart.persistence.dao.OrderCouponDao;
@@ -82,6 +83,14 @@ public class OrderRepositoryImpl implements OrderRepository {
             orderWithIds.add(convertOrderWithId(detailOrder));
         }
         return orderWithIds;
+    }
+
+    @Override
+    public void updateNotValidById(final Long id) {
+        final int updatedCount = orderDao.updateNotValidById(id);
+        if (updatedCount != 1) {
+            throw new DBException(ErrorCode.DB_UPDATE_ERROR);
+        }
     }
 
     private Long saveOrder(final Order order) {
