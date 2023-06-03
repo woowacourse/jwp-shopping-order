@@ -8,11 +8,13 @@ import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.paging.Paging;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductDao productDao;
@@ -21,6 +23,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public PagingProductResponse getAllProducts(final PageRequest pageRequest) {
         final Paging paging = new Paging(pageRequest);
 
@@ -31,6 +34,7 @@ public class ProductService {
         return new PagingProductResponse(paging.getPageInfo(count), productResponses);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
         return ProductResponse.of(product);

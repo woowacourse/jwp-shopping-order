@@ -17,11 +17,13 @@ import cart.paging.Paging;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -62,6 +64,7 @@ public class OrderService {
         return Order.from(member, paymentDto.getFinalPayment(), paymentDto.getPoint(), orderItems);
     }
 
+    @Transactional(readOnly = true)
     public PagingOrderResponse getAllOrders(final Member member, final PageRequest pageRequest) {
         final Paging paging = new Paging(pageRequest);
 
@@ -74,6 +77,7 @@ public class OrderService {
         return new PagingOrderResponse(paging.getPageInfo(count), orderResponses);
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse getOrderById(final Member member, final Long orderId) {
         final Order order = orderRepository.getOrderById(member, orderId);
         return OrderResponse.from(order);
