@@ -10,7 +10,6 @@ import com.woowahan.techcourse.order.ui.dto.response.OrderResponse;
 import com.woowahan.techcourse.order.ui.dto.response.OrdersResponse;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,10 +38,7 @@ public class OrderApiController {
     @GetMapping("/orders")
     public ResponseEntity<OrdersResponse> findAllByMemberId(Member member) {
         List<OrderResult> result = orderQueryService.findAllByMemberId(member.getId());
-        List<OrderResponse> orders = result.stream()
-                .map(OrderResponse::from)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new OrdersResponse(orders));
+        return ResponseEntity.ok(OrdersResponse.from(result));
     }
 
     @PostMapping("/orders")

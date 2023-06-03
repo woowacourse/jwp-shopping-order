@@ -1,13 +1,22 @@
 package com.woowahan.techcourse.order.db;
 
 import com.woowahan.techcourse.order.domain.OrderItem;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 public class OrderItemDao {
+
+    private static final RowMapper<OrderItem> ROW_MAPPER = (rs, rowNum) -> new OrderItem(
+            rs.getLong("cart_item_id"),
+            rs.getInt("quantity"),
+            rs.getLong("product_id"),
+            rs.getInt("product_price"),
+            rs.getString("product_name"),
+            rs.getString("product_image")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -26,31 +35,22 @@ public class OrderItemDao {
     }
 
     private void insert(long orderId, OrderItem orderItem) {
-        simpleJdbcInsert.execute(orderItemToMap(orderId, orderItem));
+        MapSqlParameterSource parameters = orderItemToParameters(orderId, orderItem);
+        simpleJdbcInsert.execute(parameters);
     }
 
-    private Map<String, Object> orderItemToMap(long orderId, OrderItem orderItem) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("order_id", orderId);
-        parameters.put("cart_item_id", orderItem.getCartItemId());
-        parameters.put("product_id", orderItem.getProductId());
-        parameters.put("quantity", orderItem.getQuantity());
-        parameters.put("product_price", orderItem.getPrice());
-        parameters.put("product_name", orderItem.getName());
-        parameters.put("product_image", orderItem.getImageUrl());
-        return parameters;
+    private MapSqlParameterSource orderItemToParameters(long orderId, OrderItem orderItem) {
+        return new MapSqlParameterSource()
+                .addValue("order_id", orderId)
+                .addValue("cart_item_id", orderItem.getCartItemId())
+                .addValue("product_id", orderItem.getProductId())
+                .addValue("quantity", orderItem.getQuantity())
+                .addValue("product_price", orderItem.getPrice())
+                .addValue("product_name", orderItem.getName())
+                .addValue("product_image", orderItem.getImageUrl());
     }
 
     public List<OrderItem> findAllByOrderId(long orderId) {
-        return jdbcTemplate.query("SELECT * FROM order_item WHERE order_id = ?",
-                (rs, rowNum) -> new OrderItem(
-                        rs.getLong("cart_item_id"),
-                        rs.getInt("quantity"),
-                        rs.getLong("product_id"),
-                        rs.getInt("product_price"),
-                        rs.getString("product_name"),
-                        rs.getString("product_image")
-                ),
-                orderId);
+        return jdbcTemplate.query("SELECT * FROM order_item WHERE order_id = ?", ROW_MAPPER, orderId);
     }
 }
