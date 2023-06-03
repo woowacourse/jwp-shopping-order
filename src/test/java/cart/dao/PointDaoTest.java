@@ -55,7 +55,7 @@ class PointDaoTest {
     void findByOrderId() {
         PointEntity expected = new PointEntity(1L, 5600, "주문 포인트 적립", LocalDate.of(2023, 06, 02), LocalDate.of(2023, 9, 30));
 
-        PointEntity point = pointDao.findByOrderId(1L);
+        PointEntity point = pointDao.findBy(1L, 1L);
 
         assertThat(point).isEqualTo(expected);
     }

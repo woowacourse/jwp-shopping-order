@@ -35,7 +35,7 @@ public class Order {
         return pointAccumulationPolicy.calculateAccumulationPoint(totalCost);
     }
 
-    public int getPayAmount() {
+    public int getTotalPayAmount() {
         return orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
                 .sum() - getTotalUsedPoint();

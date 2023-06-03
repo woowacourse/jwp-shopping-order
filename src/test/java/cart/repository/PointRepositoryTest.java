@@ -78,6 +78,16 @@ class PointRepositoryTest {
         assertThat(points.getPoints()).containsExactly(point2, point1);
     }
 
+    @DisplayName("한 유저의 한 주문에 대한 포인트 정보를 구할 수 있다.")
+    @Test
+    void findBy() {
+        Point point = pointRepository.findBy(1L, 1L);
+
+        Point expected = Point.of(1L, 5600, "주문 포인트 적립", LocalDate.of(2023, 7, 2), LocalDate.of(2023, 10, 31));
+
+        assertThat(point).isEqualTo(expected);
+    }
+
     @DisplayName("한 주문에 대한 포인트를 저장할 수 있다.")
     @Test
     void save() {

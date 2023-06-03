@@ -20,10 +20,10 @@ public class PointDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public PointEntity findByOrderId(Long orderId) {
-        String sql = "select id, earned_point, comment, create_at, expired_at from point where orders_id = ?";
+    public PointEntity findBy(Long memberId, Long orderId) {
+        String sql = "select id, earned_point, comment, create_at, expired_at from point where member_id = ? and orders_id = ?";
 
-        return jdbcTemplate.queryForObject(sql, new PointRowMapper(), orderId);
+        return jdbcTemplate.queryForObject(sql, new PointRowMapper(), memberId, orderId);
     }
 
     public List<PointEntity> findByMemberId(Long memberId) {

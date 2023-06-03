@@ -81,6 +81,18 @@ public class PointRepository {
         return new Points(points);
     }
 
+    public Point findBy(Long memberId, Long orderId) {
+        PointEntity pointEntity = pointDao.findBy(memberId, orderId);
+
+        Long id = pointEntity.getId();
+        int value = pointEntity.getValue();
+        String comment = pointEntity.getComment();
+        LocalDate createAt = pointEntity.getCreateAt();
+        LocalDate expiredAt = pointEntity.getExpiredAt();
+
+        return Point.of(id, value, comment, createAt, expiredAt);
+    }
+
     public void save(Long memberId, Long orderId, Point point) {
         PointEntity pointEntity = new PointEntity(point.getId(), point.getValue(), point.getComment(), point.getCreateAt(), point.getExpiredAt());
         pointDao.save(memberId, orderId, pointEntity);
