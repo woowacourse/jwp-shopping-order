@@ -21,7 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
         controllers = {CartItemApiController.class, OrderApiController.class, ProductApiController.class},
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class),
-                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "cart\\.authentication\\..*")
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "cart\\.authentication\\..*"),
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "cart\\.configuration\\.resolver\\..*")
         }
 )
 @AutoConfigureRestDocs

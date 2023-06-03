@@ -1,8 +1,7 @@
 package cart.configuration;
 
 import cart.authentication.AuthenticationInterceptor;
-import cart.authentication.MemberStore;
-import cart.configuration.converter.StringToIdsConverter;
+import cart.configuration.converter.CartItemIdsConverter;
 import cart.configuration.resolver.MemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +15,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AuthenticationInterceptor authInterceptor;
-    private final MemberStore memberStore;
+    private final MemberArgumentResolver memberArgumentResolver;
+    private final CartItemIdsConverter cartItemIdsConverter;
 
-    public WebMvcConfig(AuthenticationInterceptor authInterceptor, MemberStore memberStore) {
+    public WebMvcConfig(
+            AuthenticationInterceptor authInterceptor,
+            MemberArgumentResolver memberArgumentResolver,
+            CartItemIdsConverter cartItemIdsConverter
+    ) {
         this.authInterceptor = authInterceptor;
-        this.memberStore = memberStore;
+        this.memberArgumentResolver = memberArgumentResolver;
+        this.cartItemIdsConverter = cartItemIdsConverter;
     }
 
     @Override
@@ -35,7 +40,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver(memberStore));
+        resolvers.add(memberArgumentResolver);
     }
 
     @Override
@@ -47,6 +52,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new StringToIdsConverter());
+        registry.addConverter(cartItemIdsConverter);
     }
 }

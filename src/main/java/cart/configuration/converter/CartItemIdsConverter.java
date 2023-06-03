@@ -6,8 +6,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
-public class StringToIdsConverter implements Converter<String, List<Long>> {
+@Component
+public class CartItemIdsConverter implements Converter<String, List<Long>> {
 
     private static final String IDS_DELIMITER = ",";
 
