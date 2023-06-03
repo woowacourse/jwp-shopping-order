@@ -8,6 +8,7 @@ import cart.dto.OrderResponse;
 import cart.dto.OrdersResponse;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class OrderService {
                 })
                 .collect(Collectors.toList());
 
-        Long orderId = orderDao.save(new Order(member, new OrderItems(orderItems), 3000L, orderRequest.getOrderTime()));
+        Long orderId = orderDao.save(new Order(member, new OrderItems(orderItems), 3000L, Timestamp.valueOf(orderRequest.getOrderTime())));
 
         Order order = orderDao.findById(orderId);
 

@@ -1,16 +1,15 @@
 package cart.dto;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 public class OrderRequest {
     private List<OrderItemRequest> orderItems;
-    private Timestamp orderTime;
+    private String orderTime;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(List<OrderItemRequest> orderItems, Timestamp orderTime) {
+    public OrderRequest(List<OrderItemRequest> orderItems, String orderTime) {
         this.orderItems = orderItems;
         this.orderTime = orderTime;
     }
@@ -19,7 +18,7 @@ public class OrderRequest {
         return orderItems;
     }
 
-    public Timestamp getOrderTime() {
+    public String getOrderTime() {
         return orderTime;
     }
 }
