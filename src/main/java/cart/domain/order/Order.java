@@ -2,6 +2,8 @@ package cart.domain.order;
 
 import cart.domain.Member;
 
+import java.util.Objects;
+
 public class Order {
     private final Long id;
     private final Member member;
@@ -9,16 +11,16 @@ public class Order {
     private final int totalPrice;
     private final int point;
 
-    public Order(final Long id, final Member member, final int paymentPrice, final int totalPrice, final int point) {
+    public Order(final Long id, final int paymentPrice, final int totalPrice, final int point, final Member member) {
         this.id = id;
-        this.member = member;
         this.paymentPrice = paymentPrice;
         this.totalPrice = totalPrice;
         this.point = point;
+        this.member = member;
     }
 
     public Order(final int paymentPrice, final int totalPrice, final int point, final Member member) {
-        this(null, member, paymentPrice, totalPrice, point);
+        this(null, paymentPrice, totalPrice, point, member);
     }
 
     public Long getId() {
@@ -39,5 +41,29 @@ public class Order {
 
     public int getPoint() {
         return point;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", member=" + member +
+                ", paymentPrice=" + paymentPrice +
+                ", totalPrice=" + totalPrice +
+                ", point=" + point +
+                '}';
     }
 }
