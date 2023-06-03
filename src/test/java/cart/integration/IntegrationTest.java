@@ -8,7 +8,9 @@ import cart.application.dto.ProductRequest;
 import cart.application.dto.coupon.CreateCouponRequest;
 import cart.application.dto.coupon.FindCouponsResponse;
 import cart.application.dto.coupon.IssueCouponRequest;
+import cart.application.dto.order.CreateOrderByCartItemsRequest;
 import cart.application.dto.order.FindOrderCouponsResponse;
+import cart.application.dto.order.FindOrderDetailResponse;
 import cart.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -155,4 +157,32 @@ public class IntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(FindCouponsResponse.class);
     }
+
+    protected long orderCartItems(final Member member, final CreateOrderByCartItemsRequest request) {
+        ExtractableResponse<Response> response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .body(request)
+                .when()
+                .post("/orders")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
+
+        return getIdFromCreatedResponse(response);
+    }
+
+    protected FindOrderDetailResponse findOrderById(final Member member, final long orderId) {
+        return given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/orders/{orderId}", orderId)
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(FindOrderDetailResponse.class);
+    }
+
 }

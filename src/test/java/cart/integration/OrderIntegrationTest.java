@@ -5,8 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.application.dto.ProductRequest;
 import cart.application.dto.coupon.CreateCouponRequest;
 import cart.application.dto.coupon.IssueCouponRequest;
+import cart.application.dto.order.CreateOrderByCartItemsRequest;
 import cart.application.dto.order.FindOrderCouponsResponse;
+import cart.application.dto.order.FindOrderDetailResponse;
 import cart.application.dto.order.OrderCouponResponse;
+import cart.application.dto.order.OrderDetailProductResponse;
+import cart.application.dto.order.OrderProductRequest;
 import cart.domain.Member;
 import cart.domain.coupon.CouponType;
 import cart.persistence.dao.MemberCouponDao;
@@ -34,6 +38,10 @@ public class OrderIntegrationTest extends IntegrationTest {
     private Long productId2;
     private Member member;
     private Member other;
+    private Long cartItemId1;
+    private Long cartItemId2;
+    private Long couponId1;
+    private Long couponId2;
 
     @BeforeEach
     void setUp() {
@@ -46,20 +54,21 @@ public class OrderIntegrationTest extends IntegrationTest {
         long otherId = memberDao.create(new MemberEntity("other@test.com", "test!", "otherNickname"));
         member = new Member(memberId, "test@test.com", "test!", "testNickname");
         other = new Member(otherId, "other@test.com", "test!", "otherNickname");
+
+        cartItemId1 = requestAddCartItemAndGetId(member, productId);
+        cartItemId2 = requestAddCartItemAndGetId(member, productId2);
+
+        couponId1 = createCoupon(
+                new CreateCouponRequest("10%(10,000~)", 10_000, 3000, CouponType.FIXED_PERCENTAGE, 10));
+        couponId2 = createCoupon(
+                new CreateCouponRequest("1000원(50,000~)", 50_000, 1000, CouponType.FIXED_AMOUNT, 10_000));
+
     }
 
     @Test
     void 장바구니_아이디로_사용자_쿠폰을_조회한다() {
-        Long cartItemId1 = requestAddCartItemAndGetId(member, productId);
-        Long cartItemId2 = requestAddCartItemAndGetId(member, productId2);
-
         LocalDateTime pastDate = LocalDateTime.of(2000, 1, 1, 0, 0);
         LocalDateTime futureDate = LocalDateTime.of(9999, 12, 31, 0, 0);
-
-        long couponId1 = createCoupon(
-                new CreateCouponRequest("10%(10,000~)", 10_000, 3000, CouponType.FIXED_PERCENTAGE, 10));
-        long couponId2 = createCoupon(
-                new CreateCouponRequest("1000원(50,000~)", 50_000, 1000, CouponType.FIXED_AMOUNT, 10_000));
 
         long memberCouponId1 = issueCoupon(member, couponId1, new IssueCouponRequest(futureDate));
         long memberCouponId2 = issueCoupon(member, couponId2, new IssueCouponRequest(futureDate));
@@ -76,6 +85,35 @@ public class OrderIntegrationTest extends IntegrationTest {
         );
 
         assertThat(response.getCoupons())
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 장바구니_상품을_주문_및_조회한다() {
+
+        LocalDateTime futureDate = LocalDateTime.of(9999, 12, 31, 0, 0);
+        requestUpdateCartItemQuantity(member, cartItemId1, 3);
+        long memberCouponId1 = issueCoupon(member, couponId1, new IssueCouponRequest(futureDate));
+
+        CreateOrderByCartItemsRequest request = new CreateOrderByCartItemsRequest(
+                memberCouponId1,
+                List.of(
+                        new OrderProductRequest(cartItemId1, 3, "치킨", 10_000, "http://example.com/chicken.jpg"),
+                        new OrderProductRequest(cartItemId2, 1, "피자", 15_000, "http://example.com/pizza.jpg")
+                )
+        );
+
+        long orderId = orderCartItems(member, request);
+        FindOrderDetailResponse response = findOrderById(member, orderId);
+
+        FindOrderDetailResponse expected = new FindOrderDetailResponse(orderId, List.of(
+                new OrderDetailProductResponse(productId, "치킨", "http://example.com/chicken.jpg", 10_000, 3),
+                new OrderDetailProductResponse(productId2, "피자", "http://example.com/pizza.jpg", 15_000, 1)),
+                45000, 4500, 0);
+
+        assertThat(response)
                 .usingRecursiveComparison()
                 .ignoringCollectionOrder()
                 .isEqualTo(expected);
