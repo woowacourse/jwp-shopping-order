@@ -24,7 +24,7 @@
 
 ### 금액
 
-- [ ] 쿠폰을 적용한 금액의 소숫점은 버린다.
+- [X] 쿠폰을 적용한 금액의 소숫점은 버린다.
 
 ## API 명세
 
@@ -314,7 +314,7 @@ Content-Type: application/json
 ]
 ```
 ---
-- [ ] 상품 주문
+- [X] 상품 주문
 
 ### Request
 
@@ -346,7 +346,7 @@ HTTP/1.1 201 OK
 Location: /orders/{orderId}
 ```
 ---
-- [ ] 상품 주문 조회
+- [X] 상품 주문 조회
 
 ### Request
 
