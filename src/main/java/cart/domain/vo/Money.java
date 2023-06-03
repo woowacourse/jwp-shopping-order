@@ -60,6 +60,10 @@ public class Money {
         return value.compareTo(other.value) >= 0;
     }
 
+    public boolean isGreaterThan(Money other) {
+        return value.compareTo(other.value) > 0;
+    }
+
     public BigDecimal getValue() {
         return value;
     }

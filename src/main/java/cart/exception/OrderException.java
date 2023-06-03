@@ -31,4 +31,11 @@ public class OrderException extends RuntimeException {
             super("회원의 주문 정보가 아닙니다.");
         }
     }
+
+    public static class OverFlowPoint extends OrderException {
+
+        public OverFlowPoint() {
+            super("주문 금액보다 더 많은 포인트를 사용할 수 없습니다.");
+        }
+    }
 }

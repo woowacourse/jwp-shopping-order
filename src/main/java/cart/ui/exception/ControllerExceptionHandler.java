@@ -1,8 +1,7 @@
 package cart.ui.exception;
 
 import cart.application.response.ErrorResponse;
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
+import cart.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleException(AuthenticationException e) {
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
         logger.info(e.getMessage());
 
         return ResponseEntity
@@ -42,7 +41,34 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CartItemException.class)
-    public ResponseEntity<ErrorResponse> handleException(CartItemException.InvalidMember e) {
+    public ResponseEntity<ErrorResponse> handleCartItemException(CartItemException e) {
+        logger.info(e.getMessage());
+
+        return ResponseEntity
+                .status(FORBIDDEN)
+                .body(ErrorResponse.from(BAD_REQUEST.name(), e.getMessage(), now()));
+    }
+
+    @ExceptionHandler(MemberException.class)
+    public ResponseEntity<ErrorResponse> handleMemberException(MemberException e) {
+        logger.info(e.getMessage());
+
+        return ResponseEntity
+                .status(FORBIDDEN)
+                .body(ErrorResponse.from(BAD_REQUEST.name(), e.getMessage(), now()));
+    }
+
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<ErrorResponse> handleOrderException(OrderException e) {
+        logger.info(e.getMessage());
+
+        return ResponseEntity
+                .status(FORBIDDEN)
+                .body(ErrorResponse.from(BAD_REQUEST.name(), e.getMessage(), now()));
+    }
+
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<ErrorResponse> handleProductException(ProductException e) {
         logger.info(e.getMessage());
 
         return ResponseEntity

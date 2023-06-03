@@ -4,6 +4,7 @@ import cart.domain.cartitem.CartItems;
 import cart.domain.member.Member;
 import cart.domain.pay.PayPoint;
 import cart.domain.vo.Money;
+import cart.exception.OrderException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -31,14 +32,21 @@ public class Order {
     }
 
     public static Order of(Member member, CartItems cartItems, Money usePoint, PayPoint payPoint) {
-        Money totalPay = cartItems.totalPrice().minus(usePoint);
+        validateOverFlowPoint(cartItems, usePoint);
+        Money realPay = cartItems.totalPrice().minus(usePoint);
 
         member.spendPoint(usePoint);
-        member.spendMoney(totalPay);
+        member.spendMoney(realPay);
 
-        member.accumulatePoint(payPoint.calculate(totalPay));
+        member.accumulatePoint(payPoint.calculate(realPay));
 
         return new Order(member, cartItems, usePoint);
+    }
+
+    private static void validateOverFlowPoint(CartItems cartItems, Money usePoint) {
+        if (usePoint.isGreaterThan(cartItems.totalPrice())) {
+            throw new OrderException.OverFlowPoint();
+        }
     }
 
     public Long getId() {
