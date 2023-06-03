@@ -7,34 +7,37 @@ import java.util.List;
 public class OrderPrice {
     private final static int DEFAULT_DELIVERY_PRICE = 3000;
 
-    private final long orderPrice;
+    private final long totalPrice;
     private final int deliveryPrice;
+    private final long discountedPrice;
 
-    private OrderPrice(long orderPrice) {
-        this.orderPrice = orderPrice;
+    private OrderPrice(long totalPrice, long discountedPrice) {
+        this.totalPrice = totalPrice;
         this.deliveryPrice = DEFAULT_DELIVERY_PRICE;
+        this.discountedPrice = discountedPrice;
     }
 
-    private OrderPrice(long orderPrice, int deliveryPrice) {
-        this.orderPrice = orderPrice;
+    private OrderPrice(long totalPrice, int deliveryPrice, long discountedPrice) {
+        this.totalPrice = totalPrice;
         this.deliveryPrice = deliveryPrice;
+        this.discountedPrice = discountedPrice;
     }
 
-    public static OrderPrice create(long orderPrice, int deliveryPrice) {
-        return new OrderPrice(orderPrice, deliveryPrice);
+    public static OrderPrice create(long orderPrice, int deliveryPrice,long discountedPrice) {
+        return new OrderPrice(orderPrice, deliveryPrice, discountedPrice);
     }
 
     public static OrderPrice createFromItems(List<OrderItem> orderItems) {
         long totalPrice = getTotalPrice(orderItems);
 
-        return new OrderPrice(totalPrice);
+        return new OrderPrice(totalPrice, 0);
     }
 
     public static OrderPrice createFromItemsWithCoupon(List<OrderItem> orderItems, Coupon coupon) {
         long totalPrice = getTotalPrice(orderItems);
         long discountedPrice = totalPrice * (100 - coupon.getDiscountRate()) / 100;
 
-        return new OrderPrice(discountedPrice);
+        return new OrderPrice(totalPrice, discountedPrice);
     }
 
     private static long getTotalPrice(List<OrderItem> orderItems) {
@@ -43,11 +46,15 @@ public class OrderPrice {
                 .sum();
     }
 
-    public long getOrderPrice() {
-        return orderPrice;
+    public long getTotalPrice() {
+        return totalPrice;
     }
 
     public int getDeliveryPrice() {
         return deliveryPrice;
+    }
+
+    public long getDiscountedPrice() {
+        return discountedPrice;
     }
 }

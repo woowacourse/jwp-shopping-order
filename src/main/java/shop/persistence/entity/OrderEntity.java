@@ -5,20 +5,24 @@ import java.time.LocalDateTime;
 public class OrderEntity {
     private final Long id;
     private final Long memberId;
-    private final Long totalProductPrice;
+    private final Long totalPrice;
+    private final Long discountedTotalPrice;
     private final Integer deliveryPrice;
-    private final LocalDateTime orderedAt;
+    private final LocalDateTime orderAt;
 
-    public OrderEntity(Long id, Long memberId, Long totalProductPrice, Integer deliveryPrice, LocalDateTime orderedAt) {
+    public OrderEntity(Long id, Long memberId, Long totalPrice, Long discountedTotalPrice,
+                       Integer deliveryPrice, LocalDateTime orderAt) {
         this.id = id;
         this.memberId = memberId;
-        this.totalProductPrice = totalProductPrice;
+        this.totalPrice = totalPrice;
+        this.discountedTotalPrice = discountedTotalPrice;
         this.deliveryPrice = deliveryPrice;
-        this.orderedAt = orderedAt;
+        this.orderAt = orderAt;
     }
 
-    public OrderEntity(Long memberId, Long totalProductPrice, Integer deliveryPrice, LocalDateTime orderedAt) {
-        this(null, memberId, totalProductPrice, deliveryPrice, orderedAt);
+    public OrderEntity(Long memberId, Long totalPrice, Long discountedTotalPrice,
+                       Integer deliveryPrice, LocalDateTime orderAt) {
+        this(null, memberId, totalPrice, discountedTotalPrice, deliveryPrice, orderAt);
     }
 
     public Long getId() {
@@ -29,15 +33,19 @@ public class OrderEntity {
         return memberId;
     }
 
-    public Long getTotalProductPrice() {
-        return totalProductPrice;
+    public Long getTotalPrice() {
+        return totalPrice;
+    }
+
+    public Long getDiscountedTotalPrice() {
+        return discountedTotalPrice;
     }
 
     public Integer getDeliveryPrice() {
         return deliveryPrice;
     }
 
-    public LocalDateTime getOrderedAt() {
-        return orderedAt;
+    public LocalDateTime getOrderAt() {
+        return orderAt;
     }
 }

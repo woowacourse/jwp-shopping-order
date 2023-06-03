@@ -10,14 +10,14 @@ import shop.domain.order.OrderItem;
 import shop.domain.order.OrderPrice;
 import shop.domain.product.Product;
 import shop.domain.repository.OrderRepository;
-import shop.persistence.entity.detail.OrderCouponDetail;
-import shop.persistence.entity.detail.OrderProductDetail;
 import shop.persistence.dao.OrderCouponDao;
 import shop.persistence.dao.OrderDao;
 import shop.persistence.dao.OrderProductDao;
 import shop.persistence.entity.OrderCouponEntity;
 import shop.persistence.entity.OrderEntity;
 import shop.persistence.entity.OrderProductEntity;
+import shop.persistence.entity.detail.OrderCouponDetail;
+import shop.persistence.entity.detail.OrderProductDetail;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -39,7 +39,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Long save(Long memberId, Long couponId, Order order) {
         Long savedOrderId = saveOrder(memberId, order);
-        saveOrderProduct(order);
+        saveOrderProduct(savedOrderId, order);
         saveOrderCoupon(memberId, couponId);
 
         return savedOrderId;
@@ -54,9 +54,9 @@ public class OrderRepositoryImpl implements OrderRepository {
         orderCouponDao.insert(orderCouponEntity);
     }
 
-    private void saveOrderProduct(Order order) {
+    private void saveOrderProduct(Long orderId, Order order) {
         List<OrderProductEntity> orderProductEntities = order.getOrderItems().stream()
-                .map(orderItem -> createOrderProductEntity(order.getId(), orderItem))
+                .map(orderItem -> createOrderProductEntity(orderId, orderItem))
                 .collect(Collectors.toList());
 
         orderProductDao.insertAll(orderProductEntities);
@@ -74,7 +74,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     private Long saveOrder(Long memberId, Order order) {
         OrderEntity orderEntity = new OrderEntity(
                 memberId,
-                order.getOrderPrice(),
+                order.getTotalPrice(),
+                order.getDiscountedPrice(),
                 order.getDeliveryPrice(),
                 order.getOrderedAt()
         );
@@ -98,7 +99,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         Long orderId = orderEntity.getId();
         List<OrderItem> orderItems = toOrderItems(member, orderProducts);
         OrderPrice orderPrice = toOrderPrice(orderEntity);
-        LocalDateTime orderedAt = orderEntity.getOrderedAt();
+        LocalDateTime orderedAt = orderEntity.getOrderAt();
 
         return new Order(orderId, orderItems, orderPrice, orderedAt);
     }
@@ -129,8 +130,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private OrderPrice toOrderPrice(OrderEntity orderEntity) {
         return OrderPrice.create(
-                orderEntity.getTotalProductPrice(),
-                orderEntity.getDeliveryPrice()
+                orderEntity.getTotalPrice(),
+                orderEntity.getDeliveryPrice(),
+                orderEntity.getDiscountedTotalPrice()
         );
     }
 

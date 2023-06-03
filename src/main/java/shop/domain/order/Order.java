@@ -44,7 +44,11 @@ public class Order {
         return orderPrice.getDeliveryPrice();
     }
 
-    public long getOrderPrice() {
-        return orderPrice.getOrderPrice();
+    public long getTotalPrice() {
+        return orderPrice.getTotalPrice();
+    }
+
+    public long getDiscountedPrice() {
+        return orderPrice.getDiscountedPrice();
     }
 }
