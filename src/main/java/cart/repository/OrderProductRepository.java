@@ -4,6 +4,7 @@ import cart.dao.OrderProductDao;
 import cart.dao.entity.OrderProductEntity;
 import cart.dao.entity.ProductEntity;
 import cart.domain.OrderProduct;
+import cart.domain.OrderProducts;
 import cart.domain.Product;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,5 +42,32 @@ public class OrderProductRepository {
         );
 
         return new OrderProductEntity(null, orderId, productEntity, orderProduct.getQuantity());
+    }
+
+    public OrderProducts findByOrderId(final Long orderId) {
+        List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(orderId);
+
+        return toDomain(orderProductEntities);
+    }
+
+    private OrderProducts toDomain(List<OrderProductEntity> orderProductEntities) {
+        List<OrderProduct> orderProducts = orderProductEntities.stream()
+                .map(orderProductEntity -> {
+                    Product product = new Product(
+                            orderProductEntity.getProductId(),
+                            orderProductEntity.getProductName(),
+                            orderProductEntity.getProductPrice(),
+                            orderProductEntity.getProductImageUrl()
+                    );
+
+                    return new OrderProduct(
+                            orderProductEntity.getId(),
+                            product,
+                            orderProductEntity.getQuantity()
+                    );
+                })
+                .collect(Collectors.toList());
+
+        return new OrderProducts(orderProducts);
     }
 }

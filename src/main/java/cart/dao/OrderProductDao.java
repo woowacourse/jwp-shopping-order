@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.dao.entity.OrderProductEntity;
 import cart.dao.entity.ProductEntity;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderProductDao {
+    private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<OrderProductEntity> orderProductEntityRowMapper = (rs, rowNum) -> {
         ProductEntity productEntity = new ProductEntity(
@@ -32,6 +34,7 @@ public class OrderProductDao {
     };
 
     public OrderProductDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("id")
                 .withTableName("order_product")
@@ -54,5 +57,16 @@ public class OrderProductDao {
                 .toArray(SqlParameterSource[]::new);
 
         simpleJdbcInsert.executeBatch(sqlParameterSources);
+    }
+
+    public List<OrderProductEntity> findByOrderId(final Long orderId) {
+        String sql = "SELECT * FROM order_product WHERE order_id = ?";
+
+        List<OrderProductEntity> orderProductEntities = jdbcTemplate.query(sql, orderProductEntityRowMapper, orderId);
+
+        if (orderProductEntities.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return orderProductEntities;
     }
 }

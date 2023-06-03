@@ -1,6 +1,7 @@
 package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberDao;
@@ -13,6 +14,8 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
 import cart.domain.Product;
+import cart.exception.ErrorMessage;
+import cart.exception.OrderException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -71,6 +74,19 @@ class OrderRepositoryTest {
         );
     }
 
+    @Test
+    void 존재하지_않는_주문_ID로_주문을_조회하면_예외를_반환한다() {
+        // given
+        상품을_저장하고_ID를_갖는_상품을_리턴한다(첫번째_상품_엔티티);
+        상품을_저장하고_ID를_갖는_상품을_리턴한다(두번째_상품_엔티티);
+        Member 멤버 = 멤버를_저장하고_ID가_있는_멤버를_리턴한다(멤버_엔티티);
+
+        // then
+        assertThatThrownBy(() -> orderRepository.findById(Long.MAX_VALUE, 멤버))
+                .isInstanceOf(OrderException.class)
+                .hasMessage(ErrorMessage.NOT_FOUND_ORDER.getMessage());
+    }
+
     private Member 멤버를_저장하고_ID가_있는_멤버를_리턴한다(MemberEntity 멤버_엔티티) {
         Long 멤버_ID = memberDao.save(멤버_엔티티);
 
@@ -105,9 +121,9 @@ class OrderRepositoryTest {
 
         // then
         assertAll(
-
                 () -> assertThat(주문들).hasSize(2),
                 () -> assertThat(주문들).usingRecursiveComparison()
+                        .ignoringFields("createdAt", "updatedAt")
                         .isEqualTo(맞는_결과)
         );
     }

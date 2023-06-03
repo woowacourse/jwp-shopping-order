@@ -35,6 +35,14 @@ public class Order {
                 null, null);
     }
 
+    public Order(final Long id,
+                 final OrderProducts orderProducts,
+                 final Member member,
+                 final int usedPoint,
+                 final LocalDateTime createdAt, final LocalDateTime updatedAt) {
+        this(id, orderProducts, member, new Point(usedPoint), createdAt, updatedAt);
+    }
+
     public int getTotalPrice() {
         return orderProducts.getTotalPrice().getValue();
     }

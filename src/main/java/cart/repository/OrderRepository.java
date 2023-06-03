@@ -8,6 +8,7 @@ import cart.dao.entity.OrderWithOrderProductEntities;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderProduct;
+import cart.domain.OrderProducts;
 import cart.domain.Product;
 import cart.exception.OrderException;
 import java.util.List;
@@ -45,10 +46,17 @@ public class OrderRepository {
     }
 
     public Order findById(Long orderId, Member member) {
-        OrderWithOrderProductEntities orderEntity = orderDao.findById(orderId)
+        OrderEntity orderEntity = orderDao.findById(orderId)
                 .orElseThrow(() -> new OrderException(NOT_FOUND_ORDER));
 
-        return toDomain(orderEntity, member);
+        OrderProducts orderProducts = orderProductRepository.findByOrderId(orderId);
+
+        return new Order(orderId,
+                orderProducts,
+                member,
+                orderEntity.getUsedPoint(),
+                orderEntity.getCreatedAt(),
+                orderEntity.getUpdatedAt());
     }
 
     public List<Order> findOrdersByMember(Member member) {
@@ -70,7 +78,7 @@ public class OrderRepository {
                                     orderProductEntity.getProductImageUrl()
                             );
                             return new OrderProduct(
-                                    orderEntity.getId(),
+                                    orderProductEntity.getId(),
                                     product,
                                     orderProductEntity.getQuantity()
                             );

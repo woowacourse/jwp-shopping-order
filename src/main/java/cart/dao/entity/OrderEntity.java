@@ -48,6 +48,14 @@ public class OrderEntity {
         return savedPoint;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
