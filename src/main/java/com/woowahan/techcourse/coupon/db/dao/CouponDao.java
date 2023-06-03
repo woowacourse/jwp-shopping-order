@@ -4,6 +4,7 @@ import com.woowahan.techcourse.coupon.domain.Coupon;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.constraints.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -52,7 +53,7 @@ public class CouponDao {
         return jdbcTemplate.query(BASE_FIND_ALL_SQL, rowMapper);
     }
 
-    public List<Coupon> findAllByIds(List<Long> couponIds) {
+    public List<Coupon> findAllByIds(@NotNull List<Long> couponIds) {
         String inSql = String.join(",", Collections.nCopies(couponIds.size(), "?"));
         String sql = String.format(BASE_FIND_ALL_SQL + " WHERE c.id IN (%s)", inSql);
         return jdbcTemplate.query(sql, rowMapper, couponIds.toArray());
