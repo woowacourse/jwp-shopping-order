@@ -6,6 +6,8 @@ import cart.dto.CouponResponse;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +22,13 @@ public class CouponApiController {
   }
 
   @GetMapping
-  public ResponseEntity<List<CouponResponse>> showCartItems(Member member) {
+  public ResponseEntity<List<CouponResponse>> showCartItems(final Member member) {
     return ResponseEntity.ok(couponService.findMemberCouponsByMemberId(member));
+  }
+
+  @PostMapping("/{couponId}")
+  public ResponseEntity<Void> issueCoupon(final Member member, @PathVariable Long couponId) {
+    couponService.issueCoupon(member, couponId);
+    return ResponseEntity.ok().build();
   }
 }

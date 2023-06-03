@@ -31,6 +31,7 @@ class CouponApiControllerTest {
   void setUp() {
     RestAssured.port = port;
   }
+
   @Test
   void showCartItems() {
     final Long coupon1 = couponService.createCoupon(new SaveCouponRequest("1000원 할인", 10000, 1000));
