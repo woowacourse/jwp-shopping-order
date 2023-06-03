@@ -28,7 +28,8 @@ public class OrderItemRequest {
     private OrderItemRequest() {
     }
 
-    public OrderItemRequest(final OrderProductRequest productRequest, final int quantity, final List<MemberCouponRequest> memberCoupons) {
+    public OrderItemRequest(final Long cartItemId, final OrderProductRequest productRequest, final int quantity, final List<MemberCouponRequest> memberCoupons) {
+        this.cartItemId = cartItemId;
         this.productRequest = productRequest;
         this.quantity = quantity;
         this.memberCoupons = memberCoupons;

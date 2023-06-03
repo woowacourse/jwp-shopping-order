@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Discount;
+import cart.entity.CouponEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,18 +26,18 @@ class CouponDaoTest {
 
     @Test
     void findAll() {
-        Coupon coupon1 = new Coupon("오픈 기념 쿠폰", new Discount("rate", 10));
+        CouponEntity coupon1 = new CouponEntity("오픈 기념 쿠폰", "rate", 10);
         couponDao.create(coupon1);
-        Coupon coupon2 = new Coupon("오픈 기념 쿠폰", new Discount("rate", 1000));
+        CouponEntity coupon2 = new CouponEntity("오픈 기념 쿠폰", "rate", 20);
         couponDao.create(coupon2);
 
-        List<Coupon> coupons = couponDao.findAll();
+        List<CouponEntity> coupons = couponDao.findAll();
         Assertions.assertThat(coupons).hasSizeGreaterThan(2);
     }
 
     @Test
     void create() {
-        Coupon coupon = new Coupon("오픈 기념 쿠폰", new Discount("rate", 10));
+        CouponEntity coupon = new CouponEntity("오픈 기념 쿠폰", "rate", 10);
         Long id = couponDao.create(coupon);
 
         Assertions.assertThat(id).isPositive();
@@ -46,7 +45,7 @@ class CouponDaoTest {
 
     @Test
     void delete() {
-        Coupon coupon = new Coupon("오픈 기념 쿠폰", new Discount("rate", 10));
+        CouponEntity coupon = new CouponEntity("오픈 기념 쿠폰", "rate", 10);
         Long id = couponDao.create(coupon);
         couponDao.delete(id);
         Integer count = jdbcTemplate.queryForObject("select count(*) from coupon where id = ?", Integer.class, id);

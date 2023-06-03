@@ -1,9 +1,8 @@
 package cart.application;
 
-import cart.dao.CouponDao;
 import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Discount;
 import cart.dto.coupon.CouponRequest;
+import cart.repository.CouponRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,23 +10,22 @@ import java.util.List;
 @Service
 public class CouponService {
 
-    private final CouponDao couponDao;
+    private final CouponRepository couponRepository;
 
-    public CouponService(final CouponDao couponDao) {
-        this.couponDao = couponDao;
+    public CouponService(final CouponRepository couponRepository) {
+        this.couponRepository = couponRepository;
     }
 
     public List<Coupon> findAll() {
-        List<Coupon> coupons = couponDao.findAll();
+        List<Coupon> coupons = couponRepository.findAll();
         return coupons;
     }
 
     public Long create(CouponRequest request) {
-        Coupon coupon = new Coupon(request.getName(), new Discount(request.getType(), request.getAmount()));
-        return couponDao.create(coupon);
+        return couponRepository.create(request.toCoupon());
     }
 
     public void delete(Long id) {
-        couponDao.delete(id);
+        couponRepository.delete(id);
     }
 }

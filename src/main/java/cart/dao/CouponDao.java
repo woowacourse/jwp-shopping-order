@@ -1,29 +1,29 @@
 package cart.dao;
 
-import cart.domain.coupon.Coupon;
-import cart.domain.coupon.Discount;
+import cart.entity.CouponEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
 
-@Repository
+@Component
 public class CouponDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    private static RowMapper<Coupon> rowMapper() {
-        return (rs, rowNum) -> new Coupon(
+    private static RowMapper<CouponEntity> rowMapper() {
+        return (rs, rowNum) -> new CouponEntity(
                 rs.getLong("id"),
                 rs.getString("name"),
-                new Discount(rs.getString("discount_type"), rs.getInt("amount"))
+                rs.getString("discount_type"),
+                rs.getInt("amount")
         );
     }
 
@@ -34,7 +34,7 @@ public class CouponDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Coupon> findAll() {
+    public List<CouponEntity> findAll() {
         try {
             String sql = "select * from coupon";
             return jdbcTemplate.query(sql, rowMapper());
@@ -43,11 +43,11 @@ public class CouponDao {
         }
     }
 
-    public Long create(Coupon coupon) {
+    public Long create(CouponEntity coupon) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", coupon.getName())
-                .addValue("discount_type", coupon.getDiscount().getDiscountType().name())
-                .addValue("amount", coupon.getDiscount().getAmount());
+                .addValue("discount_type", coupon.getDiscountType())
+                .addValue("amount", coupon.getAmount());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }

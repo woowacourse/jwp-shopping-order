@@ -7,6 +7,8 @@ import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberCoupons;
 import cart.domain.product.Product;
+import cart.dto.coupon.DiscountRequest;
+import cart.dto.coupon.MemberCouponRequest;
 import cart.dto.order.OrderItemRequest;
 import cart.dto.order.OrderItemsRequests;
 import cart.dto.order.OrderProductRequest;
@@ -25,8 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +43,8 @@ class OrderServiceTest {
     @Test
     void OrderCartMismatchExceptionTest() {
         OrderItemRequest request = new OrderItemRequest(
-                new OrderProductRequest(1L, "치킨", 11000, "https://chicken"),
+                1L
+                , new OrderProductRequest(1L, "치킨", 10000, "https://chicken"),
                 10,
                 Collections.emptyList()
         );
@@ -50,7 +52,7 @@ class OrderServiceTest {
         OrderItemsRequests orderItemsRequests = new OrderItemsRequests(3000, List.of(request));
 
         given(cartItemRepository.findByMemberId(anyLong())).willReturn(List.of(new CartItem(1L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(1L, "a@a.com", "1234"))));
-        given(cartItemRepository.findByIds(anyList())).willReturn(List.of(new CartItem(2L, 10, new Product(2L, "치킨", 10000, "https://chicken"), new Member(2L, "a@a.com", "1234"))));
+        given(cartItemRepository.findByIds(anyList())).willReturn(List.of());
         assertThatThrownBy(() -> orderService.createOrder(orderItemsRequests, new Member(1L, "a@a.com", "1234")))
                 .isInstanceOf(OrderCartMismatchException.class);
     }
@@ -58,19 +60,19 @@ class OrderServiceTest {
     @Test
     void MemberCouponNotFoundExceptionTest() {
         OrderItemRequest request = new OrderItemRequest(
-                new OrderProductRequest(1L, "치킨", 11000, "https://chicken"),
+                3L,
+                new OrderProductRequest(1L, "치킨", 10000, "https://chicken"),
                 10,
-                Collections.emptyList()
+                List.of(new MemberCouponRequest(2L, "쿠폰", new DiscountRequest("rate", 10)))
         );
 
         OrderItemsRequests orderItemsRequests = new OrderItemsRequests(3000, List.of(request));
+        given(memberCouponRepository.findByIds(eq(List.of(2L)))).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(7L, "쿠폰", new Discount("rate", 10)), false)))));
+        given(memberCouponRepository.findByMemberId(eq(5L))).willReturn(new MemberCoupons(new ArrayList<>()));
+        given(cartItemRepository.findByIds(eq(List.of(3L)))).willReturn(List.of(new CartItem(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
+        given(cartItemRepository.findByMemberId(eq(5L))).willReturn(List.of(new CartItem(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
 
-        given(memberCouponRepository.findByIds(anyList())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(1L, new Coupon(2L, "쿠폰", new Discount("rate", 10)), false)))));
-        given(memberCouponRepository.findByMemberId(anyLong())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(2L, "쿠폰", new Discount("rate", 10)), false)))));
-        given(cartItemRepository.findByMemberId(anyLong())).willReturn(List.of(new CartItem(1L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(1L, "a@a.com", "1234"))));
-
-        assertThatThrownBy(() -> orderService.createOrder(orderItemsRequests, new Member(1L, "a@a.com", "1234")))
+        assertThatThrownBy(() -> orderService.createOrder(orderItemsRequests, new Member(5L, "a@a.com", "1234")))
                 .isInstanceOf(MemberCouponNotFoundException.class);
     }
-
 }

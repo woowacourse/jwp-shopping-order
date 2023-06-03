@@ -1,5 +1,8 @@
 package cart.dto.coupon;
 
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Discount;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -19,6 +22,10 @@ public class CouponRequest {
         this.name = name;
         this.type = type;
         this.amount = amount;
+    }
+
+    public Coupon toCoupon() {
+        return new Coupon(name, new Discount(type, amount));
     }
 
     public String getName() {
