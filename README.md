@@ -1,5 +1,8 @@
 # jwp-shopping-order
 
+### API 명세
+[API 명세](API.md)
+
 ### 주문 기능 시퀀스 다이어그램
 
 <img src="img.png" alt="img" width="200" height="200">
