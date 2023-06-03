@@ -21,4 +21,16 @@ class OrderPointExpirePolicyTest {
 
         assertThat(orderPointExpirePolicy.calculateExpireDate(now)).isEqualTo(expected);
     }
+
+    @DisplayName("동일한 달에 만료가 된다면 true를 반환하고, 아니라면 false를 반환한다.")
+    @ParameterizedTest
+    @CsvSource(value = {"2023.03.13:2023.03.30:true", "2023.02.28:2023.02.28:true", "2023.10.13:2024.01.31:false",
+            "2023.11.31:2024.11.31:false", "2023.11.21:2023.12.29:false"}, delimiter = ':')
+    void calculateExpireDate(@JavaTimeConversionPattern("yyyy.MM.dd")LocalDate now,
+                             @JavaTimeConversionPattern("yyyy.MM.dd")LocalDate other,
+                             boolean expected) {
+        OrderPointExpirePolicy orderPointExpirePolicy = new OrderPointExpirePolicy();
+
+        assertThat(orderPointExpirePolicy.isSoonExpireDate(now, other)).isEqualTo(expected);
+    }
 }

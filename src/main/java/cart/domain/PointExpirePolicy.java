@@ -5,4 +5,6 @@ import java.time.LocalDate;
 public interface PointExpirePolicy {
 
     LocalDate calculateExpireDate(LocalDate createAt);
+
+    boolean isSoonExpireDate(LocalDate base, LocalDate other);
 }
