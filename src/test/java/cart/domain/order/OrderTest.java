@@ -8,8 +8,8 @@ import static cart.fixtures.CartItemFixtures.자몽_허니_블랙티_ID_2_7개_3
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.domain.CartItem;
-import cart.domain.CartItems;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
 import cart.domain.Member;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

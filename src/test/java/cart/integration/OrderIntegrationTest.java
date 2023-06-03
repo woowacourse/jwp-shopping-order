@@ -3,10 +3,12 @@ package cart.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderItemSelectResponse;
-import cart.dto.OrderSelectResponse;
-import cart.dto.OrderSimpleInfoResponse;
+import cart.domain.order.FixedDiscountPolicy;
+import cart.dto.order.discountpolicy.DiscountPolicyResponse;
+import cart.dto.order.OrderCreateRequest;
+import cart.dto.order.OrderItemSelectResponse;
+import cart.dto.order.OrderSelectResponse;
+import cart.dto.order.OrderSimpleInfoResponse;
 import cart.repository.dao.MemberDao;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

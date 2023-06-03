@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.order;
 
 import java.util.List;
 

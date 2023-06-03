@@ -1,6 +1,6 @@
 package cart.repository.dao;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import java.util.Collections;

@@ -1,5 +1,6 @@
-package cart.dto;
+package cart.dto.cart;
 
+import cart.dto.PaginationInfoDto;
 import java.util.List;
 
 public class PagedCartItemsResponse {

@@ -10,9 +10,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 import cart.domain.Member;
-import cart.dto.OrderCreateRequest;
+import cart.dto.order.OrderCreateRequest;
 import cart.repository.OrderRepository;
 import cart.repository.dao.CartItemDao;
 import java.util.Collections;

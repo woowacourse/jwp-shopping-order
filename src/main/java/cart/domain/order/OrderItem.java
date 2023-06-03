@@ -1,6 +1,6 @@
 package cart.domain.order;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.entity.OrderItemEntity;

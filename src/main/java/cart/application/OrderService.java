@@ -1,18 +1,21 @@
 package cart.application;
 
-import cart.domain.CartItem;
-import cart.domain.CartItems;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
 import cart.domain.Member;
 import cart.domain.order.DiscountPolicy;
 import cart.domain.order.FixedDiscountPolicy;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItems;
 import cart.domain.order.Price;
-import cart.dto.OrderCreateRequest;
-import cart.dto.OrderSelectResponse;
-import cart.dto.OrderSimpleInfoResponse;
+import cart.dto.order.discountpolicy.DiscountPolicyResponse;
+import cart.dto.order.discountpolicy.FixedDiscountPolicyResponse;
+import cart.dto.order.OrderCreateRequest;
+import cart.dto.order.OrderSelectResponse;
+import cart.dto.order.OrderSimpleInfoResponse;
 import cart.repository.OrderRepository;
 import cart.repository.dao.CartItemDao;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -64,5 +67,15 @@ public class OrderService {
         return orders.stream()
                 .map(order -> OrderSimpleInfoResponse.from(order))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public DiscountPolicyResponse getAllDiscountPolicies() {
+        // TODO: 2023/06/04 0원 할인인 경우는 포함하지 않을지 물어보기
+        final List<FixedDiscountPolicyResponse> policies = Arrays.stream(FixedDiscountPolicy.values())
+                .filter(policy -> policy.getDiscountPrice() != 0)
+                .map(policy -> FixedDiscountPolicyResponse.from(policy))
+                .collect(Collectors.toUnmodifiableList());
+
+        return new DiscountPolicyResponse(policies);
     }
 }

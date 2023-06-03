@@ -1,6 +1,7 @@
-package cart.dto;
+package cart.dto.cart;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
+import cart.dto.product.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 

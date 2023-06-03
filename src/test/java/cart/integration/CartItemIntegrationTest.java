@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.application.CartItemService;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.PagedCartItemsResponse;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.cart.CartItemResponse;
+import cart.dto.cart.PagedCartItemsResponse;
 import cart.dto.PaginationInfoDto;
-import cart.dto.ProductRequest;
+import cart.dto.product.ProductRequest;
 import cart.repository.dao.MemberDao;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

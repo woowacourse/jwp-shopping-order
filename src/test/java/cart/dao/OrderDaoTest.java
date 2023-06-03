@@ -2,8 +2,8 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.CartItem;
-import cart.domain.CartItems;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
 import cart.domain.Member;
 import cart.domain.order.DiscountPolicy;
 import cart.domain.order.FixedDiscountPolicy;

@@ -5,8 +5,8 @@ import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.willReturn;
 
 import cart.domain.Product;
-import cart.dto.PagedProductsResponse;
-import cart.dto.ProductResponse;
+import cart.dto.product.PagedProductsResponse;
+import cart.dto.product.ProductResponse;
 import cart.repository.dao.ProductDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

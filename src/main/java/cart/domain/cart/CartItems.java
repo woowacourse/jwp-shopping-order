@@ -1,5 +1,6 @@
-package cart.domain;
+package cart.domain.cart;
 
+import cart.domain.Member;
 import java.util.List;
 
 public class CartItems {

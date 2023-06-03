@@ -4,8 +4,8 @@ import static cart.fixtures.CartItemFixtures.바닐라_크림_콜드브루_ID_4_
 import static cart.fixtures.CartItemFixtures.유자_민트_티_ID_1_5개_29500원;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.CartItem;
-import cart.domain.CartItems;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
 import cart.domain.Member;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

@@ -1,11 +1,11 @@
 package cart.application;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
-import cart.dto.PagedCartItemsResponse;
+import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemRequest;
+import cart.dto.cart.CartItemResponse;
+import cart.dto.cart.PagedCartItemsResponse;
 import cart.dto.PaginationInfoDto;
 import cart.repository.dao.CartItemDao;
 import cart.repository.dao.ProductDao;

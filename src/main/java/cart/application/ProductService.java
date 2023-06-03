@@ -1,11 +1,11 @@
 package cart.application;
 
 import cart.domain.Product;
-import cart.dto.PagedProductsResponse;
+import cart.dto.product.PagedProductsResponse;
 import cart.dto.PaginationInfoDto;
 import cart.repository.dao.ProductDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import java.util.Comparator;
 import org.springframework.stereotype.Service;
 

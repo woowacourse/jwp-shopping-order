@@ -3,11 +3,11 @@ package cart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.willReturn;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.CartItemResponse;
-import cart.dto.PagedCartItemsResponse;
+import cart.dto.cart.CartItemResponse;
+import cart.dto.cart.PagedCartItemsResponse;
 import cart.repository.dao.CartItemDao;
 import cart.repository.dao.ProductDao;
 import java.util.List;

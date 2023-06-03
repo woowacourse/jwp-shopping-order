@@ -6,7 +6,7 @@ import static cart.fixtures.ProductFixtures.아메리카노_4500원_ID_3;
 import static cart.fixtures.ProductFixtures.유자_민트_티_5900원_ID_1;
 import static cart.fixtures.ProductFixtures.자몽_허니_블랙티_5700원_ID_2;
 
-import cart.domain.CartItem;
+import cart.domain.cart.CartItem;
 import cart.domain.Member;
 
 @SuppressWarnings("NonAsciiCharacters")

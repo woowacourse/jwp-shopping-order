@@ -4,6 +4,8 @@ import static cart.fixtures.CartItemFixtures.유자_민트_티_ID_1_5개_29500�
 import static cart.fixtures.CartItemFixtures.자몽_허니_블랙티_ID_2_7개_39900원;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartItems;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

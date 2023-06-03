@@ -19,7 +19,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.application.ProductService;
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductResponse;
 import cart.repository.dao.MemberDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
