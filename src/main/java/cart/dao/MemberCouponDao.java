@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.MemberCoupon;
 import cart.dto.MemberCouponDto;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,16 @@ public class MemberCouponDao {
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberCouponDtoRowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<MemberCouponDto> findByIdAndMemberId(Long id, Long memberId) {
+        String sql = "SELECT * FROM member_coupon WHERE id = ? AND member_id = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberCouponDtoRowMapper, id, memberId));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

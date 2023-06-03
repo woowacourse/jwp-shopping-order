@@ -12,12 +12,6 @@ public class MemberCoupon {
         this.coupon = coupon;
     }
 
-    public boolean isSameMember(MemberCoupon otherMemberCoupon) {
-        return this.member
-                .getEmail()
-                .equals(otherMemberCoupon.getMember().getEmail());
-    }
-
     public Long getId() {
         return id;
     }

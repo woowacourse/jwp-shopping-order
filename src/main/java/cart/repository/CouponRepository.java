@@ -69,15 +69,16 @@ public class CouponRepository {
         return memberCoupons;
     }
 
-    public Optional<Coupon> findCouponByMemberCouponId(final Long memberCouponId) {
-        MemberCouponDto memberCouponDto = getMemberCouponByMemberCouponId(memberCouponId);
+    public Optional<Coupon> findCouponByMemberAndMemberCouponId(final Member member, final Long memberCouponId) {
+        Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
+        MemberCouponDto memberCouponDto = getMemberCouponByMemberCouponId(memberCouponId, memberByEmail.getId());
         CouponDto couponDto = getCouponByCouponId(memberCouponDto.getCouponId());
         Coupon coupon = new Coupon(couponDto.getId(), couponDto.getName(), couponDto.getDiscountRate(), couponDto.getDiscountPrice());
         return Optional.of(coupon);
     }
 
-    private MemberCouponDto getMemberCouponByMemberCouponId(final Long memberCouponId) {
-        return memberCouponDao.findById(memberCouponId)
+    private MemberCouponDto getMemberCouponByMemberCouponId(final Long memberCouponId, final Long memberId) {
+        return memberCouponDao.findByIdAndMemberId(memberCouponId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException(COUPON_NOT_EXISTS_MESSAGE));
     }
 

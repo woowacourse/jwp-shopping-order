@@ -4,15 +4,16 @@ import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
 import static fixture.MemberCouponFixture.MEMBER_COUPON_1;
 import static fixture.MemberCouponFixture.MEMBER_COUPON_2;
 import static fixture.MemberFixture.MEMBER_1;
+import static fixture.MemberFixture.MEMBER_2;
 import static fixture.MemberFixture.MEMBER_3;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import anotation.RepositoryTest;
 import cart.dao.MemberCouponDao;
 import cart.domain.Coupon;
 import cart.domain.MemberCoupon;
-import cart.dto.CouponDto;
 import cart.dto.MemberCouponDto;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -51,12 +52,19 @@ class CouponRepositoryTest {
     }
 
     @Test
-    @DisplayName("Member Coupon Id 로 해당하는 Coupon 을 가져온다.")
-    void findByCouponByMemberCouponId() {
-        Coupon coupon = couponRepository.findCouponByMemberCouponId(1L).orElseThrow(NoSuchElementException::new);
+    @DisplayName("Member Coupon Id 와 Member Id 에 해당하는 Coupon 을 가져온다. (성공)")
+    void findByCouponByMemberCouponId_success() {
+        Coupon coupon = couponRepository.findCouponByMemberAndMemberCouponId(MEMBER_1, 1L).orElseThrow(NoSuchElementException::new);
 
         assertThat(coupon).usingRecursiveComparison()
                 .isEqualTo(COUPON_1_NOT_NULL_PRICE);
+    }
+
+    @Test
+    @DisplayName("Member Coupon Id 와 Member Id 에 해당하는 Coupon 을 가져온다. (성공)")
+    void findByCouponByMemberCouponId_fail() {
+        assertThatThrownBy(() -> couponRepository.findCouponByMemberAndMemberCouponId(MEMBER_2, 1L))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
