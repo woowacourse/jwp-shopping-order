@@ -13,6 +13,7 @@ import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.OrderDto;
 import cart.dto.OrderRequest;
+import cart.dto.ProductDto;
 import cart.exception.OrderException;
 import cart.exception.notFound.CartItemNotFountException;
 import cart.exception.notFound.PaymentNotFoundException;
@@ -44,44 +45,34 @@ public class OrderService {
     }
 
     public Long order(Member member, OrderRequest orderRequest) {
-        List<CartItemDto> cartItems = orderRequest.getCartItems();
+        List<CartItemDto> requestCartItems = orderRequest.getCartItems();
 
-        for (CartItemDto cartItemDto : cartItems) {
-            CartItem cartItem = cartItemDao.findById(cartItemDto.getCartItemId())
-                    .orElseThrow(CartItemNotFountException::new);
-            cartItem.checkOwner(member);
-            if (cartItem.getQuantity() != cartItemDto.getQuantity()) {
-                throw new OrderException("cartItem의 quantity가 기존 cartItem과 일치하지 않습니다. 다시 확인해주세요.");
-            }
-        }
-
-        List<Product> productsInRequest = cartItems.stream()
-                .map(CartItemDto::getProduct)
-                .map(it -> new Product(it.getProductId(), it.getName(), it.getPrice(), it.getImageUrl(), it.getStock()))
-                .collect(Collectors.toList());
-        List<Long> productIds = cartItems.stream()
-                .map(it -> it.getProduct().getProductId())
-                .collect(Collectors.toList());
-        List<Product> productsInDb = productIds.stream()
-                .map(it -> productDao.findById(it)
-                        .orElseThrow(ProductNotFoundException::new))
-                .collect(Collectors.toList());
-
-        if (!productsInRequest.equals(productsInDb)) {
-            throw new OrderException("product 정보가 업데이트 되었습니다. 다시 확인해주세요.");
-        }
-
-        int size = cartItems.size();
         List<OrderItem> orderItems = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            orderItems.add(OrderItem.of(productsInDb.get(i), cartItems.get(i).getQuantity()));
+        for (CartItemDto requestCartItem : requestCartItems) {
+            // 요청에 문제가 없는지
+            CartItem realCartItem = cartItemDao.findById(requestCartItem.getCartItemId())
+                    .orElseThrow(CartItemNotFountException::new);
+            realCartItem.checkOwner(member);
+            realCartItem.checkQuantity(requestCartItem.getQuantity());
+
+            Product requestProduct = requestCartItem.getProduct().toDomain();
+            Product realProduct = productDao.findById(requestProduct.getId()).orElseThrow(ProductNotFoundException::new);
+            if (!requestProduct.equals(realProduct)) {
+                throw new OrderException("product 정보가 업데이트 되었습니다. 다시 확인해주세요.");
+            }
+
+            orderItems.add(OrderItem.of(realProduct, requestCartItem.getQuantity()));
         }
 
-        Order order = new Order(member, orderItems);
+        // 주문
+        Order order = Order.makeOrder(member, orderItems);
+        //Payment.makePayment(order, member, new Point(orderRequest.getUsePoint()))
+
         Payment payment = order.calculatePayment(new Point(orderRequest.getUsePoint()));
         validatePayment(orderRequest, payment);
 
-        List<Long> cartItemIds = cartItems.stream()
+        // 저장
+        List<Long> cartItemIds = requestCartItems.stream()
                 .map(CartItemDto::getCartItemId)
                 .collect(Collectors.toList());
         Long orderId = orderRepository.order(cartItemIds, member, order);
@@ -115,13 +106,15 @@ public class OrderService {
     }
 
     public List<OrderDto> getOrderList(Member member) {
-        List<OrderDto> orderDtos = new ArrayList<>();
         List<Order> orders = orderRepository.findByMemberId(member.getId());
+
+        List<OrderDto> orderDtos = new ArrayList<>();
         for (Order order : orders) {
             Payment payment = paymentDao.findByOrderId(order.getId())
                     .orElseThrow(PaymentNotFoundException::new);
             orderDtos.add(toDto(order, payment));
         }
+
         return orderDtos;
     }
 

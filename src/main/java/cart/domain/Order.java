@@ -29,6 +29,11 @@ public class Order {
         this.orderDateTime = orderDateTime;
     }
 
+    public static Order makeOrder(Member member, List<OrderItem> orderItems) {
+        orderItems.forEach(OrderItem::execute);
+        return new Order(member, orderItems);
+    }
+
     public Payment calculatePayment(Point usePoint) {
         int totalProductPrice = 0;
         for (OrderItem orderItem : orderItems) {
@@ -42,9 +47,15 @@ public class Order {
         return new Payment(totalProductPrice, deliveryFee, usePoint.getValue(), totalPrice);
     }
 
+    public int getTotalProductPrice() {
+        return orderItems.stream()
+                .mapToInt(OrderItem::calculatePrice)
+                .sum();
+    }
+
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new AuthorizationException("해당 사용자의 주문이 아닙니다.");
+            throw new AuthorizationException("해당 member의 order이 아닙니다.");
         }
     }
 

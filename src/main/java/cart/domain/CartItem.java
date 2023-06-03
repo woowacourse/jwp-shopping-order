@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.exception.OrderException;
 import cart.exception.auth.AuthorizationException;
 import java.util.Objects;
 
@@ -24,7 +25,13 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new AuthorizationException("해당 사용자의 장바구니 상품이 아닙니다.");
+            throw new AuthorizationException("해당 member의 cartItem이 아닙니다.");
+        }
+    }
+
+    public void checkQuantity(int quantity) {
+        if (!Objects.equals(this.quantity, quantity)) {
+            throw new OrderException("cartItem의 quantity가 일치하지 않습니다. 다시 확인해주세요.");
         }
     }
 

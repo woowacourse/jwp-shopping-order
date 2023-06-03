@@ -22,6 +22,10 @@ public class ProductDto {
                 product.getStock());
     }
 
+    public Product toDomain() {
+        return new Product(productId, name, price, imageUrl, stock);
+    }
+
     public Long getProductId() {
         return productId;
     }

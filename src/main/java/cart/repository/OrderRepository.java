@@ -38,7 +38,7 @@ public class OrderRepository {
         cartItemDao.deleteByIds(cartItemIds);
         List<Product> products = order.getOrderItems()
                 .stream()
-                .map(it -> it.getOriginalProduct())
+                .map(OrderItem::getOriginalProduct)
                 .collect(Collectors.toList());
         productDao.updateStocks(products);
         memberDao.updatePoint(member);

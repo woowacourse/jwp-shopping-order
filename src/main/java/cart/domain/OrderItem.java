@@ -17,8 +17,12 @@ public class OrderItem {
     }
 
     public static OrderItem of(Product product, int quantity) {
-        product.sold(quantity);
+        //product.sold(quantity);
         return new OrderItem(product.getId(), product, quantity);
+    }
+
+    public void execute() {
+        originalProduct.sold(quantity);
     }
 
     public int calculatePrice() {
