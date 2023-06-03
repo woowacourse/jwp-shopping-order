@@ -58,7 +58,7 @@ Location: "/orders/{id}"
 ### Response (실패: 재고 부족)
 
 ```
-HTTP/1.1 400 BadRequest
+HTTP/1.1 409 Conflict
 Content-Type: application/json
 
 {
@@ -70,7 +70,7 @@ Content-Type: application/json
 ### Response (실패: 포인트 부족)
 
 ```
-HTTP/1.1 400 BadRequest
+HTTP/1.1 409 Conflict
 Content-Type: application/json
 
 {
