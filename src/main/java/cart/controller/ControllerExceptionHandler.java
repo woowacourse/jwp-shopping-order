@@ -5,8 +5,15 @@ import cart.exception.CartItemException;
 import cart.exception.PagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -22,13 +29,31 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(Exception e) {
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CartItemException.class)
+    public ResponseEntity<String> handleCartItemException(CartItemException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(PagingException.class)
-    public ResponseEntity<String> handlePagingException(Exception e) {
+    public ResponseEntity<String> handlePagingException(PagingException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        final Map<String, String> errorMessageByFields = new HashMap<>();
+        final List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
+
+        allErrors.forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String message = error.getDefaultMessage();
+            errorMessageByFields.put(fieldName, message);
+        });
+        return ResponseEntity.badRequest().body(errorMessageByFields);
     }
 
     @ExceptionHandler(Exception.class)

@@ -13,6 +13,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,9 +25,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static cart.common.fixture.DomainFixture.PRODUCT_IMAGE;
+import static cart.common.fixture.DomainFixture.PRODUCT_NAME;
+import static cart.common.step.CartItemStep.addCartItemAndGetId;
+import static cart.common.step.ProductStep.addProductAndGetId;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 public class CartItemIntegrationTest extends IntegrationTest {
 
     @Autowired
@@ -156,6 +165,37 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
     }
 
+    @Test
+    void 장바구니에_상품을_추가할_때_상품_id를_입력하지_않으면_예외를_던진다() {
+        //given
+        final CartItemRequest nullCartItemRequest = new CartItemRequest(null);
+
+        //when
+        final ExtractableResponse<Response> response = requestAddCartItem(member, nullCartItemRequest);
+
+        //then
+        assertSoftly(softly -> {
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            softly.assertThat(response.body().asString()).contains("productId\":\"상품 id가 입력되지 않았습니다.");
+        });
+    }
+
+    @Test
+    void 장바구니_상품의_개수를_수정할_때_수량을_입력하지_않으면_예외를_던진다() {
+        //given
+        final Long productId = addProductAndGetId(new ProductRequest(PRODUCT_NAME, 20000, PRODUCT_IMAGE));
+        final Long cartItemId = addCartItemAndGetId(member.getEmailValue(), member.getPasswordValue(), new CartItemRequest(productId));
+
+        //when
+        final ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member, cartItemId, null);
+
+        //then
+        assertSoftly(softly -> {
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            softly.assertThat(response.body().asString()).contains("quantity\":\"수량이 입력되지 않았습니다.");
+        });
+    }
+
     private Long createProduct(ProductRequest productRequest) {
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -201,7 +241,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
+    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, Integer quantity) {
         CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
