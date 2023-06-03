@@ -95,4 +95,25 @@ class MemberCouponDaoTest {
         // then
         assertThat(actual.size()).isEqualTo(2);
     }
+
+    @Test
+    void 쿠폰을_사용하면_상태를_바꾼다() {
+        // given
+        insertMember(MEMBER, jdbcTemplate);
+        insertCoupon(천원_할인_쿠폰, jdbcTemplate);
+        List<Long> ids = List.of(
+                memberCouponDao.save(new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), false)),
+                memberCouponDao.save(new MemberCouponEntity(MEMBER.getId(), 천원_할인_쿠폰.getId(), false))
+        );
+
+        // when
+        memberCouponDao.uses(ids);
+
+        // then
+        List<MemberCoupon> actual = memberCouponDao.findAllByIds(ids);
+        assertAll(
+                () -> assertThat(actual.get(0).isUsed()).isTrue(),
+                () -> assertThat(actual.get(1).isUsed()).isTrue()
+        );
+    }
 }

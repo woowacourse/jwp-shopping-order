@@ -50,6 +50,7 @@ public class OrderRepository {
     private Order createOrder(Long id, OrderEntity orderEntity) {
         List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderId(id);
         List<OrderItem> orderItems = new ArrayList<>();
+
         for (OrderItemEntity orderItemEntity : orderItemEntities) {
             List<MemberCoupon> memberCoupons = orderCouponDao.findByOrderItemId(orderItemEntity.getId());
             orderItems.add(orderItemEntity.toDomain(memberCoupons));

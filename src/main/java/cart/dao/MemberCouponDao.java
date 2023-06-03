@@ -69,4 +69,15 @@ public class MemberCouponDao {
         parameters.addValue("ids", ids);
         return namedParameterJdbcTemplate.query(sql, parameters, memberCouponRowMapper);
     }
+
+    public void uses(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return;
+        }
+
+        String sql = "UPDATE member_coupon SET used = true WHERE id IN (:ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", ids);
+        namedParameterJdbcTemplate.update(sql, parameters);
+    }
 }

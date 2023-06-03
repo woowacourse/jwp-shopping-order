@@ -1,5 +1,7 @@
 package cart.entity;
 
+import cart.domain.MemberCoupon;
+
 public class MemberCouponEntity {
 
     private Long id;
@@ -18,6 +20,10 @@ public class MemberCouponEntity {
         this.used = used;
     }
 
+    public static MemberCouponEntity from(MemberCoupon memberCoupon) {
+        return new MemberCouponEntity(memberCoupon.getId(), memberCoupon.getMemberId(),
+                memberCoupon.getCoupon().getId(), memberCoupon.isUsed());
+    }
 
     public Long getId() {
         return id;

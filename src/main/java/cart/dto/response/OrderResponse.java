@@ -37,4 +37,12 @@ public class OrderResponse {
     public List<OrderItemResponse> getOrderItems() {
         return orderItems;
     }
+
+    public Integer getDeliveryFee() {
+        return deliveryFee;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
 }

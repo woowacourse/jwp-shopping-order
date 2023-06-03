@@ -73,4 +73,12 @@ public class OrderCouponDao {
                 "where oc.order_item_id = ?";
         return jdbcTemplate.query(sql, memberCouponRowMapper, orderItemId);
     }
+
+    public List<MemberCoupon> findAllByOrderItemIds(List<Integer> integers) {
+        return null;
+    }
+
+    public List<OrderCouponEntity> findALlByOrderId(Long orderId) {
+        return null;
+    }
 }
