@@ -8,6 +8,8 @@ import java.util.Objects;
 
 public class Money {
 
+    public static final Money ZERO = new Money(0);
+
     private static final int SCALE = 0;
 
     private final BigDecimal value;

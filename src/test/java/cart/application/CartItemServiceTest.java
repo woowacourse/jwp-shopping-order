@@ -116,9 +116,9 @@ class CartItemServiceTest {
         List<Long> checkoutIds = List.of(TWO_CHICKEN.getId(), FOUR_SALAD.getId());
         CheckoutResponse actual = cartItemService.checkout(MEMBER_A, checkoutIds);
 
-        int expectedTotalPrice = 30_000;
-        int expectedEarnedPoints = 3_000;
-        int expectedAvailablePoints = 3_000;
+        int expectedTotalPrice = 100_000;
+        int expectedEarnedPoints = 10_000;
+        int expectedAvailablePoints = 3_500;
         int expectedChickenQuantity = 2;
         int expectedSaladQuantity = 4;
 

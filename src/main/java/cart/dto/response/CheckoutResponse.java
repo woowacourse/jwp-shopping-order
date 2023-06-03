@@ -3,10 +3,8 @@ package cart.dto.response;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Money;
-import cart.domain.PointDiscountPolicy;
-import cart.domain.PointEarnPolicy;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CheckoutResponse {
 
@@ -33,29 +31,25 @@ public class CheckoutResponse {
         this.availablePoints = availablePoints;
     }
 
-    public static CheckoutResponse of(List<CartItem> checkedCartItems, Member member) {
-        List<CartItemResponse> cartItemResponses = new ArrayList<>();
-        Money totalPrice = new Money(0);
+    public static CheckoutResponse of(
+            List<CartItem> checkedCartItems,
+            Member member,
+            Money totalPrice,
+            Money earnedPoints,
+            Money availablePoints
+    ) {
+        List<CartItemResponse> cartItemResponses = checkedCartItems
+                .stream()
+                .map(CartItemResponse::of)
+                .collect(Collectors.toList());
 
-        for (CartItem cartItem : checkedCartItems) {
-            cartItemResponses.add(CartItemResponse.of(cartItem));
-            totalPrice = totalPrice.add(cartItem.getProduct().price());
-        }
-
-        Money currentPoints = member.point();
-        Money earnedPoints = PointEarnPolicy.DEFAULT.calculateEarnPoints(totalPrice);
-        Money moneyCondition = PointDiscountPolicy.DEFAULT.calculatePointCondition(totalPrice);
-        Money availablePoints = calculateAvailablePoints(currentPoints, moneyCondition);
-
-        return new CheckoutResponse(cartItemResponses, totalPrice.getValue(), currentPoints.getValue(),
-                earnedPoints.getValue(), availablePoints.getValue());
-    }
-
-    private static Money calculateAvailablePoints(Money currentPoints, Money moneyCondition) {
-        if (currentPoints.isGreaterThan(moneyCondition)) {
-            return moneyCondition;
-        }
-        return currentPoints;
+        return new CheckoutResponse(
+                cartItemResponses,
+                totalPrice.getValue(),
+                member.getPoint(),
+                earnedPoints.getValue(),
+                availablePoints.getValue()
+        );
     }
 
     public List<CartItemResponse> getCartItems() {

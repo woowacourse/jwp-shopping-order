@@ -2,6 +2,9 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Money;
+import cart.domain.PointDiscountPolicy;
+import cart.domain.PointEarnPolicy;
 import cart.domain.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
@@ -75,8 +78,19 @@ public class CartItemService {
     public CheckoutResponse checkout(Member member, List<Long> checkedCartItemIds) {
         List<CartItem> memberCartItems = cartItemRepository.findByMember(member);
         List<CartItem> checkedCartItems = calculateCheckedCartItems(checkedCartItemIds, memberCartItems);
+        Money totalPrice = calculateTotalPriceOfCheckedCartItems(checkedCartItems);
 
-        return CheckoutResponse.of(checkedCartItems, member);
+        Money earnedPoints = PointEarnPolicy.DEFAULT.calculateEarnPoints(totalPrice);
+        Money moneyCondition = PointDiscountPolicy.DEFAULT.calculatePointCondition(totalPrice);
+        Money availablePoints = calculateAvailablePoints(member.point(), moneyCondition);
+
+        return CheckoutResponse.of(
+                checkedCartItems,
+                member,
+                totalPrice,
+                earnedPoints,
+                availablePoints
+        );
     }
 
     private List<CartItem> calculateCheckedCartItems(List<Long> checkedCartItemIds, List<CartItem> memberCartItems) {
@@ -93,5 +107,18 @@ public class CartItemService {
         if (checkedCartItemIds.size() != checkedCartItems.size()) {
             throw new CartItemException.NotFound();
         }
+    }
+
+    private Money calculateTotalPriceOfCheckedCartItems(List<CartItem> checkedCartItems) {
+        return checkedCartItems.stream()
+                .map(CartItem::calculateCartItemPrice)
+                .reduce(Money.ZERO, Money::add);
+    }
+
+    private Money calculateAvailablePoints(Money currentPoints, Money moneyCondition) {
+        if (currentPoints.isGreaterThan(moneyCondition)) {
+            return moneyCondition;
+        }
+        return currentPoints;
     }
 }

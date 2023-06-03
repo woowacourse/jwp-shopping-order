@@ -34,6 +34,7 @@ import cart.authentication.BasicAuthorizationExtractor;
 import cart.authentication.MemberStore;
 import cart.configuration.resolver.MemberArgumentResolver;
 import cart.domain.Member;
+import cart.domain.Money;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
@@ -175,7 +176,13 @@ class CartItemApiControllerTest extends DocsTest {
     
     @Test
     void checkout() throws Exception {
-        CheckoutResponse checkoutResponse = CheckoutResponse.of(List.of(TWO_CHICKEN, FOUR_SALAD), MEMBER_A);
+        CheckoutResponse checkoutResponse = CheckoutResponse.of(
+                List.of(TWO_CHICKEN, FOUR_SALAD),
+                MEMBER_A,
+                new Money(100_000),
+                new Money(10_000),
+                new Money(3_500)
+        );
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(MEMBER_A));
         given(cartItemService.checkout(any(Member.class), anyList())).willReturn(checkoutResponse);
 
