@@ -31,6 +31,10 @@ public class CartItemRepository {
 
     public CartItems findByCartItemIds(List<Long> cartItemIds) {
         List<CartItem> findCartItems = cartItemDao.findByCartItemIds(cartItemIds);
+        if (findCartItems.isEmpty()) {
+            throw new CartItemException.NotFound();
+        }
+
         return CartItems.from(findCartItems);
     }
 

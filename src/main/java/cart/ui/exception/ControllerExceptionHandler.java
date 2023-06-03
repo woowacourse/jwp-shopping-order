@@ -32,47 +32,38 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<ErrorResponse> handleUnauthorized(Exception e) {
         logger.info(e.getMessage());
 
         return ResponseEntity
                 .status(UNAUTHORIZED)
-                .body(ErrorResponse.from(BAD_REQUEST.name(), e.getMessage(), now()));
+                .body(ErrorResponse.from(UNAUTHORIZED.name(), e.getMessage(), now()));
     }
 
-    @ExceptionHandler(CartItemException.class)
-    public ResponseEntity<ErrorResponse> handleCartItemException(CartItemException e) {
+    @ExceptionHandler({
+            CartItemException.InvalidMember.class,
+            MemberException.class
+    })
+    public ResponseEntity<ErrorResponse> handleForbidden(Exception e) {
         logger.info(e.getMessage());
 
         return ResponseEntity
                 .status(FORBIDDEN)
-                .body(ErrorResponse.from(BAD_REQUEST.name(), e.getMessage(), now()));
+                .body(ErrorResponse.from(FORBIDDEN.name(), e.getMessage(), now()));
     }
 
-    @ExceptionHandler(MemberException.class)
-    public ResponseEntity<ErrorResponse> handleMemberException(MemberException e) {
+    @ExceptionHandler({
+            CartItemException.class,
+            MemberException.NotEnoughPoint.class,
+            MemberException.NotEnoughMoney.class,
+            OrderException.class,
+            ProductException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
         logger.info(e.getMessage());
 
         return ResponseEntity
-                .status(FORBIDDEN)
-                .body(ErrorResponse.from(BAD_REQUEST.name(), e.getMessage(), now()));
-    }
-
-    @ExceptionHandler(OrderException.class)
-    public ResponseEntity<ErrorResponse> handleOrderException(OrderException e) {
-        logger.info(e.getMessage());
-
-        return ResponseEntity
-                .status(FORBIDDEN)
-                .body(ErrorResponse.from(BAD_REQUEST.name(), e.getMessage(), now()));
-    }
-
-    @ExceptionHandler(ProductException.class)
-    public ResponseEntity<ErrorResponse> handleProductException(ProductException e) {
-        logger.info(e.getMessage());
-
-        return ResponseEntity
-                .status(FORBIDDEN)
+                .status(BAD_REQUEST)
                 .body(ErrorResponse.from(BAD_REQUEST.name(), e.getMessage(), now()));
     }
 
