@@ -1,5 +1,7 @@
 package cart.dto.order;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -11,9 +13,11 @@ public class OrderItemsRequests {
     private int deliveryFee;
     @Valid
     @NotNull
+    @JsonProperty("orderItems")
     private List<OrderItemRequest> orderItemRequests;
 
-    public OrderItemsRequests(final List<OrderItemRequest> orderItemRequests) {
+    public OrderItemsRequests(final int deliveryFee, final List<OrderItemRequest> orderItemRequests) {
+        this.deliveryFee = deliveryFee;
         this.orderItemRequests = orderItemRequests;
     }
 

@@ -81,7 +81,7 @@ public class CartItemDao {
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id IN (:id)";
+                "WHERE cart_item.id IN (:ids)";
 
         SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
 
@@ -105,7 +105,7 @@ public class CartItemDao {
     }
 
     public void deleteAll(List<Long> ids) {
-        String sql = "DELETE FROM cart_item WHERE id = IN (:ids)";
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
 
         SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
         namedJdbcTemplate.update(sql, parameters);

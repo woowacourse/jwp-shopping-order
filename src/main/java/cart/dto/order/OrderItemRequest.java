@@ -3,6 +3,7 @@ package cart.dto.order;
 import cart.dto.coupon.MemberCouponRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -19,6 +20,7 @@ public class OrderItemRequest {
     private OrderProductRequest productRequest;
     @Min(value = 0, message = "상품 개수는 음수일 수 없습니다.")
     private int quantity;
+    @Valid
     @NotNull(message = "쿠폰 필드가 누락되었습니다.")
     @JsonProperty("coupons")
     private List<MemberCouponRequest> memberCoupons;
@@ -32,7 +34,7 @@ public class OrderItemRequest {
         this.memberCoupons = memberCoupons;
     }
 
-    public List<Long> toMemberCouponIds(){
+    public List<Long> toMemberCouponIds() {
         return memberCoupons.stream()
                 .map(MemberCouponRequest::getId)
                 .collect(Collectors.toList());

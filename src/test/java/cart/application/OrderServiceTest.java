@@ -47,7 +47,7 @@ class OrderServiceTest {
                 Collections.emptyList()
         );
 
-        OrderItemsRequests orderItemsRequests = new OrderItemsRequests(List.of(request));
+        OrderItemsRequests orderItemsRequests = new OrderItemsRequests(3000, List.of(request));
 
         given(cartItemRepository.findByMemberId(anyLong())).willReturn(List.of(new CartItem(1L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(1L, "a@a.com", "1234"))));
         given(cartItemRepository.findByIds(anyList())).willReturn(List.of(new CartItem(2L, 10, new Product(2L, "치킨", 10000, "https://chicken"), new Member(2L, "a@a.com", "1234"))));
@@ -63,7 +63,7 @@ class OrderServiceTest {
                 Collections.emptyList()
         );
 
-        OrderItemsRequests orderItemsRequests = new OrderItemsRequests(List.of(request));
+        OrderItemsRequests orderItemsRequests = new OrderItemsRequests(3000, List.of(request));
 
         given(memberCouponRepository.findByIds(anyList())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(1L, new Coupon(2L, "쿠폰", new Discount("rate", 10)), false)))));
         given(memberCouponRepository.findByMemberId(anyLong())).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(2L, "쿠폰", new Discount("rate", 10)), false)))));
