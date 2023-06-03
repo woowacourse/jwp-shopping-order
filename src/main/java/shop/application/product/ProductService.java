@@ -8,7 +8,6 @@ import shop.domain.product.Product;
 import shop.domain.repository.ProductRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -22,9 +21,7 @@ public class ProductService {
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
 
-        return products.stream()
-                .map(ProductDto::of)
-                .collect(Collectors.toList());
+        return ProductDto.of(products);
     }
 
     public ProductDto getProductById(Long productId) {

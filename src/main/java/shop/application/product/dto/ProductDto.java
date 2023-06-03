@@ -2,6 +2,9 @@ package shop.application.product.dto;
 
 import shop.domain.product.Product;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ProductDto {
     private Long id;
     private String name;
@@ -25,6 +28,12 @@ public class ProductDto {
                 product.getPrice(),
                 product.getImageUrl()
         );
+    }
+
+    public static List<ProductDto> of(List<Product> products) {
+        return products.stream()
+                .map(ProductDto::of)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {
