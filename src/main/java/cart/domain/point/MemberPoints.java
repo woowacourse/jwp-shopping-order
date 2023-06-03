@@ -44,7 +44,7 @@ public class MemberPoints {
     }
 
     private UsedPoint getUsedPoint(Point point, int usedPoint) {
-        int pointAmount = point.getPoint();
+        int pointAmount = point.getPointAmount();
         if (pointAmount <= usedPoint) {
             point.usedAllPoint();
             return new UsedPoint(point.getId(), pointAmount);
@@ -60,7 +60,7 @@ public class MemberPoints {
 
     public int getUsablePoints() {
         return points.stream()
-                     .mapToInt(Point::getPoint)
+                     .mapToInt(Point::getPointAmount)
                      .sum();
     }
 

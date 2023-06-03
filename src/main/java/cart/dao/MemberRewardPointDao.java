@@ -44,7 +44,7 @@ public class MemberRewardPointDao {
     public Long save(Long memberId, Point point, Long orderId) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", memberId)
-                .addValue("point", point.getPoint())
+                .addValue("point", point.getPointAmount())
                 .addValue("created_at", point.getCreatedAt())
                 .addValue("expired_at", point.getExpiredAt())
                 .addValue("reward_order_id", orderId);
@@ -69,7 +69,7 @@ public class MemberRewardPointDao {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         Point point = points.get(i);
-                        ps.setLong(1, point.getPoint());
+                        ps.setLong(1, point.getPointAmount());
                         ps.setLong(2, point.getId());
                     }
 

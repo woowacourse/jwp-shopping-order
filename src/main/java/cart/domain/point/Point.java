@@ -40,7 +40,7 @@ public class Point {
         return id;
     }
 
-    public Integer getPoint() {
+    public Integer getPointAmount() {
         return pointAmount;
     }
 

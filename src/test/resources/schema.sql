@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS order_member_point CASCADE;
-DROP TABLE IF EXISTS member_point CASCADE;
+DROP TABLE IF EXISTS order_member_used_point CASCADE;
+DROP TABLE IF EXISTS member_reward_point CASCADE;
 DROP TABLE IF EXISTS purchase_order_item CASCADE;
 DROP TABLE IF EXISTS purchase_order CASCADE;
 DROP TABLE IF EXISTS cart_item CASCADE;

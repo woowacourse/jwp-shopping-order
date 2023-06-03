@@ -32,6 +32,10 @@ public class PurchaseOrderItem {
         return quantity * product.getPrice();
     }
 
+    public Long getProductId() {
+        return product.getId();
+    }
+
     @Override
     public String toString() {
         return "PurchaseOrderItem{" +

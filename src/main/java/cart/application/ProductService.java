@@ -1,7 +1,7 @@
 package cart.application;
 
-import cart.domain.Product;
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class ProductService {
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return productDao.createProduct(product);
+        return productDao.save(product);
     }
 
     public void updateProduct(Long productId, ProductRequest productRequest) {
