@@ -74,5 +74,4 @@ class OrderTest {
         // then
         assertThat(result).isEqualTo(Money.ZERO);
     }
-
 }

@@ -111,9 +111,9 @@ class OrderControllerTest {
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final CartItem cartItem3 = cartItemRepository.save(new CartItem(member, product3));
         final Order order1 = orderRepository.save(
-                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem1, cartItem2)));
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem1, cartItem2)));
         final Order order2 = orderRepository.save(
-                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem3)));
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem3)));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect
@@ -140,7 +140,7 @@ class OrderControllerTest {
         final Member member = memberRepository.save(사용자1);
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
         final Order order = orderRepository.save(
-                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem)));
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem)));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza1@pizza.com:password".getBytes()));
 
         // expect

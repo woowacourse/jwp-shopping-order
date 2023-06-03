@@ -115,7 +115,7 @@ class CartItemDaoTest {
         );
 
         // when
-        cartItemDao.deleteByIds(List.of(cartItemEntity1.getId(), cartItemEntity2.getId()), member.getId());
+        cartItemDao.deleteByIds(List.of(cartItemEntity1.getId(), cartItemEntity2.getId()));
 
         // then
         assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty();

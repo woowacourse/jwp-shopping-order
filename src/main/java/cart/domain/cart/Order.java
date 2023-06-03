@@ -15,22 +15,32 @@ public class Order {
     private final Money deliveryFee;
     private final List<CartItem> items;
 
-    public Order(final MemberCoupon memberCoupon, final Long memberId, final List<CartItem> items) {
+    private Order(final MemberCoupon memberCoupon, final Long memberId, final List<CartItem> items) {
         this(null, memberCoupon, memberId, DEFAULT_DELIVERY_FEE, items);
     }
 
-    public Order(
+    private Order(
             final Long id,
             final MemberCoupon memberCoupon,
             final Long memberId,
             final Money deliveryFee,
             final List<CartItem> items
     ) {
+        validate(memberCoupon, items, memberId);
         this.id = id;
         this.memberCoupon = memberCoupon;
         this.memberId = memberId;
         this.deliveryFee = deliveryFee;
         this.items = items;
+    }
+
+    private void validate(final MemberCoupon memberCoupon, final List<CartItem> items, final Long memberId) {
+        final Money totalPrice = items.stream()
+                .map(CartItem::calculateTotalPrice)
+                .reduce(Money.ZERO, Money::plus);
+        if (memberCoupon.isInvalidCoupon(totalPrice)) {
+            throw new InvalidOrderException("쿠폰을 적용할 수 없는 주문입니다.");
+        }
     }
 
     public static Order of(
@@ -43,7 +53,6 @@ public class Order {
         if (Objects.isNull(memberCoupon)) {
             return new Order(id, MemberCoupon.empty(memberId), memberId, deliveryFee, items);
         }
-        validate(memberCoupon, items);
         return new Order(id, memberCoupon, memberId, deliveryFee, items);
     }
 
@@ -51,17 +60,7 @@ public class Order {
         if (Objects.isNull(memberCoupon)) {
             return new Order(MemberCoupon.empty(memberId), memberId, items);
         }
-        validate(memberCoupon, items);
         return new Order(memberCoupon, memberId, items);
-    }
-
-    private static void validate(final MemberCoupon memberCoupon, final List<CartItem> items) {
-        final Money totalPrice = items.stream()
-                .map(CartItem::calculateTotalPrice)
-                .reduce(Money.ZERO, Money::plus);
-        if (memberCoupon.isInvalidCoupon(totalPrice)) {
-            throw new InvalidOrderException("쿠폰을 적용할 수 없는 주문입니다.");
-        }
     }
 
     public void checkOwner(final Long memberId) {

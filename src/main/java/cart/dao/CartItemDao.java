@@ -82,14 +82,13 @@ public class CartItemDao {
         return jdbcTemplate.update(sql, cartItemId);
     }
 
-    public void deleteByIds(final List<Long> cartItemIds, final Long memberId) {
+    public void deleteByIds(final List<Long> cartItemIds) {
         if (cartItemIds.isEmpty()) {
             return;
         }
-        final String sql = "DELETE FROM cart_item WHERE member_id = (:member_id) AND id IN (:ids)";
+        final String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
         final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("ids", cartItemIds);
-        parameterSource.addValue("member_id", memberId);
         namedJdbcTemplate.update(sql, parameterSource);
     }
 

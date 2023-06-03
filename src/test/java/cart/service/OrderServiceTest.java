@@ -97,10 +97,10 @@ class OrderServiceTest {
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member, product2));
         final CartItem cartItem3 = cartItemRepository.save(new CartItem(member, product3));
         final Order order1 = orderRepository.save(
-                new Order(memberCoupon, member.getId(), List.of(cartItem1, cartItem3))
+                Order.of(memberCoupon, member.getId(), List.of(cartItem1, cartItem3))
         );
         final Order order2 = orderRepository.save(
-                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem2))
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem2))
         );
 
         // when
@@ -125,7 +125,7 @@ class OrderServiceTest {
         final Member member = memberRepository.save(사용자1);
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
         final Order order = orderRepository.save(
-                new Order(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem))
+                Order.of(MemberCoupon.empty(member.getId()), member.getId(), List.of(cartItem))
         );
 
         // when

@@ -40,12 +40,14 @@ public class OrderService {
         if (Objects.nonNull(request.getCouponId())) {
             final MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
                     .orElseThrow(MemberCouponNotFoundException::new);
-            final Order order = orderRepository.save(new Order(memberCoupon, memberId, items));
-            return order.getId();
+            final Order order = Order.of(memberCoupon, memberId, items);
+            final Order saveOrder = orderRepository.save(order);
+            return saveOrder.getId();
         }
 
-        final Order order = orderRepository.save(new Order(MemberCoupon.empty(memberId), memberId, items));
-        return order.getId();
+        final Order order = Order.of(MemberCoupon.empty(memberId), memberId, items);
+        final Order saveOrder = orderRepository.save(order);
+        return saveOrder.getId();
     }
 
     @Transactional(readOnly = true)

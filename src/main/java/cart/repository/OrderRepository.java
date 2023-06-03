@@ -61,7 +61,7 @@ public class OrderRepository {
         useMemberCoupon(savedOrderEntity, order.getMemberCoupon().getCouponId());
         saveOrderItems(order, savedOrderEntity);
         deleteCartItems(order);
-        return new Order(
+        return Order.of(
                 savedOrderEntity.getId(),
                 order.getMemberCoupon(),
                 order.getMemberId(),
@@ -91,7 +91,7 @@ public class OrderRepository {
         final List<Long> cartItemIds = order.getItems().stream()
                 .map(CartItem::getId)
                 .collect(toList());
-        cartItemDao.deleteByIds(cartItemIds, order.getMemberId());
+        cartItemDao.deleteByIds(cartItemIds);
     }
 
     public List<Order> findAllByMemberId(final Long memberId) {
