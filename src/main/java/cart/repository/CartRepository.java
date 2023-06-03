@@ -63,11 +63,53 @@ public class CartRepository {
         return CartItemMapper.toCartItem(cartItemEntity, productEntity, memberEntity);
     }
 
+    public Cart findByIds(final List<Long> cartItemIds) {
+        final List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(cartItemIds);
+        final Map<Long, ProductEntity> productGroupById = getProductGroupById(cartItemEntities);
+        final Map<Long, MemberEntity> memberGroupByMemberId = getMemberGroupByMemberId(cartItemEntities);
+
+        return new Cart(cartItemEntities.stream().map(it -> CartItemMapper.toCartItem(
+                it,
+                productGroupById.get(it.getId()),
+                memberGroupByMemberId.get(it.getMemberId())
+        )).collect(Collectors.toUnmodifiableList())
+        );
+    }
+
+    private Map<Long, ProductEntity> getProductGroupById(final List<CartItemEntity> cartItemEntities) {
+        return productDao.getProductGroupById(getAllProductId(cartItemEntities));
+    }
+
+    private List<Long> getAllProductId(final List<CartItemEntity> cartItemEntities) {
+        return cartItemEntities.stream()
+                .map(CartItemEntity::getId)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private Map<Long, MemberEntity> getMemberGroupByMemberId(final List<CartItemEntity> cartItemEntities) {
+        final List<Long> memberIds = cartItemEntities.stream()
+                .map(CartItemEntity::getMemberId)
+                .collect(Collectors.toUnmodifiableList());
+
+        return memberDao.findMemberGroupById(memberIds);
+    }
+
     public void deleteById(final Long id) {
         cartItemDao.deleteById(id);
     }
 
     public void updateQuantity(final CartItem cartItem) {
         cartItemDao.updateQuantity(CartItemMapper.toEntity(cartItem));
+    }
+
+    public void deleteCart(final Cart cart) {
+        final List<Long> cartItemIds = getAllCartItemIds(cart);
+        cartItemDao.deleteByIds(cartItemIds);
+    }
+
+    private List<Long> getAllCartItemIds(final Cart cart) {
+        return cart.getCartItems().stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

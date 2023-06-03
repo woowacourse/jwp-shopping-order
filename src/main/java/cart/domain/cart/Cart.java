@@ -1,6 +1,8 @@
 package cart.domain.cart;
 
+import cart.domain.member.Member;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Cart {
@@ -11,7 +13,11 @@ public class Cart {
         this.cartItems = new ArrayList<>(cartItems);
     }
 
+    public void checkOwner(final Member member) {
+        cartItems.forEach(cartItem -> cartItem.checkOwner(member));
+    }
+
     public List<CartItem> getCartItems() {
-        return cartItems;
+        return Collections.unmodifiableList(cartItems);
     }
 }

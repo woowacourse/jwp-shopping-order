@@ -4,19 +4,25 @@ import cart.entity.MemberEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public Optional<MemberEntity> getMemberById(final Long id) {
@@ -56,6 +62,22 @@ public class MemberDao {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());
     }
+
+    public Map<Long, MemberEntity> findMemberGroupById(final List<Long> ids) {
+        String sql = "SELECT * FROM member WHERE id IN (:ids)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ids", ids);
+
+        final List<MemberEntity> memberEntities = namedParameterJdbcTemplate.query(
+                sql,
+                params,
+                new MemberRowMapper()
+        );
+
+        return memberEntities.stream().collect(Collectors.toMap(MemberEntity::getId, e -> e));
+    }
+
 
     private static class MemberRowMapper implements RowMapper<MemberEntity> {
         @Override
