@@ -39,13 +39,13 @@ public class Points implements Iterable<Point> {
     }
 
     private void validate(Point usePoint) {
-        Point totalPoint = Point.from(getTotalPoints());
+        Point totalPoint = Point.from(getTotalPoint());
         if (usePoint.isGreaterThan(totalPoint)) {
             throw new OrderException("사용가능한 포인트보다 더 많은 포인트를 사용할 수 없습니다.");
         }
     }
 
-    public int getTotalPoints() {
+    public int getTotalPoint() {
         return points.stream()
                 .mapToInt(Point::getValue)
                 .sum();

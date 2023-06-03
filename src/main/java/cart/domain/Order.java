@@ -30,7 +30,7 @@ public class Order {
     public Point calculateSavedPoint(PointAccumulationPolicy pointAccumulationPolicy) {
         int totalCost = orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
-                .sum() - usedPoint.getTotalPoints();
+                .sum() - usedPoint.getTotalPoint();
 
         return pointAccumulationPolicy.calculateAccumulationPoint(totalCost);
     }
@@ -81,7 +81,7 @@ public class Order {
     }
 
     public int getTotalUsedPoint() {
-        return usedPoint.getTotalPoints();
+        return usedPoint.getTotalPoint();
     }
 
     @Override

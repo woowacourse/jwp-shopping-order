@@ -18,7 +18,7 @@ class PointsTest {
         Points points = new Points(List.of(Point.of(100, "테스트용 포인트", LocalDate.now()),
                 Point.of(10000, "테스트용 포인트", LocalDate.now())));
 
-        assertThat(points.getTotalPoints()).isEqualTo(10100);
+        assertThat(points.getTotalPoint()).isEqualTo(10100);
     }
 
     @DisplayName("유효기간이 빠른 순으로 사용할 포인트들을 구할 수 있다.(포인트가 딱 떨어지지 않을 때)")
