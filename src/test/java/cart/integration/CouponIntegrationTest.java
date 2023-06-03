@@ -6,6 +6,7 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.repository.CouponRepository;
 import cart.domain.repository.MemberRepository;
+import cart.dto.response.ActiveCouponResponse;
 import cart.dto.response.CouponResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -23,6 +24,7 @@ public class CouponIntegrationTest extends IntegrationTest {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
     private CouponRepository couponRepository;
 
     private Member member;
@@ -73,20 +75,19 @@ public class CouponIntegrationTest extends IntegrationTest {
     void getActiveCouponsByTotalProductAmount() {
         // given
         final int totalProductAmount = 1000;
+        postCoupon(coupon1.getId());
+        postCoupon(coupon2.getId());
 
         // when
         final ExtractableResponse<Response> response = getActiveCouponsResponse(totalProductAmount);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        final List<CouponResponse> couponResponses = response.jsonPath().getList(".", CouponResponse.class);
-        final CouponResponse expected = new CouponResponse(coupon1.getId(), coupon1.getName(),
-                coupon1.getMinAmount().getValue(), coupon1.getDiscountAmount().getValue(), false);
-        assertThat(couponResponses.size()).isEqualTo(1);
-        assertThat(couponResponses).usingRecursiveComparison()
-                .ignoringFields("isPublished")
-                .isEqualTo(expected);
-
+        final List<ActiveCouponResponse> responses = response.jsonPath().getList(".", ActiveCouponResponse.class);
+        final ActiveCouponResponse expected = new ActiveCouponResponse(coupon2.getId(), coupon2.getName(),
+                coupon2.getMinAmount().getValue());
+        assertThat(responses.size()).isEqualTo(1);
+        assertThat(responses.get(0)).usingRecursiveComparison().isEqualTo(expected);
     }
 
     private ExtractableResponse<Response> getCouponsResponse() {

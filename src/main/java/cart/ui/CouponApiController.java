@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.CouponService;
 import cart.domain.Member;
+import cart.dto.response.ActiveCouponResponse;
 import cart.dto.response.CouponResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,5 +34,11 @@ public class CouponApiController {
     public ResponseEntity<Void> publishCoupon(final Member member, @PathVariable final Long id) {
         couponService.publish(member, id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<ActiveCouponResponse>> showActiveCoupons(final Member member, @RequestParam int total) {
+        final List<ActiveCouponResponse> activeCoupons = couponService.findActiveCoupons(member, total);
+        return ResponseEntity.ok(activeCoupons);
     }
 }

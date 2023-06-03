@@ -4,10 +4,12 @@ import cart.domain.Coupon;
 import cart.domain.Member;
 import cart.domain.repository.CouponRepository;
 import cart.domain.repository.MemberCouponRepository;
+import cart.dto.response.ActiveCouponResponse;
 import cart.dto.response.CouponResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,5 +39,17 @@ public class CouponService {
 
     public void publish(final Member member, final Long id) {
         memberCouponRepository.create(id, member.getId());
+    }
+
+    public List<ActiveCouponResponse> findActiveCoupons(final Member member, final int totalProductAmount) {
+        final List<Long> memberCouponIds = memberCouponRepository.findCouponIdsByMemberId(member.getId());
+        final List<Coupon> coupons = couponRepository.findAll();
+        final List<Coupon> filteredCoupons = coupons.stream()
+                .filter(it -> memberCouponIds.contains(it.getId())
+                        && it.getMinAmount().getValue() <= totalProductAmount)
+                .collect(Collectors.toList());
+        return filteredCoupons.stream()
+                .map(it -> new ActiveCouponResponse(it.getId(), it.getName(), it.getMinAmount().getValue()))
+                .collect(Collectors.toList());
     }
 }
