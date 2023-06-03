@@ -52,7 +52,7 @@ public class MemberCoupon {
     }
 
     public int getDiscountPrice(final CartItems cartItems) {
-        return coupon.getDiscountPrice(cartItems);
+        return coupon.calculateDiscountPrice(cartItems);
     }
 
     public Long getId() {

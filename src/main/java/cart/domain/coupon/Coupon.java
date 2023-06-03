@@ -1,6 +1,9 @@
 package cart.domain.coupon;
 
+import static cart.exception.badrequest.BadRequestErrorType.COUPON_UNAVAILABLE;
+
 import cart.domain.cart.CartItems;
+import cart.exception.badrequest.BadRequestException;
 
 public class Coupon {
 
@@ -33,7 +36,10 @@ public class Coupon {
         return couponInfo.getMinOrderPrice() <= cartItems.calculateTotalProductPrice();
     }
 
-    public int getDiscountPrice(final CartItems cartItems) {
+    public int calculateDiscountPrice(final CartItems cartItems) {
+        if (!isApplicable(cartItems)) {
+            throw new BadRequestException(COUPON_UNAVAILABLE);
+        }
         return type.calculateDiscountPrice(value, cartItems);
     }
 
