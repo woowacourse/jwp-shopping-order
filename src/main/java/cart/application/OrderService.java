@@ -6,6 +6,7 @@ import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.Products;
+import cart.domain.repository.CartItemRepository;
 import cart.domain.repository.MemberCouponRepository;
 import cart.domain.repository.OrderRepository;
 import cart.domain.repository.ProductRepository;
@@ -26,38 +27,46 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final MemberCouponRepository memberCouponRepository;
+    private final CartItemRepository cartItemRepository;
 
     public OrderService(final OrderRepository orderRepository, final ProductRepository productRepository,
-                        final MemberCouponRepository memberCouponRepository) {
+                        final MemberCouponRepository memberCouponRepository,
+                        final CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.memberCouponRepository = memberCouponRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     public OrderResponse order(final OrderRequest orderRequest, final Member member) {
         final List<Product> products = findProducts(orderRequest);
-
-        if (orderRequest.getCouponId() == null) {
-            final Coupon emptyCoupon = new Coupon("", Amount.of(0), Amount.of(0));
-            final Order order = orderRepository.create(
-                    new Order(new Products(products), new MemberCoupon(member.getId(), emptyCoupon),
-                            Amount.of(orderRequest.getTotalProductAmount()),
-                            Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
-            return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
-                    order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
-                    makeOrderProductResponses(orderRequest, products));
-        }
-        final MemberCoupon coupon = memberCouponRepository.findByCouponIdAndMemberId(orderRequest.getCouponId(),
-                member.getId());
+        final MemberCoupon coupon = findCouponIfExists(member.getId(), orderRequest.getCouponId());
         final Order order = orderRepository.create(
                 new Order(new Products(products), coupon, Amount.of(orderRequest.getTotalProductAmount()),
                         Amount.of(orderRequest.getDeliveryAmount()), orderRequest.getAddress()), member.getId());
+        for (Product product : products) {
+            cartItemRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());
+        }
+        final int discountedProductAmount = order.discountProductAmount().getValue();
+        useCoupon(member, coupon, orderRequest.getCouponId());
+        return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
+                order.getDeliveryAmount().getValue(), discountedProductAmount, order.getAddress(),
+                makeOrderProductResponses(orderRequest, products));
+    }
+
+    private void useCoupon(final Member member, final MemberCoupon coupon, final Long requestCouponId) {
+        if (requestCouponId == null) {
+            return;
+        }
         coupon.use();
         memberCouponRepository.update(coupon, member.getId());
-        final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(orderRequest, products);
-        return new OrderResponse(order.getId(), orderRequest.getTotalProductAmount(),
-                order.getDeliveryAmount().getValue(), order.discountProductAmount().getValue(), order.getAddress(),
-                orderProductResponses);
+    }
+
+    private MemberCoupon findCouponIfExists(final Long memberId, final Long requestCouponId) {
+        if (requestCouponId != null) {
+            return memberCouponRepository.findByCouponIdAndMemberId(requestCouponId, memberId);
+        }
+        return new MemberCoupon(memberId, new Coupon("", Amount.of(0), Amount.of(0)));
     }
 
     private List<Product> findProducts(final OrderRequest orderRequest) {

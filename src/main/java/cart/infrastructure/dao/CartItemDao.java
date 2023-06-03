@@ -83,6 +83,11 @@ public class CartItemDao {
         jdbcTemplate.update(sql, id);
     }
 
+    public void deleteByMemberIdAndProductId(final Long memberId, final Long productId) {
+        final String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, memberId, productId);
+    }
+
     public void deleteAll(final List<CartItemEntity> cartItems) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {

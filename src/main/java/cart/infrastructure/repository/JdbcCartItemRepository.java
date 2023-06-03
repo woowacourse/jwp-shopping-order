@@ -97,6 +97,11 @@ public class JdbcCartItemRepository implements CartItemRepository {
     }
 
     @Override
+    public void deleteByMemberIdAndProductId(final Long memberId, final Long productId) {
+        cartItemDao.deleteByMemberIdAndProductId(memberId, productId);
+    }
+
+    @Override
     public void deleteAll(final List<CartItem> cartItems) {
         final List<CartItemEntity> cartItemEntities = cartItems.stream()
                 .map(CartItemEntity::from)

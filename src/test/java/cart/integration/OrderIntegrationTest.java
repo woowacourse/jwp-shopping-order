@@ -7,6 +7,7 @@ import cart.domain.repository.MemberRepository;
 import cart.dto.request.CartItemRequest;
 import cart.dto.request.OrderRequest;
 import cart.dto.request.ProductRequest;
+import cart.dto.response.CartItemResponse;
 import cart.dto.response.OrderResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -47,8 +48,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void orderWithoutCoupon() {
         // given
-        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2), 65_000, 2_000,
-                "서울특별시 송파구", null);
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+                65_000, 2_000, "서울특별시 송파구", null);
 
         // when
         final ExtractableResponse<Response> response = order(orderRequest);
@@ -59,6 +60,27 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(orderResponse.getTotalProductAmount()).isEqualTo(65_000);
         assertThat(orderResponse.getDiscountedProductAmount()).isEqualTo(65_000);
         assertThat(orderResponse.getDeliveryAmount()).isEqualTo(2_000);
+    }
+
+    @DisplayName("주문하면 장바구니에서 해당 상품이 삭제된다.")
+    @Test
+    void orderThenDeleteCartItem() {
+        // given
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2),
+                65_000, 2_000, "서울특별시 송파구", null);
+
+        // when
+        final ExtractableResponse<Response> response = order(orderRequest);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        final List<CartItemResponse> cartItemResponses = findCartItems();
+        final boolean isEmpty = cartItemResponses.stream()
+                .filter(it -> it.getProduct().getId().equals(cartItemRequest1.getProductId())
+                        || it.getProduct().getId().equals(cartItemRequest2.getProductId()))
+                .findAny()
+                .isEmpty();
+        assertThat(isEmpty).isTrue();
     }
 
     private Long createProduct(final ProductRequest productRequest1) {
@@ -77,6 +99,15 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .body(cartItemRequest)
                 .when().post("/cart-items")
                 .then().extract();
+    }
+
+    private List<CartItemResponse> findCartItems() {
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/cart-items")
+                .then().extract();
+        return response.jsonPath().getList(".", CartItemResponse.class);
     }
 
     private ExtractableResponse<Response> order(final OrderRequest orderRequest) {
