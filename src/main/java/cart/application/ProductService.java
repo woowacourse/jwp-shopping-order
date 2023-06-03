@@ -35,7 +35,6 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
-
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl());
