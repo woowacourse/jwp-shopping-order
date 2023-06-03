@@ -14,11 +14,13 @@ import cart.presentation.dto.request.OrderRequest;
 import cart.presentation.dto.response.SpecificOrderResponse;
 import cart.application.exception.PointExceedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderService {
 
     // TODO: MEMBER 검증로직 추가(service에서 할지, resolver에서 할지)
@@ -71,6 +73,7 @@ public class OrderService {
         memberRepository.update(updatedMember);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders(Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         return orders.stream()
@@ -90,6 +93,7 @@ public class OrderService {
                 product.getImageUrl(), orderInfo.getQuantity());
     }
 
+    @Transactional(readOnly = true)
     public SpecificOrderResponse getSpecificOrder(Member member, Long orderId) {
         Order order = orderRepository.findById(orderId);
         return new SpecificOrderResponse(order.getId(), mapOrderInfoToOrderDto(order.getOrderInfo()),

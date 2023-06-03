@@ -5,10 +5,12 @@ import cart.application.domain.Member;
 import cart.presentation.dto.response.PointResponse;
 import cart.application.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;

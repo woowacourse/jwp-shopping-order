@@ -9,11 +9,13 @@ import cart.presentation.dto.request.CartItemQuantityRequest;
 import cart.presentation.dto.request.CartItemRequest;
 import cart.presentation.dto.response.CartItemResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartItemService {
 
     private final ProductRepository productRepository;
@@ -25,6 +27,7 @@ public class CartItemService {
     }
 
     // TODO: 장바구니 품목 예외 처리(남의 장바구니)
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findAllCartItems(Member member) {
         List<CartItem> cartItems = cartItemRepository.findByMemberId(member.getId());
         return cartItems.stream()
