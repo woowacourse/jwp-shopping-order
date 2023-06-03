@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS member;
 DROP TABLE IF EXISTS cart_item;
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS ordered_item;
 DROP TABLE IF EXISTS coupon;
 DROP TABLE IF EXISTS member_coupon;
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS product
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     `name`    VARCHAR(255) NOT NULL,
     price     INT          NOT NULL,
-    image_url VARCHAR(255) NOT NULL
+    image_url TEXT NOT NULL
     );
 
 CREATE TABLE IF NOT EXISTS member
@@ -32,13 +32,13 @@ CREATE TABLE IF NOT EXISTS cart_item
     quantity   INT    NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `order`
+CREATE TABLE IF NOT EXISTS orders
 (
     id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id     BIGINT NOT NULL,
     total_price   INT    NOT NULL,
     payment_price INT    NOT NULL,
-    totalPoint         INT      DEFAULT 0,
+    point         INT      DEFAULT 0,
     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

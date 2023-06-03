@@ -31,9 +31,6 @@ class ProductWriteControllerTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @MockBean
-    WebMvcConfig webMvcConfig;
-
     @LocalServerPort
     int port;
 

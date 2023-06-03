@@ -28,7 +28,8 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorization == null) {

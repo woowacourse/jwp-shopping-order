@@ -1,6 +1,4 @@
-package cart.ui.order;
-
-import cart.ui.order.dto.CreateOrderRequest;
+package cart.ui.order.dto;
 
 import java.util.List;
 import java.util.stream.Collectors;

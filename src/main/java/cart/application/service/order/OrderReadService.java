@@ -3,7 +3,6 @@ package cart.application.service.order;
 import cart.application.repository.order.OrderRepository;
 import cart.application.service.order.dto.OrderDto;
 import cart.domain.order.Order;
-import cart.persistence.order.OrderedItemJdbcRepository;
 import cart.ui.MemberAuth;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,12 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderReadService {
 
     private final OrderRepository orderRepository;
-    private final OrderedItemJdbcRepository orderedItemJdbcRepository;
 
-    public OrderReadService(final OrderRepository orderRepository,
-                            final OrderedItemJdbcRepository orderedItemJdbcRepository) {
+    public OrderReadService(final OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.orderedItemJdbcRepository = orderedItemJdbcRepository;
     }
 
     public List<OrderDto> findAllByMember(final MemberAuth memberAuth) {

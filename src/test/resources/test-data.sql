@@ -16,3 +16,11 @@ INSERT INTO member_coupon (id, member_id, coupon_id, status) VALUES (4L, 5L, 2L,
 
 INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount) VALUES (1L, '웰컴 쿠폰 - 10%할인', 10000, 10, 0);
 INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount) VALUES (2L, '또 와요 쿠폰 - 3000원 할인', 15000, 0, 3000);
+
+
+INSERT INTO orders (id, member_id, total_price, payment_price, point, created_at)
+VALUES (100L, 5L, 30000, 3000, 0, '2023-06-03');
+
+
+INSERT INTO ordered_item (id, order_id, product_name, product_price, product_quantity, product_image)
+VALUES (100L, 100L, '레오배변패드', 30000, 1, 'image');

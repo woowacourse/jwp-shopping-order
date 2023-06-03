@@ -1,6 +1,4 @@
-package cart.ui.order;
-
-import cart.ui.order.dto.CreateOrderDiscountRequest;
+package cart.ui.order.dto;
 
 import java.util.List;
 

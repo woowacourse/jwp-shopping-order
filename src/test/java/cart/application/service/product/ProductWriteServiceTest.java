@@ -1,4 +1,4 @@
-package cart.application.service;
+package cart.application.service.product;
 
 import cart.application.repository.ProductRepository;
 import cart.application.service.product.ProductWriteService;

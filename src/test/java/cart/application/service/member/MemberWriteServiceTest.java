@@ -1,4 +1,4 @@
-package cart.application.service;
+package cart.application.service.member;
 
 import cart.application.repository.MemberRepository;
 import cart.application.service.member.MemberWriteService;

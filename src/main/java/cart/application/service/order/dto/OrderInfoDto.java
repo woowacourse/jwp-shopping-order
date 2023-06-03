@@ -1,7 +1,5 @@
 package cart.application.service.order.dto;
 
-import java.time.LocalDateTime;
-
 public class OrderInfoDto {
 
     private final Long id;

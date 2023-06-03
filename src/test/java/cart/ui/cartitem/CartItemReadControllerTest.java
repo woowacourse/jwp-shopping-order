@@ -1,5 +1,7 @@
 package cart.ui.cartitem;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.application.repository.MemberRepository;
 import cart.fixture.MemberFixture;
 import io.restassured.RestAssured;
@@ -35,8 +37,8 @@ class CartItemReadControllerTest {
     @DisplayName("[GET] /cart-items 사용자에 맞는 장바구니 정보를 반환한다.(사용자가 없을때 예외처리)")
     void showCartItemsNotExistMember() {
 
-        String email = "leotest@gmail.com";
-        String password = "leo1234";
+        String email = "leo@gmail.com";
+        String password = "leo123";
 
         String base64Credentials = java.util.Base64.getEncoder().encodeToString((email + ":" + password).getBytes());
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -45,7 +47,7 @@ class CartItemReadControllerTest {
                 .then().log().all()
                 .extract();
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -59,6 +61,6 @@ class CartItemReadControllerTest {
                 .then().log().all()
                 .extract();
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

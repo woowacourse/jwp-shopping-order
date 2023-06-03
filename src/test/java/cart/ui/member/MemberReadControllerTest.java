@@ -32,8 +32,6 @@ class MemberReadControllerTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @MockBean
-    WebMvcConfig webMvcConfig;
 
     @LocalServerPort
     private int port;
@@ -65,4 +63,5 @@ class MemberReadControllerTest {
                 () -> assertThat(response.jsonPath().getList(".", MemberResponse.class)).usingRecursiveComparison().ignoringFields("id").isEqualTo(List.of(beaver, leo, dino))
         );
     }
+
 }

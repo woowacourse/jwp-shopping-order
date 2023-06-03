@@ -1,7 +1,6 @@
-package cart.ui.order;
+package cart.ui.order.dto;
 
 import cart.application.service.order.dto.OrderDto;
-import cart.ui.order.dto.OrderResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;

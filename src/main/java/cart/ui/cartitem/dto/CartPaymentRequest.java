@@ -1,4 +1,4 @@
-package cart.ui.cartitem;
+package cart.ui.cartitem.dto;
 
 import cart.ui.order.dto.CreateOrderItemRequest;
 
