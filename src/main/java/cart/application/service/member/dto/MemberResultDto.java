@@ -1,6 +1,6 @@
 package cart.application.service.member.dto;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 public class MemberResultDto {
 

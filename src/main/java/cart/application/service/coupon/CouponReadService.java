@@ -1,13 +1,13 @@
 package cart.application.service.coupon;
 
-import cart.application.repository.CouponRepository;
-import cart.domain.coupon.Coupon;
-import cart.ui.MemberAuth;
+import cart.application.repository.coupon.CouponRepository;
+import cart.application.service.coupon.dto.CouponResultDto;
+import cart.domain.member.Member;
+import cart.domain.coupon.Coupons;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,12 +19,10 @@ public class CouponReadService {
         this.couponRepository = couponRepository;
     }
 
-    public List<CouponResultDto> findByMember(final MemberAuth memberAuth) {
-        final List<Coupon> coupons = couponRepository.findByMemberId(memberAuth.getId());
+    public List<CouponResultDto> findByMember(final Member memberAuth) {
+        final Coupons coupons = couponRepository.findByMemberId(memberAuth.getId());
 
-        return coupons.stream()
-                .map(CouponResultDto::from)
-                .collect(Collectors.toUnmodifiableList());
+        return CouponResultDto.from(coupons);
     }
 
 }

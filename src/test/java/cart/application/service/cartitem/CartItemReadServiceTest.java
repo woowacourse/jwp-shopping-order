@@ -1,11 +1,11 @@
 package cart.application.service.cartitem;
 
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.MemberRepository;
+import cart.application.repository.cartItem.CartItemRepository;
+import cart.application.repository.member.MemberRepository;
 import cart.application.service.cartitem.dto.CartResultDto;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
-import cart.ui.MemberAuth;
+import cart.domain.member.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +40,7 @@ class CartItemReadServiceTest {
     @DisplayName("사용자의 해당하는 장바구니의 정보를 조회한다.")
     void findByMemberTest() {
         // given
-        final MemberAuth memberAuth = new MemberAuth(레오_ID포함.getId(), "레오", "leo@gmail.com", "leo123");
+        final Member memberAuth = new Member(레오_ID포함.getId(), "레오", "leo@gmail.com", "leo123");
         given(memberRepository.findMemberById(any()))
                 .willReturn(Optional.of(레오_ID포함));
         given(cartItemRepository.findAllCartItemsByMemberId(any()))

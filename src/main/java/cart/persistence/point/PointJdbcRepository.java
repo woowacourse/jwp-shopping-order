@@ -1,8 +1,9 @@
 package cart.persistence.point;
 
-import cart.application.repository.PointRepository;
-import cart.domain.Point;
-import cart.domain.PointHistory;
+import cart.application.repository.point.PointRepository;
+import cart.domain.point.Point;
+import cart.domain.point.PointHistories;
+import cart.domain.point.PointHistory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -20,9 +21,9 @@ public class PointJdbcRepository implements PointRepository {
     private final RowMapper<PointHistory> pointHistoryRowMapper = (rs, rowNum) ->
             new PointHistory(
                     rs.getLong("order_id"),
-                    rs.getInt("used_point"),
-                    rs.getInt("earned_point")
-            );
+                    new Point(rs.getInt("earned_point")),
+                    new Point(rs.getInt("used_point")
+                    ));
 
     public PointJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -44,9 +45,9 @@ public class PointJdbcRepository implements PointRepository {
     }
 
     @Override
-    public Point findPointByMemberId(final Long memberId) {
+    public PointHistories findPointByMemberId(final Long memberId) {
         final String sql = "select * from point_history where member_id = ?";
-        return new Point(jdbcTemplate.query(sql, pointHistoryRowMapper, memberId));
+        return new PointHistories(jdbcTemplate.query(sql, pointHistoryRowMapper, memberId));
     }
 
 }

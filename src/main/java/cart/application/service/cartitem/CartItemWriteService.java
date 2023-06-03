@@ -1,14 +1,13 @@
 package cart.application.service.cartitem;
 
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.MemberRepository;
-import cart.application.repository.ProductRepository;
+import cart.application.repository.cartItem.CartItemRepository;
+import cart.application.repository.member.MemberRepository;
+import cart.application.repository.product.ProductRepository;
 import cart.application.service.cartitem.dto.CartItemCreateDto;
 import cart.application.service.cartitem.dto.CartItemUpdateDto;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.domain.cartitem.CartItem;
-import cart.ui.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +27,7 @@ public class CartItemWriteService {
         this.productRepository = productRepository;
     }
 
-    public Long createCartItem(MemberAuth memberAuth, CartItemCreateDto cartItemCreateDto) {
+    public Long createCartItem(Member memberAuth, CartItemCreateDto cartItemCreateDto) {
         final Member member = memberRepository.findMemberById(memberAuth.getId())
                 .orElseThrow(() -> new NoSuchElementException("일치하는 사용자가 없습니다."));
         final Product product = productRepository.findById(cartItemCreateDto.getProductId())
@@ -36,7 +35,7 @@ public class CartItemWriteService {
         return cartItemRepository.createCartItem(new CartItem(product, member));
     }
 
-    public void updateQuantity(MemberAuth memberAuth, Long cartItemId, CartItemUpdateDto cartItemUpdateDto) {
+    public void updateQuantity(Member memberAuth, Long cartItemId, CartItemUpdateDto cartItemUpdateDto) {
         final Member member = memberRepository.findMemberById(memberAuth.getId())
                 .orElseThrow(() -> new NoSuchElementException("일치하는 사용자가 없습니다."));
 
@@ -53,7 +52,7 @@ public class CartItemWriteService {
         cartItemRepository.updateQuantity(cartItem);
     }
 
-    public void remove(MemberAuth memberAuth, Long cartItemId) {
+    public void remove(Member memberAuth, Long cartItemId) {
         final Member member = memberRepository.findMemberById(memberAuth.getId())
                 .orElseThrow(() -> new NoSuchElementException("일치하는 사용자가 없습니다."));
 

@@ -1,15 +1,14 @@
 package cart.persistence.cartitem;
 
-import cart.application.repository.CartItemRepository;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.application.repository.cartItem.CartItemRepository;
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItems;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -45,7 +44,6 @@ public class CartItemJdbcRepository implements CartItemRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -53,7 +51,6 @@ public class CartItemJdbcRepository implements CartItemRepository {
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("member_id", "product_id", "quantity");
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     @Override

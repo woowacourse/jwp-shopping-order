@@ -1,11 +1,10 @@
 package cart.application.service.cartitem;
 
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.MemberRepository;
+import cart.application.repository.cartItem.CartItemRepository;
+import cart.application.repository.member.MemberRepository;
 import cart.application.service.cartitem.dto.CartResultDto;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.domain.cartitem.CartItems;
-import cart.ui.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +22,7 @@ public class CartItemReadService {
         this.memberRepository = memberRepository;
     }
 
-    public CartResultDto findByMember(final MemberAuth memberAuth) {
+    public CartResultDto findByMember(final Member memberAuth) {
         final Member member = memberRepository.findMemberById(memberAuth.getId())
                 .orElseThrow(() -> new NoSuchElementException("일치하는 사용자가 없습니다."));
 

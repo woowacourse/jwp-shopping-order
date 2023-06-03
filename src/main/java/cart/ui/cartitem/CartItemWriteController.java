@@ -3,7 +3,7 @@ package cart.ui.cartitem;
 import cart.application.service.cartitem.CartItemWriteService;
 import cart.application.service.cartitem.dto.CartItemCreateDto;
 import cart.application.service.cartitem.dto.CartItemUpdateDto;
-import cart.ui.MemberAuth;
+import cart.domain.member.Member;
 import cart.ui.cartitem.dto.CartItemQuantityUpdateRequest;
 import cart.ui.cartitem.dto.CartItemRequest;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class CartItemWriteController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItems(MemberAuth memberAuth, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<Void> addCartItems(Member memberAuth, @RequestBody CartItemRequest cartItemRequest) {
 
         final Long cartItemId = cartItemWriteService.createCartItem(memberAuth, CartItemCreateDto.from(cartItemRequest));
 
@@ -31,7 +31,7 @@ public class CartItemWriteController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateCartItemQuantity(
-            MemberAuth memberAuth,
+            Member memberAuth,
             @PathVariable("id") Long cartItemId,
             @RequestBody CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest
     ) {
@@ -42,7 +42,7 @@ public class CartItemWriteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItems(MemberAuth memberAuth, @PathVariable Long id) {
+    public ResponseEntity<Void> removeCartItems(Member memberAuth, @PathVariable Long id) {
         cartItemWriteService.remove(memberAuth, id);
 
         return ResponseEntity.noContent().build();

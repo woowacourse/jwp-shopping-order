@@ -4,7 +4,7 @@ import cart.exception.UnFulFilledMinimumAmountException;
 
 public class Coupon {
 
-    private final long id;
+    private final Long id;
     private final String couponName;
     private final int discountPercent;
     private final int discountAmount;
@@ -22,7 +22,7 @@ public class Coupon {
         if (amount < minAmount) {
             throw new UnFulFilledMinimumAmountException("최소 주문 금액: " + minAmount + "원을 충족하지 못했습니다.");
         }
-        return amount * (100 - discountPercent) / 100 - discountAmount;
+        return (amount * (100 - discountPercent) / 100) - discountAmount;
     }
 
     public Long getId() {

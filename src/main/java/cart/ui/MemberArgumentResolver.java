@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.application.service.member.MemberReadService;
 import cart.application.service.member.dto.MemberResultDto;
+import cart.domain.member.Member;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(MemberAuth.class);
+        return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             throw new AuthenticationException();
         }
 
-        return new MemberAuth(memberResultDto.getId(), memberResultDto.getName(), email, password);
+        return new Member(memberResultDto.getId(), memberResultDto.getName(), email, password);
     }
 
 }

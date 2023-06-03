@@ -1,7 +1,7 @@
 package cart.application.service.order;
 
-import cart.application.repository.CouponRepository;
-import cart.application.repository.PointRepository;
+import cart.application.repository.coupon.CouponRepository;
+import cart.application.repository.point.PointRepository;
 import cart.application.repository.order.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

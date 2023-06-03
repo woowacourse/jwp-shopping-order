@@ -1,4 +1,4 @@
-package cart.ui.cartitem;
+package cart.ui.cartitem.dto;
 
 public class CartPaymentResponse {
 

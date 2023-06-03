@@ -1,6 +1,6 @@
 package cart.ui.cartitem;
 
-import cart.application.repository.MemberRepository;
+import cart.application.repository.member.MemberRepository;
 import cart.fixture.MemberFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

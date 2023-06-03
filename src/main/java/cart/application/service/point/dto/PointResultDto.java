@@ -1,6 +1,6 @@
-package cart.application.service.point;
+package cart.application.service.point.dto;
 
-import cart.domain.PointHistory;
+import cart.domain.point.PointHistory;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,14 +1,27 @@
-package cart.ui;
+package cart.domain.member;
 
-public class MemberAuth {
+import cart.ui.member.dto.MemberRequest;
+
+public class Member {
 
     private final Long id;
     private final String name;
     private final String email;
     private final String password;
 
+    public Member(final MemberRequest memberRequest) {
+        this(memberRequest.getName(), memberRequest.getEmail(), memberRequest.getPassword());
+    }
 
-    public MemberAuth(
+    public Member(
+            final String name,
+            final String email,
+            final String password
+    ) {
+        this(null, name, email, password);
+    }
+
+    public Member(
             final Long id,
             final String name,
             final String email,
@@ -18,6 +31,10 @@ public class MemberAuth {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public boolean isEqualId(Long memberId) {
+        return this.id.equals(memberId);
     }
 
     public Long getId() {

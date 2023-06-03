@@ -1,6 +1,6 @@
-package cart.ui.cartitem;
+package cart.ui.cartitem.dto;
 
-import cart.ui.order.dto.CreateOrderItemRequest;
+import cart.ui.order.dto.request.CreateOrderItemRequest;
 
 import java.util.List;
 
