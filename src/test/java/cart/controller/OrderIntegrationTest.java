@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import cart.controller.request.OrderRequestDto;
+import cart.controller.response.CouponResponseDto;
 import cart.controller.response.OrderProductResponseDto;
 import cart.controller.response.OrderResponseDto;
 import cart.dao.CouponDao;
@@ -58,7 +59,7 @@ class OrderIntegrationTest extends IntegrationTest {
         Long matthewId = createProduct(매튜);
 
         // 쿠폰이 있다.
-        List<MemberCoupon> memberCoupon = createMemberCoupon();
+        List<CouponResponseDto> memberCoupon = createMemberCoupon();
 
         // 장바구니가 있다.
         Long hongCartItemId = requestAddCartItemAndGetId(member, hongSilId);
@@ -68,7 +69,7 @@ class OrderIntegrationTest extends IntegrationTest {
                 memberCoupon.stream()
                         .filter(this::isSameCoupon)
                         .findFirst()
-                        .map(MemberCoupon::getId)
+                        .map(CouponResponseDto::getMemberCouponId)
         );
 
         // when
@@ -113,26 +114,26 @@ class OrderIntegrationTest extends IntegrationTest {
                 .containsExactly(tuple("홍실", PRICE, "hongsil.com"), tuple("매튜", PRICE, "matthew.com"));
 
         // 사용한 쿠폰은 삭제된다.
-//        given().log().all()
-//                .accept(MediaType.APPLICATION_JSON_VALUE)
-//                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-//                .when().get("/coupon")
-//                .then().statusCode(HttpStatus.OK.value())
-//                .extract().as(CouponResponseDto.class);
+        given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().get("/coupon")
+                .then().statusCode(HttpStatus.OK.value())
+                .extract().as(CouponResponseDto.class);
 
         // 여기서 memberCoupon.get(0).getId() 삭제되었는지만 확인하면됨
+
     }
 
-    private boolean isSameCoupon(MemberCoupon memberCoupon) {
-        return memberCoupon.getCoupon()
-                .getName()
+    private boolean isSameCoupon(CouponResponseDto couponResponseDto) {
+        return couponResponseDto.getName()
                 .equals("정액 할인 쿠폰");
     }
 
-    private List<MemberCoupon> createMemberCoupon() {
+    private List<CouponResponseDto> createMemberCoupon() {
         ExtractableResponse<Response> response = given()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when().post("/coupon/1/issue")
+                .when().post("/coupon/issue")
                 .then().statusCode(HttpStatus.CREATED.value()).extract();
 
         return response.as(new TypeRef<>() {});
