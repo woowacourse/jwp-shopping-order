@@ -12,12 +12,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import static cart.fixture.ProductFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
+@Sql(value = "classpath:reset.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 class ProductRepositoryTest {
 
@@ -78,7 +81,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("존재하지 않는 상품id로 조회 시 예외 처리한다")
     void findProductById_EmptyOptionalTest() {
-        Assertions.assertThat(productRepository.findById(2L)).isEmpty();
+        assertThat(productRepository.findById(2L)).isEmpty();
     }
 
     @Test
@@ -103,13 +106,13 @@ class ProductRepositoryTest {
     void deleteProductTest() {
         // given
         final Long savedPadId = productRepository.createProduct(배변패드);
-        final Long savedTailId = productRepository.createProduct(꼬리요리);
+        final int size = productRepository.findAll().size();
 
         // when
         productRepository.deleteProduct(savedPadId);
 
         // then
-        assertThat(productRepository.findAll()).hasSize(1);
+        assertThat(productRepository.findAll()).hasSize(size - 1);
     }
 
 }

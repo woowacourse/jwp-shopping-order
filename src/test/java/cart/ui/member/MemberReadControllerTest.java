@@ -19,12 +19,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = "classpath:/reset.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(value = "classpath:reset.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 class MemberReadControllerTest {
 
@@ -43,7 +44,7 @@ class MemberReadControllerTest {
     }
 
     @Test
-    @DisplayName("GET /members 사용자를 추가한다.")
+    @DisplayName("GET /members 사용자를 확인한다.")
     void getAllMembersTest() {
         final Member beaver = MemberFixture.비버;
         final Member leo = MemberFixture.레오;

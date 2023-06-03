@@ -14,9 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/reset.sql")
+@Sql(value = "/reset.sql",executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class CartItemReadControllerTest {
 
     @Autowired
@@ -34,8 +35,8 @@ class CartItemReadControllerTest {
     @DisplayName("[GET] /cart-items 사용자에 맞는 장바구니 정보를 반환한다.(사용자가 없을때 예외처리)")
     void showCartItemsNotExistMember() {
 
-        String email = "leo@gmail.com";
-        String password = "leo123";
+        String email = "leotest@gmail.com";
+        String password = "leo1234";
 
         String base64Credentials = java.util.Base64.getEncoder().encodeToString((email + ":" + password).getBytes());
         ExtractableResponse<Response> response = RestAssured.given().log().all()

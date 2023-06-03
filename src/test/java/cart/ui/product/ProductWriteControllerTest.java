@@ -17,13 +17,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import static cart.fixture.ProductFixture.배변패드;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = "classpath:/reset.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(value = "classpath:/reset.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 class ProductWriteControllerTest {
 
@@ -99,7 +100,9 @@ class ProductWriteControllerTest {
     @DisplayName("DELETE /products 상품을 제거한다.")
     void deleteProductTest() {
         final Long productId = productRepository.createProduct(배변패드);
-        final ProductRequest productRequest = new ProductRequest("휴지", 1000, "휴지이미지");
+//        final ProductRequest productRequest = new ProductRequest("휴지", 1000, "휴지이미지");
+        final int beforeSize = productRepository.findAll().size();
+
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .when().delete("/products/" + productId)
@@ -108,7 +111,7 @@ class ProductWriteControllerTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(productRepository.findAll()).hasSize(0)
+                () -> assertThat(productRepository.findAll()).hasSize(beforeSize-1)
         );
     }
 
