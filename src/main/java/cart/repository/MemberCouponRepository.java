@@ -43,30 +43,29 @@ public class MemberCouponRepository {
         }).collect(Collectors.toList());
     }
 
-    public MemberCoupon findByIdAndMemberId(final Long memberCouponId, final Long memberId) {
-        MemberCouponEntity findMemberCoupon = memberCouponDao.findMemberCouponByMemberIdAndCouponId(
-                        memberId, memberCouponId)
+    public MemberCoupon findById(final Long memberCouponId) {
+        final MemberCouponEntity findMemberCoupon = memberCouponDao.findMemberCouponById(memberCouponId)
                 .orElseThrow(MemberCouponNotFoundException::new);
 
-        Member member = getMember(memberId);
-        Coupon coupon = getCoupon(findMemberCoupon.getCouponId());
+        final Member member = getMember(findMemberCoupon.getMemberId());
+        final Coupon coupon = getCoupon(findMemberCoupon.getCouponId());
         return new MemberCoupon(findMemberCoupon.getId(), member, coupon, findMemberCoupon.getUsed());
     }
 
     private Member getMember(final Long memberId) {
-        MemberEntity memberEntity = memberDao.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        final MemberEntity memberEntity = memberDao.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return memberEntity.toDomain();
     }
 
     private Coupon getCoupon(final Long couponId) {
-        CouponEntity couponEntity = couponDao.findByCouponId(couponId).orElseThrow(CouponNotFoundException::new);
-        DiscountPolicy discountPolicy = DiscountPolicyType.findDiscountPolicy(couponEntity.getPolicyType(),
+        final CouponEntity couponEntity = couponDao.findByCouponId(couponId).orElseThrow(CouponNotFoundException::new);
+        final DiscountPolicy discountPolicy = DiscountPolicyType.findDiscountPolicy(couponEntity.getPolicyType(),
                 couponEntity.getDiscountPrice());
 
         return new Coupon(couponEntity.getId(), couponEntity.getName(), discountPolicy, couponEntity.getMinimumPrice());
     }
 
-    public void useMemberCoupon(final Long memberId, final Long id) {
-        memberCouponDao.updateUsedCouponByMemberIdAndCouponId(memberId, id);
+    public void useMemberCoupon(final Long memberCouponId) {
+        memberCouponDao.updateUsedCouponById(memberCouponId);
     }
 }

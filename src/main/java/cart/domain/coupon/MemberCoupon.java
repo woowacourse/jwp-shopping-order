@@ -1,7 +1,9 @@
 package cart.domain.coupon;
 
 import cart.domain.Member;
+import cart.exception.InvalidMemberCouponException;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class MemberCoupon {
 
@@ -23,6 +25,12 @@ public class MemberCoupon {
 
     public static MemberCoupon makeNonMemberCoupon() {
         return new MemberCoupon(null, null, Coupon.makeNonDiscountPolicyCoupon(), false);
+    }
+
+    public void checkOwner(final Member member) {
+        if (Objects.nonNull(this.member) && !this.member.equals(member)) {
+            throw new InvalidMemberCouponException();
+        }
     }
 
     public Long getId() {

@@ -58,7 +58,7 @@ class OrderServiceTest {
         Long savedOrderId = orderService.order(member.getId(), request);
 
         // then
-        Order result = orderRepository.findByOrderIdAndMemberId(savedOrderId, member.getId());
+        Order result = orderRepository.findById(savedOrderId);
         assertThat(result.getCalculateDiscountPrice().intValue()).isEqualTo(18000L);
         assertThat(result.getCoupon()).isEqualTo(Coupon.makeNonDiscountPolicyCoupon());
         assertThat(result.getDeliveryFee()).isEqualTo(3000L);

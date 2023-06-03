@@ -30,17 +30,17 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
-    public Optional<MemberCouponEntity> findMemberCouponByMemberIdAndCouponId(final Long memberId, final Long id) {
-        String sql = "SELECT * FROM member_coupon WHERE member_id = ? and id = ?";
+    public Optional<MemberCouponEntity> findMemberCouponById(final Long id) {
+        String sql = "SELECT * FROM member_coupon WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public void updateUsedCouponByMemberIdAndCouponId(final Long memberId, final Long id) {
-        String sql = "UPDATE member_coupon SET used = true WHERE member_id = ? and id = ?";
-        jdbcTemplate.update(sql, memberId, id);
+    public void updateUsedCouponById(final Long id) {
+        String sql = "UPDATE member_coupon SET used = true WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

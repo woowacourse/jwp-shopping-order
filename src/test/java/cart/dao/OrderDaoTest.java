@@ -54,8 +54,7 @@ class OrderDaoTest {
         OrdersEntity savedOrderEntity = ordersDao.insert(ordersEntity);
 
         // then
-        OrdersEntity result = ordersDao.findByOrderIdAndMemberId(savedOrderEntity.getId(),
-                savedMember.getId());
+        OrdersEntity result = ordersDao.findById(savedOrderEntity.getId());
 
         assertThat(result.getMemberCouponId()).isEqualTo(ordersEntity.getMemberCouponId());
         assertThat(result.getDeliveryFee()).isEqualTo(ordersEntity.getDeliveryFee());

@@ -114,7 +114,7 @@ class OrderControllerTest {
         List<CartItem> findCartItems = cartItemRepository.findAllByMemberId(member.getId());
         assertThat(findCartItems).isEmpty();
 
-        Order findOrder = orderRepository.findByOrderIdAndMemberId(Long.valueOf(orderId), member.getId());
+        Order findOrder = orderRepository.findById(Long.valueOf(orderId));
         assertThat(findOrder.getOrderItems()).hasSize(2);
     }
 
@@ -157,7 +157,7 @@ class OrderControllerTest {
         List<CartItem> findCartItems = cartItemRepository.findAllByMemberId(member.getId());
         assertThat(findCartItems).isEmpty();
 
-        Order findOrder = orderRepository.findByOrderIdAndMemberId(Long.valueOf(orderId), member.getId());
+        Order findOrder = orderRepository.findById(Long.valueOf(orderId));
         assertThat(findOrder.getOrderItems()).hasSize(2);
         assertThat(findOrder.getTotalPrice()).isEqualTo(19000);
         assertThat(findOrder.getDeliveryFee()).isEqualTo(3000);

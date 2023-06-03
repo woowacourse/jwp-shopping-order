@@ -68,11 +68,11 @@ public class OrderRepository {
                 .collect(Collectors.toList());
     }
 
-    public Order findByOrderIdAndMemberId(final Long orderId, final Long memberId) {
-        final OrdersEntity ordersEntity = ordersDao.findByOrderIdAndMemberId(orderId, memberId);
+    public Order findById(final Long orderId) {
+        final OrdersEntity ordersEntity = ordersDao.findById(orderId);
 
         final List<OrderItem> orderItems = makeOrderItems(orderItemDao.findAllByOrderId(orderId));
-        final Member member = getMember(memberId);
+        final Member member = getMember(ordersEntity.getMemberId());
         final MemberCoupon memberCoupon = getMemberCoupon(member, ordersEntity.getMemberCouponId());
 
         return new Order(
@@ -84,8 +84,8 @@ public class OrderRepository {
     }
 
     private MemberCoupon getMemberCoupon(final Member member, final Long memberCouponId) {
-        final Optional<MemberCouponEntity> findMemberCoupon = memberCouponDao.findMemberCouponByMemberIdAndCouponId(
-                member.getId(), memberCouponId);
+        final Optional<MemberCouponEntity> findMemberCoupon = memberCouponDao.findMemberCouponById(
+                memberCouponId);
 
         if (findMemberCoupon.isEmpty()) {
             return MemberCoupon.makeNonMemberCoupon();

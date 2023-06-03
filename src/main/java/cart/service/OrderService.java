@@ -39,8 +39,12 @@ public class OrderService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        MemberCoupon memberCoupon = getMemberCoupon(member, request);
+        final MemberCoupon memberCoupon = getMemberCoupon(request);
+        memberCoupon.checkOwner(member);
+
         final List<CartItem> findCartItems = getCartItems(memberId, request);
+        findCartItems.forEach(it -> it.checkOwner(member));
+
         final List<OrderItem> orderItems = getOrderItems(findCartItems);
 
         final Order newOrder = new Order(memberCoupon, member, orderItems);
@@ -50,15 +54,15 @@ public class OrderService {
         for (CartItem findCartItem : findCartItems) {
             cartItemRepository.deleteById(findCartItem.getId());
         }
-        memberCouponRepository.useMemberCoupon(memberId, memberCoupon.getId());
+        memberCouponRepository.useMemberCoupon(memberCoupon.getId());
         return savedOrderId;
     }
 
-    private MemberCoupon getMemberCoupon(final Member member, final OrderSaveRequest request) {
+    private MemberCoupon getMemberCoupon(final OrderSaveRequest request) {
         if (Objects.isNull(request.getCouponId())) {
             return MemberCoupon.makeNonMemberCoupon();
         }
-        return memberCouponRepository.findByIdAndMemberId(request.getCouponId(), member.getId());
+        return memberCouponRepository.findById(request.getCouponId());
     }
 
     private List<OrderItem> getOrderItems(final List<CartItem> findCartItems) {
@@ -80,7 +84,16 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrdersDto findByOrderId(final Long memberId, final Long orderId) {
-        return new OrdersDto(orderRepository.findByOrderIdAndMemberId(orderId, memberId));
+        final Order findOrder = orderRepository.findById(orderId);
+        final Member member = getMember(memberId);
+
+        findOrder.checkOwner(member);
+        return new OrdersDto(findOrder);
+    }
+
+    private Member getMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

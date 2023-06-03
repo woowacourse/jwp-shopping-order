@@ -2,6 +2,7 @@ package cart.domain;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
+import cart.exception.InvalidOrderOwnerException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -36,6 +37,12 @@ public class Order {
         return orderItems.stream()
                 .mapToLong(OrderItem::getCalculatePrice)
                 .sum();
+    }
+
+    public void checkOwner(final Member member) {
+        if (!this.member.equals(member)) {
+            throw new InvalidOrderOwnerException();
+        }
     }
 
     public Long getId() {

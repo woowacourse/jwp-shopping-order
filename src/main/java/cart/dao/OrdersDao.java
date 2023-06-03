@@ -43,9 +43,9 @@ public class OrdersDao {
         );
     }
 
-    public OrdersEntity findByOrderIdAndMemberId(final Long orderId, final Long memberId) {
-        String sql = "SELECT * FROM orders WHERE id = ? and member_id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, orderId, memberId);
+    public OrdersEntity findById(final Long orderId) {
+        String sql = "SELECT * FROM orders WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, orderId);
     }
 
     public List<OrdersEntity> findByMemberId(final Long memberId) {
