@@ -2,6 +2,7 @@ package cart.domain.order;
 
 import cart.domain.Coupon;
 import cart.domain.Member;
+import cart.exception.CouponCannotUseException;
 import cart.exception.IllegalOrderException;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,28 @@ public class Order {
     }
 
     private void validate(OrderItems orderItems, Coupon coupon, int deliveryFee, int finalPrice) {
+        validateIsFinalPricePositive(finalPrice);
+        validateIsCouponUsable(orderItems.getTotalPrice(), coupon);
+        validateIsRightFinalPrice(orderItems, coupon, deliveryFee, finalPrice);
+
+    }
+
+    private void validateIsFinalPricePositive(int finalPrice) {
+        if (finalPrice < 0) {
+            throw new IllegalOrderException("주문 시 최종 금액은 0원 이상이어야 합니다.");
+        }
+    }
+
+    private void validateIsCouponUsable(int totalPrice, Coupon coupon) {
+        if (coupon == null) {
+            return;
+        }
+        if (totalPrice < coupon.getMinimumOrderAmount()) {
+            throw new CouponCannotUseException("상품의 금액이 최소 주문 금액보다 작습니다.");
+        }
+    }
+
+    private void validateIsRightFinalPrice(OrderItems orderItems, Coupon coupon, int deliveryFee, int finalPrice) {
         int orderItemsTotalPrice = orderItems.getTotalPrice();
         int couponPrice = 0;
         if (coupon != null) {
