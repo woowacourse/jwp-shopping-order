@@ -23,8 +23,8 @@ public class OrderFixtures {
     public static final OrderItem ORDER_WITH_COUPON_ITEM_2 = new OrderItem(6L, PRODUCT2, 4);
     public static final OrderItem ORDER_WITHOUT_COUPON_ITEM_1 = new OrderItem(5L, PRODUCT1, 2);
     public static final OrderItem ORDER_WITHOUT_COUPON_ITEM_2 = new OrderItem(6L, PRODUCT2, 4);
-    public static final Order ORDER1 = new Order(1L, List.of(ORDER_ITEM1, ORDER_ITEM2), MEMBER1, COUPON3, 3000, 55000, LocalDateTime.of(2023, 06, 01, 12, 34, 56));
-    public static final Order ORDER2 = new Order(2L, List.of(ORDER_ITEM3, ORDER_ITEM4), MEMBER1, null, 3000, 28000, LocalDateTime.of(2023, 06, 01, 13, 57, 9));
+    public static final Order ORDER1 = new Order(1L, List.of(ORDER_ITEM1, ORDER_ITEM2), MEMBER1, COUPON3, 3000, 86000, LocalDateTime.of(2023, 06, 01, 12, 34, 56));
+    public static final Order ORDER2 = new Order(2L, List.of(ORDER_ITEM3, ORDER_ITEM4), MEMBER1, null, 3000, 36000, LocalDateTime.of(2023, 06, 01, 13, 57, 9));
     public static final Order ORDER_WITH_COUPON = new Order(3L, List.of(ORDER_WITH_COUPON_ITEM_1, ORDER_WITH_COUPON_ITEM_2), MEMBER1, COUPON3, 3000, 100000, null);
     public static final Order ORDER_WITHOUT_COUPON = new Order(3L, List.of(ORDER_WITH_COUPON_ITEM_1, ORDER_WITH_COUPON_ITEM_2), MEMBER1, null, 3000, 103000, null);
 

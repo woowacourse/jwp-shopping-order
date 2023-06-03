@@ -363,7 +363,7 @@ Headers:        Authorization=BasicYUBhLmNvbToxMjM0
     1,
     2
   ],
-  "totalPrice": 5000,
+  "totalPrice": 102000,
   "couponId": 1
 }
 ```
@@ -413,7 +413,7 @@ HTTP/1.1 200
         "product": {
           "id": 2,
           "name": "샐러드",
-          "price": 5000,
+          "price": 20000,
           "imageUrl": "https://images.unsplash.com/photo-2"
         }
       },
@@ -422,8 +422,8 @@ HTTP/1.1 200
         "quantity": 2,
         "product": {
           "id": 3,
-          "name": "치킨",
-          "price": 20000,
+          "name": "피자",
+          "price": 13000,
           "imageUrl": "https://images.unsplash.com/photo-3"
         }
       }
@@ -438,7 +438,7 @@ HTTP/1.1 200
         "product": {
           "id": 2,
           "name": "샐러드",
-          "price": 5000,
+          "price": 20000,
           "imageUrl": "https://images.unsplash.com/photo-2"
         }
       },
@@ -447,8 +447,8 @@ HTTP/1.1 200
         "quantity": 1,
         "product": {
           "id": 3,
-          "name": "치킨",
-          "price": 20000,
+          "name": "피자",
+          "price": 13000,
           "imageUrl": "https://images.unsplash.com/photo-3"
         }
       }
@@ -486,7 +486,7 @@ HTTP/1.1 200
         "product": {
           "id": 2,
           "name": "샐러드",
-          "price": 5000,
+          "price": 20000,
           "imageUrl": "https://images.unsplash.com/photo-2"
         }
       },
@@ -495,14 +495,14 @@ HTTP/1.1 200
         "quantity": 2,
         "product": {
           "id": 3,
-          "name": "치킨",
-          "price": 20000,
+          "name": "피자",
+          "price": 13000,
           "imageUrl": "https://images.unsplash.com/photo-3"
         }
       }
     ]
   },
-  "totalPrice": 55000
+  "totalPrice": 86000
 }
 ```
 
