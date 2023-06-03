@@ -29,7 +29,7 @@ public class OrderPersistenceAdapter implements OrderRepository {
     public Order insert(Order order) {
         Long orderId = saveIntoOrder(order);
         orderInfoPersistenceAdapter.insert(order.getOrderInfo(), orderId);
-        return order;
+        return findById(orderId);
     }
 
     private Long saveIntoOrder(Order order) {
