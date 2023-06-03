@@ -104,7 +104,7 @@ class OrderServiceTest {
 
         //then
         assertSoftly(softly -> {
-            softly.assertThat(response.getOrderResponses()).usingRecursiveComparison()
+            softly.assertThat(response.getOrders()).usingRecursiveComparison()
                     .isEqualTo(List.of(new OrderResponse(
                                     1L,
                                     List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),

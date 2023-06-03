@@ -82,7 +82,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(orderResponse.getOrderResponses()).usingRecursiveComparison()
+            softly.assertThat(orderResponse.getOrders()).usingRecursiveComparison()
                     .isEqualTo(
                             List.of(new OrderResponse(
                                     1L,
