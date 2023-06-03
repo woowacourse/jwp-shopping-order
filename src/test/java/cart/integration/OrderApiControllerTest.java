@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 class OrderApiControllerTest extends IntegrationTest {
@@ -84,8 +85,8 @@ class OrderApiControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("주문을 조회한다.")
-    void testFindOrder() {
+    @DisplayName("id로 주문을 조회한다.")
+    void testFindOrderById() {
         //given
         final CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 3);
         final CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 3);
@@ -117,5 +118,29 @@ class OrderApiControllerTest extends IntegrationTest {
             products);
 
         assertThat(result).usingRecursiveComparison().isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @DisplayName("회원별 주문 목록을 조회한다.")
+    void testFindOrderByMember() {
+        //given
+        final CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 3);
+        final CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 3);
+        final OrderRequest orderRequest = new OrderRequest(List.of(cartItemRequest1, cartItemRequest2), 75_000, 3_000,
+            "address", coupon.getId());
+        final OrderResponse orderResponse = order(orderRequest).as(OrderResponse.class);
+
+        //when
+        final ExtractableResponse<Response> response = given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic(member.getEmail(), member.getPassword())
+            .when()
+            .get("/orders")
+            .then()
+            .log().all()
+            .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }
