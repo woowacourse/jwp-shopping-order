@@ -57,7 +57,7 @@ public class OrderService {
         Order order = new Order(usePoints, orderItems);
 
         Long orderId = orderRepository.save(member.getId(), order);
-        pointRepository.save(member.getId(), orderId, order.calculateSavedPoint(pointAccumulationPolicy));
+        pointRepository.save(member.getId(), orderId, order.calculateSavedPoint(pointAccumulationPolicy)); // 주문 취소 문제 때문에 포인트 적립 시기를 늦출 수 있으나 백/프론트 일관성 유지를 위해 주문 시 적립되는 것으로 유지
     }
 
     private Map<Long, Product> getProducts(List<ProductOrderRequest> productOrderRequests) {
@@ -85,5 +85,10 @@ public class OrderService {
             orderItems.add(new OrderItem(product, quantity, totalCost));
         }
         return orderItems;
+    }
+
+    public void deleteOrder(Member member, Long orderId) {
+        orderRepository.delete(member.getId(), orderId);
+        pointRepository.delete(member.getId(), orderId);
     }
 }

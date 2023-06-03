@@ -1,7 +1,5 @@
 package cart.dao;
 
-import cart.domain.Point;
-import cart.entity.OrderEntity;
 import cart.entity.PointEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -52,10 +50,10 @@ public class PointDao {
         return (Long) keyHolder.getKeys().get("ID");
     }
 
-    public void deleteByOrderId(Long orderId) {
-        String sql = "delete from point where orders_id = ?";
+    public void delete(Long memberId, Long orderId) {
+        String sql = "delete from point where member_id = ? and orders_id = ?";
 
-        jdbcTemplate.update(sql, orderId);
+        jdbcTemplate.update(sql, memberId, orderId);
     }
 
     private static class PointRowMapper implements RowMapper<PointEntity> {

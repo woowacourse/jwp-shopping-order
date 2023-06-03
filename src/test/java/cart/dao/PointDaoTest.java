@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Point;
 import cart.entity.PointEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -87,7 +86,7 @@ class PointDaoTest {
     @DisplayName("주문 번호를 기준으로 포인트를 삭제할 수 있다.")
     @Test
     void deleteByOrderId() {
-        pointDao.deleteByOrderId(1L);
+        pointDao.delete(1L, 1L);
 
         assertThatThrownBy(() -> jdbcTemplate.queryForObject("select id from point where orders_id = 1 ", Long.class))
                 .isInstanceOf(EmptyResultDataAccessException.class);

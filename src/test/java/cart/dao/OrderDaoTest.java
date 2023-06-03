@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -86,7 +85,7 @@ class OrderDaoTest {
     @DisplayName("주문 정보를 삭제할 수 있다.")
     @Test
     void deleteById() {
-        orderDao.deleteById(1L);
+        orderDao.delete(1L, 1L);
 
         OrderEntity order = orderDao.findById(1L);
 

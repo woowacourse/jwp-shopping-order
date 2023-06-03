@@ -57,8 +57,8 @@ public class OrderRepository {
                 .collect(Collectors.toList());
     }
 
-    public void deleteById(Long orderId) {
-        orderDao.deleteById(orderId);
+    public void delete(Long memberId, Long orderId) {
+        orderDao.delete(memberId, orderId);
     }
 
     public List<Order> findAllByMemberId(Long memberId) {

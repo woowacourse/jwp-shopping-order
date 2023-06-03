@@ -86,7 +86,7 @@ public class PointRepository {
         pointDao.save(memberId, orderId, pointEntity);
     }
 
-    public void delete(Long orderId) {
-        pointDao.deleteByOrderId(orderId);
+    public void delete(Long memberId, Long orderId) {
+        pointDao.delete(memberId, orderId);
     }
 }
