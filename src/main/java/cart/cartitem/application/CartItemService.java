@@ -6,6 +6,7 @@ import cart.cartitem.exception.NotFoundCartItemException;
 import cart.member.domain.Member;
 import cart.product.domain.Product;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,14 +21,17 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItem> findByMember(final Member member) {
         return cartItemDao.findByMemberId(member.getId());
     }
 
+    @Transactional(readOnly = true)
     public CartItem findByMemberAndProduct(final Member member, final Product product) {
         return cartItemDao.findByMemberIdAndProductId(member.getId(), product.getId());
     }
 
+    @Transactional
     public Long add(final CartItem cartItem) {
         final Member member = cartItem.getMember();
         final Product product = cartItem.getProduct();
@@ -48,6 +52,7 @@ public class CartItemService {
         return cartItem.getId();
     }
 
+    @Transactional
     public void updateQuantity(final Member member, final Long id, final int quantity) {
         validateExistCartItem(id);
 
@@ -63,6 +68,7 @@ public class CartItemService {
         cartItemDao.updateQuantity(cartItem);
     }
 
+    @Transactional
     public void remove(final Member member, final Long id) {
         validateExistCartItem(id);
 

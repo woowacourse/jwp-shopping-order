@@ -3,6 +3,7 @@ package cart.member.application;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -13,6 +14,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
+    @Transactional
     public Long depositCash(final Member member, final Long cash) {
         final Member memberEntity = memberDao.getMemberByEmail(member.getEmail());
         memberEntity.deposit(cash);
@@ -21,12 +23,14 @@ public class MemberService {
         return memberEntity.getCash();
     }
 
+    @Transactional
     public void withdrawCash(final Member member, final Long cash) {
         final Member memberEntity = memberDao.getMemberByEmail(member.getEmail());
         memberEntity.withdraw(cash);
         memberDao.updateMember(memberEntity);
     }
 
+    @Transactional(readOnly = true)
     public Long findCash(final Member member) {
         final Member memberEntity = memberDao.getMemberByEmail(member.getEmail());
 

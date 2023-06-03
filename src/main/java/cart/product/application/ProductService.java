@@ -8,6 +8,7 @@ import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
 import cart.product.exception.NotFoundProductException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,16 +25,19 @@ public class ProductService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
         return productDao.getAllProducts();
     }
 
+    @Transactional(readOnly = true)
     public Product getProductById(final Long productId) {
         validateExistProduct(productId);
 
         return productDao.getProductById(productId);
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getProductsInPaging(final Long lastIdInPrevPage, final int pageItemCount) {
         return getProductsByInterval(lastIdInPrevPage, pageItemCount);
     }
@@ -47,27 +51,32 @@ public class ProductService {
         return productDao.getProductByInterval(lastId + 1, pageItemCount);
     }
 
+    @Transactional(readOnly = true)
     public boolean hasLastProduct(final Long lastIdInPrevPage, final int pageItemCount) {
         final List<Product> products = getProductsByInterval(lastIdInPrevPage, pageItemCount);
         return products.get(products.size() - 1).getId() == 1L;
     }
 
+    @Transactional
     public Long createProduct(final Product product) {
         return productDao.createProduct(product);
     }
 
+    @Transactional
     public void updateProduct(final Long productId, final Product product) {
         validateExistProduct(productId);
 
         productDao.updateProduct(productId, product);
     }
 
+    @Transactional
     public void deleteProduct(final Long productId) {
         validateExistProduct(productId);
 
         productDao.deleteProduct(productId);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductCartItemDto> getProductCartItemsByProduct(final Member member, final List<Product> products) {
         return products.stream()
                 .map(product -> getProductCartItemByProduct(member, product))

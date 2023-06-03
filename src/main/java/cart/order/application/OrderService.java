@@ -29,6 +29,7 @@ public class OrderService {
         this.orderItemDao = orderItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDto> findAllByMemberId(final Long memberId) {
         final List<CartOrder> cartOrders = cartOrderDao.findByMemberId(memberId);
 
@@ -39,6 +40,7 @@ public class OrderService {
         return orderDtos;
     }
 
+    @Transactional(readOnly = true)
     public OrderDto findByCartOrderId(final Long cartOrderId) {
         final CartOrder cartOrder = cartOrderDao.findById(cartOrderId);
 
