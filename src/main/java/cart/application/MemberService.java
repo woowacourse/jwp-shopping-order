@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.application.repository.MemberRepository;
 import cart.application.domain.Member;
+import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.response.PointResponse;
 import cart.application.exception.AuthenticationException;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public PointResponse getPoint(Member member) {
+    public PointResponse getPoint(AuthInfo authInfo) {
+        Member member = memberRepository.findByEmail(authInfo.getEmail());
         return new PointResponse(member.getPoint());
     }
 

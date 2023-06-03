@@ -2,7 +2,7 @@ package cart.presentation;
 
 import cart.application.MemberService;
 import cart.application.exception.AuthenticationException;
-import cart.application.domain.Member;
+import cart.presentation.dto.request.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +23,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Member.class);
+        return parameter.getParameterType().equals(AuthInfo.class);
     }
 
     @Override
@@ -31,16 +31,11 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         validate(authorization);
-
-        String[] authHeader = authorization.split(" ");
-        String decodedString = new String(Base64.decodeBase64(authHeader[1]));
-
-        String[] credentials = decodedString.split(":");
+        String[] credentials = extractCredentials(authorization);
         String email = credentials[0];
         String password = credentials[1];
-
         memberService.validateMemberProfile(email, password);
-        return memberService.getMemberByEmail(email);
+        return new AuthInfo(email, password);
     }
 
     private void validate(String authorization) {
@@ -59,5 +54,11 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         if (!authHeader[0].equalsIgnoreCase("basic")) {
             throw new AuthenticationException();
         }
+    }
+
+    private String[] extractCredentials(String authorization) {
+        String[] authHeader = authorization.split(" ");
+        String decodedString = new String(Base64.decodeBase64(authHeader[1]));
+        return decodedString.split(":");
     }
 }

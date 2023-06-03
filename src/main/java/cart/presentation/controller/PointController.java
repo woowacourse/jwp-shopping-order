@@ -2,6 +2,7 @@ package cart.presentation.controller;
 
 import cart.application.MemberService;
 import cart.application.domain.Member;
+import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.response.PointResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,8 @@ public class PointController {
     }
 
     @GetMapping
-    public ResponseEntity<PointResponse> getPoint(Member member) {
-        PointResponse response = memberService.getPoint(member);
+    public ResponseEntity<PointResponse> getPoint(AuthInfo authInfo) {
+        PointResponse response = memberService.getPoint(authInfo);
         return ResponseEntity.ok(response);
     }
 }

@@ -9,6 +9,7 @@ import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 import cart.application.domain.Order;
 import cart.application.domain.Product;
+import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.response.OrderDto;
 import cart.presentation.dto.response.OrderResponse;
 import cart.presentation.dto.request.OrderRequest;
@@ -34,7 +35,8 @@ public class OrderService {
         this.memberRepository = memberRepository;
     }
 
-    public long issue(Member member, OrderRequest request) {
+    public long issue(AuthInfo authInfo, OrderRequest request) {
+        Member member = memberRepository.findByEmail(authInfo.getEmail());
         Order order = new Order(null, member, makeOrderInfosFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
         order.usePoint();
@@ -70,7 +72,8 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponse> getAllOrders(Member member) {
+    public List<OrderResponse> getAllOrders(AuthInfo authInfo) {
+        Member member = memberRepository.findByEmail(authInfo.getEmail());
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         return orders.stream()
                 .map(order -> new OrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo())))
@@ -90,7 +93,8 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public SpecificOrderResponse getSpecificOrder(Member member, Long orderId) {
+    public SpecificOrderResponse getSpecificOrder(AuthInfo authInfo, Long orderId) {
+        Member member = memberRepository.findByEmail(authInfo.getEmail());
         Order order = orderRepository.findById(orderId);
         order.validateIsIssuedBy(member);
         return new SpecificOrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo()),

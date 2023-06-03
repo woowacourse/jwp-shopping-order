@@ -2,6 +2,7 @@ package cart.presentation.controller;
 
 import cart.application.OrderService;
 import cart.application.domain.Member;
+import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.request.OrderRequest;
 import cart.presentation.dto.response.OrderResponse;
 import cart.presentation.dto.response.SpecificOrderResponse;
@@ -27,20 +28,20 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getAllOrders(Member member) {
-        List<OrderResponse> responses = orderService.getAllOrders(member);
+    public ResponseEntity<List<OrderResponse>> getAllOrders(AuthInfo authInfo) {
+        List<OrderResponse> responses = orderService.getAllOrders(authInfo);
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SpecificOrderResponse> getSpecificOrder(@PathVariable Long id, Member member) {
-        SpecificOrderResponse response = orderService.getSpecificOrder(member, id);
+    public ResponseEntity<SpecificOrderResponse> getSpecificOrder(@PathVariable Long id, AuthInfo authInfo) {
+        SpecificOrderResponse response = orderService.getSpecificOrder(authInfo, id);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Void> issueOrder(Member member, @RequestBody OrderRequest request) {
-        long id = orderService.issue(member, request);
+    public ResponseEntity<Void> issueOrder(AuthInfo authInfo, @RequestBody OrderRequest request) {
+        long id = orderService.issue(authInfo, request);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }
 }

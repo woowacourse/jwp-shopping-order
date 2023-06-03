@@ -1,10 +1,12 @@
 package cart.application;
 
-import cart.application.repository.CartItemRepository;
-import cart.application.repository.ProductRepository;
 import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 import cart.application.domain.Product;
+import cart.application.repository.CartItemRepository;
+import cart.application.repository.MemberRepository;
+import cart.application.repository.ProductRepository;
+import cart.presentation.dto.request.AuthInfo;
 import cart.presentation.dto.request.CartItemRequest;
 import cart.presentation.dto.response.CartItemResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,12 +34,16 @@ class CartItemServiceTest {
     private CartItemRepository cartItemRepository;
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private MemberRepository memberRepository;
 
+    private AuthInfo authInfo;
     private Member member;
     private Product pizza;
 
     @BeforeEach
     void setup() {
+        authInfo = new AuthInfo("teo", "1234");
         member = new Member(1L, "teo", "1234", 0);
         pizza = new Product(1L, "피자", 20000, "https://a.com", 0, false);
     }
@@ -49,9 +54,9 @@ class CartItemServiceTest {
         when(cartItemRepository.findByMemberId(member.getId())).thenReturn(List.of(
                 new CartItem(1L, 1, pizza, member)
         ));
-
+        when(memberRepository.findByEmail(any())).thenReturn(member);
         // when
-        List<CartItemResponse> carItemResponses = cartItemService.findAllCartItems(member);
+        List<CartItemResponse> carItemResponses = cartItemService.findAllCartItems(authInfo);
 
         // then
         assertThat(carItemResponses.get(0).getId()).isEqualTo(1L);
@@ -63,9 +68,10 @@ class CartItemServiceTest {
         CartItemRequest request = new CartItemRequest(1L);
         when(productRepository.findById(1L)).thenReturn(pizza);
         when(cartItemRepository.insert(any())).thenReturn(new CartItem(1L, 1, pizza, member));
+        when(memberRepository.findByEmail(any())).thenReturn(member);
 
         // when
-        Long cartItemId = cartItemService.createCartItem(member, request);
+        Long cartItemId = cartItemService.createCartItem(authInfo, request);
 
         // then
         assertThat(cartItemId).isEqualTo(1L);
