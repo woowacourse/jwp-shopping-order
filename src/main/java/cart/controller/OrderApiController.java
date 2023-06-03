@@ -45,5 +45,4 @@ public class OrderApiController {
         final OrderResponse response = orderService.getOrderById(member, orderId);
         return ResponseEntity.ok(response);
     }
-
 }
