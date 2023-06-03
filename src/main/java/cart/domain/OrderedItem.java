@@ -8,7 +8,6 @@ public class OrderedItem {
     private int price;
     private String imageUrl;
     private int quantity;
-    //private boolean isDiscounted;
     private int discountRate;
 
     public OrderedItem(Long id, Long orderId, String name, int price, String imageUrl, int quantity, int discountRate) {

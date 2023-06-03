@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,11 +26,8 @@ public class OrderItemDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO order_item (name, price, image_url, quantity, discount_rate, order_id) VALUES (?, ?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
+            String sql = "INSERT INTO order_item (name, price, image_url, quantity, discount_rate, order_id) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, orderedItem.getName());
             ps.setInt(2, orderedItem.getPrice());
             ps.setString(3, orderedItem.getImageUrl());
@@ -40,13 +39,12 @@ public class OrderItemDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
-
     }
 
-    public List<OrderedItem> findByOrderId(Long id) {
+    public List<OrderedItem> findByOrderId(Long orderId) {
         String sql = "SELECT * FROM order_item where order_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long orderId = rs.getLong("order_id");
+            Long id = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
@@ -54,6 +52,6 @@ public class OrderItemDao {
             int discountRate = rs.getInt("discount_rate");
 
             return new OrderedItem(id, orderId, name, price, imageUrl, quantity, discountRate);
-        }, id);
+        }, orderId);
     }
 }

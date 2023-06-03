@@ -22,15 +22,7 @@ public class Product {
         this.imageUrl = imageUrl;
         this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
-        initDiscountedPrice(price, discountRate);
-    }
-
-    private void initDiscountedPrice(int price, int discountRate) {
-        if(discountRate > 0){
-            this.discountedPrice = calculateDiscountedPrice();
-        }else{
-            this.discountedPrice = price;
-        }
+        this.discountedPrice = calculateDiscountedPrice();
     }
 
     public Product(String name, int price, String imageUrl, boolean isDiscounted, int discountRate) {
@@ -39,7 +31,15 @@ public class Product {
         this.imageUrl = imageUrl;
         this.isDiscounted = isDiscounted;
         this.discountRate = discountRate;
-        initDiscountedPrice(price, discountRate);
+        this.discountedPrice = calculateDiscountedPrice();
+    }
+
+    public Product(Long id, String name, int price, String imageUrl, int discountRate) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.discountRate = discountRate;
     }
 
     public int calculateDiscountedPrice(int memberDiscount) {
@@ -50,22 +50,19 @@ public class Product {
         }
     }
 
-    public int calculateProductDiscountedPrice() {
-        return (discountRate * price / 100 - price) * -1;
-    }
 
     public int calculateMemberDiscountedPrice(int memberDiscount) {
         if (!getIsDiscounted()) {
-            return (memberDiscount * price / 100 - price) * -1;
+            return price - ((memberDiscount * price / 100 - price) * -1);
         }
-        return price;
+        return 0;
     }
 
     public int calculateDiscountedPrice() {
         if (getIsDiscounted()) {
-            return (discountRate * price / 100 - price) * -1;
+            return price - ((discountRate * price / 100 - price) * -1);
         }
-        return price;
+        return 0;
     }
 
     public Long getId() {
@@ -91,6 +88,7 @@ public class Product {
     public int getDiscountRate() {
         return discountRate;
     }
+
     public int getDiscountedPrice() {
         return discountedPrice;
     }

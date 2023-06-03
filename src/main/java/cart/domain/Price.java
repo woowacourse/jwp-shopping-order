@@ -22,7 +22,9 @@ public class Price {
     public static List<Product> getProducts(List<CartItem> cartItems) {
         List<Product> products = new ArrayList<>();
         for (CartItem cartItem : cartItems) {
-            products.add(cartItem.getProduct());
+            for (int i = 0; i < cartItem.getQuantity(); i++) {
+                products.add(cartItem.getProduct());
+            }
         }
 
         return products;
@@ -40,6 +42,15 @@ public class Price {
         return Order.calculatePriceSum(discountedPrice);
     }
 
+    private static List<Product> convertToProducts(List<OrderedItem> orderedItems) {
+        ArrayList<Product> products = new ArrayList<>();
+        for (OrderedItem orderedItem : orderedItems) {
+            products.add(new Product(orderedItem.getId(), orderedItem.getName(), orderedItem.getPrice()
+                    , orderedItem.getImageUrl(), orderedItem.getDiscountRate()));
+        }
+        return products;
+    }
+
     public static int calculateShippingFee(int totalItemPrice) {
         if (totalItemPrice >= MIN_TOTAL_PRICE_FOR_FREE_SHIPPING) {
             return 0;
@@ -52,7 +63,7 @@ public class Price {
 
         List<Product> products = getProducts(cartItems);
         for (Product product : products) {
-            int price = product.getPrice() - product.calculateDiscountedPrice();
+            int price = product.calculateDiscountedPrice();
             discountedPrice.add(price);
         }
 
@@ -63,7 +74,7 @@ public class Price {
         List<Integer> discountedPrice = new ArrayList<>();
         List<Product> products = getProducts(cartItems);
         for (Product product : products) {
-            int price = product.getPrice() - product.calculateMemberDiscountedPrice(memberDiscount);
+            int price = product.calculateMemberDiscountedPrice(memberDiscount);
             discountedPrice.add(price);
         }
 

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.net.URI;
 import java.util.List;
 
@@ -28,7 +27,6 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> createOrder(Member member, @RequestBody OrderCreateRequest orderCreateRequest){
-        System.out.println(member.getEmail());
         Long id = orderService.createOrder(member, orderCreateRequest);
         return ResponseEntity.created(URI.create("/orders/" + id)).build();
     }

@@ -10,15 +10,21 @@ public class OrderResponse {
     private Long id;
     private List<OrderedItemResponse> orderedItems;
     private LocalDateTime orderedAt;
+
+    private int totalItemDiscountAmount;
+    private int totalMemberDiscountAmount;
     private int totalItemPrice;
     private int discountedTotalItemPrice;
     private int shippingFee;
     private int totalPrice;
 
-    public OrderResponse(Long id, List<OrderedItemResponse> orderedItems, LocalDateTime orderedAt, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, int totalPrice) {
+    public OrderResponse(Long id, List<OrderedItemResponse> orderedItems, LocalDateTime orderedAt, int totalItemDiscountAmount,
+                         int totalMemberDiscountAmount, int totalItemPrice, int discountedTotalItemPrice, int shippingFee, int totalPrice) {
         this.id = id;
         this.orderedItems = orderedItems;
         this.orderedAt = orderedAt;
+        this.totalItemDiscountAmount = totalItemDiscountAmount;
+        this.totalMemberDiscountAmount = totalMemberDiscountAmount;
         this.totalItemPrice = totalItemPrice;
         this.discountedTotalItemPrice = discountedTotalItemPrice;
         this.shippingFee = shippingFee;
@@ -54,5 +60,13 @@ public class OrderResponse {
 
     public int getTotalPrice() {
         return totalPrice;
+    }
+
+    public int getTotalItemDiscountAmount() {
+        return totalItemDiscountAmount;
+    }
+
+    public int getTotalMemberDiscountAmount() {
+        return totalMemberDiscountAmount;
     }
 }

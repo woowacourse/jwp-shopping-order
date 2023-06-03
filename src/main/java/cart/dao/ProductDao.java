@@ -47,6 +47,19 @@ public class ProductDao {
         });
     }
 
+    public Product getProductByName(String name) {
+        String sql = "SELECT * FROM product WHERE name = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            Long id = rs.getLong("id");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            boolean isDiscounted = (rs.getInt("is_discounted") == 1) ? true : false;
+            int discountRate = rs.getInt("discount_rate");
+
+            return new Product(id, name, price, imageUrl, isDiscounted, discountRate);
+        }, name);
+    }
+
     public Long createProduct(Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
