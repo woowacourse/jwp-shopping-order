@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
+import shop.domain.coupon.CouponType;
 import shop.web.controller.order.dto.request.OrderCreationRequest;
 import shop.web.controller.order.dto.request.OrderItemRequest;
 
@@ -163,6 +164,53 @@ public class OrderIntegrationTest extends IntegrationTest {
         assertThat(productQuantities).containsExactlyInAnyOrder(2, 3, 4, 5);
     }
 
+    @DisplayName("주문 상세 조회를 할 수 있다.")
+    @Test
+    void getOrderDetailTest() {
+        //given
+        join();
+        String token = login();
+
+        List<OrderItemRequest> orderItemRequests = List.of(
+                new OrderItemRequest(1L, 2),
+                new OrderItemRequest(2L, 3)
+        );
+
+        OrderCreationRequest request = new OrderCreationRequest(orderItemRequests, 1L);
+
+        //when
+        String location = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .body(request)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().header("Location");
+
+        //then
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .when().get(location)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        String couponName = response.jsonPath().getString("coupon.name");
+        List<Long> productIds = response.jsonPath().getList("items.product.id.flatten()", Long.class);
+        List<Integer> quantities = response.jsonPath().getList("items.quantity.flatten()", Integer.class);
+        long totalPrice = response.jsonPath().getLong("totalPrice");
+        long couponDiscountPrice = response.jsonPath().getLong("couponDiscountPrice");
+        long discountedTotalPrice = response.jsonPath().getLong("discountedTotalPrice");
+
+        assertThat(couponName).isEqualTo(CouponType.WELCOME_JOIN.getName());
+        assertThat(productIds).containsExactlyInAnyOrder(1L, 2L);
+        assertThat(quantities).containsExactlyInAnyOrder(2, 3);
+        assertThat(totalPrice).isEqualTo(10000 * 2 + 20000 * 3); // 치킨 10,000원, 샐러드 20,000원 -> 80,000원
+        assertThat(couponDiscountPrice).isEqualTo(8000); // 80,000원 / 10% = 8,000원
+        assertThat(discountedTotalPrice).isEqualTo(72000); // 80,000 - 8,000 = 72,000
+    }
 
     private void join() {
         RestAssured.given().log().all()

@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
-import shop.persistence.entity.detail.OrderCouponDetail;
 import shop.persistence.entity.OrderCouponEntity;
+import shop.persistence.entity.detail.OrderCouponDetail;
 
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ public class OrderCouponDao {
                     rs.getString("coupon.name"),
                     rs.getInt("coupon.discount_rate"),
                     rs.getInt("coupon.period"),
-                    rs.getTimestamp("coupon.expiredAt").toLocalDateTime()
+                    rs.getTimestamp("coupon.expired_at").toLocalDateTime()
             );
 
     public OrderCouponDao(JdbcTemplate jdbcTemplate) {
