@@ -13,8 +13,12 @@ import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.OrderDto;
 import cart.dto.OrderRequest;
+import cart.exception.CartItemException;
 import cart.exception.OrderException;
 import cart.exception.PaymentException;
+import cart.exception.notFound.CartItemNotFountException;
+import cart.exception.notFound.PaymentNotFoundException;
+import cart.exception.notFound.ProductNotFoundException;
 import cart.repository.OrderRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +47,7 @@ public class OrderService {
 
         for (CartItemDto cartItemDto : cartItems) {
             CartItem cartItem = cartItemDao.findById(cartItemDto.getCartItemId())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 cartItem이 존재하지 않습니다."));
+                    .orElseThrow(CartItemNotFountException::new);
             cartItem.checkOwner(member);
             if (cartItem.getQuantity() != cartItemDto.getQuantity()) {
                 throw new OrderException("cartItem의 quantity가 기존 cartItem과 일치하지 않습니다. 다시 확인해주세요.");
@@ -59,7 +63,7 @@ public class OrderService {
                 .collect(Collectors.toList());
         List<Product> productsInDb = productIds.stream()
                 .map(it -> productDao.findById(it)
-                        .orElseThrow(() -> new IllegalArgumentException("해당 product가 존재하지 않습니다..")))
+                        .orElseThrow(ProductNotFoundException::new))
                 .collect(Collectors.toList());
 
         if (!productsInRequest.equals(productsInDb)) {
@@ -104,7 +108,7 @@ public class OrderService {
         order.checkOwner(member);
 
         Payment payment = paymentDao.findByOrderId(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 결제 내역이 존재하지 않습니다."));
+                .orElseThrow(PaymentNotFoundException::new);
 
         return toDto(order, payment);
     }
@@ -114,7 +118,7 @@ public class OrderService {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         for (Order order : orders) {
             Payment payment = paymentDao.findByOrderId(order.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 결제 내역이 존재하지 않습니다."));
+                    .orElseThrow(PaymentNotFoundException::new);
             orderDtos.add(toDto(order, payment));
         }
         return orderDtos;

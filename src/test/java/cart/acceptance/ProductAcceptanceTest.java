@@ -14,6 +14,7 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.notFound.ProductNotFoundException;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
@@ -126,7 +127,7 @@ public class ProductAcceptanceTest {
 
     private void 상품_수정_결과를_검증한다(Long productId) {
         Product findProduct = productDao.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 product가 존재하지 않습니다.."));
+                .orElseThrow(ProductNotFoundException::new);
         assertThat(findProduct.getName()).isEqualTo("새로운 떡볶이");
         assertThat(findProduct.getPrice()).isEqualTo(7000);
         assertThat(findProduct.getImageUrl()).isEqualTo("http://example.com/tteokbboki.jpg");
@@ -135,8 +136,8 @@ public class ProductAcceptanceTest {
 
     private void 상품_삭제_결과를_검증한다(Long productId) {
         assertThatThrownBy(() -> productDao.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 product가 존재하지 않습니다.")))
-                .isInstanceOf(IllegalArgumentException.class)
+                .orElseThrow(ProductNotFoundException::new))
+                .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("해당 product가 존재하지 않습니다.");
     }
 

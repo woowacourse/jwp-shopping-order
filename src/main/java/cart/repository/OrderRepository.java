@@ -10,6 +10,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
 import cart.domain.Product;
+import cart.exception.notFound.OrderNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -48,7 +49,7 @@ public class OrderRepository {
 
     public Order findById(Long orderId) {
         Order order = orderDao.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+                .orElseThrow(OrderNotFoundException::new);
         return assemble(order);
     }
 
