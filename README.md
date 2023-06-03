@@ -11,3 +11,7 @@
 data.sql 실행 안되게 해야하나?
 
 3. findById의 결과값을 optional로 해두면.. service가 너무 지저분해진다. repository에서 해야할까?
+
+4. orderItem이 생성될 때 재고 감소 vs order가 생성될 때 재고 감소
+
+5. point 정책 .. (payment와의 관계)
