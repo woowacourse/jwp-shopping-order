@@ -26,28 +26,33 @@ public class OrdersService {
         this.ordersTaker = ordersTaker;
         this.couponRepository = couponRepository;
     }
+
     @Transactional
     public Long takeOrders(Member member, final OrdersRequest ordersRequest) {
         final List<Long> cartIds = ordersRequest.getSelectCartIds();
-        if(ordersRequest.isNoCoupon()){
-            return ordersTaker.takeOrder(member.getId(),cartIds, List.of());
+        if (ordersRequest.isNoCoupon()) {
+            return ordersTaker.takeOrder(member.getId(), cartIds, List.of());
         }
         final List<Long> coupons = List.of(ordersRequest.getCouponId());
-        return ordersTaker.takeOrder(member.getId(),cartIds,coupons);
+        return ordersTaker.takeOrder(member.getId(), cartIds, coupons);
     }
+
     @Transactional(readOnly = true)
     public List<OrdersResponse> findMembersAllOrders(final Member member) {
-        return ordersTaker.findOrdersWithOriginalPrice(member);
+        return ordersTaker.findOrdersWithMember(member);
     }
+
     @Transactional(readOnly = true)
     public OrdersResponse findOrdersById(final Member member, final long id) {
-        return ordersTaker.findOrdersWithId(member,id);
+        return ordersTaker.findOrdersWithId(member, id);
     }
+
     @Transactional
     public CouponResponse confirmOrders(Member member, long id) {
         CouponIssuer couponIssuer = new Issuer(couponRepository);
-        return CouponResponse.of(couponIssuer.issue(member,ordersRepository.confirmOrdersCreateCoupon(member,id).get()));
+        return CouponResponse.of(couponIssuer.issue(member, ordersRepository.confirmOrders(id).get()));
     }
+
     @Transactional
     public void deleteOrders(final long id) {
         ordersRepository.deleteOrders(id);

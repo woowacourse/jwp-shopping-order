@@ -16,7 +16,7 @@ public class MemberCouponDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member_coupon")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("member_id","coupon_id");
+                .usingColumns("member_id", "coupon_id");
     }
 
     public boolean checkByMemberIdCouponId(final long memberId, final long couponId) {

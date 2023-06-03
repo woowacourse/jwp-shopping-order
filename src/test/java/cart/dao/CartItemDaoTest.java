@@ -1,8 +1,6 @@
 package cart.dao;
 
 import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import static cart.fixture.Fixture.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 class CartItemDaoTest {
@@ -43,7 +40,7 @@ class CartItemDaoTest {
     @Test
     @DisplayName("장바구니 id로 지운다.")
     void delete() {
-        cartItemDao.delete(TEST_MEMBER.getId(),1L);
+        cartItemDao.delete(TEST_MEMBER.getId(), 1L);
         Assertions.assertThat(cartItemDao.findById(1L)).isNull();
     }
 
@@ -58,7 +55,7 @@ class CartItemDaoTest {
     @Test
     @DisplayName("장바구니 수량을 수정한다.")
     void updateQuantity() {
-        CartItem cartItem = new CartItem(1L,10,PRODUCT,TEST_MEMBER);
+        CartItem cartItem = new CartItem(1L, 10, PRODUCT, TEST_MEMBER);
         cartItemDao.updateQuantity(cartItem);
         Assertions.assertThat(cartItemDao.findById(1L).getQuantity()).isEqualTo(10);
     }

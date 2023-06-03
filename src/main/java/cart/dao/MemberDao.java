@@ -31,8 +31,6 @@ public class MemberDao {
     }
 
 
-
-
     public List<Member> getAllMembers() {
         String sql = "SELECT * from member";
         return jdbcTemplate.query(sql, new MemberRowMapper());

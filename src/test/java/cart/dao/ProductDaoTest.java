@@ -9,15 +9,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import static cart.fixture.Fixture.PRODUCT;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 class ProductDaoTest {
     private final ProductDao productDao;
+
     @Autowired
-    private ProductDaoTest(JdbcTemplate jdbcTemplate){
+    private ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
     }
+
     @Test
     @DisplayName("모든 상품을 가져온다.")
     void getAllProducts() {
@@ -39,8 +40,8 @@ class ProductDaoTest {
     @Test
     @DisplayName("상품의 정보를 수정한다.")
     void updateProduct() {
-        Product product = new Product("test",2000,"test");
-        productDao.updateProduct(1L,product);
+        Product product = new Product("test", 2000, "test");
+        productDao.updateProduct(1L, product);
         Assertions.assertThat(productDao.findById(1L).getName()).isEqualTo("test");
     }
 

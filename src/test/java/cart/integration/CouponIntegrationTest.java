@@ -9,12 +9,11 @@ import org.springframework.http.MediaType;
 
 import static cart.fixture.Fixture.EMAIL;
 import static cart.fixture.Fixture.PASSWORD;
-import static org.hamcrest.Matchers.hasSize;
 
-public class CouponIntegrationTest extends IntegrationTest{
+public class CouponIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("유저에게 쿠폰을 발급한다.")
-    void issueCouponTest(){
+    void issueCouponTest() {
         final CouponRequest couponRequest = new CouponRequest(1L);
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
@@ -24,10 +23,11 @@ public class CouponIntegrationTest extends IntegrationTest{
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
+
     // TODO : coupons 변수명 확정하기
     @Test
     @DisplayName("모든 쿠폰 조회")
-    void getAllCouponsTest(){
+    void getAllCouponsTest() {
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().get("/coupons")
@@ -37,7 +37,7 @@ public class CouponIntegrationTest extends IntegrationTest{
 
     @Test
     @DisplayName("유저 쿠폰 조회")
-    void getUserCouponsTest(){
+    void getUserCouponsTest() {
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().get("/users/coupons")

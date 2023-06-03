@@ -1,4 +1,4 @@
-SELECT * FROM member;
+--
 -- INSERT INTO product (name, price, image_url) VALUES ('제네시스 g80', 1000, 'https://www.genesis.com/content/dam/genesis-p2/kr/assets/utility/sns/genesis-kr-model-g80-02-social-1200x630-ko.jpg');
 -- INSERT INTO product (name, price, image_url) VALUES ('부가티 시론', 2000, 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Bugatti_Chiron_%2836559710091%29.jpg/300px-Bugatti_Chiron_%2836559710091%29.jpg');
 -- INSERT INTO product (name, price, image_url) VALUES ('롤스로이스 펜텀', 1000, 'https://www.motoya.co.kr/news/photo/202205/35313_220048_1952.jpg');

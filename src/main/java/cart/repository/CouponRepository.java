@@ -19,6 +19,7 @@ public class CouponRepository {
     private final CouponDao couponDao;
     private final OrdersCouponDao ordersCouponDao;
     private final MemberCouponDao memberCouponDao;
+
     public CouponRepository(CouponDao couponDao, OrdersCouponDao ordersCouponDao, MemberCouponDao memberCouponDao) {
         this.couponDao = couponDao;
         this.ordersCouponDao = ordersCouponDao;
@@ -31,9 +32,11 @@ public class CouponRepository {
         }
         memberCouponDao.create(memberId, couponId);
     }
-    public Coupon findById(final long id){
+
+    public Coupon findById(final long id) {
         return couponDao.findWithId(id);
     }
+
     public Map<Coupon, Boolean> findAllCoupons(final long id) {
         List<Long> memberCouponIds = memberCouponDao.findByMemberId(id);
         List<CouponEntity> couponEntities = couponDao.findAll();
@@ -68,16 +71,8 @@ public class CouponRepository {
         return coupons;
     }
 
-    public List<Coupon> findCouponsById(final List<Long> ids){
-        List<Coupon> coupons =new ArrayList<>();
-        for(Long couponId : ids){
-            coupons.add(couponDao.findWithId(couponId));
-        }
-        return coupons;
-    }
-
-    public List<Coupon> findByOrdersId(final long id){
-        return   ordersCouponDao.finAllByOrdersId(id).stream()
+    public List<Coupon> findByOrdersId(final long id) {
+        return ordersCouponDao.finAllByOrdersId(id).stream()
                 .map(ordersCouponEntity -> couponDao.findWithId(ordersCouponEntity.getCouponId()))
                 .collect(Collectors.toList());
     }

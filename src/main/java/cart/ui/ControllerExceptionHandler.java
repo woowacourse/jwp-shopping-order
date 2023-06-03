@@ -22,8 +22,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @ExceptionHandler({OrdersException.class,CartItemException.class})
-    public ResponseEntity<ErrorResponse> handleErrorException(Exception e){
+    @ExceptionHandler({OrdersException.class, CartItemException.class})
+    public ResponseEntity<ErrorResponse> handleErrorException(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 }

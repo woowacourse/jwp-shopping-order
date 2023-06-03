@@ -4,7 +4,6 @@ import cart.dao.entity.OrdersEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -47,7 +46,7 @@ public class OrdersDao {
 
             ps.setLong(1, memberId);
             ps.setInt(2, discountPrice);
-            ps.setBoolean(3,false);
+            ps.setBoolean(3, false);
 
 
             return ps;
@@ -58,9 +57,9 @@ public class OrdersDao {
 
     public List<OrdersEntity> findAllByMemberId(final long memberId) {
         final String sql = "SELECT * FROM orders WHERE member_id = ?";
-        try{
+        try {
             return jdbcTemplate.query(sql, ordersEntityRowMapper, memberId);
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return new ArrayList<OrdersEntity>();
         }
     }
@@ -69,7 +68,7 @@ public class OrdersDao {
         final String sql = "SELECT * FROM orders WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ordersEntityRowMapper, id));
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }

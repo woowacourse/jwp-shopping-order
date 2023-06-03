@@ -22,8 +22,9 @@ public class ProductDao {
         int price = rs.getInt("price");
         String imageUrl = rs.getString("image_url");
         boolean deleted = rs.getBoolean("deleted");
-        return new Product(productId, name, price, imageUrl,deleted);
+        return new Product(productId, name, price, imageUrl, deleted);
     };
+
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -35,7 +36,7 @@ public class ProductDao {
 
     public Product findById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,productMapper,productId);
+        return jdbcTemplate.queryForObject(sql, productMapper, productId);
     }
 
     public Long createProduct(Product product) {
@@ -69,6 +70,6 @@ public class ProductDao {
 
     public int findPriceById(long id) {
         final String sql = "SELECT price FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,(rs,rowNum)->rs.getInt("price"),id);
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("price"), id);
     }
 }

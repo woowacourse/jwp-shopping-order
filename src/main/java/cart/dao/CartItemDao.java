@@ -110,9 +110,10 @@ public class CartItemDao {
                         )
                 , cartId);
     }
-    public long findProductIdByCartId(final long cartId){
+
+    public long findProductIdByCartId(final long cartId) {
         final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,(rs,rowNum)-> rs.getLong("product_id"),cartId);
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
     }
 }
 

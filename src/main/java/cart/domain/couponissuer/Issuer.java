@@ -7,7 +7,7 @@ import cart.repository.CouponRepository;
 
 import java.util.Optional;
 
-public class Issuer extends CouponIssuer{
+public class Issuer extends CouponIssuer {
     public Issuer(CouponRepository couponRepository) {
         super(couponRepository);
     }
@@ -15,11 +15,11 @@ public class Issuer extends CouponIssuer{
     @Override
     public Optional<Coupon> issue(Member member, Orders orders) {
         setNext();
-        return this.execute(member,orders);
+        return this.execute(member, orders);
     }
 
     @Override
     protected void setNext() {
-        this.next =  new OverFiftyPriceCouponIssuer(couponRepository);
+        this.next = new OverFiftyPriceCouponIssuer(couponRepository);
     }
 }

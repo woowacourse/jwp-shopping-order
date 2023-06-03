@@ -19,9 +19,11 @@ public class OrdersResponse {
     private OrdersResponse() {
 
     }
-    public static OrdersResponse noOrdersMembersResponse(){
+
+    public static OrdersResponse noOrdersMembersResponse() {
         return new OrdersResponse();
     }
+
     private OrdersResponse(CouponResponse coupon) {
         this.coupon = coupon;
     }
@@ -40,6 +42,7 @@ public class OrdersResponse {
         this.confirmState = confirmState;
         this.coupon = coupon;
     }
+
     private OrdersResponse(Long id, List<CartItemResponse> orderProducts, int originalPrice, int discountPrice, boolean confirmState) {
         this.id = id;
         this.orderProducts = orderProducts;
@@ -49,7 +52,7 @@ public class OrdersResponse {
     }
 
     public static OrdersResponse of(Orders orders, List<CartItem> ordersProduct, int originalPrice, final List<Coupon> coupons) {
-        if(coupons.isEmpty()){
+        if (coupons.isEmpty()) {
             return new OrdersResponse(
                     orders.getId(),
                     ordersProduct.stream().map(CartItemResponse::of).collect(Collectors.toList()),

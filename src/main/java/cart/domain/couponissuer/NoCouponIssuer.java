@@ -7,14 +7,14 @@ import cart.repository.CouponRepository;
 
 import java.util.Optional;
 
-public class NoCouponIssuer extends CouponIssuer{
+public class NoCouponIssuer extends CouponIssuer {
 
     public NoCouponIssuer(CouponRepository couponRepository) {
         super(couponRepository);
     }
 
     @Override
-    public Optional<Coupon> issue(Member member,Orders orders) {
+    public Optional<Coupon> issue(Member member, Orders orders) {
         return Optional.empty();
     }
 

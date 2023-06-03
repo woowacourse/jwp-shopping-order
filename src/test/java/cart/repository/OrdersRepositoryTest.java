@@ -1,39 +1,53 @@
 package cart.repository;
 
-import cart.dao.CartItemDao;
-import cart.dao.OrdersDao;
-import cart.domain.Member;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.List;
+import static cart.fixture.Fixture.TEST_MEMBER;
 
+@JdbcTest
+class OrdersRepositoryTest extends RepositoryTest {
+    private final OrdersRepository ordersRepository;
 
-@ExtendWith(MockitoExtension.class)
-class OrdersRepositoryTest {
-    @Mock
-    private OrdersDao ordersDao;
-    @InjectMocks
-    private OrdersRepository ordersRepository;
-
-    @Test
-    @DisplayName("주문을 받는다")
-    void takeOrders() {
-        Mockito.when(ordersDao.createOrders(1l,2000)).thenReturn(1l);
-        Assertions.assertThat(ordersRepository.takeOrders(1l,2000)).isEqualTo(1L);
+    @Autowired
+    private OrdersRepositoryTest(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+        this.ordersRepository = new OrdersRepository(ordersDao, ordersCartItemDao, productDao);
     }
 
     @Test
-    @DisplayName("사용자의 모든 주문을 찾는다")
-    void findAllOrdersByMember(){
-        Mockito.when(ordersDao.findAllByMemberId(1l)).thenReturn(List.of());
-        Assertions.assertThatNoException()
-                .isThrownBy(()->ordersRepository.findAllOrdersByMember(new Member(1l,"test","test")));
+    void takeOrders() {
+        ordersRepository.takeOrders(1L, 2000);
+        Assertions.assertThat(ordersDao.findAllByMemberId(1L)).hasSize(3);
+    }
+
+    @Test
+    void findAllOrdersByMember() {
+        Assertions.assertThat(ordersRepository.findAllOrdersByMember(TEST_MEMBER)).hasSize(2);
+    }
+
+    @Test
+    void findOrdersById() {
+        Assertions.assertThat(ordersRepository.findOrdersById(1L).get().getPrice()).isEqualTo(9000);
+    }
+
+    @Test
+    void findCartItemByOrdersIds() {
+        Assertions.assertThat(ordersRepository.findCartItemByOrdersIds(TEST_MEMBER, 2L)).hasSize(2);
+    }
+
+    @Test
+    void confirmOrdersCreateCoupon() {
+        ordersRepository.confirmOrders(1L);
+        Assertions.assertThat(ordersDao.findById(1L).get().getConfirmState()).isTrue();
+    }
+
+    @Test
+    void deleteOrders() {
+        ordersRepository.deleteOrders(1L);
+        Assertions.assertThat(ordersDao.findById(1L).isEmpty()).isTrue();
     }
 }

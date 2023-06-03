@@ -35,10 +35,11 @@ public class OrdersRepository {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Orders> findOrdersById(final Member member, final long id) {
+    public Optional<Orders> findOrdersById(final long id) {
         return rendering(ordersDao.findById(id));
     }
-    public List<CartItem> findCartItemByOrdersIds(final Member member,final long id){
+
+    public List<CartItem> findCartItemByOrdersIds(final Member member, final long id) {
         return ordersCartItemDao.findAllByOrdersId(id).stream()
                 .map(entry -> new CartItem(
                         member,
@@ -46,18 +47,18 @@ public class OrdersRepository {
                 ))
                 .collect(Collectors.toList());
     }
-    public Optional<Orders>  confirmOrdersCreateCoupon(Member member,final long id) {
+
+    public Optional<Orders> confirmOrders(final long id) {
         ordersDao.updateConfirmById(id);
-        return findOrdersById(member,id);
+        return findOrdersById(id);
     }
 
     public void deleteOrders(final long id) {
-
         ordersDao.deleteById(id);
     }
 
-    private Optional<Orders> rendering(Optional<OrdersEntity> orders){
-        if(orders.isEmpty()){
+    private Optional<Orders> rendering(Optional<OrdersEntity> orders) {
+        if (orders.isEmpty()) {
             return Optional.empty();
         }
         return Optional.ofNullable(new Orders(
@@ -66,7 +67,8 @@ public class OrdersRepository {
                 orders.get().getConfirmState()
         ));
     }
-    private Orders rendering(OrdersEntity orders){
+
+    private Orders rendering(OrdersEntity orders) {
         return new Orders(
                 orders.getId(),
                 orders.getPrice(),

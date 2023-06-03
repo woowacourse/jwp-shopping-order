@@ -6,21 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @JdbcTest
 class OrdersCouponDaoTest {
     private OrdersCouponDao ordersCouponDao;
+
     @Autowired
     public OrdersCouponDaoTest(JdbcTemplate jdbcTemplate) {
-        this.ordersCouponDao =  new OrdersCouponDao(jdbcTemplate);
+        this.ordersCouponDao = new OrdersCouponDao(jdbcTemplate);
     }
 
     @Test
     void createOrderCoupon() {
-        Assertions.assertThatNoException().isThrownBy(()->
-                ordersCouponDao.createOrderCoupon(1l,1l)
-                );
+        Assertions.assertThatNoException().isThrownBy(() ->
+                ordersCouponDao.createOrderCoupon(1l, 1l)
+        );
     }
 
     @Test

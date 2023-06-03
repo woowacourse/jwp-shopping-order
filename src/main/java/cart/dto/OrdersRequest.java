@@ -23,7 +23,8 @@ public class OrdersRequest {
     public Long getCouponId() {
         return couponId;
     }
-    public boolean isNoCoupon(){
+
+    public boolean isNoCoupon() {
         return Objects.isNull(couponId);
     }
 }

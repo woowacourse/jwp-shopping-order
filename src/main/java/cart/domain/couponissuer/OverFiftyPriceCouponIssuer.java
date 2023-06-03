@@ -16,12 +16,12 @@ public class OverFiftyPriceCouponIssuer extends CouponIssuer {
 
     @Override
     public Optional<Coupon> issue(Member member, Orders orders) {
-        if(orders.getPrice()>5000){
+        if (orders.getPrice() > 5000) {
             this.issueCoupon(member.getId(), COUPON_ID);
             return Optional.of(couponRepository.findById(COUPON_ID));
         }
         setNext();
-        return this.execute(member,orders);
+        return this.execute(member, orders);
     }
 
     @Override
