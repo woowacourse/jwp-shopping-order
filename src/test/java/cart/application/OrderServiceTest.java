@@ -2,9 +2,7 @@ package cart.application;
 
 import cart.dao.ProductDao;
 import cart.domain.*;
-import cart.dto.OrderPageResponse;
-import cart.dto.OrderRequest;
-import cart.dto.ProductOrderRequest;
+import cart.dto.*;
 import cart.exception.OrderException;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
@@ -132,5 +130,28 @@ class OrderServiceTest {
                         new ProductOrderRequest(2L, 2)))))
                 .isInstanceOf(OrderException.class)
                 .hasMessageContaining("사용가능한 포인트보다 더 많은 포인트를 사용할 수 없습니다.");
+    }
+
+    @DisplayName("주문 번호를 전달했을 때 해당 주문에 대한 상세한 정보를 전달받을 수 있다.")
+    @Test
+    void findDetailOrder() {
+        List<OrderItem> orderItems = List.of(new OrderItem(product1, 3, 30000),
+                new OrderItem(product2, 2, 40000));
+        Point usedPoint = Point.of(10000, "구매 포인트", LocalDate.now());
+        Point savedPoint = Point.from(4800);
+        Points points = new Points(List.of(usedPoint));
+        Order order = new Order(1L, OrderStatus.PENDING, points, orderItems, LocalDate.now());
+
+        when(orderRepository.findOrder(1L, 1L)).thenReturn(order);
+        when(pointRepository.findBy(1L, 1L)).thenReturn(savedPoint);
+
+        ProductOrderResponse productOrderResponse1 = new ProductOrderResponse(3, ProductResponse.of(product1));
+        ProductOrderResponse productOrderResponse2 = new ProductOrderResponse(2, ProductResponse.of(product2));
+        List<ProductOrderResponse> products = new ArrayList<>(List.of(productOrderResponse1, productOrderResponse2));
+        DetailOrderResponse expected = new DetailOrderResponse(1L, LocalDate.now(), 60000, usedPoint.getValue(), savedPoint.getValue(), products);
+
+        DetailOrderResponse detailOrder = orderService.findDetailOrder(member, 1L);
+
+        assertThat(detailOrder).isEqualTo(expected);
     }
 }

@@ -2,10 +2,7 @@ package cart.application;
 
 import cart.dao.ProductDao;
 import cart.domain.*;
-import cart.dto.OrderPageResponse;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
-import cart.dto.ProductOrderRequest;
+import cart.dto.*;
 import cart.repository.OrderRepository;
 import cart.repository.PointRepository;
 import org.springframework.stereotype.Service;
@@ -40,10 +37,27 @@ public class OrderService {
         List<OrderResponse> orderResponses = orders.stream()
                 .skip(orderPage.calculateSkipNumber(pageNumber))
                 .limit(orderPage.getLimit())
-                .map(order -> new OrderResponse(order.getId(), order.getPayAmount(), order.getOrderAt(),
+                .map(order -> new OrderResponse(order.getId(), order.getTotalPayAmount(), order.getOrderAt(),
                         order.getFirstItemName(), order.getFirstItemImageUrl(), order.getItemSize()))
                 .collect(Collectors.toList());
+
         return new OrderPageResponse(orderPage.calculateTotalPages(orders.size()), pageNumber, orderResponses);
+    }
+
+    public DetailOrderResponse findDetailOrder(Member member, Long orderId) {
+        Order order = orderRepository.findOrder(member.getId(), orderId);
+        List<OrderItem> orderItems = order.getOrderItems();
+        List<ProductOrderResponse> products = getProductOrderResponses(orderItems);
+        Point point = pointRepository.findBy(member.getId(), orderId);
+        return new DetailOrderResponse(orderId, order.getOrderAt(), order.getTotalPayAmount(),
+                order.getTotalUsedPoint(), point.getValue(), products);
+    }
+
+    private List<ProductOrderResponse> getProductOrderResponses(List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(orderItem -> new ProductOrderResponse(orderItem.getQuantity(),
+                                ProductResponse.of(orderItem.getProduct())))
+                .collect(Collectors.toList());
     }
 
     public void saveOrder(Member member, OrderRequest orderRequest) {

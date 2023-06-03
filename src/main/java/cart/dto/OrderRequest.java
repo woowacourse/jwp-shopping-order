@@ -7,6 +7,9 @@ public class OrderRequest {
     private int usedPoint;
     private List<ProductOrderRequest> products;
 
+    public OrderRequest() {
+    }
+
     public OrderRequest(int usedPoint, List<ProductOrderRequest> products) {
         this.usedPoint = usedPoint;
         this.products = products;

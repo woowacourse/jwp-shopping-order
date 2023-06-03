@@ -42,6 +42,7 @@ class OrderDaoTest {
 
         jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
         jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
+        jdbcTemplate.update("insert into orders(member_id, orders_status_id) values(1, 1)");
     }
 
     @DisplayName("주문 정보를 조회할 수 있다.")
@@ -62,8 +63,9 @@ class OrderDaoTest {
         List<OrderEntity> orderEntities = orderDao.findAllByMemberId(1L);
         OrderEntity orderEntity1 = new OrderEntity(1L, 1L, 1, LocalDate.now());
         OrderEntity orderEntity2 = new OrderEntity(2L, 1L, 1, LocalDate.now());
+        OrderEntity orderEntity3 = new OrderEntity(3L, 1L, 1, LocalDate.now());
 
-        assertThat(orderEntities).containsExactlyInAnyOrder(orderEntity1, orderEntity2);
+        assertThat(orderEntities).containsExactlyInAnyOrder(orderEntity1, orderEntity2, orderEntity3);
     }
 
     @DisplayName("주문 정보를 저장할 수 있다.")
@@ -73,10 +75,10 @@ class OrderDaoTest {
 
         orderDao.save(orderEntity);
 
-        OrderEntity order = orderDao.findBy(1L, 3L);
+        OrderEntity order = orderDao.findBy(2L, 4L);
 
         assertAll(
-                () -> assertThat(order.getId()).isEqualTo(3L),
+                () -> assertThat(order.getId()).isEqualTo(4L),
                 () -> assertThat(order.getMemberId()).isEqualTo(2L),
                 () -> assertThat(order.getOrderStatusId()).isEqualTo(OrderStatus.PENDING.getOrderStatusId())
         );
