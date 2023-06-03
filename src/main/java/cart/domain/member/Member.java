@@ -1,6 +1,6 @@
 package cart.domain.member;
 
-import cart.exception.global.point.PointAbusedException;
+import cart.exception.business.point.PointAbusedException;
 
 import java.util.Objects;
 

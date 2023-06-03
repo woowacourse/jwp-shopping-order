@@ -5,7 +5,7 @@ import cart.domain.member.Member;
 import cart.domain.member.MemberPoint;
 import cart.domain.order.Order;
 import cart.domain.order.OrderProduct;
-import cart.exception.global.point.InvalidPointUseException;
+import cart.exception.business.point.InvalidPointUseException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;

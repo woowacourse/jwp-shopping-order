@@ -1,8 +1,8 @@
-package cart.exception.global.point;
+package cart.exception.business.point;
 
-import cart.exception.global.GlobalException;
+import cart.exception.business.BusinessException;
 
-public class NegativePointException extends GlobalException {
+public class NegativePointException extends BusinessException {
 
     private static final String message = "포인트는 음수값일 수 없습니다.";
 

@@ -1,10 +1,10 @@
-package cart.exception.global;
+package cart.exception.business;
 
-public abstract class GlobalException extends RuntimeException {
+public abstract class BusinessException extends RuntimeException {
 
     private final String message;
 
-    public GlobalException(final String message) {
+    public BusinessException(final String message) {
         this.message = message;
     }
 

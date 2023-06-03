@@ -1,6 +1,6 @@
 package cart.domain.member;
 
-import cart.exception.global.point.NegativePointException;
+import cart.exception.business.point.NegativePointException;
 
 import java.util.Objects;
 

@@ -2,7 +2,7 @@ package cart.ui.common;
 
 import cart.exception.authentication.AuthenticationException;
 import cart.exception.authorization.AuthorizationException;
-import cart.exception.global.GlobalException;
+import cart.exception.business.BusinessException;
 import cart.exception.notfound.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +31,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
-    @ExceptionHandler(GlobalException.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(final GlobalException e) {
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(final BusinessException e) {
         log.warn("Exception from handleGlobalException = ", e);
         final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
