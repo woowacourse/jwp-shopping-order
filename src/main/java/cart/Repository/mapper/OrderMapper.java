@@ -1,5 +1,6 @@
 package cart.Repository.mapper;
 
+import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Order.Order;
 import cart.domain.Order.OrderItem;
@@ -48,11 +49,13 @@ public class OrderMapper {
         );
     }
 
-    public static List<OrderItem> toOrderItemsFrom(List<CartItem> cartItems){
-        return cartItems.stream().map(it ->
+    public static List<OrderItem> toOrderItemsFrom(Cart cart){
+
+        return cart.getCartItems()
+                .stream().map(cartItem ->
                 new OrderItem(
-                        it.getProduct(),
-                        it.getQuantity()
+                        cartItem.getProduct(),
+                        cartItem.getQuantity()
                 )
         ).collect(Collectors.toUnmodifiableList());
     }

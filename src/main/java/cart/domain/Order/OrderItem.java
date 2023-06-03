@@ -20,11 +20,11 @@ public class OrderItem {
         return quantity;
     }
 
-    public Price getPrice() {
-        return product.getPrice();
-    }
-
     public Price totalPrice() {
         return product.multiplyPriceBy(quantity.quantity());
+    }
+
+    public Price getPrice() {
+        return product.getPrice();
     }
 }

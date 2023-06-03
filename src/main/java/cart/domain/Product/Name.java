@@ -1,7 +1,7 @@
 package cart.domain.Product;
 
 public class Name {
-    private static final int MAX_NAME_LENGTH = 100;
+    private static final int MAX_NAME_LENGTH = 50;
     private final String name;
 
     public Name(String name) {
@@ -26,7 +26,7 @@ public class Name {
 
     private static void validateLength(final String name) {
         if (name.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("Name 은 100자를 넘을 수 없습니다.");
+            throw new IllegalArgumentException("Name 은 50자를 넘을 수 없습니다.");
         }
     }
 

@@ -1,5 +1,6 @@
 package cart.Repository.mapper;
 
+import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Product.Product;
 import cart.entity.CartItemEntity;
@@ -17,12 +18,14 @@ import static java.util.stream.Collectors.toList;
 
 public class CartItemMapper {
 
-    public static List<CartItem> toCartItems(List<CartItemEntity> cartItemEntities, List<ProductEntity> productEntities, MemberEntity memberEntity) {
+    public static Cart toCart(List<CartItemEntity> cartItemEntities, List<ProductEntity> productEntities, MemberEntity memberEntity) {
         Map<Long, Product> productMappingById = productMappingById(productEntities);
 
-        return cartItemEntities.stream()
+        List<CartItem> cartItems = cartItemEntities.stream()
                 .map(it -> toCartItem(it, productMappingById.get(it.getProductId()), memberEntity))
                 .collect(toList());
+
+        return new Cart(cartItems);
     }
 
     public static CartItem toCartItem(CartItemEntity cartItemEntity, ProductEntity productEntity, MemberEntity memberEntity) {
@@ -46,9 +49,5 @@ public class CartItemMapper {
                 cartItem.getProduct().getId(),
                 cartItem.getMember().getId()
         );
-    }
-
-    public static List<Long> toCartIds(List<CartItem> cartItems) {
-        return cartItems.stream().map(CartItem::getId).collect(Collectors.toUnmodifiableList());
     }
 }

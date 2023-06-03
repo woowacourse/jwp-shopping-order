@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.Repository.OrderRepository;
+import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Member.Member;
 import cart.domain.Order.Order;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cart.Repository.mapper.CartItemMapper.toCartIds;
 import static cart.Repository.mapper.OrderMapper.toOrderItemsFrom;
 
 @Service
@@ -32,9 +32,10 @@ public class OrderService {
 
     @Transactional
     public Long add(Member member, OrderRequest orderRequest) {
-        List<CartItem> cartItems = cartItemService.findByCartItemIds(orderRequest.getCartItemIds());
-        cartItems.forEach(it -> it.checkOwner(member));
-        Order order = new Order(toOrderItemsFrom(cartItems));
+        Cart cart = cartItemService.findByCartItemIds(orderRequest.getCartItemIds());
+        cart.checkOwner(member);
+
+        Order order = new Order(toOrderItemsFrom(cart));
         Point usePoint = new Point(orderRequest.getUsePoint());
 
         pointService.checkUsePointLessThanUserPoint(member, usePoint, order.getTotalPrice());
@@ -43,7 +44,7 @@ public class OrderService {
         Order savedOrder = orderRepository.findById(orderId);
 
         pointService.savePoint(usePoint, savedOrder);
-        cartItemService.removeByIds(toCartIds(cartItems));
+        cartItemService.removeByIds(cart.getCartIds());
         return savedOrder.getId();
     }
 

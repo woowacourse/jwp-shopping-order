@@ -15,8 +15,8 @@ public class Member {
         this(id, new Email(email), new Password(password));
     }
 
-    public static Member from(Long id, String email, String password){
-        return new Member(id, Email.from(email), Password.from(password));
+    public static Member from(String email, String password){
+        return new Member(null, Email.from(email), Password.from(password));
     }
 
     public Long getId() {

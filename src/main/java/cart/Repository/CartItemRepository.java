@@ -1,9 +1,9 @@
 package cart.Repository;
 
-import cart.Repository.mapper.CartItemMapper;
 import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
+import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
@@ -27,7 +27,7 @@ public class CartItemRepository {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItem> findByMemberId(Long memberId) {
+    public Cart findByMemberId(Long memberId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByMemberId(memberId);
 
         MemberEntity memberEntity = memberDao.getMemberById(memberId)
@@ -35,7 +35,7 @@ public class CartItemRepository {
 
         List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
 
-        return toCartItems(
+        return toCart(
                 cartItemEntities,
                 productsInCarts,
                 memberEntity);
@@ -48,7 +48,7 @@ public class CartItemRepository {
         return productDao.getProductByIds(cartItemIds);
     }
 
-    public List<CartItem> findByIds(List<Long> cartItemIds) {
+    public Cart findByIds(List<Long> cartItemIds) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findByIds(cartItemIds);
         List<ProductEntity> productsInCarts = getProductInCarts(cartItemEntities);
 
@@ -56,7 +56,7 @@ public class CartItemRepository {
         MemberEntity memberEntity = memberDao.getMemberById(cartItemEntities.get(0).getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 회원이 없습니다."));
 
-        return toCartItems(
+        return toCart(
                 cartItemEntities,
                 productsInCarts,
                 memberEntity);

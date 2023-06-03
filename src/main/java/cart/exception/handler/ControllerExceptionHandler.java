@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.exception.handler;
 
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
@@ -18,6 +18,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(CartItemException.IllegalMember.class)
     public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Void> handleException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 }

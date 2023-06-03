@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Password {
 
-    private static final int MIN_PASSWORD_LENGTH = 12;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final String password;
 
     public Password(final String password) {
@@ -26,11 +26,15 @@ public class Password {
         if (password.isBlank()) {
             throw new IllegalArgumentException("Password 는 공백일 수 없습니다.");
         }
+
+        if(password.contains(" ")){
+            throw new IllegalArgumentException("Password 는 공백을 포함할 수 없습니다.");
+        }
     }
 
     private static void validateLength(final String password) {
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new IllegalArgumentException("Password 는 12자 이상이어야 합니다.");
+            throw new IllegalArgumentException("Password 는 6자 이상이어야 합니다.");
         }
     }
 
