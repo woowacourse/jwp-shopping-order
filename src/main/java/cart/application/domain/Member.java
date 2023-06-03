@@ -27,6 +27,10 @@ public class Member {
         point -= pointToUse;
     }
 
+    public boolean hasPassword(String password) {
+        return this.password.equals(password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,9 +45,5 @@ public class Member {
 
     public long getPoint() {
         return point;
-    }
-
-    public boolean hasPassword(String password) {
-        return this.password.equals(password);
     }
 }
