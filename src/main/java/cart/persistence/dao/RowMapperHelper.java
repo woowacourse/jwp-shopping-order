@@ -102,8 +102,8 @@ public class RowMapperHelper {
             return new CouponEntity(
                     rs.getLong(prefix + "id"),
                     rs.getString(prefix + "name"),
-                    rs.getInt(prefix + "min_price"),
-                    rs.getInt(prefix + "max_price"),
+                    rs.getInt(prefix + "min_order_price"),
+                    rs.getInt(prefix + "max_discount_price"),
                     CouponType.valueOf(rs.getString(prefix + "type")),
                     (Integer) rs.getObject("discount_amount"),
                     (Double) rs.getObject("discount_percentage")

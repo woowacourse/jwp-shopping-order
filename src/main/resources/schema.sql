@@ -28,8 +28,8 @@ CREATE TABLE coupon
 (
     id                  BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name                VARCHAR(255) NOT NULL,
-    min_price           INT          NOT NULL,
-    max_price           INT          NOT NULL,
+    min_order_price     INT          NOT NULL,
+    max_discount_price  INT          NOT NULL,
     type                VARCHAR(255) NOT NULL,
     discount_amount     INT,
     discount_percentage DOUBLE
