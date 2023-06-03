@@ -15,8 +15,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import cart.domain.PointDiscountPolicy;
-import cart.domain.PointEarnPolicy;
 import cart.dto.response.CartItemResponse;
 import cart.dto.response.CheckoutResponse;
 import cart.exception.CartItemException;
@@ -41,8 +39,7 @@ class CartItemServiceTest {
     void setUp(@Autowired JdbcTemplate jdbcTemplate) {
         productRepository = productRepository(jdbcTemplate);
         cartItemRepository = cartItemRepository(jdbcTemplate);
-        cartItemService = new CartItemService(productRepository, cartItemRepository, PointDiscountPolicy.DEFAULT,
-                PointEarnPolicy.DEFAULT);
+        cartItemService = new CartItemService(productRepository, cartItemRepository);
     }
 
     @Test

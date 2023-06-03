@@ -15,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.PointDiscountPolicy;
-import cart.domain.PointEarnPolicy;
 import cart.dto.response.OrderResponse;
 import cart.dto.response.SortedOrdersResponse;
 import cart.exception.MemberException;
@@ -48,12 +46,19 @@ class OrderServiceTest {
         memberRepository = memberRepository(jdbcTemplate);
         cartItemRepository = cartItemRepository(jdbcTemplate);
         orderRepository = orderRepository(jdbcTemplate);
-        orderService = new OrderService(memberRepository, cartItemRepository, orderRepository, 
-                PointDiscountPolicy.DEFAULT, PointEarnPolicy.DEFAULT);
+        orderService = new OrderService(
+                memberRepository,
+                cartItemRepository,
+                orderRepository
+        );
         CartItem persistCartItem = new CartItem(MEMBER_A, PIZZA);
         Long persistCartItemId = cartItemRepository.save(MEMBER_A, persistCartItem);
-        cartItem = new CartItem(persistCartItemId, persistCartItem.getQuantity(), persistCartItem.getMember(),
-                persistCartItem.getProduct());
+        cartItem = new CartItem(
+                persistCartItemId,
+                persistCartItem.getQuantity(),
+                persistCartItem.getMember(),
+                persistCartItem.getProduct()
+        );
     }
 
     @Test

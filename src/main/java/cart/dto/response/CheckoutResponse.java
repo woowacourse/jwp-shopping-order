@@ -33,12 +33,7 @@ public class CheckoutResponse {
         this.availablePoints = availablePoints;
     }
 
-    public static CheckoutResponse of(
-            List<CartItem> checkedCartItems,
-            Member member,
-            PointDiscountPolicy pointDiscountPolicy,
-            PointEarnPolicy pointEarnPolicy
-    ) {
+    public static CheckoutResponse of(List<CartItem> checkedCartItems, Member member) {
         List<CartItemResponse> cartItemResponses = new ArrayList<>();
         Money totalPrice = new Money(0);
 
@@ -48,8 +43,8 @@ public class CheckoutResponse {
         }
 
         Money currentPoints = member.point();
-        Money earnedPoints = pointEarnPolicy.calculateEarnPoints(totalPrice);
-        Money moneyCondition = pointDiscountPolicy.calculatePointCondition(totalPrice);
+        Money earnedPoints = PointEarnPolicy.DEFAULT.calculateEarnPoints(totalPrice);
+        Money moneyCondition = PointDiscountPolicy.DEFAULT.calculatePointCondition(totalPrice);
         Money availablePoints = calculateAvailablePoints(currentPoints, moneyCondition);
 
         return new CheckoutResponse(cartItemResponses, totalPrice.getValue(), currentPoints.getValue(),

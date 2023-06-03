@@ -25,38 +25,54 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
-    private final PointDiscountPolicy pointDiscountPolicy;
-    private final PointEarnPolicy pointEarnPolicy;
 
-    public OrderService(MemberRepository memberRepository, CartItemRepository cartItemRepository,
-            OrderRepository orderRepository, PointDiscountPolicy pointDiscountPolicy,
-            PointEarnPolicy pointEarnPolicy) {
+    public OrderService(
+            MemberRepository memberRepository,
+            CartItemRepository cartItemRepository,
+            OrderRepository orderRepository
+    ) {
         this.memberRepository = memberRepository;
         this.cartItemRepository = cartItemRepository;
         this.orderRepository = orderRepository;
-        this.pointDiscountPolicy = pointDiscountPolicy;
-        this.pointEarnPolicy = pointEarnPolicy;
     }
 
     @Transactional
     public Long order(Member member, List<Long> orderCartItemIds, int usedPointsAmount) {
-        List<CartItem> memberCartItems = cartItemRepository.findByMember(member);
-        List<OrderItem> orderCartItems = calculateOrderCartItems(orderCartItemIds, memberCartItems);
+        List<OrderItem> orderCartItems = findOrderCartItems(member, orderCartItemIds);
+        Order persistOrder = processOrder(member, orderCartItems, usedPointsAmount);
 
-        Money usedPoints = new Money(usedPointsAmount);
-
-        member.checkUsedPoints(usedPoints);
-
-        Order order = Order.of(orderCartItems, member.getId(), usedPoints, pointDiscountPolicy, pointEarnPolicy);
-        Order persistOrder = orderRepository.save(member, order);
-
-        Member usedPointsMember = member.usePoints(order.getUsedPoints());
-        Member earnedPointsMember = usedPointsMember.earnPoints(order.getEarnedPoints());
-        memberRepository.update(earnedPointsMember);
-
+        processUpdateMemberPoints(member, persistOrder);
         cartItemRepository.deleteByOrderCartItemIds(orderCartItemIds);
 
         return persistOrder.getId();
+    }
+
+    private List<OrderItem> findOrderCartItems(Member member, List<Long> orderCartItemIds) {
+        List<CartItem> memberCartItems = cartItemRepository.findByMember(member);
+
+        return calculateOrderCartItems(orderCartItemIds, memberCartItems);
+    }
+
+    private Order processOrder(Member member, List<OrderItem> orderCartItems, int usedPointsAmount) {
+        Money usedPoints = new Money(usedPointsAmount);
+        member.checkUsedPoints(usedPoints);
+
+        Order order = Order.of(
+                orderCartItems,
+                member.getId(),
+                usedPoints,
+                PointDiscountPolicy.DEFAULT,
+                PointEarnPolicy.DEFAULT
+        );
+
+        return orderRepository.save(member, order);
+    }
+
+    private void processUpdateMemberPoints(Member member, Order persistOrder) {
+        Member usedPointsMember = member.usePoints(persistOrder.getUsedPoints());
+        Member earnedPointsMember = usedPointsMember.earnPoints(persistOrder.getEarnedPoints());
+
+        memberRepository.update(earnedPointsMember);
     }
 
     public OrderResponse findByMemberAndOrderId(Member member, Long orderId) {
@@ -76,8 +92,11 @@ public class OrderService {
     private List<OrderItem> calculateOrderCartItems(List<Long> orderCartItemIds, List<CartItem> memberCartItems) {
         List<OrderItem> orderCartItems = memberCartItems.stream()
                 .filter(memberCartItem -> orderCartItemIds.contains(memberCartItem.getId()))
-                .map(memberCartItem -> new OrderItem(memberCartItem.getId(), memberCartItem.getProduct(),
-                        memberCartItem.getQuantity()))
+                .map(memberCartItem -> new OrderItem(
+                        memberCartItem.getId(),
+                        memberCartItem.getProduct(),
+                        memberCartItem.getQuantity()
+                ))
                 .collect(Collectors.toList());
 
         validateOrderCartItems(orderCartItemIds, orderCartItems);

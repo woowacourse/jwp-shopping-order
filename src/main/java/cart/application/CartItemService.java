@@ -2,8 +2,6 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.domain.PointDiscountPolicy;
-import cart.domain.PointEarnPolicy;
 import cart.domain.Product;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
@@ -25,15 +23,10 @@ public class CartItemService {
 
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
-    private final PointDiscountPolicy pointDiscountPolicy;
-    private final PointEarnPolicy pointEarnPolicy;
 
-    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository,
-            PointDiscountPolicy pointDiscountPolicy, PointEarnPolicy pointEarnPolicy) {
+    public CartItemService(ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
-        this.pointDiscountPolicy = pointDiscountPolicy;
-        this.pointEarnPolicy = pointEarnPolicy;
     }
 
     @Transactional
@@ -83,7 +76,7 @@ public class CartItemService {
         List<CartItem> memberCartItems = cartItemRepository.findByMember(member);
         List<CartItem> checkedCartItems = calculateCheckedCartItems(checkedCartItemIds, memberCartItems);
 
-        return CheckoutResponse.of(checkedCartItems, member, pointDiscountPolicy, pointEarnPolicy);
+        return CheckoutResponse.of(checkedCartItems, member);
     }
 
     private List<CartItem> calculateCheckedCartItems(List<Long> checkedCartItemIds, List<CartItem> memberCartItems) {
