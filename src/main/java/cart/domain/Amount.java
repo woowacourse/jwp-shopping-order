@@ -14,8 +14,8 @@ public class Amount {
     return new Amount(value - amount.value);
   }
 
-  public int getValue() {
-    return value;
+  public boolean isLessThan(final Amount amount) {
+    return value < amount.value;
   }
 
   @Override
@@ -33,5 +33,10 @@ public class Amount {
   @Override
   public int hashCode() {
     return Objects.hash(value);
+  }
+
+
+  public int getValue() {
+    return value;
   }
 }

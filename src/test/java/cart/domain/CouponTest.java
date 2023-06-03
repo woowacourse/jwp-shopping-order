@@ -1,7 +1,9 @@
 package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.exception.BusinessException;
 import org.junit.jupiter.api.Test;
 
 class CouponTest {
@@ -15,5 +17,14 @@ class CouponTest {
     final Amount discountedAmount = coupon.apply(inputAmount);
 
     assertThat(discountedAmount).isEqualTo(expectedAmount);
+  }
+
+  @Test
+  void applyWhenInputAmountIsLessThanMinAmount() {
+    final Coupon coupon = new Coupon(new Amount(1000), new Amount(15000));
+    final Amount inputAmount = new Amount(10000);
+
+    assertThatThrownBy(() -> coupon.apply(inputAmount))
+        .isInstanceOf(BusinessException.class);
   }
 }
