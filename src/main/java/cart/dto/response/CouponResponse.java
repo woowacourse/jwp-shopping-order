@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.response;
 
 import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.DiscountType;

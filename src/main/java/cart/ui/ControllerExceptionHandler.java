@@ -1,6 +1,6 @@
 package cart.ui;
 
-import cart.dto.ExceptionResponse;
+import cart.dto.response.ExceptionResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.CouponException;

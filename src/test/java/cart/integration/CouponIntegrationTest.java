@@ -1,9 +1,9 @@
 package cart.integration;
 
 import cart.domain.Member;
-import cart.dto.CouponIssueRequest;
-import cart.dto.CouponResponse;
-import cart.dto.CouponsResponse;
+import cart.dto.request.CouponIssueRequest;
+import cart.dto.response.CouponResponse;
+import cart.dto.response.CouponsResponse;
 import cart.repository.CouponRepository;
 import cart.repository.MemberRepository;
 import io.restassured.RestAssured;

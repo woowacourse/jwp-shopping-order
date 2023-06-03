@@ -2,10 +2,10 @@ package cart.ui;
 
 import cart.application.CouponService;
 import cart.domain.Member;
-import cart.dto.CouponIssueRequest;
-import cart.dto.CouponRequest;
-import cart.dto.CouponResponse;
-import cart.dto.CouponsResponse;
+import cart.dto.request.CouponIssueRequest;
+import cart.dto.request.CouponRequest;
+import cart.dto.response.CouponResponse;
+import cart.dto.response.CouponsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
