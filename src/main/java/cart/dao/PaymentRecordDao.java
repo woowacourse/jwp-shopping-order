@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.dao.entity.PaymentRecordEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,13 @@ import java.util.Map;
 
 @Component
 public class PaymentRecordDao {
+    public static final RowMapper<PaymentRecordEntity> rowMapper = (rs, rowNum) -> {
+        long id = rs.getLong("id");
+        long orderId = rs.getLong("order_id");
+        int price = rs.getInt("original_total_price");
+        return new PaymentRecordEntity(id, orderId, price);
+    };
+
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,8 +38,6 @@ public class PaymentRecordDao {
 
     public PaymentRecordEntity findByOrderId(final Long orderId) {
         final String sql = "SELECT * FROM payment_record WHERE order_id = ?";
-        return this.jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            return new PaymentRecordEntity(rs.getLong("id"), rs.getLong("order_id"), rs.getInt("original_total_price"));
-        }, orderId);
+        return this.jdbcTemplate.queryForObject(sql, rowMapper, orderId);
     }
 }

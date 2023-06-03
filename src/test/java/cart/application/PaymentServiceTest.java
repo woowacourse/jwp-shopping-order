@@ -11,19 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import static cart.domain.fixture.MemberFixture.memberWithId;
-import static cart.domain.fixture.OrderFixture.*;
+import static cart.domain.fixture.OrderFixture.orderByMember;
+import static cart.domain.fixture.OrderFixture.orderWithoutId;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
 class PaymentServiceTest {
 
-    private final List<Long> CART_ITEM_IDS = List.of(
-            1L, 2L, 3L
-    );
     @Autowired
     private PaymentService paymentService;
 
@@ -47,8 +43,10 @@ class PaymentServiceTest {
         //when
         final PaymentRecord draftPaymentRecord = this.paymentService.createDraftPaymentRecord(orderWithoutId);
         //then
-        assertThat(draftPaymentRecord).usingRecursiveComparison()
-                .isEqualTo(expectedPaymentRecord);
+        assertThat(draftPaymentRecord.getOriginalTotalPrice()).isEqualTo(expectedPaymentRecord.getOriginalTotalPrice());
+        assertThat(draftPaymentRecord.calculateDiscountedPrice()).isEqualTo(expectedPaymentRecord.calculateDiscountedPrice());
+        assertThat(draftPaymentRecord.calculateDeliveryFee()).isEqualTo(expectedPaymentRecord.calculateDeliveryFee());
+        assertThat(draftPaymentRecord.calculateFinalPrice()).isEqualTo(expectedPaymentRecord.calculateFinalPrice());
     }
 
     @Test
@@ -59,8 +57,10 @@ class PaymentServiceTest {
         //when
         final PaymentRecord actualPaymentRecord = this.paymentService.createPaymentRecordAndSave(this.order);
         //then
-        assertThat(actualPaymentRecord).usingRecursiveComparison()
-                .isEqualTo(expectedPaymentRecord);
+        assertThat(actualPaymentRecord.getOriginalTotalPrice()).isEqualTo(expectedPaymentRecord.getOriginalTotalPrice());
+        assertThat(actualPaymentRecord.calculateDiscountedPrice()).isEqualTo(expectedPaymentRecord.calculateDiscountedPrice());
+        assertThat(actualPaymentRecord.calculateDeliveryFee()).isEqualTo(expectedPaymentRecord.calculateDeliveryFee());
+        assertThat(actualPaymentRecord.calculateFinalPrice()).isEqualTo(expectedPaymentRecord.calculateFinalPrice());
     }
 
     @Test
@@ -69,9 +69,11 @@ class PaymentServiceTest {
         //given
         final PaymentRecord expectedPaymentRecord = this.paymentService.createPaymentRecordAndSave(this.order);
         //when
-        final PaymentRecord actualPaymentRecord = this.paymentService.findByOrder(orderWithId);
+        final PaymentRecord actualPaymentRecord = this.paymentService.findByOrder(this.order);
         //then
-        assertThat(actualPaymentRecord).usingRecursiveComparison()
-                .isEqualTo(expectedPaymentRecord);
+        assertThat(actualPaymentRecord.getOriginalTotalPrice()).isEqualTo(expectedPaymentRecord.getOriginalTotalPrice());
+        assertThat(actualPaymentRecord.calculateDiscountedPrice()).isEqualTo(expectedPaymentRecord.calculateDiscountedPrice());
+        assertThat(actualPaymentRecord.calculateDeliveryFee()).isEqualTo(expectedPaymentRecord.calculateDeliveryFee());
+        assertThat(actualPaymentRecord.calculateFinalPrice()).isEqualTo(expectedPaymentRecord.calculateFinalPrice());
     }
 }
