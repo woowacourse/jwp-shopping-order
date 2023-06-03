@@ -1,8 +1,17 @@
 package cart.dto;
 
+import org.hibernate.validator.constraints.URL;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
+
 public class ProductRequest {
+
+    @NotBlank
     private String name;
+    @PositiveOrZero
     private int price;
+    @URL
     private String imageUrl;
 
     public ProductRequest() {

@@ -1,12 +1,19 @@
 package cart.dto;
 
+import org.springframework.lang.Nullable;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Objects;
 
 public class OrderRequest {
 
+    @NotNull
     private List<Long> cartItemIds;
+    @PositiveOrZero
     private int totalPrice;
+    @Nullable
     private Long couponId;
 
     public OrderRequest() {
