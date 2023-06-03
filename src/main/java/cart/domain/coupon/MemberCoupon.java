@@ -64,4 +64,8 @@ public class MemberCoupon {
     public Money getDiscountedPrice() {
         return discountedPrice;
     }
+
+    public Coupon getCoupon() {
+        return coupon;
+    }
 }

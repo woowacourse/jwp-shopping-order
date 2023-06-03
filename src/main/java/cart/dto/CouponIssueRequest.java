@@ -2,9 +2,12 @@ package cart.dto;
 
 public class CouponIssueRequest {
 
-    private final Long couponId;
+    private Long couponId;
 
-    public CouponIssueRequest(final Long couponId) {
+    public CouponIssueRequest() {
+    }
+
+    public CouponIssueRequest(Long couponId) {
         this.couponId = couponId;
     }
 

@@ -81,12 +81,24 @@ public class CouponService {
 
     private void validateIsIssuable(final Member member, final Long couponId) {
         List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByMemberId(member.getId());
-        final boolean isContainSameUnusedCoupon = memberCoupons.stream()
+        boolean isContainSameUnusedCoupon = memberCoupons.stream()
                 .anyMatch(coupon -> (!coupon.isUsed()) && coupon.getCouponId().equals(couponId));
 
         if (isContainSameUnusedCoupon) {
             throw new CouponException.AlreadHaveSameCouponException();
         }
+    }
+
+    @Transactional
+    public CouponsResponse getAllUnusedCoupons(Member member) {
+        List<MemberCoupon> allCoupons = memberCouponRepository.findAllByMemberId(member.getId());
+
+        List<CouponResponse> unUsedCouponResponses = allCoupons.stream()
+                .filter(coupon -> !coupon.isUsed())
+                .map(MemberCoupon::getCoupon)
+                .map(this::couponToResponse)
+                .collect(Collectors.toList());
+        return new CouponsResponse(unUsedCouponResponses);
     }
 
 }
