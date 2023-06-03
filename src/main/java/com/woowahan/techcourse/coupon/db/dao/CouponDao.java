@@ -31,6 +31,7 @@ public class CouponDao {
             BASE_FIND_ALL_SQL + "JOIN coupon_member AS mc ON mc.coupon_id=c.id WHERE mc.member_id=?";
     private static final String FIND_BY_ID_SQL =
             BASE_FIND_ALL_SQL + "WHERE c.id=?";
+
     private final JdbcTemplate jdbcTemplate;
 
     public CouponDao(JdbcTemplate jdbcTemplate) {

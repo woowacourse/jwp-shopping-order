@@ -5,6 +5,7 @@ import com.woowahan.techcourse.order.domain.OrderCoupon;
 import com.woowahan.techcourse.order.domain.OrderItem;
 import com.woowahan.techcourse.order.exception.OrderNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -45,7 +46,7 @@ public class OrderDao {
                 .addValue("actual_price", order.getActualPrice());
     }
 
-    public Order findById(long orderId) {
+    public Optional<Order> findById(long orderId) {
         try {
             return findOrderResultById(orderId);
         } catch (Exception e) {
@@ -55,16 +56,32 @@ public class OrderDao {
 
     public List<Order> findAllByMemberId(long memberId) {
         return jdbcTemplate.query("SELECT id FROM orders WHERE member_id = ?",
-                (rs, rowNum) -> findById(rs.getLong("id")), memberId);
+                (rs, rowNum) -> findOrderResultByIdAndGet(rs.getLong("id")), memberId);
     }
 
-    private Order findOrderResultById(long orderId) {
+    private Order findOrderResultByIdAndGet(long orderId) {
         List<OrderCoupon> orderCoupons = orderCouponDao.findAllByOrderId(orderId);
         List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderId);
-
         return jdbcTemplate.queryForObject(
                 "SELECT member_id, id, original_price, actual_price FROM orders WHERE id = ?",
                 getOrderResultRowMapper(orderCoupons, orderItems), orderId);
+    }
+
+    private Optional<Order> findOrderResultById(long orderId) {
+        List<OrderCoupon> orderCoupons = orderCouponDao.findAllByOrderId(orderId);
+        List<OrderItem> orderItems = orderItemDao.findAllByOrderId(orderId);
+
+        return executeFineQuery(orderId, orderCoupons, orderItems);
+    }
+
+    private Optional<Order> executeFineQuery(long orderId, List<OrderCoupon> orderCoupons, List<OrderItem> orderItems) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    "SELECT member_id, id, original_price, actual_price FROM orders WHERE id = ?",
+                    getOrderResultRowMapper(orderCoupons, orderItems), orderId));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<Order> getOrderResultRowMapper(List<OrderCoupon> orderCoupons,

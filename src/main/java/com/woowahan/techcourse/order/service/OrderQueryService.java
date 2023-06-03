@@ -2,6 +2,7 @@ package com.woowahan.techcourse.order.service;
 
 import com.woowahan.techcourse.order.db.OrderDao;
 import com.woowahan.techcourse.order.domain.Order;
+import com.woowahan.techcourse.order.exception.OrderNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class OrderQueryService {
     }
 
     public Order findById(long orderId) {
-        return orderDao.findById(orderId);
+        return orderDao.findById(orderId)
+                .orElseThrow(OrderNotFoundException::new);
     }
 }
