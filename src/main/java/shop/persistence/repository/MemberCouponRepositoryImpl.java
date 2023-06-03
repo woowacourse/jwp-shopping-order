@@ -7,9 +7,9 @@ import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
 import shop.domain.member.MemberName;
 import shop.domain.repository.MemberCouponRepository;
-import shop.persistence.entity.detail.MemberCouponDetail;
 import shop.persistence.dao.MemberCouponDao;
 import shop.persistence.entity.MemberCouponEntity;
+import shop.persistence.entity.detail.MemberCouponDetail;
 
 import java.util.List;
 import java.util.stream.Collectors;

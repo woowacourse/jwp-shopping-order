@@ -1,4 +1,3 @@
-
 package shop.web.handler;
 
 public class ErrorResponse {

@@ -2,7 +2,7 @@ package shop.domain.member;
 
 import shop.exception.ShoppingException;
 
-public class NaturalPassword implements Password{
+public class NaturalPassword implements Password {
     private static final int MIN_PASSWORD_LENGTH = 4;
     private static final int MAX_PASSWORD_LENGTH = 10;
 

@@ -1,10 +1,10 @@
 package shop.web.controller;
 
-import shop.application.member.MemberService;
-import shop.application.product.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import shop.application.member.MemberService;
+import shop.application.product.ProductService;
 
 @Controller
 public class PageController {

@@ -29,7 +29,7 @@ public class CartItem {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new ShoppingException.IllegalAccessException(
                     "장바구니 상품에 대한 접근 권한이 없습니다." +
-                    "장바구니 상품 ID : " + id + ", 회원 ID : " + member.getId()
+                            "장바구니 상품 ID : " + id + ", 회원 ID : " + member.getId()
             );
         }
     }

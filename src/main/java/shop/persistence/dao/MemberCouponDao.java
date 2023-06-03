@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import shop.exception.DatabaseException;
-import shop.persistence.entity.detail.MemberCouponDetail;
 import shop.persistence.entity.MemberCouponEntity;
+import shop.persistence.entity.detail.MemberCouponDetail;
 
 import java.util.List;
 

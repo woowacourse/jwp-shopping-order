@@ -3,14 +3,14 @@ package shop.application.order.dto;
 import java.util.List;
 
 public class OrderCreationDto {
-    private List<OrderProductDto> orderProductDtos;
+    private List<OrderProductDto> orderProduct;
     private Long couponId;
 
     private OrderCreationDto() {
     }
 
-    private OrderCreationDto(List<OrderProductDto> orderProductDtos, Long couponId) {
-        this.orderProductDtos = orderProductDtos;
+    private OrderCreationDto(List<OrderProductDto> orderProduct, Long couponId) {
+        this.orderProduct = orderProduct;
         this.couponId = couponId;
     }
 
@@ -19,7 +19,7 @@ public class OrderCreationDto {
     }
 
     public List<OrderProductDto> getOrderItemDtos() {
-        return orderProductDtos;
+        return orderProduct;
     }
 
     public Long getCouponId() {

@@ -23,7 +23,7 @@ public class OrderPrice {
         this.discountedPrice = discountedPrice;
     }
 
-    public static OrderPrice create(long orderPrice, int deliveryPrice,long discountedPrice) {
+    public static OrderPrice create(long orderPrice, int deliveryPrice, long discountedPrice) {
         return new OrderPrice(orderPrice, deliveryPrice, discountedPrice);
     }
 

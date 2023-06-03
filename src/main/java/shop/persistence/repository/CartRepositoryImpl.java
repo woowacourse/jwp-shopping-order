@@ -91,7 +91,7 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public void deleteByMemberIdAndProductIds(Long memberId, List<Long> productIds) {
-        cartDao.deleteByMemberIdAndProductIds(memberId,productIds);
+        cartDao.deleteByMemberIdAndProductIds(memberId, productIds);
     }
 
     @Override
