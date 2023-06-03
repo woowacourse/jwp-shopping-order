@@ -24,7 +24,7 @@ public class PointJdbcRepository implements PointRepository {
                     rs.getInt("earned_point")
             );
 
-    public PointJdbcRepository(final JdbcTemplate jdbcTemplate) {
+    public PointJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("point_history")
@@ -32,8 +32,8 @@ public class PointJdbcRepository implements PointRepository {
     }
 
     @Override
-    public Long createPointHistory(final Long memberId, final PointHistory pointHistory) {
-        final Map<String, Object> parameters = new HashMap<>();
+    public Long createPointHistory(Long memberId, PointHistory pointHistory) {
+        Map<String, Object> parameters = new HashMap<>();
 
         parameters.put("member_id", memberId);
         parameters.put("order_id", pointHistory.getOrderId());
@@ -44,8 +44,8 @@ public class PointJdbcRepository implements PointRepository {
     }
 
     @Override
-    public Point findPointByMemberId(final Long memberId) {
-        final String sql = "select * from point_history where member_id = ?";
+    public Point findPointByMemberId(Long memberId) {
+        String sql = "select * from point_history where member_id = ?";
         return new Point(jdbcTemplate.query(sql, pointHistoryRowMapper, memberId));
     }
 

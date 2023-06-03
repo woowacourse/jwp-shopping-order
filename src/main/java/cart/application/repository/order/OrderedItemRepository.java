@@ -8,6 +8,6 @@ public interface OrderedItemRepository {
 
     void createOrderItems(List<OrderItem> orderItem);
 
-    List<OrderItem> findOrderItemsByOrderId(final Long orderId);
+    List<OrderItem> findOrderItemsByOrderId(Long orderId);
 
 }

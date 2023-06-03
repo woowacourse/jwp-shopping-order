@@ -1,13 +1,16 @@
 package cart.ui.order.dto;
 
 public class OrderItemResponse {
-    private final Long id;
-    private final String productName;
-    private final Integer productPrice;
-    private final Integer paymentPrice;
-    private final String createdAt;
-    private final Integer productQuantity;
-    private final String imageUrl;
+    private Long id;
+    private String productName;
+    private Integer productPrice;
+    private Integer paymentPrice;
+    private String createdAt;
+    private Integer productQuantity;
+    private String imageUrl;
+
+    public OrderItemResponse() {
+    }
 
     public OrderItemResponse(
             final Long id,
@@ -55,5 +58,3 @@ public class OrderItemResponse {
         return imageUrl;
     }
 }
-
-

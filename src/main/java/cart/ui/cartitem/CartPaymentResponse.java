@@ -7,7 +7,7 @@ public class CartPaymentResponse {
     public CartPaymentResponse() {
     }
 
-    public CartPaymentResponse(final int paymentPrice) {
+    public CartPaymentResponse(int paymentPrice) {
         this.paymentPrice = paymentPrice;
     }
 

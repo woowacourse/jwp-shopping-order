@@ -24,9 +24,8 @@ public class ProductReadController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        final List<ProductResultDto> productResultDtos = productReadService.getAllProducts();
-
-        final List<ProductResponse> productResponses = productResultDtos.stream()
+        List<ProductResultDto> productResultDtos = productReadService.getAllProducts();
+        List<ProductResponse> productResponses = productResultDtos.stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toUnmodifiableList());
         return ResponseEntity.ok(productResponses);
@@ -34,7 +33,7 @@ public class ProductReadController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
-        final ProductResultDto productResultDto = productReadService.getProductById(id);
+        ProductResultDto productResultDto = productReadService.getProductById(id);
         return ResponseEntity.ok(ProductResponse.of(productResultDto));
     }
 

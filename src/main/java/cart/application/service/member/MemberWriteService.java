@@ -12,7 +12,7 @@ public class MemberWriteService {
 
     private final MemberRepository memberRepository;
 
-    public MemberWriteService(final MemberRepository memberRepository) {
+    public MemberWriteService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

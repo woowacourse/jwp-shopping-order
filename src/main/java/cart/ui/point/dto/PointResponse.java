@@ -10,12 +10,12 @@ public class PointResponse {
     private final List<PointHistoryResponse> pointHistories;
     private final int totalPoint;
 
-    public PointResponse(final List<PointHistoryResponse> pointHistories, final int totalPoint) {
+    public PointResponse(List<PointHistoryResponse> pointHistories, int totalPoint) {
         this.pointHistories = pointHistories;
         this.totalPoint = totalPoint;
     }
 
-    public static PointResponse from(final PointResultDto pointResultDto) {
+    public static PointResponse from(PointResultDto pointResultDto) {
         return new PointResponse(pointResultDto.getPointHistoryDtos().stream()
                 .map(PointHistoryResponse::from)
                 .collect(Collectors.toUnmodifiableList()), pointResultDto.getTotalPoint());

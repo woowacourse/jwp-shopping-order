@@ -221,15 +221,19 @@ public class OrderControllerTest {
 
         CreateOrderDiscountRequest orderDiscounts1 = new CreateOrderDiscountRequest(List.of(usablePercentCoupon), 3000);
         CreateOrderRequest createOrderRequest1 = new CreateOrderRequest(List.of(bbqCart), orderDiscounts1);
-        given().log().all()
+
+        String location = given().log().all()
                 .auth().preemptive().basic(레오.getEmail(), 레오.getPassword())
                 .contentType(ContentType.JSON)
                 .body(createOrderRequest1)
                 .when().post("/orders")
-                .then().log().all();
+                .then().log().all()
+                .extract().header("location");
 
+        String[] splitHeader = location.split("/");
+        long orderId = Long.parseLong(splitHeader[1]);
 
-        CreateOrderDiscountRequest orderDiscounts2 = new CreateOrderDiscountRequest(List.of(usableAmountCoupon), 3000);
+        CreateOrderDiscountRequest orderDiscounts2 = new CreateOrderDiscountRequest(List.of(), 3000);
         CreateOrderRequest createOrderRequest2 = new CreateOrderRequest(List.of(padCart), orderDiscounts2);
         given().log().all()
                 .auth().preemptive().basic(레오.getEmail(), 레오.getPassword())
@@ -240,7 +244,7 @@ public class OrderControllerTest {
 
         Response response = given().log().all()
                 .auth().preemptive().basic(레오.getEmail(), 레오.getPassword())
-                .when().get("/orders/" + 1)
+                .when().get("/orders/{orderId}", orderId)
                 .then().log().all()
                 .body("usedPoint", equalTo(3000))
                 .body("paymentPrice", equalTo(0))

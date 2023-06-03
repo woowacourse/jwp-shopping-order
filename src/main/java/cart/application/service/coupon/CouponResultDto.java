@@ -9,7 +9,7 @@ public class CouponResultDto {
     private final int discountAmount;
     private final int minAmount;
 
-    private CouponResultDto(final Long id, final String couponName, final Integer discountPercent, final int discountAmount, final Integer minAmount) {
+    private CouponResultDto(Long id, String couponName, Integer discountPercent, int discountAmount, Integer minAmount) {
         this.id = id;
         this.couponName = couponName;
         this.discountPercent = discountPercent;
@@ -17,7 +17,7 @@ public class CouponResultDto {
         this.minAmount = minAmount;
     }
 
-    public static CouponResultDto from(final Coupon coupon) {
+    public static CouponResultDto from(Coupon coupon) {
         return new CouponResultDto(
                 coupon.getId(),
                 coupon.getCouponName(),

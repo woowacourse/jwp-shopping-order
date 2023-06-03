@@ -30,7 +30,7 @@ public class MemberJdbcRepository implements MemberRepository {
     private final RowMapper<Boolean> booleanRowMapper = (rs, rowNum) ->
             rs.getBoolean("isExist");
 
-    public MemberJdbcRepository(final JdbcTemplate jdbcTemplate) {
+    public MemberJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")
@@ -38,20 +38,20 @@ public class MemberJdbcRepository implements MemberRepository {
     }
 
     @Override
-    public Long createMember(final Member member) {
-        final SqlParameterSource parameter = new BeanPropertySqlParameterSource(member);
+    public Long createMember(Member member) {
+        SqlParameterSource parameter = new BeanPropertySqlParameterSource(member);
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 
     @Override
     public List<Member> findAllMembers() {
-        final String sql = "SELECT id, name, email, password FROM member";
+        String sql = "SELECT id, name, email, password FROM member";
         return jdbcTemplate.query(sql, memberRowMapper);
     }
 
     @Override
-    public Optional<Member> findMemberById(final Long id) {
-        final String sql = "SELECT id, name, email, password FROM member WHERE id = ?";
+    public Optional<Member> findMemberById(Long id) {
+        String sql = "SELECT id, name, email, password FROM member WHERE id = ?";
         try {
             final Member member = jdbcTemplate.queryForObject(sql, memberRowMapper, id);
             return Optional.of(member);
@@ -61,21 +61,21 @@ public class MemberJdbcRepository implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findMemberByEmail(final String email) {
-        final String sql = "SELECT id, name, email, password FROM member WHERE email = ?";
+    public Optional<Member> findMemberByEmail(String email) {
+        String sql = "SELECT id, name, email, password FROM member WHERE email = ?";
         try {
-            final Member member = jdbcTemplate.queryForObject(sql, memberRowMapper, email);
+            Member member = jdbcTemplate.queryForObject(sql, memberRowMapper, email);
             return Optional.of(member);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
+
     @Override
     public Boolean isMemberExist(final String email, final String password) {
-        final String sql = "SELECT EXISTS(SELECT id, name, email, password FROM member WHERE email = ? AND password = ?) AS isExist";
+        String sql = "SELECT EXISTS(SELECT id, name, email, password FROM member WHERE email = ? AND password = ?) AS isExist";
 
         return jdbcTemplate.queryForObject(sql, booleanRowMapper, email, password);
     }
 
 }
-

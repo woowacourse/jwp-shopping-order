@@ -10,7 +10,7 @@ public class OrderResultDto {
     private final int usedPoint;
     private final int paymentPrice;
 
-    public OrderResultDto(long orderId, List<OrderedItemResult> orderedItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice) {
+    public OrderResultDto(Long orderId, List<OrderedItemResult> orderedItems, List<UsedCoupon> usedCoupons, int usedPoint, int paymentPrice) {
         this.orderId = orderId;
         this.orderedItems = orderedItems;
         this.usedCoupons = usedCoupons;

@@ -6,7 +6,7 @@ public class MemberRequest {
     private final String email;
     private final String password;
 
-    public MemberRequest(final String name, final String email, final String password) {
+    public MemberRequest(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;

@@ -1,6 +1,8 @@
 package cart.ui.coupon;
 
 import cart.application.repository.CouponRepository;
+import cart.application.repository.MemberRepository;
+import cart.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -13,6 +15,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
+import static cart.fixture.MemberFixture.레오;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("/reset.sql")
 class CouponReadControllerTest {
@@ -20,26 +24,26 @@ class CouponReadControllerTest {
     @Autowired
     private CouponRepository couponRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @LocalServerPort
     private int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        memberRepository.createMember(new Member("leo", 레오.getEmail(), 레오.getPassword()));
     }
 
     @Test
     void findCoupons() {
-        String email = "leo@gmail.com";
-        String password = "leo123";
-
-        String base64Credentials = java.util.Base64.getEncoder().encodeToString((email + ":" + password).getBytes());
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .header("Authorization", "Basic " + base64Credentials)
+                .auth().preemptive().basic(레오.getEmail(), 레오.getPassword())
                 .when().get("/coupons")
                 .then().log().all()
                 .extract();
 
-        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

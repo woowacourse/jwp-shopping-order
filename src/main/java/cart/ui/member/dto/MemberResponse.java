@@ -12,7 +12,7 @@ public class MemberResponse {
     public MemberResponse() {
     }
 
-    private MemberResponse(final Long id, final String name, final String email, final String password) {
+    private MemberResponse(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;

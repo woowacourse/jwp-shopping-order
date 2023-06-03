@@ -22,13 +22,13 @@ public class ProductReadService {
 
     public List<ProductResultDto> getAllProducts() {
         final List<Product> products = productRepository.findAll();
-        return products.stream().map(ProductResultDto::of).collect(Collectors.toList());
+        return products.stream().map(ProductResultDto::from).collect(Collectors.toList());
     }
 
     public ProductResultDto getProductById(Long productId) {
         final Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("일치하는 상품이 없습니다."));
-        return ProductResultDto.of(product);
+        return ProductResultDto.from(product);
     }
 
 }

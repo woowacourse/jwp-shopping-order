@@ -11,7 +11,7 @@ public class OrderItem {
     private final int productPrice;
     private final int productQuantity;
 
-    public OrderItem(Long id, final Long orderId, final String productName, final String productImage, final int productPrice, final int productQuantity) {
+    public OrderItem(Long id, Long orderId, String productName, String productImage, int productPrice, int productQuantity) {
         this.id = id;
         this.orderId = orderId;
         this.productName = productName;
@@ -20,7 +20,7 @@ public class OrderItem {
         this.productQuantity = productQuantity;
     }
 
-    public static OrderItem of(final Long orderId, final int quantity, final Product product) {
+    public static OrderItem of(Long orderId, int quantity, Product product) {
         return new OrderItem(
                 null,
                 orderId,

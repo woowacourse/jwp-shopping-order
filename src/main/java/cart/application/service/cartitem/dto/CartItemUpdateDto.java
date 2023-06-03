@@ -10,7 +10,7 @@ public class CartItemUpdateDto {
         this.quantity = quantity;
     }
 
-    public static CartItemUpdateDto from(final CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest) {
+    public static CartItemUpdateDto from(CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest) {
         return new CartItemUpdateDto(cartItemQuantityUpdateRequest.getQuantity());
     }
 

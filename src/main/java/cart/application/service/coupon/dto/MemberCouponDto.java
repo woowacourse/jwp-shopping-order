@@ -6,7 +6,7 @@ public class MemberCouponDto {
     private final long memberId;
     private final long couponId;
 
-    public MemberCouponDto(final long id, final long memberId, final long couponId) {
+    public MemberCouponDto(long id, long memberId, long couponId) {
         this.id = id;
         this.memberId = memberId;
         this.couponId = couponId;

@@ -8,13 +8,13 @@ public class PointHistoryResponse {
     private final int earnedPoint;
     private final int usedPoint;
 
-    private PointHistoryResponse(final long orderId, final int earnedPoint, final int usedPoint) {
+    private PointHistoryResponse(long orderId, int earnedPoint, int usedPoint) {
         this.orderId = orderId;
         this.earnedPoint = earnedPoint;
         this.usedPoint = usedPoint;
     }
 
-    public static PointHistoryResponse from(final PointHistoryDto pointHistoryDto) {
+    public static PointHistoryResponse from(PointHistoryDto pointHistoryDto) {
         return new PointHistoryResponse(pointHistoryDto.getOrderId(), pointHistoryDto.getEarnedPoint(), pointHistoryDto.getUsedPoint());
     }
 

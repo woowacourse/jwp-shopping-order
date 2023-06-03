@@ -11,7 +11,7 @@ public class Order {
     private final int totalPrice;
     private final int point;
 
-    public Order(final Long id, final int paymentPrice, final int totalPrice, final int point, final Member member) {
+    public Order(Long id, int paymentPrice, int totalPrice, int point, Member member) {
         this.id = id;
         this.paymentPrice = paymentPrice;
         this.totalPrice = totalPrice;
@@ -19,7 +19,7 @@ public class Order {
         this.member = member;
     }
 
-    public Order(final int paymentPrice, final int totalPrice, final int point, final Member member) {
+    public Order(int paymentPrice, int totalPrice, int point, Member member) {
         this(null, paymentPrice, totalPrice, point, member);
     }
 
@@ -54,16 +54,5 @@ public class Order {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", member=" + member +
-                ", paymentPrice=" + paymentPrice +
-                ", totalPrice=" + totalPrice +
-                ", point=" + point +
-                '}';
     }
 }

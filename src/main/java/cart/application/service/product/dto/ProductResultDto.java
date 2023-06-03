@@ -16,7 +16,7 @@ public class ProductResultDto {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResultDto of(Product product) {
+    public static ProductResultDto from(Product product) {
         return new ProductResultDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 

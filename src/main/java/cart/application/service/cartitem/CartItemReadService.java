@@ -18,7 +18,7 @@ public class CartItemReadService {
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
 
-    public CartItemReadService(CartItemRepository cartItemRepository, final MemberRepository memberRepository) {
+    public CartItemReadService(CartItemRepository cartItemRepository, MemberRepository memberRepository) {
         this.cartItemRepository = cartItemRepository;
         this.memberRepository = memberRepository;
     }

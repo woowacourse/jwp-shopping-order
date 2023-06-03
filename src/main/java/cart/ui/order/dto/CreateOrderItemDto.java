@@ -5,7 +5,7 @@ public class CreateOrderItemDto {
     private final Long productId;
     private final Integer quantity;
 
-    public CreateOrderItemDto(final Long cartItemId, final Long productId, final Integer quantity) {
+    public CreateOrderItemDto(Long cartItemId, Long productId, Integer quantity) {
         this.cartItemId = cartItemId;
         this.productId = productId;
         this.quantity = quantity;

@@ -7,14 +7,14 @@ import java.util.Optional;
 
 public interface ProductRepository {
 
-    Long createProduct(final Product product);
+    Long createProduct(Product product);
 
     List<Product> findAll();
 
-    Optional<Product> findById(final Long productId);
+    Optional<Product> findById(Long productId);
 
-    void updateProduct(final Product product);
+    void updateProduct(Product product);
 
-    void deleteProduct(final Long productId);
+    void deleteProduct(Long productId);
 
 }

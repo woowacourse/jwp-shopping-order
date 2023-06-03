@@ -1,7 +1,6 @@
 package cart.domain.cartitem;
 
 import cart.domain.Member;
-import cart.ui.order.dto.CreateOrderItemDto;
 
 import java.util.List;
 
@@ -19,18 +18,7 @@ public class CartItems {
                 .sum();
     }
 
-    public void validate(final List<CreateOrderItemDto> createOrderItemDtos, final Long memberId) {
-        for (CreateOrderItemDto createOrderItemDto : createOrderItemDtos) {
-            cartItems.forEach(cartItem ->
-                    cartItem.validate(
-                            createOrderItemDto.getProductId(),
-                            memberId,
-                            createOrderItemDto.getQuantity())
-            );
-        }
-    }
-
-    public boolean isNotOwnedMember(final Member member) {
+    public boolean isNotOwnedMember(Member member) {
         return cartItems.stream()
                 .anyMatch(cartItem -> cartItem.isNotOwnedByMember(member));
     }

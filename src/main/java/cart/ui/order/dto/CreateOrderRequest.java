@@ -10,7 +10,7 @@ public class CreateOrderRequest {
     public CreateOrderRequest() {
     }
 
-    public CreateOrderRequest(final List<CreateOrderItemRequest> orderItems, final CreateOrderDiscountRequest orderDiscounts) {
+    public CreateOrderRequest(List<CreateOrderItemRequest> orderItems, CreateOrderDiscountRequest orderDiscounts) {
         this.orderItems = orderItems;
         this.orderDiscounts = orderDiscounts;
     }

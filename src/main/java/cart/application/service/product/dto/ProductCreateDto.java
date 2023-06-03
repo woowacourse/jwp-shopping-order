@@ -8,13 +8,13 @@ public class ProductCreateDto {
     private final int price;
     private final String imageUrl;
 
-    public ProductCreateDto(final String name, final int price, final String imageUrl) {
+    public ProductCreateDto(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public static ProductCreateDto from(final ProductRequest productRequest) {
+    public static ProductCreateDto from(ProductRequest productRequest) {
         return new ProductCreateDto(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
     }
 

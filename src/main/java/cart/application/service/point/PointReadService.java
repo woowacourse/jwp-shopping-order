@@ -12,11 +12,11 @@ public class PointReadService {
 
     private final PointRepository pointRepository;
 
-    public PointReadService(final PointRepository pointRepository) {
+    public PointReadService(PointRepository pointRepository) {
         this.pointRepository = pointRepository;
     }
 
-    public PointResultDto findPointByMember(final MemberAuth memberAuth) {
+    public PointResultDto findPointByMember(MemberAuth memberAuth) {
         final Point pointByMember = pointRepository.findPointByMemberId(memberAuth.getId());
         return PointResultDto.of(pointByMember.getPointHistories(), pointByMember.calculateTotalPoint());
     }

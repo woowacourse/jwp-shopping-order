@@ -43,7 +43,7 @@ public class OrderReadService {
         return orderResults;
     }
 
-    public OrderResultDto findOrderBy(long orderId) {
+    public OrderResultDto findOrderBy(Long orderId) {
         Order order = orderRepository.findOrderBy(orderId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 주문입니다."));
         List<OrderedItemResult> orderedItemResults = makeOrderItemResults(order);
         List<UsedCoupon> usedCoupons = makeUsedCoupons(order);

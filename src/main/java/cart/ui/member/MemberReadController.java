@@ -17,7 +17,7 @@ public class MemberReadController {
 
     private final MemberReadService memberReadService;
 
-    public MemberReadController(final MemberReadService memberReadService) {
+    public MemberReadController(MemberReadService memberReadService) {
         this.memberReadService = memberReadService;
     }
 

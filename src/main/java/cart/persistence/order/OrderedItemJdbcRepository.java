@@ -16,7 +16,7 @@ public class OrderedItemJdbcRepository implements OrderedItemRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public OrderedItemJdbcRepository(final JdbcTemplate jdbcTemplate) {
+    public OrderedItemJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("ordered_item")
@@ -34,7 +34,7 @@ public class OrderedItemJdbcRepository implements OrderedItemRepository {
             ));
 
     @Override
-    public void createOrderItems(final List<OrderItem> orderItems) {
+    public void createOrderItems(List<OrderItem> orderItems) {
         String sql = "INSERT INTO ordered_item (order_id, product_name, product_price, product_quantity, product_image) VALUES (?,?,?,?,?);";
         jdbcTemplate.batchUpdate(sql, orderItems, orderItems.size(),
                 (PreparedStatement ps, OrderItem orderItem) -> {
@@ -47,7 +47,7 @@ public class OrderedItemJdbcRepository implements OrderedItemRepository {
     }
 
     @Override
-    public List<OrderItem> findOrderItemsByOrderId(final Long orderId) {
+    public List<OrderItem> findOrderItemsByOrderId(Long orderId) {
         String sql = "SELECT id, order_id, product_name, product_price, product_quantity, product_image FROM ordered_item WHERE order_id = ?";
         return jdbcTemplate.query(sql, orderItemRowMapper, orderId);
     }

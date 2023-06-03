@@ -16,7 +16,7 @@ public class MemberReadService {
 
     private final MemberRepository memberRepository;
 
-    public MemberReadService(final MemberRepository memberRepository) {
+    public MemberReadService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
@@ -27,19 +27,19 @@ public class MemberReadService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public MemberResultDto findMemberById(final Long id) {
+    public MemberResultDto findMemberById(Long id) {
         final Member member = memberRepository.findMemberById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 사용자가 존재하지 않습니다."));
         return MemberResultDto.from(member);
     }
 
-    public MemberResultDto findMemberByEmail(final String email) {
+    public MemberResultDto findMemberByEmail(String email) {
         final Member member = memberRepository.findMemberByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 사용자가 존재하지 않습니다."));
         return MemberResultDto.from(member);
     }
 
-    public boolean isMemberExist(final String email, final String password) {
+    public boolean isMemberExist(String email, String password) {
         return memberRepository.isMemberExist(email, password);
     }
 

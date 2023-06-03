@@ -19,7 +19,7 @@ public class CartItemResultDto {
         return new CartItemResultDto(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductResultDto.of(cartItem.getProduct())
+                ProductResultDto.from(cartItem.getProduct())
         );
     }
 

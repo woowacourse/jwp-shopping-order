@@ -11,18 +11,18 @@ public class Member {
     private final String email;
     private final String password;
 
-    public Member(final String name, final String email, final String password) {
+    public Member(String name, String email, String password) {
         this(null, name, email, password);
     }
 
-    public Member(final Long id, final String name, final String email, final String password) {
+    public Member(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public Member(final MemberRequest memberRequest) {
+    public Member(MemberRequest memberRequest) {
         this(null, memberRequest.getName(), memberRequest.getEmail(), memberRequest.getPassword());
     }
 

@@ -7,6 +7,6 @@ public interface PointRepository {
 
     Point findPointByMemberId(Long memberId);
 
-    Long createPointHistory(final Long memberId, final PointHistory pointHistory);
+    Long createPointHistory(Long memberId, PointHistory pointHistory);
 
 }

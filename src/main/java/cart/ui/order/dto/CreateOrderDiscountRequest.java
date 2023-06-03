@@ -10,7 +10,7 @@ public class CreateOrderDiscountRequest {
     public CreateOrderDiscountRequest() {
     }
 
-    public CreateOrderDiscountRequest(final List<Long> couponIds, final Integer point) {
+    public CreateOrderDiscountRequest(List<Long> couponIds, Integer point) {
         this.couponIds = couponIds;
         this.point = point;
     }

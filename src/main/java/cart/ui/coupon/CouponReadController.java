@@ -18,14 +18,14 @@ public class CouponReadController {
 
     private final CouponReadService couponReadService;
 
-    public CouponReadController(final CouponReadService couponReadService) {
+    public CouponReadController(CouponReadService couponReadService) {
         this.couponReadService = couponReadService;
     }
 
     @GetMapping
-    public ResponseEntity<List<CouponResponse>> findCoupons(final MemberAuth memberAuth) {
-        final List<CouponResultDto> couponResultDtos = couponReadService.findByMember(memberAuth);
-        final List<CouponResponse> couponResponses = couponResultDtos.stream()
+    public ResponseEntity<List<CouponResponse>> findCoupons(MemberAuth memberAuth) {
+        List<CouponResultDto> couponResultDtos = couponReadService.findByMember(memberAuth);
+        List<CouponResponse> couponResponses = couponResultDtos.stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toUnmodifiableList());
         return ResponseEntity.ok(couponResponses);

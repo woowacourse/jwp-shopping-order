@@ -10,7 +10,7 @@ public class CartItemCreateDto {
         this.productId = productId;
     }
 
-    public static CartItemCreateDto from(final CartItemRequest cartItemRequest) {
+    public static CartItemCreateDto from(CartItemRequest cartItemRequest) {
         return new CartItemCreateDto(cartItemRequest.getProductId());
     }
 

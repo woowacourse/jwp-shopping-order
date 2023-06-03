@@ -1,3 +1,14 @@
+DROP TABLE if exists product;
+DROP TABLE if exists member;
+DROP TABLE if exists cart_item;
+DROP TABLE if exists orders;
+DROP TABLE if exists ordered_item;
+DROP TABLE if exists coupon;
+DROP TABLE if exists member_coupon;
+DROP TABLE if exists point_history;
+DROP TABLE if exists ordered_coupon;
+
+
 CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -46,10 +57,10 @@ CREATE TABLE IF NOT EXISTS coupon
 (
     id               BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name`           VARCHAR(255) NOT NULL,
-    min_amount       INT                             DEFAULT 0,
-    discount_percent INT DEFAULT 0,
-    discount_amount  INT          NOT NULL              DEFAULT 0
-    CONSTRAINT chk_coupon CHECK (discount_percent = 0 OR discount_amount = 0),
+    min_amount       INT                   DEFAULT 0,
+    discount_percent INT                   DEFAULT 0,
+    discount_amount  INT          NOT NULL DEFAULT 0
+        CONSTRAINT chk_coupon CHECK (discount_percent = 0 OR discount_amount = 0),
     CONSTRAINT chk_coupon_positive CHECK (discount_percent >= 0 AND discount_amount >= 0),
     CONSTRAINT chk_coupon_valid CHECK (discount_percent <= 100)
 );

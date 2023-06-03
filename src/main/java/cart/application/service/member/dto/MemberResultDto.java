@@ -10,7 +10,7 @@ public class MemberResultDto {
     private final String password;
 
 
-    private MemberResultDto(final Long id, final String name, final String email, final String password) {
+    private MemberResultDto(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;

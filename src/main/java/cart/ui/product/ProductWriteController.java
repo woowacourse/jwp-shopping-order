@@ -5,7 +5,13 @@ import cart.application.service.product.dto.ProductCreateDto;
 import cart.ui.product.dto.ProductRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
@@ -15,13 +21,13 @@ public class ProductWriteController {
 
     private final ProductWriteService productWriteService;
 
-    public ProductWriteController(final ProductWriteService productWriteService) {
+    public ProductWriteController(ProductWriteService productWriteService) {
         this.productWriteService = productWriteService;
     }
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody ProductRequest productRequest) {
-        final Long id = productWriteService.createProduct(ProductCreateDto.from(productRequest));
+        Long id = productWriteService.createProduct(ProductCreateDto.from(productRequest));
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 

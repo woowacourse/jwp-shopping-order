@@ -13,33 +13,33 @@ public class CartItem {
     private final Product product;
     private final Member member;
 
-    public CartItem(final Product product, final Member member) {
+    public CartItem(Product product, Member member) {
         this(null, 1, product, member);
     }
 
-    public CartItem(final int quantity, final Product product, final Member member) {
+    public CartItem(int quantity, Product product, Member member) {
         this(null, quantity, product, member);
     }
 
-    public CartItem(final Long id, final int quantity, final Product product, final Member member) {
+    public CartItem(Long id, int quantity, Product product, Member member) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
         this.member = member;
     }
 
-    public boolean isCorrectQuantity(final Long productId, final Integer quantity) {
+    public boolean isCorrectQuantity(Long productId, Integer quantity) {
         if (this.quantity == quantity && product.isEqualId(productId)) {
             return true;
         }
         throw new IllegalArgumentException("상품의 수량이 일치하지 않습니다.");
     }
 
-    public boolean isNotOwnedByMember(final Member member) {
+    public boolean isNotOwnedByMember(Member member) {
         return !this.member.equals(member);
     }
 
-    public void validate(final Long productId, final Long memberId, final Integer quantity) {
+    public void validate(Long productId, Long memberId, Integer quantity) {
         if (!(product.isEqualId(productId) && member.isEqualId(memberId))) {
             throw new IllegalArgumentException("장바구니 정보가 일치하지 않습니다.");
         }

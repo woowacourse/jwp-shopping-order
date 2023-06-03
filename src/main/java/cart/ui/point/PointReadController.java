@@ -15,13 +15,13 @@ public class PointReadController {
 
     private final PointReadService pointReadService;
 
-    public PointReadController(final PointReadService pointReadService) {
+    public PointReadController(PointReadService pointReadService) {
         this.pointReadService = pointReadService;
     }
 
     @GetMapping
-    public ResponseEntity<PointResponse> findPointByMember(final MemberAuth memberAuth) {
-        final PointResultDto pointResultDto = pointReadService.findPointByMember(memberAuth);
+    public ResponseEntity<PointResponse> findPointByMember(MemberAuth memberAuth) {
+        PointResultDto pointResultDto = pointReadService.findPointByMember(memberAuth);
         return ResponseEntity.ok(PointResponse.from(pointResultDto));
     }
 

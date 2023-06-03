@@ -9,13 +9,13 @@ public class CreateOrderDto {
     private final List<Long> couponIds;
     private final Integer point;
 
-    private CreateOrderDto(final List<CreateOrderItemDto> createOrderItemDtos, List<Long> couponIds, Integer point) {
+    private CreateOrderDto(List<CreateOrderItemDto> createOrderItemDtos, List<Long> couponIds, Integer point) {
         this.createOrderItemDtos = createOrderItemDtos;
         this.couponIds = couponIds;
         this.point = point;
     }
 
-    public static CreateOrderDto from(final CreateOrderRequest createOrderRequest) {
+    public static CreateOrderDto from(CreateOrderRequest createOrderRequest) {
         List<CreateOrderItemDto> createOrderItems = createOrderRequest.getOrderItems().stream()
                 .map(CreateOrderItemDto::from)
                 .collect(Collectors.toUnmodifiableList());

@@ -9,7 +9,7 @@ public class UsedCoupon {
     private final int discountAmount;
     private final int minAmount;
 
-    public UsedCoupon(long id, String couponName, int discountPercent, int discountAmount, int minAmount) {
+    public UsedCoupon(Long id, String couponName, int discountPercent, int discountAmount, int minAmount) {
         this.id = id;
         this.couponName = couponName;
         this.discountPercent = discountPercent;

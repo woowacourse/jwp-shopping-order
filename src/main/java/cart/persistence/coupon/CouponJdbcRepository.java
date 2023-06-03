@@ -43,7 +43,7 @@ public class CouponJdbcRepository implements CouponRepository {
                     rs.getInt("coupon.discount_amount")
             );
 
-    public CouponJdbcRepository(final JdbcTemplate jdbcTemplate) {
+    public CouponJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleOrderedCouponInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("ordered_coupon")
@@ -51,8 +51,8 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
-    public List<Coupon> findByMemberId(final Long memberId) {
-        final String sql = "SELECT coupon.* " +
+    public List<Coupon> findByMemberId(Long memberId) {
+        String sql = "SELECT coupon.* " +
                 "FROM coupon " +
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
                 "WHERE member_coupon.member_id = ? AND member_coupon.status = " + USABLE;
@@ -60,8 +60,8 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
-    public Optional<CouponPolicy> findPercentCouponById(final Long memberCouponId) {
-        final String sql = "SELECT coupon.min_amount, coupon.discount_percent " +
+    public Optional<CouponPolicy> findPercentCouponById(Long memberCouponId) {
+        String sql = "SELECT coupon.min_amount, coupon.discount_percent " +
                 "FROM coupon " +
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
                 "WHERE member_coupon.id = ? AND discount_amount = 0 AND member_coupon.status = 1";
@@ -75,8 +75,8 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
-    public Optional<CouponPolicy> findAmountCouponById(final Long memberCouponId) {
-        final String sql = "SELECT coupon.min_amount, coupon.discount_amount " +
+    public Optional<CouponPolicy> findAmountCouponById(Long memberCouponId) {
+        String sql = "SELECT coupon.min_amount, coupon.discount_amount " +
                 "FROM coupon " +
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
                 "WHERE member_coupon.id = ? AND discount_percent = 0 AND member_coupon.status = 1";
@@ -90,13 +90,13 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
-    public void convertToUseMemberCoupon(final Long memberCouponId) {
+    public void convertToUseMemberCoupon(Long memberCouponId) {
         String sql = "UPDATE member_coupon SET status = 0 WHERE id = ?";
         jdbcTemplate.update(sql, memberCouponId);
     }
 
     @Override
-    public long createOrderedCoupon(final Long orderId, final Long memberCouponId) {
+    public long createOrderedCoupon(Long orderId, Long memberCouponId) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("order_id", orderId);
         parameters.addValue("member_coupon_id", memberCouponId);

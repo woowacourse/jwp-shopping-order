@@ -19,7 +19,7 @@ public class CouponReadService {
         this.couponRepository = couponRepository;
     }
 
-    public List<CouponResultDto> findByMember(final MemberAuth memberAuth) {
+    public List<CouponResultDto> findByMember(MemberAuth memberAuth) {
         final List<Coupon> coupons = couponRepository.findByMemberId(memberAuth.getId());
 
         return coupons.stream()

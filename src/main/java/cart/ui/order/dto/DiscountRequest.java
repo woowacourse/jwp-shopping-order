@@ -5,7 +5,7 @@ public class DiscountRequest {
     private Long couponId;
     private Integer point;
 
-    public DiscountRequest(final Long couponId, final Integer point) {
+    public DiscountRequest(Long couponId, Integer point) {
         this.couponId = couponId;
         this.point = point;
     }

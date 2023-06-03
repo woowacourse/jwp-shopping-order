@@ -9,7 +9,7 @@ public class CreateOrderItemRequest {
     public CreateOrderItemRequest() {
     }
 
-    public CreateOrderItemRequest(final Long cartItemId, final Long productId, final Integer quantity) {
+    public CreateOrderItemRequest(Long cartItemId, Long productId, Integer quantity) {
         this.cartItemId = cartItemId;
         this.productId = productId;
         this.quantity = quantity;

@@ -10,7 +10,7 @@ public class OrderedItemResult {
     private final int productQuantity;
     private final String imageUrl;
 
-    public OrderedItemResult(long id, String productName, int productPrice, int productQuantity, String imageUrl) {
+    public OrderedItemResult(Long id, String productName, int productPrice, int productQuantity, String imageUrl) {
         this.id = id;
         this.productName = productName;
         this.productPrice = productPrice;

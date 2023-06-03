@@ -40,7 +40,7 @@ class CartItemReadServiceTest {
     @DisplayName("사용자의 해당하는 장바구니의 정보를 조회한다.")
     void findByMemberTest() {
         // given
-        final MemberAuth memberAuth = new MemberAuth(레오_ID포함.getId(), "레오", "leo@gmail.com", "leo123");
+        MemberAuth memberAuth = new MemberAuth(레오_ID포함.getId(), "레오", "leo@gmail.com", "leo123");
         given(memberRepository.findMemberById(any()))
                 .willReturn(Optional.of(레오_ID포함));
         given(cartItemRepository.findAllCartItemsByMemberId(any()))
@@ -49,7 +49,7 @@ class CartItemReadServiceTest {
                         new CartItem(1, 꼬리요리, 레오_ID포함)
                 )));
         // when
-        final CartResultDto resultDto = cartItemReadService.findByMember(memberAuth);
+        CartResultDto resultDto = cartItemReadService.findByMember(memberAuth);
 
         // then
         assertThat(resultDto.getTotalPrice()).isEqualTo(6000);

@@ -4,10 +4,13 @@ import cart.application.service.product.dto.ProductResultDto;
 
 public class ProductResponse {
 
-    private final Long id;
-    private final String name;
-    private final int price;
-    private final String imageUrl;
+    private Long id;
+    private String name;
+    private int price;
+    private String imageUrl;
+
+    public ProductResponse() {
+    }
 
     private ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;

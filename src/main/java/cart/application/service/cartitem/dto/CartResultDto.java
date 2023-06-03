@@ -10,12 +10,12 @@ public class CartResultDto {
     private final List<CartItemResultDto> cartItemResultDtos;
     private final int totalPrice;
 
-    private CartResultDto(final List<CartItemResultDto> cartItemResultDtos, final int totalPrice) {
+    private CartResultDto(List<CartItemResultDto> cartItemResultDtos, int totalPrice) {
         this.cartItemResultDtos = cartItemResultDtos;
         this.totalPrice = totalPrice;
     }
 
-    public static CartResultDto of(final List<CartItem> cartItems, final int totalPrice) {
+    public static CartResultDto of(List<CartItem> cartItems, int totalPrice) {
         List<CartItemResultDto> cartItemResults = cartItems.stream()
                 .map(CartItemResultDto::of)
                 .collect(Collectors.toUnmodifiableList());

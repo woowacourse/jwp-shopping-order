@@ -8,13 +8,13 @@ public class PointHistoryDto {
     private final int earnedPoint;
     private final int usedPoint;
 
-    private PointHistoryDto(final long orderId, final int earnedPoint, final int usedPoint) {
+    private PointHistoryDto(long orderId, int earnedPoint, int usedPoint) {
         this.orderId = orderId;
         this.earnedPoint = earnedPoint;
         this.usedPoint = usedPoint;
     }
 
-    public static PointHistoryDto from(final PointHistory pointHistory) {
+    public static PointHistoryDto from(PointHistory pointHistory) {
         return new PointHistoryDto(pointHistory.getOrderId(), pointHistory.getEarnedPoint(), pointHistory.getUsedPoint());
     }
 

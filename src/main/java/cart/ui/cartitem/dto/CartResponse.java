@@ -13,13 +13,13 @@ public class CartResponse {
     public CartResponse() {
     }
 
-    private CartResponse(final List<CartItemResponse> cartItems, final int totalPrice) {
+    private CartResponse(List<CartItemResponse> cartItems, int totalPrice) {
         this.cartItems = cartItems;
         this.totalPrice = totalPrice;
     }
 
-    public static CartResponse from(final CartResultDto cartResult) {
-        final List<CartItemResponse> cartItemResponses = cartResult.getCartItemResultDtos().stream()
+    public static CartResponse from(CartResultDto cartResult) {
+        List<CartItemResponse> cartItemResponses = cartResult.getCartItemResultDtos().stream()
                 .map(CartItemResponse::of)
                 .collect(Collectors.toUnmodifiableList());
 

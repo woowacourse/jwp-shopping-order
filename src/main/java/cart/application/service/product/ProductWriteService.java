@@ -14,24 +14,24 @@ public class ProductWriteService {
 
     private final ProductRepository productRepository;
 
-    public ProductWriteService(final ProductRepository productRepository) {
+    public ProductWriteService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public Long createProduct(final ProductCreateDto productCreateDto) {
-        final Product product = new Product(productCreateDto.getName(), productCreateDto.getPrice(), productCreateDto.getImageUrl());
+    public Long createProduct(ProductCreateDto productCreateDto) {
+        Product product = new Product(productCreateDto.getName(), productCreateDto.getPrice(), productCreateDto.getImageUrl());
         return productRepository.createProduct(product);
     }
 
-    public void updateProduct(final Long productId, final ProductCreateDto productCreateDto) {
+    public void updateProduct(Long productId, ProductCreateDto productCreateDto) {
         productRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
 
-        final Product product = new Product(productId, productCreateDto.getName(), productCreateDto.getPrice(), productCreateDto.getImageUrl());
+        Product product = new Product(productId, productCreateDto.getName(), productCreateDto.getPrice(), productCreateDto.getImageUrl());
         productRepository.updateProduct(product);
     }
 
-    public void deleteProduct(final Long productId) {
+    public void deleteProduct(Long productId) {
         productRepository.deleteProduct(productId);
     }
 

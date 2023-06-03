@@ -10,7 +10,7 @@ public class CouponResponse {
     private final Integer discountAmount;
     private final Integer minAmount;
 
-    public CouponResponse(final Long id, final String couponName, final Integer discountPercent, final Integer discountAmount, final Integer minAmount) {
+    public CouponResponse(Long id, String couponName, Integer discountPercent, Integer discountAmount, Integer minAmount) {
         this.id = id;
         this.couponName = couponName;
         this.discountPercent = discountPercent;
@@ -18,7 +18,7 @@ public class CouponResponse {
         this.minAmount = minAmount;
     }
 
-    public static CouponResponse from(final CouponResultDto couponResultDto) {
+    public static CouponResponse from(CouponResultDto couponResultDto) {
         return new CouponResponse(
                 couponResultDto.getId(),
                 couponResultDto.getCouponName(),
