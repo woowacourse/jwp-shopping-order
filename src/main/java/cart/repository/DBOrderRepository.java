@@ -104,22 +104,29 @@ public class DBOrderRepository implements OrderRepository {
                 "WHERE member_id = ?";
 
         return jdbcTemplate.query(sql, rs -> {
+            boolean isOrderExist = false;
             List<Order> orders = new ArrayList<>();
             Long orderId = null;
-            Order currentOrder = null;
+            List<OrderItem> orderItems = new ArrayList<>();
+            Member member = null;
+            Coupon coupon = null;
+            int deliveryFee = 0;
+            int finalPrice = 0;
+            LocalDateTime orderTime = null;
 
             while (rs.next()) {
+                isOrderExist = true;
                 if (orderId == null || rs.getLong("order_id") != orderId) {
+                    if (orderId != null) {
+                        orders.add(new Order(orderId, orderItems, member, coupon, deliveryFee, finalPrice, orderTime));
+                    }
                     orderId = rs.getLong("order_id");
-                    int deliveryFee = rs.getInt("delivery_fee");
-                    int finalPrice = rs.getInt("payed_price");
-                    LocalDateTime orderTime = rs.getTimestamp("order_date").toLocalDateTime();
-                    Member member = getMember(rs);
-                    Coupon coupon = getCoupon(rs);
-                    List<OrderItem> orderItems = new ArrayList<>();
-
-                    currentOrder = new Order(orderId, orderItems, member, coupon, deliveryFee, finalPrice, orderTime);
-                    orders.add(currentOrder);
+                    orderItems = new ArrayList<>();
+                    member = getMember(rs);
+                    coupon = getCoupon(rs);
+                    deliveryFee = rs.getInt("delivery_fee");
+                    finalPrice = rs.getInt("payed_price");
+                    orderTime = rs.getTimestamp("order_date").toLocalDateTime();
                 }
 
                 Long orderItemId = rs.getLong("order_item_id");
@@ -130,11 +137,11 @@ public class DBOrderRepository implements OrderRepository {
                 int quantity = rs.getInt("quantity");
 
                 Product product = new Product(productId, productName, productPrice, productImageUrl);
-                OrderItem orderItem = new OrderItem(orderItemId, product, quantity);
+                orderItems.add(new OrderItem(orderItemId, product, quantity));
+            }
 
-                if (currentOrder != null) {
-                    currentOrder.getOrderItems().add(orderItem);
-                }
+            if (isOrderExist) {
+                orders.add(new Order(orderId, orderItems, member, coupon, deliveryFee, finalPrice, orderTime));
             }
 
             return orders;
