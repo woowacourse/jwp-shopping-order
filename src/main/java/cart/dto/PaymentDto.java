@@ -2,10 +2,15 @@ package cart.dto;
 
 import cart.domain.Order;
 
+import javax.validation.constraints.NotNull;
+
 public class PaymentDto {
 
+    @NotNull(message = "초기 결제금액이 입력되지 않았습니다.")
     private Integer originalPayment;
+    @NotNull(message = "최종 결제금액이 입력되지 않았습니다.")
     private Integer finalPayment;
+    @NotNull(message = "사용 포인트가 입력되지 않았습니다.")
     private Integer point;
 
     public PaymentDto() {

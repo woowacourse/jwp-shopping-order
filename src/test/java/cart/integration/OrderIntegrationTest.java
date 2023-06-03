@@ -18,6 +18,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,40 +58,6 @@ class OrderIntegrationTest extends IntegrationTest {
         new MemberDao(jdbcTemplate).addMember(new MemberEntity(EMAIL, PASSWORD, 1000));
         productId = addProductAndGetId(new ProductRequest("chicken", 20000, "chicken.jpeg"));
         cartItemId = addCartItemAndGetId(EMAIL, PASSWORD, new CartItemRequest(productId));
-    }
-
-    @Test
-    void 주문한다() {
-        //given
-        final OrderRequest orderRequest = new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000));
-
-        //when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .auth().preemptive().basic(EMAIL, PASSWORD)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequest)
-                .when()
-                .post("/orders")
-                .then()
-                .log().all().extract();
-
-        //then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-
-    @Test
-    void 주문한_상품은_장바구니에서_삭제된다() {
-        //given
-        addOrder(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000)));
-
-        //when
-        final ExtractableResponse<Response> response = showCartItemByProductId(EMAIL, PASSWORD, productId);
-
-        //then
-        assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
-            softly.assertThat(response.body().asString()).isEqualTo("회원의 장바구니에 해당 상품이 존재하지 않습니다; productId=1");
-        });
     }
 
     @Test
@@ -154,5 +121,72 @@ class OrderIntegrationTest extends IntegrationTest {
                             )
                     );
         });
+    }
+
+    @Nested
+    class 주문_테스트 {
+        @Test
+        void 주문한다() {
+            //given
+            final OrderRequest orderRequest = new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000));
+
+            //when
+            final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                    .auth().preemptive().basic(EMAIL, PASSWORD)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(orderRequest)
+                    .when()
+                    .post("/orders")
+                    .then()
+                    .log().all().extract();
+
+            //then
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        }
+
+        @Test
+        void 주문한_상품은_장바구니에서_삭제된다() {
+            //given
+            addOrder(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000)));
+
+            //when
+            final ExtractableResponse<Response> response = showCartItemByProductId(EMAIL, PASSWORD, productId);
+
+            //then
+            assertSoftly(softly -> {
+                softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+                softly.assertThat(response.body().asString()).isEqualTo("회원의 장바구니에 해당 상품이 존재하지 않습니다; productId=1");
+            });
+        }
+
+        @Test
+        void 주문할_때_결제_정보를_입력하지_않으면_예외를_던진다() {
+            //given
+            final PaymentDto paymentWithNull = new PaymentDto(null, 19000, 1000);
+
+            //when
+            final ExtractableResponse<Response> response = addOrder(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderItemDto(cartItemId)), paymentWithNull));
+
+            //then
+            assertSoftly(softly -> {
+                softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softly.assertThat(response.body().asString()).contains("초기 결제금액이 입력되지 않았습니다.");
+            });
+        }
+
+        @Test
+        void 주문할_때_주문_상품_정보를_입력하지_않으면_예외를_던진다() {
+            //given
+            final OrderItemDto nullOrderItem = new OrderItemDto(null);
+
+            //when
+            final ExtractableResponse<Response> response = addOrder(EMAIL, PASSWORD, new OrderRequest(List.of(nullOrderItem), new PaymentDto(20000, 19000, 1000)));
+
+            //then
+            assertSoftly(softly -> {
+                softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softly.assertThat(response.body().asString()).contains("장바구니 상품 id가 입력되지 않았습니다.");
+            });
+        }
     }
 }

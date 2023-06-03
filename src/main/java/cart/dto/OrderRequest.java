@@ -1,10 +1,13 @@
 package cart.dto;
 
+import javax.validation.Valid;
 import java.util.List;
 
 public class OrderRequest {
 
+    @Valid
     private List<OrderItemDto> orderItems;
+    @Valid
     private PaymentDto payment;
 
     public OrderRequest() {
