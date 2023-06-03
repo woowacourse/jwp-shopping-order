@@ -21,9 +21,9 @@ PID=$(pgrep -f 'java -jar')
 if [ -z "$PID" ]
 then
   # 애플리케이션 시작 명령어
-  nohup java -jar jwp-shopping-order.jar
+  java -jar jwp-shopping-order.jar
 else
   kill $PID
   # 애플리케이션 시작 명령어
-  nohup java -jar jwp-shopping-order.jar
+  java -jar jwp-shopping-order.jar
 fi
