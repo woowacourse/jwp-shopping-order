@@ -2,7 +2,6 @@ package cart.dto;
 
 import cart.domain.Order;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,7 @@ public class OrdersDto {
     private final Long totalItemsPrice;
 
     @Schema(description = "주문 할인 가격", example = "3000")
-    private final BigInteger discountPrice;
+    private final Long discountPrice;
 
     @Schema(description = "배달료", example = "3000")
     private final Long deliveryFee;
@@ -27,7 +26,7 @@ public class OrdersDto {
     public OrdersDto(final Order order) {
         this.id = order.getId();
         this.totalItemsPrice = order.getTotalPrice();
-        this.discountPrice = order.getDiscountPrice().toBigInteger();
+        this.discountPrice = order.getDiscountPrice();
         this.deliveryFee = order.getDeliveryFee();
         this.orderItems = order.getOrderItems().stream()
                 .map(it -> new OrderItemDto(it.getId(), it.getName(), it.getPrice(), it.getImageUrl(),
@@ -43,7 +42,7 @@ public class OrdersDto {
         return totalItemsPrice;
     }
 
-    public BigInteger getDiscountPrice() {
+    public Long getDiscountPrice() {
         return discountPrice;
     }
 

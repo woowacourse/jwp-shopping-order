@@ -93,7 +93,7 @@ public class OrderRepository {
     }
 
     private MemberCoupon getMemberCoupon(final Member member, final Long memberCouponId) {
-        Optional<MemberCouponEntity> findMemberCoupon = memberCouponDao.findNotUsedCouponByMemberIdAndCouponId(
+        Optional<MemberCouponEntity> findMemberCoupon = memberCouponDao.findMemberCouponByMemberIdAndCouponId(
                 member.getId(), memberCouponId);
 
         if (findMemberCoupon.isEmpty()) {
@@ -138,7 +138,7 @@ public class OrderRepository {
     private Coupon getCoupon(final Long couponId) {
         CouponEntity couponEntity = couponDao.findByCouponId(couponId).orElseThrow(CouponNotFoundException::new);
         DiscountPolicy discountPolicy = DiscountPolicyType.findDiscountPolicy(couponEntity.getPolicyType(),
-                couponEntity.getDiscountValue());
+                couponEntity.getDiscountPrice());
 
         return new Coupon(couponEntity.getId(), couponEntity.getName(), discountPolicy, couponEntity.getMinimumPrice());
     }

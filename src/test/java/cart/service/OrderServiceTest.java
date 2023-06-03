@@ -90,7 +90,7 @@ class OrderServiceTest {
         Long savedOrderId2 = orderService.order(member.getId(), request2);
 
         // when
-        List<OrdersDto> result = orderService.findAllBy(member.getId());
+        List<OrdersDto> result = orderService.findAllByMemberId(member.getId());
 
         // then
         assertThat(result).hasSize(2);

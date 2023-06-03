@@ -84,7 +84,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrdersDto> findAllBy(final Long memberId) {
+    public List<OrdersDto> findAllByMemberId(final Long memberId) {
         return orderRepository.findAllByMemberId(memberId).stream()
                 .map(OrdersDto::new)
                 .collect(Collectors.toList());

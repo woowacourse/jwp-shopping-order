@@ -62,7 +62,7 @@ public class Order {
         return orderItems;
     }
 
-    public BigDecimal getDiscountPrice() {
-        return BigDecimal.valueOf(getTotalPrice()).subtract(getCalculateDiscountPrice());
+    public Long getDiscountPrice() {
+        return memberCoupon.getDiscountPrice();
     }
 }

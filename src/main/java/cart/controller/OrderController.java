@@ -49,7 +49,7 @@ public class OrderController {
     )
     @GetMapping
     public ResponseEntity<List<OrdersDto>> findAllOrderByMemberId(@Auth final Credential credential) {
-        final List<OrdersDto> findAllOrders = orderService.findAllBy(credential.getMemberId());
+        final List<OrdersDto> findAllOrders = orderService.findAllByMemberId(credential.getMemberId());
         return ResponseEntity.ok(findAllOrders);
     }
 

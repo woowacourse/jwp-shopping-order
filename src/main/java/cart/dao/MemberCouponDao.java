@@ -30,8 +30,8 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
-    public Optional<MemberCouponEntity> findNotUsedCouponByMemberIdAndCouponId(final Long memberId, final Long id) {
-        String sql = "SELECT * FROM member_coupon WHERE member_id = ? and id = ? and used = false";
+    public Optional<MemberCouponEntity> findMemberCouponByMemberIdAndCouponId(final Long memberId, final Long id) {
+        String sql = "SELECT * FROM member_coupon WHERE member_id = ? and id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId, id));
         } catch (final EmptyResultDataAccessException e) {
