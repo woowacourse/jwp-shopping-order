@@ -66,7 +66,11 @@ public class Money {
     }
 
     public int getValue() {
-        return value.intValue();
+        try {
+            return value.intValueExact();
+        } catch (ArithmeticException ex) {
+            throw new MoneyException.DecimalMoney(ex);
+        }
     }
 
     @Override

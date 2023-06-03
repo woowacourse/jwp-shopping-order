@@ -18,8 +18,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
         logger.error("", ex);
 
-        return ResponseEntity.internalServerError()
+        return ResponseEntity
+                .internalServerError()
                 .body(new ExceptionResponse("예상치 못한 문제가 발생했습니다."));
+    }
+
+    @ExceptionHandler(MoneyException.DecimalMoney.class)
+    public ResponseEntity<ExceptionResponse> handleDecimalMoneyException(MoneyException.DecimalMoney ex) {
+        logger.error("", ex);
+
+        return ResponseEntity
+                .internalServerError()
+                .body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler({
@@ -30,7 +40,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> handlerAuthenticationException(AuthenticationException ex) {
         logger.info("", ex);
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
@@ -41,7 +52,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleForbiddenException(RuntimeException ex) {
         logger.info("", ex);
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse("잘못된 사용자입니다."));
     }
 
@@ -59,7 +71,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleBadRequestException(RuntimeException ex) {
         logger.info("", ex);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
@@ -71,15 +84,17 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex) {
         logger.info("", ex);
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatus status,
-                                                                  WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
         logger.info("", ex);
 
         String fieldErrorMessage = ex.getBindingResult().getFieldErrors()
@@ -87,7 +102,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity
+                .badRequest()
                 .body(new ExceptionResponse(fieldErrorMessage));
     }
 
