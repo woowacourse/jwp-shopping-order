@@ -8,6 +8,7 @@ import cart.dto.OrderResponse;
 import cart.dto.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,6 @@ import java.util.Optional;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Transactional
 public class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
@@ -35,12 +35,13 @@ public class OrderIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         super.setUp();
-
-        productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg", 0));
-        productId2 = createProduct(new ProductRequest("피자", 10_000, "http://example.com/pizza.jpg", 50));
-
         member = memberDao.getMemberById(1L); //일반 등급
         member2 = memberDao.getMemberById(2L); //실버 등급
+    }
+
+    @AfterEach
+    void setAfter(){
+
     }
 
     private Long createProduct(ProductRequest productRequest) {
@@ -76,9 +77,13 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    @Transactional
     public void createOrder() {
         //given
-        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
+        productId = createProduct(new ProductRequest("연어덮밥", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("카레", 10_000, "http://example.com/pizza.jpg", 50));
+
+        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2, 1));
 
         //when
         var response = requestOrder(member2, cartItemId4);
@@ -123,9 +128,13 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     @DisplayName("상품 할인 적용")
+    @Transactional
     public void product_discount() {
         //given
-        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
+        productId = createProduct(new ProductRequest("족발", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("마라탕", 10_000, "http://example.com/pizza.jpg", 50));
+
+        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2, 1));
         List<Long> cartItemIds = List.of(cartItemId4);
         int totalItemDiscountAmount = 5_000;
         int totalMemberDiscountAmount = 0;
@@ -167,7 +176,10 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("멤버 할인 적용")
     public void member_discount() {
         //given
-        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId));
+        productId = createProduct(new ProductRequest("덮밥", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("규동", 10_000, "http://example.com/pizza.jpg", 50));
+
+        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId, 1));
         List<Long> cartItemIds = List.of(cartItemId4);
         int totalItemDiscountAmount = 0;
         int totalMemberDiscountAmount = 1_000;
@@ -207,9 +219,13 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     @DisplayName("상품의 원가격, 할인된 가격, 배송비, 총구매금액을 구한다")
+    @Transactional
     public void testAllPrices() {
         //given
-        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2));
+        productId = createProduct(new ProductRequest("짬뽕", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("탕수육", 10_000, "http://example.com/pizza.jpg", 50));
+
+        Long cartItemId4 = createCartItem(member2, new CartItemRequest(productId2, 1));
         List<Long> cartItemIds = List.of(cartItemId4);
         int totalItemDiscountAmount = 5_000;
         int totalMemberDiscountAmount = 0;
@@ -251,9 +267,13 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     @DisplayName("특정 멤버의 특정 주문을 조회한다")
+    @Transactional
     void get_order() {
-        Long cartItemId = createCartItem(member2, new CartItemRequest(productId2));
-        Long cartItemId2 = createCartItem(member2, new CartItemRequest(productId));
+        productId = createProduct(new ProductRequest("초밥", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("김치찜", 10_000, "http://example.com/pizza.jpg", 50));
+
+        Long cartItemId = createCartItem(member2, new CartItemRequest(productId2, 1));
+        Long cartItemId2 = createCartItem(member2, new CartItemRequest(productId, 1));
         Long orderId = requestCreateOrder(member2, List.of(cartItemId, cartItemId2));
         ExtractableResponse<Response> response = requestGetOrderById(member2, orderId);
         OrderResponse orderResponse = getOrderResponse(member2, orderId);
@@ -317,6 +337,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     @DisplayName("멤버의 모든 주문들을 조회한다")
+    @Transactional
     public void getOrders() {
         var result = requestGetAllOrders(member2);
 
@@ -325,9 +346,14 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     @Test
     @DisplayName("멤버의 모든 주문을 조회했을 때 실제 주문이 존재하는지 확인한다")
+    @Transactional
     public void getOrders_order_exist() {
-        Long cartItemId = createCartItem(member2, new CartItemRequest(productId2));
-        Long cartItemId2 = createCartItem(member2, new CartItemRequest(productId));
+        productId = createProduct(new ProductRequest("감자탕", 10_000, "http://example.com/chicken.jpg", 0));
+        productId2 = createProduct(new ProductRequest("칼국수", 10_000, "http://example.com/pizza.jpg", 50));
+
+        Long cartItemId = createCartItem(member2, new CartItemRequest(productId2, 1));
+        Long cartItemId2 = createCartItem(member2, new CartItemRequest(productId, 1));
+
         Long orderId = requestCreateOrder(member2, List.of(cartItemId, cartItemId2));
 
         ExtractableResponse<Response> allOrdersResponse = requestGetAllOrders(member2);

@@ -49,8 +49,11 @@ public class OrderService {
     }
 
     private Long makeOrder(Member member, OrderCreateRequest orderCreateRequest) {
+        System.out.println("start");
         int totalItemPrice = findTotalItemPrice(orderCreateRequest);
+        System.out.println(totalItemPrice);
         int discountedTotalItemPrice = findDiscountedTotalItemPrice(member, orderCreateRequest);
+        System.out.println(discountedTotalItemPrice);
         int shippingFee = findShippingFee(orderCreateRequest, totalItemPrice);
         int totalPrice = discountedTotalItemPrice + shippingFee;
 
@@ -156,10 +159,11 @@ public class OrderService {
     }
 
     private int calculateTotalItemDiscountedPriceForOrder(List<OrderedItem> orderedItems) {
+
         List<Integer> itemDiscountedPrice = new ArrayList<>();
         for (OrderedItem orderedItem : orderedItems) {
+            System.out.println("주문한 상품: "+orderedItem.getName());
             calculateItemDiscountedPriceForOrder(itemDiscountedPrice, orderedItem);
-
         }
         return Order.calculatePriceSum(itemDiscountedPrice);
     }

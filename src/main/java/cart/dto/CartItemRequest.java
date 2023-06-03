@@ -7,8 +7,9 @@ public class CartItemRequest {
     public CartItemRequest() {
     }
 
-    public CartItemRequest(Long productId) {
+    public CartItemRequest(Long productId, int quantity) {
         this.productId = productId;
+        this.quantity = quantity;
     }
 
     public Long getProductId() {
