@@ -64,7 +64,7 @@ public class CouponJdbcRepository implements CouponRepository {
         final String sql = "SELECT coupon.min_amount, coupon.discount_percent " +
                 "FROM coupon " +
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
-                "WHERE member_coupon.id = ? AND discount_amount = 0";
+                "WHERE member_coupon.id = ? AND discount_amount = 0 AND member_coupon.status = 1";
 
         try {
             CouponPolicy percentCoupon = jdbcTemplate.queryForObject(sql, percentCouponRowMapper, memberCouponId);
@@ -79,7 +79,7 @@ public class CouponJdbcRepository implements CouponRepository {
         final String sql = "SELECT coupon.min_amount, coupon.discount_amount " +
                 "FROM coupon " +
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
-                "WHERE member_coupon.id = ? AND discount_percent = 0";
+                "WHERE member_coupon.id = ? AND discount_percent = 0 AND member_coupon.status = 1";
 
         try {
             CouponPolicy percentCoupon = jdbcTemplate.queryForObject(sql, amountCouponRowMapper, memberCouponId);

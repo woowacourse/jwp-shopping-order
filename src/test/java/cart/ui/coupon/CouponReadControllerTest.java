@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("/reset.sql")
 class CouponReadControllerTest {
 
     @Autowired
@@ -27,6 +27,7 @@ class CouponReadControllerTest {
     void setUp() {
         RestAssured.port = port;
     }
+
     @Test
     void findCoupons() {
         String email = "leo@gmail.com";
