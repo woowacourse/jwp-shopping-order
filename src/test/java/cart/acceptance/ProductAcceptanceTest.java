@@ -1,6 +1,10 @@
 package cart.acceptance;
 
-import static cart.acceptance.CommonSteps.*;
+import static cart.acceptance.CommonSteps.LOCATION_헤더를_검증한다;
+import static cart.acceptance.CommonSteps.STATUS_CODE를_검증한다;
+import static cart.acceptance.CommonSteps.정상_삭제;
+import static cart.acceptance.CommonSteps.정상_생성;
+import static cart.acceptance.CommonSteps.정상_처리;
 import static cart.acceptance.ProductSteps.모든_상품_조회_요청;
 import static cart.acceptance.ProductSteps.상품_삭제_요청;
 import static cart.acceptance.ProductSteps.상품_생성_요청;
@@ -10,11 +14,11 @@ import static cart.acceptance.ProductSteps.특정_상품_조회_요청;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.common.dto.ProductRequest;
+import cart.common.dto.ProductResponse;
 import cart.exception.notFound.ProductNotFoundException;
+import cart.product.application.Product;
+import cart.product.persistence.ProductDao;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
@@ -158,7 +162,8 @@ public class ProductAcceptanceTest {
             expectedResponses.add(productResponse);
         }
 
-        List<ProductResponse> actualResponses = response.as(new TypeRef<>() {});
+        List<ProductResponse> actualResponses = response.as(new TypeRef<>() {
+        });
         assertThat(actualResponses).usingRecursiveComparison()
                 .isEqualTo(expectedResponses);
     }

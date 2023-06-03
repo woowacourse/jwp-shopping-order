@@ -16,12 +16,12 @@ import static cart.acceptance.MemberSteps.유저_생성_요청하고_유저_반�
 import static cart.acceptance.ProductSteps.상품_생성하고_아이디_반환;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.CartItemDao;
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.dto.CartItemDto;
-import cart.dto.CartItemRequest;
-import cart.dto.ProductRequest;
+import cart.cartItem.application.CartItem;
+import cart.cartItem.persistence.CartItemDao;
+import cart.common.dto.CartItemDto;
+import cart.common.dto.CartItemRequest;
+import cart.common.dto.ProductRequest;
+import cart.member.application.Member;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
@@ -182,12 +182,14 @@ public class CartItemAcceptanceTest {
 
         // then
         STATUS_CODE를_검증한다(response, 정상_처리);
-        장바구니의_모든_상품_조회_결과를_검증한다(response, List.of(cartItemId1, cartItemId2), List.of(productId1, productId2), List.of(1, 1));
+        장바구니의_모든_상품_조회_결과를_검증한다(response, List.of(cartItemId1, cartItemId2), List.of(productId1, productId2),
+                List.of(1, 1));
     }
 
     private void 장바구니의_모든_상품_조회_결과를_검증한다(ExtractableResponse<Response> response,
                                          List<Long> cartItemIds, List<Long> productIds, List<Integer> quantitys) {
-        List<CartItemDto> actualResponses = response.as(new TypeRef<>() {});
+        List<CartItemDto> actualResponses = response.as(new TypeRef<>() {
+        });
         for (int i = 0; i < actualResponses.size(); i++) {
             CartItemDto cartItemDto = actualResponses.get(i);
             assertThat(cartItemDto.getCartItemId()).isEqualTo(cartItemIds.get(i));

@@ -2,9 +2,9 @@ package cart.acceptance;
 
 import static io.restassured.RestAssured.given;
 
-import cart.domain.Member;
-import cart.domain.Point;
-import cart.ui.MemberRequest;
+import cart.common.dto.MemberRequest;
+import cart.member.application.Member;
+import cart.member.application.Point;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")

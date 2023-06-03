@@ -1,7 +1,6 @@
 package cart.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import cart.order.application.DeliveryPolicy;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;

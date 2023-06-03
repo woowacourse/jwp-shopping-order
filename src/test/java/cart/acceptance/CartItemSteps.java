@@ -3,9 +3,9 @@ package cart.acceptance;
 import static cart.acceptance.CommonSteps.LOCATION_헤더에서_ID_추출;
 import static io.restassured.RestAssured.given;
 
-import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
+import cart.common.dto.CartItemQuantityUpdateRequest;
+import cart.common.dto.CartItemRequest;
+import cart.member.application.Member;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
