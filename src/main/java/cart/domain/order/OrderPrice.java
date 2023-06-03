@@ -9,11 +9,16 @@ public class OrderPrice {
     private final DiscountPolicy discountPolicy;
     private final DeliveryPolicy deliveryPolicy;
 
-    public OrderPrice(final Long productPrice, final DiscountPolicy discountPolicy,
+    private OrderPrice(final Long productPrice, final DiscountPolicy discountPolicy,
         final DeliveryPolicy deliveryPolicy) {
         this.productPrice = productPrice;
         this.discountPolicy = discountPolicy;
         this.deliveryPolicy = deliveryPolicy;
+    }
+
+    public static OrderPrice of(final Order order, final DiscountPolicy discountPolicy,
+        final DeliveryPolicy deliveryPolicy) {
+        return new OrderPrice(order.getProductPrice(), discountPolicy, deliveryPolicy);
     }
 
     public Long getProductPrice() {

@@ -4,9 +4,9 @@ import cart.domain.order.OrderItem;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class OrderItemDao {
 
     private final SimpleJdbcInsert simpleJdbcInsert;

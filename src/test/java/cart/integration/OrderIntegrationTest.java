@@ -42,7 +42,7 @@ public class OrderIntegrationTest extends IntegrationTest {
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
         productId3 = createProduct(new ProductRequest("셀러드", 20_000, "http://example.com/salad.jpg"));
 
-        member1 = memberDao.getMemberById(1L);
+        member1 = memberDao.getMemberById(1L).get();
 
         orderRequest1 = new OrderRequest(
             List.of(new OrderItemRequest(productId, 1), new OrderItemRequest(productId2, 1)),
@@ -143,9 +143,9 @@ public class OrderIntegrationTest extends IntegrationTest {
 
             () -> assertThat(ordersResponse.getOrders().get(1).getItems()).hasSize(2),
             () -> assertThat(ordersResponse.getOrders().get(1).getProductPrice()).isEqualTo(35_000),
-            () -> assertThat(ordersResponse.getOrders().get(1).getDiscountPrice()).isEqualTo(3000),
+            () -> assertThat(ordersResponse.getOrders().get(1).getDiscountPrice()).isEqualTo(0),
             () -> assertThat(ordersResponse.getOrders().get(1).getDeliveryFee()).isEqualTo(3000),
-            () -> assertThat(ordersResponse.getOrders().get(1).getTotalPrice()).isEqualTo(35_000)
+            () -> assertThat(ordersResponse.getOrders().get(1).getTotalPrice()).isEqualTo(38_000)
         );
     }
 

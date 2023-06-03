@@ -21,7 +21,7 @@ public class CartItems {
         this.purchaseItems = new HashSet<>();
     }
 
-    public void purchase(final CartItem cartItem) {
+    public void buy(final CartItem cartItem) {
         final CartItem findCartItem = get(cartItem.getProduct().getId(), cartItem.getQuantity())
             .orElseThrow(() -> new CartItemNotExisctException("해당 상품이 장바구니에 없습니다."));
         purchaseItems.add(findCartItem);

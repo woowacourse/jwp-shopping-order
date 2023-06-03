@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.exception.MemberNotExistException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,7 @@ class CartItemDaoTest {
     }
 
     private Member findMemberById(final Long memberId) {
-        return memberDao.getMemberById(1L);
+        return memberDao.getMemberById(1L).orElseThrow(() -> new MemberNotExistException("멤버가 존재하지 않습니다."));
     }
 
     private Product createProduct(final String name, final int price, final String imageUrl) {

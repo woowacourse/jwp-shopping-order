@@ -1,8 +1,5 @@
 package cart.domain.discount;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class BasicDiscountPolicy implements DiscountPolicy {
 
     private static final Long FIRST_BOUND = 50000L;

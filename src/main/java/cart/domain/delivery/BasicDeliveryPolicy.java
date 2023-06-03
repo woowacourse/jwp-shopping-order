@@ -1,8 +1,5 @@
 package cart.domain.delivery;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class BasicDeliveryPolicy implements DeliveryPolicy {
 
     private static final long BASIC_FEE = 3000L;

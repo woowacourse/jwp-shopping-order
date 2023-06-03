@@ -13,6 +13,7 @@ import cart.domain.order.OrderItem;
 import cart.domain.order.OrderItems;
 import cart.domain.order.OrderPrice;
 import cart.dto.OrderDto;
+import cart.exception.MemberNotExistException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -55,8 +56,7 @@ class OrderDaoTest {
         //given
         createCartItem(new CartItem(member, product1));
         final Order order = createOrder(member, List.of(OrderItem.notPersisted(product1, 1)));
-        final OrderPrice orderPrice = new OrderPrice(order.getProductPrice(), new BasicDiscountPolicy(),
-            new BasicDeliveryPolicy());
+        final OrderPrice orderPrice = OrderPrice.of(order, new BasicDiscountPolicy(), new BasicDeliveryPolicy());
         //when
         final Order persistedOrder = orderDao.insert(order, orderPrice);
 
@@ -87,7 +87,7 @@ class OrderDaoTest {
     }
 
     private Member findMemberById(final Long memberId) {
-        return memberDao.getMemberById(memberId);
+        return memberDao.getMemberById(memberId).orElseThrow(() -> new MemberNotExistException("멤버가 존재하지 않습니다."));
     }
 
     private Product createProduct(final String name, final int price, final String imageUrl) {
@@ -97,8 +97,7 @@ class OrderDaoTest {
 
     private Order createOrder(final Member member, final List<OrderItem> orderItems) {
         final Order order = Order.beforePersisted(member, new OrderItems(orderItems), LocalDateTime.now());
-        final OrderPrice orderPrice = new OrderPrice(order.getProductPrice(), new BasicDiscountPolicy(),
-            new BasicDeliveryPolicy());
+        final OrderPrice orderPrice = OrderPrice.of(order, new BasicDiscountPolicy(), new BasicDeliveryPolicy());
 
         final Order persistedOrder = orderDao.insert(order, orderPrice);
         order.getOrderItems().forEach((orderItem -> orderItemDao.insert(persistedOrder.getId(), orderItem)));

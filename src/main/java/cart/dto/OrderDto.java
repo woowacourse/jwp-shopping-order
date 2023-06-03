@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.order.OrderItem;
 import java.time.LocalDateTime;
@@ -8,6 +9,9 @@ public class OrderDto {
 
     private Long orderId;
     private LocalDateTime orderTime;
+    private Long memberId;
+    private String memberEmail;
+    private String memberPassword;
     private Long orderProductPrice;
     private Long orderDiscountPrice;
     private Long orderDeliveryFee;
@@ -18,13 +22,17 @@ public class OrderDto {
     private String orderItemImageUrl;
     private int orderItemQuantity;
 
-    public OrderDto(final Long orderId, final LocalDateTime orderTime, final Long orderProductPrice,
-        final Long orderDiscountPrice,
-        final Long orderDeliveryFee, final Long orderTotalPrice, final Long orderITemId, final String orderItemName,
-        final int orderItemPrice,
-        final String orderItemImageUrl, final int orderItemQuantity) {
+    public OrderDto(final Long orderId, final LocalDateTime orderTime,
+        final Long memberId, final String memberEmail, final String memberPassword,
+        final Long orderProductPrice, final Long orderDiscountPrice, final Long orderDeliveryFee,
+        final Long orderTotalPrice, final Long orderITemId,
+        final String orderItemName, final int orderItemPrice, final String orderItemImageUrl,
+        final int orderItemQuantity) {
         this.orderId = orderId;
         this.orderTime = orderTime;
+        this.memberId = memberId;
+        this.memberEmail = memberEmail;
+        this.memberPassword = memberPassword;
         this.orderProductPrice = orderProductPrice;
         this.orderDiscountPrice = orderDiscountPrice;
         this.orderDeliveryFee = orderDeliveryFee;
@@ -36,8 +44,8 @@ public class OrderDto {
         this.orderItemQuantity = orderItemQuantity;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Member getMember() {
+        return new Member(memberId, memberEmail, memberPassword);
     }
 
     public Product getProduct() {
@@ -46,6 +54,10 @@ public class OrderDto {
 
     public OrderItem getOrderItem() {
         return OrderItem.persisted(orderITemId, getProduct(), orderItemQuantity);
+    }
+
+    public Long getOrderId() {
+        return orderId;
     }
 
     public LocalDateTime getOrderTime() {

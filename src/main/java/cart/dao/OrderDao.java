@@ -11,9 +11,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -44,6 +44,9 @@ public class OrderDao {
         final String sql = "SELECT "
             + "ORD.id AS order_id, "
             + "ORD.created_at AS order_time, "
+            + "MEM.id AS member_id, "
+            + "MEM.email AS member_email, "
+            + "MEM.password AS member_password, "
             + "ORD.product_price AS order_product_price, "
             + "ORD.discount_price AS order_discount_price, "
             + "ORD.delivery_fee AS order_delivery_fee, "
@@ -54,6 +57,7 @@ public class OrderDao {
             + "IT.product_image_url AS order_item_image_url, "
             + "IT.product_quantity AS order_item_quantity "
             + "FROM orders AS ORD "
+            + "INNER JOIN member AS MEM ON MEM.id = ORD.member_id "
             + "INNER JOIN order_items AS IT ON IT.order_id = ORD.id "
             + "WHERE ORD.id = ?";
 
@@ -64,6 +68,9 @@ public class OrderDao {
         final String sql = "SELECT "
             + "ORD.id AS order_id, "
             + "ORD.created_at AS order_time, "
+            + "MEM.id AS member_id, "
+            + "MEM.email AS member_email, "
+            + "MEM.password AS member_password, "
             + "ORD.product_price AS order_product_price, "
             + "ORD.discount_price AS order_discount_price, "
             + "ORD.delivery_fee AS order_delivery_fee, "
@@ -74,6 +81,7 @@ public class OrderDao {
             + "IT.product_image_url AS order_item_image_url, "
             + "IT.product_quantity AS order_item_quantity "
             + "FROM orders AS ORD "
+            + "INNER JOIN member AS MEM ON MEM.id = ORD.member_id "
             + "INNER JOIN order_items AS IT ON IT.order_id = ORD.id "
             + "WHERE ORD.member_id = ?";
 
@@ -87,6 +95,9 @@ public class OrderDao {
             return new OrderDto(
                 rs.getLong("order_id"),
                 rs.getTimestamp("order_time").toLocalDateTime(),
+                rs.getLong("member_id"),
+                rs.getString("member_email"),
+                rs.getString("member_password"),
                 rs.getLong("order_product_price"),
                 rs.getLong("order_discount_price"),
                 rs.getLong("order_delivery_fee"),

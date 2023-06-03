@@ -9,6 +9,7 @@ import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.CartItemResponse;
+import cart.exception.MemberNotExistException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;
@@ -39,8 +40,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberDao.getMemberById(1L).orElseThrow(() -> new MemberNotExistException("멤버가 존재하지 않습니다."));
+        member2 = memberDao.getMemberById(2L).orElseThrow(() -> new MemberNotExistException("멤버가 존재하지 않습니다."));
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

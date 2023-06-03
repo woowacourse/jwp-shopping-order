@@ -35,6 +35,6 @@ public class OrderApiController {
 
     @GetMapping("/orders/{id}")
     public ResponseEntity<OrderResponse> showOrder(Member member, @PathVariable(name = "id") final Long orderId) {
-        return ResponseEntity.ok(orderService.getOrderById(member.getId(), orderId));
+        return ResponseEntity.ok(orderService.getOrderById(orderId));
     }
 }
