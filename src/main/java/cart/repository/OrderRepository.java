@@ -4,6 +4,7 @@ import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.ProductDao;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.domain.order.Orders;
 import cart.entity.MemberEntity;
@@ -38,11 +39,11 @@ public class OrderRepository {
         this.orderDao = orderDao;
     }
 
-    public Orders findByMemberId(final Long memberId) {
-        final MemberEntity orderOwner = memberDao.getMemberById(memberId).orElseThrow(
-                () -> new IllegalArgumentException(memberId + "id를 가진 멤버를 찾을 수 없습니다.")
+    public Orders findByMember(final Member member) {
+        final MemberEntity orderOwner = memberDao.getMemberById(member.getId()).orElseThrow(
+                () -> new IllegalArgumentException(member.getId() + "id를 가진 멤버를 찾을 수 없습니다.")
         );
-        final List<OrderEntity> orderEntities = orderDao.findOrderByMemberId(memberId);
+        final List<OrderEntity> orderEntities = orderDao.findOrderByMemberId(member.getId());
 
         if (orderEntities.isEmpty()) {
             return new Orders(Collections.emptyList());

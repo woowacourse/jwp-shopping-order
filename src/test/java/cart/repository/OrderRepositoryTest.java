@@ -124,6 +124,7 @@ class OrderRepositoryTest {
     @Test
     void 유저의_전체_주문_목록을_조회할_수_있다() {
         // given
+        final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
         final MemberEntity memberEntity = new MemberEntity(1L, "a@a.com", "1234");
         final OrderEntity orderEntity = new OrderEntity(1L, 1L,
                 Timestamp.valueOf(LocalDateTime.of(2023, 6, 1, 12, 41, 0)));
@@ -138,7 +139,7 @@ class OrderRepositoryTest {
         given(productDao.getProductGroupById(List.of(1L))).willReturn(productGroupById);
 
         // when
-        final Orders orders = orderRepository.findByMemberId(1L);
+        final Orders orders = orderRepository.findByMember(member);
 
         // then
         assertThat(orders).usingRecursiveComparison().isEqualTo(new Orders(
@@ -151,11 +152,12 @@ class OrderRepositoryTest {
     @Test
     void 유저의_전체_주문_목록이_없을_때_조회하면_빈_주문을_반환한다() {
         // given
+        final Member member = new Member(1L, new Email("a@a.com"), new Password("1234"));
         given(memberDao.getMemberById(1L)).willReturn(Optional.of(new MemberEntity(1L, "a@a.com", "1234")));
         given(orderDao.findOrderByMemberId(1L)).willReturn(Collections.emptyList());
 
         // when
-        assertThat(orderRepository.findByMemberId(1L)).usingRecursiveComparison()
+        assertThat(orderRepository.findByMember(member)).usingRecursiveComparison()
                 .isEqualTo(new Orders(Collections.emptyList()));
     }
 }
