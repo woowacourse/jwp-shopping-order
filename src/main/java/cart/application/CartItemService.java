@@ -8,7 +8,7 @@ import cart.domain.respository.product.ProductRepository;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
 import cart.dto.response.CartItemResponse;
-import cart.exception.CartItemException;
+import cart.exception.CartItemException.CartItemNotExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -33,13 +33,13 @@ public class CartItemService {
 
     public CartItem add(Member member, CartItemRequest cartItemRequest) {
         final Product productById = productRepository.getProductById(cartItemRequest.getProductId())
-            .orElseThrow(() -> new CartItemException.CartItemNotExisctException("장바구니 상품이 존재하지 않습니다."));
+            .orElseThrow(() -> new CartItemNotExistException("장바구니 상품이 존재하지 않습니다."));
         return cartItemRepository.save(new CartItem(member, productById));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         final CartItem cartItem = cartItemRepository.findById(id)
-            .orElseThrow(() -> new CartItemException.CartItemNotExisctException("장바구니 상품이 존재하지 않습니다."));
+            .orElseThrow(() -> new CartItemNotExistException("장바구니 상품이 존재하지 않습니다."));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -53,7 +53,7 @@ public class CartItemService {
 
     public void remove(Member member, Long id) {
         final CartItem cartItem = cartItemRepository.findById(id)
-            .orElseThrow(() -> new CartItemException.CartItemNotExisctException("장바구니 상품이 존재하지 않습니다."));
+            .orElseThrow(() -> new CartItemNotExistException("장바구니 상품이 존재하지 않습니다."));
 
         cartItem.checkOwner(member);
 

@@ -3,7 +3,7 @@ package cart.domain;
 import cart.domain.order.Order;
 import cart.domain.order.OrderItem;
 import cart.domain.order.OrderItems;
-import cart.exception.CartItemException.CartItemNotExisctException;
+import cart.exception.CartItemException.CartItemNotExistException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +23,7 @@ public class CartItems {
 
     public void buy(final CartItem cartItem) {
         final CartItem findCartItem = get(cartItem.getProduct().getId(), cartItem.getQuantity())
-            .orElseThrow(() -> new CartItemNotExisctException("해당 상품이 장바구니에 없습니다."));
+            .orElseThrow(() -> new CartItemNotExistException("해당 상품이 장바구니에 없습니다."));
         purchaseItems.add(findCartItem);
     }
 

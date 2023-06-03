@@ -16,9 +16,9 @@ public class CartItemException extends RuntimeException {
         }
     }
 
-    public static class CartItemNotExisctException extends CartItemException {
+    public static class CartItemNotExistException extends CartItemException {
 
-        public CartItemNotExisctException(String message) {
+        public CartItemNotExistException(String message) {
             super(message);
         }
     }
