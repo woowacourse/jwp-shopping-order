@@ -2,13 +2,16 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.dao.MemberEntity;
+import cart.domain.CartItem;
 import cart.domain.member.Email;
 import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
 import cart.dto.ProductRequest;
 import cart.repository.MemberRepository;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,13 +67,33 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("장바구니에 아이템을 추가한다.")
     @Test
     void addCartItem() {
+        //given
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
+
+        //when
         ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        //then
+        final ExtractableResponse<Response> cartResponse = requestGetCartItems(member);
+        final List<CartItemResponse> cartItemResponses = cartResponse.as(new TypeRef<>() {
+        });
+
+        assertSoftly(softly -> {
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+            softly.assertThat(cartItemResponses).usingRecursiveComparison()
+                    .isEqualTo(List.of(
+                            CartItemResponse.of(new CartItem(
+                                    1L,
+                                    1,
+                                    new Product(productId, "치킨", 10_000, "http://example.com/chicken.jpg"),
+                                    member)
+                            )
+                    ));
+        });
+
     }
 
-    @DisplayName("장바구니에 아이템을 두 번 추가한다.")
+    @DisplayName("장바구니에 아이템을 두 번 추가하면 예외가 발생한다.")
     @Test
     void addCartItemTwice() {
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
