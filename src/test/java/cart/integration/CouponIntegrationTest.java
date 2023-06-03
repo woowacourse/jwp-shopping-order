@@ -44,7 +44,7 @@ public class CouponIntegrationTest extends IntegrationTest {
 
     @DisplayName("사용자에게 쿠폰을 발급할 수 있다.")
     @Test
-    void postCouponToMember() {
+    void publishCouponToMember() {
         // given
         final Long couponId = 1L;
 
@@ -57,7 +57,7 @@ public class CouponIntegrationTest extends IntegrationTest {
         final CouponResponse couponResponse = couponResponses.stream()
                 .filter(it -> it.getCouponId().equals(couponId))
                 .findAny().orElseThrow(NoSuchElementException::new);
-        assertThat(couponResponse.isPublished()).isTrue();
+        assertThat(couponResponse.getIsPublished()).isTrue();
     }
 
     private ExtractableResponse<Response> getCouponsResponse() {

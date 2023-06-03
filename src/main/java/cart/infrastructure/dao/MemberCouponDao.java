@@ -1,17 +1,21 @@
 package cart.infrastructure.dao;
 
 import cart.entity.MemberCouponEntity;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberCouponDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     private final RowMapper<MemberCouponEntity> rowMapper = (rs, rowNum) ->
             MemberCouponEntity.of(
@@ -23,6 +27,18 @@ public class MemberCouponDao {
 
     public MemberCouponDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member_coupon")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("is_used", "member_id", "coupon_id");
+    }
+
+    public void create(final Long couponId, final Long memberId) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("is_used", false);
+        params.put("member_id", memberId);
+        params.put("coupon_id", couponId);
+        simpleJdbcInsert.execute(params);
     }
 
     public Optional<MemberCouponEntity> findByCouponIdAndMemberId(final Long couponId, final Long memberId) {

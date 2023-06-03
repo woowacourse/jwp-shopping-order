@@ -33,7 +33,7 @@ public class CouponResponse {
         return discountAmount;
     }
 
-    public boolean isPublished() {
+    public boolean getIsPublished() {
         return isPublished;
     }
 }

@@ -34,4 +34,8 @@ public class CouponService {
         }
         return couponResponses;
     }
+
+    public void publish(final Member member, final Long id) {
+        memberCouponRepository.create(id, member.getId());
+    }
 }

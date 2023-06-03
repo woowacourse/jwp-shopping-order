@@ -22,6 +22,11 @@ public class JdbcMemberCouponRepository implements MemberCouponRepository {
     }
 
     @Override
+    public void create(final Long couponId, final Long memberId) {
+        memberCouponDao.create(couponId, memberId);
+    }
+
+    @Override
     public MemberCoupon findByCouponIdAndMemberId(final Long couponId, final Long memberId) {
         final MemberCouponEntity memberCouponEntity = memberCouponDao.findByCouponIdAndMemberId(couponId, memberId)
                 .orElseThrow(NoSuchElementException::new);

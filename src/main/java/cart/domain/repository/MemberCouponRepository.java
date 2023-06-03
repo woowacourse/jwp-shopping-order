@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface MemberCouponRepository {
 
+    void create(Long couponId, Long memberId);
+
     MemberCoupon findByCouponIdAndMemberId(final Long couponId, final Long memberId);
 
     List<Long> findCouponIdsByMemberId(final Long memberId);
