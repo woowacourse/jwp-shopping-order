@@ -93,7 +93,7 @@ class CartItemRepositoryTest extends RepositoryTestConfig {
 
         // then
         assertThatThrownBy(() -> cartItemRepository.findByCartItemId(장바구니_상품_식별자값))
-                .isInstanceOf(CartItemException.NotExists.class);
+                .isInstanceOf(CartItemException.NotFound.class);
     }
 
     @Test

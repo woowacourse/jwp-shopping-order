@@ -6,18 +6,6 @@ public class OrderException extends RuntimeException {
         super(message);
     }
 
-    public static class NotEnoughPoint extends OrderException {
-
-        public NotEnoughPoint() {
-            super("사용할 포인트가 부족합니다.");
-        }
-    }
-    public static class NotEnoughMoney extends OrderException {
-
-        public NotEnoughMoney() {
-            super("주문에 필요한 금액이 부족합니다.");
-        }
-    }
     public static class NotFound extends OrderException {
 
         public NotFound() {

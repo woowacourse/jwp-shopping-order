@@ -26,7 +26,7 @@ public class CartItemRepository {
 
     public CartItem findByCartItemId(Long cartItemId) {
         return cartItemDao.findByCartItemId(cartItemId)
-                .orElseThrow(CartItemException.NotExists::new);
+                .orElseThrow(CartItemException.NotFound::new);
     }
 
     public CartItems findByCartItemIds(List<Long> cartItemIds) {

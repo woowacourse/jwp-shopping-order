@@ -22,13 +22,13 @@ public class MemberRepository {
 
     public Member findByMemberId(Long memberId) {
         return memberDao.getByMemberId(memberId)
-                .orElseThrow(MemberException.NotExist::new)
+                .orElseThrow(MemberException.NotFound::new)
                 .toDomain();
     }
 
     public Member findByMemberEmail(String email) {
         return memberDao.getByMemberEmail(email)
-                .orElseThrow(MemberException.NotExist::new)
+                .orElseThrow(MemberException.NotFound::new)
                 .toDomain();
     }
 

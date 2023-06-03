@@ -31,7 +31,7 @@ public class MemberDaoFixture {
 
     public Member 회원을_조회한다(Long 회원_식별자값) {
         return memberDao.getByMemberId(회원_식별자값)
-                .orElseThrow(MemberException.NotExist::new)
+                .orElseThrow(MemberException.NotFound::new)
                 .toDomain();
     }
 }

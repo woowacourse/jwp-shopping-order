@@ -6,9 +6,9 @@ public class MemberException extends RuntimeException {
         super(message);
     }
 
-    public static class NotExist extends MemberException {
+    public static class NotFound extends MemberException {
 
-        public NotExist() {
+        public NotFound() {
             super("존재하지 않는 회원입니다.");
         }
     }
