@@ -30,10 +30,10 @@ public class PointRepository {
         return new Point(pointEntity.getPoint());
     }
 
-    public void update(Point usePoint, Point savePoint, Order order) {
+    public void update(Point usePoint, Point savePoint, Order order, Point newPoint) {
         Point updatePoint = savePoint.subtract(usePoint);
 
-        pointDao.update(toPointEntity(order, updatePoint));
+        pointDao.update(toPointEntity(order, newPoint));
         pointHistoryDao.save(toPointHistoryEntity(order, usePoint, savePoint));
     }
 

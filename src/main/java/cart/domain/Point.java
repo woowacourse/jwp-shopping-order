@@ -39,6 +39,11 @@ public class Point {
         return new Point(this.point - usePoint.point);
     }
 
+    public Point getNewPoint(Point savePoint, Point usePoint) {
+        int newPoint = this.point + savePoint.point - usePoint.point;
+        return new Point(newPoint);
+    }
+
     public int point() {
         return point;
     }

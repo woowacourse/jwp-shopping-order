@@ -33,10 +33,17 @@ public class PointService {
 
 
     public void savePoint(Point usePoint, Order order) {
+
         Price realPrice = order.getTotalPrice()
                 .subtract(usePoint);
         Point savePoint = Point.makePointFrom(realPrice);
-        pointRepository.update(usePoint, savePoint, order);
+
+        Point memberPoint = pointRepository.getPointByMemberId(order.getMember().getId());
+
+        Point newPoint = memberPoint.getNewPoint(savePoint, usePoint);
+
+
+        pointRepository.update(usePoint, savePoint, order, newPoint);
     }
 
     public OrderPointResponse findSavedPointByOrderId(Long orderId) {

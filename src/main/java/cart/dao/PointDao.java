@@ -32,7 +32,7 @@ public class PointDao {
     }
 
     public void update(PointEntity pointEntity) {
-        String sql = "UPDATE point SET point = point + ? WHERE member_id = ? ";
+        String sql = "UPDATE point SET point = ? WHERE member_id = ? ";
         jdbcTemplate.update(sql, pointEntity.getPoint(), pointEntity.getMemberId());
     }
 }
