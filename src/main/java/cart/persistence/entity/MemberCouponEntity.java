@@ -4,6 +4,7 @@ import cart.domain.Member;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.MemberCoupon;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class MemberCouponEntity {
 
@@ -39,7 +40,7 @@ public class MemberCouponEntity {
                 coupon.getId(),
                 memberCoupon.isUsed(),
                 Timestamp.valueOf(memberCoupon.getExpiredAt()),
-                Timestamp.valueOf(memberCoupon.getCreatedAt())
+                (Objects.nonNull(memberCoupon.getCreatedAt())) ? Timestamp.valueOf(memberCoupon.getCreatedAt()) : null
         );
     }
 

@@ -4,6 +4,7 @@ import cart.domain.Member;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class OrderEntity {
 
@@ -32,8 +33,14 @@ public class OrderEntity {
     public static OrderEntity from(final Order order) {
         Member member = order.getMember();
         MemberCoupon memberCoupon = order.getMemberCoupon();
-        return new OrderEntity(order.getId(), member.getId(), memberCoupon.getId(), order.getShippingFee().getValue(),
-                order.getTotalOrderPrice(), Timestamp.valueOf(order.getCreatedAt()));
+        return new OrderEntity(
+                order.getId(),
+                member.getId(),
+                memberCoupon.getId(),
+                order.getShippingFee().getValue(),
+                order.getTotalOrderPrice(),
+                (Objects.nonNull(order.getCreatedAt()) ? Timestamp.valueOf(order.getCreatedAt()) : null)
+        );
     }
 
     public Long getId() {
