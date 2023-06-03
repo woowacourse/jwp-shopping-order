@@ -27,7 +27,7 @@ public class OrderService {
     public OrderResponse add(Member member, OrderRequest orderRequest) {
         List<OrderItem> orderItems = orderRequest.getOrderItems().stream()
                 .map(orderItemRequest -> {
-                    Product product = productDao.getProductById(orderItemRequest.getProductId());
+                    Product product = productDao.getProductById(orderItemRequest.getId());
                     return new OrderItem(product, orderItemRequest.getQuantity());
                 })
                 .collect(Collectors.toList());

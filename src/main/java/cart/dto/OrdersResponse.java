@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 
 public class OrdersResponse {
 
-    private List<OrderResponse> ordersResponse;
+    private List<OrderResponse> orders;
 
     public OrdersResponse() {
     }
 
-    private OrdersResponse(List<OrderResponse> ordersResponse) {
-        this.ordersResponse = ordersResponse;
+    private OrdersResponse(List<OrderResponse> orders) {
+        this.orders = orders;
     }
 
     public static OrdersResponse of(List<Order> orders) {
@@ -23,7 +23,7 @@ public class OrdersResponse {
         return new OrdersResponse(ordersResponse);
     }
 
-    public List<OrderResponse> getOrdersResponse() {
-        return ordersResponse;
+    public List<OrderResponse> getOrders() {
+        return orders;
     }
 }

@@ -24,7 +24,7 @@ public class OrderApiController {
     public ResponseEntity<OrderResponse> addOrder(Member member, @RequestBody OrderRequest orderRequest) {
         OrderResponse orderResponse = orderService.add(member, orderRequest);
 
-        return ResponseEntity.created(URI.create("/order/" + orderResponse.getId())).body(orderResponse);
+        return ResponseEntity.created(URI.create("/order/" + orderResponse.getOrderId())).body(orderResponse);
     }
 
     @GetMapping("/{orderId}")

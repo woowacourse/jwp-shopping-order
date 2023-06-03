@@ -2,16 +2,16 @@ package cart.dto;
 
 public class OrderItemRequest {
 
-    private final Long productId;
+    private final Long id;
     private final int quantity;
 
-    public OrderItemRequest(Long productId, int quantity) {
-        this.productId = productId;
+    public OrderItemRequest(Long id, int quantity) {
+        this.id = id;
         this.quantity = quantity;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getId() {
+        return id;
     }
 
     public int getQuantity() {
