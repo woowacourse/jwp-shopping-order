@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface MemberCouponRepository {
 
+    long create(MemberCoupon memberCoupon);
+    
     List<MemberCoupon> findValidCouponsByMember(Member member);
 
     Optional<MemberCoupon> findById(long id);

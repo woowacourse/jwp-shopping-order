@@ -63,6 +63,10 @@ public class MemberCoupon {
         return coupon;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
     public boolean isUsed() {
         return isUsed;
     }

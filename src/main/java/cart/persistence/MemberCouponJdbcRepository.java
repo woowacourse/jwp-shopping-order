@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.domain.coupon.MemberCoupon;
 import cart.persistence.dao.MemberCouponDao;
 import cart.persistence.dto.MemberCouponDetailDTO;
+import cart.persistence.entity.MemberCouponEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,6 +18,12 @@ public class MemberCouponJdbcRepository implements MemberCouponRepository {
 
     public MemberCouponJdbcRepository(final MemberCouponDao memberCouponDao) {
         this.memberCouponDao = memberCouponDao;
+    }
+
+    @Override
+    public long create(final MemberCoupon memberCoupon) {
+        MemberCouponEntity entity = MemberCouponEntity.from(memberCoupon);
+        return memberCouponDao.create(entity);
     }
 
     @Override

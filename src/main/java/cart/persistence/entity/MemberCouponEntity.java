@@ -1,5 +1,8 @@
 package cart.persistence.entity;
 
+import cart.domain.Member;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
 import java.sql.Timestamp;
 
 public class MemberCouponEntity {
@@ -25,6 +28,19 @@ public class MemberCouponEntity {
         this.isUsed = isUsed;
         this.expiredAt = expiredAt;
         this.createdAt = createdAt;
+    }
+
+    public static MemberCouponEntity from(final MemberCoupon memberCoupon) {
+        Coupon coupon = memberCoupon.getCoupon();
+        Member member = memberCoupon.getMember();
+        return new MemberCouponEntity(
+                memberCoupon.getId(),
+                member.getId(),
+                coupon.getId(),
+                memberCoupon.isUsed(),
+                Timestamp.valueOf(memberCoupon.getExpiredAt()),
+                Timestamp.valueOf(memberCoupon.getCreatedAt())
+        );
     }
 
     public Long getId() {
