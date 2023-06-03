@@ -18,12 +18,14 @@ import cart.domain.Product;
 import cart.domain.Products;
 import cart.domain.vo.Amount;
 import cart.dto.CartItemRequest;
+import cart.dto.OrderListResponse;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.BusinessException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -147,5 +149,40 @@ class OrderServiceTest {
         //then
         assertThatThrownBy(() -> orderService.findOrder(3L))
             .isInstanceOf(BusinessException.class);
+    }
+
+    @Test
+    @DisplayName("회원 별 주문 목록 조회 구현")
+    void findOrderByMember() {
+        //given
+        final Order order2 = new Order(2L, new Products(List.of(product1, product2)),
+            Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), Amount.of(29_000),
+            Amount.of(3_000), "address");
+        final List<Order> orders = List.of(order, order2);
+        given(orderDao.findByMember(any(Member.class)))
+            .willReturn(orders);
+
+        //when
+        final List<OrderListResponse> responses = orderService.findOrder(member);
+
+        //then
+        final List<OrderListResponse> expectedResponse = orders.stream()
+            .map(order -> {
+                final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(order);
+                return new OrderListResponse(order.getId(), orderProductResponses);
+            })
+            .collect(Collectors.toUnmodifiableList());
+        assertThat(responses).usingRecursiveComparison().isEqualTo(expectedResponse);
+    }
+
+    private List<OrderProductResponse> makeOrderProductResponses(final Order order) {
+        final List<Product> products = order.getProducts().getValue();
+        return products.stream()
+            .map(it -> {
+                final int quantity = productOrderDao.count(it.getId(), order.getId());
+                return new OrderProductResponse(it.getId(), it.getName(), it.getAmount().getValue(), it.getImageUrl(),
+                    quantity);
+            })
+            .collect(Collectors.toUnmodifiableList());
     }
 }

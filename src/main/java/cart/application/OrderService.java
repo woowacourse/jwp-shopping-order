@@ -12,6 +12,7 @@ import cart.domain.Product;
 import cart.domain.Products;
 import cart.domain.vo.Amount;
 import cart.dto.CartItemRequest;
+import cart.dto.OrderListResponse;
 import cart.dto.OrderProductResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
@@ -124,6 +125,16 @@ public class OrderService {
                 final int quantity = productOrderDao.count(it.getId(), order.getId());
                 return new OrderProductResponse(it.getId(), it.getName(), it.getAmount().getValue(), it.getImageUrl(),
                     quantity);
+            })
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<OrderListResponse> findOrder(final Member member) {
+        final List<Order> orders = orderDao.findByMember(member);
+        return orders.stream()
+            .map(order -> {
+                final List<OrderProductResponse> orderProductResponses = makeOrderProductResponses(order);
+                return new OrderListResponse(order.getId(), orderProductResponses);
             })
             .collect(Collectors.toUnmodifiableList());
     }
