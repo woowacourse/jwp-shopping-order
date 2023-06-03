@@ -13,16 +13,13 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private final CredentialDao credentialDao;
     private final BasicAuthorizationParser basicAuthorizationParser;
-    private final CredentialThreadLocal credentialThreadLocal;
 
     public AuthInterceptor(
             final CredentialDao credentialDao,
-            final BasicAuthorizationParser basicAuthorizationParser,
-            final CredentialThreadLocal credentialThreadLocal
+            final BasicAuthorizationParser basicAuthorizationParser
     ) {
         this.credentialDao = credentialDao;
         this.basicAuthorizationParser = basicAuthorizationParser;
-        this.credentialThreadLocal = credentialThreadLocal;
     }
 
     @Override
@@ -41,7 +38,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             throw new AuthenticationException();
         }
 
-        credentialThreadLocal.set(savedCredential);
         return true;
     }
 }

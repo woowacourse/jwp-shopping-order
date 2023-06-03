@@ -1,5 +1,7 @@
 package cart.auth;
 
+import cart.dao.CredentialDao;
+import cart.exception.auth.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -8,10 +10,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final CredentialThreadLocal credentialThreadLocal;
 
-    public AuthArgumentResolver(final CredentialThreadLocal credentialThreadLocal) {
-        this.credentialThreadLocal = credentialThreadLocal;
+    private final CredentialDao credentialDao;
+    private final BasicAuthorizationParser basicAuthorizationParser;
+
+    public AuthArgumentResolver(final CredentialDao credentialDao, final BasicAuthorizationParser basicAuthorizationParser) {
+        this.credentialDao = credentialDao;
+        this.basicAuthorizationParser = basicAuthorizationParser;
     }
 
     @Override
@@ -28,6 +33,10 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) {
-        return credentialThreadLocal.getAndClear();
+        final String authorizationHeader = webRequest.getHeader("Authorization");
+        final Credential credential = basicAuthorizationParser.parse(authorizationHeader);
+        return credentialDao.findByEmail(credential.getEmail())
+                .orElseThrow(() -> new AuthenticationException("올바르지 않은 이메일입니다. 입력값: " + credential.getEmail()));
+
     }
 }
