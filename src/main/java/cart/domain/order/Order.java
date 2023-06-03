@@ -37,7 +37,7 @@ public class Order {
     }
 
     public static Order of(final Member member, final CartItems cartItems, final MemberCoupon memberCoupon) {
-        cartItems.checkOwner(member);
+        validateCartItems(member, cartItems);
         validateCoupon(member, cartItems, memberCoupon);
 
         List<OrderItem> orderItems = cartItems.getCartItems().stream()
@@ -50,6 +50,11 @@ public class Order {
         int totalOrderPrice = totalProductPrice - discountPrice + shippingFee.getValue();
 
         return new Order(member, memberCoupon, orderItems, shippingFee, totalOrderPrice);
+    }
+
+    private static void validateCartItems(final Member member, final CartItems cartItems) {
+        cartItems.checkNotEmpty();
+        cartItems.checkOwner(member);
     }
 
     private static void validateCoupon(final Member member, final CartItems cartItems,

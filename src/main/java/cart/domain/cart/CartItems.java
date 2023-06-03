@@ -9,11 +9,10 @@ public class CartItems {
     private final List<CartItem> cartItems;
 
     public CartItems(final List<CartItem> cartItems) {
-        validate(cartItems);
         this.cartItems = cartItems;
     }
 
-    private void validate(final List<CartItem> cartItems) {
+    public void checkNotEmpty() {
         if (cartItems.isEmpty()) {
             throw new StoreException("장바구니 상품이 없습니다.");
         }

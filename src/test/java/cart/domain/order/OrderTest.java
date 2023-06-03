@@ -16,6 +16,7 @@ import cart.fixture.MemberFixture.Member_test2;
 import cart.fixture.ProductFixture.치킨_15000원;
 import cart.fixture.ProductFixture.피자_20000원;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -47,6 +48,17 @@ class OrderTest {
                 // when then
                 assertThatThrownBy(() -> Order.of(member, cartItems, memberCoupon))
                         .isInstanceOf(ForbiddenException.class);
+            }
+
+            @Test
+            void 장바구니가_비어있으면_예외발생() {
+                // given
+                cartItems = new CartItems(Collections.emptyList());
+
+                // when then
+                assertThatThrownBy(() -> Order.of(member, cartItems, memberCoupon))
+                        .isInstanceOf(StoreException.class)
+                        .hasMessage("장바구니 상품이 없습니다.");
             }
         }
 
