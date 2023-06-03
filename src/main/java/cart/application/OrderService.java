@@ -37,7 +37,8 @@ public class OrderService {
     public long issue(Member member, OrderRequest request) {
         Order order = new Order(null, member, makeOrderInfosFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
-        order.adjustPoint();
+        order.usePoint();
+        order.earnPoint();
         memberRepository.update(order.getMember());
         Order inserted = orderRepository.insert(order);
         cartItemRepository.deleteByMemberId(member.getId());

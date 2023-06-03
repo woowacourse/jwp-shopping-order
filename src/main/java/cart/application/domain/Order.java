@@ -23,11 +23,6 @@ public class Order {
         this.pointToAdd = pointToAdd;
     }
 
-    public void adjustPoint() {
-        usePoint();
-        earnPoint();
-    }
-
     public void usePoint() {
         long availablePoint = orderInfos.calculateAvailablePoint();
         if (availablePoint < usedPoint) {
