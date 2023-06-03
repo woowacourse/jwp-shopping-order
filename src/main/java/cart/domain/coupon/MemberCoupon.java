@@ -15,7 +15,7 @@ public class MemberCoupon {
     private final LocalDateTime expiredAt;
     private final LocalDateTime createdAt;
 
-    public MemberCoupon(final Coupon coupon, final LocalDateTime expiredAt, final Member member) {
+    public MemberCoupon(final Coupon coupon, final Member member, final LocalDateTime expiredAt) {
         this(null, coupon, member, false, expiredAt, null);
     }
 
@@ -28,6 +28,10 @@ public class MemberCoupon {
         this.isUsed = isUsed;
         this.expiredAt = expiredAt;
         this.createdAt = createdAt;
+    }
+
+    public static MemberCoupon none(final Member member) {
+        return new MemberCoupon(Coupon.none(), member, LocalDateTime.MAX);
     }
 
     public boolean isApplicable(final CartItems cartItems) {

@@ -11,7 +11,11 @@ public class CouponInfo {
         this.minOrderPrice = minOrderPrice;
         this.maxDiscountPrice = maxDiscountPrice;
     }
-    
+
+    public static CouponInfo none() {
+        return new CouponInfo("", 0, 0);
+    }
+
     public String getName() {
         return name;
     }
