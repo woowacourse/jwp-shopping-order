@@ -57,8 +57,9 @@ public class OrderIntegrationTest extends IntegrationTest {
         memberDao.updatePoints(1000L, member);
         memberDao.updatePoints(300L, member2);
 
-//        createOrder(member, List.of(1, 2), 400);
-//        createOrder(member2, List.of(3), 200);
+        createOrder(member, List.of(1, 2), 400);
+        createOrder(member, List.of(4), 100);
+        createOrder(member, List.of(3), 10);
 
         getOrders(member);
     }
@@ -68,7 +69,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     void getOrderDetail() {
         member = memberDao.getMemberByEmail("kangsj9665@gmail.com").get();
 
-        getOrderDetails(member, 22L);
+        getOrderDetails(member, 1L);
     }
 
     private void createOrder(Member member, List<Integer> cartItemIds, int point) {

@@ -2,10 +2,8 @@ package cart.service;
 
 import cart.dao.*;
 import cart.domain.*;
-import cart.dto.OrderItemResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
-import cart.dto.ProductResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.InvalidCardException;
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,44 +73,28 @@ public class OrderService {
     }
 
     public List<OrderResponse> findAll(Long id) {
-        List<OrderResponseEntity> orderResponseEntities = shoppingOrderDao.findAll(id);
-        return getOrderResponse(orderResponseEntities);
+        List<Order> orders = shoppingOrderDao.findAll(id);
+
+        List<Order> groupedOrders = groupOrderList(orders);
+        groupedOrders.forEach(Order::calculateSavedPoint);
+        List<OrderResponse> orderResponses = groupedOrders.stream()
+                .map(OrderResponse::of)
+                .collect(Collectors.toList());
+        return orderResponses;
     }
 
-    private List<OrderResponse> getOrderResponse(List<OrderResponseEntity> orderResponseEntities) {
-        Map<Long, OrderResponse> orderMap = new HashMap<>();
-        for (OrderResponseEntity entity : orderResponseEntities) {
-            Long orderId = entity.getOrderId();
-            Long usedPoint = entity.getUsedPoint();
-            LocalDateTime orderedAt = entity.getOrderedAt();
-            orderMap.put(orderId, new OrderResponse(orderId, usedPoint, null, orderedAt, new ArrayList<>()));
-        }
+    private List<Order> groupOrderList(List<Order> orders) {
+        Map<List<Object>, List<Order>> groupedOrders = orders.stream()
+                .collect(Collectors.groupingBy(order -> Arrays.asList(order.getId(), order.getMember(), order.getOrderedAt(), order.getUsedPoint())));
 
-        for (OrderResponseEntity entity : orderResponseEntities) {
-            Long orderId = entity.getOrderId();
-            Long orderItemId = entity.getOrderItemId();
-            Integer quantity = entity.getQuantity();
-            Long productId = entity.getProductId();
-            String productName = entity.getProductName();
-            Integer productPrice = entity.getProductPrice();
-            String productImageUrl = entity.getProductImageUrl();
+        return groupedOrders.values().stream().map(group -> {
+            Order firstOrder = group.get(0);
+            OrderedItems mergedItems = group.stream()
+                    .map(Order::getOrderedItems)
+                    .reduce(new OrderedItems(new ArrayList<>()), OrderedItems::merge);
 
-            ProductResponse productResponse = new ProductResponse(productId, productName, productPrice, productImageUrl);
-
-            OrderItemResponse orderItemResponse = new OrderItemResponse(orderItemId, quantity, productResponse);
-
-            orderMap.get(orderId).getProducts().add(orderItemResponse);
-        }
-
-        for (OrderResponse response : orderMap.values()) {
-            long totalPrice = response.getProducts().stream()
-                    .mapToLong(detailOrder -> detailOrder.getQuantity() * detailOrder.getProductResponse().getPrice())
-                    .sum();
-            long usedPoint = response.getUsedPoint();
-            Point savingPoint = PointEarningPolicy.calculateSavingPoints(totalPrice - usedPoint);
-            response.setSavedPoint(savingPoint.getValue());
-        }
-        return new ArrayList<>(orderMap.values());
+            return new Order(firstOrder.getId(), firstOrder.getMember(), firstOrder.getOrderedAt(), firstOrder.getUsedPoint(), mergedItems);
+        }).collect(Collectors.toList());
     }
 
     public OrderResponse findById(Member member, Long id) {
@@ -121,28 +103,14 @@ public class OrderService {
             throw new IllegalArgumentException("로그인한 사용자의 주문 목록이 아닙니다");
         }
 
-        List<OrderResponseEntity> detailOrders = shoppingOrderDao.findById(id);
-        long totalPrice = detailOrders.stream()
-                .mapToLong(detailOrder -> detailOrder.getQuantity() * detailOrder.getProductPrice())
-                .sum();
-        long usedPoint = detailOrders.get(0).getUsedPoint();
-        Point savingPoint = PointEarningPolicy.calculateSavingPoints(totalPrice - usedPoint);
-        long orderId = detailOrders.get(0).getOrderId();
-        LocalDateTime orderedAt = detailOrders.get(0).getOrderedAt();
+        List<Order> orders = shoppingOrderDao.findById(id);
+        Order firstOrder = orders.get(0);
+        OrderedItems mergedItems = orders.stream()
+                .map(Order::getOrderedItems)
+                .reduce(new OrderedItems(new ArrayList<>()), OrderedItems::merge);
+        Order order = new Order(firstOrder.getId(), firstOrder.getMember(), firstOrder.getOrderedAt(), firstOrder.getUsedPoint(), mergedItems);
+        order.calculateSavedPoint();
 
-        List<OrderItemResponse> orderItems = new ArrayList<>();
-
-        for (OrderResponseEntity detailOrder : detailOrders) {
-            Long orderItemId = detailOrder.getOrderItemId();
-            Integer quantity = detailOrder.getQuantity();
-            Long productId = detailOrder.getProductId();
-            String productName = detailOrder.getProductName();
-            Integer productPrice = detailOrder.getProductPrice();
-            String productImageUrl = detailOrder.getProductImageUrl();
-
-            OrderItemResponse orderItem = new OrderItemResponse(orderItemId, quantity, new ProductResponse(productId, productName, productPrice, productImageUrl));
-            orderItems.add(orderItem);
-        }
-        return new OrderResponse(orderId, usedPoint, savingPoint.getValue(), orderedAt, orderItems);
+        return OrderResponse.of(order);
     }
 }

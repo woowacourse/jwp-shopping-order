@@ -1,22 +1,33 @@
 package cart.dto;
 
+import cart.domain.Order;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderResponse {
     private final Long id;
     private final Long usedPoint;
     private final LocalDateTime orderedAt;
-    private final List<OrderItemResponse> products;
+    private final List<OrderedItemResponse> products;
 
     private Long savedPoint;
 
-    public OrderResponse(Long id, Long usedPoint, Long savedPoint, LocalDateTime orderedAt, List<OrderItemResponse> products) {
+    public OrderResponse(Long id, Long usedPoint, Long savedPoint, LocalDateTime orderedAt, List<OrderedItemResponse> products) {
         this.id = id;
         this.usedPoint = usedPoint;
         this.savedPoint = savedPoint;
         this.orderedAt = orderedAt;
         this.products = products;
+    }
+
+    public static OrderResponse of(Order order) {
+        List<OrderedItemResponse> orderedItemResponses = order.getOrderedItems().getOrderedItems().stream()
+                .map(OrderedItemResponse::of)
+                .collect(Collectors.toList());
+        return new OrderResponse(order.getId(), order.getUsedPoint().getValue(),
+                order.getSavedPoint().getValue(), order.getOrderedAt(), orderedItemResponses);
     }
 
     public Long getId() {
@@ -39,7 +50,7 @@ public class OrderResponse {
         return orderedAt;
     }
 
-    public List<OrderItemResponse> getProducts() {
+    public List<OrderedItemResponse> getProducts() {
         return products;
     }
 }

@@ -10,4 +10,29 @@ public class OrderedItem {
         this.product = product;
         this.quantity = quantity;
     }
+
+    public long calculateTotalPrice() {
+        return quantity * product.getPrice().getValue();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderedItem{" +
+                "id=" + id +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

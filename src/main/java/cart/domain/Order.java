@@ -12,6 +12,8 @@ public class Order {
     private final Point usedPoint;
     private final OrderedItems orderedItems;
 
+    private Point savedPoint;
+
     public Order(Member member, LocalDateTime orderedAt, Point usedPoint) {
         this.id = null;
         this.member = member;
@@ -34,6 +36,11 @@ public class Order {
         }
     }
 
+    public void calculateSavedPoint() {
+        long totalPrice = orderedItems.calculateTotalPrice();
+        this.savedPoint = PointEarningPolicy.calculateSavingPoints(totalPrice - usedPoint.getValue());
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,7 +57,23 @@ public class Order {
         return usedPoint;
     }
 
+    public Point getSavedPoint() {
+        return savedPoint;
+    }
+
     public OrderedItems getOrderedItems() {
         return orderedItems;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", member=" + member +
+                ", orderedAt=" + orderedAt +
+                ", usedPoint=" + usedPoint +
+                ", orderedItems=" + orderedItems +
+                ", savedPoint=" + savedPoint +
+                '}';
     }
 }
