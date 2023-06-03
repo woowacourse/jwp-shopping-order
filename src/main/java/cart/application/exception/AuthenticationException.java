@@ -1,6 +1,6 @@
 package cart.application.exception;
 
-public class AuthenticationException extends RuntimeException {
+public class AuthenticationException extends ExpectedException {
 
     private static final String MESSAGE = "인증 오류가 발생했습니다.";
 

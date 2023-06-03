@@ -1,6 +1,6 @@
 package cart.application.exception;
 
-public class ExceedOwnedPointException extends RuntimeException {
+public class ExceedOwnedPointException extends ExpectedException {
 
     private static final String MESSAGE = "보유한 포인트보다 많은 포인트를 사용할 수 없습니다.";
 
