@@ -8,8 +8,8 @@ import cart.domain.coupon.policy.PercentDiscountPolicy;
 
 public enum CouponType {
     NONE(new NonePolicy()),
-    PERCENT(new PercentDiscountPolicy()),
-    AMOUNT(new AmountDiscountPolicy()),
+    FIXED_PERCENTAGE(new PercentDiscountPolicy()),
+    FIXED_AMOUNT(new AmountDiscountPolicy()),
     ;
 
     private final DiscountPolicy discountPolicy;

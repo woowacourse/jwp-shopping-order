@@ -22,7 +22,7 @@ class CouponTest {
         CartItems cartItems = Mockito.mock(CartItems.class);
         given(cartItems.calculateTotalProductPrice()).willReturn(totalPrice);
         CouponInfo couponInfo = new CouponInfo("1000원할인", minOrderPrice, 2000);
-        Coupon coupon = new Coupon(couponInfo, 1000, CouponType.AMOUNT);
+        Coupon coupon = new Coupon(couponInfo, 1000, CouponType.FIXED_AMOUNT);
 
         // when
         boolean result = coupon.isApplicable(cartItems);

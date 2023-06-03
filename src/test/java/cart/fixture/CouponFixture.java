@@ -12,7 +12,7 @@ public class CouponFixture {
         private static final String NAME = "1000원 할인쿠폰";
         private static final int MIN_ORDER_PRICE = 10_000;
         private static final int MAX_DISCOUNT_PRICE = 10_000;
-        private static final CouponType TYPE = CouponType.AMOUNT;
+        private static final CouponType TYPE = CouponType.FIXED_AMOUNT;
         private static final Integer DISCOUNT_AMOUNT = 1000;
         private static final Double DISCOUNT_PERCENT = null;
 
