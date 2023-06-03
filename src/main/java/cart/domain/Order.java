@@ -2,6 +2,7 @@ package cart.domain;
 
 import static java.util.stream.Collectors.toList;
 
+import cart.domain.util.DiscountCalculator;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -67,19 +68,12 @@ public class Order {
     }
 
     public Integer calculateCutPrice() {
-        Integer originalPrice = calculateTotalPrice();
-        Integer priceAfterDiscount = coupon.map(notNullCoupon -> applyDiscount(originalPrice, notNullCoupon))
-                .orElseGet(() -> originalPrice);
+        Integer originPrice = calculateTotalPrice();
+        Integer priceAfterDiscount = coupon
+                .map(notNullCoupon -> DiscountCalculator.calculatePriceAfterDiscount(originPrice, notNullCoupon))
+                .orElseGet(() ->  originPrice);
 
-        return originalPrice - priceAfterDiscount;
-    }
-
-    private int applyDiscount(final Integer originalPrice,
-                              final Coupon coupon) {
-        int priceAfterDiscount = originalPrice;
-        priceAfterDiscount -= (int) (priceAfterDiscount * (coupon.getDiscountRate() / PERCENTAGE));
-        priceAfterDiscount -= coupon.getDiscountPrice();
-        return priceAfterDiscount;
+        return  originPrice - priceAfterDiscount;
     }
 
     private int calculateOrderProduct(final OrderProduct orderProduct) {
