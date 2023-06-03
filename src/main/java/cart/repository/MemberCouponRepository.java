@@ -12,9 +12,9 @@ import cart.entity.CouponEntity;
 import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
 import cart.exception.CouponNotFoundException;
+import cart.exception.MemberCouponNotFoundException;
 import cart.exception.MemberNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -44,15 +44,13 @@ public class MemberCouponRepository {
     }
 
     public MemberCoupon findByIdAndMemberId(final Long memberCouponId, final Long memberId) {
-        Optional<MemberCouponEntity> findMemberCoupon = memberCouponDao.findMemberCouponByMemberIdAndCouponId(
-                memberId, memberCouponId);
+        MemberCouponEntity findMemberCoupon = memberCouponDao.findMemberCouponByMemberIdAndCouponId(
+                        memberId, memberCouponId)
+                .orElseThrow(MemberCouponNotFoundException::new);
 
-        if (findMemberCoupon.isEmpty()) {
-            return MemberCoupon.makeNonMemberCoupon();
-        }
         Member member = getMember(memberId);
-        Coupon coupon = getCoupon(findMemberCoupon.get().getCouponId());
-        return new MemberCoupon(findMemberCoupon.get().getId(), member, coupon, findMemberCoupon.get().getUsed());
+        Coupon coupon = getCoupon(findMemberCoupon.getCouponId());
+        return new MemberCoupon(findMemberCoupon.getId(), member, coupon, findMemberCoupon.getUsed());
     }
 
     private Member getMember(final Long memberId) {
