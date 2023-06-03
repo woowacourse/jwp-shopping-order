@@ -1,5 +1,6 @@
 package cart.application;
 
+import cart.dao.MemberCouponDao;
 import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupons;
@@ -13,7 +14,6 @@ import cart.exception.MemberCouponNotFoundException;
 import cart.exception.OrderCartMismatchException;
 import cart.exception.OrderNotFoundException;
 import cart.repository.CartItemRepository;
-import cart.repository.MemberCouponRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final MemberCouponRepository memberCouponRepository;
+    private final MemberCouponDao memberCouponDao;
     private final CartItemRepository cartItemRepository;
 
-    public OrderService(final OrderRepository orderRepository, final MemberCouponRepository memberCouponRepository, final CartItemRepository cartItemRepository) {
+    public OrderService(final OrderRepository orderRepository, final MemberCouponDao memberCouponDao, final CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
-        this.memberCouponRepository = memberCouponRepository;
+        this.memberCouponDao = memberCouponDao;
         this.cartItemRepository = cartItemRepository;
     }
 
@@ -55,14 +55,14 @@ public class OrderService {
     }
 
     private MemberCoupons usedCoupons(final Member member, final OrderItemRequest request) {
-        MemberCoupons requestCoupons = memberCouponRepository.findByIds(request.toMemberCouponIds());
-        MemberCoupons memberCoupons = memberCouponRepository.findByMemberId(member.getId()).getUnUsedCoupons();
+        MemberCoupons requestCoupons = new MemberCoupons(memberCouponDao.findByIds(request.toMemberCouponIds()));
+        MemberCoupons memberCoupons = new MemberCoupons(memberCouponDao.findByMemberId(member.getId()));
 
         if (memberCoupons.isNotContains(requestCoupons)) {
             throw new MemberCouponNotFoundException();
         }
 
-        memberCouponRepository.updateCoupons(requestCoupons.useCoupons(), member);
+        memberCouponDao.updateCoupon(requestCoupons.getCoupons(), member.getId());
         return requestCoupons;
     }
 

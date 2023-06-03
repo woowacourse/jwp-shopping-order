@@ -3,10 +3,9 @@ package cart.ui;
 import cart.application.CouponService;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.domain.member.MemberCoupons;
+import cart.domain.member.MemberCoupon;
 import cart.dto.coupon.CouponRequest;
 import cart.dto.coupon.CouponResponse;
-import cart.repository.MemberCouponRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,17 +18,15 @@ import java.util.stream.Collectors;
 public class CouponController {
 
     private final CouponService couponService;
-    private final MemberCouponRepository memberCouponRepository;
 
-    public CouponController(final CouponService couponService, final MemberCouponRepository memberCouponRepository) {
+    public CouponController(final CouponService couponService) {
         this.couponService = couponService;
-        this.memberCouponRepository = memberCouponRepository;
     }
 
     @GetMapping("/coupons")
     public ResponseEntity<List<CouponResponse>> showAllCoupons(Member member) {
-        MemberCoupons coupons = memberCouponRepository.findByMemberId(member.getId()).getUnUsedCoupons();
-        List<CouponResponse> couponResponses = coupons.getCoupons().stream()
+        List<MemberCoupon> memberCoupons = couponService.findMemberCouponsByMember(member);
+        List<CouponResponse> couponResponses = memberCoupons.stream()
                 .map(CouponResponse::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(couponResponses);
@@ -37,7 +34,7 @@ public class CouponController {
 
     @PostMapping("/coupon")
     public ResponseEntity<Void> addCoupon(@Valid @RequestBody Long couponId, Member member) {
-        memberCouponRepository.create(couponId, member.getId());
+        couponService.createMemberCoupons(member, couponId);
         return ResponseEntity.noContent().build();
     }
 

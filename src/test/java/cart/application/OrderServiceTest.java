@@ -1,11 +1,11 @@
 package cart.application;
 
+import cart.dao.MemberCouponDao;
 import cart.domain.cartItem.CartItem;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
-import cart.domain.member.MemberCoupons;
 import cart.domain.product.Product;
 import cart.dto.coupon.DiscountRequest;
 import cart.dto.coupon.MemberCouponRequest;
@@ -15,7 +15,6 @@ import cart.dto.order.OrderProductRequest;
 import cart.exception.MemberCouponNotFoundException;
 import cart.exception.OrderCartMismatchException;
 import cart.repository.CartItemRepository;
-import cart.repository.MemberCouponRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,7 +35,7 @@ class OrderServiceTest {
     @Mock
     private CartItemRepository cartItemRepository;
     @Mock
-    private MemberCouponRepository memberCouponRepository;
+    private MemberCouponDao memberCouponDao;
     @InjectMocks
     private OrderService orderService;
 
@@ -67,8 +66,8 @@ class OrderServiceTest {
         );
 
         OrderItemsRequests orderItemsRequests = new OrderItemsRequests(3000, List.of(request));
-        given(memberCouponRepository.findByIds(eq(List.of(2L)))).willReturn(new MemberCoupons(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(7L, "쿠폰", new Discount("rate", 10)), false)))));
-        given(memberCouponRepository.findByMemberId(eq(5L))).willReturn(new MemberCoupons(new ArrayList<>()));
+        given(memberCouponDao.findByIds(eq(List.of(2L)))).willReturn(new ArrayList<>(List.of(new MemberCoupon(2L, new Coupon(7L, "쿠폰", new Discount("rate", 10)), false))));
+        given(memberCouponDao.findByMemberId(eq(5L))).willReturn(new ArrayList<>());
         given(cartItemRepository.findByIds(eq(List.of(3L)))).willReturn(List.of(new CartItem(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
         given(cartItemRepository.findByMemberId(eq(5L))).willReturn(List.of(new CartItem(3L, 10, new Product(1L, "치킨", 10000, "https://chicken"), new Member(5L, "a@a.com", "1234"))));
 

@@ -3,7 +3,6 @@ package cart.dao;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.Discount;
 import cart.domain.member.MemberCoupon;
-import cart.domain.member.MemberCoupons;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -74,18 +73,16 @@ public class MemberCouponDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void updateCoupon(MemberCoupons memberCoupons, Long memberId) {
+    public void updateCoupon(List<MemberCoupon> memberCoupons, Long memberId) {
         if (memberCoupons.isEmpty()) {
             return;
         }
 
         String sql = "UPDATE member_coupon SET member_id = ?, coupon_id = ?, used = ? where id = ?";
 
-        List<MemberCoupon> coupons = memberCoupons.getCoupons();
-
         jdbcTemplate.batchUpdate(sql,
-                coupons,
-                coupons.size(),
+                memberCoupons,
+                memberCoupons.size(),
                 (PreparedStatement ps, MemberCoupon memberCoupon) -> {
                     ps.setLong(1, memberId);
                     ps.setLong(2, memberCoupon.getCoupon().getId());

@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.domain.member.MemberCoupon;
-import cart.domain.member.MemberCoupons;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +54,7 @@ class MemberCouponDaoTest {
         Long memberCouponId2 = memberCouponDao.create(1L, 3L);
         List<MemberCoupon> memberCoupons = memberCouponDao.findByIds(List.of(memberCouponId1, memberCouponId2));
         List<MemberCoupon> usedCoupons = memberCoupons.stream().map(MemberCoupon::use).collect(Collectors.toList());
-        memberCouponDao.updateCoupon(new MemberCoupons(usedCoupons), 1L);
+        memberCouponDao.updateCoupon(usedCoupons, 1L);
         List<MemberCoupon> coupons = memberCouponDao.findByIds(List.of(memberCouponId1, memberCouponId2));
         List<Boolean> collect = coupons.stream().map(MemberCoupon::isUsed).collect(Collectors.toList());
         Assertions.assertThat(collect).isEqualTo(List.of(true, true));
