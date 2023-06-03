@@ -74,7 +74,7 @@ public class Order {
     }
 
     public int calculateDiscountPrice() {
-        return calculateTotalProductPrice() - totalOrderPrice;
+        return calculateTotalProductPrice() + shippingFee.getValue() - totalOrderPrice;
     }
 
     public void checkOwner(final Member member) {
