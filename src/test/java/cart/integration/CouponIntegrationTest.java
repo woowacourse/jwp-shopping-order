@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
 import cart.domain.repository.MemberRepository;
+import cart.dto.response.CouponResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,11 +42,37 @@ public class CouponIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @DisplayName("사용자에게 쿠폰을 발급할 수 있다.")
+    @Test
+    void postCouponToMember() {
+        // given
+        final Long couponId = 1L;
+
+        // when
+        final ExtractableResponse<Response> response = postCoupon(couponId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        final List<CouponResponse> couponResponses = getCouponsResponse().jsonPath().getList(".", CouponResponse.class);
+        final CouponResponse couponResponse = couponResponses.stream()
+                .filter(it -> it.getCouponId().equals(couponId))
+                .findAny().orElseThrow(NoSuchElementException::new);
+        assertThat(couponResponse.isPublished()).isTrue();
+    }
+
     private ExtractableResponse<Response> getCouponsResponse() {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when().get("/coupons")
+                .then().extract();
+    }
+
+    private ExtractableResponse<Response> postCoupon(final Long id) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when().post("/coupons/" + id)
                 .then().extract();
     }
 }
