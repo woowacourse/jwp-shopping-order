@@ -4,12 +4,12 @@ public class OrderItem {
 
     private final Long cartItemId;
     private final int quantity;
-    private final Long productId;
+    private final long productId;
     private final int price;
     private final String name;
     private final String imageUrl;
 
-    public OrderItem(Long cartItemId, int quantity, Long productId, int price, String name, String imageUrl) {
+    public OrderItem(Long cartItemId, int quantity, long productId, int price, String name, String imageUrl) {
         this.cartItemId = cartItemId;
         this.quantity = quantity;
         this.productId = productId;
@@ -26,7 +26,7 @@ public class OrderItem {
         return quantity;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 
