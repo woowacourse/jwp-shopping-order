@@ -2,6 +2,7 @@ package cart.error.ui;
 
 import cart.auth.AuthenticationException;
 import cart.cartitem.exception.CartItemException;
+import cart.cartitem.exception.NotFoundCartItemException;
 import cart.error.ui.response.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,5 +64,16 @@ public class ControllerExceptionHandler {
         final ErrorResponse errorResponse = ErrorResponse.from(errorMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler({NotFoundCartItemException.class})
+    public ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundCartItemException e) {
+        logger.error(LOG_FORMAT,
+                e.getClass().getSimpleName(),
+                e.getMessage());
+
+        final ErrorResponse errorResponse = ErrorResponse.from(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 }

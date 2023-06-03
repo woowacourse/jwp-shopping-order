@@ -1,6 +1,5 @@
-package cart.member;
+package cart.member.application;
 
-import cart.member.application.MemberService;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import org.assertj.core.api.SoftAssertions;

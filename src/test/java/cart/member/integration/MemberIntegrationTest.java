@@ -1,4 +1,4 @@
-package cart.member;
+package cart.member.integration;
 
 import cart.config.IntegrationTest;
 import cart.member.ui.request.DepositRequest;

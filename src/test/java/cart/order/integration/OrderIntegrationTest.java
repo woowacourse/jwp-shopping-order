@@ -1,4 +1,4 @@
-package cart.order;
+package cart.order.integration;
 
 import cart.config.IntegrationTest;
 import cart.order.ui.request.OrderCartItemRequest;

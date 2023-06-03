@@ -1,4 +1,4 @@
-package cart.member;
+package cart.member.dao;
 
 import cart.config.DaoTest;
 import cart.member.domain.Member;

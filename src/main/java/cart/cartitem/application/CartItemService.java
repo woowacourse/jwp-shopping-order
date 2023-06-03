@@ -2,6 +2,7 @@ package cart.cartitem.application;
 
 import cart.cartitem.dao.CartItemDao;
 import cart.cartitem.domain.CartItem;
+import cart.cartitem.exception.NotFoundCartItemException;
 import cart.member.domain.Member;
 import cart.product.domain.Product;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.Optional;
 @Service
 public class CartItemService {
 
+    private static final int NOT_EXIST_CART_ITEM = 0;
     private final CartItemDao cartItemDao;
 
     public CartItemService(final CartItemDao cartItemDao) {
@@ -39,12 +41,16 @@ public class CartItemService {
     }
 
     private Long addQuantity(final CartItem cartItem) {
+        validateExistCartItem(cartItem.getId());
+
         cartItem.addQuantity(cartItem.getQuantity());
         cartItemDao.updateQuantity(cartItem);
         return cartItem.getId();
     }
 
     public void updateQuantity(final Member member, final Long id, final int quantity) {
+        validateExistCartItem(id);
+
         final CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
@@ -58,9 +64,17 @@ public class CartItemService {
     }
 
     public void remove(final Member member, final Long id) {
+        validateExistCartItem(id);
+
         final CartItem cartItem = cartItemDao.findById(id);
         cartItem.checkOwner(member);
 
         cartItemDao.deleteById(id);
+    }
+
+    private void validateExistCartItem(final Long id) {
+        if (cartItemDao.countById(id) == NOT_EXIST_CART_ITEM) {
+            throw new NotFoundCartItemException();
+        }
     }
 }

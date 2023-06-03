@@ -125,5 +125,10 @@ public class CartItemDao {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
+
+    public Long countById(final Long id) {
+        final String sql = "SELECT count(*) FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, id);
+    }
 }
 
