@@ -1,4 +1,4 @@
-package cart.ui.order.dto;
+package cart.ui.order.dto.request;
 
 public class CreateOrderItemRequest {
 

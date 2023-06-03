@@ -1,5 +1,7 @@
 package cart.ui.order.dto;
 
+import cart.ui.order.dto.request.CreateOrderItemRequest;
+
 public class CreateOrderItemDto {
     private final Long cartItemId;
     private final Long productId;
@@ -9,6 +11,11 @@ public class CreateOrderItemDto {
         this.cartItemId = cartItemId;
         this.productId = productId;
         this.quantity = quantity;
+    }
+
+    public static CreateOrderItemDto from(final CreateOrderItemRequest createOrderItemRequest) {
+        return new CreateOrderItemDto(createOrderItemRequest.getCartItemId(), createOrderItemRequest.getProductId(), createOrderItemRequest.getQuantity());
+
     }
 
     public Long getCartItemId() {
@@ -21,10 +28,5 @@ public class CreateOrderItemDto {
 
     public Integer getQuantity() {
         return quantity;
-    }
-
-    public static CreateOrderItemDto from(final CreateOrderItemRequest createOrderItemRequest) {
-        return new CreateOrderItemDto(createOrderItemRequest.getCartItemId(), createOrderItemRequest.getProductId(), createOrderItemRequest.getQuantity());
-
     }
 }

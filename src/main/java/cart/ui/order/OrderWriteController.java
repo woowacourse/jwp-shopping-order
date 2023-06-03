@@ -3,7 +3,7 @@ package cart.ui.order;
 import cart.application.service.order.OrderWriteService;
 import cart.ui.MemberAuth;
 import cart.ui.order.dto.CreateOrderDto;
-import cart.ui.order.dto.CreateOrderRequest;
+import cart.ui.order.dto.request.CreateOrderRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

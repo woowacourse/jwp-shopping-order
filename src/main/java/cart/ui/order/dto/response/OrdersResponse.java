@@ -1,4 +1,4 @@
-package cart.ui.order.dto;
+package cart.ui.order.dto.response;
 
 import cart.application.service.order.dto.OrderResultDto;
 
