@@ -22,14 +22,14 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getAllProducts() {
+    public List<ProductResponse> findAllProducts() {
         List<Product> products = productDao.getAllProducts();
         ModelSortHelper.sortByIdInDescending(products);
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProductById(Long productId) {
+    public ProductResponse findProductById(Long productId) {
         Product product = productDao.getProductById(productId).orElseThrow(() -> new NoSuchProductException());
         return ProductResponse.of(product);
     }
