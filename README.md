@@ -55,7 +55,7 @@
 ---
 
 ## DB 다이어그램
-<img src="https://raw.githubusercontent.com/Cl8D/jwp-shopping-order/4dbe8e0b7252fb66f40dbcff12f1c21ffda558e1/src/main/resources/static/file/db-diagram.png">
+<img src="https://raw.githubusercontent.com/Cl8D/jwp-shopping-order/step1/src/main/resources/static/file/db-diagram.png">
 
 ---
 
@@ -75,13 +75,14 @@ docker-compose up -d
 ### 상품 API (ProductController)
 - product.http
 
-|              | HTTP method |     요청 URI     |
-|:------------:|:-----------:|:--------------:|
-|  **상품 추가**   |    POST     |   /products    |
-|  **상품 수정**   |     PUT     |   /products    |
-| **상품 단일 조회** |     GET     | /products/{id} |
-| **상품 전체 조회** |     GET     |   /products    |
-|  **상품 삭제**   |   DELETE    | /products/{id} |
+|               | HTTP method |             요청 URI             |
+|:-------------:|:-----------:|:------------------------------:|
+|   **상품 추가**   |    POST     |           /products            |
+|   **상품 수정**   |     PUT     |           /products            |
+| **상품 단일 조회**  |     GET     |         /products/{id}         |
+| **상품 전체 조회**  |     GET     |           /products            |
+| **상품 페이지 조회** |     GET     | /products/pages?page=1&size=10 |
+|   **상품 삭제**   |   DELETE    |         /products/{id}         |
 
 
 ### 사용자 API (MemberController)
@@ -119,9 +120,9 @@ docker-compose up -d
 ### 주문 API (OrderController)
 - order.http
 
-|               | HTTP method |      요청 URI      |
-|:-------------:|:-----------:|:----------------:|
-|   **주문 추가**   |    POST     |     /orders      |
-| **주문 단일 조회 ** |     GET     |    /orders/1     |
-| **주문 단일 조회 ** |     GET     |     /orders      |
-|  **주문 취소 **   |    POST     | /orders/cancel/1 |
+|              | HTTP method |      요청 URI      |
+|:------------:|:-----------:|:----------------:|
+|  **주문 추가**   |    POST     |     /orders      |
+| **주문 단일 조회** |     GET     |    /orders/1     |
+| **주문 단일 조회** |     GET     |     /orders      |
+|  **주문 취소**   |    POST     | /orders/cancel/1 |
