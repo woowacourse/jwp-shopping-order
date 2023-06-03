@@ -6,4 +6,6 @@ import java.util.List;
 public interface CouponRepository {
 
     List<Coupon> findAll();
+
+    Coupon findById(final Long id);
 }

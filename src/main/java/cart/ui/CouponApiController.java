@@ -3,6 +3,7 @@ package cart.ui;
 import cart.application.CouponService;
 import cart.domain.Member;
 import cart.dto.response.ActiveCouponResponse;
+import cart.dto.response.CouponDiscountResponse;
 import cart.dto.response.CouponResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,11 @@ public class CouponApiController {
     public ResponseEntity<List<ActiveCouponResponse>> showActiveCoupons(final Member member, @RequestParam int total) {
         final List<ActiveCouponResponse> activeCoupons = couponService.findActiveCoupons(member, total);
         return ResponseEntity.ok(activeCoupons);
+    }
+
+    @GetMapping("/{id}/discount")
+    public ResponseEntity<CouponDiscountResponse> showCouponDiscountAmount(@PathVariable final Long id, @RequestParam int total) {
+        final CouponDiscountResponse response = couponService.findCouponDiscountAmount(id, total);
+        return ResponseEntity.ok(response);
     }
 }

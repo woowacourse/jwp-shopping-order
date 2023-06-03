@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.domain.repository.CouponRepository;
 import cart.domain.repository.MemberCouponRepository;
 import cart.dto.response.ActiveCouponResponse;
+import cart.dto.response.CouponDiscountResponse;
 import cart.dto.response.CouponResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,5 +52,12 @@ public class CouponService {
         return filteredCoupons.stream()
                 .map(it -> new ActiveCouponResponse(it.getId(), it.getName(), it.getMinAmount().getValue()))
                 .collect(Collectors.toList());
+    }
+
+    public CouponDiscountResponse findCouponDiscountAmount(final Long id, final int total) {
+        final Coupon coupon = couponRepository.findById(id);
+        final int discountedAmount = coupon.calculateDiscountedAmount(total);
+        final int discountAmount = coupon.getDiscountAmount().getValue();
+        return new CouponDiscountResponse(discountedAmount, discountAmount);
     }
 }

@@ -110,6 +110,25 @@ public class CouponIntegrationTest extends IntegrationTest {
                 .isEqualTo(totalProductAmount - expectedDiscountAmount);
     }
 
+    @DisplayName("총 상품 금액이 쿠폰 할인 금액보다 작은 경우, 할인 금액과 할인된 상품 금액(0원)을 반환한다.")
+    @Test
+    void showCouponDiscountAmountWhenTotalAmountLessThanDiscountAmount() {
+        // given
+        final Long couponId = coupon2.getId();
+        final int totalProductAmount = 10000;
+
+        // when
+        final ExtractableResponse<Response> response = getDiscountAmountResponse(couponId, totalProductAmount);
+
+        // then
+        final CouponDiscountResponse couponDiscountResponse = response.as(CouponDiscountResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        final int expectedDiscountAmount = coupon2.getDiscountAmount().getValue();
+        assertThat(couponDiscountResponse.getDiscountAmount()).isEqualTo(expectedDiscountAmount);
+        assertThat(couponDiscountResponse.getDiscountedProductAmount())
+                .isEqualTo(0);
+    }
+
     private ExtractableResponse<Response> getCouponsResponse() {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

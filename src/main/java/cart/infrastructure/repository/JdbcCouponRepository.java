@@ -5,6 +5,7 @@ import cart.domain.repository.CouponRepository;
 import cart.entity.CouponEntity;
 import cart.infrastructure.dao.CouponDao;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -22,5 +23,12 @@ public class JdbcCouponRepository implements CouponRepository {
         return couponDao.findAll().stream()
                 .map(CouponEntity::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Coupon findById(final Long id) {
+        return couponDao.findById(id)
+                .orElseThrow(NoSuchElementException::new)
+                .toDomain();
     }
 }

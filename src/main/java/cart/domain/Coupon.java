@@ -20,6 +20,13 @@ public class Coupon {
         this.minAmount = minAmount;
     }
 
+    public int calculateDiscountedAmount(final int total) {
+        if (discountAmount.getValue() >= total) {
+            return 0;
+        }
+        return total - discountAmount.getValue();
+    }
+
     public Long getId() {
         return id;
     }
