@@ -1,5 +1,8 @@
 package cart.application.dto.order;
 
+import cart.domain.Product;
+import cart.domain.order.OrderItem;
+
 public class FindOrderDetailProductResponse {
 
     private final long id;
@@ -15,6 +18,17 @@ public class FindOrderDetailProductResponse {
         this.imageUrl = imageUrl;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    public static FindOrderDetailProductResponse from(final OrderItem orderItem) {
+        Product product = orderItem.getProduct();
+        return new FindOrderDetailProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getImageUrl(),
+                product.getPrice(),
+                orderItem.getQuantity()
+        );
     }
 
     public long getId() {

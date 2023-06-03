@@ -1,6 +1,9 @@
 package cart.application.dto.order;
 
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FindOrderDetailResponse {
 
@@ -18,6 +21,20 @@ public class FindOrderDetailResponse {
         this.totalProductPrice = totalProductPrice;
         this.discountPrice = discountPrice;
         this.shippingFee = shippingFee;
+    }
+
+    public static FindOrderDetailResponse from(final Order order) {
+        List<OrderItem> orderItems = order.getOrderItems();
+        List<FindOrderDetailProductResponse> products = orderItems.stream()
+                .map(FindOrderDetailProductResponse::from)
+                .collect(Collectors.toList());
+        return new FindOrderDetailResponse(
+                order.getId(),
+                products,
+                order.calculateTotalProductPrice(),
+                order.calculateDiscountPrice(),
+                order.getShippingFee().getValue()
+        );
     }
 
     public long getId() {

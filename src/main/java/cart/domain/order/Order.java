@@ -67,6 +67,16 @@ public class Order {
         }
     }
 
+    public int calculateTotalProductPrice() {
+        return orderItems.stream()
+                .mapToInt(item -> item.getProduct().getPrice() * item.getQuantity())
+                .sum();
+    }
+
+    public int calculateDiscountPrice() {
+        return totalOrderPrice - calculateTotalProductPrice();
+    }
+
     public void checkOwner(final Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new ForbiddenException();

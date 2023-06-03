@@ -5,6 +5,7 @@ import static cart.exception.badrequest.BadRequestErrorType.CART_ITEM_QUANTITY_I
 import static cart.exception.noexist.NoExistErrorType.COUPON_NO_EXIST;
 import static cart.exception.noexist.NoExistErrorType.ORDER_NO_EXIST;
 
+import cart.application.dto.order.FindOrderDetailResponse;
 import cart.application.dto.order.OrderCartItemProductRequest;
 import cart.application.dto.order.OrderCartItemsRequest;
 import cart.application.repository.CartItemRepository;
@@ -77,11 +78,11 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Order getOrderById(final Member member, final long orderId) {
+    public FindOrderDetailResponse getOrderById(final Member member, final long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NoExistException(ORDER_NO_EXIST));
         order.checkOwner(member);
 
-        return order;
+        return FindOrderDetailResponse.from(order);
     }
 }
