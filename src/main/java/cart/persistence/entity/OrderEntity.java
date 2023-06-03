@@ -33,7 +33,7 @@ public class OrderEntity {
         Member member = order.getMember();
         MemberCoupon memberCoupon = order.getMemberCoupon();
         return new OrderEntity(order.getId(), member.getId(), memberCoupon.getId(), order.getShippingFee().getValue(),
-                order.getTotalOrderAmount(), Timestamp.valueOf(order.getCreatedAt()));
+                order.getTotalOrderPrice(), Timestamp.valueOf(order.getCreatedAt()));
     }
 
     public Long getId() {

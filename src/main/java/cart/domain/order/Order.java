@@ -17,22 +17,22 @@ public class Order {
     private final MemberCoupon memberCoupon;
     private final List<OrderItem> orderItems;
     private final ShippingFee shippingFee;
-    private final int totalOrderAmount;
+    private final int totalOrderPrice;
     private final LocalDateTime createdAt;
 
     public Order(final Member member, final MemberCoupon memberCoupon, final List<OrderItem> orderItems,
-            final ShippingFee shippingFee, final int totalOrderAmount) {
-        this(null, member, memberCoupon, orderItems, shippingFee, totalOrderAmount, null);
+            final ShippingFee shippingFee, final int totalOrderPrice) {
+        this(null, member, memberCoupon, orderItems, shippingFee, totalOrderPrice, null);
     }
 
     public Order(final Long id, final Member member, final MemberCoupon memberCoupon, final List<OrderItem> orderItems,
-            final ShippingFee shippingFee, final int totalOrderAmount, final LocalDateTime createdAt) {
+            final ShippingFee shippingFee, final int totalOrderPrice, final LocalDateTime createdAt) {
         this.id = id;
         this.member = member;
         this.memberCoupon = memberCoupon;
         this.orderItems = orderItems;
         this.shippingFee = shippingFee;
-        this.totalOrderAmount = totalOrderAmount;
+        this.totalOrderPrice = totalOrderPrice;
         this.createdAt = createdAt;
     }
 
@@ -44,10 +44,10 @@ public class Order {
                 .map(OrderItem::of)
                 .collect(Collectors.toList());
 
-        int totalOrderAmount = calculateTotalOrderAmount(cartItems, memberCoupon);
-        ShippingFee shippingFee = ShippingFee.fromTotalOrderAmount(totalOrderAmount);
+        int totalOrderPrice = calculatetotalOrderPrice(cartItems, memberCoupon);
+        ShippingFee shippingFee = ShippingFee.fromtotalOrderPrice(totalOrderPrice);
 
-        return new Order(member, memberCoupon, orderItems, shippingFee, totalOrderAmount);
+        return new Order(member, memberCoupon, orderItems, shippingFee, totalOrderPrice);
     }
 
     private static void validateCoupon(final Member member, final CartItems cartItems,
@@ -58,7 +58,7 @@ public class Order {
         }
     }
 
-    private static int calculateTotalOrderAmount(final CartItems cartItems, final MemberCoupon coupon) {
+    private static int calculatetotalOrderPrice(final CartItems cartItems, final MemberCoupon coupon) {
         int discountPrice = coupon.getDiscountPrice(cartItems);
         int totalProductPrice = cartItems.calculateTotalProductPrice();
         return totalProductPrice - discountPrice;
@@ -90,8 +90,8 @@ public class Order {
         return shippingFee;
     }
 
-    public int getTotalOrderAmount() {
-        return totalOrderAmount;
+    public int getTotalOrderPrice() {
+        return totalOrderPrice;
     }
 
     public LocalDateTime getCreatedAt() {

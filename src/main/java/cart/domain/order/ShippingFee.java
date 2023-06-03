@@ -11,8 +11,8 @@ public class ShippingFee {
         this.value = value;
     }
 
-    public static ShippingFee fromTotalOrderAmount(final int totalOrderAmount) {
-        if (FREE_SHIPPING_AMOUNT <= totalOrderAmount) {
+    public static ShippingFee fromtotalOrderPrice(final int totalOrderPrice) {
+        if (FREE_SHIPPING_AMOUNT <= totalOrderPrice) {
             return new ShippingFee(0);
         }
         return new ShippingFee(BASE_SHIPPING_FEE);

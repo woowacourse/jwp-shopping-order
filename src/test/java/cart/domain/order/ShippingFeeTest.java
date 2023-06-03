@@ -15,10 +15,10 @@ class ShippingFeeTest {
     @Test
     void 총주문금액이_30000원_이상이면_무료배송이다() {
         // given
-        int totalOrderAmount = 30_000;
+        int totalOrderPrice = 30_000;
 
         // when
-        ShippingFee shippingFee = ShippingFee.fromTotalOrderAmount(totalOrderAmount);
+        ShippingFee shippingFee = ShippingFee.fromtotalOrderPrice(totalOrderPrice);
 
         // then
         assertThat(shippingFee.getValue()).isEqualTo(0);
@@ -27,10 +27,10 @@ class ShippingFeeTest {
     @Test
     void 총주문금액이_30000원보다_적으면_배송비는_3000원이다() {
         // given
-        int totalOrderAmount = 29_000;
+        int totalOrderPrice = 29_000;
 
         // when
-        ShippingFee shippingFee = ShippingFee.fromTotalOrderAmount(totalOrderAmount);
+        ShippingFee shippingFee = ShippingFee.fromtotalOrderPrice(totalOrderPrice);
 
         // then
         assertThat(shippingFee.getValue()).isEqualTo(3000);
