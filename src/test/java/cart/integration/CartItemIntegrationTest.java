@@ -1,5 +1,8 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.cartitem.CartItemQuantityUpdateRequest;
@@ -8,20 +11,16 @@ import cart.dto.cartitem.CartItemResponse;
 import cart.dto.product.ProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
@@ -73,7 +72,9 @@ public class CartItemIntegrationTest extends IntegrationTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-        List<Long> resultCartItemIds = response.jsonPath().getList(".", CartItemResponse.class).stream()
+        List<Long> resultCartItemIds = response.jsonPath()
+                .setRootPath("cartItems")
+                .getList(".", CartItemResponse.class).stream()
                 .map(CartItemResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultCartItemIds).containsAll(Arrays.asList(cartItemId1, cartItemId2));
@@ -90,6 +91,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .setRootPath("cartItems")
                 .getList(".", CartItemResponse.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
@@ -110,6 +112,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .setRootPath("cartItems")
                 .getList(".", CartItemResponse.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
@@ -140,6 +143,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> cartItemsResponse = requestGetCartItems(member);
 
         Optional<CartItemResponse> selectedCartItemResponse = cartItemsResponse.jsonPath()
+                .setRootPath("cartItems")
                 .getList(".", CartItemResponse.class)
                 .stream()
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
@@ -187,7 +191,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
-                .get("/cart-items")
+                .get("/cart-items?unit-size=10&page=1")
                 .then()
                 .log().all()
                 .extract();

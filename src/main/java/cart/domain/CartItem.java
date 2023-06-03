@@ -26,10 +26,6 @@ public class CartItem {
         return new Price(product.getPrice() * quantity);
     }
 
-    public boolean equalsProductId(Long productId) {
-        return product.getId().equals(productId);
-    }
-
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
             throw new CartItemException.IllegalMember(this, member);

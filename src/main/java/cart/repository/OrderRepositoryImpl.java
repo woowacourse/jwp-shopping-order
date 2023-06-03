@@ -5,6 +5,7 @@ import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.PaymentDao;
 import cart.dao.ProductDao;
+import cart.domain.CartItem;
 import cart.domain.CartItems;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -13,12 +14,14 @@ import cart.domain.OrderItems;
 import cart.domain.Payment;
 import cart.domain.Price;
 import cart.domain.Product;
+import cart.entity.CartItemEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.PaymentEntity;
 import cart.entity.ProductEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,8 +49,31 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orderId;
     }
 
-    public CartItems findCartItemsByMemberId(Long memberId) {
-        return cartItemDao.findByMemberId(memberId);
+    public CartItems findCartItemsByMemberId(Member member) {
+        List<CartItemEntity> cartItemEntity = cartItemDao.findByMemberId(member.getId());
+        return createCartItems(member, cartItemEntity);
+    }
+
+    private CartItems createCartItems(final Member member, final List<CartItemEntity> cartItemEntities) {
+        return new CartItems(cartItemEntities.stream()
+                .map(cartItemEntity -> createCartItem(member, cartItemEntity))
+                .collect(Collectors.toList()));
+    }
+
+    private CartItem createCartItem(final Member member, final CartItemEntity cartItemEntity) {
+        return new CartItem(
+                cartItemEntity.getId(),
+                cartItemEntity.getQuantity(),
+                convertProductEntityToProduct(cartItemEntity.getProductId()),
+                member);
+    }
+
+    private Product convertProductEntityToProduct(final Long productId) {
+        ProductEntity productEntity = productDao.getProductById(productId);
+        return new Product(productEntity.getId(),
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl());
     }
 
     public Order findOrder(Long orderId, Member member) {

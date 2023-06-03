@@ -13,6 +13,7 @@ import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
 import cart.dao.PaymentDao;
+import cart.dao.ProductDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ class OrderRepositoryImplTest {
 
     @MockBean
     private CartItemDao cartItemDao;
+
+    @MockBean
+    private ProductDao productDao;
 
     @Test
     @DisplayName("주문을 생성한다.")

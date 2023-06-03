@@ -38,7 +38,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     public List<Product> findProductsByPage(int size, int page) {
-        List<ProductEntity> productEntities = productDao.findProductsInCurrentPage(size, page);
+        List<ProductEntity> productEntities = productDao.findProductsByPage(size, page);
         return productEntities.stream()
                 .map(this::convertEntityToProduct)
                 .collect(Collectors.toList());

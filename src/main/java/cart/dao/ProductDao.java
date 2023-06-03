@@ -75,8 +75,8 @@ public class ProductDao {
         jdbcTemplate.update(sql, productId);
     }
 
-    public List<ProductEntity> findProductsInCurrentPage(int size, int page) {
-        String sql = "SELECT * FROM product LIMIT ? OFFSET ? ";
+    public List<ProductEntity> findProductsByPage(int size, int page) {
+        String sql = "SELECT * FROM product ORDER BY id DESC LIMIT ? OFFSET ? ";
         int offset = (page - 1) * size;
         return jdbcTemplate.query(sql, productEntityRowMapper(), size, offset);
     }

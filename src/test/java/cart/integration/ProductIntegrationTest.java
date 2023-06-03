@@ -1,13 +1,13 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductIntegrationTest extends IntegrationTest {
 
@@ -16,7 +16,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products")
+                .get("/products?unit-size=1&page=1")
                 .then()
                 .extract();
 

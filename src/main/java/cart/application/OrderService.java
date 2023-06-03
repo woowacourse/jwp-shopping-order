@@ -28,7 +28,7 @@ public class OrderService {
     }
 
     public Long createOrder(final Member member, final OrderRequest request) {
-        CartItems cartItems = orderRepository.findCartItemsByMemberId(member.getId());
+        CartItems cartItems = orderRepository.findCartItemsByMemberId(member);
         Payment payment = getPayment(request, cartItems);
         OrderItems orderItems = createOrderItems(cartItems);
         return orderRepository.createOrder(new Order(payment, orderItems, member), cartItems);

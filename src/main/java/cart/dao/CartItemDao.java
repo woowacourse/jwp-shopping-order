@@ -1,9 +1,9 @@
 package cart.dao;
 
+import cart.dao.dto.PageInfo;
 import cart.domain.CartItem;
 import cart.domain.CartItems;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.entity.CartItemEntity;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -23,26 +24,17 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public CartItems findByMemberId(Long memberId) {
-        String sql =
-                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
-                        +
-                        "FROM cart_item " +
-                        "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id " +
-                        "WHERE cart_item.member_id = ?";
-        return new CartItems(jdbcTemplate.query(sql, new Object[]{memberId}, (rs, rowNum) -> {
-            String email = rs.getString("email");
-            Long productId = rs.getLong("product.id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        }));
+    public List<CartItemEntity> findByMemberId(Long memberId) {
+        String sql = "SELECT * FROM cart_item WHERE member_id = ?";
+        return jdbcTemplate.query(sql, cartItemEntityRowMapper(), memberId);
+    }
+
+    private RowMapper<CartItemEntity> cartItemEntityRowMapper() {
+        return (rs, rowNum) -> new CartItemEntity(
+                rs.getLong("id"),
+                rs.getLong("member_id"),
+                rs.getLong("product_id"),
+                rs.getInt("quantity"));
     }
 
     public Long save(CartItem cartItem) {
@@ -64,28 +56,9 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public CartItem findById(Long id) {
-        String sql =
-                "SELECT cart_item.id, cart_item.member_id, member.email, product.id, product.name, product.price, product.image_url, cart_item.quantity "
-                        +
-                        "FROM cart_item " +
-                        "INNER JOIN member ON cart_item.member_id = member.id " +
-                        "INNER JOIN product ON cart_item.product_id = product.id " +
-                        "WHERE cart_item.id = ?";
-        List<CartItem> cartItems = jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
-            Long memberId = rs.getLong("member_id");
-            String email = rs.getString("email");
-            Long productId = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imageUrl = rs.getString("image_url");
-            Long cartItemId = rs.getLong("cart_item.id");
-            int quantity = rs.getInt("cart_item.quantity");
-            Member member = new Member(memberId, email, null);
-            Product product = new Product(productId, name, price, imageUrl);
-            return new CartItem(cartItemId, quantity, product, member);
-        });
-        return cartItems.isEmpty() ? null : cartItems.get(0);
+    public CartItemEntity findById(Long id) {
+        String sql = "SELECT * FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, cartItemEntityRowMapper(), id);
     }
 
     public void delete(Long memberId, Long productId) {
@@ -117,6 +90,41 @@ public class CartItemDao {
                 return cartItems.getItems().size();
             }
         });
+    }
+
+    public boolean existsByMemberIdAndProductId(Long productId, Long memberId) {
+        String sql = "SELECT COUNT(*) FROM cart_item WHERE product_id = ? AND member_id = ?";
+        Integer integer = jdbcTemplate.queryForObject(sql, Integer.class, productId, memberId);
+
+        if (integer == null) {
+            return false;
+        }
+
+        return integer > 0;
+    }
+
+    public List<CartItemEntity> findCartItemsByPage(Long memberId, int size, int page) {
+        String sql = "SELECT * FROM cart_item WHERE member_id = ? ORDER BY id DESC LIMIT ? OFFSET ? ";
+        int offset = (page - 1) * size;
+        return jdbcTemplate.query(sql, cartItemEntityRowMapper(), memberId, size, offset);
+    }
+
+    public PageInfo findPageInfo(Long memberId, int size, int page) {
+        String sql = "SELECT COUNT(*) as total,"
+                + " ? as perPage,"
+                + " ? as currentPage,"
+                + " CEILING(COUNT(*) / CAST(? AS DECIMAL(10, 2))) as lastPage"
+                + " FROM cart_item"
+                + " WHERE member_id = ?;";
+        return jdbcTemplate.queryForObject(sql, pageInfoRowMapper(), size, page, size, memberId);
+    }
+
+    private RowMapper<PageInfo> pageInfoRowMapper() {
+        return (rs, rowNum) -> new PageInfo(
+                rs.getInt("total"),
+                rs.getInt("perPage"),
+                rs.getInt("currentPage"),
+                rs.getInt("lastPage"));
     }
 }
 
