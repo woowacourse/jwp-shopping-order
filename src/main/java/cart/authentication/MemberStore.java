@@ -2,21 +2,19 @@ package cart.authentication;
 
 import cart.domain.Member;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
 @Component
+@RequestScope
 public class MemberStore {
 
-    private final ThreadLocal<Member> localMember = new ThreadLocal<>();
+    private Member member;
 
     public void set(Member member) {
-        localMember.set(member);
+        this.member = member;
     }
 
     public Member get() {
-        return localMember.get();
-    }
-
-    public void remove() {
-        localMember.remove();
+        return member;
     }
 }

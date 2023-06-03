@@ -15,8 +15,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private final AuthenticationMemberConverter authConverter;
     private final MemberStore memberStore;
 
-    public AuthenticationInterceptor(BasicAuthorizationExtractor extractor,
-            AuthenticationMemberConverter memberConverter, MemberStore memberStore) {
+    public AuthenticationInterceptor(
+            BasicAuthorizationExtractor extractor,
+            AuthenticationMemberConverter memberConverter,
+            MemberStore memberStore
+    ) {
         this.extractor = extractor;
         this.authConverter = memberConverter;
         this.memberStore = memberStore;
@@ -32,11 +35,5 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         memberStore.set(loginMember);
 
         return true;
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-            Exception ex) throws Exception {
-        memberStore.remove();
     }
 }
