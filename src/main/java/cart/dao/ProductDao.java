@@ -20,8 +20,10 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM product";
+    public List<Product> getAllProductsBy(final int start, final int size) {
+        String sql = "SELECT * FROM product " +
+                "ORDER BY id " +
+                "LIMIT " + size + " OFFSET " + start;
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
@@ -33,7 +35,7 @@ public class ProductDao {
 
     public Product getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
@@ -68,5 +70,10 @@ public class ProductDao {
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    public Integer countAllProduct() {
+        final String sql = "SELECT COUNT(*) FROM product";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 }
