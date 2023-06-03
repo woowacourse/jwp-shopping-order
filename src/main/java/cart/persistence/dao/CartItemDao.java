@@ -78,4 +78,10 @@ public class CartItemDao {
         final String sql = "SELECT COUNT(*) FROM cart_item WHERE member_id = ? AND product_id = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId) > 0;
     }
+
+    public void deleteAllById(final List<Long> ids) {
+        final String sql = "DELETE FROM cart_item WHERE id IN (:id)";
+        final MapSqlParameterSource source = new MapSqlParameterSource("id", ids);
+        namedJdbcTemplate.update(sql, source);
+    }
 }

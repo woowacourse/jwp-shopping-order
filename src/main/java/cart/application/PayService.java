@@ -1,6 +1,5 @@
 package cart.application;
 
-import cart.application.dto.request.CartItemRequest;
 import cart.application.dto.request.PaymentRequest;
 import cart.domain.cart.CartItem;
 import cart.domain.member.Member;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PayService {
@@ -24,18 +22,13 @@ public class PayService {
 
     @Transactional
     public Long pay(final Member member, final PaymentRequest request) {
-        final List<Long> cartIds = extractCartIds(request);
+        final List<Long> cartIds = request.getCartItemIds();
         final List<CartItem> cartItems = getCartItems(member, cartIds);
         member.usePoint(request.getPoint());
         final OrderProducts orderProducts = new OrderProducts(cartItems);
         final Order order = new Order(member, request.getPoint(), orderProducts);
+        payRepository.deleteCartItemsByIds(cartIds);
         return payRepository.createOrder(order);
-    }
-
-    private List<Long> extractCartIds(final PaymentRequest request) {
-        return request.getCartItemRequests().stream()
-                .map(CartItemRequest::getProductId)
-                .collect(Collectors.toList());
     }
 
     private List<CartItem> getCartItems(final Member member, final List<Long> cartIds) {

@@ -86,4 +86,8 @@ public class PayRepository {
         final MemberEntity memberEntity = memberEntityMapper(member);
         memberDao.updatePoint(memberEntity);
     }
+
+    public void deleteCartItemsByIds(final List<Long> cartIds) {
+        cartItemDao.deleteAllById(cartIds);
+    }
 }
