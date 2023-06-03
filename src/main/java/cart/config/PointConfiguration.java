@@ -1,7 +1,7 @@
 package cart.config;
 
-import cart.domain.BasicPointPolicy;
-import cart.domain.PointPolicy;
+import cart.domain.point.BasicPointPolicy;
+import cart.domain.point.PointPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

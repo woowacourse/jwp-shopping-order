@@ -1,12 +1,12 @@
 package cart.service;
 
 import cart.dao.CartItemDao;
-import cart.domain.CartItem;
-import cart.domain.Order;
-import cart.domain.OrderItem;
-import cart.domain.Point;
-import cart.domain.PointPolicy;
+import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.point.Point;
+import cart.domain.point.PointPolicy;
 import cart.dto.OrderItemDto;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;

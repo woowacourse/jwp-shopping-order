@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.point;
 
 import cart.domain.common.Money;
 

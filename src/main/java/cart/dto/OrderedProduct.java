@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.OrderItem;
+import cart.domain.order.OrderItem;
 
 public class OrderedProduct {
 

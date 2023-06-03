@@ -2,9 +2,9 @@ package cart.repository;
 
 import cart.dao.OrderDao;
 import cart.dao.ProductDao;
-import cart.domain.Order;
-import cart.domain.OrderItem;
 import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 import cart.entity.OrderDetailEntity;
 import cart.entity.OrderEntity;
 import org.springframework.stereotype.Repository;

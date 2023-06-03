@@ -1,6 +1,9 @@
 package cart.domain;
 
 import cart.domain.common.Money;
+import cart.domain.point.BasicPointPolicy;
+import cart.domain.point.Point;
+import cart.domain.point.PointPolicy;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

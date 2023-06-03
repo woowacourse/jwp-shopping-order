@@ -1,6 +1,6 @@
 package cart.domain.member;
 
-import cart.domain.Point;
+import cart.domain.point.Point;
 
 import java.util.Objects;
 

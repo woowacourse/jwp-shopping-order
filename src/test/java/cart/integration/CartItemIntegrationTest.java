@@ -2,7 +2,7 @@ package cart.integration;
 
 import cart.dao.MemberDao;
 import cart.dao.MemberEntity;
-import cart.domain.CartItem;
+import cart.domain.cartItem.CartItem;
 import cart.domain.member.Email;
 import cart.domain.member.Member;
 import cart.domain.product.Product;

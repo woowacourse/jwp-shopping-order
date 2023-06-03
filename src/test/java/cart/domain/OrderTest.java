@@ -1,6 +1,9 @@
 package cart.domain;
 
 import cart.domain.member.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.point.Point;
 import cart.domain.product.Product;
 import cart.exception.OrderException;
 import org.junit.jupiter.api.DisplayNameGeneration;

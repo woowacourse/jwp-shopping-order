@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.CartItemDao;
-import cart.domain.CartItem;
+import cart.domain.cartItem.CartItem;
 import cart.dto.CartItemResponse;
 import cart.exception.CartItemException;
 import org.junit.jupiter.api.DisplayNameGeneration;

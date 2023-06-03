@@ -1,7 +1,8 @@
-package cart.domain;
+package cart.domain.order;
 
 import cart.domain.common.Money;
 import cart.domain.member.Member;
+import cart.domain.point.Point;
 import cart.exception.OrderException;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 
 import javax.validation.constraints.NotNull;
 

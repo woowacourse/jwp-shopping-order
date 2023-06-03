@@ -1,7 +1,7 @@
 package cart.dto;
 
-import cart.domain.Order;
-import cart.domain.OrderItem;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 
 import java.util.List;
 import java.util.stream.Collectors;

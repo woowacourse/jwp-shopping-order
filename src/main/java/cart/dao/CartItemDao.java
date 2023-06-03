@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartItem;
+import cart.domain.cartItem.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.CartItemException;
