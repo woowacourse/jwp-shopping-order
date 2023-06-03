@@ -16,4 +16,5 @@ public class PercentCoupon implements CouponPolicy{
         }
         return 0;
     }
+
 }
