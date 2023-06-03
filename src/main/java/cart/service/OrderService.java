@@ -10,10 +10,7 @@ import cart.exception.InvalidCardException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -87,14 +84,17 @@ public class OrderService {
         Map<List<Object>, List<Order>> groupedOrders = orders.stream()
                 .collect(Collectors.groupingBy(order -> Arrays.asList(order.getId(), order.getMember(), order.getOrderedAt(), order.getUsedPoint())));
 
-        return groupedOrders.values().stream().map(group -> {
-            Order firstOrder = group.get(0);
-            OrderedItems mergedItems = group.stream()
-                    .map(Order::getOrderedItems)
-                    .reduce(new OrderedItems(new ArrayList<>()), OrderedItems::merge);
+        return groupedOrders.values().stream()
+                .map(group -> {
+                    Order firstOrder = group.get(0);
+                    OrderedItems mergedItems = group.stream()
+                            .map(Order::getOrderedItems)
+                            .reduce(new OrderedItems(new ArrayList<>()), OrderedItems::merge);
 
-            return new Order(firstOrder.getId(), firstOrder.getMember(), firstOrder.getOrderedAt(), firstOrder.getUsedPoint(), mergedItems);
-        }).collect(Collectors.toList());
+                    return new Order(firstOrder.getId(), firstOrder.getMember(), firstOrder.getOrderedAt(), firstOrder.getUsedPoint(), mergedItems);
+                })
+                .sorted(Comparator.comparing(Order::getId))
+                .collect(Collectors.toList());
     }
 
     public OrderResponse findById(Member member, Long id) {

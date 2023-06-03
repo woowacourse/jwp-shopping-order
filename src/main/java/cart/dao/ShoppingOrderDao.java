@@ -29,7 +29,6 @@ public class ShoppingOrderDao {
         Integer productPrice = rs.getInt("price");
         String productImageUrl = rs.getString("image_url");
         OrderedItem orderedItem = new OrderedItem(orderItemId, new Product(productId, productName, new Price(productPrice), productImageUrl), quantity);
-        System.out.println(orderedItem);
 
         return new Order(orderId, null, orderedAt, new Point(usedPoint), new OrderedItems(new ArrayList<>(List.of(orderedItem))));
     };
