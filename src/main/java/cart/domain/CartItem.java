@@ -6,10 +6,10 @@ import java.util.Objects;
 
 public class CartItem {
 
-    private Long id;
-    private int quantity;
-    private Product product;
-    private Member member;
+    private final Long id;
+    private final int quantity;
+    private final Product product;
+    private final Member member;
 
     public CartItem(Member member, Product product) {
         this(null, 1, member, product);
@@ -28,10 +28,10 @@ public class CartItem {
         }
     }
 
-    public void changeQuantity(int quantity) {
+    public CartItem changeQuantity(int quantity) {
         validateQuantity(quantity);
 
-        this.quantity = quantity;
+        return new CartItem(id, quantity, member, product);
     }
 
     private void validateQuantity(int quantity) {

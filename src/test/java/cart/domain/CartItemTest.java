@@ -28,9 +28,12 @@ class CartItemTest {
     }
 
     @Test
-    @DisplayName("changeQuantity는 변경할 수량으로 0 이상을 전달하면 정상 동작한다.")
+    @DisplayName("changeQuantity는 변경할 수량으로 0 이상을 전달하면 CartItem을 전달한 수량으로 변경한다..")
     void changeQuantitySuccessTest() {
-        assertDoesNotThrow(() -> TWO_CHICKEN.changeQuantity(0));
+        int changeQuantity = 0;
+
+        CartItem actual = TWO_CHICKEN.changeQuantity(changeQuantity);
+        assertThat(actual.getQuantity()).isEqualTo(changeQuantity);
     }
 
     @Test
