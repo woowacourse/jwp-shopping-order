@@ -7,6 +7,7 @@ import cart.exception.IllegalPointException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class PointTest {
@@ -59,5 +60,48 @@ class PointTest {
 
         // then
         assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("포인트를 더할 수 있다.")
+    void add() {
+        // given
+        Point standard = new Point(1000);
+        Point other = new Point(500);
+
+        // when
+        Point result = standard.add(other);
+
+        // then
+        assertThat(result).isEqualTo(new Point(1500));
+    }
+
+
+    @ParameterizedTest
+    @CsvSource(value = {"1000:0", "500:500"}, delimiter = ':')
+    @DisplayName("포인트를 차감할 수 있다.")
+    void subtract(int otherValue, int expectedValue) {
+        // given
+        Point standard = new Point(1000);
+        Point other = new Point(otherValue);
+
+        // when
+        Point result = standard.subtract(other);
+
+        // then
+        assertThat(result).isEqualTo(new Point(expectedValue));
+    }
+
+    @Test
+    @DisplayName("보유한 포인트보다 차감하려는 포인트가 더 크면 예외가 발생한다.")
+    void subtract_fail() {
+        // given
+        Point standard = new Point(1000);
+        Point other = new Point(1001);
+
+        // when, then
+        assertThatThrownBy(() -> standard.subtract(other))
+            .isInstanceOf(IllegalPointException.class)
+            .hasMessageContaining("보유한 포인트보다 큰 포인트를 차감할 수 없습니다.");
     }
 }

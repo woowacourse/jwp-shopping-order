@@ -57,6 +57,10 @@ public class Money {
         return this.value.multiply(BigDecimal.valueOf(rate));
     }
 
+    public boolean isGreaterThan(Money other) {
+        return this.value.compareTo(other.value) > 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -98,4 +98,19 @@ class MoneyTest {
         Money expected = Money.from(BigDecimal.valueOf(resultValue));
         assertThat(result).isEqualTo(expected);
     }
+
+    @ParameterizedTest
+    @CsvSource(value = {"501:true", "500:false", "409:false"}, delimiter = ':')
+    @DisplayName("더 큰 금액을 확인할 수 있다.")
+    void isGreaterThan(int targetValue, boolean expected) {
+        // given
+        Money standard = Money.from(targetValue);
+        Money other = Money.from(500);
+
+        // when
+        boolean result = standard.isGreaterThan(other);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
 }

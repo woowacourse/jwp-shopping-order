@@ -24,6 +24,21 @@ public class Point {
         return new Point(money.multiplyRateAndRound(EARN_RATE).getIntValue());
     }
 
+    public Point add(Point other) {
+        return new Point(this.value + other.value);
+    }
+
+    public Point subtract(Point other) {
+        if (isLessThan(other)) {
+            throw new IllegalPointException("보유한 포인트보다 큰 포인트를 차감할 수 없습니다.");
+        }
+        return new Point(this.value - other.value);
+    }
+
+    private boolean isLessThan(Point other) {
+        return this.value < other.value;
+    }
+
     public Money toMoney() {
         return Money.from(value);
     }
