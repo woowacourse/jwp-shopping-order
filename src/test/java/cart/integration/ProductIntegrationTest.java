@@ -47,6 +47,21 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    public void query스트링이_형식이_맞지않으면_400_예외를_발생시킨다() {
+        var result = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products?ids=1^^3")
+                .then().log().all()
+                .extract();
+
+        assertAll(
+                () -> assertThat(result.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(result.jsonPath().getInt("errorCode")).isNotNull()
+        );
+    }
+
+    @Test
     public void createProduct() {
         var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 
