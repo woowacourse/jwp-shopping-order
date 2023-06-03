@@ -36,7 +36,14 @@ public class OrderRepository {
 
         orderItemDao.saveAll(orderItemEntities);
 
-        return Order.of(orderId, order.getOrderItems(), member.getId(), order.getUsedPoints(), order.getEarnedPoints(), order.getOrderDate());
+        return Order.of(
+                orderId,
+                order.getOrderItems(),
+                member.getId(),
+                order.getUsedPoints(),
+                order.getEarnedPoints(),
+                order.getOrderDate()
+        );
     }
 
     public Optional<Order> findByOrderId(Long orderId) {
@@ -45,8 +52,11 @@ public class OrderRepository {
     }
 
     public List<Order> findByMemberAndLastOrderIdAndSize(Member member, Long lastOrderId, int size) {
-        List<OrderEntity> orderEntities = orderDao.findByMemberIdAndLastOrderIdAndSize(member.getId(), lastOrderId,
-                size);
+        List<OrderEntity> orderEntities = orderDao.findByMemberIdAndLastOrderIdAndSize(
+                member.getId(),
+                lastOrderId,
+                size
+        );
 
         return orderEntities.stream()
                 .map(this::mapToOrder)
@@ -62,13 +72,23 @@ public class OrderRepository {
         Money earnedPoints = new Money(orderEntity.getEarnedPoints());
         Money usedPoints = new Money(orderEntity.getUsedPoints());
 
-        return Order.of(orderEntity.getId(), orderItems, orderEntity.getMemberId(), usedPoints, earnedPoints,
-                orderEntity.getOrderDate());
+        return Order.of(
+                orderEntity.getId(),
+                orderItems,
+                orderEntity.getMemberId(),
+                usedPoints,
+                earnedPoints,
+                orderEntity.getOrderDate()
+        );
     }
 
     private OrderItem mapToOrderItem(OrderItemEntity orderItemEntity) {
-        Product product = new Product(orderItemEntity.getProductId(), orderItemEntity.getProductName(),
-                orderItemEntity.getProductPrice(), orderItemEntity.getProductImageUrl());
+        Product product = new Product(
+                orderItemEntity.getProductId(),
+                orderItemEntity.getProductName(),
+                orderItemEntity.getProductPrice(),
+                orderItemEntity.getProductImageUrl()
+        );
 
         return new OrderItem(orderItemEntity.getId(), product, orderItemEntity.getQuantity());
     }

@@ -47,8 +47,11 @@ public class ProductService {
 
     @Transactional
     public void update(Long productId, ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
-                productRequest.getImageUrl());
+        Product product = new Product(
+                productRequest.getName(),
+                productRequest.getPrice(),
+                productRequest.getImageUrl()
+        );
 
         productRepository.update(productId, product);
     }
