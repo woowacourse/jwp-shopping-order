@@ -1,7 +1,7 @@
 package cart.fixtures;
 
 import cart.domain.Coupon;
-import cart.dto.CouponResponse;
+import cart.dto.coupon.CouponResponse;
 
 import java.time.LocalDateTime;
 

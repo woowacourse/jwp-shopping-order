@@ -1,6 +1,7 @@
-package cart.dto;
+package cart.dto.order;
 
-import cart.domain.OrderItem;
+import cart.domain.order.OrderItem;
+import cart.dto.product.ProductResponse;
 
 import java.util.Objects;
 

@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.domain.Order;
+import cart.domain.order.Order;
 
 import java.util.List;
 

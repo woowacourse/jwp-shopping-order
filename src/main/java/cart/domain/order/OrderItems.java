@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.order;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package cart;
 
 import cart.repository.MemberRepository;
-import cart.ui.MemberArgumentResolver;
+import cart.ui.api.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -30,6 +30,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOriginPatterns("*")
                 .allowedOrigins("*")
                 .allowCredentials(false)
-                .allowedMethods("GET","POST","PUT","DELETE","PATCH","OPTIONS");
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
     }
 }

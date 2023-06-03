@@ -1,5 +1,7 @@
-package cart.domain;
+package cart.domain.order;
 
+import cart.domain.Coupon;
+import cart.domain.Member;
 import cart.exception.IllegalOrderException;
 
 import java.time.LocalDateTime;

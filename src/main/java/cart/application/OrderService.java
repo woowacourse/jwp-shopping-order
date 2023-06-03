@@ -1,9 +1,13 @@
 package cart.application;
 
-import cart.domain.*;
-import cart.dto.OrderDetailResponse;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.domain.Coupon;
+import cart.domain.Member;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.order.OrderItems;
+import cart.dto.order.OrderDetailResponse;
+import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.CouponRepository;
 import cart.repository.OrderRepository;

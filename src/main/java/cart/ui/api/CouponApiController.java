@@ -1,8 +1,8 @@
-package cart.ui;
+package cart.ui.api;
 
 import cart.application.CouponService;
 import cart.domain.Member;
-import cart.dto.CouponResponse;
+import cart.dto.coupon.CouponResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,6 +1,11 @@
 package cart.repository;
 
-import cart.domain.*;
+import cart.domain.Coupon;
+import cart.domain.Member;
+import cart.domain.Product;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.order.OrderItems;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

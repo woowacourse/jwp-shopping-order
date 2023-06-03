@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.domain.Coupon;
 import cart.domain.Member;
-import cart.dto.CouponResponse;
+import cart.dto.coupon.CouponResponse;
 import cart.repository.CouponRepository;
 import org.springframework.stereotype.Service;
 

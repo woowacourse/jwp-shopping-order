@@ -1,11 +1,11 @@
 package cart.fixtures;
 
-import cart.domain.Order;
-import cart.domain.OrderItem;
-import cart.domain.OrderItems;
-import cart.dto.OrderDetailResponse;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
+import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
+import cart.domain.order.OrderItems;
+import cart.dto.order.OrderDetailResponse;
+import cart.dto.order.OrderRequest;
+import cart.dto.order.OrderResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;

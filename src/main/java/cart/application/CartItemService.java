@@ -2,9 +2,9 @@ package cart.application;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
-import cart.dto.CartItemResponse;
+import cart.dto.cartItem.CartItemQuantityUpdateRequest;
+import cart.dto.cartItem.CartItemRequest;
+import cart.dto.cartItem.CartItemResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;

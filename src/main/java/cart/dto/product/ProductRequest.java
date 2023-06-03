@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.product;
 
 import org.hibernate.validator.constraints.URL;
 
