@@ -18,17 +18,17 @@ import java.util.List;
 public class OrderPersistenceAdapter implements OrderRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final OrderInfoPersistenceAdapter orderInfoPersistenceAdapter;
+    private final OrderInfosPersistenceAdapter orderInfosPersistenceAdapter;
 
     public OrderPersistenceAdapter(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.orderInfoPersistenceAdapter = new OrderInfoPersistenceAdapter(namedParameterJdbcTemplate);
+        this.orderInfosPersistenceAdapter = new OrderInfosPersistenceAdapter(namedParameterJdbcTemplate);
     }
 
     @Override
     public Order insert(Order order) {
         Long orderId = saveIntoOrder(order);
-        orderInfoPersistenceAdapter.insert(order.getOrderInfo(), orderId);
+        orderInfosPersistenceAdapter.insert(order.getOrderInfo(), orderId);
         return findById(orderId);
     }
 
@@ -56,7 +56,7 @@ public class OrderPersistenceAdapter implements OrderRepository {
             new Order(
                     rs.getLong("orders.id"),
                     extractMember(rs),
-                    orderInfoPersistenceAdapter.findByOrderId(rs.getLong("orders.id")),
+                    orderInfosPersistenceAdapter.findByOrderId(rs.getLong("orders.id")),
                     rs.getInt("orders.original_price"),
                     rs.getInt("orders.used_point"),
                     rs.getInt("orders.point_to_add")
@@ -75,7 +75,7 @@ public class OrderPersistenceAdapter implements OrderRepository {
                 new Order(
                         rs.getLong("orders.id"),
                         extractMember(rs),
-                        orderInfoPersistenceAdapter.findByOrderId(rs.getLong("orders.id")),
+                        orderInfosPersistenceAdapter.findByOrderId(rs.getLong("orders.id")),
                         rs.getInt("orders.original_price"),
                         rs.getInt("orders.used_point"),
                         rs.getInt("orders.point_to_add")

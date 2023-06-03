@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.application.domain.OrderInfo;
+import cart.application.domain.OrderInfos;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberRepository;
 import cart.application.repository.OrderRepository;
@@ -35,7 +36,7 @@ public class OrderService {
     }
 
     public long issue(Member member, OrderRequest request) {
-        Order order = new Order(null, member, makeOrderInfoFromRequest(member, request),
+        Order order = new Order(null, member, makeOrderInfosFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
         order.adjustPoint();
         memberRepository.update(order.getMember());
@@ -44,10 +45,10 @@ public class OrderService {
         return inserted.getId();
     }
 
-    private List<OrderInfo> makeOrderInfoFromRequest(Member member, OrderRequest request) {
+    private OrderInfos makeOrderInfosFromRequest(Member member, OrderRequest request) {
         List<CartItem> cartItems = makeCartItemsFromRequest(request);
         cartItems.forEach(cartItem -> cartItem.validateIsOwnedBy(member));
-        return makeOrderInfosFromCartItems(cartItems);
+        return new OrderInfos(makeOrderInfosFromCartItems(cartItems));
     }
 
     private List<CartItem> makeCartItemsFromRequest(OrderRequest request) {
@@ -72,12 +73,12 @@ public class OrderService {
     public List<OrderResponse> getAllOrders(Member member) {
         List<Order> orders = orderRepository.findByMemberId(member.getId());
         return orders.stream()
-                .map(order -> new OrderResponse(order.getId(), mapOrderInfoToOrderDto(order.getOrderInfo())))
+                .map(order -> new OrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo())))
                 .collect(Collectors.toList());
     }
 
-    private List<OrderDto> mapOrderInfoToOrderDto(List<OrderInfo> orderInfo) {
-        return orderInfo.stream()
+    private List<OrderDto> mapOrderInfosToOrderDto(OrderInfos orderInfos) {
+        return orderInfos.getValues().stream()
                 .map(this::makeOrderDto)
                 .collect(Collectors.toList());
     }
@@ -91,7 +92,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public SpecificOrderResponse getSpecificOrder(Member member, Long orderId) {
         Order order = orderRepository.findById(orderId);
-        return new SpecificOrderResponse(order.getId(), mapOrderInfoToOrderDto(order.getOrderInfo()),
+        return new SpecificOrderResponse(order.getId(), mapOrderInfosToOrderDto(order.getOrderInfo()),
                 order.getOriginalPrice(), order.getUsedPoint(), order.getPointToAdd());
     }
 }

@@ -6,16 +6,16 @@ public class Order {
 
     private final Long id;
     private final Member member;
-    private final List<OrderInfo> orderInfo;
+    private final OrderInfos orderInfos;
     private final long originalPrice;
     private final long usedPoint;
     private final long pointToAdd;
 
-    public Order(Long id, Member member, List<OrderInfo> orderInfo,
+    public Order(Long id, Member member, OrderInfos orderInfo,
                  long originalPrice, long usedPoint, long pointToAdd) {
         this.id = id;
         this.member = member;
-        this.orderInfo = orderInfo;
+        this.orderInfos = orderInfo;
         this.originalPrice = originalPrice;
         this.usedPoint = usedPoint;
         this.pointToAdd = pointToAdd;
@@ -27,9 +27,7 @@ public class Order {
     }
 
     public void usePoint() {
-        long availablePoint = orderInfo.stream()
-                .mapToLong(OrderInfo::calculateAvailablePoint)
-                .sum();
+        long availablePoint = orderInfos.calculateAvailablePoint();
         if (availablePoint < usedPoint) {
             throw new IllegalArgumentException(); // TODO: 예외 변경
         }
@@ -37,9 +35,7 @@ public class Order {
     }
 
     public void earnPoint() {
-        long earnedPoint = orderInfo.stream()
-                .mapToLong(OrderInfo::calculateEarnedPoint)
-                .sum();
+        long earnedPoint = orderInfos.calculateEarnedPoint();
         member.addPoint(earnedPoint);
     }
 
@@ -51,8 +47,8 @@ public class Order {
         return member;
     }
 
-    public List<OrderInfo> getOrderInfo() {
-        return orderInfo;
+    public OrderInfos getOrderInfo() {
+        return orderInfos;
     }
 
     public long getOriginalPrice() {
