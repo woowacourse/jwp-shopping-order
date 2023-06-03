@@ -26,13 +26,13 @@ public enum Grade {
     }
     
     public static int findGradeDiscount(String grade){
-        if (grade.equals(Grade.GENERAL)) {
+        if (grade.equals(Grade.GENERAL.gradeName)) {
             return 0;
-        }else if(grade.equals(Grade.SILVER)){
+        }else if(grade.equals(Grade.SILVER.gradeName)){
             return 5;
-        }else if(grade.equals(Grade.GOLD)){
+        }else if(grade.equals(Grade.GOLD.gradeName)){
             return 10;
-        }else if(grade.equals(Grade.PLATINUM)){
+        }else if(grade.equals(Grade.PLATINUM.gradeName)){
             return 15;
         }else{
             return 20;

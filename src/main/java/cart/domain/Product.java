@@ -52,7 +52,7 @@ public class Product {
 
 
     public int calculateMemberDiscountedPrice(int memberDiscount) {
-        if (!getIsDiscounted()) {
+        if (!getIsDiscounted() && memberDiscount > 0) {
             return price - ((memberDiscount * price / 100 - price) * -1);
         }
         return 0;
