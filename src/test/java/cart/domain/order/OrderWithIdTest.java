@@ -19,8 +19,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class OrderWithIdTest {
 
-    @ParameterizedTest(name = "주문에 존재하는 사용자 이름과 요청받은 사용자의 이름이 같으면 true, 아니면 false를 반환한다.")
-    @CsvSource(value = {"journey:true", "raon:false"}, delimiter = ':')
+    @ParameterizedTest(name = "주문에 존재하는 사용자 이름과 요청받은 사용자의 이름이 다르면 false, 같으면 true를 반환한다.")
+    @CsvSource(value = {"journey:false", "raon:true"}, delimiter = ':')
     void isNotOwner(final String name, final boolean expected) {
         // given
         final MemberWithId 져니 = new MemberWithId(1L,

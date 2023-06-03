@@ -15,6 +15,8 @@ import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
@@ -34,6 +36,7 @@ public class MemberCouponService {
     }
 
     @TransactionalEventListener
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveJoinMemberCoupon(final JoinMemberCouponEvent joinMemberCouponEvent) {
         final Long memberId = joinMemberCouponEvent.getMemberId();
         final CouponWithId coupon = couponRepository.findByNameAndDiscountRate(JOIN_MEMBER_COUPON.getName(),
@@ -46,6 +49,7 @@ public class MemberCouponService {
     }
 
     @TransactionalEventListener
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveFirstOrderCoupon(final FirstOrderCouponEvent firstOrderCouponEvent) {
         final Long memberId = firstOrderCouponEvent.getMemberId();
         final CouponWithId coupon = couponRepository.findByNameAndDiscountRate(FIRST_ORDER_COUPON.getName(),
