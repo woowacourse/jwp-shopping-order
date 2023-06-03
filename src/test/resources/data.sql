@@ -41,6 +41,8 @@ INSERT INTO member (id, email, password)
 VALUES (1, 'a@a.com', '1234');
 INSERT INTO member (id, email, password)
 VALUES (2, 'b@b.com', '1234');
+INSERT INTO member (email, password)
+VALUES ('c@c.com', '1234');
 
 -- 장바구니
 INSERT INTO cart_item (member_id, product_id, quantity)
@@ -72,8 +74,8 @@ VALUES (1, 2);
 INSERT INTO coupon (member_id, coupon_type_id)
 VALUES (1, 3);
 INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (2, 4);
+VALUES (2, 1);
 INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (2, 5);
+VALUES (2, 2);
 INSERT INTO coupon (member_id, coupon_type_id)
-VALUES (2, 6);
+VALUES (2, 3);

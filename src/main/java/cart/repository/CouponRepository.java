@@ -40,7 +40,7 @@ public class CouponRepository {
         final List<CouponEntity> coupons = couponDao.findByMember(member.getId());
         return coupons.stream()
                 .filter(coupon -> !coupon.isUsed())
-                .map(coupon -> Coupon.of(coupon, CouponType.from(findCouponType(coupon.getId()))))
+                .map(coupon -> Coupon.of(coupon, CouponType.from(findCouponType(coupon.getCouponTypeId()))))
                 .collect(Collectors.toList());
     }
 
