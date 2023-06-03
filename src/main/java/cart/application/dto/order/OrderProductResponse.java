@@ -11,6 +11,9 @@ public class OrderProductResponse {
     private String imageUrl;
     private int quantity;
 
+    private OrderProductResponse() {
+    }
+
     public OrderProductResponse(final long id, final String name, final int price, final String imageUrl,
             final int quantity) {
         this.id = id;

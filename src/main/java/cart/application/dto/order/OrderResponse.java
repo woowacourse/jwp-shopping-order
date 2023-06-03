@@ -9,6 +9,9 @@ public class OrderResponse {
     private long id;
     private List<OrderProductResponse> products;
 
+    private OrderResponse() {
+    }
+
     public OrderResponse(final long id, final List<OrderProductResponse> products) {
         this.id = id;
         this.products = products;

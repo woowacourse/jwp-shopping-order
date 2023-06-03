@@ -8,6 +8,9 @@ public class FindOrdersResponse {
 
     private List<OrderResponse> orders;
 
+    private FindOrdersResponse() {
+    }
+
     public FindOrdersResponse(final List<OrderResponse> orders) {
         this.orders = orders;
     }
