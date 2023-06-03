@@ -1,15 +1,15 @@
 package cart.document;
 
-import cart.WebMvcConfig;
-import cart.application.OrderService;
-import cart.dao.MemberDao;
-import cart.domain.CartOrder;
-import cart.dto.OrderCartItemDto;
-import cart.dto.OrderCartItemsRequest;
-import cart.dto.OrderDto;
-import cart.dto.OrderedProductDto;
-import cart.ui.MemberArgumentResolver;
-import cart.ui.OrderApiController;
+import cart.auth.MemberArgumentResolver;
+import cart.auth.WebMvcConfig;
+import cart.member.dao.MemberDao;
+import cart.order.application.OrderService;
+import cart.order.application.dto.OrderDto;
+import cart.order.application.dto.OrderedProductDto;
+import cart.order.domain.CartOrder;
+import cart.order.ui.OrderApiController;
+import cart.order.ui.request.OrderCartItemRequest;
+import cart.order.ui.request.OrderCartItemsRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -166,9 +166,9 @@ public class OrderApiDocumentTest {
     @Test
     void 특정_유저의_주문하기_문서화() throws Exception {
         // given
-        final OrderCartItemDto oneDto = new OrderCartItemDto(1L, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
-        final OrderCartItemDto twoDto = new OrderCartItemDto(2L, PIZZA.NAME, PIZZA.PRICE, PIZZA.IMAGE_URL);
-        final List<OrderCartItemDto> orderCartItemDtos = List.of(oneDto, twoDto);
+        final OrderCartItemRequest oneDto = new OrderCartItemRequest(1L, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+        final OrderCartItemRequest twoDto = new OrderCartItemRequest(2L, PIZZA.NAME, PIZZA.PRICE, PIZZA.IMAGE_URL);
+        final List<OrderCartItemRequest> orderCartItemDtos = List.of(oneDto, twoDto);
         final OrderCartItemsRequest request = new OrderCartItemsRequest(orderCartItemDtos);
 
         given(memberDao.getMemberByEmail(MemberA.EMAIL)).willReturn(MemberA.ENTITY);
@@ -184,18 +184,18 @@ public class OrderApiDocumentTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/orders/" + 1L))
                 .andDo(document("orders/postOrder",
-                        preprocessRequest(prettyPrint()),
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
-                        ),
-                        requestFields(
-                                fieldWithPath("orderCartItems").type(JsonFieldType.ARRAY).description("주문하려는 장바구니 목록"),
-                                fieldWithPath("orderCartItems.[].cartItemId").type(JsonFieldType.NUMBER).description("장바구니 ID"),
-                                fieldWithPath("orderCartItems.[].orderCartItemName").type(JsonFieldType.STRING).description("주문 시점의 상품 이름"),
-                                fieldWithPath("orderCartItems.[].orderCartItemPrice").type(JsonFieldType.NUMBER).description("주문 시점의 상품 가격"),
-                                fieldWithPath("orderCartItems.[].orderCartItemImageUrl").type(JsonFieldType.STRING).description("주문 시점의 상품 이미지 경로")
+                                preprocessRequest(prettyPrint()),
+                                requestHeaders(
+                                        headerWithName(HttpHeaders.AUTHORIZATION).description("[Basic Auth] 로그인 정보")
+                                ),
+                                requestFields(
+                                        fieldWithPath("orderCartItems").type(JsonFieldType.ARRAY).description("주문하려는 장바구니 목록"),
+                                        fieldWithPath("orderCartItems.[].cartItemId").type(JsonFieldType.NUMBER).description("장바구니 ID"),
+                                        fieldWithPath("orderCartItems.[].orderCartItemName").type(JsonFieldType.STRING).description("주문 시점의 상품 이름"),
+                                        fieldWithPath("orderCartItems.[].orderCartItemPrice").type(JsonFieldType.NUMBER).description("주문 시점의 상품 가격"),
+                                        fieldWithPath("orderCartItems.[].orderCartItemImageUrl").type(JsonFieldType.STRING).description("주문 시점의 상품 이미지 경로")
+                                )
                         )
-                )
-        );
+                );
     }
 }

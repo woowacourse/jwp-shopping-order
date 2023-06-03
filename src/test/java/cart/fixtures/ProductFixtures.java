@@ -1,8 +1,8 @@
 package cart.fixtures;
 
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.product.domain.Product;
+import cart.product.ui.request.ProductRequest;
+import cart.product.ui.response.ProductResponse;
 
 public class ProductFixtures {
 

@@ -1,9 +1,9 @@
 package cart.fixtures;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
-import cart.dto.CartItemResponse;
+import cart.cartitem.domain.CartItem;
+import cart.cartitem.ui.response.CartItemResponse;
+import cart.member.domain.Member;
+import cart.product.domain.Product;
 
 import static cart.fixtures.MemberFixtures.MemberA;
 import static cart.fixtures.MemberFixtures.MemberB;

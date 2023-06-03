@@ -1,15 +1,15 @@
 package cart.document;
 
-import cart.WebMvcConfig;
-import cart.application.CartItemService;
-import cart.application.ProductService;
-import cart.dao.MemberDao;
-import cart.domain.CartItem;
-import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.CartItemRequest;
+import cart.auth.MemberArgumentResolver;
+import cart.auth.WebMvcConfig;
+import cart.cartitem.application.CartItemService;
+import cart.cartitem.domain.CartItem;
+import cart.cartitem.ui.CartItemApiController;
+import cart.cartitem.ui.request.CartItemQuantityUpdateRequest;
+import cart.cartitem.ui.request.CartItemRequest;
 import cart.fixtures.ProductFixtures;
-import cart.ui.CartItemApiController;
-import cart.ui.MemberArgumentResolver;
+import cart.member.dao.MemberDao;
+import cart.product.application.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;

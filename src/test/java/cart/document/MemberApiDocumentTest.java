@@ -1,11 +1,11 @@
 package cart.document;
 
-import cart.WebMvcConfig;
-import cart.application.MemberService;
-import cart.dao.MemberDao;
-import cart.dto.DepositRequest;
-import cart.ui.MemberApiController;
-import cart.ui.MemberArgumentResolver;
+import cart.auth.MemberArgumentResolver;
+import cart.auth.WebMvcConfig;
+import cart.member.application.MemberService;
+import cart.member.dao.MemberDao;
+import cart.member.ui.MemberApiController;
+import cart.member.ui.request.DepositRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;

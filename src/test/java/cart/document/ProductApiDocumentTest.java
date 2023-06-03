@@ -1,11 +1,11 @@
 package cart.document;
 
-import cart.WebMvcConfig;
-import cart.application.CartItemService;
-import cart.application.ProductService;
-import cart.domain.Product;
-import cart.dto.ProductCartItemDto;
-import cart.ui.ProductApiController;
+import cart.auth.WebMvcConfig;
+import cart.cartitem.application.CartItemService;
+import cart.product.application.ProductService;
+import cart.product.application.dto.ProductCartItemDto;
+import cart.product.domain.Product;
+import cart.product.ui.ProductApiController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
