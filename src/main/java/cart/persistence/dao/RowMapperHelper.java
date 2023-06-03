@@ -11,6 +11,7 @@ import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderEntity;
 import cart.persistence.entity.OrderItemEntity;
 import cart.persistence.entity.ProductEntity;
+import java.util.Objects;
 import org.springframework.jdbc.core.RowMapper;
 
 public class RowMapperHelper {
@@ -99,6 +100,9 @@ public class RowMapperHelper {
     private static RowMapper<CouponEntity> getCouponRowMapper(boolean withTable) {
         return (rs, rowNum) -> {
             String prefix = withTable ? "coupon." : "";
+            if (Objects.isNull(rs.getString(prefix + "name"))) {
+                return null;
+            }
             return new CouponEntity(
                     rs.getLong(prefix + "id"),
                     rs.getString(prefix + "name"),
@@ -122,6 +126,9 @@ public class RowMapperHelper {
     private static RowMapper<MemberCouponEntity> getMemberCouponRowMapper(boolean withTable) {
         return (rs, rowNum) -> {
             String prefix = withTable ? "member_coupon." : "";
+            if (Objects.isNull(rs.getTimestamp("expired_at"))) {
+                return null;
+            }
             return new MemberCouponEntity(
                     rs.getLong(prefix + "id"),
                     rs.getLong(prefix + "member_id"),
@@ -156,7 +163,7 @@ public class RowMapperHelper {
             return new OrderEntity(
                     rs.getLong(prefix + "id"),
                     rs.getLong(prefix + "member_id"),
-                    rs.getLong(prefix + "member_coupon_id"),
+                    (Long) rs.getObject(prefix + "member_coupon_id"),
                     rs.getInt(prefix + "shipping_fee"),
                     rs.getInt(prefix + "total_price"),
                     rs.getTimestamp(prefix + "created_at")

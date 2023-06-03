@@ -91,7 +91,6 @@ public class OrderService {
     @Transactional(readOnly = true)
     public FindOrdersResponse findOrders(final Member member) {
         List<Order> orders = orderRepository.findByMember(member);
-
         return FindOrdersResponse.from(orders);
     }
 }

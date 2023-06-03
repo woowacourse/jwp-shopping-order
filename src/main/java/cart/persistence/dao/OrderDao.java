@@ -41,12 +41,11 @@ public class OrderDao {
     public Optional<OrderDetailDTO> findById(final long id) {
         String sql = "SELECT * FROM `order` "
                 + "INNER JOIN member ON `order`.member_id = member.id "
-                + "INNER JOIN member_coupon ON `order`.member_coupon_id = member_coupon.id "
-                + "INNER JOIN coupon ON member_coupon.id = coupon.id "
+                + "LEFT JOIN member_coupon ON `order`.member_coupon_id = member_coupon.id "
+                + "LEFT JOIN coupon ON member_coupon.id = coupon.id "
                 + "WHERE `order`.id = ?";
         try {
-            OrderDetailDTO order = jdbcTemplate.queryForObject(sql, RowMapperHelper.orderDetailRowMapper(),
-                    id);
+            OrderDetailDTO order = jdbcTemplate.queryForObject(sql, RowMapperHelper.orderDetailRowMapper(), id);
             return Optional.of(order);
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
@@ -56,8 +55,8 @@ public class OrderDao {
     public List<OrderDetailDTO> findByMemberId(final long memberId) {
         String sql = "SELECT * FROM `order` "
                 + "INNER JOIN member ON `order`.member_id = member.id "
-                + "INNER JOIN member_coupon ON `order`.member_coupon_id = member_coupon.id "
-                + "INNER JOIN coupon ON member_coupon.id = coupon.id "
+                + "LEFT JOIN member_coupon ON `order`.member_coupon_id = member_coupon.id "
+                + "LEFT JOIN coupon ON member_coupon.id = coupon.id "
                 + "WHERE `order`.member_id = ? ";
         return jdbcTemplate.query(sql, RowMapperHelper.orderDetailRowMapper(), memberId);
     }

@@ -15,6 +15,9 @@ public class MemberCouponMapper {
 
     public static MemberCoupon toDomain(final MemberCouponEntity memberCouponEntity, final CouponEntity couponEntity,
             final MemberEntity memberEntity) {
+        if (memberCouponEntity == null) {
+            return null;
+        }
         Coupon coupon = couponEntity.toDomain();
         Member member = memberEntity.toDomain();
         return new MemberCoupon(memberCouponEntity.getId(), coupon, member, false,
