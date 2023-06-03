@@ -2,9 +2,9 @@ package cart.domain.order;
 
 public class OrderProduct {
 
-    private final Long id;
+    private Long id;
+    private Long orderId;
     private final long productId;
-    private final long orderId;
     private final String name;
     private final int price;
     private final String imageUrl;
@@ -77,7 +77,7 @@ public class OrderProduct {
         private int productPrice;
         private String productImageUrl;
         private int quantity;
-        private int totalPayment;
+        private int totalPrice;
 
         public Builder id(long id) {
             this.id = id;
@@ -114,13 +114,13 @@ public class OrderProduct {
             return this;
         }
 
-        public Builder totalPayment(int totalPayment) {
-            this.totalPayment = totalPayment;
+        public Builder totalPrice(int totalPrice) {
+            this.totalPrice = totalPrice;
             return this;
         }
 
         public OrderProduct build() {
-            return new OrderProduct(id, productId, orderId, productName, productPrice, productImageUrl, quantity, totalPayment);
+            return new OrderProduct(id, productId, orderId, productName, productPrice, productImageUrl, quantity, totalPrice);
         }
     }
 }

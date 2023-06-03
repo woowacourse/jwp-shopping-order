@@ -9,8 +9,9 @@ public class OrderProductEntity {
     private final int productPrice;
     private final String productImageUrl;
     private final int quantity;
+    private final int totalPrice;
 
-    private OrderProductEntity(Long id, long orderId, long productId, String productName, int productPrice, String productImageUrl, int quantity) {
+    private OrderProductEntity(Long id, long orderId, long productId, String productName, int productPrice, String productImageUrl, int quantity, int totalPrice) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
@@ -18,6 +19,7 @@ public class OrderProductEntity {
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
         this.quantity = quantity;
+        this.totalPrice = totalPrice;
     }
 
     public Long getId() {
@@ -48,6 +50,10 @@ public class OrderProductEntity {
         return quantity;
     }
 
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
     @Override
     public String toString() {
         return "OrderProductEntity{" +
@@ -58,6 +64,7 @@ public class OrderProductEntity {
                 ", productPrice=" + productPrice +
                 ", productImageUrl='" + productImageUrl + '\'' +
                 ", quantity=" + quantity +
+                ", totalPrice=" + totalPrice +
                 '}';
     }
 
@@ -70,6 +77,7 @@ public class OrderProductEntity {
         private int productPrice;
         private String productImageUrl;
         private int quantity;
+        private int totalPrice;
 
         public Builder id(long id) {
             this.id = id;
@@ -106,8 +114,13 @@ public class OrderProductEntity {
             return this;
         }
 
+        public Builder totalPrice(int totalPrice) {
+            this.totalPrice = totalPrice;
+            return this;
+        }
+
         public OrderProductEntity build() {
-            return new OrderProductEntity(id, orderId, productId, productName, productPrice, productImageUrl, quantity);
+            return new OrderProductEntity(id, orderId, productId, productName, productPrice, productImageUrl, quantity, totalPrice);
         }
     }
 }

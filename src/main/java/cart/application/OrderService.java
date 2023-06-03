@@ -3,9 +3,7 @@ package cart.application;
 import cart.domain.carts.CartItem;
 import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.domain.order.OrderProduct;
 import cart.domain.order.OrderProducts;
-import cart.domain.payment.Payment;
 import cart.dto.order.OrderProductsRequest;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
@@ -13,10 +11,6 @@ import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class OrderService {
@@ -32,44 +26,16 @@ public class OrderService {
     }
 
     public long orderProducts(Member member, OrderProductsRequest orderProductsRequest) {
-        List<CartItem> cartItems = toCartItems(orderProductsRequest.getCartIds());
-        OrderProducts orderProducts = toOrderProducts(cartItems);
-        Payment payment = new Payment(orderProducts.calculateTotalPayment(), orderProductsRequest.getPoint());
-        Order order = new Order(member, orderProducts, payment);
+        List<CartItem> cartItems = cartItemRepository.findCartItemsByIds(orderProductsRequest.getCartIds());
+        Order order = Order.of(member, cartItems, orderProductsRequest.getPoint());
         // 장바구니에서 삭제
         cartItems.forEach(cartItem -> cartItemRepository.deleteById(cartItem.getId()));
         // 주문 목록에 저장
         long orderId = orderRepository.createOrder(order);
-        // 포인트 적립
-        member.usePoint(payment.getUsedPoint());
-        member.earnPoint(payment);
 
         // 포인트 정보 저장
         memberRepository.updatePoint(member.getId(), member.getPoint());
         return orderId;
-    }
-
-    private List<CartItem> toCartItems(List<Long> cartItemIds) {
-        return cartItemIds.stream()
-                .map(cartItemRepository::findCartItemById)
-                .collect(Collectors.toList());
-    }
-
-    private OrderProducts toOrderProducts(List<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(this::toOrderItem)
-                .collect(collectingAndThen(toList(), OrderProducts::new));
-    }
-
-    private OrderProduct toOrderItem(CartItem cartItem) {
-        return new OrderProduct.Builder()
-                .productId(cartItem.getProduct().getId())
-                .productName(cartItem.getProduct().getName())
-                .productPrice(cartItem.getProduct().getPrice())
-                .productImageUrl(cartItem.getProduct().getImageUrl())
-                .quantity(cartItem.getQuantity())
-                .totalPayment(cartItem.getQuantity() * cartItem.getProduct().getPrice())
-                .build();
     }
 
     // 사용자별 주문 내역

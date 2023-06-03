@@ -68,6 +68,10 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public int calculateTotalProductsPrice() {
+        return product.getPrice() * quantity;
+    }
+
     public Long getId() {
         return id;
     }

@@ -26,6 +26,7 @@ public class OrderDao {
                     .productPrice(resultSet.getInt("product_price"))
                     .productImageUrl(resultSet.getString("product_image_url"))
                     .quantity(resultSet.getInt("quantity"))
+                    .totalPrice(resultSet.getInt("total_price"))
                     .build();
 
     private final RowMapper<OrderEntity> orderEntityRowMapper = (resultSet, rowNum) ->
@@ -61,7 +62,7 @@ public class OrderDao {
     }
 
     public long insertOrderItems(OrderProductEntity orderProductEntity) {
-        String query = "INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO order_item (order_id, product_id, product_name, product_price, product_image_url, quantity, total_price) VALUES (?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -74,6 +75,7 @@ public class OrderDao {
             preparedStatement.setInt(4, orderProductEntity.getProductPrice());
             preparedStatement.setString(5, orderProductEntity.getProductImageUrl());
             preparedStatement.setInt(6, orderProductEntity.getQuantity());
+            preparedStatement.setInt(7, orderProductEntity.getTotalPrice());
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey().longValue());

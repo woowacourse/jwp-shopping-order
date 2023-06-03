@@ -48,13 +48,14 @@ public class OrderRepository {
                 .productPrice(orderProduct.getPrice())
                 .productImageUrl(orderProduct.getImageUrl())
                 .quantity(orderProduct.getQuantity())
+                .totalPrice(orderProduct.getTotalPrice())
                 .build();
     }
 
     private static OrderEntity toOrderEntity(Order order) {
         return new OrderEntity.Builder()
                 .memberId(order.getMember().getId())
-                .totalPayment(order.getPayment().getTotalPayment())
+                .totalPayment(order.getPayment().getTotalPrice())
                 .usedPoint(order.getPayment().getUsedPoint())
                 .build();
     }
@@ -80,6 +81,7 @@ public class OrderRepository {
                         .productPrice(orderProductEntity.getProductPrice())
                         .productImageUrl(orderProductEntity.getProductImageUrl())
                         .quantity(orderProductEntity.getQuantity())
+                        .totalPrice(orderProductEntity.getTotalPrice())
                         .build()
                 ).collect(collectingAndThen(toList(), (orderProducts) -> new OrderProducts(orderId, orderProducts)));
     }
@@ -89,6 +91,6 @@ public class OrderRepository {
         OrderEntity orderEntity = orderDao.getOrderById(orderId);
         OrderProducts orderProducts = toOrderProducts(orderId, orderDao.getOrderItemsByOrderId(orderId));
         Payment payment = new Payment(orderEntity.getTotalPayment(), orderEntity.getUsedPoint());
-        return new Order(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
+        return Order.of(orderId, member, orderProducts, payment, orderEntity.getCreatedAt());
     }
 }

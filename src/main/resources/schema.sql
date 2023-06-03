@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS order_item
     product_price     INT          NOT NULL,
     product_image_url VARCHAR(255) NOT NULL,
     quantity          INT          NOT NULL,
+    total_price       INT          NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT EMPPK_4 FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE
 );

@@ -40,13 +40,13 @@ public class OrderApiController {
 
     @GetMapping
     public ResponseEntity<List<OrderProductsResponse>> showOrder(Member member) {
-        List<OrderProducts> orderItems = orderService.getOrderByMember(member);
-        return ResponseEntity.ok(toOrderProductsResponse(orderItems));
+        List<OrderProducts> orderProducts = orderService.getOrderByMember(member);
+        return ResponseEntity.ok(toOrderProductsResponse(orderProducts));
     }
 
-    private List<OrderProductsResponse> toOrderProductsResponse(List<OrderProducts> orderProducts) {
-        return orderProducts.stream()
-                .map(orderProduct -> new OrderProductsResponse(orderProduct.getOrderId(), toOrderProductResponse(orderProduct.getOrderProducts())))
+    private List<OrderProductsResponse> toOrderProductsResponse(List<OrderProducts> orderProductsOfOrders) {
+        return orderProductsOfOrders.stream()
+                .map(orderProductsOfOrder -> new OrderProductsResponse(orderProductsOfOrder.getOrderId(), toOrderProductResponse(orderProductsOfOrder.getOrderProducts())))
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +72,7 @@ public class OrderApiController {
         return new OrderResponse(
                 order.getId(),
                 order.getOrderProducts(),
-                order.getPayment().getTotalPayment(),
+                order.getPayment().getTotalPrice(),
                 order.getPayment().getUsedPoint(),
                 order.getCreatedAt()
         );

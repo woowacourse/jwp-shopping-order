@@ -3,6 +3,7 @@ package cart.domain.member;
 import cart.domain.payment.Payment;
 import cart.domain.payment.Point;
 import cart.exception.MemberException;
+import cart.exception.NotEnoughMoneyException;
 import cart.exception.PointException;
 
 import java.util.Objects;
@@ -13,11 +14,13 @@ public class Member {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
     private static final int INITIAL_POINT = 1_000;
     private static final int MINIMUM_POINT = 0;
+    private static final int INITIAL_MONEY = 1_000_000_000;
 
     private final Long id;
     private final String email;
     private final String password;
     private int point;
+    private int money;
 
     public Member(Long id, String email, String password) {
         validate(id, email);
@@ -25,6 +28,7 @@ public class Member {
         this.email = email;
         this.password = password;
         this.point = INITIAL_POINT;
+        this.money = INITIAL_MONEY;
     }
 
     private void validate(Long id, String email) {
@@ -44,18 +48,27 @@ public class Member {
         }
     }
 
-    public void usePoint(int usedPoint) {
-        validateUsePoint(usedPoint);
-        point -= usedPoint;
+    public void pay(Payment payment) {
+        validatePointToUse(payment.getUsedPoint());
+        validateMoneyToUse(payment.getUserPayment());
+        point -= payment.getUsedPoint();
+        money -= payment.getUserPayment();
+        earnPoint(payment);
     }
 
-    private void validateUsePoint(int usePoint) {
+    private void validatePointToUse(int usePoint) {
         if (usePoint < MINIMUM_POINT || usePoint > point) {
             throw new PointException.InvalidUsedPoint();
         }
     }
 
-    public int earnPoint(Payment payment) {
+    private void validateMoneyToUse(int userPayment) {
+        if (userPayment > money) {
+            throw new NotEnoughMoneyException();
+        }
+    }
+
+    private int earnPoint(Payment payment) {
         point += Point.calculateEarningPoint(payment.getUserPayment());
         return point;
     }

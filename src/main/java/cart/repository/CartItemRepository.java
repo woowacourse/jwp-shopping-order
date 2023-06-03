@@ -4,6 +4,9 @@ import cart.domain.carts.CartItem;
 import cart.repository.dao.CartItemDao;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 public class CartItemRepository {
 
@@ -19,5 +22,11 @@ public class CartItemRepository {
 
     public void deleteById(long cartItemId) {
         cartItemDao.deleteById(cartItemId);
+    }
+
+    public List<CartItem> findCartItemsByIds(List<Long> cartIds) {
+        return cartIds.stream()
+                .map(this::findCartItemById)
+                .collect(Collectors.toList());
     }
 }
