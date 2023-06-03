@@ -19,6 +19,7 @@ import static cart.exception.ErrorCode.INVALID_PRODUCT_ID;
 
 @Service
 public class CartItemService {
+    
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
@@ -36,7 +37,6 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId());
-        // TODO: 에러 처리
         return cartItemRepository.save(new CartItem(member, product));
     }
 

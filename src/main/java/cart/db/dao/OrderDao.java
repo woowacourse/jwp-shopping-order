@@ -2,6 +2,7 @@ package cart.db.dao;
 
 import cart.db.entity.OrderEntity;
 import cart.db.entity.OrderMemberDetailEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderDao {
@@ -32,17 +34,15 @@ public class OrderDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public OrderEntity findById(final Long id) {
-        String sql = "SELECT id, member_id, total_price, discounted_total_price, delivery_price, ordered_at " +
-                "FROM `order` WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new OrderEntityRowMapper(), id);
-    }
-
-    public OrderMemberDetailEntity findOrderMemberById(final Long id) {
+    public Optional<OrderMemberDetailEntity> findOrderMemberById(final Long id) {
         String sql = "SELECT `order`.id, member_id, member.name, member.password, " +
                 "total_price, discounted_total_price, delivery_price, ordered_at " +
                 "FROM `order` JOIN member ON `order`.member_id = member.id WHERE `order`.id = ?";
-        return jdbcTemplate.queryForObject(sql, new OrderMemberDetailEntityRowMapper(), id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new OrderMemberDetailEntityRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<OrderMemberDetailEntity> findOrderMemberByMemberId(final Long memberId) {

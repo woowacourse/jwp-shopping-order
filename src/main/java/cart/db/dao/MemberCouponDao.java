@@ -39,6 +39,11 @@ public class MemberCouponDao {
         return jdbcTemplate.query(sql, new MemberCouponDetailEntityRowMapper(), memberId);
     }
 
+    public Boolean existByMemberIdAndCouponId(final Long memberId, final Long couponId) {
+        String sql = "SELECT EXISTS(SELECT * FROM member_coupon WHERE member_id = ? AND coupon_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, memberId, couponId);
+    }
+
     private static class MemberCouponDetailEntityRowMapper implements RowMapper<MemberCouponDetailEntity> {
         @Override
         public MemberCouponDetailEntity mapRow(ResultSet rs, int rowNum) throws SQLException {

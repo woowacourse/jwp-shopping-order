@@ -2,6 +2,7 @@ package cart.db.dao;
 
 import cart.db.entity.CartItemDetailEntity;
 import cart.db.entity.CartItemEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CartItemDao {
@@ -45,7 +47,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, new CartItemDetailEntityRowMapper(), memberId);
     }
 
-    public List<CartItemDetailEntity> findById(final Long id) {
+    public Optional<CartItemDetailEntity> findById(final Long id) {
         String sql = "SELECT cart_item.id, cart_item.quantity, " +
                 "member.id, member.name, member.password, " +
                 "product.id, product.name, product.price, product.image_url, product.is_deleted " +
@@ -53,7 +55,11 @@ public class CartItemDao {
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.id = ? AND product.is_deleted = false";
-        return jdbcTemplate.query(sql, new CartItemDetailEntityRowMapper(), id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new CartItemDetailEntityRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Long countByIdsAndMemberId(final Long memberId, List<Long> ids) {

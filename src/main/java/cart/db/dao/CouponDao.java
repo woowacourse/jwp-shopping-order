@@ -1,12 +1,14 @@
 package cart.db.dao;
 
 import cart.db.entity.CouponEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Repository
 public class CouponDao {
@@ -17,9 +19,13 @@ public class CouponDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public CouponEntity findById(final Long couponId) {
+    public Optional<CouponEntity> findById(final Long couponId) {
         String sql = "SELECT * FROM coupon WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new CouponEntityRowMapper(), couponId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new CouponEntityRowMapper(), couponId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private static class CouponEntityRowMapper implements RowMapper<CouponEntity> {

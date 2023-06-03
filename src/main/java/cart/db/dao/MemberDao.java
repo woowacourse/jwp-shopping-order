@@ -2,6 +2,7 @@ package cart.db.dao;
 
 import cart.db.entity.MemberEntity;
 import cart.domain.member.Member;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -37,16 +39,22 @@ public class MemberDao {
         return jdbcTemplate.query(sql, new MemberEntityRowMapper());
     }
 
-    public MemberEntity findById(final Long id) {
+    public Optional<MemberEntity> findById(final Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
-        List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberEntityRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new MemberEntityRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public MemberEntity findByName(final String name) {
+    public Optional<MemberEntity> findByName(final String name) {
         String sql = "SELECT * FROM member WHERE name = ?";
-        List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{name}, new MemberEntityRowMapper());
-        return members.isEmpty() ? null : members.get(0);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new MemberEntityRowMapper(), name));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void update(final Member member) {

@@ -17,6 +17,21 @@ public class OrderMapper {
 
     public static Order toDomain(
             final OrderMemberDetailEntity orderMember,
+            final List<OrderProductDetailEntity> orderProducts
+    ) {
+        Member member = new Member(orderMember.getMemberId(), orderMember.getName(), orderMember.getPassword());
+        List<Item> items = orderProducts.stream().map(entity ->
+                new Item(
+                        entity.getId(),
+                        new Product(entity.getProductId(), entity.getProductName(), entity.getProductPrice(), entity.getProductImageUrl(), entity.getProductIsDeleted()),
+                        entity.getQuantity()
+                )
+        ).collect(Collectors.toList());
+        return new Order(orderMember.getId(), member, items, null, orderMember.getTotalPrice(), orderMember.getDeliveryPrice(), orderMember.getOrderedAt());
+    }
+
+    public static Order toDomain(
+            final OrderMemberDetailEntity orderMember,
             final List<OrderProductDetailEntity> orderProducts,
             final OrderCouponDetailEntity orderCoupon
     ) {

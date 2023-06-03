@@ -4,12 +4,14 @@ import cart.db.dao.CartItemDao;
 import cart.db.entity.CartItemDetailEntity;
 import cart.db.entity.CartItemEntity;
 import cart.domain.cart.CartItem;
+import cart.exception.BadRequestException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static cart.db.mapper.CartItemMapper.toDomain;
 import static cart.db.mapper.CartItemMapper.toEntity;
+import static cart.exception.ErrorCode.INVALID_CART_ID;
 
 @Repository
 public class CartItemRepository {
@@ -31,11 +33,9 @@ public class CartItemRepository {
     }
 
     public CartItem findById(final Long id) {
-        List<CartItemDetailEntity> cartItemDetailEntities = cartItemDao.findById(id);
-        if (cartItemDetailEntities.isEmpty()) {
-            return null;
-        }
-        return toDomain(cartItemDetailEntities.get(0));
+        CartItemDetailEntity cartItemDetailEntity = cartItemDao.findById(id)
+                .orElseThrow(() -> new BadRequestException(INVALID_CART_ID));
+        return toDomain(cartItemDetailEntity);
     }
 
     public Long countByIdsAndMemberId(final Long memberId, List<Long> ids) {

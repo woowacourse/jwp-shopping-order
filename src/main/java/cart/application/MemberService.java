@@ -14,6 +14,8 @@ import static cart.exception.ErrorCode.NOT_AUTHENTICATION_MEMBER;
 @Service
 public class MemberService {
 
+    private static final Long CONGRATULATION_COUPON_ID_TO_NEW_MEMBER = 1L;
+
     private final MemberCouponService memberCouponService;
     private final MemberRepository memberRepository;
 
@@ -29,7 +31,7 @@ public class MemberService {
         }
         Long memberId = memberRepository.save(new Member(memberRequest.getName(), memberRequest.getPassword()));
         Member newMember = new Member(memberId, memberRequest.getName(), memberRequest.getPassword());
-        memberCouponService.add(new Member(memberId, newMember.getName(), newMember.getPassword()), 1L);
+        memberCouponService.add(newMember, CONGRATULATION_COUPON_ID_TO_NEW_MEMBER);
     }
 
     public TokenResponse generateMemberToken(final MemberRequest memberRequest) {

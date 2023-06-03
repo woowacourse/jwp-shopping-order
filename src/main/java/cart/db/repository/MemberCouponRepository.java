@@ -27,4 +27,8 @@ public class MemberCouponRepository {
         List<MemberCouponDetailEntity> memberCouponDetailEntities = memberCouponDao.findAllByMemberId(memberId);
         return MemberCouponMapper.toDomain(memberCouponDetailEntities);
     }
+
+    public boolean existByMemberIdAndCouponId(final Long memberId, final Long couponId) {
+        return memberCouponDao.existByMemberIdAndCouponId(memberId, couponId);
+    }
 }

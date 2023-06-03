@@ -3,12 +3,14 @@ package cart.db.repository;
 import cart.db.dao.MemberDao;
 import cart.db.entity.MemberEntity;
 import cart.domain.member.Member;
+import cart.exception.BadRequestException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static cart.db.mapper.MemberMapper.toDomain;
 import static cart.db.mapper.MemberMapper.toEntity;
+import static cart.exception.ErrorCode.INVALID_MEMBER_ID;
 
 @Repository
 public class MemberRepository {
@@ -30,12 +32,14 @@ public class MemberRepository {
     }
 
     public Member findById(final Long id) {
-        MemberEntity memberEntity = memberDao.findById(id);
+        MemberEntity memberEntity = memberDao.findById(id)
+                .orElseThrow(() -> new BadRequestException(INVALID_MEMBER_ID));
         return toDomain(memberEntity);
     }
 
     public Member findByName(final String name) {
-        MemberEntity memberEntity = memberDao.findByName(name);
+        MemberEntity memberEntity = memberDao.findByName(name)
+                .orElseThrow(() -> new BadRequestException(INVALID_MEMBER_ID));
         return toDomain(memberEntity);
     }
 

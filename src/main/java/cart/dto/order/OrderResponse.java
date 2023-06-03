@@ -20,11 +20,11 @@ public class OrderResponse {
 
     public OrderResponse(final Order order) {
         this.orderId = order.getId();
-        if (order.getCoupon() == null) {
+        if (order.getCoupon().isEmpty()) {
             this.coupon = new CouponResponse();
         }
-        if (order.getCoupon() != null) {
-            this.coupon = new CouponResponse(order.getCoupon());
+        if (order.getCoupon().isPresent()) {
+            this.coupon = new CouponResponse(order.getCoupon().get());
         }
         this.items = order.getItems().getItems()
                 .stream().map(CartItemResponse::of)

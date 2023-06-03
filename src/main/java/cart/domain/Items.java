@@ -12,12 +12,16 @@ public class Items {
     }
 
     private void validateItemsSize(final List<Item> items) {
-        int totalQuantity = items.stream()
-                .mapToInt(Item::getQuantity)
-                .sum();
+        int totalQuantity = calculateItemsQuantity(items);
         if (totalQuantity < 1 || totalQuantity > 1000) {
             throw new IllegalArgumentException("상품 총 수량은 1개 이상 1000개 이하까지 가능합니다.");
         }
+    }
+
+    public int calculateItemsQuantity(final List<Item> items) {
+        return items.stream()
+                .mapToInt(Item::getQuantity)
+                .sum();
     }
 
     public List<Item> getItems() {

@@ -2,6 +2,7 @@ package cart.ui;
 
 import cart.exception.AuthenticationException;
 import cart.exception.AuthorizationException;
+import cart.exception.BadRequestException;
 import cart.exception.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,15 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(e.getErrorCode(), e.getErrorCode().getErrorMessage()));
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleException(BadRequestException e) {
+        logger.error(e.getErrorCode().getErrorMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(e.getErrorCode(), e.getErrorCode().getErrorMessage()));
+    }
+
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException1(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
         e.printStackTrace();
         logger.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

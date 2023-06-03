@@ -3,12 +3,14 @@ package cart.db.repository;
 import cart.db.dao.ProductDao;
 import cart.db.entity.ProductEntity;
 import cart.domain.Product;
+import cart.exception.BadRequestException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static cart.db.mapper.ProductMapper.toDomain;
 import static cart.db.mapper.ProductMapper.toEntity;
+import static cart.exception.ErrorCode.INVALID_PRODUCT_ID;
 
 @Repository
 public class ProductRepository {
@@ -35,7 +37,8 @@ public class ProductRepository {
     }
 
     public Product findById(final Long id) {
-        ProductEntity productEntity = productDao.findById(id);
+        ProductEntity productEntity = productDao.findById(id)
+                .orElseThrow(() -> new BadRequestException(INVALID_PRODUCT_ID));
         return toDomain(productEntity);
     }
 

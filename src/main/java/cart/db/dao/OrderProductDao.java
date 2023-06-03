@@ -44,7 +44,7 @@ public class OrderProductDao {
 
     public List<OrderProductDetailEntity> findByOrderId(final Long orderId) {
         String sql = "SELECT order_product.id, order_id, quantity, " +
-                "product_id, product.name, ordered_product_price, product.image_url " +
+                "product_id, product.name, ordered_product_price, product.image_url, product.is_deleted " +
                 "FROM order_product JOIN product ON order_product.product_id = product.id " +
                 "WHERE order_id = ?";
         return jdbcTemplate.query(sql, new OrderProductDetailEntityRowMapper(), orderId);

@@ -2,6 +2,7 @@ package cart.db.dao;
 
 import cart.db.entity.OrderCouponDetailEntity;
 import cart.db.entity.OrderCouponEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderCouponDao {
@@ -36,12 +38,16 @@ public class OrderCouponDao {
         simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public OrderCouponDetailEntity findByOrderId(final Long orderId) {
+    public Optional<OrderCouponDetailEntity> findByOrderId(final Long orderId) {
         String sql = "SELECT order_coupon.id, order_id, " +
                 "coupon_id, coupon.name, discount_rate, period, expired_at " +
                 "FROM order_coupon JOIN coupon ON order_coupon.coupon_id = coupon.id " +
                 "WHERE order_id = ?";
-        return jdbcTemplate.queryForObject(sql, new OrderCouponDetailEntityRowMapper(), orderId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new OrderCouponDetailEntityRowMapper(), orderId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<OrderCouponDetailEntity> findByOrderIds(final List<Long> orderIds) {

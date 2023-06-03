@@ -11,6 +11,7 @@ import cart.domain.order.Order;
 import cart.dto.ItemRequest;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
+import cart.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static cart.exception.ErrorCode.INVALID_PRODUCT_ID;
 
 @Service
 public class OrderService {
@@ -39,22 +42,22 @@ public class OrderService {
                 .collect(Collectors.toMap(ItemRequest::getProductId, ItemRequest::getQuantity));
 
         List<Product> products = productRepository.findByIds(new ArrayList<>(orderRequestItems.keySet()));
-        // TODO: 유효성 검증: 개수가 일치하는지 확인
+        if (orderRequestItems.keySet().size() != products.size()) {
+            throw new BadRequestException(INVALID_PRODUCT_ID);
+        }
 
         List<Item> items = products.stream()
                 .map(product -> new Item(product, orderRequestItems.get(product.getId())))
                 .collect(Collectors.toUnmodifiableList());
 
-        Long couponId = orderRequest.getCouponId();
-        Coupon coupon = couponRepository.findById(couponId); // 쿠폰 ID 유효성 검사
-        Order order = new Order(member, items, coupon, 10000, 3000);
-
-        Long orderId = orderRepository.save(order);
+        Coupon coupon = couponRepository.findById(orderRequest.getCouponId());
+        Order order = new Order(member, items, coupon);
+        orderRepository.save(order);
     }
 
     public OrderResponse findOrderById(final Member member, final Long orderId) {
         Order order = orderRepository.findById(orderId);
-        // TODO: 소유자 확인
+        order.checkOwner(member);
         return new OrderResponse(order);
     }
 
