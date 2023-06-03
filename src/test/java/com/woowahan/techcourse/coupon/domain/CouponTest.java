@@ -36,7 +36,7 @@ class CouponTest {
         Coupon coupon = new Coupon("쿠폰", alwaysDiscountCondition, discountPolicy);
 
         // when
-        Money result = coupon.calculateDiscountAmount(new Order(10000));
+        Money result = coupon.calculateDiscountAmount(new OriginalAmount(10000));
 
         // then
         assertThat(result.getValue().doubleValue()).isEqualTo(new Money(3000).getValue().doubleValue());
@@ -48,7 +48,7 @@ class CouponTest {
         Coupon coupon = new Coupon("쿠폰", noneDiscountCondition, discountPolicy);
 
         // when
-        Money result = coupon.calculateDiscountAmount(new Order(10000));
+        Money result = coupon.calculateDiscountAmount(new OriginalAmount(10000));
 
         // then
         assertThat(result).isEqualTo(Money.ZERO);

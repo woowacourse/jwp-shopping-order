@@ -10,9 +10,9 @@ public class Coupons {
         this.coupons = coupons;
     }
 
-    public Money calculateActualPrice(Order order) {
-        Money originalPrice = order.getOriginalPrice();
-        Money discountAmount = calculateDiscountAmount(order);
+    public Money calculateActualPrice(OriginalAmount originalAmount) {
+        Money originalPrice = originalAmount.getOriginalPrice();
+        Money discountAmount = calculateDiscountAmount(originalAmount);
         return calculateSubtractOrZero(originalPrice, discountAmount);
     }
 
@@ -23,9 +23,9 @@ public class Coupons {
         return originalPrice.subtract(discountAmount);
     }
 
-    private Money calculateDiscountAmount(Order order) {
+    private Money calculateDiscountAmount(OriginalAmount originalAmount) {
         return coupons.stream()
-                .map(coupon -> coupon.calculateDiscountAmount(order))
+                .map(coupon -> coupon.calculateDiscountAmount(originalAmount))
                 .reduce(Money.ZERO, Money::add);
     }
 }

@@ -32,7 +32,7 @@ class CouponsTest {
         Coupons coupons = new Coupons(List.of(언제나_10_할인, 언제나_20_할인, 언제나_30_할인));
 
         // when
-        Money result = coupons.calculateActualPrice(new Order(10000));
+        Money result = coupons.calculateActualPrice(new OriginalAmount(10000));
 
         // then
         assertThat(result.getValue().doubleValue()).isEqualTo(new Money(6000).getValue().doubleValue());
@@ -44,7 +44,7 @@ class CouponsTest {
         Coupons coupons = new Coupons(List.of(언제나_10_할인, 언제나_20_할인, 언제나_30_할인, 언제나_100_할인));
 
         // when
-        Money result = coupons.calculateActualPrice(new Order(10000));
+        Money result = coupons.calculateActualPrice(new OriginalAmount(10000));
 
         // then
         assertThat(result).isEqualTo(Money.ZERO);

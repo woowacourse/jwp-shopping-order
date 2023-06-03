@@ -1,10 +1,10 @@
 package com.woowahan.techcourse.coupon.domain;
 
-public class Order {
+public class OriginalAmount {
 
     private final Money originalPrice;
 
-    public Order(long originalPrice) {
+    public OriginalAmount(long originalPrice) {
         this.originalPrice = new Money(originalPrice);
     }
 

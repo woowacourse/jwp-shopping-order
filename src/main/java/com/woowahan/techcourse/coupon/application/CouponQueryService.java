@@ -6,7 +6,7 @@ import com.woowahan.techcourse.coupon.db.dao.CouponDao;
 import com.woowahan.techcourse.coupon.domain.Coupon;
 import com.woowahan.techcourse.coupon.domain.Coupons;
 import com.woowahan.techcourse.coupon.domain.Money;
-import com.woowahan.techcourse.coupon.domain.Order;
+import com.woowahan.techcourse.coupon.domain.OriginalAmount;
 import com.woowahan.techcourse.coupon.exception.CouponNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -35,9 +35,10 @@ public class CouponQueryService {
             CalculateActualPriceRequestDto calculateActualPriceRequestDto) {
         Coupons coupons = findCoupons(calculateActualPriceRequestDto.getCouponIds());
 
-        Order targetOrder = calculateActualPriceRequestDto.getOrderRequest().toOrder();
+        OriginalAmount originalAmount = new OriginalAmount(
+                calculateActualPriceRequestDto.getOrderRequest().getOriginalPrice());
 
-        Money money = coupons.calculateActualPrice(targetOrder);
+        Money money = coupons.calculateActualPrice(originalAmount);
 
         return new CalculateActualPriceResponseDto(money.getValue());
     }

@@ -1,6 +1,5 @@
 package com.woowahan.techcourse.coupon.application.dto;
 
-import com.woowahan.techcourse.coupon.domain.Order;
 import java.util.List;
 
 public class CalculateActualPriceRequestDto {
@@ -27,10 +26,6 @@ public class CalculateActualPriceRequestDto {
 
         public OrderRequest(long originalPrice) {
             this.originalPrice = originalPrice;
-        }
-
-        public Order toOrder() {
-            return new Order(originalPrice);
         }
 
         public long getOriginalPrice() {

@@ -1,11 +1,11 @@
 package com.woowahan.techcourse.coupon.domain.discountcondition;
 
-import com.woowahan.techcourse.coupon.domain.Order;
+import com.woowahan.techcourse.coupon.domain.OriginalAmount;
 
 public class NoneDiscountCondition implements DiscountCondition {
 
     @Override
-    public boolean isSatisfiedBy(Order order) {
+    public boolean isSatisfiedBy(OriginalAmount originalAmount) {
         return false;
     }
 

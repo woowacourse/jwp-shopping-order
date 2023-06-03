@@ -1,11 +1,11 @@
 package com.woowahan.techcourse.coupon.domain.discountpolicy;
 
 import com.woowahan.techcourse.coupon.domain.Money;
-import com.woowahan.techcourse.coupon.domain.Order;
+import com.woowahan.techcourse.coupon.domain.OriginalAmount;
 
 public interface DiscountPolicy {
 
-    Money calculateDiscountAmount(Order order);
+    Money calculateDiscountAmount(OriginalAmount originalAmount);
 
     int getAmount();
 

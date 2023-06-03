@@ -3,7 +3,7 @@ package com.woowahan.techcourse.coupon.domain.discountpolicy;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowahan.techcourse.coupon.domain.Money;
-import com.woowahan.techcourse.coupon.domain.Order;
+import com.woowahan.techcourse.coupon.domain.OriginalAmount;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +19,7 @@ class PercentDiscountPolicyTest {
         PercentDiscountPolicy discountPolicy = new PercentDiscountPolicy(10);
 
         // when
-        Money result = discountPolicy.calculateDiscountAmount(new Order(input));
+        Money result = discountPolicy.calculateDiscountAmount(new OriginalAmount(input));
 
         // then
         assertThat(result.getValue().doubleValue()).isEqualTo(new Money(expected).getValue().doubleValue());

@@ -22,9 +22,9 @@ public class Coupon {
         this(null, name, discountCondition, discountPolicy);
     }
 
-    public Money calculateDiscountAmount(Order order) {
-        if (discountCondition.isSatisfiedBy(order)) {
-            return discountPolicy.calculateDiscountAmount(order);
+    public Money calculateDiscountAmount(OriginalAmount originalAmount) {
+        if (discountCondition.isSatisfiedBy(originalAmount)) {
+            return discountPolicy.calculateDiscountAmount(originalAmount);
         }
         return Money.ZERO;
     }

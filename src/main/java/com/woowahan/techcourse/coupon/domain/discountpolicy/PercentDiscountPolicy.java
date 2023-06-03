@@ -1,7 +1,7 @@
 package com.woowahan.techcourse.coupon.domain.discountpolicy;
 
 import com.woowahan.techcourse.coupon.domain.Money;
-import com.woowahan.techcourse.coupon.domain.Order;
+import com.woowahan.techcourse.coupon.domain.OriginalAmount;
 
 public class PercentDiscountPolicy implements DiscountPolicy {
 
@@ -12,8 +12,8 @@ public class PercentDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public Money calculateDiscountAmount(Order order) {
-        return order.getOriginalPrice().getMoneyByPercentage(discountRate);
+    public Money calculateDiscountAmount(OriginalAmount originalAmount) {
+        return originalAmount.getOriginalPrice().getMoneyByPercentage(discountRate);
     }
 
     @Override

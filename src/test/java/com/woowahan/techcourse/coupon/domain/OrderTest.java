@@ -13,10 +13,10 @@ class OrderTest {
     @Test
     void 주문이_잘_생성된다() {
         // given
-        Order order = new Order(10000);
+        OriginalAmount originalAmount = new OriginalAmount(10000);
 
         // when
-        Money result = order.getOriginalPrice();
+        Money result = originalAmount.getOriginalPrice();
 
         // then
         assertEquals(BigDecimal.valueOf(10000), result.getValue());
