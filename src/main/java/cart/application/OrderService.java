@@ -48,20 +48,24 @@ public class OrderService {
 
         List<CartItem> itemsToOrder = new ArrayList<>();
         for (OrderItemRequest orderItemRequest : request.getOrderItems()) {
-            CartItem item = cartItemService.getItemByProductId(orderItemRequest.getProduct().getId());
-            List<Long> couponIds = orderItemRequest.getCoupons()
-                    .stream()
-                    .map(MemberCouponRequest::getCouponId)
-                    .collect(Collectors.toList());
-            List<MemberCoupon> coupons = couponService.getMemberCouponsBy(member, couponIds);
-            cart.applyCouponsOn(item, coupons);
-
-            itemsToOrder.add(item);
+            CartItem itemToOrder = cartItemService.getItemBy(orderItemRequest.getId());
+            List<MemberCoupon> memberCoupons = getMemberCouponsFrom(member, orderItemRequest);
+            cart.applyCouponsOn(itemToOrder, memberCoupons);
+            itemsToOrder.add(itemToOrder);
         }
         Order order = cart.order(itemsToOrder);
 
         save(order);
         cartService.save(cart);
+    }
+
+    private List<MemberCoupon> getMemberCouponsFrom(Member member, OrderItemRequest orderItemRequest) {
+        return couponService.getMemberCouponsBy(
+                member,
+                orderItemRequest.getCoupons().stream()
+                        .map(MemberCouponRequest::getCouponId)
+                        .collect(Collectors.toList())
+        );
     }
 
     public List<Order> getBy(Member owner) {

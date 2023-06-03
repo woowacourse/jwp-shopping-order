@@ -24,7 +24,7 @@ class CartTest {
 
     @Test
     void 항목을_구매한다() {
-        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A);
+        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A());
 
         var orderItems = cart.order(List.of(CART_ITEM_치킨_MEMBER_A()));
 
@@ -35,7 +35,7 @@ class CartTest {
 
     @Test
     void 없는_항목은_주문할_수_없다() {
-        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A);
+        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A());
 
         assertThatThrownBy(() -> cart.order(List.of(new CartItem(MEMBER_A, 피자))))
                 .isInstanceOf(NotContainedItemException.class);
@@ -43,7 +43,7 @@ class CartTest {
 
     @Test
     void 구매한_항목은_제거된다() {
-        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A);
+        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A());
 
         cart.order(List.of(CART_ITEM_치킨_MEMBER_A()));
 
@@ -52,7 +52,7 @@ class CartTest {
 
     @Test
     void 항목에_쿠폰들을_적용한다() {
-        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A);
+        var cart = new Cart(MEMBER_A, CART_ITEMS_MEMBER_A());
         List<MemberCoupon> coupons = List.of(MEMBER_A_COUPON_PERCENTAGE_50(), MEMBER_A_COUPON_FIXED_2000());
         cart.applyCouponsOn(CART_ITEM_치킨_MEMBER_A(), coupons);
 

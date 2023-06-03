@@ -68,13 +68,13 @@ public class CartItemApiControllerTest extends ControllerTestWithDocs {
         when(memberDao.getMemberByEmail(eq(MEMBER_B.getEmail()))).thenReturn(Optional.of(MEMBER_B));
 
         when(cartItemService.findByMember(notNull())).thenReturn(Collections.emptyList());
-        when(cartItemService.findByMember(eq(MEMBER_A))).thenReturn(CART_ITEMS_MEMBER_A);
+        when(cartItemService.findByMember(eq(MEMBER_A))).thenReturn(CART_ITEMS_MEMBER_A());
         when(cartItemService.add(eq(MEMBER_A), any())).thenReturn(1L);
     }
 
     @Test
     void 장바구니_항목_조회() throws Exception {
-        List<CartItemResponse> cartItemsResponse = CartItemResponse.of(CART_ITEMS_MEMBER_A);
+        List<CartItemResponse> cartItemsResponse = CartItemResponse.of(CART_ITEMS_MEMBER_A());
         String response = objectMapper.writeValueAsString(cartItemsResponse);
 
         //when

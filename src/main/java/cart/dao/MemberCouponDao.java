@@ -49,13 +49,17 @@ public class MemberCouponDao {
     }
 
     public void update(MemberCoupon memberCoupon) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(MemberCouponDto.of(memberCoupon));
+        String sql = "update member_coupon set is_used = ? where id = ?";
 
-        simpleJdbcInsert.execute(parameterSource);
+        jdbcTemplate.update(
+                sql,
+                memberCoupon.isUsed(),
+                memberCoupon.getId()
+        );
     }
 
     public List<MemberCouponDto> selectAllBy(Long ownerId) {
-        String sql = "select * from member_coupon where owner_id = ?";
+        String sql = "select * from member_coupon where owner_id = ? and is_used = false";
 
         return jdbcTemplate.query(
                 sql,

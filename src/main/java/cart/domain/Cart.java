@@ -24,10 +24,11 @@ public class Cart {
 
     public Order order(List<CartItem> itemsToOrder) {
         validateContains(itemsToOrder);
-        cartItems.removeAll(itemsToOrder);
-        List<OrderItem> orderItems = itemsToOrder.stream()
+        List<OrderItem> orderItems = cartItems.stream()
+                .filter(itemsToOrder::contains)
                 .map(OrderItem::new)
                 .collect(Collectors.toList());
+        cartItems.removeAll(itemsToOrder);
         return new Order(owner, orderItems);
     }
 

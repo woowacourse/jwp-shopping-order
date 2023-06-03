@@ -63,6 +63,12 @@ public class CouponService {
         return couponDao.selectAll();
     }
 
+    public void updateMemberCoupons(List<MemberCoupon> memberCoupons) {
+        for (MemberCoupon memberCoupon : memberCoupons) {
+            memberCouponDao.update(memberCoupon);
+        }
+    }
+
     private MemberCoupon toMemberCoupon(MemberCouponDto dto) {
         return new MemberCoupon(
                 dto.getId(),
