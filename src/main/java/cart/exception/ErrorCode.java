@@ -42,7 +42,7 @@ public enum ErrorCode {
      */
     ORDER_NOT_FOUND("존재하지 않는 주문 정보입니다."),
     ORDER_INVALID_PRODUCTS("장바구니에 담기지 않은 상품은 주문할 수 없습니다."),
-    ORDER_QUANTITY_EXCEED("상품은 최대 1000개까지 주문할 수 있습니다."),
+    ORDER_QUANTITY_EXCEED("상품은 최대 100,000개까지 주문할 수 있습니다."),
     ORDER_CANNOT_CANCEL("주문 취소 기간이 지나 취소가 불가능합니다."),
 
     /**

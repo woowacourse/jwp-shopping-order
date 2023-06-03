@@ -58,16 +58,16 @@ public class MemberCouponService {
         memberCouponRepository.save(memberId, memberCoupon);
     }
 
-    private void validateAlreadyIssued(final Long memberId, final Long couponId) {
-        if (memberCouponRepository.existByMemberIdAndCouponId(memberId, couponId)) {
-            throw new BadRequestException(ErrorCode.COUPON_ALREADY_EXIST);
-        }
-    }
-
     private void validateFirstOrder(final Long memberId) {
         final Long orderCount = orderRepository.countByMemberId(memberId);
         if (orderCount != FIRST_ORDER_COUNT) {
             throw new BadRequestException(ErrorCode.COUPON_NOT_FIRST_ORDER);
+        }
+    }
+
+    private void validateAlreadyIssued(final Long memberId, final Long couponId) {
+        if (memberCouponRepository.existByMemberIdAndCouponId(memberId, couponId)) {
+            throw new BadRequestException(ErrorCode.COUPON_ALREADY_EXIST);
         }
     }
 }

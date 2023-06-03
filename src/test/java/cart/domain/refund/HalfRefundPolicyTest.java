@@ -7,8 +7,10 @@ import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.order.BasicOrder;
+import cart.domain.price.BigDecimalConverter;
 import cart.domain.product.Product;
 import cart.domain.product.dto.ProductWithId;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,10 +54,10 @@ class HalfRefundPolicyTest {
     @DisplayName("할인 금액을 전체 금액의 절반으로 계산한다.")
     void calculatePrice() {
         // when
-        final int result = halfRefundPolicy.calculatePrice(10000);
+        final BigDecimal result = halfRefundPolicy.calculatePrice(BigDecimalConverter.convert(10000));
 
         // then
         assertThat(result)
-            .isEqualTo(5000);
+            .isEqualTo(BigDecimalConverter.convert(5000));
     }
 }

@@ -1,6 +1,8 @@
 package cart.domain.member;
 
 import cart.domain.coupon.dto.CouponWithId;
+import cart.exception.BadRequestException;
+import cart.exception.ErrorCode;
 import java.time.LocalDateTime;
 
 public class MemberCoupon {
@@ -16,6 +18,24 @@ public class MemberCoupon {
         this.issuedAt = issuedAt;
         this.expiredAt = expiredAt;
         this.isUsed = isUsed;
+    }
+
+    public void checkValid() {
+        validateCouponExpired();
+        validateAlreadyUsed();
+    }
+
+    private void validateCouponExpired() {
+        final LocalDateTime now = LocalDateTime.now();
+        if (expiredAt.isBefore(now)) {
+            throw new BadRequestException(ErrorCode.COUPON_EXPIRED);
+        }
+    }
+
+    private void validateAlreadyUsed() {
+        if (isUsed()) {
+            throw new BadRequestException(ErrorCode.COUPON_ALREADY_USED);
+        }
     }
 
     public CouponWithId getCoupon() {

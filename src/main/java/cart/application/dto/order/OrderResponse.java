@@ -1,23 +1,24 @@
 package cart.application.dto.order;
 
 import cart.application.dto.coupon.CouponResponse;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderResponse {
 
     private final Long orderId;
-    private final int totalPrice;
-    private final int discountedTotalPrice;
-    private final int couponDiscountPrice;
+    private final BigDecimal totalPrice;
+    private final BigDecimal discountedTotalPrice;
+    private final BigDecimal couponDiscountPrice;
     private final int deliveryPrice;
     private final LocalDateTime orderedAt;
     private final CouponResponse coupon;
     private final List<OrderProductResponse> items;
     private final boolean isValid;
 
-    public OrderResponse(final Long orderId, final int totalPrice, final int discountedTotalPrice,
-                         final int couponDiscountPrice, final int deliveryPrice,
+    public OrderResponse(final Long orderId, BigDecimal totalPrice, final BigDecimal discountedTotalPrice,
+                         final BigDecimal couponDiscountPrice, final int deliveryPrice,
                          final LocalDateTime orderedAt, final CouponResponse coupon,
                          final List<OrderProductResponse> items,
                          final boolean isValid) {
@@ -37,15 +38,15 @@ public class OrderResponse {
     }
 
 
-    public int getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public int getDiscountedTotalPrice() {
+    public BigDecimal getDiscountedTotalPrice() {
         return discountedTotalPrice;
     }
 
-    public int getCouponDiscountPrice() {
+    public BigDecimal getCouponDiscountPrice() {
         return couponDiscountPrice;
     }
 

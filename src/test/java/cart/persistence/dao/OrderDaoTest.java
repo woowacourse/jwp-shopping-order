@@ -3,6 +3,7 @@ package cart.persistence.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
+import cart.domain.price.BigDecimalConverter;
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderCouponEntity;
@@ -30,7 +31,8 @@ class OrderDaoTest extends DaoTestHelper {
         // given
         final LocalDateTime 주문_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final Long 저장된_져니_아이디 = 져니_저장();
-        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 10000, 9000, 3000, 주문_시간);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, BigDecimalConverter.convert(10000),
+            BigDecimalConverter.convert(9000), 3000, 주문_시간);
 
         // when
         final Long 저장된_주문_아이디 = orderDao.insert(주문_엔티티);
@@ -54,7 +56,8 @@ class OrderDaoTest extends DaoTestHelper {
         final Long 저장된_져니_아이디 = 져니_저장();
         final Long 저장된_신규_가입_축하_쿠폰_아이디 = 신규_가입_쿠폰_저장();
         져니_쿠폰_저장(저장된_져니_아이디, 저장된_신규_가입_축하_쿠폰_아이디);
-        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 10000, 9000, 3000, 주문_시간);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, BigDecimalConverter.convert(10000),
+            BigDecimalConverter.convert(9000), 3000, 주문_시간);
         orderDao.insert(주문_엔티티);
 
         // when
@@ -71,7 +74,8 @@ class OrderDaoTest extends DaoTestHelper {
         // given
         final LocalDateTime 주문_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final Long 저장된_져니_아이디 = 져니_저장();
-        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 350_000, 280_000, 3_000, 주문_시간);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, BigDecimalConverter.convert(350_000),
+            BigDecimalConverter.convert(280_000), 3_000, 주문_시간);
         final Long 저장된_주문_아이디 = orderDao.insert(주문_엔티티);
         final List<Long> 저장된_상품_아이디들 = 주문_상품들을_저장한다(저장된_주문_아이디);
         final Long 저장된_주문_쿠폰_아이디 = 주문_쿠폰을_저장한다(저장된_주문_아이디);
@@ -111,7 +115,8 @@ class OrderDaoTest extends DaoTestHelper {
         final Long 저장된_져니_아이디 = 져니_저장();
         final Long 저장된_라온_아이디 = 다른_사용자를_저장한다();
 
-        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 350_000, 280_000, 3_000, 주문_시간);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, BigDecimalConverter.convert(350_000),
+            BigDecimalConverter.convert(280_000), 3_000, 주문_시간);
         final Long 저장된_주문_아이디 = orderDao.insert(주문_엔티티);
         다른_사용자의_주문을_추가한다(저장된_라온_아이디);
 
@@ -151,7 +156,8 @@ class OrderDaoTest extends DaoTestHelper {
         // given
         final LocalDateTime 주문_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
         final Long 저장된_져니_아이디 = 져니_저장();
-        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 350_000, 280_000, 3_000, 주문_시간);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, BigDecimalConverter.convert(350_000),
+            BigDecimalConverter.convert(280_000), 3_000, 주문_시간);
         final Long 저장된_주문_아이디 = orderDao.insert(주문_엔티티);
 
         // when
@@ -193,8 +199,10 @@ class OrderDaoTest extends DaoTestHelper {
 
     private void 다른_사용자의_주문을_추가한다(final Long 저장된_라온_아이디) {
         final LocalDateTime 주문_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
-        final OrderEntity 다른_사용자의_주문_엔티티1 = new OrderEntity(저장된_라온_아이디, 10000, 9000, 3000, 주문_시간);
-        final OrderEntity 다른_사용자의_주문_엔티티2 = new OrderEntity(저장된_라온_아이디, 20000, 1000, 10000, 주문_시간);
+        final OrderEntity 다른_사용자의_주문_엔티티1 = new OrderEntity(저장된_라온_아이디, BigDecimalConverter.convert(10000),
+            BigDecimalConverter.convert(9000), 3000, 주문_시간);
+        final OrderEntity 다른_사용자의_주문_엔티티2 = new OrderEntity(저장된_라온_아이디, BigDecimalConverter.convert(20000),
+            BigDecimalConverter.convert(18000), 3000, 주문_시간);
         orderDao.insert(다른_사용자의_주문_엔티티1);
         orderDao.insert(다른_사용자의_주문_엔티티2);
     }

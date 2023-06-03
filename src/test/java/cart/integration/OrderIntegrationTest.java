@@ -8,6 +8,7 @@ import static cart.exception.ErrorCode.ORDER_QUANTITY_EXCEED;
 import static cart.exception.ErrorCode.PRODUCT_DELETED;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import cart.application.dto.cartitem.CartRequest;
@@ -243,7 +244,7 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("주문하는 상품의 총 개수가 1000개 초과면 예외가 발생한다.")
+    @DisplayName("주문하는 상품의 총 개수가 100,000개 초과면 예외가 발생한다.")
     void orderProducts_exceed_max_quantity() {
         // given
         쿠폰을_저장한다();
@@ -255,8 +256,8 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         /** 상품 주문 요청 */
         final List<OrderProductRequest> 주문할_상품들 = List.of(
-            new OrderProductRequest(1L, 999),
-            new OrderProductRequest(2L, 2));
+            new OrderProductRequest(1L, 100_000),
+            new OrderProductRequest(2L, 1));
         final OrderRequest 주문_요청 = new OrderRequest(1L, 주문할_상품들);
 
         // expected
@@ -269,7 +270,7 @@ public class OrderIntegrationTest extends IntegrationTest {
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .body("errorCode", equalTo(ORDER_QUANTITY_EXCEED.name()))
-            .body("errorMessage", equalTo("상품은 최대 1000개까지 주문할 수 있습니다."));
+            .body("errorMessage", equalTo("상품은 최대 100,000개까지 주문할 수 있습니다."));
     }
 
     @Test

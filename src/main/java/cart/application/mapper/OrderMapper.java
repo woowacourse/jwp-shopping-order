@@ -13,6 +13,7 @@ import cart.domain.order.BasicOrder;
 import cart.domain.order.CouponOrder;
 import cart.domain.order.Order;
 import cart.domain.order.OrderWithId;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,9 +44,9 @@ public class OrderMapper {
         final List<OrderProductResponse> orderProductResponses = convertOrderProductResponses(order);
 
         final Long orderId = orderWithId.getOrderId();
-        final Integer orderPrice = order.getTotalPrice();
-        final Integer discountedTotalPrice = order.getDiscountedTotalPrice();
-        final int couponDiscountPrice = orderPrice - discountedTotalPrice;
+        final BigDecimal orderPrice = order.getTotalPrice();
+        final BigDecimal discountedTotalPrice = order.getDiscountedTotalPrice();
+        final BigDecimal couponDiscountPrice = orderPrice.subtract(discountedTotalPrice);
         final Integer deliveryPrice = order.getDeliveryPrice();
         final LocalDateTime orderedAt = order.getOrderedAt();
         final Boolean isValid = order.isValid();

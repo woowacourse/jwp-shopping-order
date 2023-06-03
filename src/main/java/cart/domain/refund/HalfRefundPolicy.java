@@ -3,6 +3,9 @@ package cart.domain.refund;
 import static cart.domain.refund.RefundLimitDate.HALF_REFUND;
 
 import cart.domain.order.Order;
+import cart.domain.price.BigDecimalConverter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +22,8 @@ public class HalfRefundPolicy implements RefundPolicy {
     }
 
     @Override
-    public int calculatePrice(final int price) {
-        return (int) Math.floor(price * (PERCENTAGE - HALF_REFUND_RATE) * DECIMAL_CONVERSION);
+    public BigDecimal calculatePrice(final BigDecimal price) {
+        final BigDecimal refundRate = BigDecimalConverter.convert((PERCENTAGE - HALF_REFUND_RATE) * DECIMAL_CONVERSION);
+        return price.multiply(refundRate).setScale(0, RoundingMode.DOWN);
     }
 }

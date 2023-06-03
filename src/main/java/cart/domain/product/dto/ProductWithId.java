@@ -12,6 +12,10 @@ public class ProductWithId {
         this.product = product;
     }
 
+    public boolean isDeleted() {
+        return product.isDeleted();
+    }
+
     public Long getProductId() {
         return productId;
     }

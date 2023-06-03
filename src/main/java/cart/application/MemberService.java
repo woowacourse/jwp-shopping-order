@@ -52,14 +52,7 @@ public class MemberService {
     public MemberLoginResponse login(final MemberLoginRequest memberLoginRequest) {
         final String name = memberLoginRequest.getName();
         final String password = memberLoginRequest.getPassword();
-
-        final Member member = memberRepository.findByName(name);
-        final String encodedPassword = SHA256Service.encrypt(password);
-        final EncryptedPassword requestEncryptedPassword = EncryptedPassword.create(encodedPassword);
-
-        if (!requestEncryptedPassword.equals(member.memberPassword())) {
-            throw new BadRequestException(ErrorCode.MEMBER_PASSWORD_INVALID);
-        }
+        validatePassword(name, password);
         final String basicToken = BasicTokenProvider.createToken(name, password);
         return new MemberLoginResponse(basicToken);
     }
@@ -78,6 +71,15 @@ public class MemberService {
         return memberRepository.findAll().stream()
             .map(MemberMapper::convertMemberResponse)
             .collect(Collectors.toUnmodifiableList());
+    }
+
+    private void validatePassword(final String name, final String password) {
+        final Member member = memberRepository.findByName(name);
+        final String encodedPassword = SHA256Service.encrypt(password);
+        final EncryptedPassword requestEncryptedPassword = EncryptedPassword.create(encodedPassword);
+        if (!requestEncryptedPassword.equals(member.memberPassword())) {
+            throw new BadRequestException(ErrorCode.MEMBER_PASSWORD_INVALID);
+        }
     }
 
     public List<MemberCouponResponse> getByCoupons(final String memberName) {

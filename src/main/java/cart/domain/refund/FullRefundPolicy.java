@@ -3,6 +3,7 @@ package cart.domain.refund;
 import static cart.domain.refund.RefundLimitDate.FULL_REFUND;
 
 import cart.domain.order.Order;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class FullRefundPolicy implements RefundPolicy {
     }
 
     @Override
-    public int calculatePrice(final int price) {
+    public BigDecimal calculatePrice(final BigDecimal price) {
         return price;
     }
 }

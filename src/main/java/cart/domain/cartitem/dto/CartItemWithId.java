@@ -1,6 +1,7 @@
 package cart.domain.cartitem.dto;
 
 import cart.domain.product.dto.ProductWithId;
+import java.util.Objects;
 
 public class CartItemWithId {
 
@@ -16,6 +17,14 @@ public class CartItemWithId {
         this.cartId = cartId;
         this.quantity = quantity;
         this.product = product;
+    }
+
+    public boolean isSameProductId(final Long productId) {
+        return Objects.equals(product.getProductId(), productId);
+    }
+
+    public boolean isDeleted() {
+        return product.isDeleted();
     }
 
     public Long getCartId() {

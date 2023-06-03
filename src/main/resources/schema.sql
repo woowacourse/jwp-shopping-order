@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS product (
-    id INT UNSIGNED AUTO_INCREMENT,
+    id BIGINT AUTO_INCREMENT,
     name VARCHAR(20) NOT NULL,
     price INT NOT NULL,
     image_url VARCHAR(512) NOT NULL,
@@ -8,16 +8,16 @@ CREATE TABLE IF NOT EXISTS product (
 );
 
 CREATE TABLE IF NOT EXISTS member (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(10) NOT NULL UNIQUE,
     password VARCHAR(64) NOT NULL,
     PRIMARY KEY(id)
 );
 
 CREATE TABLE IF NOT EXISTS cart_item (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    member_id INT UNSIGNED NOT NULL,
-    product_id INT UNSIGNED NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    member_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
     is_deleted TINYINT(1) NOT NULL DEFAULT(0),
     PRIMARY KEY(id),
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS cart_item (
 
 CREATE TABLE IF NOT EXISTS coupon
 (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     discount_rate INT NOT NULL,
     `period` INT NOT NULL,
@@ -38,9 +38,9 @@ CREATE TABLE IF NOT EXISTS coupon
 
 CREATE TABLE IF NOT EXISTS member_coupon
 (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    member_id INT UNSIGNED NOT NULL,
-    coupon_id INT UNSIGNED NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    member_id BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL,
     issued_at DATETIME NOT NULL,
     expired_at DATETIME NOT NULL,
     is_used TINYINT(1) NOT NULL,
@@ -52,11 +52,11 @@ CREATE TABLE IF NOT EXISTS member_coupon
 
 CREATE TABLE IF NOT EXISTS `order`
 (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    member_id INT UNSIGNED NOT NULL,
-    total_price INT UNSIGNED NOT NULL,
-    discounted_total_price INT UNSIGNED NOT NULL,
-    delivery_price INT UNSIGNED NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    member_id BIGINT NOT NULL,
+    total_price BIGINT NOT NULL,
+    discounted_total_price BIGINT NOT NULL,
+    delivery_price INT NOT NULL,
     ordered_at DATETIME NOT NULL,
     is_valid TINYINT(1) NOT NULL,
     PRIMARY KEY(id),
@@ -65,10 +65,10 @@ CREATE TABLE IF NOT EXISTS `order`
 
 CREATE TABLE IF NOT EXISTS order_product
 (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    order_id INT UNSIGNED NOT NULL,
-    product_id INT UNSIGNED NOT NULL,
-    ordered_product_price BIGINT UNSIGNED NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    ordered_product_price BIGINT NOT NULL,
     quantity INT NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (order_id) REFERENCES `order`(id),
@@ -77,9 +77,9 @@ CREATE TABLE IF NOT EXISTS order_product
 
 CREATE TABLE IF NOT EXISTS order_coupon
 (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    order_id INT UNSIGNED NOT NULL,
-    coupon_id INT UNSIGNED NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    order_id BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (order_id) REFERENCES `order`(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)

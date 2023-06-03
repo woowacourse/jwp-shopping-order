@@ -2,6 +2,7 @@ package cart.persistence.dao;
 
 import cart.persistence.dao.dto.OrderDto;
 import cart.persistence.entity.OrderEntity;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.List;
@@ -51,8 +52,8 @@ public class OrderDao {
         jdbcTemplate.update(connection -> {
             final PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
             ps.setLong(1, orderEntity.getMemberId());
-            ps.setInt(2, orderEntity.getTotalPrice());
-            ps.setInt(3, orderEntity.getDiscountedTotalPrice());
+            ps.setBigDecimal(2, orderEntity.getTotalPrice());
+            ps.setBigDecimal(3, orderEntity.getDiscountedTotalPrice());
             ps.setInt(4, orderEntity.getDeliveryPrice());
             ps.setTimestamp(5, Timestamp.valueOf(orderEntity.getOrderedAt()));
             ps.setBoolean(6, true);

@@ -3,7 +3,9 @@ package cart.domain.order;
 import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.dto.MemberWithId;
-import cart.domain.product.dto.ProductWithId;
+import cart.domain.price.BigDecimalConverter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +17,8 @@ public class CouponOrder implements Order {
 
     private final MemberWithId member;
     private final CouponWithId coupon;
-    private final Integer totalPrice;
-    private final Integer discountedTotalPrice;
+    private final BigDecimal totalPrice;
+    private final BigDecimal discountedTotalPrice;
     private final Integer deliveryPrice;
     private final LocalDateTime orderedAt;
     private final List<CartItemWithId> cartItems;
@@ -28,25 +30,21 @@ public class CouponOrder implements Order {
         this.coupon = coupon;
         this.orderedAt = orderedAt;
         this.cartItems = cartItems;
-        this.totalPrice = calculateTotalPrice();
+        this.totalPrice = calculateTotalOrderPrice();
         this.discountedTotalPrice = calculateDiscountPrice();
         this.deliveryPrice = deliveryPrice;
         this.isValid = isValid;
     }
 
-    private int calculateDiscountPrice() {
-        final int discountRate = coupon.getCoupon().discountRate();
-        return (int) Math.floor(totalPrice * (PERCENTAGE - discountRate) * DECIMAL_CONVERSION);
+    private BigDecimal calculateTotalOrderPrice() {
+        return OrderPriceCalculator.calculateTotalOrderPrice(cartItems);
     }
 
-    private int calculateTotalPrice() {
-        return cartItems.stream()
-            .mapToInt(cartItemWithId -> {
-                final ProductWithId productWithId = cartItemWithId.getProduct();
-                final int productPrice = productWithId.getProduct().getPrice();
-                final int productQuantity = cartItemWithId.getQuantity();
-                return productPrice * productQuantity;
-            }).sum();
+    private BigDecimal calculateDiscountPrice() {
+        final int discountRate = coupon.getCoupon().discountRate();
+        final BigDecimal convertedDiscountRate = BigDecimalConverter.convert(
+            (PERCENTAGE - discountRate) * DECIMAL_CONVERSION);
+        return totalPrice.multiply(convertedDiscountRate).setScale(0, RoundingMode.DOWN);
     }
 
     @Override
@@ -75,12 +73,12 @@ public class CouponOrder implements Order {
     }
 
     @Override
-    public Integer getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
     @Override
-    public Integer getDiscountedTotalPrice() {
+    public BigDecimal getDiscountedTotalPrice() {
         return discountedTotalPrice;
     }
 

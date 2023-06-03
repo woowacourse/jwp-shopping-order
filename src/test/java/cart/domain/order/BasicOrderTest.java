@@ -6,8 +6,10 @@ import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.dto.MemberWithId;
+import cart.domain.price.BigDecimalConverter;
 import cart.domain.product.Product;
 import cart.domain.product.dto.ProductWithId;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -29,11 +31,11 @@ class BasicOrderTest {
             List.of(치킨_장바구니_아이템, 피자_장바구니_아이템), true);
 
         // when
-        final Integer 총_금액 = 주문.getTotalPrice();
+        final BigDecimal 총_금액 = 주문.getTotalPrice();
 
         // then
         assertThat(총_금액)
-            .isEqualTo(350_000);
+            .isEqualTo(BigDecimalConverter.convert(350_000));
     }
 
     @Test
@@ -50,10 +52,10 @@ class BasicOrderTest {
             List.of(치킨_장바구니_아이템, 피자_장바구니_아이템), true);
 
         // when
-        final Integer 할인된_금액 = 주문.getDiscountedTotalPrice();
+        final BigDecimal 할인된_금액 = 주문.getDiscountedTotalPrice();
 
         // then
         assertThat(할인된_금액)
-            .isEqualTo(350_000);
+            .isEqualTo(BigDecimalConverter.convert(350_000));
     }
 }

@@ -1,22 +1,24 @@
 package cart.persistence.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class OrderEntity {
 
     private final Long id;
     private final Long memberId;
-    private final Integer totalPrice;
-    private final Integer discountedTotalPrice;
+    private final BigDecimal totalPrice;
+    private final BigDecimal discountedTotalPrice;
     private final Integer deliveryPrice;
     private final LocalDateTime orderedAt;
 
-    public OrderEntity(final Long memberId, final Integer totalPrice, final Integer discountedTotalPrice,
+    public OrderEntity(final Long memberId, final BigDecimal totalPrice, final BigDecimal discountedTotalPrice,
                        final Integer deliveryPrice, final LocalDateTime orderedAt) {
         this(null, memberId, totalPrice, discountedTotalPrice, deliveryPrice, orderedAt);
     }
 
-    public OrderEntity(final Long id, final Long memberId, final Integer totalPrice, final Integer discountedTotalPrice,
+    public OrderEntity(final Long id, final Long memberId, final BigDecimal totalPrice,
+                       final BigDecimal discountedTotalPrice,
                        final Integer deliveryPrice, final LocalDateTime orderedAt) {
         this.id = id;
         this.memberId = memberId;
@@ -34,11 +36,11 @@ public class OrderEntity {
         return memberId;
     }
 
-    public Integer getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public Integer getDiscountedTotalPrice() {
+    public BigDecimal getDiscountedTotalPrice() {
         return discountedTotalPrice;
     }
 

@@ -24,15 +24,16 @@ import cart.domain.order.CouponOrder;
 import cart.domain.order.Order;
 import cart.domain.order.OrderRepository;
 import cart.domain.order.OrderWithId;
+import cart.domain.price.BigDecimalConverter;
 import cart.domain.refund.RefundPolicy;
 import cart.domain.refund.RefundPolicyComposite;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import cart.exception.ForbiddenException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -42,26 +43,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class OrderService {
 
-    private static final int MAX_ORDER_QUANTITY = 1000;
-    private static final int DELIVERY_PRICE = 3000;
+    private static final int MAX_ORDER_QUANTITY = 100_000;
+    private static final int DELIVERY_PRICE = 3_000;
 
     private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
-    private final MemberCouponRepository memberCouponRepository;
     private final RefundPolicyComposite refundPolicyComposite;
+    private final MemberCouponRepository memberCouponRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public OrderService(final CartRepository cartRepository, final OrderRepository orderRepository,
-                        final MemberRepository memberRepository,
+                        final MemberRepository memberRepository, final RefundPolicyComposite refundPolicyComposite,
                         final MemberCouponRepository memberCouponRepository,
-                        final RefundPolicyComposite refundPolicyComposite,
                         final ApplicationEventPublisher applicationEventPublisher) {
         this.cartRepository = cartRepository;
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
-        this.memberCouponRepository = memberCouponRepository;
         this.refundPolicyComposite = refundPolicyComposite;
+        this.memberCouponRepository = memberCouponRepository;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -104,16 +104,19 @@ public class OrderService {
         if (!orderWithId.isOwner(memberName)) {
             throw new ForbiddenException(ErrorCode.FORBIDDEN);
         }
+
         final Order order = orderWithId.getOrder();
         final LocalDateTime currentTime = LocalDateTime.now();
         final RefundPolicy refundPolicy = refundPolicyComposite.getRefundPolicies(order, currentTime);
         orderRepository.updateNotValidById(orderWithId.getOrderId());
-        final int paymentPrice = changeCouponUnUsedIfExist(order);
-        final int refundPrice = refundPolicy.calculatePrice(paymentPrice) + order.getDeliveryPrice();
+
+        final BigDecimal paymentPrice = changeCouponUnUsedIfExist(order);
+        final BigDecimal refundPrice = refundPolicy.calculatePrice(paymentPrice).add(
+            BigDecimalConverter.convert(order.getDeliveryPrice()));
         return new OrderRefundResponse(refundPrice);
     }
 
-    private int changeCouponUnUsedIfExist(final Order order) {
+    private BigDecimal changeCouponUnUsedIfExist(final Order order) {
         if (order.getCoupon().isEmpty()) {
             return order.getTotalPrice();
         }
@@ -158,19 +161,14 @@ public class OrderService {
                                                           final List<CartItemWithId> cartItems) {
         return cartItems.stream()
             .flatMap(cartItemWithId -> orderRequest.getItems().stream()
-                .filter(orderProductRequest -> isSameProductId(cartItemWithId, orderProductRequest))
+                .filter(orderProductRequest -> cartItemWithId.isSameProductId(orderProductRequest.getProductId()))
                 .map(orderProductRequest -> convertCartItemWithId(cartItemWithId, orderProductRequest)))
             .collect(Collectors.toList());
     }
 
-    private boolean isSameProductId(final CartItemWithId cartItemWithId,
-                                    final OrderProductRequest orderProductRequest) {
-        return Objects.equals(cartItemWithId.getProduct().getProductId(), orderProductRequest.getProductId());
-    }
-
     private void validateDeletedProductExistence(final List<CartItemWithId> requestCartItems) {
         final long deletedProductCount = requestCartItems.stream()
-            .filter(cartItemWithId -> cartItemWithId.getProduct().getProduct().isDeleted())
+            .filter(CartItemWithId::isDeleted)
             .count();
         if (deletedProductCount > 0) {
             throw new BadRequestException(ErrorCode.PRODUCT_DELETED);
@@ -194,24 +192,10 @@ public class OrderService {
                                  final MemberWithId memberWithId, final Long couponId) {
         final Long memberId = memberWithId.getMemberId();
         final MemberCoupon memberCoupon = memberCouponRepository.findByMemberIdAndCouponId(memberId, couponId);
-        validateCouponExpired(memberCoupon);
-        validateAlreadyUsed(memberCoupon);
+        memberCoupon.checkValid();
         final CouponOrder order = convertCouponOrder(productWithIds, DELIVERY_PRICE, memberWithId, memberCoupon);
         final Long savedOrderId = orderRepository.saveWithCoupon(order);
         memberCouponRepository.updateUsed(memberId, couponId);
         return savedOrderId;
-    }
-
-    private void validateCouponExpired(final MemberCoupon memberCoupon) {
-        final LocalDateTime now = LocalDateTime.now();
-        if (memberCoupon.getExpiredAt().isBefore(now)) {
-            throw new BadRequestException(ErrorCode.COUPON_EXPIRED);
-        }
-    }
-
-    private void validateAlreadyUsed(final MemberCoupon memberCoupon) {
-        if (memberCoupon.isUsed()) {
-            throw new BadRequestException(ErrorCode.COUPON_ALREADY_USED);
-        }
     }
 }

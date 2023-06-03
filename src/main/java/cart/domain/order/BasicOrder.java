@@ -3,7 +3,7 @@ package cart.domain.order;
 import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.dto.MemberWithId;
-import cart.domain.product.dto.ProductWithId;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +11,8 @@ import java.util.Optional;
 public class BasicOrder implements Order {
 
     private final MemberWithId member;
-    private final Integer totalPrice;
-    private final Integer discountedTotalPrice;
+    private final BigDecimal totalPrice;
+    private final BigDecimal discountedTotalPrice;
     private final Integer deliveryPrice;
     private final LocalDateTime orderedAt;
     private final List<CartItemWithId> cartItems;
@@ -29,14 +29,8 @@ public class BasicOrder implements Order {
         this.isValid = isValid;
     }
 
-    private int calculateTotalOrderPrice() {
-        return cartItems.stream()
-            .mapToInt(cartItemWithId -> {
-                final ProductWithId productWithId = cartItemWithId.getProduct();
-                final int productPrice = productWithId.getProduct().getPrice();
-                final int productQuantity = cartItemWithId.getQuantity();
-                return productPrice * productQuantity;
-            }).sum();
+    private BigDecimal calculateTotalOrderPrice() {
+        return OrderPriceCalculator.calculateTotalOrderPrice(cartItems);
     }
 
     @Override
@@ -65,12 +59,12 @@ public class BasicOrder implements Order {
     }
 
     @Override
-    public Integer getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
     @Override
-    public Integer getDiscountedTotalPrice() {
+    public BigDecimal getDiscountedTotalPrice() {
         return discountedTotalPrice;
     }
 

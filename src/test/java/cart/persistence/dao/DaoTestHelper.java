@@ -1,5 +1,6 @@
 package cart.persistence.dao;
 
+import cart.domain.price.BigDecimalConverter;
 import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.CouponEntity;
 import cart.persistence.entity.MemberCouponEntity;
@@ -76,7 +77,8 @@ public class DaoTestHelper extends DaoTest {
 
     Long 주문_저장(final Long 저장된_져니_아이디) {
         final LocalDateTime 주문_시간 = LocalDateTime.of(2023, 6, 1, 13, 0, 0);
-        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, 10000, 9000, 3000, 주문_시간);
+        final OrderEntity 주문_엔티티 = new OrderEntity(저장된_져니_아이디, BigDecimalConverter.convert(10000),
+            BigDecimalConverter.convert(9000), 3000, 주문_시간);
         return orderDao.insert(주문_엔티티);
     }
 }
