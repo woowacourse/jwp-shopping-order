@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class OrderControllerTest {
+class OrderApiControllerTest {
 
   @LocalServerPort
   private int port;
