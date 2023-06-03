@@ -7,6 +7,7 @@ import cart.domain.cart.CartItems;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dto.CartDetailDTO;
 import cart.persistence.entity.CartItemEntity;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,6 +47,9 @@ public class CartItemJdbcRepository implements CartItemRepository {
 
     @Override
     public CartItems findByIds(final List<Long> ids) {
+        if (ids.isEmpty()) {
+            return new CartItems(Collections.emptyList());
+        }
         List<CartDetailDTO> cartDetails = cartItemDao.findByIds(ids);
         List<CartItem> cartItems = cartDetails.stream()
                 .map(CartDetailDTO::toDomain)
