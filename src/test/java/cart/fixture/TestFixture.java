@@ -6,6 +6,8 @@ import cart.domain.Member;
 import cart.domain.Money;
 import cart.domain.Order;
 import cart.domain.Product;
+import cart.domain.coupon.Coupon;
+import cart.domain.coupon.CouponType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +17,9 @@ public class TestFixture {
 
     public static final Member 밀리 = new Member(1L, "millie@email.com", "millie");
     public static final Member 박스터 = new Member(2L, "boxster@email.com", "boxster");
+
+    public static final Coupon 쿠폰_10퍼센트 = new Coupon(1L, "10퍼센트 할인 쿠폰", CouponType.RATE, BigDecimal.valueOf(10),
+            new Money(1000));
 
     public static final Product 치킨_10000원 = new Product(1L, "치킨", BigDecimal.valueOf(10000), "http://chicken.com");
     public static final Product 피자_20000원 = new Product(2L, "피자", BigDecimal.valueOf(20000), "http://pizza.com");
