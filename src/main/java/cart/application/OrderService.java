@@ -86,7 +86,7 @@ public class OrderService {
         Product product = cartItem.getProduct();
         double pointRatio = product.getPointRatio() / 100;
         long price = product.getPrice() * cartItem.getQuantity();
-        return Math.round(pointRatio * price);
+        return (long) Math.ceil(pointRatio * price);
     }
 
     private void useMemberPoint(Member member, long usedPoint) {
