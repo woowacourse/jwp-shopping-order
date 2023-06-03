@@ -6,6 +6,7 @@ import cart.member.domain.Member;
 import cart.product.application.dto.ProductCartItemDto;
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
+import cart.product.exception.NotFoundProductException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
+    private static final int NOT_EXIST_PRODUCT = 0;
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
@@ -27,6 +29,8 @@ public class ProductService {
     }
 
     public Product getProductById(final Long productId) {
+        validateExistProduct(productId);
+
         return productDao.getProductById(productId);
     }
 
@@ -53,10 +57,14 @@ public class ProductService {
     }
 
     public void updateProduct(final Long productId, final Product product) {
+        validateExistProduct(productId);
+
         productDao.updateProduct(productId, product);
     }
 
     public void deleteProduct(final Long productId) {
+        validateExistProduct(productId);
+
         productDao.deleteProduct(productId);
     }
 
@@ -72,6 +80,12 @@ public class ProductService {
             return new ProductCartItemDto(product, cartItem);
         } catch (final NullPointerException e) {
             return new ProductCartItemDto(product, null);
+        }
+    }
+
+    private void validateExistProduct(final Long productId) {
+        if (productDao.countById(productId) == NOT_EXIST_PRODUCT) {
+            throw new NotFoundProductException();
         }
     }
 }

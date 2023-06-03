@@ -4,6 +4,7 @@ import cart.auth.AuthenticationException;
 import cart.cartitem.exception.CartItemException;
 import cart.cartitem.exception.NotFoundCartItemException;
 import cart.error.ui.response.ErrorResponse;
+import cart.product.exception.NotFoundProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -66,7 +67,7 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler({NotFoundCartItemException.class})
+    @ExceptionHandler({NotFoundCartItemException.class, NotFoundProductException.class})
     public ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundCartItemException e) {
         logger.error(LOG_FORMAT,
                 e.getClass().getSimpleName(),

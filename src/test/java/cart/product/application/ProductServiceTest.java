@@ -56,6 +56,7 @@ class ProductServiceTest {
     void 상품_id를_통해_상품을_가져오다() {
         // given
         when(productDao.getProductById(1L)).thenReturn(CHICKEN.ENTITY);
+        when(productDao.countById(1L)).thenReturn(1L);
 
         // when
         final Product product = productService.getProductById(1L);
@@ -155,6 +156,7 @@ class ProductServiceTest {
     void 상품_정보를_수정하다() {
         // given
         final Product product = Product.of("test", 10000, "www.test.com");
+        when(productDao.countById(1L)).thenReturn(1L);
         doNothing().when(productDao).updateProduct(1L, product);
 
         // when, then
@@ -165,6 +167,7 @@ class ProductServiceTest {
     void 상품을_삭제하다() {
         // given
         doNothing().when(productDao).deleteProduct(1L);
+        when(productDao.countById(1L)).thenReturn(1L);
 
         // when, then
         assertDoesNotThrow(() -> productService.deleteProduct(1L));

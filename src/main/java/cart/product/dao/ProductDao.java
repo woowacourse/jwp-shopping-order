@@ -90,4 +90,10 @@ public class ProductDao {
         final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productId);
     }
+
+    public Long countById(final Long productId) {
+        final String sql = "SELECT count(*) FROM product WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, Long.class, productId);
+    }
 }
