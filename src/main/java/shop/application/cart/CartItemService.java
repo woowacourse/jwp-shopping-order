@@ -58,7 +58,10 @@ public class CartItemService {
     }
 
     @Transactional
-    public void removeItems(final Member member, final List<Long> ids) {
-        cartRepository.deleteByMemberIdAndCartItemIds(member.getId(), ids);
+    public void removeItems(Member member, List<Long> ids) {
+        List<CartItem> cartItems = cartRepository.findAllByMemberId(member.getId());
+        cartItems.forEach(item -> item.checkOwner(member));
+
+        cartRepository.deleteByIds(ids);
     }
 }

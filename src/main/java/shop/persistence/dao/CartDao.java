@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import shop.exception.DatabaseException;
-import shop.persistence.entity.detail.CartItemDetail;
 import shop.persistence.entity.CartEntity;
+import shop.persistence.entity.detail.CartItemDetail;
 
 import java.util.List;
 
@@ -92,16 +92,11 @@ public class CartDao {
         return jdbcTemplate.update(sql, quantity, id);
     }
 
-    public int deleteByMemberIdAndCartItemIds(final Long memberId, final List<Long> ids) {
-        String sql = "DELETE FROM cart_item WHERE cart_item.id IN "
-                + " (SELECT cart_item.id FROM cart_item " +
-                "JOIN member ON cart_item.member_id = member.id AND " +
-                "cart_item.id in (:ids) AND " +
-                "member.id = (:memberId))";
+    public int deleteByIds(final List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE cart_item.id = (:ids)";
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("ids", ids);
-        mapSqlParameterSource.addValue("memberId", memberId);
 
         return namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }

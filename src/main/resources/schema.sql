@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS cart_item
     product_id INT UNSIGNED NOT NULL,
     quantity   INT          NOT NULL, # 1 ~ 1000개
     PRIMARY KEY (id),
+    UNIQUE (member_id, product_id),
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
@@ -73,11 +74,11 @@ CREATE TABLE IF NOT EXISTS `order`
 # 주문 상품
 CREATE TABLE IF NOT EXISTS order_product
 (
-    id                    INT UNSIGNED    NOT NULL AUTO_INCREMENT,
-    order_id              INT UNSIGNED    NOT NULL,
-    product_id            INT UNSIGNED    NOT NULL,
+    id                    INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    order_id              INT UNSIGNED NOT NULL,
+    product_id            INT UNSIGNED NOT NULL,
     ordered_product_price INT UNSIGNED NOT NULL,
-    quantity              INT             NOT NULL,
+    quantity              INT          NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (order_id) REFERENCES `order` (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
