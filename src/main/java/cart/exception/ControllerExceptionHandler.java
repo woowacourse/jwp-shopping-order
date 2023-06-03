@@ -13,7 +13,7 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ExceptionHandler(CartItemException.IllegalMember.class)
+    @ExceptionHandler({CartItemException.IllegalMember.class, OrderException.IllegalMember.class})
     public ResponseEntity<Void> handleForbiddenNException(CartItemException.IllegalMember e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }

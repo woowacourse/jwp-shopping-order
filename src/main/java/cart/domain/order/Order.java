@@ -2,6 +2,7 @@ package cart.domain.order;
 
 import cart.domain.member.Member;
 import cart.domain.product.Price;
+import cart.exception.OrderException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,7 +48,7 @@ public class Order {
 
     public void checkOwner(final Member member) {
         if (this.member.isNotSameMember(member)) {
-            throw new IllegalArgumentException("해당 멤버의 주문이 아닙니다.");
+            throw new OrderException.IllegalMember(member);
         }
     }
 
