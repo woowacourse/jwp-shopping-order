@@ -1,6 +1,7 @@
 package cart.persistence.dao;
 
 import cart.persistence.entity.CouponEntity;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,5 +36,10 @@ public class CouponDao {
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public List<CouponEntity> findAll() {
+        String sql = "SELECT * FROM coupon";
+        return jdbcTemplate.query(sql, RowMapperHelper.couponRowMapper());
     }
 }

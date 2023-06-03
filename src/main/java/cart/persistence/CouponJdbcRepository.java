@@ -4,7 +4,9 @@ import cart.application.repository.CouponRepository;
 import cart.domain.coupon.Coupon;
 import cart.persistence.dao.CouponDao;
 import cart.persistence.entity.CouponEntity;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -29,5 +31,13 @@ public class CouponJdbcRepository implements CouponRepository {
             return Optional.empty();
         }
         return Optional.of(optionalCoupon.get().toDomain());
+    }
+
+    @Override
+    public List<Coupon> findAll() {
+        List<CouponEntity> entities = couponDao.findAll();
+        return entities.stream()
+                .map(CouponEntity::toDomain)
+                .collect(Collectors.toList());
     }
 }
