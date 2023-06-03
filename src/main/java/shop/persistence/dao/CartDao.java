@@ -92,13 +92,24 @@ public class CartDao {
         return jdbcTemplate.update(sql, quantity, id);
     }
 
-    public int deleteByIds(final List<Long> ids) {
-        String sql = "DELETE FROM cart_item WHERE cart_item.id = (:ids)";
+    public void deleteByIds(final List<Long> ids) {
+        String sql = "DELETE FROM cart_item WHERE id IN (:ids)";
 
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("ids", ids);
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("ids", ids);
 
-        return namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
+        namedParameterJdbcTemplate.update(sql, param);
+    }
+
+    public void deleteByMemberIdAndProductIds(Long memberId, List<Long> productIds) {
+        String sql = "DELETE FROM cart_item " +
+                "WHERE member_id = :memberId AND product_id IN (:productIds)";
+
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("productIds", productIds);
+
+        namedParameterJdbcTemplate.update(sql, param);
     }
 }
 

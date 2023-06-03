@@ -1,5 +1,6 @@
 package shop.application.order;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.application.order.dto.OrderCreationDto;
@@ -9,6 +10,7 @@ import shop.application.order.dto.OrderProductDto;
 import shop.domain.cart.Quantity;
 import shop.domain.coupon.Coupon;
 import shop.domain.coupon.MemberCoupon;
+import shop.domain.event.ProductOrderedEvent;
 import shop.domain.member.Member;
 import shop.domain.order.Order;
 import shop.domain.order.OrderDetail;
@@ -27,16 +29,19 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @Service
 public class OrderService {
+    private final ApplicationEventPublisher eventPublisher;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CouponRepository couponRepository;
     private final MemberCouponRepository memberCouponRepository;
 
-    public OrderService(OrderRepository orderRepository, CouponRepository couponRepository,
-                        ProductRepository productRepository, MemberCouponRepository memberCouponRepository) {
+    public OrderService(ApplicationEventPublisher eventPublisher, OrderRepository orderRepository,
+                        ProductRepository productRepository, CouponRepository couponRepository,
+                        MemberCouponRepository memberCouponRepository) {
+        this.eventPublisher = eventPublisher;
         this.orderRepository = orderRepository;
-        this.couponRepository = couponRepository;
         this.productRepository = productRepository;
+        this.couponRepository = couponRepository;
         this.memberCouponRepository = memberCouponRepository;
     }
 
@@ -46,7 +51,7 @@ public class OrderService {
         OrderPrice orderPrice = calculateOrderPrice(member, orderCreationDto.getCouponId(), orderItems);
 
         Order order = new Order(orderItems, orderPrice, LocalDateTime.now());
-
+        eventPublisher.publishEvent(new ProductOrderedEvent(member.getId(), orderItems));
         return orderRepository.save(member.getId(), orderCreationDto.getCouponId(), order);
     }
 

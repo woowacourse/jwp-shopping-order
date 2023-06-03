@@ -86,12 +86,12 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public void deleteByIds(List<Long> ids) {
-        int countOfDeletedItem = cartDao.deleteByIds(ids);
+        cartDao.deleteByIds(ids);
+    }
 
-        if (countOfDeletedItem != ids.size()) {
-            throw new DatabaseException.IllegalDataException("유효하지 않은 상품 ID가 존재합니다. " +
-                    "요청 id : " + ids);
-        }
+    @Override
+    public void deleteByMemberIdAndProductIds(Long memberId, List<Long> productIds) {
+        cartDao.deleteByMemberIdAndProductIds(memberId,productIds);
     }
 
     @Override
