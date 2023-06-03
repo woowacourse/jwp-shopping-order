@@ -1,7 +1,7 @@
-package cart;
+package cart.config;
 
-import cart.domain.MemberRepository;
-import cart.ui.MemberArgumentResolver;
+import cart.domain.member.MemberRepository;
+import cart.auth.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

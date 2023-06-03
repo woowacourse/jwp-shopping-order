@@ -1,6 +1,9 @@
-package cart.domain;
+package cart.domain.order;
 
+import cart.domain.Model;
+import cart.domain.orderProduct.OrderProduct;
 import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +13,7 @@ public class Order implements Model {
     private final Integer originalPrice;
     private final Integer discountPrice;
     private final List<OrderProduct> orderProducts;
-    private final Coupon usedCoupon;
+    private final Coupon usedCoupon; // TODO coupon vs memberCoupon
     private Boolean confirmState;
     private final Member member;
 

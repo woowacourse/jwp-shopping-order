@@ -1,4 +1,6 @@
-package cart.domain;
+package cart.domain.member;
+
+import cart.domain.Model;
 
 import java.util.Objects;
 

@@ -1,10 +1,15 @@
 package cart.application;
 
-import cart.domain.*;
+import cart.domain.cartItem.CartItem;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.CouponRepository;
+import cart.domain.member.Member;
 import cart.domain.memberCoupon.MemberCoupon;
 import cart.domain.memberCoupon.MemberCouponRepository;
+import cart.domain.order.Order;
+import cart.domain.order.OrderRepository;
+import cart.domain.orderProduct.OrderProduct;
+import cart.domain.product.Product;
 import cart.dto.CouponResponse;
 import cart.dto.OrderConfirmResponse;
 import cart.dto.ProductResponse;
@@ -13,6 +18,7 @@ import cart.dto.order.OrderProductResponse;
 import cart.dto.order.OrderRequest;
 import cart.dto.order.OrderResponse;
 import cart.persistence.dao.CartItemDao;
+import cart.util.ModelSortHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,8 +1,8 @@
 package cart.application;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.cartItem.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
@@ -10,6 +10,7 @@ import cart.exception.NoSuchCartItemException;
 import cart.exception.NoSuchProductException;
 import cart.persistence.dao.CartItemDao;
 import cart.persistence.dao.ProductDao;
+import cart.util.ModelSortHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

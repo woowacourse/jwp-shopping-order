@@ -1,7 +1,7 @@
-package cart.ui;
+package cart.auth;
 
-import cart.domain.Member;
-import cart.domain.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;

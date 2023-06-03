@@ -1,4 +1,4 @@
-package cart.ui;
+package cart.exception;
 
 import cart.dto.ErrorResponse;
 import cart.exception.AuthenticationException;
@@ -21,7 +21,7 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @ExceptionHandler(IllegalArgumentException.class) // TODO DB NoSuch 에러 분리
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }

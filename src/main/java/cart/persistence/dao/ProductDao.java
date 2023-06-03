@@ -1,6 +1,6 @@
 package cart.persistence.dao;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

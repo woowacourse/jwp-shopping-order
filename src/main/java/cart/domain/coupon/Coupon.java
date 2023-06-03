@@ -1,7 +1,7 @@
 package cart.domain.coupon;
 
 import cart.domain.Model;
-import cart.domain.Order;
+import cart.domain.order.Order;
 
 import java.util.Objects;
 

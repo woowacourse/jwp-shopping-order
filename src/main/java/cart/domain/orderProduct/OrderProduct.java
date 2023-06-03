@@ -1,4 +1,7 @@
-package cart.domain;
+package cart.domain.orderProduct;
+
+import cart.domain.Model;
+import cart.domain.product.Product;
 
 import java.util.Objects;
 

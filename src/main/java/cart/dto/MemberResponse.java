@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 public class MemberResponse {
     private final String email;

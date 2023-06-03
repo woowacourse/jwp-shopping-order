@@ -1,4 +1,4 @@
-package cart.application;
+package cart.util;
 
 import cart.domain.Model;
 

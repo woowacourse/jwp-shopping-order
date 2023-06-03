@@ -1,10 +1,11 @@
 package cart.application;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.exception.NoSuchProductException;
 import cart.persistence.dao.ProductDao;
+import cart.util.ModelSortHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

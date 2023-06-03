@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.OrderService;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.OrderConfirmResponse;
 import cart.dto.order.OrderDetailResponse;
 import cart.dto.order.OrderRequest;

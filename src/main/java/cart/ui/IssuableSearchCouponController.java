@@ -1,7 +1,7 @@
 package cart.ui;
 
 import cart.application.IssuableSearchCouponService;
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.dto.IssuableSearchCouponResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
