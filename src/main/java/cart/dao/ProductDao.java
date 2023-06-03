@@ -1,6 +1,8 @@
 package cart.dao;
 
+import cart.domain.Amount;
 import cart.domain.Product;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -27,18 +29,18 @@ public class ProductDao {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
+            return new Product(productId, name, new Amount(price), imageUrl);
         });
     }
 
-    public Product getProductById(Long productId) {
+    public Optional<Product> getProductById(Long productId) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
+        return jdbcTemplate.query(sql, new Object[]{productId}, (rs, rowNum) -> {
             String name = rs.getString("name");
             int price = rs.getInt("price");
             String imageUrl = rs.getString("image_url");
-            return new Product(productId, name, price, imageUrl);
-        });
+            return new Product(productId, name, new Amount(price), imageUrl);
+        }).stream().findAny();
     }
 
     public Long createProduct(Product product) {
@@ -51,7 +53,7 @@ public class ProductDao {
             );
 
             ps.setString(1, product.getName());
-            ps.setInt(2, product.getPrice());
+            ps.setInt(2, product.getPrice().getValue());
             ps.setString(3, product.getImageUrl());
 
             return ps;

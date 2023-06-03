@@ -21,8 +21,16 @@ public class Amount {
         .sum());
   }
 
+  public Amount plus(final Amount amount) {
+    return new Amount(value + amount.value);
+  }
+
   public Amount minus(final Amount amount) {
     return new Amount(value - amount.value);
+  }
+
+  public Amount multiply(final int quantity) {
+    return new Amount(value * quantity);
   }
 
   public boolean isLessThan(final Amount amount) {

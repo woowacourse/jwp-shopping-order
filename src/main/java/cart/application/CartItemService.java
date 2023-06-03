@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,9 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        return cartItemDao.save(new CartItem(member,
+            productDao.getProductById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new BusinessException("찾는 상품이 존재하지 않습니다."))));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {

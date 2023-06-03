@@ -14,10 +14,4 @@ public class Products {
   public List<Product> getValues() {
     return values;
   }
-
-  public Amount sumPrice() {
-    return Amount.sum(values.stream()
-        .map(product -> new Amount(product.getPrice()))
-        .collect(Collectors.toList()));
-  }
 }

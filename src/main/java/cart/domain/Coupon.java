@@ -22,7 +22,7 @@ public class Coupon {
 
   public Amount apply(final Amount amount) {
     if (amount.isLessThan(minAmount)) {
-      throw new BusinessException(String.format("최소 금액이 %d이상 이여야 합니다.", minAmount.getValue()));
+      throw new BusinessException(String.format("최소 금액이 %d원 이상 이여야 합니다.", minAmount.getValue()));
     }
     return amount.minus(discountAmount);
   }
