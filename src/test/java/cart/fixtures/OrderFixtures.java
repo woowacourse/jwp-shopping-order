@@ -12,8 +12,8 @@ import cart.domain.order.application.dto.OrderRequest;
 import cart.domain.order.application.dto.OrderResponse;
 import cart.domain.order.domain.Order;
 import cart.domain.order.domain.dto.OrderCartItemDto;
+import cart.domain.order.domain.dto.OrderItemDto;
 import cart.domain.order.domain.dto.OrderedProductDto;
-import cart.domain.product.application.dto.ProductResponse;
 import cart.domain.product.domain.Product;
 import cart.fixtures.MemberFixtures.Dooly;
 
@@ -86,10 +86,10 @@ public class OrderFixtures {
         }
 
         public static OrderResponse RESPONSE() {
-            ProductResponse productResponse1 = CHICKEN.RESPONSE;
-            OrderedProductDto orderedProductDto1 = new OrderedProductDto(productResponse1, Dooly_CartItem1.QUANTITY);
-            ProductResponse productResponse2 = SALAD.RESPONSE;
-            OrderedProductDto orderedProductDto2 = new OrderedProductDto(productResponse2, Dooly_CartItem2.QUANTITY);
+            OrderItemDto orderItemDto1 = new OrderItemDto(CHICKEN.ID, CHICKEN.NAME, CHICKEN.PRICE, CHICKEN.IMAGE_URL);
+            OrderedProductDto orderedProductDto1 = new OrderedProductDto(orderItemDto1, Dooly_CartItem1.QUANTITY);
+            OrderItemDto orderItemDto2 = new OrderItemDto(SALAD.ID, SALAD.NAME, SALAD.PRICE, SALAD.IMAGE_URL);
+            OrderedProductDto orderedProductDto2 = new OrderedProductDto(orderItemDto2, Dooly_CartItem2.QUANTITY);
             return new OrderResponse(ID, CREATED_AT, List.of(orderedProductDto2, orderedProductDto1), TOTAL_PRICE);
         }
     }
@@ -119,8 +119,8 @@ public class OrderFixtures {
         }
 
         public static OrderResponse RESPONSE() {
-            ProductResponse productResponse1 = PANCAKE.RESPONSE;
-            OrderedProductDto orderedProductDto1 = new OrderedProductDto(productResponse1, Dooly_CartItem1.QUANTITY);
+            OrderItemDto orderItemDto = new OrderItemDto(PANCAKE.ID, PANCAKE.NAME, PANCAKE.PRICE, PANCAKE.IMAGE_URL);
+            OrderedProductDto orderedProductDto1 = new OrderedProductDto(orderItemDto, Dooly_CartItem1.QUANTITY);
             return new OrderResponse(ID, CREATED_AT, List.of(orderedProductDto1), TOTAL_PRICE);
         }
     }
