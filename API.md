@@ -3,13 +3,14 @@
 - 상품 (admin)
 
   | 기능 | HTTP Method | URL | HTTP Status |
-                      | --- | --- | --- | --- |
+                        | --- | --- | --- | --- |
   | 상품 목록 조회 | get | /products | 200 |
   | 상품 상세 정보 조회 | get | /products/{id} | 200 |
   | 상품 추가 | post | /products | 201 |
   | 상품 정보 수정 | put | /products/{id} | 200 |
   | 상품 제거 | delete | /products/{id} | 204 |
 
+- RESPONSE (상품 상세 정보 조회 `GET /cart-items/{id}`)
     ```http request
     {
         "name": "Example Product",
@@ -22,14 +23,14 @@
 - 장바구니
 
   | 기능 | HTTP Method | URL | HTTP Status |
-                      | --- | --- | --- | --- |
+                        | --- | --- | --- | --- |
   | 장바구니 상품 목록 조회 | get | /cart-items | 200 |
   | 장바구니 상품 추가 | post | /cart-items | 201 |
   | 장바구니 상품 갯수 변경 | patch | /cart-items/{id} | 200 |
   | 장바구니 제거 | delete | /cart-items | 204 |
 
+- REQUEST (장바구니 제거 `DELETE /cart-items`)
     ```http request
-    장바구니 제거 REQUEST
     {
         "cartItemIdList": [1, 2, 3]
     }
@@ -38,15 +39,15 @@
 - 주문
 
   | 기능 | HTTP Method | URL | HTTP Status |
-                            | --- | --- | --- | --- |
+                                            | --- | --- | --- | --- |
   | 주문 목록 조회 | get | /orders | 200 |
   | 주문 상세 정보 조회 | get | /orders/{orderId} | 200 |
   | 주문하기 | post | /orders | 201 |
   | 주문 삭제 | delete | /orders/{orderId} | 204 |
   | 주문 취소 | patch | /orders/{orderId} | 200 |
 
+- REQUEST (주문하기 `POST /orders`)
     ```http request
-    REQUEST (주문하기)
     {
         "cartItemIdList": [1, 2, 3],
             "totalPrice" : 10000,
@@ -55,9 +56,8 @@
     }
     ```
 
-    ```http request
-    RESPONSE (주문 목록 조회)
-      
+- RESPONSE (주문 목록 조회 `GET /orders`)
+    ```http request 
     [
         {
             "orderId": 1,
@@ -88,8 +88,8 @@
     ]
     ```
 
+- RESPONSE (주문 내역 상세 조회 `GET /orders/{id}`)
     ```http request
-    RESPONSE (주문 내역 상세 조회)
     {
         "orderId" : 1,
         "products": [
@@ -114,11 +114,11 @@
 - 쿠폰
 
   | 기능 | HTTP Method | URL | HTTP Status |
-                        | --- | --- | --- | --- |
+                          | --- | --- | --- | --- |
   | 보유 쿠폰 목록 조회 | get | coupons | 200 |
 
+- RESPONSE (보유 쿠폰 목록 조회 `GET /coupons`)
   ```http request
-  GET coupons
   [
      {
         "id": 12,
