@@ -1,3 +1,6 @@
+### 재화 정책 요청
+GET http://localhost:8080/order-policy
+
 ### 장바구니 조회 요청
 GET http://localhost:8080/cart-items
 Authorization: Basic YUBhLmNvbToxMjM0
