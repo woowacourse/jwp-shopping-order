@@ -26,11 +26,8 @@ public class Product {
     }
 
     public long calculatePointToEarn() {
-        if (pointAvailable) {
-            double point = pointRatio / 100 * price;
-            return (long) Math.ceil(point);
-        }
-        return 0;
+        double point = pointRatio / 100 * price;
+        return (long) Math.ceil(point);
     }
 
     public Long getId() {
