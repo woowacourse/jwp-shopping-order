@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Order;
 import cart.entity.OrderEntity;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -37,5 +38,10 @@ public class OrderDao {
                 rs.getLong("id"),
                 rs.getLong("member_id"),
                 rs.getTimestamp("created_at").toLocalDateTime());
+    }
+
+    public List<OrderEntity> findAllByMemberId(Long memberId) {
+        String sql = "SELECT * FROM orders WHERE member_id = ?";
+        return jdbcTemplate.query(sql, orderEntityRowMapper(), memberId);
     }
 }

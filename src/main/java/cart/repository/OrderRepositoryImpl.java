@@ -19,7 +19,6 @@ import cart.entity.OrderEntity;
 import cart.entity.OrderItemEntity;
 import cart.entity.PaymentEntity;
 import cart.entity.ProductEntity;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
@@ -79,10 +78,15 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Order findOrder(Long orderId, Member member) {
         OrderEntity orderEntity = orderDao.findById(orderId);
         validateCorrectMemberById(orderEntity.getMemberId(), member.getId());
+
+        return buildOrder(member, orderEntity);
+    }
+
+    private Order buildOrder(final Member member, final OrderEntity orderEntity) {
         return new Order(orderEntity.getId(),
                 orderEntity.getCreatedAt(),
-                createPayment(orderId),
-                createOrderItems(orderId),
+                createPayment(orderEntity.getId()),
+                createOrderItems(orderEntity.getId()),
                 member);
     }
 
@@ -97,12 +101,11 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private OrderItems createOrderItems(final Long orderId) {
         List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderId(orderId);
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemEntity orderItemEntity : orderItemEntities) {
-            Product product = createProduct(orderItemEntity.getProductId());
-            OrderItem orderItem = new OrderItem(orderItemEntity.getId(), product, orderItemEntity.getQuantity());
-            orderItems.add(orderItem);
-        }
+        List<OrderItem> orderItems = orderItemEntities.stream()
+                .map(orderItemEntity -> new OrderItem(orderItemEntity.getId(),
+                        createProduct(orderItemEntity.getProductId()),
+                        orderItemEntity.getQuantity()))
+                .collect(Collectors.toList());
         return new OrderItems(orderItems);
     }
 
@@ -118,5 +121,12 @@ public class OrderRepositoryImpl implements OrderRepository {
         if (!memberId.equals(otherId)) {
             throw new IllegalArgumentException("주문한 사용자의 정보가 잘못되었습니다.");
         }
+    }
+
+    public List<Order> findAllByMember(Member member) {
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(member.getId());
+        return orderEntities.stream()
+                .map(orderEntity -> buildOrder(member, orderEntity))
+                .collect(Collectors.toList());
     }
 }
