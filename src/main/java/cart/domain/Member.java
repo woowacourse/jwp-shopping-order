@@ -1,19 +1,12 @@
 package cart.domain;
 
-import cart.exception.payment.PaymentException;
+import cart.exception.point.HavingPointIsLessThanUsePointException;
 
 public class Member {
     private Long id;
     private String email;
     private String password;
     private Point point;
-
-    public Member(Long id, String email, String password, Point point) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.point = point;
-    }
 
     public Member(String email, String password) {
         this.email = email;
@@ -26,9 +19,16 @@ public class Member {
         this.point = point;
     }
 
+    public Member(Long id, String email, String password, Point point) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
     public void usePoint(Point usePoint) {
         if (point.isSmallerThan(usePoint)) {
-            throw new PaymentException("보유한 포인트가 사용하고자 하는 포인트보다 적습니다.");
+            throw new HavingPointIsLessThanUsePointException();
         }
         this.point = this.point.subtract(usePoint);
     }

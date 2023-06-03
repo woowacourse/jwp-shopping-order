@@ -6,6 +6,7 @@ import cart.exception.auth.AuthorizationException;
 import cart.exception.order.OrderException;
 import cart.exception.payment.PaymentException;
 import cart.exception.notFound.NotFoundException;
+import cart.exception.point.PointException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler({PaymentException.class, OrderException.class})
+    @ExceptionHandler({PaymentException.class, OrderException.class, PointException.class})
     public ResponseEntity<ErrorResponse> handleBusinessException(Exception e) {
         log.warn(e.getMessage());
         ErrorResponse response = new ErrorResponse(e.getMessage());
