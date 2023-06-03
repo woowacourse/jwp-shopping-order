@@ -2,7 +2,7 @@ package cart.domain;
 
 import cart.exception.OrderException;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class Order {
@@ -14,20 +14,20 @@ public class Order {
     private Long discountPrice;
     private Long deliveryFee;
     private Long totalPrice;
-    private java.sql.Date date;
+    private Timestamp orderTime;
 
 
-    public Order(Member member, OrderItems orderItems, Long deliveryFee, Date date) {
+    public Order(Member member, OrderItems orderItems, Long deliveryFee, Timestamp orderTime) {
         this.member = member;
         this.orderItems = orderItems;
         this.productPrice = orderItems.calculateOrderPrice();
         this.discountPrice = calculateDiscountedPrice();
         this.deliveryFee = calculateDeliveryFee(deliveryFee);
         this.totalPrice = calculateTotalPrice();
-        this.date = date;
+        this.orderTime = orderTime;
     }
 
-    public Order(Long id, Member member, OrderItems orderItems, Long productPrice, Long discountPrice, Long deliveryFee, Long totalPrice, Date date) {
+    public Order(Long id, Member member, OrderItems orderItems, Long productPrice, Long discountPrice, Long deliveryFee, Long totalPrice, Timestamp orderTime) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
@@ -35,7 +35,7 @@ public class Order {
         this.discountPrice = discountPrice;
         this.deliveryFee = deliveryFee;
         this.totalPrice = totalPrice;
-        this.date = date;
+        this.orderTime = orderTime;
     }
 
     private Long calculateDiscountedPrice() {
@@ -74,6 +74,10 @@ public class Order {
         return orderItems;
     }
 
+    public Timestamp getOrderTime() {
+        return orderTime;
+    }
+
     public Long getProductPrice() {
         return productPrice;
     }
@@ -88,10 +92,6 @@ public class Order {
 
     public Long getTotalPrice() {
         return totalPrice;
-    }
-
-    public Date getDate() {
-        return date;
     }
 
     public void setId(Long id) {
@@ -122,7 +122,7 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setOrderTime(Timestamp orderTime) {
+        this.orderTime = orderTime;
     }
 }

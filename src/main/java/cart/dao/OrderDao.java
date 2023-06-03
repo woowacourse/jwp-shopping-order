@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +40,7 @@ public class OrderDao {
             ps.setLong(3, order.getDiscountPrice());
             ps.setLong(4, order.getDeliveryFee());
             ps.setLong(5, order.getTotalPrice());
-            ps.setDate(6, order.getDate());
+            ps.setTimestamp(6, order.getOrderTime());
 
             return ps;
         }, keyHolder);
@@ -78,7 +79,7 @@ public class OrderDao {
             Long discountPrice = rs.getLong("orders.discount_price");
             Long deliveryFee = rs.getLong("orders.delivery_fee");
             Long totalPrice = rs.getLong("orders.total_price");
-            Date createdAt = rs.getDate("orders.created_at");
+            Timestamp createdAt = rs.getTimestamp("orders.created_at");
 
             List<OrderItem> orderItem = new ArrayList<>();
             Member member = new Member(memberId, email, null);
