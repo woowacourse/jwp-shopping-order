@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -115,6 +114,4 @@ public class OrderDao {
         String sql = "DELETE FROM orders WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
-
-
 }

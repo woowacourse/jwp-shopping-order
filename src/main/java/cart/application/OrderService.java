@@ -3,9 +3,9 @@ package cart.application;
 import cart.dao.OrderDao;
 import cart.dao.ProductDao;
 import cart.domain.*;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
-import cart.dto.OrdersResponse;
+import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderResponse;
+import cart.dto.response.OrdersResponse;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;

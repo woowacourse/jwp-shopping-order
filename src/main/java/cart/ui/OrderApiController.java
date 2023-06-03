@@ -2,9 +2,9 @@ package cart.ui;
 
 import cart.application.OrderService;
 import cart.domain.Member;
-import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
-import cart.dto.OrdersResponse;
+import cart.dto.request.OrderRequest;
+import cart.dto.response.OrderResponse;
+import cart.dto.response.OrdersResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +35,7 @@ public class OrderApiController {
 
     @GetMapping
     public ResponseEntity<OrdersResponse> showAllOrders(Member member) {
+
         return ResponseEntity.ok(orderService.findAll(member));
     }
 

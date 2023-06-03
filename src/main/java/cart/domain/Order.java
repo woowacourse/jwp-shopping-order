@@ -102,27 +102,4 @@ public class Order {
         this.member = member;
     }
 
-    public void setOrderItems(OrderItems orderItems) {
-        this.orderItems = orderItems;
-    }
-
-    public void setProductPrice(Long productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public void setDiscountPrice(Long discountPrice) {
-        this.discountPrice = discountPrice;
-    }
-
-    public void setDeliveryFee(Long deliveryFee) {
-        this.deliveryFee = deliveryFee;
-    }
-
-    public void setTotalPrice(Long totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setOrderTime(Timestamp orderTime) {
-        this.orderTime = orderTime;
-    }
 }
