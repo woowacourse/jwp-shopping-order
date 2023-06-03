@@ -15,10 +15,6 @@ public enum Grade {
         this.discountRate = discountRate;
     }
 
-    public int calculateGradeDiscountPrice(final int price) {
-        return (int) (price * discountRate);
-    }
-
     public static Grade from(final String name) {
         return Arrays.stream(values())
                 .filter(value -> value.name().equals(name.toUpperCase()))
@@ -33,5 +29,4 @@ public enum Grade {
     public double getDiscountRate() {
         return discountRate;
     }
-
 }

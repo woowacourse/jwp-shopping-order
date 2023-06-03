@@ -1,7 +1,9 @@
 package cart.application;
 
 import cart.domain.Grade;
-import cart.domain.PriceDiscountCalculator;
+import cart.domain.discount.Discount;
+import cart.domain.discount.GradeDiscount;
+import cart.domain.discount.PriceDiscount;
 import cart.dto.response.DiscountResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +15,13 @@ public class DiscountService {
     public List<DiscountResponse> getPrice(final int price, final String gradeName) {
         final List<DiscountResponse> discountResponses = new ArrayList<>();
 
-        final Grade grade = Grade.from(gradeName);
-        final int discountedPriceByGrade = grade.calculateGradeDiscountPrice(price);
-
-        final DiscountResponse gradeDiscountResponse = DiscountResponse.of(grade, discountedPriceByGrade);
+        final Discount gradeDiscount = GradeDiscount.of(Grade.from(gradeName), price);
+        final DiscountResponse gradeDiscountResponse = DiscountResponse.from(gradeDiscount);
 
         discountResponses.add(gradeDiscountResponse);
 
-        final PriceDiscountCalculator priceDiscountCalculator = new PriceDiscountCalculator(price);
-        final DiscountResponse priceDiscountResponse = DiscountResponse.from(priceDiscountCalculator);
+        final Discount priceDiscount = new PriceDiscount(price);
+        final DiscountResponse priceDiscountResponse = DiscountResponse.from(priceDiscount);
 
         discountResponses.add(priceDiscountResponse);
         return discountResponses;

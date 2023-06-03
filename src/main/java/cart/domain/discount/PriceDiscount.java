@@ -1,7 +1,7 @@
-package cart.domain;
+package cart.domain.discount;
 
-public class PriceDiscountCalculator {
-    private static final String POLICY = "priceDiscount";
+public class PriceDiscount implements Discount {
+    private static final String POLICY_NAME = "priceDiscount";
     private static final int MAX_DISCOUNT_MONEY = 100_000;
     private static final double MAX_DISCOUNT_RATE = 0.1;
     private static final int DISCOUNT_UNIT = 10_000;
@@ -10,22 +10,25 @@ public class PriceDiscountCalculator {
 
     private final int price;
 
-    public PriceDiscountCalculator(final int price) {
+    public PriceDiscount(final int price) {
         this.price = price;
     }
 
-    public double discountRate() {
+    @Override
+    public String getName() {
+        return POLICY_NAME;
+    }
+
+    @Override
+    public double getRate() {
         if (price > MAX_DISCOUNT_MONEY) {
             return MAX_DISCOUNT_RATE;
         }
         return (price / DISCOUNT_UNIT + PLUS_VALUE_FOR_CALCULATE_DISCOUNT) * DISCOUNT_RATE_UNIT;
     }
 
-    public int getDiscountedPrice() {
-        return (int) (price * discountRate());
-    }
-
-    public String getPolicyName(){
-        return POLICY;
+    @Override
+    public int getMoney() {
+        return (int) (price * getRate());
     }
 }

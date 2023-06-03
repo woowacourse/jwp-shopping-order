@@ -1,7 +1,6 @@
 package cart.dto.response;
 
-import cart.domain.Grade;
-import cart.domain.PriceDiscountCalculator;
+import cart.domain.discount.Discount;
 
 public class DiscountResponse {
 
@@ -15,12 +14,9 @@ public class DiscountResponse {
         this.discountPrice = discountPrice;
     }
 
-    public static DiscountResponse of(final Grade grade, final int price) {
-        return new DiscountResponse("memberGradeDiscount", grade.getDiscountRate(), price);
-    }
 
-    public static DiscountResponse from(final PriceDiscountCalculator priceDiscountCalculator) {
-        return new DiscountResponse(priceDiscountCalculator.getPolicyName(), priceDiscountCalculator.discountRate(), priceDiscountCalculator.getDiscountedPrice());
+    public static DiscountResponse from(final Discount discount) {
+        return new DiscountResponse(discount.getName(), discount.getRate(), discount.getMoney());
     }
 
     public String getPolicyName() {
