@@ -6,14 +6,14 @@ public class ProductQuantityResponse {
     private final ProductResponse product;
     private final int quantity;
 
-    public ProductQuantityResponse(ProductResponse product, int quantity) {
+    private ProductQuantityResponse(ProductResponse product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }
 
-    public static ProductQuantityResponse of(CartItem product) {
+    public static ProductQuantityResponse from(CartItem product) {
         return new ProductQuantityResponse(
-                ProductResponse.of(product.getProduct()), product.getQuantity());
+                ProductResponse.from(product.getProduct()), product.getQuantity());
     }
 
     public ProductResponse getProduct() {

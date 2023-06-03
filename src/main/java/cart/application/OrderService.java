@@ -5,12 +5,8 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.coupon.Coupon;
 import cart.domain.repository.*;
-import cart.dto.response.OrderResponse;
 import cart.dto.request.OrderRequest;
-import cart.dto.response.CouponConfirmResponse;
-import cart.dto.response.CouponResponse;
-import cart.dto.response.OrdersResponse;
-import cart.dto.response.ProductQuantityResponse;
+import cart.dto.response.*;
 import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,18 +57,14 @@ public class OrderService {
     public List<OrdersResponse> findAllByMemberId(Member member) {
         return orderRepository.findAllByMemberId(member).stream()
                 .sorted(Comparator.comparing(Order::getId).reversed())
-                .map(OrdersResponse::of).collect(Collectors.toList());
+                .map(OrdersResponse::from)
+                .collect(Collectors.toList());
     }
 
     public OrderResponse findByOrderId(Member member, Long orderId) {
         Order order = orderRepository.findByOrderId(member, orderId);
 
-        List<ProductQuantityResponse> products = order.getCartProducts().stream()
-                .map(ProductQuantityResponse::of)
-                .collect(Collectors.toList());
-
-        return new OrderResponse(order.getId(), products, order.calculatePrice(), order.calculateDiscountPrice(),
-                order.getConfirmState(), CouponResponse.of(order.getCoupon()));
+        return OrderResponse.of(order);
     }
 
     public void cancelOrder(Member member, Long orderId) {
@@ -89,8 +81,7 @@ public class OrderService {
     public CouponConfirmResponse confirmOrder(Member member, Long orderId) {
         orderRepository.confirmOrder(orderId, member);
         Coupon coupon = memberCouponRepository.publishBonusCoupon(orderId, member);
-        return new CouponConfirmResponse(new CouponResponse(coupon.getId(), coupon.getName(),
-                coupon.getCouponTypes().getCouponTypeName(), coupon.getMinimumPrice(), coupon.getDiscountRate(),
-                coupon.getDiscountPrice()));
+
+        return CouponConfirmResponse.from(CouponResponse.from(coupon));
     }
 }

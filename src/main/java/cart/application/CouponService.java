@@ -31,10 +31,7 @@ public class CouponService {
     @Transactional(readOnly = true)
     public List<CouponResponse> getUserCoupon(Member member) {
         return couponRepository.getUserCoupon(member).stream()
-                .map(it -> new CouponResponse(it.getId(), it.getName(),
-                        it.getCouponTypes().getCouponTypeName(),
-                        it.getMinimumPrice(), it.getDiscountRate(), it.getDiscountPrice()
-                ))
+                .map(CouponResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -43,10 +40,8 @@ public class CouponService {
         List<Coupon> coupons = couponRepository.findAllCoupons();
         List<Coupon> memberCoupons = memberCouponRepository.findMemberCoupons(member);
 
-        return coupons.stream().map(it -> new CouponIssuableResponse(it.getId(), it.getName(),
-                        it.getCouponTypes().getCouponTypeName(),
-                        it.getMinimumPrice(), it.getDiscountRate(), it.getDiscountPrice(),
-                        !memberCoupons.contains(it)))
+        return coupons.stream()
+                .map(it -> CouponIssuableResponse.of(it, !memberCoupons.contains(it)))
                 .collect(Collectors.toList());
     }
 }

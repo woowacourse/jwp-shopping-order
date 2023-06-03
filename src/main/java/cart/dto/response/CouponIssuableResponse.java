@@ -1,5 +1,7 @@
 package cart.dto.response;
 
+import cart.domain.coupon.Coupon;
+
 public class CouponIssuableResponse {
     private final Long id;
     private final String name;
@@ -9,7 +11,7 @@ public class CouponIssuableResponse {
     private final int discountAmount;
     private final boolean issuable;
 
-    public CouponIssuableResponse(Long id, String name, String couponType, int minimumPrice, double discountRate, int discountAmount, boolean issuable) {
+    private CouponIssuableResponse(Long id, String name, String couponType, int minimumPrice, double discountRate, int discountAmount, boolean issuable) {
         this.id = id;
         this.name = name;
         this.discountType = couponType;
@@ -18,6 +20,14 @@ public class CouponIssuableResponse {
         this.discountAmount = discountAmount;
         this.issuable = issuable;
     }
+
+    public static CouponIssuableResponse of(Coupon it, boolean isIssuable) {
+        return new CouponIssuableResponse(it.getId(), it.getName(),
+                it.getCouponTypes().getCouponTypeName(),
+                it.getMinimumPrice(), it.getDiscountRate(), it.getDiscountPrice(),
+                isIssuable);
+    }
+
 
     public Long getId() {
         return id;

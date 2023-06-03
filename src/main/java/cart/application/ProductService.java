@@ -19,16 +19,21 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productRepository.getAllProducts();
-        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+
+        return products.stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
     }
 
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.getProductById(productId);
-        return ProductResponse.of(product);
+
+        return ProductResponse.from(product);
     }
 
     public Long createProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+
         return productRepository.createProduct(product);
     }
 

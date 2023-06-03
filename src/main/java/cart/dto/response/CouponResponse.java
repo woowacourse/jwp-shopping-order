@@ -10,7 +10,7 @@ public class CouponResponse {
     private final double discountRate;
     private final int discountAmount;
 
-    public CouponResponse(Long id, String name, String couponType, int minimumPrice, double discountRate, int discountAmount) {
+    private CouponResponse(Long id, String name, String couponType, int minimumPrice, double discountRate, int discountAmount) {
         this.id = id;
         this.name = name;
         this.discountType = couponType;
@@ -19,7 +19,7 @@ public class CouponResponse {
         this.discountAmount = discountAmount;
     }
 
-    public static CouponResponse of(Coupon coupon) {
+    public static CouponResponse from(Coupon coupon) {
         if(coupon.getId() == null){
             return null;
         }

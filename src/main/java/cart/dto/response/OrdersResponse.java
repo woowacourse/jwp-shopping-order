@@ -10,16 +10,16 @@ public class OrdersResponse {
     private final List<ProductQuantityResponse> orderProducts;
     private final boolean confirmState;
 
-    public OrdersResponse(Long id, List<ProductQuantityResponse> orderProducts, boolean confirmState) {
+    private OrdersResponse(Long id, List<ProductQuantityResponse> orderProducts, boolean confirmState) {
         this.id = id;
         this.orderProducts = orderProducts;
         this.confirmState = confirmState;
     }
 
-    public static OrdersResponse of(Order order) {
+    public static OrdersResponse from(Order order) {
         return new OrdersResponse(
                 order.getId(),
-                order.getCartProducts().stream().map(ProductQuantityResponse::of).collect(Collectors.toList()),
+                order.getCartProducts().stream().map(ProductQuantityResponse::from).collect(Collectors.toList()),
                 order.getConfirmState()
         );
     }

@@ -13,11 +13,11 @@ public class CartItemResponse {
         this.product = product;
     }
 
-    public static CartItemResponse of(CartItem cartItem) {
+    public static CartItemResponse from(CartItem cartItem) {
         return new CartItemResponse(
                 cartItem.getId(),
                 cartItem.getQuantity(),
-                ProductResponse.of(cartItem.getProduct())
+                ProductResponse.from(cartItem.getProduct())
         );
     }
 
