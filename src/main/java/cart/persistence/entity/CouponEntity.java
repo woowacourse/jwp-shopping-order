@@ -31,12 +31,25 @@ public class CouponEntity {
         this.discountPercentage = discountPercentage;
     }
 
+    public static CouponEntity from(final Coupon coupon) {
+        CouponInfo couponInfo = coupon.getCouponInfo();
+        CouponType type = coupon.getType();
+        Integer discountAmount = (type == CouponType.AMOUNT) ? coupon.getValue() : null;
+        Double discountPercent = (type == CouponType.PERCENT) ? (double) (coupon.getValue()) / 100 : null;
+        return new CouponEntity(
+                coupon.getId(),
+                couponInfo.getName(),
+                couponInfo.getMinOrderPrice(),
+                couponInfo.getMaxDiscountPrice(),
+                type,
+                discountAmount,
+                discountPercent
+        );
+    }
+
     public Coupon toDomain() {
         CouponInfo couponInfo = new CouponInfo(name, minOrderPrice, maxDiscountPrice);
-        int value = discountAmount;
-        if (type == CouponType.PERCENT) {
-            value = discountPercentage.intValue();
-        }
+        int value = (type == CouponType.AMOUNT) ? discountAmount : (int) (discountPercentage * 100);
         return new Coupon(id, couponInfo, value, type);
     }
 
