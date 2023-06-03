@@ -28,25 +28,26 @@ public class CartCommandService {
     }
 
     public void updateQuantity(long memberId, Long id, CartItemQuantityUpdateRequest request) {
-        CartItem cartItem = cartItemDao.findById(id)
+        CartItem cartItem = cartItemDao.findByIdAndMemberId(id, memberId)
                 .orElseThrow(CartItemNotFoundException::new);
-        cartItem.checkOwner(memberId);
+        cartItem.changeQuantity(request.getQuantity());
+        updateOrDeleteCartItem(cartItem);
+    }
 
-        if (request.getQuantity() == 0) {
-            cartItemDao.deleteById(id);
+    private void updateOrDeleteCartItem(CartItem cartItem) {
+        if (needToRemove(cartItem)) {
+            cartItemDao.deleteById(cartItem.getId());
             return;
         }
+        cartItemDao.update(cartItem);
+    }
 
-        cartItem.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+    private boolean needToRemove(CartItem cartItem) {
+        return cartItem.getQuantity() == 0;
     }
 
     public void remove(long memberId, Long id) {
-        CartItem cartItem = cartItemDao.findById(id)
-                .orElseThrow(CartItemNotFoundException::new);
-        cartItem.checkOwner(memberId);
-
-        cartItemDao.deleteById(id);
+        cartItemDao.deleteByIdAndMemberId(id, memberId);
     }
 
     public void removeAllByCartIds(Long memberId, List<Long> cartItemIds) {

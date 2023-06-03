@@ -4,6 +4,7 @@ import static com.woowahan.techcourse.cart.domain.CartItemFixture.CART_ITEM1;
 import static com.woowahan.techcourse.cart.domain.CartItemFixture.CART_ITEM2;
 import static com.woowahan.techcourse.cart.domain.CartItemFixture.CART_ITEM3;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.woowahan.techcourse.cart.domain.CartItem;
@@ -52,6 +53,11 @@ class CartItemDaoTest {
             // then
             assertThat(cartItemDao.findById(cartItemId + 1)).isEmpty();
         }
+
+        @Test
+        void 없는_것을_제거해도_에러가_발생하지_않음() {
+            assertThatCode(() -> cartItemDao.deleteById(1L)).doesNotThrowAnyException();
+        }
     }
 
     @Nested
@@ -62,6 +68,21 @@ class CartItemDaoTest {
         @BeforeEach
         void setCartItem() {
             cartItemId = cartItemDao.save(CART_ITEM1);
+        }
+
+        @Test
+        void 멤버_id와_카트_아이템_id로_조회하면_잘_나온다() {
+            // given
+            // when
+            Optional<CartItem> result = cartItemDao.findByIdAndMemberId(cartItemId, CART_ITEM1.getMemberId());
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result).isPresent();
+                softly.assertThat(result.get().getMemberId()).isEqualTo(CART_ITEM1.getMemberId());
+                softly.assertThat(result.get().getProductId()).isEqualTo(CART_ITEM1.getProductId());
+                softly.assertThat(result.get().getQuantity()).isEqualTo(CART_ITEM1.getQuantity());
+            });
         }
 
         @Test

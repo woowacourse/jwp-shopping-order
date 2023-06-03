@@ -121,7 +121,7 @@ class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId() == cartItemId)
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        assertThat(selectedCartItemResponse).isEmpty();
     }
 
     @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
@@ -131,7 +131,7 @@ class CartItemIntegrationTest extends IntegrationTest {
 
         ExtractableResponse<Response> response = requestUpdateCartItemQuantity(member2, cartItemId, 10);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("장바구니에 담긴 아이템을 삭제한다.")
