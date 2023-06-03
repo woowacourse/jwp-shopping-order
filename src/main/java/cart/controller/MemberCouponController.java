@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
+import cart.domain.member.MemberCoupon;
 import cart.dto.MemberCouponResponse;
 import cart.service.MemberCouponService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SecurityRequirement(name = "basicAuth")
 @Tag(name = "쿠폰", description = "쿠폰을 조회한다")
@@ -42,7 +44,10 @@ public class MemberCouponController {
     })
     @GetMapping
     public ResponseEntity<List<MemberCouponResponse>> findAll(@Auth final Credential credential) {
-        final List<MemberCouponResponse> result = memberCouponService.findAllByMemberId(credential.getMemberId());
+        final List<MemberCoupon> memberCoupons = memberCouponService.findAllByMemberId(credential.getMemberId());
+        final List<MemberCouponResponse> result = memberCoupons.stream()
+                .map(MemberCouponResponse::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 }

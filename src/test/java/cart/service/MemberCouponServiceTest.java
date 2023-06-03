@@ -5,7 +5,6 @@ import cart.domain.coupon.Coupon;
 import cart.domain.coupon.discountPolicy.PricePolicy;
 import cart.domain.member.Member;
 import cart.domain.member.MemberCoupon;
-import cart.dto.MemberCouponResponse;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
@@ -50,7 +49,7 @@ class MemberCouponServiceTest {
         memberCouponRepository.save(new MemberCoupon(member2, coupon, false));
 
         // when
-        final List<MemberCouponResponse> result = memberCouponService.findAllByMemberId(member1.getId());
+        final List<MemberCoupon> result = memberCouponService.findAllByMemberId(member1.getId());
 
         // then
         assertThat(result.size()).isEqualTo(2);

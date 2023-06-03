@@ -7,7 +7,6 @@ import cart.domain.member.MemberCoupon;
 import cart.domain.member.MemberValidator;
 import cart.domain.order.Order;
 import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
 import cart.exception.member.MemberCouponNotFoundException;
 import cart.exception.member.MemberNotFoundException;
 import cart.exception.order.OrderNotFoundException;
@@ -44,14 +43,14 @@ public class OrderService {
         this.memberCouponRepository = memberCouponRepository;
     }
 
-    public Long save(final Long memberId, final OrderRequest request) {
+    public Order save(final Long memberId, final OrderRequest request) {
         final List<CartItem> cartItems = cartItemRepository.findAllByMemberId(memberId);
 
         final MemberCoupon usedCoupon = useCouponIfExist(request.getCouponId());
         final Order order = Order.createFromCartItems(cartItems, new Money(BigDecimal.valueOf(3000L)), usedCoupon, memberId);
 
         cartItemRepository.deleteAll(cartItems);
-        return orderRepository.save(order).getId();
+        return orderRepository.save(order);
     }
 
     private MemberCoupon useCouponIfExist(final Long couponId) {
@@ -64,7 +63,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponse> findAll(final Long memberId) {
+    public List<Order> findAll(final Long memberId) {
         final List<Order> orders = orderRepository.findByMemberId(memberId);
 
         return orders.stream()
@@ -73,7 +72,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderResponse findById(final Long memberId, final Long id) {
+    public Order findById(final Long memberId, final Long id) {
         final Order order = orderRepository.findById(id)
                 .orElseThrow(OrderNotFoundException::new);
         final Member member = memberRepository.findById(memberId)
@@ -81,9 +80,7 @@ public class OrderService {
 
         final MemberValidator memberValidator = new MemberValidator(member);
         order.validateMember(memberValidator);
-        final Money discountedOrderPrice = order.discountOrderPrice();
-        final Money discountedDeliveryFee = order.discountDeliveryFee();
 
-        return OrderResponse.of(order, order.getOrderPrice(), discountedOrderPrice, discountedDeliveryFee);
+        return order;
     }
 }

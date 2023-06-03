@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
+import cart.domain.CartItem;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SecurityRequirement(name = "basicAuth")
 @Tag(name = "장바구니", description = "장바구니를 관리한다.")
@@ -58,8 +60,8 @@ public class CartItemController {
             @Auth final Credential credential,
             @RequestBody final CartItemSaveRequest request
     ) {
-        final Long id = cartItemService.save(credential.getMemberId(), request);
-        return ResponseEntity.created(URI.create("/cart-items/" + id)).build();
+        final CartItem cartItem = cartItemService.save(credential.getMemberId(), request);
+        return ResponseEntity.created(URI.create("/cart-items/" + cartItem.getId())).build();
     }
 
     @Operation(summary = "장바구니 상품 전체 조회", description = "장바구니 상품 전체를 조회한다.")
@@ -69,7 +71,10 @@ public class CartItemController {
     )
     @GetMapping
     public ResponseEntity<List<CartItemDto>> findAll(@Auth final Credential credential) {
-        final List<CartItemDto> result = cartItemService.findAll(credential.getMemberId());
+        final List<CartItem> cartItems = cartItemService.findAll(credential.getMemberId());
+        final List<CartItemDto> result = cartItems.stream()
+                .map(CartItemDto::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 

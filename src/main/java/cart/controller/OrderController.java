@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
+import cart.domain.order.Order;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.ExceptionResponse;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SecurityRequirement(name = "basicAuth")
 @Tag(name = "주문", description = "장바구니의 상품을 주문한다")
@@ -50,8 +52,8 @@ public class OrderController {
     })
     @PostMapping
     public ResponseEntity<Void> save(@Auth final Credential credential, @RequestBody final OrderRequest request) {
-        final Long id = orderService.save(credential.getMemberId(), request);
-        return ResponseEntity.created(URI.create("/orders/" + id)).build();
+        final Order order = orderService.save(credential.getMemberId(), request);
+        return ResponseEntity.created(URI.create("/orders/" + order.getId())).build();
     }
 
     @Operation(summary = "사용자 주문 조회", description = "사용자의 모든 주문 내역을 조회한다")
@@ -68,7 +70,10 @@ public class OrderController {
     })
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findAll(@Auth final Credential credential) {
-        final List<OrderResponse> orderResponses = orderService.findAll(credential.getMemberId());
+        final List<Order> orders = orderService.findAll(credential.getMemberId());
+        final List<OrderResponse> orderResponses = orders.stream()
+                .map(order -> OrderResponse.of(order, order.getOrderPrice(), order.discountOrderPrice(), order.discountDeliveryFee()))
+                .collect(Collectors.toList());
         return ResponseEntity.ok(orderResponses);
     }
 
@@ -86,7 +91,7 @@ public class OrderController {
     })
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> findById(@Auth final Credential credential, @PathVariable final Long orderId) {
-        final OrderResponse response = orderService.findById(credential.getMemberId(), orderId);
-        return ResponseEntity.ok(response);
+        final Order order = orderService.findById(credential.getMemberId(), orderId);
+        return ResponseEntity.ok(OrderResponse.of(order, order.getOrderPrice(), order.discountOrderPrice(), order.discountDeliveryFee()));
     }
 }

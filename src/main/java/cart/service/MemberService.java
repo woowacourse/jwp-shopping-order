@@ -1,13 +1,11 @@
 package cart.service;
 
-import cart.dto.MemberDto;
+import cart.domain.member.Member;
 import cart.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Service
 public class MemberService {
@@ -19,9 +17,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberDto> findAll() {
-        return memberRepository.findAll().stream()
-                .map(MemberDto::from)
-                .collect(toUnmodifiableList());
+    public List<Member> findAll() {
+        return memberRepository.findAll();
     }
 }

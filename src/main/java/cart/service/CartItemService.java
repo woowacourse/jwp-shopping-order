@@ -4,12 +4,11 @@ import cart.domain.CartItem;
 import cart.domain.Product;
 import cart.domain.member.Member;
 import cart.domain.member.MemberValidator;
-import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemSaveRequest;
 import cart.exception.cart.CartItemNotFoundException;
-import cart.exception.member.MemberNotFoundException;
 import cart.exception.cart.ProductNotFoundException;
+import cart.exception.member.MemberNotFoundException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Transactional
 @Service
@@ -38,19 +35,17 @@ public class CartItemService {
         this.productRepository = productDao;
     }
 
-    public Long save(final Long memberId, final CartItemSaveRequest request) {
+    public CartItem save(final Long memberId, final CartItemSaveRequest request) {
         final Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(ProductNotFoundException::new);
 
         final CartItem cartItem = new CartItem(memberId, product);
-        return cartItemRepository.save(cartItem).getId();
+        return cartItemRepository.save(cartItem);
     }
 
     @Transactional(readOnly = true)
-    public List<CartItemDto> findAll(final Long memberId) {
-        return cartItemRepository.findAllByMemberId(memberId).stream()
-                .map(CartItemDto::from)
-                .collect(toList());
+    public List<CartItem> findAll(final Long memberId) {
+        return cartItemRepository.findAllByMemberId(memberId);
     }
 
     public void delete(final Long cartItemId, final Long memberId) {
@@ -64,7 +59,7 @@ public class CartItemService {
         cartItemRepository.delete(cartItem);
     }
 
-    public void updateQuantity(
+    public CartItem updateQuantity(
             final Long memberId,
             final Long cartItemId,
             final CartItemQuantityUpdateRequest request
@@ -78,10 +73,10 @@ public class CartItemService {
         cartItem.validateOwner(memberValidator);
         if (request.getQuantity() == 0) {
             cartItemRepository.delete(cartItem);
-            return;
+            return cartItem;
         }
 
         cartItem.changeQuantity(request.getQuantity());
-        cartItemRepository.save(cartItem);
+        return cartItemRepository.save(cartItem);
     }
 }

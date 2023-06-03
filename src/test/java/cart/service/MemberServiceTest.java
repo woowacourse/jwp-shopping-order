@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.domain.member.Member;
-import cart.dto.MemberDto;
 import cart.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -33,12 +32,11 @@ public class MemberServiceTest {
         final Member member2 = memberRepository.save(new Member("pizza2@pizza.com", "password"));
 
         // when
-        final List<MemberDto> result = memberService.findAll();
+        final List<Member> result = memberService.findAll();
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new MemberDto(member1.getId(), member1.getEmail(), member1.getPassword()),
-                new MemberDto(member2.getId(), member2.getEmail(), member2.getPassword())
+                member1, member2
         ));
     }
 }

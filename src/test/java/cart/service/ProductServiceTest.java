@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.domain.Money;
 import cart.domain.Product;
-import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
 import cart.exception.cart.ProductNotFoundException;
@@ -58,12 +57,12 @@ class ProductServiceTest {
         final Long id2 = productService.save(request2);
 
         // when
-        final List<ProductResponse> result = productService.findAll();
+        final List<Product> result = productService.findAll();
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new ProductResponse(id1, request1.getName(), request1.getImageUrl(), request1.getPrice()),
-                new ProductResponse(id2, request2.getName(), request2.getImageUrl(), request2.getPrice())
+                new Product(id1, request1.getName(), request1.getImageUrl(), new Money(request1.getPrice())),
+                new Product(id2, request2.getName(), request2.getImageUrl(), new Money(request2.getPrice()))
         ));
     }
 
@@ -74,14 +73,14 @@ class ProductServiceTest {
         final Long id = productService.save(product);
 
         // when
-        final ProductResponse productDto = productService.findById(id);
+        final Product result = productService.findById(id);
 
         // then
         assertAll(
-                () -> assertThat(productDto.getId()).isEqualTo(id),
-                () -> assertThat(productDto.getName()).isEqualTo("허브티"),
-                () -> assertThat(productDto.getImageUrl()).isEqualTo("tea.jpg"),
-                () -> assertThat(productDto.getPrice().longValue()).isEqualTo(99L)
+                () -> assertThat(result.getId()).isEqualTo(id),
+                () -> assertThat(result.getName()).isEqualTo("허브티"),
+                () -> assertThat(result.getImageUrl()).isEqualTo("tea.jpg"),
+                () -> assertThat(result.getPrice().getValue().longValue()).isEqualTo(99L)
         );
     }
 

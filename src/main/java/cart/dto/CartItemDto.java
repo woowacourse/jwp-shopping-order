@@ -3,9 +3,6 @@ package cart.dto;
 import cart.domain.CartItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-
 @Schema(description = "장바구니 상품")
 public class CartItemDto {
 

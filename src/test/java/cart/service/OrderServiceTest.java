@@ -4,8 +4,8 @@ import cart.domain.CartItem;
 import cart.domain.Money;
 import cart.domain.Product;
 import cart.domain.member.Member;
+import cart.domain.order.Order;
 import cart.dto.OrderRequest;
-import cart.dto.OrderResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
@@ -52,7 +52,7 @@ class OrderServiceTest {
         orderService.save(member.getId(), orderRequest);
 
         // then
-        final List<OrderResponse> orderResponses = orderService.findAll(member.getId());
+        final List<Order> orderResponses = orderService.findAll(member.getId());
         assertThat(orderResponses).hasSize(1);
     }
 
@@ -68,7 +68,7 @@ class OrderServiceTest {
         orderService.save(member.getId(), orderRequest);
 
         // when
-        final List<OrderResponse> orderResponses = orderService.findAll(member.getId());
+        final List<Order> orderResponses = orderService.findAll(member.getId());
 
         // then
         assertThat(orderResponses).hasSize(1);
@@ -83,12 +83,12 @@ class OrderServiceTest {
         final CartItem cartItem1 = cartItemRepository.save(new CartItem(member.getId(), product1));
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
         final OrderRequest orderRequest = new OrderRequest(List.of(cartItem1.getId(), cartItem2.getId()));
-        final Long order = orderService.save(member.getId(), orderRequest);
+        final Order order = orderService.save(member.getId(), orderRequest);
 
         // when
-        final OrderResponse response = orderService.findById(member.getId(), order);
+        final Order result = orderService.findById(member.getId(), order.getId());
 
         // then
-        assertThat(response.getId()).isEqualTo(order);
+        assertThat(result.getId()).isEqualTo(order.getId());
     }
 }

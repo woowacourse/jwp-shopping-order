@@ -4,9 +4,7 @@ import cart.domain.CartItem;
 import cart.domain.Money;
 import cart.domain.Product;
 import cart.domain.member.Member;
-import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
-import cart.dto.ProductResponse;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberRepository;
 import cart.repository.ProductRepository;
@@ -65,12 +63,11 @@ public class CartItemServiceTest {
         final CartItem cartItem2 = cartItemRepository.save(new CartItem(member.getId(), product2));
 
         // when
-        final List<CartItemDto> result = cartItemService.findAll(member.getId());
+        final List<CartItem> result = cartItemService.findAll(member.getId());
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new CartItemDto(cartItem1.getId(), 1, ProductResponse.from(product1)),
-                new CartItemDto(cartItem2.getId(), 1, ProductResponse.from(product2))
+                cartItem1, cartItem2
         ));
     }
 

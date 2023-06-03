@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.domain.Product;
 import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "상품", description = "상품을 관리한다.")
 @RequestMapping("/products")
@@ -46,8 +48,10 @@ public class ProductController {
     )
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAll() {
-        final List<ProductResponse> productDtos = productService.findAll();
-        return ResponseEntity.ok(productDtos);
+        final List<ProductResponse> products = productService.findAll().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(products);
     }
 
     @Operation(summary = "단일 상품 조회", description = "단일 상품을 조회한다.")
@@ -67,8 +71,8 @@ public class ProductController {
     public ResponseEntity<ProductResponse> findById(
             @Parameter(description = "상품 Id") @PathVariable final Long id
     ) {
-        final ProductResponse productDto = productService.findById(id);
-        return ResponseEntity.ok(productDto);
+        final Product product = productService.findById(id);
+        return ResponseEntity.ok(ProductResponse.from(product));
     }
 
     @Operation(summary = "상품 저장", description = "상품을 저장한다.")
