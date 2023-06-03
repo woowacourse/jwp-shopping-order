@@ -88,7 +88,7 @@ public class CartItemDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("cartItemIds", cartItemIds);
 
-        namedParameterJdbcTemplate.query(sql, params, rowMapper);
+        namedParameterJdbcTemplate.update(sql, params);
     }
 }
 
