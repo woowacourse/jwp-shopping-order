@@ -11,8 +11,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
-    private static final int EMAIL_CREDNTIAL_INDEX = 0;
+    private static final int EMAIL_CREDENTIAL_INDEX = 0;
     private static final int PASSWORD_CREDENTIAL_EXIST = 1;
+
     private final MemberQueryService memberQueryService;
 
     public AuthInterceptor(MemberQueryService memberQueryService) {
@@ -55,7 +56,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private void validateCredentialUserExist(String[] credentials) {
-        String email = credentials[EMAIL_CREDNTIAL_INDEX];
+        String email = credentials[EMAIL_CREDENTIAL_INDEX];
         String password = credentials[PASSWORD_CREDENTIAL_EXIST];
         memberQueryService.findByEmailAndPassword(email, password).orElseThrow(AuthenticationException::new);
     }
