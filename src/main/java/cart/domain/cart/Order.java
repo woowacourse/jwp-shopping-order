@@ -35,11 +35,22 @@ public class Order {
     }
 
     private void validate(final MemberCoupon memberCoupon, final List<CartItem> items, final Long memberId) {
+        validateCoupon(memberCoupon, items);
+        validateItemOwner(items, memberId);
+    }
+
+    private static void validateCoupon(final MemberCoupon memberCoupon, final List<CartItem> items) {
         final Money totalPrice = items.stream()
                 .map(CartItem::calculateTotalPrice)
                 .reduce(Money.ZERO, Money::plus);
         if (memberCoupon.isInvalidCoupon(totalPrice)) {
             throw new InvalidOrderException("쿠폰을 적용할 수 없는 주문입니다.");
+        }
+    }
+
+    private void validateItemOwner(final List<CartItem> items, final Long memberId) {
+        for (CartItem item : items) {
+            item.checkOwner(memberId);
         }
     }
 

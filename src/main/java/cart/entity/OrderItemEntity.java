@@ -49,8 +49,8 @@ public class OrderItemEntity {
         );
     }
 
-    public CartItem toDomain() {
-        return new CartItem(id, quantity, null, new Product(name, imageUrl, price));
+    public CartItem toDomain(final Long memberId) {
+        return new CartItem(id, quantity, memberId, new Product(name, imageUrl, price));
     }
 
     public Long getId() {

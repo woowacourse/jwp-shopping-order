@@ -136,7 +136,7 @@ public class OrderRepository {
                 orderEntity.getMemberId(),
                 Money.from(orderEntity.getDeliveryFee()),
                 orderIdByOrderItems.getOrDefault(id, new ArrayList<>()).stream()
-                        .map(OrderItemEntity::toDomain)
+                        .map(orderItemEntity -> orderItemEntity.toDomain(orderEntity.getMemberId()))
                         .collect(toList())
         );
     }
