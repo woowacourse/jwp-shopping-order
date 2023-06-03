@@ -6,16 +6,14 @@ import java.util.regex.Pattern;
 
 public class Password {
 
-    private static final int MINIMUM_LENGTH = 8;
+    private static final int MINIMUM_LENGTH = 4;
     private static final int MAXIMUM_LENGTH = 20;
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
-    private static final Pattern LETTER_PATTERN = Pattern.compile("[a-zA-Z]");
-    private static final Pattern SPECIAL_LETTER_PATTERN = Pattern.compile("[~`!@#$%^&*()-+=]");
 
     private final String value;
 
     public Password(final String value) {
-//        validateFormat(value);
+        validateFormat(value);
         this.value = value;
     }
 
@@ -25,12 +23,6 @@ public class Password {
         }
         if (notContains(NUMBER_PATTERN, value)) {
             throw new IllegalArgumentException("비밀번호는 숫자를 포함해야 합니다.");
-        }
-        if (notContains(LETTER_PATTERN, value)) {
-            throw new IllegalArgumentException("비밀번호는 대소문자를 포함해야 합니다.");
-        }
-        if (notContains(SPECIAL_LETTER_PATTERN, value)) {
-            throw new IllegalArgumentException("비밀번호는 특수문자를 포함해야 합니다.");
         }
     }
 
