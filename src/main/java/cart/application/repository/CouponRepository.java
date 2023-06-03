@@ -1,5 +1,6 @@
 package cart.application.repository;
 
+import cart.application.service.coupon.dto.MemberCouponDto;
 import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.CouponPolicy;
 
@@ -7,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CouponRepository {
-    List<Coupon> findByMemberId(Long memberId);
+    List<MemberCouponDto> findByMemberId(Long memberId);
 
     Optional<CouponPolicy> findPercentCouponById(Long memberCouponId);
 

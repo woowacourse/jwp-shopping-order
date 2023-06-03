@@ -1,7 +1,7 @@
 package cart.application.service.coupon;
 
 import cart.application.repository.CouponRepository;
-import cart.domain.coupon.Coupon;
+import cart.application.service.coupon.dto.MemberCouponDto;
 import cart.ui.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ public class CouponReadService {
     }
 
     public List<CouponResultDto> findByMember(MemberAuth memberAuth) {
-        final List<Coupon> coupons = couponRepository.findByMemberId(memberAuth.getId());
+        final List<MemberCouponDto> coupons = couponRepository.findByMemberId(memberAuth.getId());
 
         return coupons.stream()
                 .map(CouponResultDto::from)

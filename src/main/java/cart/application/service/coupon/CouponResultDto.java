@@ -1,6 +1,6 @@
 package cart.application.service.coupon;
 
-import cart.domain.coupon.Coupon;
+import cart.application.service.coupon.dto.MemberCouponDto;
 
 public class CouponResultDto {
     private final long id;
@@ -17,13 +17,13 @@ public class CouponResultDto {
         this.minAmount = minAmount;
     }
 
-    public static CouponResultDto from(Coupon coupon) {
+    public static CouponResultDto from(MemberCouponDto memberCouponDto) {
         return new CouponResultDto(
-                coupon.getId(),
-                coupon.getCouponName(),
-                coupon.getDiscountPercent(),
-                coupon.getDiscountAmount(),
-                coupon.getMinAmount()
+                memberCouponDto.getId(),
+                memberCouponDto.getCouponName(),
+                memberCouponDto.getDiscountPercent(),
+                memberCouponDto.getDiscountAmount(),
+                memberCouponDto.getMinAmount()
         );
     }
 

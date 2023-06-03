@@ -1,5 +1,6 @@
 package cart.persistence.coupon;
 
+import cart.application.service.coupon.dto.MemberCouponDto;
 import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.CouponPolicy;
 import cart.domain.order.Order;
@@ -13,12 +14,28 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static cart.fixture.MemberFixture.비버_ID포함;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class CouponJdbcRepositoryTest {
+
+    // 더미데이터 존재
+    // INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount)
+    // VALUES (1L, '웰컴 쿠폰 - 10%할인', 10000, 10, 0);
+    // INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount)
+    // VALUES (2L, '또 와요 쿠폰 - 3000원 할인', 15000, 0, 3000);
+
+    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
+    // VALUES (1L, 2L, 1L, 1);
+    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
+    // VALUES (2L, 2L, 1L, 0);
+    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
+    // VALUES (3L, 2L, 1L, 1);
+    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
+    // VALUES (4L, 2L, 2L, 1);
 
     private CouponJdbcRepository couponJdbcRepository;
 
@@ -31,16 +48,22 @@ class CouponJdbcRepositoryTest {
     }
 
     @Test
-    @DisplayName("사용자의 따른 저장되어있는 쿠폰 조회 테스트")
+    @DisplayName("사용자의 따라 저장되어있는 쿠폰 조회 테스트")
     void findByMemberId() {
-        List<Coupon> coupons = couponJdbcRepository.findByMemberId(2L);
-        assertThat(coupons).hasSize(3);
+        List<MemberCouponDto> coupons = couponJdbcRepository.findByMemberId(2L);
+        List<String> couponNames = coupons.stream().map(MemberCouponDto::getCouponName).collect(Collectors.toList());
+
+        Assertions.assertAll(
+                () -> assertThat(coupons).hasSize(3),
+                () -> assertThat(couponNames).containsExactlyInAnyOrder("웰컴 쿠폰 - 10%할인", "웰컴 쿠폰 - 10%할인", "또 와요 쿠폰 - 3000원 할인")
+        );
     }
 
     @Test
     @DisplayName("memberCouponId가 정률 할인인 쿠폰을 조회한다.")
     void findPercentCouponByIdTest() {
         Optional<CouponPolicy> percentCoupon = couponJdbcRepository.findPercentCouponById(3L);
+        CouponPolicy coupon = percentCoupon.get();
         assertThat(percentCoupon).isNotEmpty();
     }
 
@@ -69,7 +92,7 @@ class CouponJdbcRepositoryTest {
     @DisplayName("사용자 쿠폰의 상태를 사용 상태로 변경한다.")
     void convertToUseMemberCouponTest() {
         couponJdbcRepository.convertToUseMemberCoupon(4L);
-        List<Coupon> usableCoupons = couponJdbcRepository.findByMemberId(2L);
+        List<MemberCouponDto> usableCoupons = couponJdbcRepository.findByMemberId(2L);
         assertThat(usableCoupons).hasSize(2);
     }
 
@@ -80,19 +103,6 @@ class CouponJdbcRepositoryTest {
         assertThat(couponJdbcRepository.createOrderedCoupon(order.getId(), 2L)).isPositive();
     }
 
-    // INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount)
-    // VALUES (1L, '웰컴 쿠폰 - 10%할인', 10000, 10, 0);
-    // INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount)
-    // VALUES (2L, '또 와요 쿠폰 - 3000원 할인', 15000, 0, 3000);
-
-    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
-    // VALUES (1L, 2L, 1L, 1);
-    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
-    // VALUES (2L, 2L, 1L, 0);
-    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
-    // VALUES (3L, 2L, 1L, 1);
-    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
-    // VALUES (4L, 2L, 2L, 1);
     @Test
     @DisplayName("주문에 사용한 쿠폰 목록을 조회한다.")
     void findCouponsOnOrder() {

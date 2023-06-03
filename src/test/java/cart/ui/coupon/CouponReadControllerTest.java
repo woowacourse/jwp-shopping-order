@@ -18,7 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static cart.fixture.MemberFixture.레오;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/reset.sql")
+@Sql(value = "/reset.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class CouponReadControllerTest {
 
     @Autowired

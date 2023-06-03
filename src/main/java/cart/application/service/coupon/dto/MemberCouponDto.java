@@ -3,25 +3,36 @@ package cart.application.service.coupon.dto;
 public class MemberCouponDto {
 
     private final long id;
-    private final long memberId;
-    private final long couponId;
+    private final String couponName;
+    private final int discountPercent;
+    private final int discountAmount;
+    private final int minAmount;
 
-    public MemberCouponDto(long id, long memberId, long couponId) {
+    public MemberCouponDto(long id, String couponName, int discountPercent, int discountAmount, int minAmount) {
         this.id = id;
-        this.memberId = memberId;
-        this.couponId = couponId;
+        this.couponName = couponName;
+        this.discountPercent = discountPercent;
+        this.discountAmount = discountAmount;
+        this.minAmount = minAmount;
     }
 
     public long getId() {
         return id;
     }
 
-    public long getMemberId() {
-        return memberId;
+    public String getCouponName() {
+        return couponName;
     }
 
-    public long getCouponId() {
-        return couponId;
+    public int getDiscountPercent() {
+        return discountPercent;
     }
 
+    public int getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public int getMinAmount() {
+        return minAmount;
+    }
 }

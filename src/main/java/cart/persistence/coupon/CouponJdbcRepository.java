@@ -1,6 +1,7 @@
 package cart.persistence.coupon;
 
 import cart.application.repository.CouponRepository;
+import cart.application.service.coupon.dto.MemberCouponDto;
 import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.AmountCoupon;
 import cart.domain.discountpolicy.CouponPolicy;
@@ -31,6 +32,15 @@ public class CouponJdbcRepository implements CouponRepository {
                     rs.getInt("min_amount")
             );
 
+    private final RowMapper<MemberCouponDto> memberCouponDtoRowMapper = ((rs, rowNum) ->
+            new MemberCouponDto(
+                    rs.getLong("member_coupon.id"),
+                    rs.getString("coupon.name"),
+                    rs.getInt("coupon.discount_percent"),
+                    rs.getInt("coupon.discount_amount"),
+                    rs.getInt("coupon.min_amount")
+            ));
+
     private final RowMapper<CouponPolicy> percentCouponRowMapper = (rs, rowMapper) ->
             new PercentCoupon(
                     rs.getInt("coupon.min_amount"),
@@ -50,13 +60,22 @@ public class CouponJdbcRepository implements CouponRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
+//    @Override
+//    public List<Coupon> findByMemberId(Long memberId) {
+//        String sql = "SELECT coupon.*, member_coupon.id " +
+//                "FROM coupon " +
+//                "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
+//                "WHERE member_coupon.member_id = ? AND member_coupon.status = " + USABLE;
+//        return jdbcTemplate.query(sql, couponRowMapper, memberId);
+//    }
+
     @Override
-    public List<Coupon> findByMemberId(Long memberId) {
-        String sql = "SELECT coupon.* " +
+    public List<MemberCouponDto> findByMemberId(Long memberId) {
+        String sql = "SELECT coupon.*, member_coupon.id " +
                 "FROM coupon " +
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
                 "WHERE member_coupon.member_id = ? AND member_coupon.status = " + USABLE;
-        return jdbcTemplate.query(sql, couponRowMapper, memberId);
+        return jdbcTemplate.query(sql, memberCouponDtoRowMapper, memberId);
     }
 
     @Override
