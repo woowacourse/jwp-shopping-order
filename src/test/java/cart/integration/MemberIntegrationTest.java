@@ -22,7 +22,7 @@ public class MemberIntegrationTest extends IntegrationTest{
     @BeforeEach
     void setUp() {
         super.setUp();
-        member2 = memberDao.getMemberById(2L); //실버 등급
+        member2 = memberDao.getMemberById(2L); //골드 등급
     }
 
     @Test
