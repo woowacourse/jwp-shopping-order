@@ -18,6 +18,12 @@ public class CartItem {
         this.member = member;
     }
 
+    public void validateIsOwnedBy(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new IllegalMemberException();
+        }
+    }
+
     public Long getId() {
         return id;
     }
@@ -32,11 +38,5 @@ public class CartItem {
 
     public long getQuantity() {
         return quantity;
-    }
-
-    public void validateIsOwnedBy(Member member) {
-        if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalMemberException();
-        }
     }
 }
