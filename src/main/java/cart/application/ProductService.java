@@ -3,19 +3,17 @@ package cart.application;
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
-import cart.repository.MysqlProductRepository;
 import cart.repository.ProductRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductService(final MysqlProductRepository productRepository) {
+    public ProductService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

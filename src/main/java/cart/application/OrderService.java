@@ -6,8 +6,6 @@ import cart.domain.Order;
 import cart.dto.request.OrderRequest;
 import cart.dto.response.OrderResponse;
 import cart.repository.CartItemRepository;
-import cart.repository.MysqlCartItemRepository;
-import cart.repository.MysqlOrderRepository;
 import cart.repository.OrderRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +18,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
     
-    public OrderService(final MysqlOrderRepository orderRepository, final MysqlCartItemRepository cartItemRepository) {
+    public OrderService(final OrderRepository orderRepository, final CartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
     }
