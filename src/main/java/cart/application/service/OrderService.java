@@ -36,16 +36,14 @@ public class OrderService {
     }
 
     public long orderCartItems(final Member member, final OrderCartItemsRequest request) {
-        Map<Long, OrderCartItemProductRequest> cartProducts = request.getProducts().stream()
+        Map<Long, OrderCartItemProductRequest> cartProductRequests = request.getProducts().stream()
                 .collect(Collectors.toMap(OrderCartItemProductRequest::getCartItemId, cartItem -> cartItem));
 
-        CartItems cartItems = cartItemRepository.findByIds(new ArrayList<>(cartProducts.keySet()));
-        cartItems.checkOwner(member);
-        validateCartItems(cartProducts, cartItems);
+        CartItems cartItems = cartItemRepository.findByIds(new ArrayList<>(cartProductRequests.keySet()));
+        validateCartItems(cartProductRequests, cartItems);
 
         MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
                 .orElseThrow(MemberCouponNotFoundException::new);
-        memberCoupon.checkOwner(member);
 
         Order order = Order.of(member, cartItems, memberCoupon);
 
