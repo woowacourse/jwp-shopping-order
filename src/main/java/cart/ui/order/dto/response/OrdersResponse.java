@@ -1,7 +1,6 @@
-package cart.ui.order;
+package cart.ui.order.dto.response;
 
-import cart.application.service.order.OrderDto;
-import cart.ui.order.dto.OrderResponse;
+import cart.application.service.order.dto.OrderResultDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +16,7 @@ public class OrdersResponse {
         this.orderResponses = orderResponses;
     }
 
-    public static OrdersResponse from(final List<OrderDto> orderDtos) {
+    public static OrdersResponse from(final List<OrderResultDto> orderDtos) {
         return new OrdersResponse(orderDtos.stream()
                 .map(OrderResponse::from)
                 .collect(Collectors.toUnmodifiableList()));

@@ -1,9 +1,8 @@
-package cart.ui.order;
+package cart.application.service.order.dto;
 
-import cart.ui.order.dto.CreateOrderRequest;
+import cart.ui.order.dto.request.CreateOrderRequest;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CreateOrderDto {
 
@@ -16,11 +15,9 @@ public class CreateOrderDto {
     }
 
     public static CreateOrderDto from(final CreateOrderRequest createOrderRequest) {
-        List<CreateOrderItemDto> createOrderItems = createOrderRequest.getOrderItems().stream()
-                .map(CreateOrderItemDto::from)
-                .collect(Collectors.toUnmodifiableList());
+        final List<CreateOrderItemDto> createOrderItems = CreateOrderItemDto.from(createOrderRequest.getOrderItems());
 
-        CreateOrderDiscountDto createOrderDiscounts = CreateOrderDiscountDto.from(createOrderRequest.getOrderDiscounts());
+        final CreateOrderDiscountDto createOrderDiscounts = CreateOrderDiscountDto.from(createOrderRequest.getOrderDiscounts());
 
         return new CreateOrderDto(createOrderItems, createOrderDiscounts);
     }
