@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS default_delivery_policy(
 CREATE TABLE IF NOT EXISTS payment_record(
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id BIGINT NOT NULL,
-    originalTotalPrice INT NOT NULL,
+    original_total_price INT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES order_record(id)
 );
 
