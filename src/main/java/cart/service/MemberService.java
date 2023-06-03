@@ -2,7 +2,7 @@ package cart.service;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
-import cart.dto.member.MemberDto;
+import cart.dto.member.MemberResponse;
 import cart.repository.MemberRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberDto> findAll() {
+    public List<MemberResponse> findAll() {
         return memberRepository.findAll().stream()
-                .map(MemberDto::from)
+                .map(MemberResponse::from)
                 .collect(toUnmodifiableList());
     }
 }

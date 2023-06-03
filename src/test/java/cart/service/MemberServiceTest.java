@@ -5,7 +5,7 @@ import static cart.fixture.MemberFixture.사용자2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.member.Member;
-import cart.dto.member.MemberDto;
+import cart.dto.member.MemberResponse;
 import cart.repository.MemberRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -34,12 +34,12 @@ public class MemberServiceTest {
         final Member member2 = memberRepository.save(사용자2);
 
         // when
-        final List<MemberDto> result = memberService.findAll();
+        final List<MemberResponse> result = memberService.findAll();
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new MemberDto(member1.getId(), member1.getEmail(), member1.getPassword()),
-                new MemberDto(member2.getId(), member2.getEmail(), member2.getPassword())
+                new MemberResponse(member1.getId(), member1.getEmail(), member1.getPassword()),
+                new MemberResponse(member2.getId(), member2.getEmail(), member2.getPassword())
         ));
     }
 }

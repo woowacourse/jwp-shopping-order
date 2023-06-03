@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.cart.ProductDto;
+import cart.dto.cart.ProductResponse;
 import cart.dto.cart.ProductSaveRequest;
 import cart.dto.cart.ProductUpdateRequest;
 import cart.exception.common.ExceptionResponse;
@@ -41,12 +41,12 @@ public class ProductController {
     @ApiResponse(
             responseCode = "200",
             description = "전체 상품 조회 성공.",
-            content = @Content(schema = @Schema(implementation = ProductDto.class))
+            content = @Content(schema = @Schema(implementation = ProductResponse.class))
     )
     @GetMapping
-    public ResponseEntity<List<ProductDto>> findAll() {
-        final List<ProductDto> productDtos = productService.findAll();
-        return ResponseEntity.ok(productDtos);
+    public ResponseEntity<List<ProductResponse>> findAll() {
+        final List<ProductResponse> productResponses = productService.findAll();
+        return ResponseEntity.ok(productResponses);
     }
 
     @Operation(summary = "단일 상품 조회", description = "단일 상품을 조회한다.")
@@ -54,7 +54,7 @@ public class ProductController {
             @ApiResponse(
                     responseCode = "200",
                     description = "단일 상품 조회 성공.",
-                    content = @Content(schema = @Schema(implementation = ProductDto.class))
+                    content = @Content(schema = @Schema(implementation = ProductResponse.class))
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -63,11 +63,11 @@ public class ProductController {
             )
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> findById(
+    public ResponseEntity<ProductResponse> findById(
             @Parameter(description = "상품 Id") @PathVariable final Long id
     ) {
-        final ProductDto productDto = productService.findById(id);
-        return ResponseEntity.ok(productDto);
+        final ProductResponse productResponse = productService.findById(id);
+        return ResponseEntity.ok(productResponse);
     }
 
     @Operation(summary = "상품 저장", description = "상품을 저장한다.")

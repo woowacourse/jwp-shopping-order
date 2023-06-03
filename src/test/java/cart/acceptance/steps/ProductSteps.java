@@ -3,7 +3,7 @@ package cart.acceptance.steps;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.cart.Product;
-import cart.dto.cart.ProductDto;
+import cart.dto.cart.ProductResponse;
 import cart.dto.cart.ProductSaveRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -75,10 +75,10 @@ public class ProductSteps {
             final String 상품_번호,
             final Product 상품
     ) {
-        assertThat(요청_결과.jsonPath().getObject(".", ProductDto.class))
+        assertThat(요청_결과.jsonPath().getObject(".", ProductResponse.class))
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields()
-                .isEqualTo(new ProductDto(
+                .isEqualTo(new ProductResponse(
                         Long.parseLong(상품_번호),
                         상품.getName(),
                         상품.getImageUrl(),
@@ -86,16 +86,16 @@ public class ProductSteps {
                 ));
     }
 
-    public static ProductDto 상품_정보(final String 상품_번호, final Product 상품) {
-        return new ProductDto(Long.parseLong(상품_번호), 상품.getName(), 상품.getImageUrl(), 상품.getPrice().getLongValue());
+    public static ProductResponse 상품_정보(final String 상품_번호, final Product 상품) {
+        return new ProductResponse(Long.parseLong(상품_번호), 상품.getName(), 상품.getImageUrl(), 상품.getPrice().getLongValue());
     }
 
     public static void 상품_전체_조회_결과를_확인한다(
             final ExtractableResponse<Response> 요청_결과,
-            final ProductDto... 상품_정보
+            final ProductResponse... 상품_정보
     ) {
-        final List<ProductDto> 전체_상품_정보 = Arrays.stream(상품_정보).collect(Collectors.toList());
-        assertThat(요청_결과.jsonPath().getList(".", ProductDto.class))
+        final List<ProductResponse> 전체_상품_정보 = Arrays.stream(상품_정보).collect(Collectors.toList());
+        assertThat(요청_결과.jsonPath().getList(".", ProductResponse.class))
                 .usingRecursiveComparison()
                 .isEqualTo(전체_상품_정보);
     }

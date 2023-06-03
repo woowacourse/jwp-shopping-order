@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +35,7 @@ public class CouponIssuanceController {
             content = @Content(schema = @Schema(implementation = CouponSaveRequest.class))
     )
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody final CouponSaveRequest couponSaveRequest) {
+    public ResponseEntity<Void> save(@Valid @RequestBody final CouponSaveRequest couponSaveRequest) {
         final Long couponId = couponService.issuance(couponSaveRequest);
         return ResponseEntity.created(URI.create("/coupons/" + couponId)).build();
     }

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.VO.Money;
 import cart.domain.cart.Product;
-import cart.dto.cart.ProductDto;
+import cart.dto.cart.ProductResponse;
 import cart.dto.cart.ProductSaveRequest;
 import cart.dto.cart.ProductUpdateRequest;
 import cart.exception.cart.ProductNotFoundException;
@@ -56,12 +56,12 @@ class ProductServiceTest {
         final Long id2 = productService.save(request2);
 
         // when
-        final List<ProductDto> result = productService.findAll();
+        final List<ProductResponse> result = productService.findAll();
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
-                new ProductDto(id1, request1.getName(), request1.getImageUrl(), request1.getPrice()),
-                new ProductDto(id2, request2.getName(), request2.getImageUrl(), request2.getPrice())
+                new ProductResponse(id1, request1.getName(), request1.getImageUrl(), request1.getPrice()),
+                new ProductResponse(id2, request2.getName(), request2.getImageUrl(), request2.getPrice())
         ));
     }
 
@@ -72,14 +72,14 @@ class ProductServiceTest {
         final Long id = productService.save(product);
 
         // when
-        final ProductDto productDto = productService.findById(id);
+        final ProductResponse productResponse = productService.findById(id);
 
         // then
         assertAll(
-                () -> assertThat(productDto.getId()).isEqualTo(id),
-                () -> assertThat(productDto.getName()).isEqualTo("허브티"),
-                () -> assertThat(productDto.getImageUrl()).isEqualTo("tea.jpg"),
-                () -> assertThat(productDto.getPrice()).isEqualTo(99L)
+                () -> assertThat(productResponse.getId()).isEqualTo(id),
+                () -> assertThat(productResponse.getName()).isEqualTo("허브티"),
+                () -> assertThat(productResponse.getImageUrl()).isEqualTo("tea.jpg"),
+                () -> assertThat(productResponse.getPrice()).isEqualTo(99L)
         );
     }
 

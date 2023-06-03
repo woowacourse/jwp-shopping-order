@@ -4,24 +4,24 @@ import cart.domain.cart.CartItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "장바구니 상품")
-public class CartItemDto {
+public class CartItemResponse {
 
     @Schema(description = "장바구니 상품 id", example = "1")
     private Long id;
 
     @Schema(description = "장바구니 상품 수량", example = "1")
     private Integer quantity;
-    private ProductDto product;
+    private ProductResponse product;
 
-    public CartItemDto(final Long id, final Integer quantity, final ProductDto product) {
+    public CartItemResponse(final Long id, final Integer quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
     }
 
-    public static CartItemDto from(final CartItem cartItem) {
-        final ProductDto productDto = ProductDto.from(cartItem.getProduct());
-        return new CartItemDto(cartItem.getId(), cartItem.getQuantity(), productDto);
+    public static CartItemResponse from(final CartItem cartItem) {
+        final ProductResponse productResponse = ProductResponse.from(cartItem.getProduct());
+        return new CartItemResponse(cartItem.getId(), cartItem.getQuantity(), productResponse);
     }
 
     public Long getId() {
@@ -32,7 +32,7 @@ public class CartItemDto {
         return quantity;
     }
 
-    public ProductDto getProduct() {
+    public ProductResponse getProduct() {
         return product;
     }
 }

@@ -3,7 +3,7 @@ package cart.service;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.domain.cart.Product;
-import cart.dto.cart.ProductDto;
+import cart.dto.cart.ProductResponse;
 import cart.dto.cart.ProductSaveRequest;
 import cart.dto.cart.ProductUpdateRequest;
 import cart.exception.cart.ProductNotFoundException;
@@ -28,17 +28,17 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> findAll() {
+    public List<ProductResponse> findAll() {
         return productRepository.findAll().stream()
-                .map(ProductDto::from)
+                .map(ProductResponse::from)
                 .collect(toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
-    public ProductDto findById(final Long id) {
+    public ProductResponse findById(final Long id) {
         final Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
-        return ProductDto.from(product);
+        return ProductResponse.from(product);
     }
 
     public void update(final Long id, final ProductUpdateRequest request) {

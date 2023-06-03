@@ -21,14 +21,14 @@ public class OrderResponse {
     private final Long deliveryFee;
 
     @Schema(description = "주문 상품")
-    private final List<ItemDto> orderItems;
+    private final List<ItemResponse> orderItems;
 
     public OrderResponse(
             final Long id,
             final Long totalItemsPrice,
             final Long discountPrice,
             final Long deliveryFee,
-            final List<ItemDto> orderItems
+            final List<ItemResponse> orderItems
     ) {
         this.id = id;
         this.totalItemsPrice = totalItemsPrice;
@@ -38,8 +38,8 @@ public class OrderResponse {
     }
 
     public static OrderResponse from(final Order order) {
-        final List<ItemDto> items = order.getItems().stream()
-                .map(ItemDto::from)
+        final List<ItemResponse> items = order.getItems().stream()
+                .map(ItemResponse::from)
                 .collect(Collectors.toList());
         return new OrderResponse(
                 order.getId(),
@@ -77,7 +77,7 @@ public class OrderResponse {
         return deliveryFee;
     }
 
-    public List<ItemDto> getOrderItems() {
+    public List<ItemResponse> getOrderItems() {
         return orderItems;
     }
 }

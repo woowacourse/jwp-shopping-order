@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toList;
 
 import cart.domain.cart.CartItem;
 import cart.domain.cart.Product;
-import cart.dto.cart.CartItemDto;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemResponse;
 import cart.dto.cart.CartItemSaveRequest;
 import cart.exception.cart.CartItemNotFoundException;
 import cart.exception.cart.ProductNotFoundException;
@@ -39,9 +39,9 @@ public class CartItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartItemDto> findAll(final Long memberId) {
+    public List<CartItemResponse> findAll(final Long memberId) {
         return cartItemRepository.findAllByMemberId(memberId).stream()
-                .map(CartItemDto::from)
+                .map(CartItemResponse::from)
                 .collect(toList());
     }
 

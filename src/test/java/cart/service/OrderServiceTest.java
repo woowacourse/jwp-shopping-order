@@ -14,7 +14,7 @@ import cart.domain.cart.Order;
 import cart.domain.cart.Product;
 import cart.domain.coupon.Coupon;
 import cart.domain.member.Member;
-import cart.dto.cart.ItemDto;
+import cart.dto.cart.ItemResponse;
 import cart.dto.cart.OrderResponse;
 import cart.dto.cart.OrderSaveRequest;
 import cart.repository.CartItemRepository;
@@ -111,11 +111,11 @@ class OrderServiceTest {
         // then
         assertThat(result).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(List.of(
                 new OrderResponse(order1.getId(), 37800L, 2000L, 3000L, List.of(
-                        new ItemDto(null, "pizza1", 8900L, "pizza1.png", 1),
-                        new ItemDto(null, "pizza3", 28900L, "pizza3.png", 1)
+                        new ItemResponse(null, "pizza1", 8900L, "pizza1.png", 1),
+                        new ItemResponse(null, "pizza3", 28900L, "pizza3.png", 1)
                 )),
                 new OrderResponse(order2.getId(), 18900L, 0L, 3000L, List.of(
-                        new ItemDto(null, "pizza2", 18900L, "pizza2.png", 1)
+                        new ItemResponse(null, "pizza2", 18900L, "pizza2.png", 1)
                 ))
         ));
     }
@@ -136,7 +136,7 @@ class OrderServiceTest {
         // then
         assertThat(result).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(
                 new OrderResponse(order.getId(), 8900L, 0L, 3000L, List.of(
-                        new ItemDto(null, "pizza1", 8900L, "pizza1.png", 1)
+                        new ItemResponse(null, "pizza1", 8900L, "pizza1.png", 1)
                 ))
         );
     }

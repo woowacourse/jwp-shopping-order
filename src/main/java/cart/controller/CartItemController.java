@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.Credential;
-import cart.dto.cart.CartItemDto;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
+import cart.dto.cart.CartItemResponse;
 import cart.dto.cart.CartItemSaveRequest;
 import cart.exception.common.ExceptionResponse;
 import cart.service.CartItemService;
@@ -55,7 +55,7 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<Void> save(
             @Auth final Credential credential,
-            @RequestBody final CartItemSaveRequest request
+            @Valid @RequestBody final CartItemSaveRequest request
     ) {
         final Long id = cartItemService.save(credential.getMemberId(), request);
         return ResponseEntity.created(URI.create("/cart-items/" + id)).build();
@@ -67,8 +67,8 @@ public class CartItemController {
             description = "장바구니 상품 전체 조회 성공"
     )
     @GetMapping
-    public ResponseEntity<List<CartItemDto>> findAll(@Auth final Credential credential) {
-        final List<CartItemDto> result = cartItemService.findAll(credential.getMemberId());
+    public ResponseEntity<List<CartItemResponse>> findAll(@Auth final Credential credential) {
+        final List<CartItemResponse> result = cartItemService.findAll(credential.getMemberId());
         return ResponseEntity.ok(result);
     }
 
