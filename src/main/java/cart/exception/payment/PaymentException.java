@@ -1,4 +1,4 @@
-package cart.exception;
+package cart.exception.payment;
 
 public class PaymentException extends RuntimeException {
     public PaymentException(String message) {

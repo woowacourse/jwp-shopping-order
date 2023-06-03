@@ -1,10 +1,11 @@
 package cart.ui;
 
 import cart.dto.ErrorResponse;
-import cart.exception.AuthenticationException;
-import cart.exception.AuthorizationException;
+import cart.exception.auth.AuthenticationException;
+import cart.exception.auth.AuthorizationException;
 import cart.exception.OrderException;
-import cart.exception.PaymentException;
+import cart.exception.payment.PaymentException;
+import cart.exception.notFound.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,13 @@ public class ControllerExceptionHandler {
         log.warn(e.getMessage());
         ErrorResponse response = new ErrorResponse("권한이 없는 사용자입니다.");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
+        log.warn(e.getMessage());
+        ErrorResponse response = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler({PaymentException.class, OrderException.class})

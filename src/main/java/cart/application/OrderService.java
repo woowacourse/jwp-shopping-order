@@ -13,12 +13,13 @@ import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.OrderDto;
 import cart.dto.OrderRequest;
-import cart.exception.CartItemException;
 import cart.exception.OrderException;
-import cart.exception.PaymentException;
 import cart.exception.notFound.CartItemNotFountException;
 import cart.exception.notFound.PaymentNotFoundException;
 import cart.exception.notFound.ProductNotFoundException;
+import cart.exception.payment.TotalDeliveryFeeDoesNotMatchException;
+import cart.exception.payment.TotalPriceDoesNotMatchException;
+import cart.exception.payment.TotalProductPriceDoesNotMatchException;
 import cart.repository.OrderRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,16 +31,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OrderService {
     private final ProductDao productDao;
-    private final OrderRepository orderRepository;
-    private final PaymentDao paymentDao;
     private final CartItemDao cartItemDao;
+    private final PaymentDao paymentDao;
+    private final OrderRepository orderRepository;
 
-    public OrderService(ProductDao productDao, OrderRepository orderRepository, PaymentDao paymentDao,
-                        CartItemDao cartItemDao) {
+    public OrderService(ProductDao productDao, CartItemDao cartItemDao, PaymentDao paymentDao,
+                        OrderRepository orderRepository) {
         this.productDao = productDao;
-        this.orderRepository = orderRepository;
-        this.paymentDao = paymentDao;
         this.cartItemDao = cartItemDao;
+        this.paymentDao = paymentDao;
+        this.orderRepository = orderRepository;
     }
 
     public Long order(Member member, OrderRequest orderRequest) {
@@ -89,17 +90,17 @@ public class OrderService {
         return orderId;
     }
 
-    private static void validatePayment(OrderRequest orderRequest, Payment payment) {
-        if (payment.getTotalProductPrice() != orderRequest.getTotalProductPrice()) {
-            throw new PaymentException("상품의 총 금액이 다릅니다."
-                    + " 입력된 금액 : " + Integer.toString(orderRequest.getTotalProductPrice())
-                    + " 실제 금액 : " + Integer.toString(payment.getTotalProductPrice()));
+    private static void validatePayment(OrderRequest request, Payment payment) {
+        if (payment.getTotalProductPrice() != request.getTotalProductPrice()) {
+            throw new TotalProductPriceDoesNotMatchException(request.getTotalProductPrice(),
+                    payment.getTotalProductPrice());
         }
-        if (payment.getTotalDeliveryFee() != orderRequest.getTotalDeliveryFee()) {
-            throw new PaymentException("총 배달비가 다릅니다.");
+        if (payment.getTotalDeliveryFee() != request.getTotalDeliveryFee()) {
+            throw new TotalDeliveryFeeDoesNotMatchException(request.getTotalDeliveryFee(),
+                    payment.getTotalDeliveryFee());
         }
-        if (payment.getTotalPrice() != orderRequest.getTotalPrice()) {
-            throw new PaymentException("주문의 총 금액이 다릅니다.");
+        if (payment.getTotalPrice() != request.getTotalPrice()) {
+            throw new TotalPriceDoesNotMatchException(request.getTotalPrice(), payment.getTotalPrice());
         }
     }
 
@@ -124,7 +125,7 @@ public class OrderService {
         return orderDtos;
     }
 
-    public OrderDto toDto(Order order, Payment payment) {
+    private OrderDto toDto(Order order, Payment payment) {
         return OrderDto.of(order.getId(), order.getOrderDateTime(), order.getOrderItems(), payment.getTotalPrice());
     }
 }

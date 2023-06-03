@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.PaymentException;
+import cart.exception.payment.PaymentException;
 
 public class Member {
     private Long id;

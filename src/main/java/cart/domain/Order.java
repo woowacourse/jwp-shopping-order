@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.AuthorizationException;
+import cart.exception.auth.AuthorizationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;

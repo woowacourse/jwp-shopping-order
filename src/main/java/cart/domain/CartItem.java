@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.AuthorizationException;
+import cart.exception.auth.AuthorizationException;
 import java.util.Objects;
 
 public class CartItem {
