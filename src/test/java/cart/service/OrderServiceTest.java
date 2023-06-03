@@ -1,6 +1,7 @@
 package cart.service;
 
 import static cart.fixture.TestFixture.밀리;
+import static cart.fixture.TestFixture.밀리_만료기간_지난_쿠폰_10퍼센트;
 import static cart.fixture.TestFixture.밀리_쿠폰_10퍼센트;
 import static cart.fixture.TestFixture.박스터;
 import static cart.fixture.TestFixture.장바구니_밀리_치킨_10개;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import cart.dto.OrderDetailResponse;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.exception.IllegalCouponException;
 import cart.exception.IllegalMemberException;
 import cart.exception.IncorrectPriceException;
 import cart.repository.CartItemRepository;
@@ -67,6 +69,34 @@ class OrderServiceTest {
         verify(cartItemRepository, times(2)).deleteById(any());
         verify(memberCouponRepository, times(1)).delete(any());
         assertThat(id).isEqualTo(1L);
+    }
+
+    @Test
+    void 쿠폰으로_주문할_때_최소_사용_가능_금액보다_작으면_예외가_발생한다() {
+        given(cartItemRepository.findById(anyLong()))
+                .willReturn(Optional.of(장바구니_밀리_피자_1개));
+        given(memberCouponRepository.findById(anyLong()))
+                .willReturn(Optional.of(밀리_쿠폰_10퍼센트));
+
+        verify(orderRepository, never()).save(any());
+        verify(cartItemRepository, never()).deleteById(any());
+        verify(memberCouponRepository, never()).delete(any());
+        assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L), 1L, 3000, valueOf(21000)), 밀리))
+                .isInstanceOf(IllegalCouponException.class);
+    }
+
+    @Test
+    void 쿠폰으로_주문할_때_만료기간이_지난_쿠폰이면_예외가_발생한다() {
+        given(cartItemRepository.findById(anyLong()))
+                .willReturn(Optional.of(장바구니_밀리_피자_1개));
+        given(memberCouponRepository.findById(anyLong()))
+                .willReturn(Optional.of(밀리_만료기간_지난_쿠폰_10퍼센트));
+
+        verify(orderRepository, never()).save(any());
+        verify(cartItemRepository, never()).deleteById(any());
+        verify(memberCouponRepository, never()).delete(any());
+        assertThatThrownBy(() -> orderService.register(new OrderRequest(of(1L), 1L, 3000, valueOf(21000)), 밀리))
+                .isInstanceOf(IllegalCouponException.class);
     }
 
     @Test
