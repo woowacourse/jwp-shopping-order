@@ -61,4 +61,9 @@ public class OrderHistoryDao {
         final String sql = "SELECT member_id FROM order_history WHERE id = :id";
         return namedParameterJdbcTemplate.queryForObject(sql, Map.of("id", id), Long.class);
     }
+
+    public OrderHistoryEntity findOrderHistoryById(final Long id) {
+        final String sql = "SELECT * FROM order_history WHERE id = :id";
+        return namedParameterJdbcTemplate.queryForObject(sql, Map.of("id", id), ORDER_HISTORY_ENTITY_ROW_MAPPER);
+    }
 }

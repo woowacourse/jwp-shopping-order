@@ -1,5 +1,6 @@
 package cart.repository;
 
+import cart.dao.MemberDao;
 import cart.dao.OrderHistoryDao;
 import cart.dao.OrderProductDao;
 import cart.domain.Member;
@@ -15,15 +16,19 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
+
 @Repository
 public class OrderRepository {
 
     private final OrderHistoryDao orderHistoryDao;
     private final OrderProductDao orderProductDao;
+    private final MemberDao memberDao;
 
-    public OrderRepository(final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao) {
+    public OrderRepository(final OrderHistoryDao orderHistoryDao, final OrderProductDao orderProductDao, final MemberDao memberDao) {
         this.orderHistoryDao = orderHistoryDao;
         this.orderProductDao = orderProductDao;
+        this.memberDao = memberDao;
     }
 
     public List<OrderHistoryEntity> findAll() {
@@ -69,7 +74,7 @@ public class OrderRepository {
         for (final OrderHistoryEntity orderHistory : orderHistoryEntities) {
             final List<OrderProductEntity> products = orderProductDao.findByOrderId(orderHistory.getId());
             final Map<Product, Integer> orderedProducts = products.stream()
-                    .collect(Collectors.toMap(
+                    .collect(toMap(
                             orderProduct -> new Product(
                                     orderProduct.getProductId(),
                                     orderProduct.getName(),
@@ -90,8 +95,28 @@ public class OrderRepository {
         return orders;
     }
 
-    public boolean isOrderOfMember(final Member member, final Long orderHistoryId) {
+    public boolean isAccessibleToOrder(final Member member, final Long orderHistoryId) {
         final Long memberId = orderHistoryDao.findMemberIdOf(orderHistoryId);
         return Objects.equals(memberId, member.getId());
+    }
+
+    public Order findOrderProductOf(final Long orderHistoryId) {
+        final OrderHistoryEntity orderHistory = orderHistoryDao.findOrderHistoryById(orderHistoryId);
+        final Member member = memberDao.getMemberById(orderHistory.getMemberId()).toMember();
+
+        final List<OrderProductEntity> orderProductEntities = orderProductDao.findByOrderId(orderHistoryId);
+
+        final Map<Product, Integer> orderedProducts = orderProductEntities.stream()
+                .collect(toMap(
+                        entity -> new Product(
+                                entity.getId(),
+                                entity.getName(),
+                                entity.getPrice(),
+                                entity.getImageUrl()
+                        ),
+                        OrderProductEntity::getQuantity)
+                );
+
+        return new Order(orderHistoryId, orderHistory.getUsedPoint(), orderedProducts, member);
     }
 }

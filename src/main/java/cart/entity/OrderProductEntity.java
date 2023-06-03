@@ -66,4 +66,17 @@ public class OrderProductEntity {
     public int getQuantity() {
         return quantity;
     }
+
+    @Override
+    public String toString() {
+        return "OrderProductEntity{" +
+                "id=" + id +
+                ", orderHistoryId=" + orderHistoryId +
+                ", productId=" + productId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

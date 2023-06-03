@@ -23,4 +23,19 @@ public class OrderSteps {
                 .log().all()
                 .extract();
     }
+
+    public static ExtractableResponse<Response> 멤버의_특정_주문을_조회_요청(final Member member, final Long orderHistoryId) {
+        return RestAssured.given()
+                .log().all()
+                .contentType(JSON)
+                .auth().preemptive()
+                .basic(member.getEmail(), member.getPassword())
+
+                .when()
+                .get("/members/orders/" + orderHistoryId)
+
+                .then()
+                .log().all()
+                .extract();
+    }
 }
