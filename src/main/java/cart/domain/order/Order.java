@@ -44,8 +44,10 @@ public class Order {
                 .map(OrderItem::of)
                 .collect(Collectors.toList());
 
-        int totalOrderPrice = calculateTotalOrderPrice(cartItems, memberCoupon);
-        ShippingFee shippingFee = ShippingFee.fromTotalOrderPrice(totalOrderPrice);
+        int discountPrice = memberCoupon.getDiscountPrice(cartItems);
+        int totalProductPrice = cartItems.calculateTotalProductPrice();
+        ShippingFee shippingFee = ShippingFee.fromTotalOrderPrice(totalProductPrice - discountPrice);
+        int totalOrderPrice = totalProductPrice - discountPrice + shippingFee.getValue();
 
         return new Order(member, memberCoupon, orderItems, shippingFee, totalOrderPrice);
     }
@@ -56,12 +58,6 @@ public class Order {
         if (!memberCoupon.isApplicable(cartItems)) {
             throw new StoreException("적용할 수 없는 쿠폰입니다.");
         }
-    }
-
-    private static int calculateTotalOrderPrice(final CartItems cartItems, final MemberCoupon memberCoupon) {
-        int discountPrice = memberCoupon.getDiscountPrice(cartItems);
-        int totalProductPrice = cartItems.calculateTotalProductPrice();
-        return totalProductPrice - discountPrice;
     }
 
     public void checkOwner(final Member member) {
