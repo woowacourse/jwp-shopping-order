@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -38,25 +39,39 @@ public class OrderService {
         if (!card.isValid()) {
             throw new InvalidCardException("카드 정보가 유효하지 않습니다");
         }
-        Long totalOrderPrice = 0L;
         Order order = new Order(member, LocalDateTime.now(), new Point(orderRequest.getPoint()));
         Long orderId = shoppingOrderDao.save(order);
         List<Long> cartItemIds = orderRequest.getCartItemIds();
-        for (Long cartItemId : cartItemIds) {
-            CartItem cartItem = cartItemDao.findById(cartItemId).orElseThrow(() -> new CartItemException("장바구니 목록에서 조회할 수 없습니다"));
-            cartItem.checkOwner(member);
-            Integer quantity = cartItem.getQuantity();
-            Product product = cartItem.getProduct();
-            totalOrderPrice += quantity * product.getPrice().getValue();
-            orderedItemDao.save(product.getId(), orderId, quantity);
-            cartItemDao.deleteById(cartItemId);
-        }
+        CartItems cartItems = getCartItems(cartItemIds);
+        cartItems.checkOwner(member);
+        saveOrderItems(orderId, cartItems);
+        long totalOrderPrice = cartItems.calculateTotalPrice();
+        updateMemberPoints(member, orderRequest, totalOrderPrice);
+        cartItemIds.forEach(cartItemDao::deleteById);
+
+        return orderId;
+    }
+
+    private void updateMemberPoints(Member member, OrderRequest orderRequest, long totalOrderPrice) {
         Point currentPoint = member.getPoint();
         Point savingPoint = PointEarningPolicy.calculateSavingPoints(totalOrderPrice - orderRequest.getPoint());
         Point updated = new Point(currentPoint.getValue() - orderRequest.getPoint() + savingPoint.getValue());
         memberDao.updatePoints(updated.getValue(), member);
+    }
 
-        return orderId;
+    private void saveOrderItems(Long orderId, CartItems cartItems) {
+        cartItems.getCartItems().forEach(cartItem -> {
+            Integer quantity = cartItem.getQuantity();
+            Product product = cartItem.getProduct();
+            orderedItemDao.save(product.getId(), orderId, quantity);
+        });
+    }
+
+    private CartItems getCartItems(List<Long> cartItemIds) {
+        List<CartItem> cartItems = cartItemIds.stream()
+                .map(cartItemId -> cartItemDao.findById(cartItemId).orElseThrow(() -> new CartItemException("장바구니 목록에서 조회할 수 없습니다")))
+                .collect(Collectors.toList());
+        return new CartItems(cartItems);
     }
 
     public List<OrderResponse> findAll(Long id) {
