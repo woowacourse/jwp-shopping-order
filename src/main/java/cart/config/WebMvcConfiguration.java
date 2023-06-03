@@ -3,6 +3,7 @@ package cart.config;
 import cart.auth.AuthArgumentResolver;
 import cart.auth.AuthContext;
 import cart.auth.AuthInterceptor;
+import cart.paging.PagingArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -23,7 +24,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthArgumentResolver(authContext));
+        resolvers.addAll(List.of(new AuthArgumentResolver(authContext), new PagingArgumentResolver()));
     }
 
     @Override

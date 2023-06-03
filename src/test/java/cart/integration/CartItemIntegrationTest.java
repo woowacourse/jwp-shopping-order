@@ -177,7 +177,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
-                .body(cartItemRequest)
+                .body(cartItemRequest).log().all()
                 .when()
                 .post("/cart-items")
                 .then()

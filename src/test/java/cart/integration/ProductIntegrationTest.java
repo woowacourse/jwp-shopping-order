@@ -57,7 +57,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     public void createProduct() {
         var product = new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg");
 
-        var response = given()
+        var response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(product)
                 .when()
@@ -74,12 +74,12 @@ public class ProductIntegrationTest extends IntegrationTest {
 
         // create product
         var location =
-                given()
+                given().log().all()
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .body(product)
                         .when()
                         .post("/products")
-                        .then()
+                        .then().log().all()
                         .statusCode(HttpStatus.CREATED.value())
                         .extract().header("Location");
 
@@ -87,7 +87,7 @@ public class ProductIntegrationTest extends IntegrationTest {
         var responseProduct = given().log().all()
                 .when()
                 .get(location)
-                .then()
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .jsonPath()

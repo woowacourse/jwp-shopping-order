@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -30,8 +29,7 @@ public class ProductApiController {
     }
 
     @GetMapping
-    public ResponseEntity<PagingProductResponse> getAllProducts(@RequestParam final int page, @RequestParam final int size) {
-        final PageRequest pageRequest = new PageRequest(page, size);
+    public ResponseEntity<PagingProductResponse> getAllProducts(final PageRequest pageRequest) {
         return ResponseEntity.ok(productService.getAllProducts(pageRequest));
     }
 
