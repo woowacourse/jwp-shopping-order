@@ -31,12 +31,11 @@ public class Order {
     }
 
     public static Order of(Member member, CartItems cartItems, Money usePoint, PayPoint payPoint) {
-        Money currentTotalPrice = cartItems.totalPrice();
+        Money totalPay = cartItems.totalPrice().minus(usePoint);
 
-        member.spendMoney(currentTotalPrice);
         member.spendPoint(usePoint);
+        member.spendMoney(totalPay);
 
-        Money totalPay = currentTotalPrice.minus(usePoint);
         member.accumulatePoint(payPoint.calculate(totalPay));
 
         return new Order(member, cartItems, usePoint);
