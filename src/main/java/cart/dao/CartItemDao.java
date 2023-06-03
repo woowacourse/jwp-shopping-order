@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.exception.CartItemException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -67,7 +68,7 @@ public class CartItemDao {
                     "WHERE cart_item.id = ?";
             return jdbcTemplate.queryForObject(sql, cartItemRowMapper, id);
         } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("id : " + id + " 인 장바구니 상품이 존재하지 않습니다.");
+            throw new CartItemException.IllegalId(id);
         }
     }
 

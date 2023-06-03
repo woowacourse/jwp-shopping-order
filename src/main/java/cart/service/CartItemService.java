@@ -7,6 +7,7 @@ import cart.domain.member.Member;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +62,7 @@ public class CartItemService {
         final CartItem cartItem = cartItems.stream()
                 .filter(item -> item.hasSameProduct(productId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("회원의 장바구니에 해당 상품이 존재하지 않습니다; productId=" + productId));
+                .orElseThrow(() -> new CartItemException.IllegalProduct(productId));
 
         return CartItemResponse.of(cartItem);
     }

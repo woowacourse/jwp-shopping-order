@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.CartItem;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.exception.CartItemException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -87,8 +88,8 @@ class CartItemDaoTest {
 
         //expect
         assertThatThrownBy(() -> cartItemDao.findById(wrongId))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("id : -9223372036854775808 인 장바구니 상품이 존재하지 않습니다.");
+                .isInstanceOf(CartItemException.IllegalId.class)
+                .hasMessage("회원의 장바구니에 해당 id의 상품이 존재하지 않습니다; id=-9223372036854775808");
     }
 
     @Test
@@ -121,8 +122,8 @@ class CartItemDaoTest {
         assertSoftly(softly -> {
             softly.assertThat(affectedRows).isEqualTo(1);
             softly.assertThatThrownBy(() -> cartItemDao.findById(id))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("id : 1 인 장바구니 상품이 존재하지 않습니다.");
+                    .isInstanceOf(CartItemException.IllegalId.class)
+                    .hasMessage("회원의 장바구니에 해당 id의 상품이 존재하지 않습니다; id=1");
         });
     }
 
@@ -138,8 +139,8 @@ class CartItemDaoTest {
         assertSoftly(softly -> {
             softly.assertThat(affectedRows).isEqualTo(1);
             softly.assertThatThrownBy(() -> cartItemDao.findById(id))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("id : 1 인 장바구니 상품이 존재하지 않습니다.");
+                    .isInstanceOf(CartItemException.IllegalId.class)
+                    .hasMessage("회원의 장바구니에 해당 id의 상품이 존재하지 않습니다; id=1");
         });
     }
 

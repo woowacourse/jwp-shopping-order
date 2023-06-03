@@ -3,6 +3,7 @@ package cart.service;
 import cart.dao.CartItemDao;
 import cart.domain.CartItem;
 import cart.dto.CartItemResponse;
+import cart.exception.CartItemException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ class CartItemServiceTest {
 
         //expect
         assertThatThrownBy(() -> cartItemService.findByProductId(MEMBER_HUCHU, wrongProductId))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CartItemException.IllegalProduct.class)
                 .hasMessage("회원의 장바구니에 해당 상품이 존재하지 않습니다; productId=-9223372036854775808");
     }
 
