@@ -36,10 +36,17 @@ public abstract class CartItemException extends RuntimeException {
         }
     }
 
+    public static class EmptyIds extends CartItemException {
+
+        public EmptyIds() {
+            super("주문할 장바구니 상품 ID를 입력해주세요.");
+        }
+    }
+
     public static class InvalidIdsFormat extends CartItemException {
 
-        public InvalidIdsFormat(String message) {
-            super(message);
+        public InvalidIdsFormat() {
+            super("주문할 장바구니 상품 ID는 숫자여야 합니다.");
         }
     }
 

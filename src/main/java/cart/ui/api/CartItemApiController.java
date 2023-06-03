@@ -2,11 +2,9 @@ package cart.ui.api;
 
 import cart.application.CartItemService;
 import cart.configuration.resolver.AuthMember;
-import cart.configuration.resolver.Checkout;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
 import cart.dto.request.CartItemRequest;
-import cart.dto.request.CheckoutRequestParameter;
 import cart.dto.response.CartItemResponse;
 import cart.dto.response.CheckoutResponse;
 import java.net.URI;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -60,9 +59,11 @@ public class CartItemApiController {
     }
 
     @GetMapping("/checkout")
-    public ResponseEntity<CheckoutResponse> checkoutCartItems(@AuthMember Member member,
-            @Checkout CheckoutRequestParameter parameter) {
-        CheckoutResponse response = cartItemService.checkout(member, parameter.getCheckoutIds());
+    public ResponseEntity<CheckoutResponse> checkoutCartItems(
+            @AuthMember Member member,
+            @RequestParam List<Long> ids
+    ) {
+        CheckoutResponse response = cartItemService.checkout(member, ids);
 
         return ResponseEntity.ok(response);
     }

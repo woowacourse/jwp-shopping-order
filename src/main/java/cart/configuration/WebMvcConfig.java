@@ -2,10 +2,11 @@ package cart.configuration;
 
 import cart.authentication.AuthenticationInterceptor;
 import cart.authentication.MemberStore;
-import cart.configuration.resolver.CheckoutArgumentResolver;
+import cart.configuration.converter.StringToIdsConverter;
 import cart.configuration.resolver.MemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -35,7 +36,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberArgumentResolver(memberStore));
-        resolvers.add(new CheckoutArgumentResolver());
     }
 
     @Override
@@ -43,5 +43,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/cart-items/**")
                 .addPathPatterns("/orders/**");
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new StringToIdsConverter());
     }
 }

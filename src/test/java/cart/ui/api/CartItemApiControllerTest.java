@@ -32,7 +32,6 @@ import cart.authentication.AuthenticationInterceptor;
 import cart.authentication.AuthenticationMemberConverter;
 import cart.authentication.BasicAuthorizationExtractor;
 import cart.authentication.MemberStore;
-import cart.configuration.resolver.CheckoutArgumentResolver;
 import cart.configuration.resolver.MemberArgumentResolver;
 import cart.domain.Member;
 import cart.dto.request.CartItemQuantityUpdateRequest;
@@ -63,11 +62,10 @@ class CartItemApiControllerTest extends DocsTest {
                 memberStore
         );
         MemberArgumentResolver memberArgumentResolver = new MemberArgumentResolver(memberStore);
-        CheckoutArgumentResolver checkoutArgumentResolver = new CheckoutArgumentResolver();
 
         mockMvc = MockMvcBuilders.standaloneSetup(cartItemApiController)
                 .setControllerAdvice(new ControllerExceptionHandler())
-                .setCustomArgumentResolvers(memberArgumentResolver, checkoutArgumentResolver)
+                .setCustomArgumentResolvers(memberArgumentResolver)
                 .addInterceptors(authInterceptor)
                 .addFilters(new CharacterEncodingFilter(CharEncoding.UTF_8, true))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
