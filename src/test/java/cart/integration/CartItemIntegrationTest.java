@@ -70,6 +70,21 @@ public class CartItemIntegrationTest extends IntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("장바구니에 아이템을 두 번 추가한다.")
+    @Test
+    void addCartItemTwice() {
+        CartItemRequest cartItemRequest = new CartItemRequest(productId);
+
+        requestAddCartItem(member, cartItemRequest);
+        final ExtractableResponse<Response> response = requestAddCartItem(member, cartItemRequest);
+
+        assertSoftly(softly -> {
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            softly.assertThat(response.body().asString()).contains("회원의 장바구니에 해당 상품이 이미 존재합니다; productId=" + productId);
+        });
+
+    }
+
     @DisplayName("잘못된 사용자 정보로 장바구니에 아이템을 추가 요청시 실패한다.")
     @Test
     void addCartItemByIllegalMember() {
@@ -197,12 +212,12 @@ public class CartItemIntegrationTest extends IntegrationTest {
     }
 
     private Long createProduct(ProductRequest productRequest) {
-        ExtractableResponse<Response> response = given()
+        ExtractableResponse<Response> response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
                 .post("/products")
-                .then()
+                .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
 
@@ -217,7 +232,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmailValue(), member.getPasswordValue())
-                .body(cartItemRequest).log().all()
+                .body(cartItemRequest)
                 .when()
                 .post("/cart-items")
                 .then()

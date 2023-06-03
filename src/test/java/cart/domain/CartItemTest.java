@@ -63,4 +63,15 @@ class CartItemTest {
         //then
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    void 장바구니_상품이_중복되면_예외를_던진다() {
+        //given
+        final CartItem cartItem = new CartItem(1L, 1, PRODUCT_CHICKEN, MEMBER_HUCHU);
+
+        //expect
+        assertThatThrownBy(() -> cartItem.checkProductDuplication(PRODUCT_CHICKEN.getId()))
+                .isInstanceOf(CartItemException.DuplicateProduct.class)
+                .hasMessage("회원의 장바구니에 해당 상품이 이미 존재합니다; productId=1");
+    }
 }

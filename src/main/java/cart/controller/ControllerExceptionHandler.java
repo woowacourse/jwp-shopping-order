@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,21 +25,27 @@ public class ControllerExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Void> handlerAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
         logger.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleCartItemException(CartItemException.IllegalMember e) {
+    public ResponseEntity<String> handleCartItemExceptionIllegalMember(CartItemException e) {
         logger.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CartItemException.DuplicateProduct.class)
+    public ResponseEntity<String> handleCartItemExceptionDuplicateProduct(CartItemException e) {
+        logger.warn(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
         logger.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(CartItemException.class)
@@ -49,7 +57,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(PagingException.class)
     public ResponseEntity<String> handlePagingException(PagingException e) {
         logger.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -64,6 +72,18 @@ public class ControllerExceptionHandler {
             logger.warn(message);
         });
         return ResponseEntity.badRequest().body(errorMessageByFields);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<String> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException exception) {
+        logger.warn(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("요청 리소스에 맞는 메서드가 아닙니다.");
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadableException(final HttpMessageNotReadableException exception) {
+        logger.warn(exception.getMessage());
+        return ResponseEntity.badRequest().body("요청 body에서 문제가 발생했습니다. body를 확인해주세요.");
     }
 
     @ExceptionHandler(Exception.class)

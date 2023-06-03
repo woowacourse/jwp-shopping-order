@@ -51,6 +51,12 @@ public class CartItem {
         return product.isSameId(productId);
     }
 
+    public void checkProductDuplication(final Long productId) {
+        if (Objects.equals(this.product.getId(), productId)) {
+            throw new CartItemException.DuplicateProduct(productId);
+        }
+    }
+
     public void changeQuantity(int quantity) {
         this.quantity = quantity;
     }

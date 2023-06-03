@@ -32,7 +32,12 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        return cartItemDao.save(new CartItem(member, productDao.getProductById(cartItemRequest.getProductId())));
+        final Long productId = cartItemRequest.getProductId();
+        final List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
+
+        cartItems.forEach(item -> item.checkProductDuplication(productId));
+
+        return cartItemDao.save(new CartItem(member, productDao.getProductById(productId)));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
