@@ -22,6 +22,7 @@
         <div class="cart-item" th:each="member : ${members}">
             <div class="cart-item-info">
                 <div class="cart-item-name" th:text="${member.email}"></div>
+                <div class="cart-item-name" th:text="${member.grade}"></div>
                 <div class="cart-item-price" th:text="${member.password}"></div>
                 <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
             </div>
