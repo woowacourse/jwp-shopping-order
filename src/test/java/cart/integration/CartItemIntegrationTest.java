@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -61,7 +60,7 @@ class CartItemIntegrationTest extends IntegrationTest {
 
     @Test
     void 잘못된_사용자_정보로_장바구니에_아이템을_추가_요청시_실패한다() {
-        Member illegalMember = new Member(member.getId(), member.getGradeValue(), member.getEmail(), member.getPassword() + "asdf");
+        Member illegalMember = new Member(member.getId(), member.getGradeName(), member.getEmail(), member.getPassword() + "asdf");
         CartItemRequest cartItemRequest = new CartItemRequest(productId);
         ExtractableResponse<Response> response = requestAddCartItem(illegalMember, cartItemRequest);
 

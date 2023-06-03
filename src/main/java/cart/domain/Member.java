@@ -17,7 +17,7 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.grade = Grade.valueOf(grade);
+        this.grade = Grade.from(grade);
     }
 
     public static Member from(final MemberEntity memberEntity) {

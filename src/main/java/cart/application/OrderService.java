@@ -19,8 +19,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
-
-
+    
     public OrderService(final MysqlOrderRepository orderRepository, final MysqlCartItemRepository cartItemRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
