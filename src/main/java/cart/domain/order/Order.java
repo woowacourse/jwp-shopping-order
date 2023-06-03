@@ -1,6 +1,6 @@
 package cart.domain.order;
 
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.dto.MemberWithId;
 import java.time.LocalDateTime;
@@ -22,4 +22,5 @@ public interface Order {
     Integer getTotalPrice();
 
     Integer getDiscountedTotalPrice();
+    Boolean isValid();
 }

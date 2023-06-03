@@ -2,7 +2,7 @@ package cart.domain.order;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.member.EncryptedPassword;
 import cart.domain.member.Member;
 import cart.domain.member.dto.MemberWithId;
@@ -25,7 +25,8 @@ class BasicOrderTest {
             new Product("치킨", 20000, "chicken_image_url", false)));
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
             new Product("피자", 30000, "pizza_image_url", false)));
-        final BasicOrder 주문 = new BasicOrder(져니, 3000, LocalDateTime.now(), List.of(치킨_장바구니_아이템, 피자_장바구니_아이템));
+        final BasicOrder 주문 = new BasicOrder(져니, 3000, LocalDateTime.now(),
+            List.of(치킨_장바구니_아이템, 피자_장바구니_아이템), true);
 
         // when
         final Integer 총_금액 = 주문.getTotalPrice();
@@ -45,7 +46,8 @@ class BasicOrderTest {
             new Product("치킨", 20000, "chicken_image_url", false)));
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
             new Product("피자", 30000, "pizza_image_url", false)));
-        final BasicOrder 주문 = new BasicOrder(져니, 3000, LocalDateTime.now(), List.of(치킨_장바구니_아이템, 피자_장바구니_아이템));
+        final BasicOrder 주문 = new BasicOrder(져니, 3000, LocalDateTime.now(),
+            List.of(치킨_장바구니_아이템, 피자_장바구니_아이템), true);
 
         // when
         final Integer 할인된_금액 = 주문.getDiscountedTotalPrice();

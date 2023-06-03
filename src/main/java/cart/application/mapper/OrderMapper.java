@@ -6,7 +6,7 @@ import static cart.application.mapper.ProductMapper.convertProductResponse;
 import cart.application.dto.coupon.CouponResponse;
 import cart.application.dto.order.OrderProductResponse;
 import cart.application.dto.order.OrderResponse;
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.member.MemberCoupon;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.order.BasicOrder;
@@ -21,14 +21,14 @@ public class OrderMapper {
 
     public static BasicOrder converBasicOrder(final List<CartItemWithId> productWithIds,
                                               final int deliveryPrice, final MemberWithId memberWithId) {
-        return new BasicOrder(memberWithId, deliveryPrice, LocalDateTime.now(), productWithIds);
+        return new BasicOrder(memberWithId, deliveryPrice, LocalDateTime.now(), productWithIds, true);
     }
 
     public static CouponOrder convertCouponOrder(final List<CartItemWithId> productWithIds,
                                                  final int deliveryPrice, final MemberWithId memberWithId,
                                                  final MemberCoupon memberCoupon) {
         return new CouponOrder(memberWithId, memberCoupon.getCoupon(), deliveryPrice,
-            LocalDateTime.now(), productWithIds);
+            LocalDateTime.now(), productWithIds, true);
     }
 
     public static List<OrderProductResponse> convertOrderProductResponses(final Order order) {
@@ -48,13 +48,14 @@ public class OrderMapper {
         final int couponDiscountPrice = orderPrice - discountedTotalPrice;
         final Integer deliveryPrice = order.getDeliveryPrice();
         final LocalDateTime orderedAt = order.getOrderedAt();
+        final Boolean isValid = order.isValid();
 
         if (order.getCoupon().isPresent()) {
             final CouponResponse couponResponse = convertCouponResponse(order.getCoupon().get());
             return new OrderResponse(orderId, orderPrice, discountedTotalPrice, couponDiscountPrice, deliveryPrice,
-                orderedAt, couponResponse, orderProductResponses);
+                orderedAt, couponResponse, orderProductResponses, isValid);
         }
         return new OrderResponse(orderId, orderPrice, discountedTotalPrice, couponDiscountPrice, deliveryPrice,
-            orderedAt, null, orderProductResponses);
+            orderedAt, null, orderProductResponses, isValid);
     }
 }

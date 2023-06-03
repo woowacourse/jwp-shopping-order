@@ -11,6 +11,7 @@ public class OrderDto {
     private final Integer totalPrice;
     private final Integer discountedTotalPrice;
     private final Integer deliveryPrice;
+    private final Boolean isValid;
     private final Long couponId;
     private final String couponName;
     private final Integer couponDiscountRate;
@@ -27,8 +28,8 @@ public class OrderDto {
 
     public OrderDto(final Long orderId, final LocalDateTime orderedAt, final Integer orderQuantity,
                     final Integer totalPrice, final Integer discountedTotalPrice, final Integer deliveryPrice,
-                    final Long couponId, final String couponName, final Integer couponDiscountRate,
-                    final Integer couponPeriod, final Timestamp couponExpiredAt,
+                    final Boolean isValid, final Long couponId, final String couponName,
+                    final Integer couponDiscountRate, final Integer couponPeriod, final Timestamp couponExpiredAt,
                     final Long memberId, final String memberName, final String memberPassword, final Long productId,
                     final String productName, final Integer productPrice,
                     final String productImageUrl, final Boolean productIsDeleted) {
@@ -38,6 +39,7 @@ public class OrderDto {
         this.totalPrice = totalPrice;
         this.discountedTotalPrice = discountedTotalPrice;
         this.deliveryPrice = deliveryPrice;
+        this.isValid = isValid;
         this.couponId = couponId;
         this.couponName = couponName;
         this.couponDiscountRate = couponDiscountRate;
@@ -75,6 +77,10 @@ public class OrderDto {
 
     public Integer getDeliveryPrice() {
         return deliveryPrice;
+    }
+
+    public Boolean getIsValid() {
+        return isValid;
     }
 
     public Long getCouponId() {

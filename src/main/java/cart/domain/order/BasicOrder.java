@@ -1,6 +1,6 @@
 package cart.domain.order;
 
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.dto.MemberWithId;
 import cart.domain.product.dto.ProductWithId;
@@ -16,15 +16,17 @@ public class BasicOrder implements Order {
     private final Integer deliveryPrice;
     private final LocalDateTime orderedAt;
     private final List<CartItemWithId> cartItems;
+    private final Boolean isValid;
 
     public BasicOrder(final MemberWithId member, final Integer deliveryPrice,
-                      final LocalDateTime orderedAt, final List<CartItemWithId> cartItems) {
+                      final LocalDateTime orderedAt, final List<CartItemWithId> cartItems, final Boolean isValid) {
         this.member = member;
         this.orderedAt = orderedAt;
         this.cartItems = cartItems;
         this.totalPrice = calculateTotalOrderPrice();
         this.discountedTotalPrice = totalPrice;
         this.deliveryPrice = deliveryPrice;
+        this.isValid = isValid;
     }
 
     private int calculateTotalOrderPrice() {
@@ -70,6 +72,11 @@ public class BasicOrder implements Order {
     @Override
     public Integer getDiscountedTotalPrice() {
         return discountedTotalPrice;
+    }
+
+    @Override
+    public Boolean isValid() {
+        return isValid;
     }
 }
 

@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS cart_item (
     member_id INT UNSIGNED NOT NULL,
     product_id INT UNSIGNED NOT NULL,
     quantity INT NOT NULL,
+    is_deleted TINYINT(1) NOT NULL DEFAULT(0),
     PRIMARY KEY(id),
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
@@ -57,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `order`
     discounted_total_price INT UNSIGNED NOT NULL,
     delivery_price INT UNSIGNED NOT NULL,
     ordered_at DATETIME NOT NULL,
+    is_valid TINYINT(1) NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (member_id) REFERENCES member(id)
 );

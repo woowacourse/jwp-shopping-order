@@ -41,4 +41,8 @@ public class Coupon {
     public LocalDateTime expiredAt() {
         return expiredAt;
     }
+
+    public boolean isNotExpired(final LocalDateTime targetTime) {
+        return expiredAt.isAfter(targetTime);
+    }
 }

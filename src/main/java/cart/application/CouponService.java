@@ -1,5 +1,7 @@
 package cart.application;
 
+import static cart.application.mapper.CouponMapper.convertCouponResponse;
+
 import cart.application.dto.coupon.CouponRequest;
 import cart.application.dto.coupon.CouponResponse;
 import cart.application.mapper.CouponMapper;
@@ -31,7 +33,7 @@ public class CouponService {
 
     public CouponResponse getCouponById(final Long id) {
         final Coupon coupon = couponRepository.findById(id);
-        return new CouponResponse(id, coupon.name(), coupon.discountRate(), coupon.expiredAt());
+        return convertCouponResponse(id, coupon);
     }
 
     @Transactional
@@ -39,9 +41,7 @@ public class CouponService {
         final String name = couponRequest.getName();
         final int discountRate = couponRequest.getDiscountRate();
         final int period = couponRequest.getPeriod();
-        if (couponRepository.existByNameAndDiscountRate(name, discountRate)) {
-            throw new BadRequestException(ErrorCode.COUPON_DUPLICATE);
-        }
+        validateDuplicatedCoupon(name, discountRate);
         final Coupon coupon = Coupon.create(name, discountRate, period, LocalDateTime.now().plusDays(period));
         return couponRepository.insert(coupon);
     }
@@ -49,5 +49,11 @@ public class CouponService {
     @Transactional
     public void deleteCoupon(final Long couponId) {
         couponRepository.deleteById(couponId);
+    }
+
+    private void validateDuplicatedCoupon(final String name, final int discountRate) {
+        if (couponRepository.existByNameAndDiscountRate(name, discountRate)) {
+            throw new BadRequestException(ErrorCode.COUPON_DUPLICATE);
+        }
     }
 }

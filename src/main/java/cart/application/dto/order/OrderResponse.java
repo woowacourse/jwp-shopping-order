@@ -14,11 +14,13 @@ public class OrderResponse {
     private final LocalDateTime orderedAt;
     private final CouponResponse coupon;
     private final List<OrderProductResponse> items;
+    private final boolean isValid;
 
     public OrderResponse(final Long orderId, final int totalPrice, final int discountedTotalPrice,
                          final int couponDiscountPrice, final int deliveryPrice,
                          final LocalDateTime orderedAt, final CouponResponse coupon,
-                         final List<OrderProductResponse> items) {
+                         final List<OrderProductResponse> items,
+                         final boolean isValid) {
         this.orderId = orderId;
         this.totalPrice = totalPrice;
         this.discountedTotalPrice = discountedTotalPrice;
@@ -27,6 +29,7 @@ public class OrderResponse {
         this.orderedAt = orderedAt;
         this.coupon = coupon;
         this.items = items;
+        this.isValid = isValid;
     }
 
     public Long getOrderId() {
@@ -60,5 +63,9 @@ public class OrderResponse {
 
     public List<OrderProductResponse> getItems() {
         return items;
+    }
+
+    public boolean getIsValid() {
+        return isValid;
     }
 }

@@ -21,6 +21,7 @@ public class OrderDao {
         rs.getInt("totalPrice"),
         rs.getInt("discountedTotalPrice"),
         rs.getInt("deliveryPrice"),
+        rs.getBoolean("is_valid"),
         rs.getLong("couponId"),
         rs.getString("couponName"),
         rs.getInt("couponDiscountRate"),
@@ -44,7 +45,7 @@ public class OrderDao {
 
     public Long insert(final OrderEntity orderEntity) {
         final String query = "INSERT INTO `order`(member_id, total_price, discounted_total_price, "
-            + "delivery_price, ordered_at) VALUES (?, ?, ?, ?, ?)";
+            + "delivery_price, ordered_at, is_valid) VALUES (?, ?, ?, ?, ?, ?)";
 
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -54,6 +55,7 @@ public class OrderDao {
             ps.setInt(3, orderEntity.getDiscountedTotalPrice());
             ps.setInt(4, orderEntity.getDeliveryPrice());
             ps.setTimestamp(5, Timestamp.valueOf(orderEntity.getOrderedAt()));
+            ps.setBoolean(6, true);
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -67,7 +69,7 @@ public class OrderDao {
     public List<OrderDto> findById(final Long id) {
         final String sql = "SELECT m.id AS memberId, m.name AS memberName, m.password AS memberPassword, "
             + "o.id AS orderId, o.total_price AS totalPrice, o.discounted_total_price AS discountedTotalPrice, "
-            + "o.delivery_price AS deliveryPrice, o.ordered_at AS orderedAt, "
+            + "o.delivery_price AS deliveryPrice, o.ordered_at AS orderedAt, o.is_valid As isValid, "
             + "c.id AS couponId, c.name AS couponName, c.discount_rate AS couponDiscountRate, "
             + "c.period AS couponPeriod, c.expired_at AS couponExpiredAt, "
             + "op.ordered_product_price AS orderedProductPrice, op.quantity as orderQuantity, "
@@ -85,7 +87,7 @@ public class OrderDao {
     public List<OrderDto> findByMemberName(final String memberName) {
         final String sql = "SELECT m.id AS memberId, m.name AS memberName, m.password AS memberPassword, "
             + "o.id AS orderId, o.total_price AS totalPrice, o.discounted_total_price AS discountedTotalPrice, "
-            + "o.delivery_price AS deliveryPrice, o.ordered_at AS orderedAt, "
+            + "o.delivery_price AS deliveryPrice, o.ordered_at AS orderedAt, o.is_valid AS isValid, "
             + "c.id AS couponId, c.name AS couponName, c.discount_rate AS couponDiscountRate, "
             + "c.period AS couponPeriod, c.expired_at AS couponExpiredAt, "
             + "op.ordered_product_price AS orderedProductPrice, op.quantity as orderQuantity, "

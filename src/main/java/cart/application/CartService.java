@@ -3,16 +3,13 @@ package cart.application;
 import cart.application.dto.cartitem.CartItemQuantityUpdateRequest;
 import cart.application.dto.cartitem.CartRequest;
 import cart.application.dto.cartitem.CartResponse;
-import cart.application.dto.product.ProductResponse;
+import cart.application.mapper.CartMapper;
 import cart.domain.cartitem.Cart;
-import cart.domain.cartitem.CartItemWithId;
 import cart.domain.cartitem.CartRepository;
 import cart.domain.cartitem.dto.CartItemSaveReq;
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
-import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
-import cart.domain.product.dto.ProductWithId;
 import cart.exception.BadRequestException;
 import cart.exception.ErrorCode;
 import cart.exception.ForbiddenException;
@@ -43,9 +40,8 @@ public class CartService {
     public List<CartResponse> findByMember(final String memberName) {
         final Member member = memberRepository.findByName(memberName);
         final Cart cart = cartRepository.findByMemberName(member.name());
-
         return cart.getCartItems().stream()
-            .map(this::convertCartItemResponse)
+            .map(CartMapper::convertCartItemResponse)
             .collect(Collectors.toUnmodifiableList());
     }
 
@@ -69,8 +65,6 @@ public class CartService {
             cartRepository.deleteById(cartItemId);
             return;
         }
-        final CartItemWithId cartItem = cart.getCartItems().get(0);
-        cartItem.changeQuantity(quantity);
         cartRepository.updateQuantity(cartItemId, quantity);
     }
 
@@ -100,13 +94,5 @@ public class CartService {
         if (cartRepository.existByMemberNameAndProductId(memberName, productId)) {
             throw new BadRequestException(ErrorCode.CART_ALREADY_ADD);
         }
-    }
-
-    private CartResponse convertCartItemResponse(final CartItemWithId cartItemWithId) {
-        final ProductWithId productWithId = cartItemWithId.getProduct();
-        final Product product = productWithId.getProduct();
-        return new CartResponse(cartItemWithId.getCartId(), cartItemWithId.getQuantity(),
-            new ProductResponse(productWithId.getProductId(), product.getName(), product.getPrice(),
-                product.getImageUrl()));
     }
 }

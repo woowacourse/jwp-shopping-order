@@ -1,6 +1,7 @@
 package cart.domain.coupon.dto;
 
 import cart.domain.coupon.Coupon;
+import java.time.LocalDateTime;
 
 public class CouponWithId {
 
@@ -18,5 +19,9 @@ public class CouponWithId {
 
     public Coupon getCoupon() {
         return coupon;
+    }
+
+    public boolean isNotExpired(final LocalDateTime targetTime) {
+        return coupon.isNotExpired(targetTime);
     }
 }

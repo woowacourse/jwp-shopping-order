@@ -2,7 +2,7 @@ package cart.domain.order;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.cartitem.CartItemWithId;
+import cart.domain.cartitem.dto.CartItemWithId;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.dto.CouponWithId;
 import cart.domain.member.EncryptedPassword;
@@ -30,7 +30,7 @@ class CouponOrderTest {
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
             new Product("피자", 30000, "pizza_image_url", false)));
         final CouponOrder 주문 = new CouponOrder(져니, 신규_가입_축하_쿠폰, 3000, LocalDateTime.now(),
-            List.of(치킨_장바구니_아이템, 피자_장바구니_아이템));
+            List.of(치킨_장바구니_아이템, 피자_장바구니_아이템), true);
 
         // when
         final Integer 총_금액 = 주문.getTotalPrice();
@@ -53,7 +53,7 @@ class CouponOrderTest {
         final CartItemWithId 피자_장바구니_아이템 = new CartItemWithId(2L, 5, new ProductWithId(2L,
             new Product("피자", 30000, "pizza_image_url", false)));
         final CouponOrder 주문 = new CouponOrder(져니, 신규_가입_축하_쿠폰, 3000, LocalDateTime.now(),
-            List.of(치킨_장바구니_아이템, 피자_장바구니_아이템));
+            List.of(치킨_장바구니_아이템, 피자_장바구니_아이템), true);
 
         // when
         final Integer 할인된_금액 = 주문.getDiscountedTotalPrice();
