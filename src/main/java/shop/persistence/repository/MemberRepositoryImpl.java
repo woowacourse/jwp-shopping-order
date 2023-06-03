@@ -7,7 +7,6 @@ import shop.domain.member.MemberName;
 import shop.domain.repository.MemberRepository;
 import shop.persistence.dao.MemberDao;
 import shop.persistence.entity.MemberEntity;
-import shop.util.Encryptor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,8 +21,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Long save(Member member) {
-        String encryptedPassword = Encryptor.encrypt(member.getPassword());
-        MemberEntity memberEntity = new MemberEntity(member.getName(), encryptedPassword);
+        MemberEntity memberEntity = new MemberEntity(member.getName(), member.getPassword());
 
         return memberDao.insertMember(memberEntity);
     }

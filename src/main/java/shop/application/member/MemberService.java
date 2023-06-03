@@ -7,7 +7,9 @@ import shop.application.member.dto.MemberDto;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
 import shop.domain.event.MemberJoinedEvent;
+import shop.domain.member.EncryptedPassword;
 import shop.domain.member.Member;
+import shop.domain.member.MemberName;
 import shop.domain.repository.MemberRepository;
 import shop.exception.AuthenticationException;
 import shop.exception.ShoppingException;
@@ -33,10 +35,19 @@ public class MemberService {
             throw new ShoppingException("중복되는 이름입니다. 입력한 회원 이름 : " + memberDto.getName());
         }
 
-        Member member = new Member(memberDto.getName(), memberDto.getPassword());
+        Member member = createMember(memberDto);
 
         Long memberId = memberRepository.save(member);
         eventPublisher.publishEvent(new MemberJoinedEvent(memberId));
+    }
+
+    private Member createMember(MemberJoinDto memberDto) {
+        String encryptedPassword = Encryptor.encrypt(memberDto.getPassword());
+
+        MemberName name = new MemberName(memberDto.getName());
+        EncryptedPassword password = new EncryptedPassword(encryptedPassword);
+
+        return new Member(name, password);
     }
 
     public String login(MemberLoginDto memberDto) {

@@ -1,5 +1,7 @@
 package shop.domain.member;
 
+import java.util.Objects;
+
 public class Member {
     private final Long id;
     private final MemberName name;
@@ -12,8 +14,8 @@ public class Member {
         this.password = password;
     }
 
-    public Member(String name, String password) {
-        this(null, new MemberName(name), new NaturalPassword(password));
+    public Member(MemberName name, Password password) {
+        this(null, name, password);
     }
 
     public Long getId() {
@@ -29,6 +31,6 @@ public class Member {
     }
 
     public boolean checkPassword(String password) {
-        return this.password.getPassword().equals(password);
+        return Objects.equals(this.password.getPassword(), password);
     }
 }

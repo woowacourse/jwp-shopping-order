@@ -18,3 +18,5 @@ INSERT INTO member (name, password) VALUES ('b@b.com', '1234');
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 1, 2);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (1, 2, 4);
 INSERT INTO cart_item (member_id, product_id, quantity) VALUES (2, 3, 5);
+
+INSERT INTO coupon (name, discount_rate, `period`, expired_at) VALUES ("회원가입 감사 쿠폰", 10, 7, '9999-12-31')

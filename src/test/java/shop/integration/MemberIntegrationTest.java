@@ -11,11 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.util.Base64Utils;
 import shop.application.member.dto.MemberJoinDto;
 import shop.application.member.dto.MemberLoginDto;
-import shop.domain.coupon.Coupon;
 import shop.domain.coupon.CouponType;
 import shop.domain.member.Member;
-import shop.domain.repository.CouponRepository;
-import shop.domain.repository.MemberCouponRepository;
+import shop.domain.member.MemberName;
+import shop.domain.member.NaturalPassword;
 import shop.domain.repository.MemberRepository;
 import shop.util.Encryptor;
 
@@ -28,18 +27,10 @@ public class MemberIntegrationTest extends IntegrationTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
-    private CouponRepository couponRepository;
-    @Autowired
-    private MemberCouponRepository memberCouponRepository;
-
     @DisplayName("회원가입을 할 수 있다.")
     @Test
     void joinTest() {
         MemberJoinDto request = new MemberJoinDto("testMember", "asdf1234");
-        Coupon coupon = new Coupon(CouponType.WELCOME_JOIN);
-
-        couponRepository.save(coupon);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +49,7 @@ public class MemberIntegrationTest extends IntegrationTest {
         String name = "testMember";
         String password = "test1234";
         MemberLoginDto request = new MemberLoginDto(name, password);
-        Member member = new Member(name, password);
+        Member member = new Member(new MemberName(name), new NaturalPassword(password));
 
         memberRepository.save(member);
 
@@ -87,9 +78,6 @@ public class MemberIntegrationTest extends IntegrationTest {
     void issueCouponIfJoin() {
         //given
         MemberLoginDto request = new MemberLoginDto("testName", "test1234");
-        Coupon coupon = new Coupon(CouponType.WELCOME_JOIN);
-
-        couponRepository.save(coupon);
 
         //when
         RestAssured.given().log().all()
@@ -132,11 +120,9 @@ public class MemberIntegrationTest extends IntegrationTest {
     @Test
     void joinWithDuplicateNameTest() {
         //given
-        Member member = new Member("testMember", "password");
+        Member member = new Member(new MemberName("testMember"), new NaturalPassword("password"));
         MemberJoinDto request = new MemberJoinDto("testMember", "asdf1234");
-        Coupon coupon = new Coupon(CouponType.WELCOME_JOIN);
 
-        couponRepository.save(coupon);
         memberRepository.save(member);
 
         //when
