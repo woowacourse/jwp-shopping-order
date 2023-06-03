@@ -14,11 +14,12 @@ public class Order {
 
     public Order(
             final List<OrderItem> orderItems,
+            final int shippingFee,
             final Member member
     ) {
         this.id = null;
         this.orderItems = orderItems;
-        this.shippingFee = new Money(calculateShippingFee());
+        this.shippingFee = new Money(shippingFee);
         this.orderedAt = LocalDateTime.now();
         this.member = member;
     }

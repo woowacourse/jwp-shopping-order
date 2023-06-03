@@ -55,7 +55,7 @@ public class OrderService {
             cartItemRepository.deleteById(cartItemDto.getCartItemId());
         }
 
-        final Order order = new Order(orderItems, member);
+        final Order order = new Order(orderItems, request.getShippingFee(), member);
         final Long savedId = orderRepository.saveOrder(order).getId();
 
         member.addTotalPurchaseAmount(order.calculateTotalPrice());
