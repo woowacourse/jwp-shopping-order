@@ -51,7 +51,6 @@ class PointDaoTest {
 
         // then
         assertThat(pointEntity).isEmpty();
-
     }
 
     @Test
@@ -69,6 +68,5 @@ class PointDaoTest {
             .get()
             .usingRecursiveComparison()
             .isEqualTo(pointToUpdate);
-
     }
 }
