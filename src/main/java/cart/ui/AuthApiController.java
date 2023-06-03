@@ -1,17 +1,14 @@
 package cart.ui;
 
-import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cart.domain.Member;
-import cart.dto.request.CartItemRequest;
-import cart.dto.request.LogInRequest;
+import cart.application.MemberService;
 import cart.dto.response.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,8 +39,8 @@ public class AuthApiController {
         )
     })
     @PostMapping("/login")
-    public ResponseEntity<Void> addCartItems(Member member) {
-        memberService.logIn(member);
+    public ResponseEntity<Void> addCartItems(@RequestHeader HttpServletRequest httpServletRequest) {
+        memberService.logIn(httpServletRequest);
         return ResponseEntity.ok().build();
     }
 }

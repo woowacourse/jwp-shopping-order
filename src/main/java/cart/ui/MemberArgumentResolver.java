@@ -1,5 +1,8 @@
 package cart.ui;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +11,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import cart.auth.BasicAuthorizationDecoder;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.AuthenticationException;
@@ -33,17 +37,9 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             return null;
         }
 
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
-            return null;
-        }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
+        Map.Entry<String, String> emailAndPassword = BasicAuthorizationDecoder.decode(authorization);
+        String email = emailAndPassword.getKey();
+        String password = emailAndPassword.getValue();
 
         // 본인 여부 확인
         Member member = memberDao.getMemberByEmail(email);

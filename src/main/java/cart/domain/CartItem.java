@@ -42,7 +42,7 @@ public class CartItem {
 
     public void checkOwner(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new ForbiddenException(ExceptionType.LOGIN_FAIL);
+            throw new ForbiddenException(ExceptionType.FORBIDDEN);
         }
     }
 
