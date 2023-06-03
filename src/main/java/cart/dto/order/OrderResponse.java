@@ -2,7 +2,7 @@ package cart.dto.order;
 
 import cart.domain.order.Order;
 import cart.dto.cart.CartItemResponse;
-import cart.dto.coupon.CouponResponse;
+import cart.dto.coupon.OrderCouponResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class OrderResponse {
     private Long orderId;
-    private CouponResponse coupon;
+    private OrderCouponResponse coupon;
     private List<CartItemResponse> items;
     private int totalPrice;
     private int discountedTotalPrice;
@@ -21,10 +21,10 @@ public class OrderResponse {
     public OrderResponse(final Order order) {
         this.orderId = order.getId();
         if (order.getCoupon().isEmpty()) {
-            this.coupon = new CouponResponse();
+            this.coupon = new OrderCouponResponse();
         }
         if (order.getCoupon().isPresent()) {
-            this.coupon = new CouponResponse(order.getCoupon().get());
+            this.coupon = new OrderCouponResponse(order.getCoupon().get());
         }
         this.items = order.getItems().getItems()
                 .stream().map(CartItemResponse::of)
@@ -40,7 +40,7 @@ public class OrderResponse {
         return orderId;
     }
 
-    public CouponResponse getCoupon() {
+    public OrderCouponResponse getCoupon() {
         return coupon;
     }
 
