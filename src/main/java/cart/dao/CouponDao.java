@@ -19,7 +19,7 @@ public class CouponDao {
         final Long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String policyType = rs.getString("policy_type");
-        final Long discountPrice = rs.getLong("discount_price");
+        final Long discountPrice = rs.getLong("discount_value");
         final Long minimumPrice = rs.getLong("minimum_price");
         return new CouponEntity(id, name, policyType, discountPrice, minimumPrice);
     };
@@ -45,7 +45,7 @@ public class CouponDao {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(couponEntity);
         long id = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
         return new CouponEntity(id, couponEntity.getName(), couponEntity.getPolicyType(),
-                couponEntity.getDiscountPrice(),
+                couponEntity.getDiscountValue(),
                 couponEntity.getMinimumPrice());
     }
 }

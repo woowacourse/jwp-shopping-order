@@ -60,7 +60,7 @@ public class MemberCouponRepository {
     private Coupon getCoupon(final Long couponId) {
         final CouponEntity couponEntity = couponDao.findByCouponId(couponId).orElseThrow(CouponNotFoundException::new);
         final DiscountPolicy discountPolicy = DiscountPolicyType.findDiscountPolicy(couponEntity.getPolicyType(),
-                couponEntity.getDiscountPrice());
+                couponEntity.getDiscountValue());
 
         return new Coupon(couponEntity.getId(), couponEntity.getName(), discountPolicy, couponEntity.getMinimumPrice());
     }
