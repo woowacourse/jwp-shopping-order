@@ -36,4 +36,8 @@ public class Product {
     public ImageUrl getImageUrl() {
         return imageUrl;
     }
+
+    public Price multiplyPriceBy(int quantity) {
+        return price.multiply(quantity);
+    }
 }

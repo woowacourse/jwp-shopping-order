@@ -1,29 +1,30 @@
 package cart.domain.Order;
 
+import cart.domain.Product.Price;
 import cart.domain.Product.Product;
 
 public class OrderItem {
     Product product;
-    int quantity;
+    Quantity quantity;
 
     public OrderItem(Product product, int quantity) {
         this.product = product;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 
     public Product getProduct() {
         return product;
     }
 
-    public int getQuantity() {
+    public Quantity getQuantity() {
         return quantity;
     }
 
-    public int getPrice() {
-        return product.getPrice().price();
+    public Price getPrice() {
+        return product.getPrice();
     }
 
-    public int totalPrice() {
-        return getPrice() * getQuantity();
+    public Price totalPrice() {
+        return product.multiplyPriceBy(quantity.quantity());
     }
 }

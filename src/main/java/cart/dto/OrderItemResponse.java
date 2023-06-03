@@ -21,9 +21,9 @@ public class OrderItemResponse {
     public static OrderItemResponse of(OrderItem orderItem) {
         return new OrderItemResponse(
                 orderItem.getProduct().getId(),
-                orderItem.getQuantity(),
+                orderItem.getQuantity().quantity(),
                 orderItem.getProduct().getName().name(),
-                orderItem.getPrice(),
+                orderItem.getPrice().price(),
                 orderItem.getProduct().getImageUrl().imageUrl()
         );
 

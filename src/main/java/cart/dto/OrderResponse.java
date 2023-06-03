@@ -26,7 +26,7 @@ public class OrderResponse {
 
         return new OrderResponse(
                 order.getId(),
-                order.getTotalPrice(),
+                order.getTotalPrice().price(),
                 order.getOrderDate(),
                 orderItemResponses
         );

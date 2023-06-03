@@ -41,8 +41,8 @@ public class OrderRepository {
                 .stream().map(it -> new OrderItemEntity(
                         orderId,
                         it.getProduct().getId(),
-                        it.getQuantity(),
-                        it.getPrice()
+                        it.getQuantity().quantity(),
+                        it.getPrice().price()
                 )).collect(Collectors.toUnmodifiableList());
 
         orderItemDao.save(orderItemEntities);
