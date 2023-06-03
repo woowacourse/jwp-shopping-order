@@ -14,8 +14,12 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(CartItemException.IllegalMember.class)
-    public ResponseEntity<Void> handleException(CartItemException.IllegalMember e) {
+    public ResponseEntity<Void> handleForbiddenNException(CartItemException.IllegalMember e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
+    @ExceptionHandler(ProductException.NotFoundProduct.class)
+    public ResponseEntity<Void> handleNotFoundException() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 }

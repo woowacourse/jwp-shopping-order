@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.entity.ProductEntity;
+import cart.exception.ProductException;
 import cart.repository.mapper.ProductMapper;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class ProductRepository {
 
     public Product getProductById(final Long productId) {
         ProductEntity productEntity = productDao.getProductById(productId)
-                .orElseThrow(() -> new IllegalArgumentException(productId + "id에 해당하는 상품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ProductException.NotFoundProduct(productId));
 
         return ProductMapper.toProduct(productEntity);
     }
@@ -38,10 +39,18 @@ public class ProductRepository {
 
 
     public void updateProduct(final Long productId, final Product product) {
-        productDao.updateProduct(productId, ProductMapper.toEntity(product));
+        try {
+            productDao.updateProduct(productId, ProductMapper.toEntity(product));
+        } catch (IllegalArgumentException e) {
+            throw new ProductException.NotFoundProduct(productId);
+        }
     }
 
     public void deleteProduct(Long productId) {
-        productDao.deleteProduct(productId);
+        try {
+            productDao.deleteProduct(productId);
+        } catch (IllegalArgumentException e) {
+            throw new ProductException.NotFoundProduct(productId);
+        }
     }
 }

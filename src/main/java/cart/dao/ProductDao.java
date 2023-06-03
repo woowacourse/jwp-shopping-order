@@ -66,18 +66,26 @@ public class ProductDao {
 
     public void updateProduct(Long productId, ProductEntity product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(
+        final int affectedRow = jdbcTemplate.update(
                 sql,
                 product.getName(),
                 product.getPrice(),
                 product.getImage(),
                 productId
         );
+
+        if (affectedRow == 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void deleteProduct(Long productId) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productId);
+        final int affectedRow = jdbcTemplate.update(sql, productId);
+
+        if (affectedRow == 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public Map<Long, ProductEntity> getProductGroupById(final List<Long> ids) {
