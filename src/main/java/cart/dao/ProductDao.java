@@ -58,6 +58,10 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public int findPriceById(long id) {
+        final String sql = "SELECT price FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("price"), id);
+    }
     public void updateProduct(Long productId, Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
@@ -68,8 +72,4 @@ public class ProductDao {
         jdbcTemplate.update(sql, productId);
     }
 
-    public int findPriceById(long id) {
-        final String sql = "SELECT price FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("price"), id);
-    }
 }

@@ -83,22 +83,6 @@ public class CartItemDao {
         return cartItems.isEmpty() ? null : cartItems.get(0);
     }
 
-
-    public void delete(Long memberId, Long productId) {
-        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    public void updateQuantity(CartItem cartItem) {
-        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
-    }
-
     public CartItemEntity findCartItemEntitiesByCartId(final long cartId) {
         final String sql = "SELECT * FROM cart_item WHERE id =?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
@@ -115,5 +99,22 @@ public class CartItemDao {
         final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
     }
+
+    public void updateQuantity(CartItem cartItem) {
+        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public void delete(Long memberId, Long productId) {
+        String sql = "DELETE FROM cart_item WHERE member_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, memberId, productId);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+
 }
 
