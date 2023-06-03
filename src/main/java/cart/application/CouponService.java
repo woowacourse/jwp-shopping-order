@@ -2,11 +2,17 @@ package cart.application;
 
 import cart.domain.Member;
 import cart.domain.coupon.Coupon;
+import cart.domain.coupon.MemberCoupon;
+import cart.domain.discountpolicy.DiscountPolicy;
 import cart.domain.discountpolicy.DiscountPolicyProvider;
 import cart.domain.discountpolicy.DiscountType;
 import cart.dto.CouponIssueRequest;
+import cart.dto.CouponRequest;
 import cart.dto.CouponResponse;
 import cart.dto.CouponsResponse;
+import cart.dto.apidatamapper.DiscountAmountMapper;
+import cart.dto.apidatamapper.DiscountTypeMapper;
+import cart.exception.CouponException;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import org.springframework.stereotype.Service;
@@ -33,6 +39,22 @@ public class CouponService {
     }
 
     @Transactional
+    public CouponResponse makeCoupon(final CouponRequest couponRequest) {
+        Coupon coupon = requestToCoupon(couponRequest);
+        Long insertedId = couponRepository.insert(coupon);
+
+        Coupon insertedCoupon = couponRepository.findById(insertedId);
+        return couponToResponse(insertedCoupon);
+    }
+
+    private Coupon requestToCoupon(final CouponRequest couponRequest) {
+        DiscountType discountType = DiscountTypeMapper.apiBodyStringToDomain(couponRequest.getType());
+        DiscountPolicy discountPolicy = discountPolicyProvider.getByType(discountType);
+        double domainValue = DiscountAmountMapper.apiBodyAmountToDomainValue(discountType, couponRequest.getAmount());
+        return new Coupon(couponRequest.getName(), discountPolicy, domainValue);
+    }
+
+    @Transactional
     public CouponsResponse getAllCoupons() {
         List<Coupon> coupons = couponRepository.findAll();
         List<CouponResponse> couponResponses = coupons.stream()
@@ -52,6 +74,19 @@ public class CouponService {
         Long couponId = couponIssueRequest.getCouponId();
         Coupon couponToIssue = couponRepository.findById(couponId);
 
+        validateIsIssuable(member, couponId);
+
         return memberCouponRepository.insert(member, couponToIssue);
     }
+
+    private void validateIsIssuable(final Member member, final Long couponId) {
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findAllByMemberId(member.getId());
+        final boolean isContainSameUnusedCoupon = memberCoupons.stream()
+                .anyMatch(coupon -> (!coupon.isUsed()) && coupon.getCouponId().equals(couponId));
+
+        if (isContainSameUnusedCoupon) {
+            throw new CouponException.AlreadHaveSameCouponException();
+        }
+    }
+
 }

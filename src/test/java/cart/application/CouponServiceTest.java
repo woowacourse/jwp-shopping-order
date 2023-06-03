@@ -1,10 +1,12 @@
 package cart.application;
 
 import cart.domain.Member;
+import cart.domain.Money;
 import cart.domain.coupon.MemberCoupon;
 import cart.dto.CouponIssueRequest;
 import cart.dto.CouponResponse;
 import cart.dto.CouponsResponse;
+import cart.exception.CouponException;
 import cart.repository.CouponRepository;
 import cart.repository.MemberCouponRepository;
 import cart.repository.MemberRepository;
@@ -23,6 +25,8 @@ import static cart.domain.fixture.CouponFixture.AMOUNT_1000_COUPON;
 import static cart.domain.fixture.CouponFixture.RATE_10_COUPON;
 import static cart.domain.fixture.MemberFixture.MEMBER_A;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Transactional
@@ -86,5 +90,35 @@ class CouponServiceTest {
                 .map(MemberCoupon::getId)
                 .collect(Collectors.toList());
         assertThat(ids).containsExactlyInAnyOrder(issuedCouponId);
+    }
+
+    @Test
+    @DisplayName("사용자에게 이미 가지고 있는 쿠폰을 추가한다.")
+    void issue_same_coupon_to_member_test() {
+        // given
+        CouponIssueRequest couponIssueRequest = new CouponIssueRequest(rateCouponId);
+        couponService.issueCouponToMember(member, couponIssueRequest);
+
+        // when
+        // then
+        assertThatThrownBy(() -> couponService.issueCouponToMember(member, couponIssueRequest))
+                .isInstanceOf(CouponException.AlreadHaveSameCouponException.class);
+    }
+
+    @Test
+    @DisplayName("사용한 쿠폰은 재발급 받을 수 있다.")
+    void issue_used_coupon_to_member_test() {
+        // given
+        CouponIssueRequest couponIssueRequest = new CouponIssueRequest(rateCouponId);
+        Long issuedId = couponService.issueCouponToMember(member, couponIssueRequest);
+        MemberCoupon issuedCoupon = memberCouponRepository.findByIdForUpdate(issuedId);
+
+
+        // when
+        issuedCoupon.use(new Money(100000));
+        memberCouponRepository.updateCouponStatus(issuedCoupon);
+
+        // then
+        assertThatNoException().isThrownBy(() -> couponService.issueCouponToMember(member, couponIssueRequest));
     }
 }

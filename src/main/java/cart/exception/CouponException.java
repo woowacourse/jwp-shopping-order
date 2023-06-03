@@ -18,9 +18,9 @@ public class CouponException extends RuntimeException {
         }
     }
 
-    public static class OverOriginalPrice extends CouponException {
-        public OverOriginalPrice() {
-            super("쿠폰 할인금액이 주문 금액보다 높습니다.");
+    public static class AlreadHaveSameCouponException extends CouponException {
+        public AlreadHaveSameCouponException() {
+            super("이미 가지고 있는 쿠폰입니다.");
         }
     }
 }
