@@ -32,9 +32,9 @@ public class OrderService {
     }
 
     public long orderProducts(Member member, OrderProductsRequest orderProductsRequest) {
-        List<CartItem> cartItems = toCartItems(orderProductsRequest.getCartItemIds());
+        List<CartItem> cartItems = toCartItems(orderProductsRequest.getCartIds());
         OrderProducts orderProducts = toOrderProducts(cartItems);
-        Payment payment = new Payment(orderProducts.calculateTotalPayment(), orderProductsRequest.getUsedPoint());
+        Payment payment = new Payment(orderProducts.calculateTotalPayment(), orderProductsRequest.getPoint());
         Order order = new Order(member, orderProducts, payment);
         // 장바구니에서 삭제
         cartItems.forEach(cartItem -> cartItemRepository.deleteById(cartItem.getId()));

@@ -17,24 +17,24 @@ public class OrderProductsRequest {
     public OrderProductsRequest() {
     }
 
-    public OrderProductsRequest(List<Long> cartItemIds, int usedPoint) {
-        this.cartIds = cartItemIds;
-        this.point = usedPoint;
+    public OrderProductsRequest(List<Long> cartIds, int point) {
+        this.cartIds = cartIds;
+        this.point = point;
     }
 
     public List<Long> getCartIds() {
         return cartIds;
     }
 
-    public int getUsedPoint() {
+    public int getPoint() {
         return point;
     }
 
     @Override
     public String toString() {
         return "OrderProductsRequest{" +
-                "cartItemIds=" + cartIds +
-                ", usedPoint=" + point +
+                "cartIds=" + cartIds +
+                ", point=" + point +
                 '}';
     }
 }
