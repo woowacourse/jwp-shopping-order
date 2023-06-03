@@ -31,8 +31,6 @@ public class OrderDao {
     }
 
     public Long insertOrder(OrderEntity orderEntity) {
-        simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(orderEntity))
-                .longValue();
         return simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource()
                         .addValue("member_id", orderEntity.getMemberId())
                         .addValue("total_price", orderEntity.getTotalPrice())
