@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +24,20 @@ public class ProductDao {
     public List<Product> getAllProducts() {
         String sql = "SELECT * FROM products";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Long productId = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imageUrl = rs.getString("image_url");
+            return new Product(productId, name, price, imageUrl);
+        });
+    }
+
+    public List<Product> getProductsByIds(List<Long> ids) {
+        String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String sql = "SELECT * FROM products " +
+                "WHERE id IN (" + placeholders + ")";
+
+        return jdbcTemplate.query(sql, ids.toArray(), (rs, rowNum) -> {
             Long productId = rs.getLong("id");
             String name = rs.getString("name");
             int price = rs.getInt("price");

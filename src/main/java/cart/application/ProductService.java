@@ -23,6 +23,11 @@ public class ProductService {
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
+    public List<ProductResponse> getProductsById(List<Long> ids) {
+        final List<Product> products = productDao.getProductsByIds(ids);
+        return products.stream().map(ProductResponse::of).collect(Collectors.toList());
+    }
+
     public ProductResponse getProductById(Long productId) {
         Product product = productDao.getProductById(productId);
         return ProductResponse.of(product);

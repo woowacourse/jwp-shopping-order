@@ -21,8 +21,11 @@ public class ProductApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "") List<Long> ids) {
+        if (ids.isEmpty()) {
+            return ResponseEntity.ok(productService.getAllProducts());
+        }
+        return ResponseEntity.ok(productService.getProductsById(ids));
     }
 
     @GetMapping("/{id}")
