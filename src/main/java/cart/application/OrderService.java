@@ -45,4 +45,8 @@ public class OrderService {
 
         return order;
     }
+
+    public List<Order> findAllByMember(Member member) {
+        return orderDao.findAllByMember(member);
+    }
 }

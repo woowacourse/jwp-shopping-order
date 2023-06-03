@@ -12,6 +12,8 @@ import static io.restassured.RestAssured.given;
 
 public class Steps {
 
+    private static final String ORDERS_URI = "/orders";
+
     public static ExtractableResponse<Response> 상품을_장바구니에_담는다(CartItemRequest cartItemRequest, Member member) {
         return given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, TestUtils.toBasicAuthHeaderValue(getAuthValue(member)))
@@ -29,7 +31,7 @@ public class Steps {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(TestUtils.toJson(orderRequest))
                 .when()
-                .post("/orders")
+                .post(ORDERS_URI)
                 .then().log().all()
                 .extract();
     }
@@ -39,6 +41,15 @@ public class Steps {
                 .header(HttpHeaders.AUTHORIZATION, TestUtils.toBasicAuthHeaderValue(getAuthValue(member)))
                 .when()
                 .get(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 사용자의_모든_주문정보를_가져온다(Member member) {
+        return given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, TestUtils.toBasicAuthHeaderValue(getAuthValue(member)))
+                .when()
+                .get(ORDERS_URI)
                 .then().log().all()
                 .extract();
     }

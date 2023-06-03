@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderDao {
@@ -99,5 +100,15 @@ public class OrderDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<Order> findAllByMember(Member member) {
+        String ordersQuery = "select id from orders where member_id = ?";
+        final List<Long> orderIds = jdbcTemplate.query(ordersQuery, (rs, rowNum) -> rs.getLong("id"), member.getId());
+
+        return orderIds.stream()
+                .map(this::findById)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 }
