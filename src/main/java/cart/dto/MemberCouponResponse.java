@@ -32,7 +32,7 @@ public class MemberCouponResponse {
                 memberCoupon.getId(),
                 memberCoupon.getCoupon().getName(),
                 memberCoupon.getCoupon().getDiscountPolicy().getName().toLowerCase(),
-                memberCoupon.getCoupon().getValue(),
+                memberCoupon.getCoupon().getDiscountValue(),
                 memberCoupon.getCoupon().getMinimumPrice().getValue()
         );
     }

@@ -46,7 +46,7 @@ public class CouponEntity {
                 null,
                 coupon.getName(),
                 coupon.getDiscountPolicy().getName(),
-                coupon.getValue(),
+                coupon.getDiscountValue(),
                 coupon.getMinimumPrice().getValue()
         );
     }

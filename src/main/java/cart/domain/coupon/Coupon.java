@@ -11,24 +11,24 @@ public class Coupon {
     private final Long id;
     private final String name;
     private final DiscountPolicy discountPolicy;
-    private final BigDecimal value;
+    private final BigDecimal discountValue;
     private final Money minimumPrice;
 
-    public Coupon(final Long id, final String name, final DiscountPolicy discountPolicy, final BigDecimal value, final Money minimumPrice) {
+    public Coupon(final Long id, final String name, final DiscountPolicy discountPolicy, final BigDecimal discountValue, final Money minimumPrice) {
         this.id = id;
         this.name = name;
         this.discountPolicy = discountPolicy;
-        this.value = value;
+        this.discountValue = discountValue;
         this.minimumPrice = minimumPrice;
     }
 
-    public Coupon(final String name, final DiscountPolicy discountPolicy, final BigDecimal value, final Money minimumPrice) {
-        this(null, name, discountPolicy, value, minimumPrice);
+    public Coupon(final String name, final DiscountPolicy discountPolicy, final BigDecimal discountValue, final Money minimumPrice) {
+        this(null, name, discountPolicy, discountValue, minimumPrice);
     }
 
     public Money discount(final Money money) {
         if (money.isMoreThan(minimumPrice)) {
-            return discountPolicy.discount(money, value);
+            return discountPolicy.discount(money, discountValue);
         }
         return new Money(BigDecimal.ZERO);
     }
@@ -65,8 +65,8 @@ public class Coupon {
         return discountPolicy;
     }
 
-    public BigDecimal getValue() {
-        return value;
+    public BigDecimal getDiscountValue() {
+        return discountValue;
     }
 
     public Money getMinimumPrice() {
