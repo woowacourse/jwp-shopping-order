@@ -7,6 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -24,12 +26,14 @@ public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public List<CartItemEntity> findByMemberId(Long memberId) {
@@ -59,5 +63,16 @@ public class CartItemDao {
     public void updateQuantity(CartItemEntity cartItemEntity) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ? ";
         jdbcTemplate.update(sql, cartItemEntity.getQuantity(), cartItemEntity.getId());
+    }
+
+    public void deleteByIds(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return;
+        }
+
+        String sql = "DELETE FROM cart_Item WHERE id IN (:ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", ids);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 }

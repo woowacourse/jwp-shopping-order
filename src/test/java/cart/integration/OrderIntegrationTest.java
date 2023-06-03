@@ -52,11 +52,13 @@ public class OrderIntegrationTest extends IntegrationTest {
                 new OrderRequest(3000,
                         List.of(
                                 new OrderItemRequest(
+                                        1L,
                                         new OrderProductRequest(1L, "치킨", 10_000, "www.naver.com"),
                                         1,
                                         List.of()
                                 ),
                                 new OrderItemRequest(
+                                        1L,
                                         new OrderProductRequest(2L, "피자", 15_000, "www.kakao.com"),
                                         1,
                                         List.of(new OrderCouponRequest(쿠폰원.getId(), 쿠폰원.getCoupon().getName(),
@@ -82,11 +84,13 @@ public class OrderIntegrationTest extends IntegrationTest {
         MemberCoupon 쿠폰원 = new MemberCoupon(1L, MEMBER.getId(), 천원_할인_쿠폰, false);
         insertMemberCoupon(쿠폰원, jdbcTemplate);
         OrderItemRequest 치킨_주문 = new OrderItemRequest(
+                1L,
                 new OrderProductRequest(1L, "치킨", 10_000, "www.naver.com"),
                 1,
                 List.of()
         );
         OrderItemRequest 피자_주문 = new OrderItemRequest(
+                1L,
                 new OrderProductRequest(2L, "피자", 15_000, "www.kakao.com"),
                 1,
                 List.of(new OrderCouponRequest(쿠폰원.getId(), 쿠폰원.getCoupon().getName(),

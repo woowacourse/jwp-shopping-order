@@ -4,6 +4,7 @@ import java.util.List;
 
 public class OrderItemRequest {
 
+    private Long id;
     private OrderProductRequest product;
     private Integer quantity;
     private List<OrderCouponRequest> coupons;
@@ -11,10 +12,16 @@ public class OrderItemRequest {
     public OrderItemRequest() {
     }
 
-    public OrderItemRequest(OrderProductRequest product, Integer quantity, List<OrderCouponRequest> coupons) {
+
+    public OrderItemRequest(Long id, OrderProductRequest product, Integer quantity, List<OrderCouponRequest> coupons) {
+        this.id = id;
         this.product = product;
         this.quantity = quantity;
         this.coupons = coupons;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public OrderProductRequest getProduct() {

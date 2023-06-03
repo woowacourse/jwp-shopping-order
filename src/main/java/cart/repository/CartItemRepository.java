@@ -67,4 +67,11 @@ public class CartItemRepository {
     public void updateQuantity(CartItem cartItem) {
         cartItemDao.updateQuantity(CartItemEntity.from(cartItem));
     }
+
+    public void clear(List<CartItem> cartItems) {
+        List<Long> ids = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(toList());
+        cartItemDao.deleteByIds(ids);
+    }
 }

@@ -3,6 +3,7 @@ package cart.application;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import cart.domain.CartItem;
 import cart.domain.MemberCoupon;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -19,8 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -46,11 +49,19 @@ public class OrderService {
 
         List<OrderItem> orderItems = getOrderItems(request, memberCouponsById);
         couponRepository.useCoupons(memberCoupons);
+        clearCartItems(request, memberId);
 
         int totalPrice = orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
                 .sum();
         return orderRepository.save(new Order(memberId, orderItems, totalPrice));
+    }
+
+    private void clearCartItems(OrderRequest request, Long memberId) {
+        List<CartItem> cartItems = request.getOrderItemRequests().stream()
+                .map(it -> new CartItem(it.getId(), it.getQuantity(), it.getProduct().toDomain(), memberId))
+                .collect(toList());
+        cartItemRepository.clear(cartItems);
     }
 
     private List<OrderItem> getOrderItems(OrderRequest request, Map<Long, MemberCoupon> memberCouponsById) {
@@ -78,11 +89,13 @@ public class OrderService {
         return price;
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findById(Long orderId) {
         Order order = orderRepository.findById(orderId);
         return OrderResponse.from(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findAllByMemberId(Long memberId) {
         List<Order> orders = orderRepository.findAllByMemberId(memberId);
         return orders.stream()

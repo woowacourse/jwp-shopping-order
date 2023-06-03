@@ -133,4 +133,25 @@ class CartItemDaoTest {
         CartItemEntity actual = cartItemDao.findById(cartItemId).get();
         assertThat(actual.getQuantity()).isEqualTo(10);
     }
+
+    @Test
+    void 아이디_목록을_받아서_모두_삭제한다() {
+        // given
+        insertMember(MEMBER, jdbcTemplate);
+        insertProduct(CHICKEN, jdbcTemplate);
+        insertProduct(PIZZA, jdbcTemplate);
+        CartItemEntity chickenCartItem = new CartItemEntity(CHICKEN.getId(), MEMBER.getId(), 2);
+        CartItemEntity pizzaCartItem = new CartItemEntity(PIZZA.getId(), MEMBER.getId(), 5);
+
+        List<Long> ids = List.of(
+                cartItemDao.save(chickenCartItem),
+                cartItemDao.save(pizzaCartItem));
+
+        // when
+        cartItemDao.deleteByIds(ids);
+
+        // then
+        List<CartItemEntity> result = cartItemDao.findByMemberId(MEMBER.getId());
+        assertThat(result).isEmpty();
+    }
 }
