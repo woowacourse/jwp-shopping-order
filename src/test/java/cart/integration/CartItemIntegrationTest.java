@@ -1,6 +1,7 @@
 package cart.integration;
 
-import cart.dao.MemberDao;
+import cart.db.dao.MemberDao;
+import cart.db.repository.MemberRepository;
 import cart.domain.member.Member;
 import cart.dto.cart.CartItemQuantityUpdateRequest;
 import cart.dto.cart.CartItemRequest;
@@ -28,6 +29,10 @@ public class CartItemIntegrationTest extends IntegrationTest {
     @Autowired
     private MemberDao memberDao;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+
     private Long productId;
     private Long productId2;
     private Member member;
@@ -40,8 +45,8 @@ public class CartItemIntegrationTest extends IntegrationTest {
         productId = createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         productId2 = createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));
 
-        member = memberDao.getMemberById(1L);
-        member2 = memberDao.getMemberById(2L);
+        member = memberRepository.findById(1L);
+        member2 = memberRepository.findById(2L);
     }
 
     @DisplayName("장바구니에 아이템을 추가한다.")

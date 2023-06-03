@@ -6,6 +6,7 @@ import cart.db.repository.ProductRepository;
 import cart.domain.Item;
 import cart.domain.Product;
 import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
 import cart.dto.ItemRequest;
 import cart.dto.order.OrderRequest;
@@ -32,7 +33,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void add(final Long memberId, final OrderRequest orderRequest) {
+    public void add(final Member member, final OrderRequest orderRequest) {
         Map<Long, Integer> orderRequestItems = orderRequest.getItems()
                 .stream()
                 .collect(Collectors.toMap(ItemRequest::getProductId, ItemRequest::getQuantity));
@@ -46,20 +47,19 @@ public class OrderService {
 
         Long couponId = orderRequest.getCouponId();
         Coupon coupon = couponRepository.findById(couponId); // 쿠폰 ID 유효성 검사
-        Order order = new Order(items, coupon, 10000, 3000);
+        Order order = new Order(member, items, coupon, 10000, 3000);
 
-        Long orderId = orderRepository.addOrder(memberId, order);
-        orderRepository.addOrderProducts(orderId, items);
-        orderRepository.addOrderCoupon(orderId, couponId);
+        Long orderId = orderRepository.save(order);
     }
 
-    public OrderResponse findOrdersByIdAndMemberId(final Long memberId, final Long orderId) {
-        Order order = orderRepository.findOrderByIdAndMemberId(memberId, orderId);
+    public OrderResponse findOrderById(final Member member, final Long orderId) {
+        Order order = orderRepository.findById(orderId);
+        // TODO: 소유자 확인
         return new OrderResponse(order);
     }
 
     public List<OrderResponse> findOrdersByMemberId(final Long memberId) {
-        List<Order> orders = orderRepository.findOrdersByMemberId(memberId);
+        List<Order> orders = orderRepository.findByMemberId(memberId);
         return orders.stream()
                 .map(OrderResponse::new)
                 .collect(Collectors.toUnmodifiableList());

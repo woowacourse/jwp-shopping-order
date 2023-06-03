@@ -20,8 +20,8 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(Member member, @RequestBody final OrderRequest orderRequest) {
-        orderService.add(member.getId(), orderRequest);
+    public ResponseEntity<Void> createOrder(final Member member, @RequestBody final OrderRequest orderRequest) {
+        orderService.add(member, orderRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -33,7 +33,7 @@ public class OrderApiController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> findOrdersByMember(Member member, @PathVariable final Long orderId) {
-        OrderResponse orderResponse = orderService.findOrdersByIdAndMemberId(member.getId(), orderId);
+        OrderResponse orderResponse = orderService.findOrderById(member, orderId);
         return ResponseEntity.ok().body(orderResponse);
     }
 }

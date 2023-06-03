@@ -4,14 +4,14 @@ import cart.db.entity.MemberEntity;
 import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class MemberDao {
@@ -27,11 +27,9 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long create(MemberEntity memberEntity) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("name", memberEntity.getName());
-        params.put("password", memberEntity.getPassword());
-        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    public Long create(final MemberEntity memberEntity) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(memberEntity);
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     public List<MemberEntity> findAll() {
@@ -39,24 +37,24 @@ public class MemberDao {
         return jdbcTemplate.query(sql, new MemberEntityRowMapper());
     }
 
-    public MemberEntity findById(Long id) {
+    public MemberEntity findById(final Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
         List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{id}, new MemberEntityRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public MemberEntity findByName(String name) {
+    public MemberEntity findByName(final String name) {
         String sql = "SELECT * FROM member WHERE name = ?";
         List<MemberEntity> members = jdbcTemplate.query(sql, new Object[]{name}, new MemberEntityRowMapper());
         return members.isEmpty() ? null : members.get(0);
     }
 
-    public void update(Member member) {
+    public void update(final Member member) {
         String sql = "UPDATE member SET name = ?, password = ? WHERE id = ?";
         jdbcTemplate.update(sql, member.getName(), member.getPassword(), member.getId());
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         String sql = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

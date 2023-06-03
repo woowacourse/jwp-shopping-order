@@ -3,6 +3,7 @@ package cart.domain.order;
 import cart.domain.Item;
 import cart.domain.Items;
 import cart.domain.coupon.Coupon;
+import cart.domain.member.Member;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,18 +11,20 @@ import java.util.List;
 public class Order {
 
     private final Long id;
+    private final Member member;
     private final Items items;
     private final Coupon coupon;
     private final int totalPrice;
     private final int deliveryPrice;
     private final LocalDateTime orderedAt;
 
-    public Order(final List<Item> items, final Coupon coupon, final int totalPrice, final int deliveryPrice) {
-        this(null, items, coupon, totalPrice, deliveryPrice, LocalDateTime.now());
+    public Order(final Member member, final List<Item> items, final Coupon coupon, final int totalPrice, final int deliveryPrice) {
+        this(null, member, items, coupon, totalPrice, deliveryPrice, LocalDateTime.now());
     }
 
-    public Order(final Long id, final List<Item> items, final Coupon coupon, final int totalPrice, final int deliveryPrice, final LocalDateTime orderedAt) {
+    public Order(final Long id, final Member member, final List<Item> items, final Coupon coupon, final int totalPrice, final int deliveryPrice, final LocalDateTime orderedAt) {
         this.id = id;
+        this.member = member;
         this.items = new Items(items);
         this.coupon = coupon;
         this.totalPrice = totalPrice;
@@ -42,6 +45,10 @@ public class Order {
 
     public Long getId() {
         return id;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public Items getItems() {
