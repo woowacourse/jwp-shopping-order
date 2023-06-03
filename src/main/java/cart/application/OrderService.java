@@ -74,7 +74,7 @@ public class OrderService {
                 .collect(Collectors.toList());
         List<CartItem> requestCartItems = cartItemRepository.findByIds(orderItemIds);
 
-        if (!memberCartItems.containsAll(requestCartItems)) {
+        if (requestCartItems.isEmpty() || !memberCartItems.containsAll(requestCartItems)) {
             throw new OrderCartMismatchException();
         }
 

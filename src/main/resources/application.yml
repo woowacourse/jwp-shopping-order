@@ -1,14 +1,19 @@
-  spring.thymeleaf.cache: false
-  spring:
-    config:
-      import: secret.properties, application-datasource.yml
-  server:
-    port: 443
-    ssl:
-      enabled: true
-      enabled-protocols:
-        - TLSv1.1
-        - TLSv1.2
-      key-store: "classpath:${KEYSTORE}"
-      key-store-password: ${PASSWORD}
-      key-store-type: "PKCS12"
+spring.thymeleaf.cache: false
+spring:
+  config:
+    import: secret.properties, application-datasource.yml
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+server:
+  port: 443
+  ssl:
+    enabled: true
+    enabled-protocols:
+      - TLSv1.1
+      - TLSv1.2
+    key-store: "classpath:${KEYSTORE}"
+    key-store-password: ${PASSWORD}
+    key-store-type: "PKCS12"
