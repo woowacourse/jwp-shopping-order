@@ -1,6 +1,6 @@
 package cart.application.domain;
 
-import cart.application.exception.PointExceedException;
+import cart.application.exception.ExceedOwnedPointException;
 
 public class Member {
 
@@ -22,7 +22,7 @@ public class Member {
 
     public void usePoint(long pointToUse) {
         if (point - pointToUse < 0) {
-            throw new PointExceedException();
+            throw new ExceedOwnedPointException();
         }
         point -= pointToUse;
     }

@@ -1,6 +1,6 @@
 package cart.application.domain;
 
-import java.util.List;
+import cart.application.exception.ExceedAvailablePointException;
 
 public class Order {
 
@@ -11,8 +11,7 @@ public class Order {
     private final long usedPoint;
     private final long pointToAdd;
 
-    public Order(Long id, Member member, OrderInfos orderInfo,
-                 long originalPrice, long usedPoint, long pointToAdd) {
+    public Order(Long id, Member member, OrderInfos orderInfo, long originalPrice, long usedPoint, long pointToAdd) {
         this.id = id;
         this.member = member;
         this.orderInfos = orderInfo;
@@ -29,7 +28,7 @@ public class Order {
     public void usePoint() {
         long availablePoint = orderInfos.calculateAvailablePoint();
         if (availablePoint < usedPoint) {
-            throw new IllegalArgumentException(); // TODO: 예외 변경
+            throw new ExceedAvailablePointException();
         }
         member.usePoint(usedPoint);
     }

@@ -3,11 +3,11 @@ package cart.application.exception;
 import cart.application.domain.CartItem;
 import cart.application.domain.Member;
 
-public class IllegalMemberException extends CartItemException {
+public class IllegalMemberException extends RuntimeException {
 
-    private static final String MESSAGE_FORMAT = "Illegal member attempts to cart; cartItemId=%d, memberId=%d";
+    private static final String MESSAGE = "해당 멤버는 카트에 접근할 수 없습니다.";
 
-    public IllegalMemberException(CartItem cartItem, Member member) {
-        super(String.format(MESSAGE_FORMAT, cartItem.getId(), member.getId()));
+    public IllegalMemberException() {
+        super(MESSAGE);
     }
 }

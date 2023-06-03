@@ -36,7 +36,7 @@ public class CartItem {
 
     public void validateIsOwnedBy(Member member) {
         if (!Objects.equals(this.member.getId(), member.getId())) {
-            throw new IllegalMemberException(this, member);
+            throw new IllegalMemberException();
         }
     }
 }
