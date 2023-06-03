@@ -55,7 +55,7 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<Void> save(
             @Auth final Credential credential,
-            @RequestBody final CartItemSaveRequest request
+            @Valid @RequestBody final CartItemSaveRequest request
     ) {
         final Long id = cartItemService.save(credential.getMemberId(), request);
         return ResponseEntity.created(URI.create("/cart-items/" + id)).build();

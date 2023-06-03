@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +38,8 @@ public class OrderController {
             description = "주문 추가 성공."
     )
     @PostMapping
-    public ResponseEntity<Void> order(@Auth final Credential credential, @RequestBody final OrderSaveRequest request) {
+    public ResponseEntity<Void> order(@Auth final Credential credential,
+                                      @Valid @RequestBody final OrderSaveRequest request) {
         final Long orderId = orderService.order(credential.getMemberId(), request);
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
