@@ -1,6 +1,9 @@
 package cart.ui.coupon.dto;
 
-import cart.application.service.coupon.CouponResultDto;
+import cart.application.service.coupon.dto.CouponResultDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CouponResponse {
 
@@ -18,16 +21,17 @@ public class CouponResponse {
         this.minAmount = minAmount;
     }
 
-    public static CouponResponse from(final CouponResultDto couponResultDto) {
-        return new CouponResponse(
-                couponResultDto.getId(),
-                couponResultDto.getCouponName(),
-                couponResultDto.getDiscountPercent(),
-                couponResultDto.getDiscountAmount(),
-                couponResultDto.getMinAmount()
-        );
+    public static List<CouponResponse> from(final List<CouponResultDto> couponResultDtos) {
+        return couponResultDtos.stream()
+                .map(couponResultDto -> new CouponResponse(
+                        couponResultDto.getId(),
+                        couponResultDto.getCouponName(),
+                        couponResultDto.getDiscountPercent(),
+                        couponResultDto.getDiscountAmount(),
+                        couponResultDto.getMinAmount())
+                )
+                .collect(Collectors.toUnmodifiableList());
     }
-
 
     public Long getId() {
         return id;

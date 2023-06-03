@@ -1,6 +1,9 @@
-package cart.application.service.coupon;
+package cart.application.service.coupon.dto;
 
-import cart.domain.coupon.Coupon;
+import cart.domain.coupon.Coupons;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CouponResultDto {
     private final long id;
@@ -17,15 +20,17 @@ public class CouponResultDto {
         this.minAmount = minAmount;
     }
 
-    public static CouponResultDto from(final Coupon coupon) {
-        return new CouponResultDto(
-                coupon.getId(),
-                coupon.getCouponName(),
-                coupon.getDiscountPercent(),
-                coupon.getDiscountAmount(),
-                coupon.getMinAmount()
-        );
+    public static List<CouponResultDto> from(final Coupons coupons) {
+        return coupons.getCoupons().stream()
+                .map(coupon -> new CouponResultDto(
+                        coupon.getId(),
+                        coupon.getCouponName(),
+                        coupon.getDiscountPercent(),
+                        coupon.getDiscountAmount(),
+                        coupon.getMinAmount()))
+                .collect(Collectors.toUnmodifiableList());
     }
+
 
     public Long getId() {
         return id;
