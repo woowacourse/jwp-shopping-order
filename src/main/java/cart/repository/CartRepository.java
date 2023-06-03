@@ -5,6 +5,7 @@ import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartItem;
+import cart.domain.member.Member;
 import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
@@ -31,11 +32,11 @@ public class CartRepository {
         this.memberDao = memberDao;
     }
 
-    public Cart findByMemberId(final Long id) {
-        final List<CartItemEntity> cartItems = cartItemDao.findByMemberId(id);
+    public Cart findByMember(final Member member) {
+        final List<CartItemEntity> cartItems = cartItemDao.findByMemberId(member.getId());
 
-        final MemberEntity memberEntity = memberDao.getMemberById(id)
-                .orElseThrow(() -> new IllegalArgumentException(id + "를 가진 멤버를 찾을 수 없습니다."));
+        final MemberEntity memberEntity = memberDao.getMemberById(member.getId())
+                .orElseThrow(() -> new IllegalArgumentException(member.getId() + "를 가진 멤버를 찾을 수 없습니다."));
 
         final List<Long> productIds = cartItems.stream()
                 .map(CartItemEntity::getProductId)
