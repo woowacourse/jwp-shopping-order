@@ -72,12 +72,12 @@ public class CartItemRepository {
                 .toDomain();
     }
 
-    public void deleteById(final Long cartItemId, final Long memberId) {
-        cartItemDao.deleteById(cartItemId, memberId);
+    public void deleteById(final Long cartItemId) {
+        cartItemDao.deleteById(cartItemId);
     }
 
     private List<CartItem> makeCartItems(final List<CartItemEntity> cartItemEntities, final Member member,
-                                             final Map<Long, Product> products) {
+                                         final Map<Long, Product> products) {
         return cartItemEntities.stream()
                 .map(it -> new CartItem(it.getId(), it.getQuantity(), member, products.get(it.getProductId())))
                 .collect(toList());

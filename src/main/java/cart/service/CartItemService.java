@@ -53,8 +53,14 @@ public class CartItemService {
                 .collect(toList());
     }
 
-    public void delete(final Long productId, final Long memberId) {
-        cartItemRepository.deleteById(productId, memberId);
+    public void delete(final Long cartItemId, final Long memberId) {
+        final CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(CartItemNotFoundException::new);
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        cartItem.checkOwner(member);
+        cartItemRepository.deleteById(cartItemId);
     }
 
     public void updateQuantity(
@@ -69,7 +75,7 @@ public class CartItemService {
 
         cartItem.checkOwner(member);
         if (request.getQuantity() == 0) {
-            cartItemRepository.deleteById(cartItemId, memberId);
+            cartItemRepository.deleteById(cartItemId);
             return;
         }
 

@@ -77,7 +77,7 @@ class CartItemDaoTest {
         final CartItemEntity cartItemEntity = new CartItemEntity(member.getId(), product.getId(), 1);
 
         // when
-        cartItemDao.deleteById(cartItemEntity.getId(), member.getId());
+        cartItemDao.deleteById(cartItemEntity.getId());
 
         // then
         assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty();
@@ -114,9 +114,12 @@ class CartItemDaoTest {
         final ProductEntity product2 = productDao.insert(new ProductEntity("치즈피자2", "2.jpg", 8900L));
         final ProductEntity product3 = productDao.insert(new ProductEntity("치즈피자3", "3.jpg", 8900L));
 
-        CartItemEntity savedCartItemEntity1 = cartItemDao.insert(new CartItemEntity(member.getId(), product1.getId(), 1));
-        CartItemEntity savedCartItemEntity2 = cartItemDao.insert(new CartItemEntity(member.getId(), product2.getId(), 1));
-        CartItemEntity savedCartItemEntity3 = cartItemDao.insert(new CartItemEntity(member.getId(), product3.getId(), 1));
+        CartItemEntity savedCartItemEntity1 = cartItemDao.insert(
+                new CartItemEntity(member.getId(), product1.getId(), 1));
+        CartItemEntity savedCartItemEntity2 = cartItemDao.insert(
+                new CartItemEntity(member.getId(), product2.getId(), 1));
+        CartItemEntity savedCartItemEntity3 = cartItemDao.insert(
+                new CartItemEntity(member.getId(), product3.getId(), 1));
 
         // when
         List<CartItemEntity> result = cartItemDao.findAllByCartItemIds(
