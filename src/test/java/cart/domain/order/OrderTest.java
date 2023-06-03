@@ -8,7 +8,8 @@ import cart.domain.Product;
 import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItems;
 import cart.domain.coupon.MemberCoupon;
-import cart.exception.StoreException;
+import cart.exception.badrequest.BadRequestErrorType;
+import cart.exception.badrequest.BadRequestException;
 import cart.exception.forbidden.ForbiddenException;
 import cart.fixture.CouponFixture.금액_10000원이상_1000원할인;
 import cart.fixture.MemberFixture.Member_test1;
@@ -57,8 +58,8 @@ class OrderTest {
 
                 // when then
                 assertThatThrownBy(() -> Order.of(member, cartItems, memberCoupon))
-                        .isInstanceOf(StoreException.class)
-                        .hasMessage("장바구니 상품이 없습니다.");
+                        .isInstanceOf(BadRequestException.class)
+                        .hasMessage(BadRequestErrorType.CART_ITEM_EMPTY.name());
             }
         }
 
@@ -82,8 +83,8 @@ class OrderTest {
 
                 // when then
                 assertThatThrownBy(() -> Order.of(member, cartItems, memberCoupon))
-                        .isInstanceOf(StoreException.class)
-                        .hasMessage("적용할 수 없는 쿠폰입니다.");
+                        .isInstanceOf(BadRequestException.class)
+                        .hasMessage(BadRequestErrorType.COUPON_UNAVAILABLE.name());
             }
 
 
@@ -95,8 +96,8 @@ class OrderTest {
 
                 // when then
                 assertThatThrownBy(() -> Order.of(member, cartItems, memberCoupon))
-                        .isInstanceOf(StoreException.class)
-                        .hasMessage("적용할 수 없는 쿠폰입니다.");
+                        .isInstanceOf(BadRequestException.class)
+                        .hasMessage(BadRequestErrorType.COUPON_UNAVAILABLE.name());
             }
 
             @Test
@@ -106,8 +107,8 @@ class OrderTest {
 
                 // when then
                 assertThatThrownBy(() -> Order.of(member, cartItems, memberCoupon))
-                        .isInstanceOf(StoreException.class)
-                        .hasMessage("적용할 수 없는 쿠폰입니다.");
+                        .isInstanceOf(BadRequestException.class)
+                        .hasMessage(BadRequestErrorType.COUPON_UNAVAILABLE.name());
             }
         }
 

@@ -1,10 +1,12 @@
 package cart.application.service;
 
+import static cart.exception.noexist.NoExistErrorType.PRODUCT_NO_EXIST;
+
 import cart.application.dto.ProductRequest;
 import cart.application.dto.ProductResponse;
 import cart.application.repository.ProductRepository;
 import cart.domain.Product;
-import cart.exception.notfound.ProductNotFoundException;
+import cart.exception.noexist.NoExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse getProductById(final Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new NoExistException(PRODUCT_NO_EXIST));
         return ProductResponse.of(product);
     }
 
@@ -46,7 +48,7 @@ public class ProductService {
 
     private void checkProductExistence(final Long productId) {
         productRepository.findById(productId)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new NoExistException(PRODUCT_NO_EXIST));
     }
 
     public void deleteProduct(final Long productId) {

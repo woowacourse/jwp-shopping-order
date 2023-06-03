@@ -1,5 +1,8 @@
 package cart.application.service;
 
+import static cart.exception.noexist.NoExistErrorType.CART_ITEM_NO_EXIST;
+import static cart.exception.noexist.NoExistErrorType.PRODUCT_NO_EXIST;
+
 import cart.application.dto.CartItemQuantityUpdateRequest;
 import cart.application.dto.CartItemRequest;
 import cart.application.dto.CartItemResponse;
@@ -8,8 +11,7 @@ import cart.application.repository.ProductRepository;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.domain.cart.CartItem;
-import cart.exception.notfound.CartItemNotFoundException;
-import cart.exception.notfound.ProductNotFoundException;
+import cart.exception.noexist.NoExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -38,13 +40,13 @@ public class CartItemService {
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new NoExistException(PRODUCT_NO_EXIST));
         return cartItemRepository.create(new CartItem(member, product));
     }
 
     public void updateQuantity(Member member, Long id, CartItemQuantityUpdateRequest request) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(CartItemNotFoundException::new);
+                .orElseThrow(() -> new NoExistException(CART_ITEM_NO_EXIST));
         cartItem.checkOwner(member);
 
         if (request.getQuantity() == 0) {
@@ -58,7 +60,7 @@ public class CartItemService {
 
     public void remove(Member member, Long id) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(CartItemNotFoundException::new);
+                .orElseThrow(() -> new NoExistException(CART_ITEM_NO_EXIST));
         cartItem.checkOwner(member);
 
         cartItemRepository.deleteById(id);

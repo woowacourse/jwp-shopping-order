@@ -1,7 +1,9 @@
 package cart.domain.coupon.policy;
 
+import static cart.exception.badrequest.BadRequestErrorType.DISCOUNT_PERCENT_INVALID;
+
 import cart.domain.cart.CartItems;
-import cart.exception.StoreException;
+import cart.exception.badrequest.BadRequestException;
 
 public class PercentDiscountPolicy implements DiscountPolicy {
 
@@ -10,7 +12,7 @@ public class PercentDiscountPolicy implements DiscountPolicy {
     @Override
     public void validateValue(final int percent, final int minOrderPrice) {
         if (percent <= 0 || PERCENT_BASE < percent) {
-            throw new StoreException("잘못된 할인율입니다.");
+            throw new BadRequestException(DISCOUNT_PERCENT_INVALID);
         }
     }
 

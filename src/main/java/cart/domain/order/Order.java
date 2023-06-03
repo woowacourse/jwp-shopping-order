@@ -1,9 +1,11 @@
 package cart.domain.order;
 
+import static cart.exception.badrequest.BadRequestErrorType.COUPON_UNAVAILABLE;
+
 import cart.domain.Member;
 import cart.domain.cart.CartItems;
 import cart.domain.coupon.MemberCoupon;
-import cart.exception.StoreException;
+import cart.exception.badrequest.BadRequestException;
 import cart.exception.forbidden.ForbiddenException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,7 +63,7 @@ public class Order {
             final MemberCoupon memberCoupon) {
         memberCoupon.checkOwner(member);
         if (!memberCoupon.isApplicable(cartItems)) {
-            throw new StoreException("적용할 수 없는 쿠폰입니다.");
+            throw new BadRequestException(COUPON_UNAVAILABLE);
         }
     }
 

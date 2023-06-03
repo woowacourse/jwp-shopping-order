@@ -6,7 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import cart.domain.cart.CartItems;
-import cart.exception.StoreException;
+import cart.exception.badrequest.BadRequestErrorType;
+import cart.exception.badrequest.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -37,16 +38,16 @@ class PercentDiscountPolicyTest {
         void 양수가_아니면_예외(int percent) {
             // when then
             assertThatThrownBy(() -> discountPolicy.validateValue(percent, 1000))
-                    .isInstanceOf(StoreException.class)
-                    .hasMessage("잘못된 할인율입니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage(BadRequestErrorType.DISCOUNT_PERCENT_INVALID.name());
         }
 
         @Test
         void _100보다_크면_예외() {
             // when then
             assertThatThrownBy(() -> discountPolicy.validateValue(110, 1000))
-                    .isInstanceOf(StoreException.class)
-                    .hasMessage("잘못된 할인율입니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage(BadRequestErrorType.DISCOUNT_PERCENT_INVALID.name());
         }
 
         @Test

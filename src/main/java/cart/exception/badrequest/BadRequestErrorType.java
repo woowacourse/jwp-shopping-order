@@ -1,0 +1,14 @@
+package cart.exception.badrequest;
+
+public enum BadRequestErrorType {
+    LOGIN_FAIL,
+    INVALID_FORM,
+    COUPON_UNAVAILABLE,
+    CART_ITEM_QUANTITY_INCORRECT,
+    CART_ITEM_PRICE_INCORRECT,
+    CART_ITEM_EMPTY,
+    DISCOUNT_AMOUNT_INVALID,
+    DISCOUNT_PERCENT_INVALID,
+    MIN_ORDER_PRICE_INVALID,
+    ;
+}

@@ -1,10 +1,19 @@
 package cart.exception.forbidden;
 
-import cart.exception.StoreException;
+import cart.exception.ApplicationException;
+import org.springframework.http.HttpStatus;
 
-public class ForbiddenException extends StoreException {
+public class ForbiddenException extends ApplicationException {
 
-    public ForbiddenException() {
-        super("해당 자원에 대한 접근 권한이 없습니다.");
+    private static final String ERROR_TYPE = "FORBIDDEN";
+
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.FORBIDDEN;
+    }
+
+    @Override
+    public String getMessage() {
+        return ERROR_TYPE;
     }
 }

@@ -1,10 +1,19 @@
 package cart.exception.auth;
 
-import cart.exception.StoreException;
+import cart.exception.ApplicationException;
+import org.springframework.http.HttpStatus;
 
-public class UnauthorizedException extends StoreException {
+public class UnauthorizedException extends ApplicationException {
 
-    public UnauthorizedException(final String message) {
-        super(message);
+    private static final String ERROR_TYPE = "UNAUTHORIZED";
+
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.UNAUTHORIZED;
+    }
+
+    @Override
+    public String getMessage() {
+        return ERROR_TYPE;
     }
 }

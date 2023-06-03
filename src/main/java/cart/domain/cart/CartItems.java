@@ -1,7 +1,9 @@
 package cart.domain.cart;
 
+import static cart.exception.badrequest.BadRequestErrorType.CART_ITEM_EMPTY;
+
 import cart.domain.Member;
-import cart.exception.StoreException;
+import cart.exception.badrequest.BadRequestException;
 import java.util.List;
 
 public class CartItems {
@@ -14,7 +16,7 @@ public class CartItems {
 
     public void checkNotEmpty() {
         if (cartItems.isEmpty()) {
-            throw new StoreException("장바구니 상품이 없습니다.");
+            throw new BadRequestException(CART_ITEM_EMPTY);
         }
     }
 

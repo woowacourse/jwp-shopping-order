@@ -1,5 +1,10 @@
 package cart.application.service;
 
+import static cart.exception.badrequest.BadRequestErrorType.CART_ITEM_PRICE_INCORRECT;
+import static cart.exception.badrequest.BadRequestErrorType.CART_ITEM_QUANTITY_INCORRECT;
+import static cart.exception.noexist.NoExistErrorType.COUPON_NO_EXIST;
+import static cart.exception.noexist.NoExistErrorType.ORDER_NO_EXIST;
+
 import cart.application.dto.order.OrderCartItemProductRequest;
 import cart.application.dto.order.OrderCartItemsRequest;
 import cart.application.repository.CartItemRepository;
@@ -10,9 +15,8 @@ import cart.domain.cart.CartItem;
 import cart.domain.cart.CartItems;
 import cart.domain.coupon.MemberCoupon;
 import cart.domain.order.Order;
-import cart.exception.StoreException;
-import cart.exception.notfound.MemberCouponNotFoundException;
-import cart.exception.notfound.OrderNotFoundException;
+import cart.exception.badrequest.BadRequestException;
+import cart.exception.noexist.NoExistException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -51,7 +55,7 @@ public class OrderService {
         }
 
         MemberCoupon memberCoupon = memberCouponRepository.findById(memberCouponId)
-                .orElseThrow(MemberCouponNotFoundException::new);
+                .orElseThrow(() -> new NoExistException(COUPON_NO_EXIST));
         Order order = Order.of(member, cartItems, memberCoupon);
 
         cartItemRepository.deleteAll(cartItems);
@@ -64,10 +68,10 @@ public class OrderService {
         for (final CartItem cartItem : cartItems.getCartItems()) {
             OrderCartItemProductRequest cartProductRequest = cartProductRequests.get(cartItem.getId());
             if (cartItem.getQuantity() != cartProductRequest.getQuantity()) {
-                throw new StoreException("주문 수량을 확인해주세요.");
+                throw new BadRequestException(CART_ITEM_QUANTITY_INCORRECT);
             }
             if (cartItem.getProduct().getPrice() != cartProductRequest.getPrice()) {
-                throw new StoreException("가격을 확인해주세요.");
+                throw new BadRequestException(CART_ITEM_PRICE_INCORRECT);
             }
         }
     }
@@ -75,7 +79,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Order getOrderById(final Member member, final long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(OrderNotFoundException::new);
+                .orElseThrow(() -> new NoExistException(ORDER_NO_EXIST));
         order.checkOwner(member);
 
         return order;

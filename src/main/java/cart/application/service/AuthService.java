@@ -2,7 +2,7 @@ package cart.application.service;
 
 import cart.application.repository.MemberRepository;
 import cart.domain.Member;
-import cart.exception.auth.LoginFailException;
+import cart.exception.auth.UnauthorizedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +18,9 @@ public class AuthService {
 
     public Member login(final String email, final String password) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(LoginFailException::new);
+                .orElseThrow(UnauthorizedException::new);
         if (!member.checkPassword(password)) {
-            throw new LoginFailException();
+            throw new UnauthorizedException();
         }
         return member;
     }

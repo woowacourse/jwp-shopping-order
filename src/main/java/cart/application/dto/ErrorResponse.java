@@ -2,13 +2,13 @@ package cart.application.dto;
 
 public class ErrorResponse {
 
-    private String message;
+    private final String errorType;
 
-    public ErrorResponse(final String message) {
-        this.message = message;
+    public ErrorResponse(final String errorType) {
+        this.errorType = errorType;
     }
 
-    public String getMessage() {
-        return message;
+    public String getErrorType() {
+        return errorType;
     }
 }

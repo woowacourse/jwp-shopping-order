@@ -6,7 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import cart.domain.cart.CartItems;
-import cart.exception.StoreException;
+import cart.exception.badrequest.BadRequestErrorType;
+import cart.exception.badrequest.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -38,8 +39,8 @@ class AmountDiscountPolicyTest {
         void 양수가_아니면_예외(int discountAmount) {
             // when then
             assertThatThrownBy(() -> discountPolicy.validateValue(discountAmount, 1000))
-                    .isInstanceOf(StoreException.class)
-                    .hasMessage("할인 금액은 0원보다 커야합니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage(BadRequestErrorType.DISCOUNT_AMOUNT_INVALID.name());
         }
 
         @Test
@@ -50,8 +51,8 @@ class AmountDiscountPolicyTest {
 
             // when then
             assertThatThrownBy(() -> discountPolicy.validateValue(discountAmount, minOrderPrice))
-                    .isInstanceOf(StoreException.class)
-                    .hasMessage("최소 주문 금액은 할인 금액보다 크거나 같아야합니다.");
+                    .isInstanceOf(BadRequestException.class)
+                    .hasMessage(BadRequestErrorType.MIN_ORDER_PRICE_INVALID.name());
         }
 
         @ParameterizedTest

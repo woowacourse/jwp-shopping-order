@@ -1,6 +1,6 @@
 package cart.ui.auth;
 
-import cart.exception.auth.LoginFailException;
+import cart.exception.auth.UnauthorizedException;
 import cart.ui.auth.dto.BasicAuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
 
@@ -14,11 +14,11 @@ public class BasicAuthorizationExtractor {
 
     public static BasicAuthInfo extract(final String header) {
         if (header == null || !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
-            throw new LoginFailException();
+            throw new UnauthorizedException();
         }
         String[] credentials = extractCredentials(header);
         if (credentials.length != 2) {
-            throw new LoginFailException();
+            throw new UnauthorizedException();
         }
         return new BasicAuthInfo(credentials[0], credentials[1]);
     }

@@ -1,17 +1,20 @@
 package cart.domain.coupon.policy;
 
+import static cart.exception.badrequest.BadRequestErrorType.DISCOUNT_AMOUNT_INVALID;
+import static cart.exception.badrequest.BadRequestErrorType.MIN_ORDER_PRICE_INVALID;
+
 import cart.domain.cart.CartItems;
-import cart.exception.StoreException;
+import cart.exception.badrequest.BadRequestException;
 
 public class AmountDiscountPolicy implements DiscountPolicy {
 
     @Override
     public void validateValue(final int discountAmount, final int minOrderPrice) {
         if (discountAmount <= 0) {
-            throw new StoreException("할인 금액은 0원보다 커야합니다.");
+            throw new BadRequestException(DISCOUNT_AMOUNT_INVALID);
         }
         if (minOrderPrice < discountAmount) {
-            throw new StoreException("최소 주문 금액은 할인 금액보다 크거나 같아야합니다.");
+            throw new BadRequestException(MIN_ORDER_PRICE_INVALID);
         }
     }
 
