@@ -25,7 +25,8 @@ public class ProductQueryService {
     }
 
     public ProductResponse getProductById(Long productId) {
-        Product product = productDao.getProductById(productId);
+        Product product = productDao.findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
         return ProductResponse.of(product);
     }
 

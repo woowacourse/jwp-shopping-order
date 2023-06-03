@@ -35,11 +35,6 @@ public class ProductDao {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Product getProductById(Long productId) {
-        String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, productId);
-    }
-
     public long insert(Product product) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("name", product.getName())
@@ -49,9 +44,9 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(mapSqlParameterSource).longValue();
     }
 
-    public void updateProduct(Long productId, Product product) {
+    public void update(Product product) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), productId);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
     }
 
     public void deleteProduct(Long productId) {

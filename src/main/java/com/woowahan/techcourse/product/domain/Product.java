@@ -3,9 +3,9 @@ package com.woowahan.techcourse.product.domain;
 public class Product {
 
     private final Long id;
-    private final String name;
-    private final int price;
-    private final String imageUrl;
+    private String name;
+    private int price;
+    private String imageUrl;
 
     public Product(String name, int price, String imageUrl) {
         this(null, name, price, imageUrl);
@@ -32,5 +32,11 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void updateInfo(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 }
