@@ -17,7 +17,7 @@ public class MemberController {
     private MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<MemberResponse> getRank(Member member){
-        return ResponseEntity.ok(memberService.getRankById(member.getId()));
+    public ResponseEntity<MemberResponse> getGrade(Member member){
+        return ResponseEntity.ok(memberService.getGradeById(member.getId()));
     }
 }

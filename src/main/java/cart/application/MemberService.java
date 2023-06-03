@@ -12,8 +12,8 @@ public class MemberService {
     @Autowired
     private MemberDao memberDao;
 
-    public MemberResponse getRankById(Long id) {
+    public MemberResponse getGradeById(Long id) {
         Member member = memberDao.getMemberById(id);
-        return new MemberResponse(id, member.getMemberRank(), member.findDiscountedPercentage());
+        return new MemberResponse(id, member.getGrade(), member.findDiscountedPercentage());
     }
 }
