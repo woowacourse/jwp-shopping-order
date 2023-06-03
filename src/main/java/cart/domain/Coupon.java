@@ -15,7 +15,7 @@ public class Coupon {
     }
 
     public Coupon(final String name, final Double discountRate, final Integer discountPrice) {
-        this(null, name, discountRate, discountPrice);
+       this(null, name, discountRate, discountPrice);
     }
 
     public Long getId() {

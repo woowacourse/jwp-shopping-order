@@ -4,7 +4,6 @@ import static fixture.CouponFixture.COUPON_1_NOT_NULL_PRICE;
 import static fixture.MemberCouponFixture.MEMBER_COUPON_1;
 import static fixture.MemberCouponFixture.MEMBER_COUPON_2;
 import static fixture.MemberFixture.MEMBER_1;
-import static fixture.MemberFixture.MEMBER_2;
 import static fixture.MemberFixture.MEMBER_3;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -21,25 +20,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 
 @RepositoryTest
 class CouponRepositoryTest {
-
-    private static final RowMapper<MemberCouponDto> memberCouponDtoRowMapper = (rs, rn) ->
-            new MemberCouponDto(
-                    rs.getLong("id"),
-                    rs.getLong("member_id"),
-                    rs.getLong("coupon_id")
-            );
-
-    private static final RowMapper<CouponDto> couponDtoRowMapper = (rs, rn) ->
-            new CouponDto(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getDouble("discount_rate"),
-                    rs.getInt("discount_price")
-            );
 
     @Autowired
     private CouponRepository couponRepository;

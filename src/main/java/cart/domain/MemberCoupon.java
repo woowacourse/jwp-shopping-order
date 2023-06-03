@@ -3,13 +3,19 @@ package cart.domain;
 public class MemberCoupon {
 
     private final Long id;
-    private final Member member; // TODO : Member 로 확인하는 기능 추가 (현재 해당 MemberCoupon 을 호출한 인원이 주인이 맞는지))
+    private final Member member;
     private final Coupon coupon;
 
     public MemberCoupon(final Long id, final Member member, final Coupon coupon) {
         this.id = id;
         this.member = member;
         this.coupon = coupon;
+    }
+
+    public boolean isSameMember(MemberCoupon otherMemberCoupon) {
+        return this.member
+                .getEmail()
+                .equals(otherMemberCoupon.getMember().getEmail());
     }
 
     public Long getId() {
