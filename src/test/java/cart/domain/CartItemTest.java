@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.domain.carts.CartItem;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.exception.CartItemException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,6 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("NonAsciiCharacters")
 class CartItemTest {
 
     private final long validId = 1L;

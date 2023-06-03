@@ -41,10 +41,10 @@ public class OrderApiController {
     @GetMapping
     public ResponseEntity<List<OrderProductsResponse>> showOrder(Member member) {
         List<OrderProducts> orderItems = orderService.getOrderByMember(member);
-        return ResponseEntity.ok(toOrderResponse(orderItems));
+        return ResponseEntity.ok(toOrderProductsResponse(orderItems));
     }
 
-    private List<OrderProductsResponse> toOrderResponse(List<OrderProducts> orderProducts) {
+    private List<OrderProductsResponse> toOrderProductsResponse(List<OrderProducts> orderProducts) {
         return orderProducts.stream()
                 .map(orderProduct -> new OrderProductsResponse(orderProduct.getOrderId(), toOrderProductResponse(orderProduct.getOrderProducts())))
                 .collect(Collectors.toList());
