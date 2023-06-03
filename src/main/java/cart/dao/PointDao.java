@@ -47,7 +47,7 @@ public class PointDao {
     }
 
     public void update(PointEntity point) {
-        String sql = "UPDATE point SET point = ? WHERE id = ?";
-        jdbcTemplate.update(sql, point.getPoint(), point.getId());
+        String sql = "UPDATE point SET point = ? WHERE member_id = ?";
+        jdbcTemplate.update(sql, point.getPoint(), point.getMemberId());
     }
 }
