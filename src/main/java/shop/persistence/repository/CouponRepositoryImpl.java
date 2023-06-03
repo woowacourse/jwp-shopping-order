@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 import shop.domain.coupon.Coupon;
 import shop.domain.coupon.CouponType;
 import shop.domain.repository.CouponRepository;
-import shop.exception.DatabaseException;
 import shop.persistence.dao.CouponDao;
 import shop.persistence.entity.CouponEntity;
 
@@ -52,10 +51,7 @@ public class CouponRepositoryImpl implements CouponRepository {
         String name = couponType.getName();
         Integer discountRate = couponType.getDiscountRate();
 
-        CouponEntity couponEntity = couponDao.findByNameAndDiscountRate(name, discountRate)
-                .orElseThrow(() -> new DatabaseException.IllegalDataException(
-                        name + "(" + discountRate + ")에 해당하는 쿠폰을 찾을 수 없습니다.")
-                );
+        CouponEntity couponEntity = couponDao.findByNameAndDiscountRate(name, discountRate);
 
         return toCoupon(couponEntity);
     }

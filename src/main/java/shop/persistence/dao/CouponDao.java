@@ -12,7 +12,6 @@ import shop.exception.DatabaseException;
 import shop.persistence.entity.CouponEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class CouponDao {
@@ -61,10 +60,14 @@ public class CouponDao {
         }
     }
 
-    public Optional<CouponEntity> findByNameAndDiscountRate(String name, Integer discountRate) {
+    public CouponEntity findByNameAndDiscountRate(String name, Integer discountRate) {
         String sql = "SELECT * FROM coupon WHERE name = ? AND discount_rate = ?";
-        CouponEntity couponEntity = jdbcTemplate.queryForObject(sql, rowMapper, name, discountRate);
 
-        return Optional.ofNullable(couponEntity);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, name, discountRate);
+        } catch (DataAccessException e) {
+            throw new DatabaseException.IllegalDataException("존재하지 않는 쿠폰입니다." +
+                    "조회하려는 쿠폰 이름 : " + name + " 할인율 : " + discountRate + "%");
+        }
     }
 }
