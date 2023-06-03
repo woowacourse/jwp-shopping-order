@@ -6,6 +6,7 @@ import cart.coupon.Coupon;
 import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
 import cart.discountpolicy.discountcondition.DiscountTarget;
+import cart.order.OrderCoupon;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -37,18 +38,19 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrderCoupon> getOrderCoupons(List<Long> couponIds) {
+        return couponIds.stream()
+                .map(couponRepository::findById)
+                .map(OrderCoupon::from)
+                .collect(Collectors.toList());
+    }
+
     public void applyCoupons(Cart cart, List<Long> couponIds) {
         final var coupons = couponIds.stream()
                 .map(couponRepository::findById)
                 .collect(Collectors.toList());
 
         for (Coupon coupon : coupons) {
-            coupon.apply(cart);
-        }
-    }
-
-    public void applyCouponsApplyingToTotalPrice(Long memberId, Cart cart) {
-        for (Coupon coupon : couponRepository.findAllByMemberIdApplyingToTotalPrice(memberId)) {
             coupon.apply(cart);
         }
     }

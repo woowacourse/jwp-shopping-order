@@ -3,6 +3,7 @@ package cart.coupon.application;
 import cart.cart.Cart;
 import cart.cartitem.CartItem;
 import cart.deliveryprice.DeliveryPrice;
+import cart.discountpolicy.application.DiscountPolicyDao;
 import cart.discountpolicy.application.DiscountPolicyRepository;
 import cart.discountpolicy.application.DiscountPolicyService;
 import cart.discountpolicy.discountcondition.DiscountCondition;
@@ -13,19 +14,28 @@ import cart.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 class SaleServiceTest {
     private CouponService couponService;
+
+    @Autowired
     private CouponRepository couponRepository;
+
+    @Autowired
+    private DiscountPolicyService discountPolicyService;
 
     @BeforeEach
     void setup() {
-        this.couponRepository = new CouponRepository();
-        this.couponService = new CouponService(new DiscountPolicyService(new DiscountPolicyRepository()), couponRepository);
+        this.couponService = new CouponService(discountPolicyService, couponRepository);
     }
 
     @Test
@@ -49,7 +59,7 @@ class SaleServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(0, 0);
-        assertThat(cart.getOriginalDeliveryPrice())
+        assertThat(cart.getDiscountDeliveryPrice())
                 .isEqualTo(1500);
     }
 

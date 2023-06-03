@@ -1,7 +1,6 @@
 package cart.order.application;
 
 import cart.cart.Cart;
-import cart.cart.application.CartService;
 import cart.cartitem.CartItem;
 import cart.coupon.application.CouponService;
 import cart.order.Order;
@@ -10,7 +9,6 @@ import cart.order.OrderItem;
 import cart.presentation.presentation.OrderDetailResponse;
 import cart.presentation.presentation.OrderRequest;
 import cart.presentation.presentation.OrderResponse;
-import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -64,10 +62,7 @@ public class OrderService {
     }
 
     private List<OrderCoupon> getOrderCoupons(List<Long> couponIds) {
-        return couponIds.stream()
-                .map(couponService::findById)
-                .map(OrderCoupon::from)
-                .collect(Collectors.toList());
+        return couponService.getOrderCoupons(couponIds);
     }
 
     public List<OrderResponse> findOrderHistories(Long memberId) {

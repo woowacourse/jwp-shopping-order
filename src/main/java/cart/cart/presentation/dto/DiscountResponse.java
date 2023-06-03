@@ -41,4 +41,16 @@ public class DiscountResponse {
     private static DiscountFromTotalPrice getDiscountFromTotalPrice(Cart cart) {
         return new DiscountFromTotalPrice(cart.getDiscountFromTotalPrice());
     }
+
+    public List<CartItemDiscountResponse> getCartItemsPrice() {
+        return cartItemsPrice;
+    }
+
+    public DeliveryDiscountResponse getDeliveryPrice() {
+        return deliveryPrice;
+    }
+
+    public DiscountFromTotalPrice getDiscountFromTotalPrice() {
+        return discountFromTotalPrice;
+    }
 }

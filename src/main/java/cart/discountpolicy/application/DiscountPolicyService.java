@@ -15,7 +15,7 @@ public class DiscountPolicyService {
     }
 
     public Long savePolicy(DiscountCondition discountCondition) {
-        return discountPolicyRepository.save(DiscountPolicyBuilder.build(discountCondition));
+        return discountPolicyRepository.save(discountCondition);
     }
 
     public void applyPolicy(Long discountConditionId, Cart cart) {

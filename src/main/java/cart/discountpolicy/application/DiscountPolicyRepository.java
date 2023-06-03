@@ -1,22 +1,10 @@
 package cart.discountpolicy.application;
+
 import cart.discountpolicy.DiscountPolicy;
-import org.springframework.stereotype.Repository;
+import cart.discountpolicy.discountcondition.DiscountCondition;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface DiscountPolicyRepository {
+    long save(DiscountCondition discountCondition);
 
-@Repository
-public class DiscountPolicyRepository {
-    private final Map<Long, DiscountPolicy> discountPolicyMap = new HashMap<>();
-    private long id = 1L;
-
-    public long save(DiscountPolicy discountPolicy) {
-        final var id = this.id++;
-        discountPolicyMap.put(id, discountPolicy);
-        return id;
-    }
-
-    public DiscountPolicy findById(Long id) {
-        return this.discountPolicyMap.get(id);
-    }
+    DiscountPolicy findById(Long id);
 }

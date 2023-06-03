@@ -77,8 +77,8 @@ public class OrderScenarioTest extends ScenarioFixture {
                 .extract();
         final var jsonPath = response.jsonPath();
 
-        assertThat(jsonPath.getLong("price")).isEqualTo(0);
-        assertThat(jsonPath.getLong("limit")).isEqualTo(30000);
+        assertThat(jsonPath.getLong("price")).isEqualTo(3_000);
+        assertThat(jsonPath.getLong("limit")).isEqualTo(30_000);
     }
 
     @Test
@@ -102,7 +102,6 @@ public class OrderScenarioTest extends ScenarioFixture {
     }
 
     @Test
-    @Disabled
     @DisplayName("사용자가 적용할 쿠폰 목록을 체크한다.")
     void 사용자가_적용할_쿠폰_목록을_체크한다() {
         final var 결과 = given().log().all()
@@ -144,7 +143,7 @@ public class OrderScenarioTest extends ScenarioFixture {
 
         assertAll(
                 "최종 금액에서의 할인액 검증",
-                () -> assertThat(jsonPath.getLong("discountFromTotalPrice.discountPrice")).isEqualTo(5000)
+                () -> assertThat(jsonPath.getLong("discountFromTotalPrice.discountPrice")).isEqualTo(0)
         );
     }
 

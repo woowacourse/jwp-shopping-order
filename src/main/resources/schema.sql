@@ -27,11 +27,27 @@ CREATE TABLE discount_policy (
     discount_value INT NOT NULL
 );
 
+CREATE TABLE policy_products
+(
+    product_id BIGINT NOT NULL,
+    discount_policy_id BIGINT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product(id),
+    FOREIGN KEY (discount_policy_id) REFERENCES discount_policy(id)
+);
+
 CREATE TABLE coupon (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     discount_policy_id BIGINT NOT NULL,
     name VARCHAR(255) NOT NULL,
     FOREIGN KEY (discount_policy_id) REFERENCES discount_policy(id)
+);
+
+CREATE TABLE member_coupons
+(
+    member_id BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (coupon_id) REFERENCES coupon (id)
 );
 
 CREATE TABLE sale (
@@ -49,7 +65,7 @@ CREATE TABLE orders (
     FOREIGN KEY (member_id) REFERENCES member(id)
 );
 
-CREATE TABLE order_item(
+CREATE TABLE order_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id BIGINT NOT NULL,
     orders_id BIGINT NOT NULL,
@@ -61,13 +77,14 @@ CREATE TABLE order_item(
     FOREIGN KEY (orders_id) REFERENCES orders(id)
 );
 
-CREATE TABLE order_coupon (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id BIGINT NOT NULL,
-    coupon_id BIGINT NOT NULL,
+CREATE TABLE order_coupon
+(
+    id          BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id    BIGINT       NOT NULL,
+    coupon_id   BIGINT       NOT NULL,
     coupon_name VARCHAR(255) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
-)
+);
 
 
