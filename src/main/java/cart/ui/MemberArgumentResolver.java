@@ -12,43 +12,50 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Optional;
+
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     private final MemberDao memberDao;
 
-    public MemberArgumentResolver(MemberDao memberDao) {
+    public MemberArgumentResolver(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.getParameterType().equals(Member.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
+        final String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
             throw new MissingRequestHeaderException(HttpHeaders.AUTHORIZATION, parameter);
         }
 
-        String[] authHeader = authorization.split(" ");
+        final String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
             throw new AuthenticationException.InvalidScheme();
         }
-
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
-
-        // 본인 여부 확인
-        Member member = memberDao.getMemberByEmail(email);
-        if (!member.checkPassword(password)) {
+        if (authHeader.length != 2) {
             throw new AuthenticationException.InvalidCredentials();
         }
-        return member;
+
+        return this.generateMember(authHeader);
+    }
+
+    private Member generateMember(final String[] authHeader) {
+        return Optional.ofNullable(Base64.decodeBase64(authHeader[1]))
+                .map(String::new)
+                .map(decodedBytes -> decodedBytes.split(":"))
+                .filter(credentials -> credentials.length == 2)
+                .flatMap(this::getMember)
+                .orElseThrow(AuthenticationException.InvalidCredentials::new);
+    }
+
+    private Optional<Member> getMember(final String[] credentials) {
+        final Optional<Member> memberByEmail = this.memberDao.getMemberByEmail(credentials[0]);
+        return memberByEmail.filter(member1 -> member1.checkPassword(credentials[1]));
     }
 }

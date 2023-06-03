@@ -5,8 +5,14 @@ public class AuthenticationException extends RuntimeException {
         super();
     }
 
-    public AuthenticationException(String message) {
+    public AuthenticationException(final String message) {
         super(message);
+    }
+
+    public static class NotFound extends AuthenticationException {
+        public NotFound() {
+            super("해당 유저를 찾을 수 없습니다.");
+        }
     }
 
     public static class InvalidScheme extends AuthenticationException {

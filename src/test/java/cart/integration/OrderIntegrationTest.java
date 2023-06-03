@@ -3,6 +3,7 @@ package cart.integration;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.*;
+import cart.exception.AuthenticationException;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
@@ -42,7 +43,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         super.setUp(restDocumentation);
 
-        this.member = this.memberDao.getMemberById(1L);
+        this.member = this.memberDao.getMemberById(1L).orElseThrow(AuthenticationException.NotFound::new);
 
         this.productId = this.createProduct(new ProductRequest("치킨", 10_000, "http://example.com/chicken.jpg"));
         this.productId2 = this.createProduct(new ProductRequest("피자", 15_000, "http://example.com/pizza.jpg"));

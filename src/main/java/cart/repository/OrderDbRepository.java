@@ -8,6 +8,7 @@ import cart.dao.entity.OrderItemEntity;
 import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderItem;
+import cart.exception.AuthenticationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -59,8 +60,7 @@ public class OrderDbRepository implements OrderRepository {
     public Optional<Order> findById(final Long id) {
         try {
             final OrderEntity orderEntity = this.orderDao.findById(id);
-            final Member member = this.memberDao.getMemberById(orderEntity.getMemberId());
-
+            final Member member = this.memberDao.getMemberById(orderEntity.getMemberId()).orElseThrow(AuthenticationException.NotFound::new);
             return Optional.of(this.toOrder(member, orderEntity));
         } catch (final DataAccessException exception) {
             return Optional.empty();
