@@ -1,5 +1,6 @@
-package cart.order.presentation;
+package cart.presentation.presentation;
 
+import cart.cart.application.CartService;
 import cart.common.auth.Auth;
 import cart.member.Member;
 import cart.order.application.OrderService;
@@ -12,14 +13,17 @@ import java.util.List;
 @RestController
 public class OrderController {
     private final OrderService orderService;
+    private final CartService cartService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, CartService cartService) {
         this.orderService = orderService;
+        this.cartService = cartService;
     }
 
     @PostMapping("/payments")
     public ResponseEntity<Void> order(@Auth Member member, @RequestBody OrderRequest orderRequest) {
-        final var orderId = orderService.order(member, orderRequest);
+        cartService.order(member, orderRequest);
+        final var orderId = cartService.order(member, orderRequest);
         return ResponseEntity.created(URI.create(orderId.toString())).build();
     }
 

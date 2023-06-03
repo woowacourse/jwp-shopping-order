@@ -66,7 +66,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(10_000, 0);
-        assertThat(cart.getOriginalDeliveryPrice().getPrice())
+        assertThat(cart.getOriginalDeliveryPrice())
                 .isEqualTo(3_000);
     }
 
@@ -84,7 +84,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(0, 0);
-        assertThat(cart.getOriginalDeliveryPrice().getPrice())
+        assertThat(cart.getOriginalDeliveryPrice())
                 .isEqualTo(1500);
     }
 
@@ -102,7 +102,7 @@ class DiscountPolicyServiceTest {
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(12_000, 18_000);
-        assertThat(cart.getOriginalDeliveryPrice().getPrice())
+        assertThat(cart.getOriginalDeliveryPrice())
                 .isEqualTo(3_000);
     }
 
@@ -114,9 +114,6 @@ class DiscountPolicyServiceTest {
         final var 백여우가담은피자 = new CartItem(1L, 피자.getName(), 피자.getPrice(), 3, 피자.getImageUrl(), 피자.getId(), 백여우.getId());
         final var 백여우가담은치킨 = new CartItem(2L, 치킨.getName(), 치킨.getPrice(), 2, 피자.getImageUrl(), 치킨.getId(), 백여우.getId());
 
-        return new Cart(
-                List.of(백여우가담은피자, 백여우가담은치킨),
-                new DeliveryPrice()
-        );
+        return new Cart(List.of(백여우가담은피자, 백여우가담은치킨));
     }
 }

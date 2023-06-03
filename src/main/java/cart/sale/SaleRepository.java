@@ -1,5 +1,6 @@
 package cart.sale;
 
+import cart.discountpolicy.application.DiscountPolicyRepository;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import org.springframework.stereotype.Repository;
 
@@ -8,11 +9,16 @@ import java.util.*;
 @Repository
 public class SaleRepository {
     private final Map<Long, Sale> couponMap = new HashMap<>();
+    private final DiscountPolicyRepository discountPolicyRepository;
     private long id = 0L;
+
+    public SaleRepository(DiscountPolicyRepository discountPolicyRepository) {
+        this.discountPolicyRepository = discountPolicyRepository;
+    }
 
     public Long save(String name, Long discountPolicyId) {
         final var id = this.id++;
-        this.couponMap.put(id, new Sale(name, discountPolicyId));
+        this.couponMap.put(id, new Sale(name, discountPolicyRepository.findById(discountPolicyId)));
         return id;
     }
 

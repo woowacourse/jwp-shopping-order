@@ -1,6 +1,7 @@
 package cart.coupon.application;
 
 import cart.coupon.Coupon;
+import cart.discountpolicy.application.DiscountPolicyRepository;
 import cart.discountpolicy.discountcondition.DiscountTarget;
 import cart.member.application.MemberCouponMapper;
 import org.springframework.stereotype.Repository;
@@ -13,12 +14,13 @@ import java.util.stream.Collectors;
 @Repository
 public class CouponRepository {
     private final MemberCouponMapper memberCouponMapper = new MemberCouponMapper();
+    private DiscountPolicyRepository discountPolicyRepository;
     private final Map<Long, Coupon> couponMap = new HashMap<>();
     private long id = 1L;
 
     public Long save(String name, Long discountPolicyId) {
         final var id = this.id++;
-        this.couponMap.put(id, new Coupon(id, name, discountPolicyId));
+        this.couponMap.put(id, new Coupon(id, name, discountPolicyRepository.findById(discountPolicyId)));
         return id;
     }
 

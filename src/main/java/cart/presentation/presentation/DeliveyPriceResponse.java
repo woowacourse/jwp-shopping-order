@@ -1,4 +1,4 @@
-package cart.order.presentation;
+package cart.presentation.presentation;
 
 public class DeliveyPriceResponse {
     private int price;

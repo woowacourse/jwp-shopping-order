@@ -1,9 +1,6 @@
-package cart.order.presentation;
+package cart.presentation.presentation;
 
 import cart.order.OrderItem;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderItemResponse {
     private Long id;

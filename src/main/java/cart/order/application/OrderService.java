@@ -1,15 +1,15 @@
 package cart.order.application;
 
+import cart.cart.Cart;
 import cart.cart.application.CartService;
 import cart.cartitem.CartItem;
 import cart.coupon.application.CouponService;
-import cart.member.Member;
 import cart.order.Order;
 import cart.order.OrderCoupon;
 import cart.order.OrderItem;
-import cart.order.presentation.OrderDetailResponse;
-import cart.order.presentation.OrderRequest;
-import cart.order.presentation.OrderResponse;
+import cart.presentation.presentation.OrderDetailResponse;
+import cart.presentation.presentation.OrderRequest;
+import cart.presentation.presentation.OrderResponse;
 import cart.sale.SaleService;
 import org.springframework.stereotype.Service;
 
@@ -21,49 +21,28 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
-    private final CartService cartService;
-    private final SaleService saleService;
     private final CouponService couponService;
     private final OrderRepository orderRepository;
 
-    public OrderService(CartService cartService, SaleService saleService, CouponService couponService, OrderRepository orderRepository) {
-        this.cartService = cartService;
-        this.saleService = saleService;
+    public OrderService(CouponService couponService, OrderRepository orderRepository) {
         this.couponService = couponService;
         this.orderRepository = orderRepository;
     }
 
-    public Long order(Member member, OrderRequest orderRequest) {
-        // 1. cart 찾아오기
-        final var cart = cartService.findCart(member);
+    public Long order(Long memberId, Cart cart, OrderRequest orderRequest) {
+        // 1. OrderItems로 변환하기
+        final ArrayList<OrderItem> orderItems = getOrderItems(cart, orderRequest);
 
-        // 2. cart에 Sale 적용하기
-        saleService.applySales(cart);
+        // 2. 쿠폰 정보를 OrderCoupons로 변환하기
+        final var orderCoupons = getOrderCoupons(orderRequest.getCouponIds());
 
-        // 3. cart에 Coupon 적용하기
-        for (Long couponId : orderRequest.getCouponIds()) {
-            couponService.applyCoupon(couponId, cart);
-        }
-
-        // 4. OrderItems로 변환하기
-        final var cartItems = cart.getCartItems();
-        final var orderItems = new ArrayList<OrderItem>();
-        for (CartItem cartItem : cartItems) {
-            if (orderRequest.isCartItemOrdered(cartItem.getId())) {
-                orderItems.add(convertCartItemToOrderItem(cartItem, orderRequest));
-            }
-        }
-
-        // 5. 쿠폰 정보를 OrderCoupons로 변환하기
-        final var orderCoupons = convertCouponsToOrderCoupons(orderRequest.getCouponIds());
-
-        // 6. Order로 만들어 저장하기
+        // 3. Order로 만들어 저장하기
         final var order = new Order(
                 orderItems,
                 orderCoupons,
-                cart.getDeliveryPrice().getPrice(),
+                cart.calculateFinalDeliveryPrice(),
                 Timestamp.valueOf(LocalDateTime.now()),
-                member.getId()
+                memberId
         );
 
         return orderRepository.save(order);
@@ -73,25 +52,22 @@ public class OrderService {
         // TODO: 주문할 때 사용한 쿠폰은 사용자에게서 빼기
     }
 
-    private List<OrderCoupon> convertCouponsToOrderCoupons(List<Long> couponIds) {
-        final var coupons = couponIds.stream()
-                .map(couponService::findById)
-                .collect(Collectors.toList());
-        return coupons
-                .stream().map(coupon -> new OrderCoupon(coupon.getId(), coupon.getName()))
-                .collect(Collectors.toList());
+    private ArrayList<OrderItem> getOrderItems(Cart cart, OrderRequest orderRequest) {
+        final var cartItems = cart.getCartItems();
+        final var orderItems = new ArrayList<OrderItem>();
+        for (CartItem cartItem : cartItems) {
+            if (orderRequest.isCartItemOrdered(cartItem.getId())) {
+                orderItems.add(OrderItem.from(cartItem));
+            }
+        }
+        return orderItems;
     }
 
-    private OrderItem convertCartItemToOrderItem(CartItem cartItem, OrderRequest orderRequest) {
-        final var quantity = cartItem.getQuantity();
-        return new OrderItem(
-                cartItem.getProductId(),
-                cartItem.getName(),
-                cartItem.getOriginalPrice(),
-                cartItem.getDiscountPrice(),
-                quantity,
-                cartItem.getImageUrl()
-        );
+    private List<OrderCoupon> getOrderCoupons(List<Long> couponIds) {
+        return couponIds.stream()
+                .map(couponService::findById)
+                .map(OrderCoupon::from)
+                .collect(Collectors.toList());
     }
 
     public List<OrderResponse> findOrderHistories(Long memberId) {

@@ -1,4 +1,4 @@
-package cart.order.presentation;
+package cart.presentation.presentation;
 
 public class OrderCouponRequest {
     private Long id;

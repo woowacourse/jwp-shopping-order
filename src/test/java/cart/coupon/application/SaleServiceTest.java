@@ -44,12 +44,12 @@ class SaleServiceTest {
         final var discountCondition = DiscountCondition.from(DiscountTarget.DELIVERY, DiscountUnit.ABSOLUTE, 1500);
         final var couponId = couponService.saveCoupon(discountCondition, "배송비 50% 할인 쿠폰");
 
-        couponService.applyCoupon(couponId, cart);
+        couponService.applyCoupons(cart, List.of(couponId));
 
         assertThat(cart.getCartItems())
                 .extracting(CartItem::getDiscountPrice)
                 .containsExactly(0, 0);
-        assertThat(cart.getOriginalDeliveryPrice().getPrice())
+        assertThat(cart.getOriginalDeliveryPrice())
                 .isEqualTo(1500);
     }
 
@@ -61,9 +61,6 @@ class SaleServiceTest {
         final var 백여우가담은피자 = new CartItem(1L, 피자.getName(), 피자.getPrice(), 3, 피자.getImageUrl(), 피자.getId(), 백여우.getId());
         final var 백여우가담은치킨 = new CartItem(2L, 치킨.getName(), 치킨.getPrice(), 2, 치킨.getImageUrl(), 치킨.getId(), 백여우.getId());
 
-        return new Cart(
-                List.of(백여우가담은피자, 백여우가담은치킨),
-                new DeliveryPrice()
-        );
+        return new Cart(List.of(백여우가담은피자, 백여우가담은치킨));
     }
 }

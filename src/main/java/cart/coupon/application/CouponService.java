@@ -37,9 +37,11 @@ public class CouponService {
                 .collect(Collectors.toList());
     }
 
-    public void applyCoupons(Long memberId, Cart cart, DiscountTarget... targetToExclude) {
-        final var targetsToExclude = Arrays.stream(targetToExclude).collect(Collectors.toList());
-        final var coupons = couponRepository.findAllByMemberIdExcludingTarget(memberId, targetsToExclude);
+    public void applyCoupons(Cart cart, List<Long> couponIds) {
+        final var coupons = couponIds.stream()
+                .map(couponRepository::findById)
+                .collect(Collectors.toList());
+
         for (Coupon coupon : coupons) {
             coupon.apply(cart);
         }
