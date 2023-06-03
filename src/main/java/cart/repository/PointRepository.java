@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.PointDao;
 import cart.dao.PointHistoryDao;
 import cart.domain.Point;
+import cart.domain.Points;
 import cart.entity.PointEntity;
 import cart.entity.PointHistoryEntity;
 import org.springframework.stereotype.Repository;
@@ -24,7 +25,7 @@ public class PointRepository {
         this.pointHistoryDao = pointHistoryDao;
     }
 
-    public List<Point> findUsablePointsByMemberId(Long memberId) {
+    public Points findUsablePointsByMemberId(Long memberId) {
         List<PointEntity> pointEntities = pointDao.findByMemberId(memberId);
         List<PointEntity> pointsNotExpired = getPointsNotExpired(pointEntities);
         List<PointHistoryEntity> pointHistoryEntities = getPointHistoryEntities(pointsNotExpired);
@@ -66,7 +67,7 @@ public class PointRepository {
         return usedPointById;
     }
 
-    private List<Point> generatePoints(List<PointEntity> pointsNotExpired, Map<Long, Integer> usedPointById) {
+    private Points generatePoints(List<PointEntity> pointsNotExpired, Map<Long, Integer> usedPointById) {
         List<Point> points = new ArrayList<>();
         for (PointEntity pointEntity : pointsNotExpired) {
             Long id = pointEntity.getId();
@@ -77,7 +78,7 @@ public class PointRepository {
 
             points.add(Point.of(id, value, comment, createAt, expiredAt));
         }
-        return points;
+        return new Points(points);
     }
 
     public void save(Long memberId, Long orderId, Point point) {

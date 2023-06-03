@@ -59,7 +59,7 @@ class PointRepositoryTest {
 
         jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 1, 5600, '주문 포인트 적립', '2023-07-02', '2023-10-31')");
         jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 2, 1300, '주문 포인트 적립', '2023-06-15', '2023-09-30')");
-        jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 3, 400, '주문 포인트 적립', '2023-02-15', '2023-05-15')");
+        jdbcTemplate.update("insert into point(member_id, orders_id, earned_point, comment, create_at, expired_at) values(1, 3, 400, '주문 포인트 적립', '2023-02-15', '2023-05-31')");
 
         jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(2, 1, 1000)");
         jdbcTemplate.update("insert into point_history(orders_id, point_id, used_point) values(3, 1, 2000)");
@@ -67,15 +67,15 @@ class PointRepositoryTest {
         member = new Member(1L, "kong@com", "1234");
     }
 
-    @DisplayName("한 유저에 대한 사용가능한 포인트 정보를 구할 수 있다.")
+    @DisplayName("한 유저에 대한 사용가능한 포인트 정보를 구할 수 있다. 이때 정렬된 값이 반환된다.")
     @Test
     void findUsablePointsByMemberId() {
-        List<Point> points = pointRepository.findUsablePointsByMemberId(1L);
+        Points points = pointRepository.findUsablePointsByMemberId(1L);
 
-        Point point1 = Point.of(1L, 2600, "주문 포인트 적립", LocalDate.of(2023, 07, 02), LocalDate.of(2023, 10, 31));
-        Point point2 = Point.of(2L, 1300, "주문 포인트 적립", LocalDate.of(2023, 06, 15), LocalDate.of(2023, 9, 30));
+        Point point1 = Point.of(1L, 2600, "주문 포인트 적립", LocalDate.of(2023, 7, 2), LocalDate.of(2023, 10, 31));
+        Point point2 = Point.of(2L, 1300, "주문 포인트 적립", LocalDate.of(2023, 6, 15), LocalDate.of(2023, 9, 30));
 
-        assertThat(points).containsExactly(point2, point1);
+        assertThat(points.getPoints()).containsExactly(point2, point1);
     }
 
     @DisplayName("한 주문에 대한 포인트를 저장할 수 있다.")

@@ -38,9 +38,9 @@ class OrderServiceTest {
         orderService = new OrderService(orderRepository, pointRepository, new OrderPage(10));
     }
 
-    @DisplayName("한 유저가 주문한 정보에 대해 한 페이지당 10개의 주문을 반환받을 수 있다.(10개 이내)")
+    @DisplayName("한 유저가 주문한 정보에 대해 한 페이지당 10개의 주문을 반환받을 수 있다.")
     @Test
-    void findOrders() {
+    void findOrders_1() {
         List<OrderItem> orderItems = List.of(new OrderItem(product1, 3, 30000),
                 new OrderItem(product2, 2, 40000));
         Points points = new Points(List.of(Point.of(10000, "구매 포인트", LocalDate.now())));
@@ -55,5 +55,6 @@ class OrderServiceTest {
                 () -> assertThat(orderPageResponse.getTotalPages()).isEqualTo(1),
                 () -> assertThat(orderPageResponse.getCurrentPage()).isEqualTo(1),
                 () -> assertThat(orderPageResponse.getContents().size()).isEqualTo(2)
-        );    }
+        );
+    }
 }
