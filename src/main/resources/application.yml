@@ -12,5 +12,5 @@ spring:
     active: ${profile}
   sql:
     init:
-      data-locations: classpath:schema.sql
+      data-locations: classpath:schema.sql, classpath:data.sql
       mode: always
