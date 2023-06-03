@@ -5,7 +5,7 @@ public class Member {
     private String email;
     private String password;
     private String grade;
-    private int totalPrice;
+    private int totalPurchaseAmount;
 
     public Member(Long id, String email, String password) {
         this.id = id;
@@ -13,12 +13,12 @@ public class Member {
         this.password = password;
     }
 
-    public Member(Long id, String email, String password, String grade, int totalPrice) {
+    public Member(Long id, String email, String password, String grade, int totalPurchaseAmount) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.grade = grade;
-        this.totalPrice = totalPrice;
+        this.totalPurchaseAmount = totalPurchaseAmount;
     }
 
     public Member(String email, String password, String grade) {
@@ -28,18 +28,18 @@ public class Member {
     }
 
     public void createOrder(int totalPrice){
-        this.totalPrice += totalPrice;
+        this.totalPurchaseAmount += totalPrice;
         setGrade();
     }
 
     public void setGrade() {
-        if (totalPrice == 0) {
+        if (totalPurchaseAmount == 0) {
             this.grade = "일반";
-        }else if(totalPrice <= 100_000){
+        }else if(totalPurchaseAmount <= 100_000){
             this.grade = "silver";
-        }else if(totalPrice <= 200_000){
+        }else if(totalPurchaseAmount <= 200_000){
             this.grade = "gold";
-        }else if(totalPrice <= 300_000){
+        }else if(totalPurchaseAmount <= 300_000){
             this.grade = "platinum";
         }else{
             this.grade = "diamond";
@@ -80,7 +80,7 @@ public class Member {
         return grade;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public int getTotalPurchaseAmount() {
+        return totalPurchaseAmount;
     }
 }
