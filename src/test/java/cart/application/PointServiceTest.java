@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import cart.application.event.PointEvent;
+import cart.application.event.PointAdditionEvent;
 import cart.dao.PointAdditionDao;
 import cart.dao.PointUsageDao;
 import cart.domain.PointAddition;
@@ -51,11 +51,11 @@ class PointServiceTest {
             // given
             int usePointAmount = 1000;
             int payAmount = 999;
-            PointEvent pointEvent = makeEvent(usePointAmount, payAmount);
+            PointAdditionEvent pointAdditionEvent = makeEvent(usePointAmount, payAmount);
 
             // when & then
             assertThatThrownBy(
-                () -> pointService.handlePointProcessInOrder(pointEvent))
+                () -> pointService.handlePointProcessInOrder(pointAdditionEvent))
                 .isInstanceOf(IllegalPointException.class)
                 .hasMessage("지불할 금액을 초과하는 포인트를 사용할 수 없습니다");
         }
@@ -65,7 +65,7 @@ class PointServiceTest {
             // given
             int usePointAmount = 1000;
             int payAmount = 20000;
-            PointEvent pointEvent = makeEvent(usePointAmount, payAmount);
+            PointAdditionEvent pointAdditionEvent = makeEvent(usePointAmount, payAmount);
             PointAddition plus500 = new PointAddition(1L, memberId, orderId, 500, now, now);
             PointAddition plus700 = new PointAddition(2L, memberId, orderId, 700, now.plusMinutes(1),
                 now.plusMinutes(1));
@@ -76,7 +76,7 @@ class PointServiceTest {
 
             // when & then
             assertThatThrownBy(() ->
-                pointService.handlePointProcessInOrder(pointEvent))
+                pointService.handlePointProcessInOrder(pointAdditionEvent))
                 .isInstanceOf(IllegalPointException.class)
                 .hasMessage("보유한 포인트 이상을 사용할 수 없습니다");
         }
@@ -86,7 +86,7 @@ class PointServiceTest {
             // given
             int usePointAmount = 1000;
             int payAmount = 20000;
-            PointEvent pointEvent = makeEvent(usePointAmount, payAmount);
+            PointAdditionEvent pointAdditionEvent = makeEvent(usePointAmount, payAmount);
             PointAddition plus500 = new PointAddition(1L, memberId, orderId, 500, now, now);
             PointAddition plus700 = new PointAddition(2L, memberId, orderId, 700, now.plusMinutes(1),
                 now.plusMinutes(1));
@@ -97,11 +97,11 @@ class PointServiceTest {
 
             // when & then
             assertDoesNotThrow(() ->
-                pointService.handlePointProcessInOrder(pointEvent));
+                pointService.handlePointProcessInOrder(pointAdditionEvent));
         }
     }
 
-    private PointEvent makeEvent(int usePointAmount, int payAmount) {
-        return new PointEvent(orderId, memberId, usePointAmount, payAmount, now);
+    private PointAdditionEvent makeEvent(int usePointAmount, int payAmount) {
+        return new PointAdditionEvent(orderId, memberId, usePointAmount, payAmount, now);
     }
 }

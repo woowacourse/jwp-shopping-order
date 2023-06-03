@@ -2,6 +2,8 @@ package cart.repository;
 
 import java.time.LocalDateTime;
 
+import cart.domain.Order;
+
 public class OrderEntity {
 
     private final Long id;
@@ -20,6 +22,11 @@ public class OrderEntity {
 
     public OrderEntity(Long memberId, LocalDateTime orderAt, int payAmount, String orderStatus) {
         this(null, memberId, orderAt, payAmount, orderStatus);
+    }
+
+    public static OrderEntity of(Order order) {
+        return new OrderEntity(order.getMember().getId(), order.getOrderAt(), order.getPayAmount(),
+            order.getOrderStatus().getDisplayName());
     }
 
     public Long getId() {

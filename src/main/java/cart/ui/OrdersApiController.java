@@ -19,6 +19,7 @@ import cart.application.dto.GetDetailedOrderResponse;
 import cart.application.dto.GetOrdersRequest;
 import cart.application.dto.GetOrdersResponse;
 import cart.application.dto.PostOrderRequest;
+import cart.application.event.CancelOrderService;
 import cart.domain.Member;
 
 @RestController
@@ -26,10 +27,13 @@ public class OrdersApiController {
 
     private final FindOrderService findOrderService;
     private final AddOrderService addOrderService;
+    private final CancelOrderService cancelOrderService;
 
-    public OrdersApiController(FindOrderService findOrderService, AddOrderService addOrderService) {
+    public OrdersApiController(FindOrderService findOrderService, AddOrderService addOrderService,
+        CancelOrderService cancelOrderService) {
         this.findOrderService = findOrderService;
         this.addOrderService = addOrderService;
+        this.cancelOrderService = cancelOrderService;
     }
 
     @GetMapping("/orders")
@@ -51,7 +55,7 @@ public class OrdersApiController {
 
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<Void> cancel(Member member, @PathVariable Long orderId) {
-        findOrderService.cancelOrder(member, orderId);
+        cancelOrderService.cancelOrder(member, orderId);
         return ResponseEntity.ok().build();
     }
 }

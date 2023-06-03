@@ -40,7 +40,6 @@ class ProductDaoTest {
 
         // when
         List<Product> foundProducts = productDao.findProductsByIds(productIds);
-        foundProducts.forEach(System.out::println);
 
         // then
         assertThat(foundProducts.size()).isEqualTo(givenProducts.size());

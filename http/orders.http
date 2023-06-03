@@ -21,3 +21,13 @@ Authorization: basic YUBhLmNvbToxMjM0
 GET http://localhost:8080/orders?page=1
 Content-Type: application/json
 Authorization: basic YUBhLmNvbToxMjM0
+
+### 주문 상세 정보 조회
+GET http://localhost:8080/orders/1
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0
+
+### 주문 취소
+DELETE http://localhost:8080/orders/1
+Content-Type: application/json
+Authorization: basic YUBhLmNvbToxMjM0

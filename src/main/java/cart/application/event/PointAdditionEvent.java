@@ -2,7 +2,7 @@ package cart.application.event;
 
 import java.time.LocalDateTime;
 
-public class PointEvent {
+public class PointAdditionEvent {
 
     private final long orderId;
     private final long memberId;
@@ -10,7 +10,7 @@ public class PointEvent {
     private final int payAmount;
     private final LocalDateTime now;
 
-    public PointEvent(long orderId, long memberId, int usePointAmount, int payAmount, LocalDateTime now) {
+    public PointAdditionEvent(long orderId, long memberId, int usePointAmount, int payAmount, LocalDateTime now) {
         this.orderId = orderId;
         this.memberId = memberId;
         this.usePointAmount = usePointAmount;

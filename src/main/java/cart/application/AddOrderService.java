@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cart.application.dto.PostOrderRequest;
 import cart.application.dto.SingleKindProductRequest;
 import cart.application.event.CartItemDeleteEvent;
-import cart.application.event.PointEvent;
+import cart.application.event.PointAdditionEvent;
 import cart.dao.ProductDao;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -48,7 +48,7 @@ public class AddOrderService {
         int payAmount = totalPrice - request.getUsedPoint();
         Long orderId = orderRepository.insert(new Order(member, now, payAmount, OrderStatus.PENDING, quantityAndProducts));
 
-        handlePoint(member, request, now, payAmount, orderId);
+        handlePointAddition(member, request, now, payAmount, orderId);
         handleCartItemDeletion(member, quantityAndProducts);
         return orderId;
     }
@@ -73,8 +73,8 @@ public class AddOrderService {
         }
     }
 
-    private void handlePoint(Member member, PostOrderRequest request, LocalDateTime now, int payAmount, Long orderId) {
-        publisher.publishEvent(new PointEvent(orderId, member.getId(), request.getUsedPoint(), payAmount, now));
+    private void handlePointAddition(Member member, PostOrderRequest request, LocalDateTime now, int payAmount, Long orderId) {
+        publisher.publishEvent(new PointAdditionEvent(orderId, member.getId(), request.getUsedPoint(), payAmount, now));
     }
 
     private void handleCartItemDeletion(Member member, List<QuantityAndProduct> quantityAndProducts) {

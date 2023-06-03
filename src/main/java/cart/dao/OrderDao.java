@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import cart.domain.Order;
 import cart.repository.OrderDto;
 import cart.repository.OrderEntity;
 
@@ -74,6 +73,9 @@ public class OrderDao {
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void update(Order order) {
+    public void update(OrderEntity order) {
+        String sql = "UPDATE orders SET member_id = ?, order_at = ?, pay_amount = ?, order_status = ? WHERE id = ?";
+        jdbcTemplate.update(sql, order.getMemberId(), order.getOrderAt(), order.getPayAmount(), order.getOrderStatus(),
+            order.getId());
     }
 }

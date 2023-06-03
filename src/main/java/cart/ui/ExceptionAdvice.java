@@ -11,6 +11,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import cart.exception.IllegalOrderException;
+import cart.exception.IllegalPointException;
+
 @RestControllerAdvice
 public class ExceptionAdvice {
 
@@ -23,6 +26,11 @@ public class ExceptionAdvice {
             .map(FieldError::getDefaultMessage)
             .collect(Collectors.joining("\n"));
         return ResponseEntity.badRequest().body(errorMessage);
+    }
+
+    @ExceptionHandler({IllegalOrderException.class, IllegalOrderException.IllegalMember.class, IllegalPointException.class})
+    public ResponseEntity<String> handleServiceExceptions(Exception exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler

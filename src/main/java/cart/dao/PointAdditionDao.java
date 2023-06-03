@@ -49,4 +49,9 @@ public class PointAdditionDao {
         );
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
+
+    public void deleteByOrderId(Long orderId) {
+        String sql = "DELETE FROM point_addition WHERE order_id = ?";
+        jdbcTemplate.update(sql, orderId);
+    }
 }

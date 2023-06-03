@@ -62,8 +62,7 @@ public class OrderRepository {
     }
 
     public Long insert(Order order) {
-        OrderEntity orderEntity = new OrderEntity(order.getMember().getId(), order.getOrderAt(), order.getPayAmount(),
-            order.getOrderStatus().getDisplayName());
+        OrderEntity orderEntity = OrderEntity.of(order);
         Long orderId = orderDao.insert(orderEntity);
         List<QuantityAndProduct> quantityAndProducts = order.getQuantityAndProducts();
         List<OrderProductEntity> orderProducts = quantityAndProducts.stream()
@@ -72,5 +71,9 @@ public class OrderRepository {
             .collect(toList());
         orderProductDao.insertAll(orderProducts);
         return orderId;
+    }
+
+    public void updateStatus(Order order) {
+        orderDao.update(OrderEntity.of(order));
     }
 }

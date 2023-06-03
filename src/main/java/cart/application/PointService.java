@@ -7,13 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import cart.application.event.PointEvent;
+import cart.application.event.PointAdditionEvent;
+import cart.application.event.PointRetrieveEvent;
 import cart.dao.PointAdditionDao;
 import cart.dao.PointUsageDao;
 import cart.domain.PointAddition;
 import cart.domain.PointCalculator;
 import cart.domain.PointUsage;
 import cart.domain.Points;
+import cart.exception.IllegalOrderException;
 import cart.exception.IllegalPointException;
 
 @Service
@@ -47,17 +49,15 @@ public class PointService {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void handlePointProcessInOrder(PointEvent event) {
-        long orderId = event.getOrderId();
+    public void handlePointProcessInOrder(PointAdditionEvent event) {
         long memberId = event.getMemberId();
         int usePointAmount = event.getUsePointAmount();
         int payAmount = event.getPayAmount();
-        LocalDateTime now = event.getNow();
         if (usePointAmount != 0) {
             validateNotUsingMorePointThanPrice(usePointAmount, payAmount);
             usePoint(memberId, usePointAmount);
         }
-        givePoint(orderId, memberId, payAmount, now);
+        givePoint(event.getOrderId(), memberId, payAmount, event.getNow());
     }
 
     private void validateNotUsingMorePointThanPrice(int usedPoint, int payAmount) {
@@ -85,6 +85,20 @@ public class PointService {
         int addition = pointCalculator.calculatePoint(payAmount);
         pointAdditionDao.insert(
             PointAddition.from(memberId, orderId, addition, now, now.plusDays(POINT_EXPIRATION_DATE)));
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void handlePointRetrieval(PointRetrieveEvent event) {
+        long orderId = event.getOrderId();
+        List<PointUsage> pointUsageHistory = pointUsageDao.findAllByOrderId(orderId);
+        validateAddedOrderNotUsedYet(pointUsageHistory);
+        pointAdditionDao.deleteByOrderId(orderId);
+    }
+
+    private void validateAddedOrderNotUsedYet(List<PointUsage> pointUsageHistory) {
+        if (pointUsageHistory.size() != 0) {
+            throw new IllegalOrderException("지급된 포인트가 이미 사용되어 취소가 불가능합니다");
+        }
     }
 }
 

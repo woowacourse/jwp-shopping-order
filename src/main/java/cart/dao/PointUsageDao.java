@@ -41,6 +41,11 @@ public class PointUsageDao {
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
+    public List<PointUsage> findAllByOrderId(Long orderId) {
+        String sql = "SELECT id, member_id, order_id, point_addition_id, amount FROM point_usage WHERE order_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, orderId);
+    }
+
     public Long insert(PointUsage pointUsage) {
         Map<String, Object> params = Map.of(
             "id", pointUsage.getId(),
