@@ -3,7 +3,7 @@
 - 상품 (admin)
 
   | 기능 | HTTP Method | URL | HTTP Status |
-                        | --- | --- | --- | --- |
+            | --- | --- | --- | --- |
   | 상품 목록 조회 | get | /products | 200 |
   | 상품 상세 정보 조회 | get | /products/{id} | 200 |
   | 상품 추가 | post | /products | 201 |
@@ -23,7 +23,7 @@
 - 장바구니
 
   | 기능 | HTTP Method | URL | HTTP Status |
-                        | --- | --- | --- | --- |
+      | --- | --- | --- | --- |
   | 장바구니 상품 목록 조회 | get | /cart-items | 200 |
   | 장바구니 상품 추가 | post | /cart-items | 201 |
   | 장바구니 상품 갯수 변경 | patch | /cart-items/{id} | 200 |
@@ -39,7 +39,7 @@
 - 주문
 
   | 기능 | HTTP Method | URL | HTTP Status |
-                                            | --- | --- | --- | --- |
+        | --- | --- | --- | --- |
   | 주문 목록 조회 | get | /orders | 200 |
   | 주문 상세 정보 조회 | get | /orders/{orderId} | 200 |
   | 주문하기 | post | /orders | 201 |
@@ -114,7 +114,7 @@
 - 쿠폰
 
   | 기능 | HTTP Method | URL | HTTP Status |
-                          | --- | --- | --- | --- |
+      | --- | --- | --- | --- |
   | 보유 쿠폰 목록 조회 | get | coupons | 200 |
 
 - RESPONSE (보유 쿠폰 목록 조회 `GET /coupons`)
