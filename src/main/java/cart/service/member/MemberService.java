@@ -26,8 +26,7 @@ public class MemberService {
     @Transactional
     public void createMember(final MemberCreateRequest request) {
         validateAlreadyExistMember(request);
-        Member member = new Member(request.getEmail(), request.getPassword());
-        long memberId = memberRepository.save(member);
+        long memberId = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
         cartRepository.createMemberCart(memberId);
     }
 

@@ -61,8 +61,6 @@ public class ProductService {
     @Transactional
     public long unapplySale(final Long productId) {
         Product product = productRepository.findProductById(productId);
-        product.unApplySale();
-
         productRepository.unapplySale(productId);
         return product.getId();
     }

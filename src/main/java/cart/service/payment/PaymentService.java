@@ -44,7 +44,6 @@ public class PaymentService {
     public PaymentUsingCouponsResponse applyCoupons(final Member member, final List<Long> request) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
         Coupons requestCoupons = couponRepository.findAllByCouponIds(request);
-
         member.validateHasCoupons(request);
 
         return PaymentUsingCouponsResponse.from(cart, requestCoupons.getCoupons());
