@@ -26,21 +26,23 @@
             <th>이름</th>
             <th>가격</th>
             <th>이미지</th>
+            <th>할인율</th>
             <th>Actions</th>
         </tr>
         <tbody id="product-list">
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td th:text="${product.name}"></td>
-                <td th:text="${product.price}"></td>
-                <td>
-                    <img th:attr="src=@{|${product.imageUrl}|}" style="max-width: 100px;">
-                </td>
-                <td>
-                    <button th:onclick="showEditModal([[${product}]])">수정</button>
-                    <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
-                </td>
-            </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td>
+                <img th:attr="src=@{|${product.imageUrl}|}" style="max-width: 100px;">
+            </td>
+            <td th:text="${product.discountRate + '%'}"></td>
+            <td>
+                <button th:onclick="showEditModal([[${product}]])">수정</button>
+                <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
+            </td>
+        </tr>
         </tbody>
     </table>
 
@@ -57,13 +59,19 @@
                 <label for="image-url">이미지 URL</label><br>
                 <input type="text" id="image-url" name="imageUrl" required><br>
 
+                <label for="is-discounted">할인상품</label>
+                <input type="checkbox" id="is-discounted" name="isDiscounted" value="true"><br>
+
+                <label for="discount-rate">할인율</label><br>
+                <input type="number" id="discount-rate" name="discountRate" required><br>
+
                 <button type="submit">Submit</button>
             </form>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/admin.js}"> </script>
+<script th:src="@{/js/admin.js}"></script>
 </body>
 </html>
 

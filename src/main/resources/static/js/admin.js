@@ -29,9 +29,17 @@ form.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
+
+    if (!formData.has('isDiscounted')) {
+        formData.append('isDiscounted', false);
+    }
+
     let product = {};
+
     for (const entry of formData.entries()) {
         const [key, value] = entry;
+        console.log("key : " + key);
+        console.log("value : " + value);
         product[key] = value;
     }
 
@@ -45,6 +53,7 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
+    console.log("axios : " + product.isDiscounted);
     axios.post('/products', product)
         .then((response) => {
             window.location.reload();
@@ -55,7 +64,7 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
     axios.put(`/products/${id}`, product)
         .then((response) => {
             window.location.reload();
