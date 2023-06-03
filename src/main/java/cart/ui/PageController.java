@@ -1,13 +1,14 @@
 package cart.ui;
 
-import cart.application.ProductService;
-import cart.dao.MemberDao;
+import cart.application.service.ProductService;
+import cart.persistence.dao.MemberDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
+
     private final ProductService productService;
     private final MemberDao memberDao;
 
@@ -18,13 +19,13 @@ public class PageController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.findAllProducts());
         return "admin";
     }
 
     @GetMapping("/settings")
     public String members(Model model) {
-        model.addAttribute("members", memberDao.getAllMembers());
+        model.addAttribute("members", memberDao.findAll());
         return "settings";
     }
 }
