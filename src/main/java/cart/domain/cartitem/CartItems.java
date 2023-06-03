@@ -1,7 +1,7 @@
 package cart.domain.cartitem;
 
 import cart.domain.Member;
-import cart.ui.order.CreateOrderItemDto;
+import cart.ui.order.dto.CreateOrderItemDto;
 
 import java.util.List;
 
