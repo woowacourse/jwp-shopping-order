@@ -21,7 +21,7 @@ public class PriceDiscount implements Discount {
 
     @Override
     public double getRate() {
-        if (price > MAX_DISCOUNT_MONEY) {
+        if (price >= MAX_DISCOUNT_MONEY) {
             return MAX_DISCOUNT_RATE;
         }
         return (price / DISCOUNT_UNIT + PLUS_VALUE_FOR_CALCULATE_DISCOUNT) * DISCOUNT_RATE_UNIT;
