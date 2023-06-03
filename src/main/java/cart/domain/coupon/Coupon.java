@@ -5,11 +5,17 @@ import cart.domain.coupon.policy.DiscountPolicy;
 
 public class Coupon {
 
+    private final Long id;
     private final CouponInfo couponInfo;
     private final int value;
     private final CouponType type;
 
     public Coupon(final CouponInfo couponInfo, final int value, final CouponType type) {
+        this(null, couponInfo, value, type);
+    }
+
+    public Coupon(final Long id, final CouponInfo couponInfo, final int value, final CouponType type) {
+        this.id = id;
         this.couponInfo = couponInfo;
         this.value = value;
         this.type = type;
@@ -24,7 +30,19 @@ public class Coupon {
         return discountPolicy.calculateDiscountPrice(value, cartItems);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public CouponInfo getCouponInfo() {
         return couponInfo;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public CouponType getType() {
+        return type;
     }
 }

@@ -31,12 +31,12 @@ public class CouponEntity {
     }
 
     public Coupon toDomain() {
-        CouponInfo couponInfo = new CouponInfo(id, name, minPrice, maxPrice);
+        CouponInfo couponInfo = new CouponInfo(name, minPrice, maxPrice);
         int value = discountAmount;
         if (type == CouponType.PERCENT) {
             value = discountPercentage.intValue();
         }
-        return new Coupon(couponInfo, value, type);
+        return new Coupon(id, couponInfo, value, type);
     }
 
     public Long getId() {

@@ -18,7 +18,7 @@ public class CouponFixture {
 
         public static final CouponEntity ENTITY = new CouponEntity(NAME, MIN_ORDER_PRICE,
                 MAX_DISCOUNT_PRICE, TYPE, DISCOUNT_AMOUNT, DISCOUNT_PERCENT);
-        public static final CouponInfo COUPON_INFO = new CouponInfo(1L, NAME, MIN_ORDER_PRICE, MAX_DISCOUNT_PRICE);
+        public static final CouponInfo COUPON_INFO = new CouponInfo(NAME, MIN_ORDER_PRICE, MAX_DISCOUNT_PRICE);
         public static final Coupon COUPON = new Coupon(COUPON_INFO, DISCOUNT_AMOUNT, TYPE);
     }
 }
