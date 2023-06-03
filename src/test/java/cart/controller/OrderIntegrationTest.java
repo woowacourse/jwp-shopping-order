@@ -1,5 +1,6 @@
 package cart.controller;
 
+import static fixture.MemberFixture.MEMBER_1;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -122,6 +123,18 @@ class OrderIntegrationTest extends IntegrationTest {
         assertThat(couponResponseDtos)
                 .hasSize(1)
                 .noneMatch(couponResponseDto -> couponResponseDto.getName().equals("정액 할인 쿠폰"));
+    }
+
+    @Test
+    @DisplayName("Coupon 으로 인한 할인 가격을 반환받는다.")
+    void getDiscountPrice() {
+        Integer totalPriceAfterDiscount = given().log().all()
+                .auth().preemptive().basic(MEMBER_1.getEmail(), MEMBER_1.getPassword())
+                .when().get("coupon/discount?origin-price=10000&member-coupon-id=1")
+                .then().statusCode(HttpStatus.OK.value()).extract().as(Integer.class);
+
+        assertThat(totalPriceAfterDiscount)
+                .isEqualTo(5000);
     }
 
     private boolean isSameCoupon(CouponResponseDto couponResponseDto) {
