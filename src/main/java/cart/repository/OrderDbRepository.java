@@ -22,7 +22,8 @@ public class OrderDbRepository implements OrderRepository {
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
 
-    public OrderDbRepository(final MemberDao memberDao, final OrderDao orderDao, final OrderItemDao orderItemDao) {
+    public OrderDbRepository(final MemberDao memberDao, final OrderDao orderDao,
+        final OrderItemDao orderItemDao) {
         this.memberDao = memberDao;
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
@@ -31,9 +32,9 @@ public class OrderDbRepository implements OrderRepository {
     @Override
     public Long create(final Order order) {
         final long orderId = this.orderDao.insert(OrderEntity.from(order));
-
         final List<OrderItem> orderItems = order.getOrderItems();
-        orderItems.forEach(orderItem -> this.orderItemDao.insert(OrderItemEntity.from(orderItem, orderId)));
+        orderItems.forEach(
+            orderItem -> this.orderItemDao.insert(OrderItemEntity.from(orderItem, orderId)));
 
         return orderId;
     }
@@ -43,14 +44,15 @@ public class OrderDbRepository implements OrderRepository {
         final List<OrderEntity> orderEntities = this.orderDao.findByMemberId(member.getId());
 
         return orderEntities.stream()
-                .map(orderEntity -> this.toOrder(member, orderEntity))
-                .collect(Collectors.toList());
+            .map(orderEntity -> this.toOrder(member, orderEntity))
+            .collect(Collectors.toList());
     }
 
     private Order toOrder(final Member member, final OrderEntity orderEntity) {
-        final List<OrderItem> orderItems = this.orderItemDao.findByOrderId(orderEntity.getId()).stream()
-                .map(OrderItemEntity::toOrderItem)
-                .collect(Collectors.toList());
+        final List<OrderItem> orderItems = this.orderItemDao.findByOrderId(orderEntity.getId())
+            .stream()
+            .map(OrderItemEntity::toOrderItem)
+            .collect(Collectors.toList());
 
         return orderEntity.toOrder(member, orderItems);
     }

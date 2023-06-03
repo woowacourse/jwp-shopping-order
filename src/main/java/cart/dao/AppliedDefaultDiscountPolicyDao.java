@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.DefaultDiscountPolicy;
 import cart.domain.DiscountPolicy;
 import cart.domain.Money;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -37,10 +38,10 @@ public class AppliedDefaultDiscountPolicyDao {
         return this.simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
-    public DiscountPolicy findByPaymentRecordId(final Long paymentRecordId) {
+    public List<DiscountPolicy> findByPaymentRecordId(final Long paymentRecordId) {
         final String sql = "SELECT B.id AS id, B.name AS name, B.threshold AS threshold, B.discount_rate AS discount_rate FROM applied_default_discount_policy AS A " +
                 "INNER JOIN default_discount_policy AS B ON A.default_discount_policy_id = B.id " +
                 "WHERE A.payment_record_id = ?";
-        return this.jdbcTemplate.queryForObject(sql, this.rowMapper, paymentRecordId);
+        return this.jdbcTemplate.query(sql, this.rowMapper, paymentRecordId);
     }
 }

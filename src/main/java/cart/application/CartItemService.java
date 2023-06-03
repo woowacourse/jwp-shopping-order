@@ -32,7 +32,6 @@ public class CartItemService {
     public Long add(Member member, CartItemRequest cartItemRequest) {
         Product product = productRepository.findById(cartItemRequest.getProductId())
                 .orElseThrow(() -> new ProductException.NotFound(cartItemRequest.getProductId()));
-
         return cartItemRepository.create(new CartItem(member, product));
     }
 
