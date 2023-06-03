@@ -18,7 +18,7 @@ class ShippingFeeTest {
         int totalOrderPrice = 30_000;
 
         // when
-        ShippingFee shippingFee = ShippingFee.fromtotalOrderPrice(totalOrderPrice);
+        ShippingFee shippingFee = ShippingFee.fromTotalOrderPrice(totalOrderPrice);
 
         // then
         assertThat(shippingFee.getValue()).isEqualTo(0);
@@ -30,7 +30,7 @@ class ShippingFeeTest {
         int totalOrderPrice = 29_000;
 
         // when
-        ShippingFee shippingFee = ShippingFee.fromtotalOrderPrice(totalOrderPrice);
+        ShippingFee shippingFee = ShippingFee.fromTotalOrderPrice(totalOrderPrice);
 
         // then
         assertThat(shippingFee.getValue()).isEqualTo(3000);

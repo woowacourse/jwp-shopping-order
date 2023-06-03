@@ -45,7 +45,7 @@ public class Order {
                 .collect(Collectors.toList());
 
         int totalOrderPrice = calculateTotalOrderPrice(cartItems, memberCoupon);
-        ShippingFee shippingFee = ShippingFee.fromtotalOrderPrice(totalOrderPrice);
+        ShippingFee shippingFee = ShippingFee.fromTotalOrderPrice(totalOrderPrice);
 
         return new Order(member, memberCoupon, orderItems, shippingFee, totalOrderPrice);
     }
@@ -58,8 +58,8 @@ public class Order {
         }
     }
 
-    private static int calculateTotalOrderPrice(final CartItems cartItems, final MemberCoupon coupon) {
-        int discountPrice = coupon.getDiscountPrice(cartItems);
+    private static int calculateTotalOrderPrice(final CartItems cartItems, final MemberCoupon memberCoupon) {
+        int discountPrice = memberCoupon.getDiscountPrice(cartItems);
         int totalProductPrice = cartItems.calculateTotalProductPrice();
         return totalProductPrice - discountPrice;
     }
