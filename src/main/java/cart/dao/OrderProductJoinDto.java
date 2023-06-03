@@ -6,6 +6,7 @@ public class OrderProductJoinDto {
     private final int discountedAmount;
     private final int deliveryAmount;
     private final int totalAmount;
+    private final Long member_id;
     private final String address;
     private final Long productId;
     private final String productName;
@@ -13,13 +14,14 @@ public class OrderProductJoinDto {
     private final String productImageUrl;
 
     public OrderProductJoinDto(final Long id, final int discountedAmount, final int deliveryAmount,
-        final int totalAmount,
-        final String address,
-        final Long productId, final String productName, final int productAmount, final String productImageUrl) {
+        final int totalAmount, final Long member_id,
+        final String address, final Long productId, final String productName, final int productAmount,
+        final String productImageUrl) {
         this.id = id;
         this.discountedAmount = discountedAmount;
         this.deliveryAmount = deliveryAmount;
         this.totalAmount = totalAmount;
+        this.member_id = member_id;
         this.address = address;
         this.productId = productId;
         this.productName = productName;
@@ -61,5 +63,9 @@ public class OrderProductJoinDto {
 
     public String getProductImageUrl() {
         return productImageUrl;
+    }
+
+    public Long getMember_id() {
+        return member_id;
     }
 }

@@ -21,6 +21,10 @@ public class OrderConverter {
         return Optional.empty();
     }
 
+    public static List<Order> convertToOrders(final List<OrderProductJoinDto> orderProductJoinDtos) {
+        return removeDuplicate(orderProductJoinDtos);
+    }
+
     private static List<Order> removeDuplicate(final List<OrderProductJoinDto> dtos) {
         final Map<Long, List<OrderProductJoinDto>> orderBoard = collectDtosByOrderId(dtos);
         final List<Order> lines = new ArrayList<>();
@@ -55,5 +59,4 @@ public class OrderConverter {
             Amount.of(dto.getDiscountedAmount()), Amount.of(dto.getDeliveryAmount()),
             dto.getAddress());
     }
-
 }

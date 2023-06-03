@@ -89,4 +89,37 @@ class OrderDaoTest {
             assertThat(products.getValue().get(index).getId()).isEqualTo(savedProducts.get(index).getId());
         }
     }
+
+    @Test
+    @DisplayName("회원으로 주문을 찾는다.")
+    void testFindByMember() {
+        //given
+        final Member savedMember = memberDao.addMember(member);
+        final Coupon savedCoupon = couponDao.save(coupon, savedMember.getId());
+        final Product product1 = new Product("product1", Amount.of(10_000), "imageUrl1");
+        final Product product2 = new Product("product2", Amount.of(20_000), "imageUrl2");
+        final Long product1Id = productDao.createProduct(product1);
+        final Long product2Id = productDao.createProduct(product2);
+        final Product savedProduct1 = new Product(product1Id, "product1", Amount.of(10_000), "imageUrl1");
+        final Product savedProduct2 = new Product(product2Id, "product2", Amount.of(20_000), "imageUrl2");
+        final List<Product> savedProducts = List.of(savedProduct1, savedProduct2);
+        final Order order = new Order(new Products(List.of(savedProduct1, savedProduct2)),
+            Amount.of(product1.getAmount().getValue() + product2.getAmount().getValue()), Amount.of(29_000),
+            Amount.of(3_000), "address");
+        final Order savedOrder = orderDao.save(order, savedMember.getId());
+
+        //when
+        final List<Order> orders = orderDao.findByMember(savedMember);
+
+        //then
+        final Order result = orders.get(0);
+        assertThat(result.getId()).isEqualTo(savedOrder.getId());
+        assertThat(result.getAddress()).isEqualTo(savedOrder.getAddress());
+        assertThat(result.getDeliveryAmount()).isEqualTo(savedOrder.getDeliveryAmount());
+        assertThat(result.getTotalAmount()).isEqualTo(savedOrder.getTotalAmount());
+        final Products products = result.getProducts();
+        for (int index = 0; index < 2; index++) {
+            assertThat(products.getValue().get(index).getId()).isEqualTo(savedProducts.get(index).getId());
+        }
+    }
 }

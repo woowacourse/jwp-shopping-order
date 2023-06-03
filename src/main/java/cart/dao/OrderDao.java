@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.Product;
 import cart.domain.Products;
@@ -23,6 +24,7 @@ public class OrderDao {
             rs.getInt("discounted_amount"),
             rs.getInt("delivery_amount"),
             rs.getInt("total_amount"),
+            rs.getLong("member_id"),
             rs.getString("address"),
             rs.getLong("product_id"),
             rs.getString("product_name"),
@@ -61,18 +63,42 @@ public class OrderDao {
     public Optional<Order> findById(final Long id) {
         final String sql =
             "SELECT o.id                as id, "
-                + "       o.discounted_amount as discounted_amount, "
+                + "       o.discounted_amount as discount_amount, "
                 + "       o.delivery_amount   as delivery_amount, "
                 + "       o.address           as address, "
                 + "       o.total_amount      as total_amount, "
+                + "       o.member_id         as memer_id,"
                 + "       p.id                as product_id, "
                 + "       p.name              as product_name, "
                 + "       p.price             as product_price, "
                 + "       p.image_url         as product_image_url "
                 + "FROM `order` as o "
                 + "         join product_order po on o.id = po.order_id "
-                + "         join product p on po.product_id = p.id";
-        final List<OrderProductJoinDto> orderProductJoinDtos = jdbcTemplate.query(sql, orderProductJoinDtoRowMapper);
+                + "         join product p on po.product_id = p.id "
+                + "WHERE id = ?;";
+        final List<OrderProductJoinDto> orderProductJoinDtos = jdbcTemplate.query(sql, orderProductJoinDtoRowMapper,
+            id);
         return OrderConverter.convertToOrder(orderProductJoinDtos);
+    }
+
+    public List<Order> findByMember(final Member member) {
+        final String sql =
+            "SELECT o.id                as id, "
+                + "       o.discounted_amount as discount_amount, "
+                + "       o.delivery_amount   as delivery_amount, "
+                + "       o.address           as address, "
+                + "       o.total_amount      as total_amount, "
+                + "       o.member_id         as memer_id, "
+                + "       p.id                as product_id, "
+                + "       p.name              as product_name, "
+                + "       p.price             as product_price, "
+                + "       p.image_url         as product_image_url "
+                + "FROM `order` as o "
+                + "         join product_order po on o.id = po.order_id "
+                + "         join product p on po.product_id = p.id "
+                + "WHERE member_id = ?";
+        final List<OrderProductJoinDto> orderProductJoinDtos = jdbcTemplate.query(sql, orderProductJoinDtoRowMapper,
+            member.getId());
+        return OrderConverter.convertToOrders(orderProductJoinDtos);
     }
 }
