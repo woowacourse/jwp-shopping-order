@@ -1,7 +1,6 @@
 package cart.domain.cart;
 
 import cart.domain.coupon.Coupon;
-import cart.domain.product.Product;
 import cart.dto.history.OrderedProductHistory;
 import cart.dto.product.ProductPriceAppliedAllDiscountResponse;
 
@@ -19,26 +18,6 @@ public class Cart {
         this.id = id;
         this.cartItems = cartItems;
         this.deliveryFee = DeliveryFee.createDefault();
-    }
-
-    public CartItem addItem(final Product product) {
-        return cartItems.add(product);
-    }
-
-    public void removeItem(final CartItem cartItem) {
-        cartItems.remove(cartItem);
-    }
-
-    public void changeQuantity(final long cartItemId, final int quantity) {
-        cartItems.changeQuantity(cartItemId, quantity);
-    }
-
-    public boolean hasCartItem(final CartItem cartItem) {
-        return cartItems.hasCartItem(cartItem);
-    }
-
-    public int calculateOriginPrice() {
-        return cartItems.getTotalOriginPrice();
     }
 
     public int calculateDeliveryFeeUsingCoupons(final List<Coupon> usingCoupons) {
