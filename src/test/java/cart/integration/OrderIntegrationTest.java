@@ -1,7 +1,9 @@
 package cart.integration;
 
 import static cart.fixture.DomainFixture.CHICKEN;
+import static cart.fixture.DomainFixture.MEMBER_A;
 import static cart.fixture.DomainFixture.MEMBER_B;
+import static cart.fixture.DomainFixture.PIZZA;
 import static cart.fixture.DomainFixture.SALAD;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-public class OrderIntegrationTest extends IntegrationTest {
+class OrderIntegrationTest extends IntegrationTest {
 
     @Autowired
     MemberRepository memberRepository;
@@ -39,19 +41,23 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Autowired
     ProductRepository productRepository;
 
+    Member memberA;
     Member memberB;
 
     Product chicken;
     Product salad;
+    Product pizza;
 
     @BeforeEach
     void setUp() {
         super.setUp();
 
+        memberA = memberRepository.findByEmail(MEMBER_A.getEmail()).get();
         memberB = memberRepository.findByEmail(MEMBER_B.getEmail()).get();
 
         chicken = productRepository.findById(CHICKEN.getId()).get();
         salad = productRepository.findById(SALAD.getId()).get();
+        pizza = productRepository.findById(PIZZA.getId()).get();
     }
 
     @Test
@@ -86,12 +92,11 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("주문할 때 최대 사용 가능 포인트 이상으로 사용 포인트를 전달하면 실패한다.")
     void orderWithGreaterThanConditionPoints() {
-        Long chickenCartItemId = requestAddCartItem(memberB, new CartItemRequest(chicken.getId()));
-        Long saladCartItemId = requestAddCartItem(memberB, new CartItemRequest(salad.getId()));
+        Long pizzaCartItemId = requestAddCartItem(memberA, new CartItemRequest(pizza.getId()));
 
-        OrderRequest orderRequest = new OrderRequest(3_001, List.of(chickenCartItemId, saladCartItemId));
+        OrderRequest orderRequest = new OrderRequest(1_301, List.of(pizzaCartItemId));
 
-        ExtractableResponse<Response> response = requestAddOrder(memberB, orderRequest);
+        ExtractableResponse<Response> response = requestAddOrder(memberA, orderRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }

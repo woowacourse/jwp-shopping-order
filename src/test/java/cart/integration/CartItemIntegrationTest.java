@@ -140,7 +140,7 @@ class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isTrue();
+        assertThat(selectedCartItemResponse).isPresent();
         assertThat(selectedCartItemResponse.get().getQuantity()).isEqualTo(10);
     }
 
@@ -173,7 +173,7 @@ class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        assertThat(selectedCartItemResponse).isEmpty();
     }
 
     @DisplayName("다른 사용자가 담은 장바구니 아이템의 수량을 변경하려 하면 실패한다.")
@@ -203,7 +203,7 @@ class CartItemIntegrationTest extends IntegrationTest {
                 .filter(cartItemResponse -> cartItemResponse.getId().equals(cartItemId))
                 .findFirst();
 
-        assertThat(selectedCartItemResponse.isPresent()).isFalse();
+        assertThat(selectedCartItemResponse).isEmpty();
     }
 
     private ExtractableResponse<Response> requestDeleteCartItem(final Long cartItemId) {
@@ -220,24 +220,26 @@ class CartItemIntegrationTest extends IntegrationTest {
     @DisplayName("주문할 장바구니 상품을 선택한다.")
     @Test
     void checkoutCartItems() {
-        CartItemRequest firstCartItemRequest = new CartItemRequest(productId);
-        requestAddCartItem(member, firstCartItemRequest);
-        CartItemRequest secondCartItemRequest = new CartItemRequest(productId2);
-        requestAddCartItem(member, secondCartItemRequest);
+        Long firstCartItemId = requestAddCartItemAndGetId(member, productId);
+        Long secondCartItemId = requestAddCartItemAndGetId(member, productId2);
 
-        ExtractableResponse<Response> response = requestCheckoutCartItems();
+        ExtractableResponse<Response> response = requestCheckoutCartItems(firstCartItemId, secondCartItemId);
 
         assertAll(
-                () -> assertThat(response.body().jsonPath().getLong("cartItems[0].id")).isEqualTo(productId),
-                () -> assertThat(response.body().jsonPath().getLong("cartItems[1].id")).isEqualTo(productId2)
+                () -> assertThat(response.body().jsonPath().getLong("cartItems[0].id")).isEqualTo(firstCartItemId),
+                () -> assertThat(response.body().jsonPath().getLong("cartItems[1].id")).isEqualTo(secondCartItemId)
         );
     }
 
-    private ExtractableResponse<Response> requestCheckoutCartItems() {
+    private ExtractableResponse<Response> requestCheckoutCartItems(Long... cartItemId) {
+        final String cartItemIds = Arrays.stream(cartItemId)
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .queryParam("ids", productId + "," + productId2)
+                .queryParam("ids", cartItemIds)
                 .when()
                 .get("/cart-items/checkout")
                 .then()
