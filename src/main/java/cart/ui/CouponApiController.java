@@ -43,6 +43,6 @@ public class CouponApiController {
 
     @GetMapping
     public ResponseEntity<FindCouponsResponse> findAllCoupons() {
-        return ResponseEntity.ok(couponService.findAll());
+        return ResponseEntity.ok(couponService.findAllCoupons());
     }
 }

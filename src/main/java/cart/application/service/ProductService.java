@@ -23,13 +23,13 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getAllProducts() {
+    public List<ProductResponse> findAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProductById(final Long productId) {
+    public ProductResponse findProductById(final Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoExistException(PRODUCT_NO_EXIST));
         return ProductResponse.of(product);

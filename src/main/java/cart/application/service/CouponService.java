@@ -23,7 +23,7 @@ public class CouponService {
         return couponRepository.create(coupon);
     }
 
-    public FindCouponsResponse findAll() {
+    public FindCouponsResponse findAllCoupons() {
         List<Coupon> coupons = couponRepository.findAll();
         return FindCouponsResponse.from(coupons);
     }
