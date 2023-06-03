@@ -8,13 +8,16 @@ import java.time.LocalDateTime;
 
 public class FindOrderCouponResponse {
 
-    private final long id;
-    private final String name;
-    private final int minOrderPrice;
-    private final int maxDiscountPrice;
-    private final boolean isAvailable;
-    private final Integer discountPrice;
-    private final LocalDateTime expiredAt;
+    private long id;
+    private String name;
+    private int minOrderPrice;
+    private int maxDiscountPrice;
+    private boolean isAvailable;
+    private Integer discountPrice;
+    private LocalDateTime expiredAt;
+
+    private FindOrderCouponResponse() {
+    }
 
     public FindOrderCouponResponse(final long id, final String name, final int minOrderPrice,
             final int maxDiscountPrice, final boolean isAvailable,
@@ -58,7 +61,7 @@ public class FindOrderCouponResponse {
         return maxDiscountPrice;
     }
 
-    public boolean isAvailable() {
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 

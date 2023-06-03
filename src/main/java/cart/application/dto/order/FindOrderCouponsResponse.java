@@ -7,7 +7,10 @@ import java.util.stream.Collectors;
 
 public class FindOrderCouponsResponse {
 
-    private final List<FindOrderCouponResponse> coupons;
+    private List<FindOrderCouponResponse> coupons;
+
+    private FindOrderCouponsResponse() {
+    }
 
     public FindOrderCouponsResponse(final List<FindOrderCouponResponse> coupons) {
         this.coupons = coupons;
