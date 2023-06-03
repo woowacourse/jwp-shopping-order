@@ -28,7 +28,7 @@ public class Member {
 
     public void usePoint(Point usePoint) {
         if (point.isSmallerThan(usePoint)) {
-            throw new HavingPointIsLessThanUsePointException();
+            throw new HavingPointIsLessThanUsePointException(this.point.getValue(), usePoint.getValue());
         }
         this.point = this.point.subtract(usePoint);
     }
