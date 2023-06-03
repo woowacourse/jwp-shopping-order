@@ -13,7 +13,8 @@ public class ProductMapper {
                 productEntity.getId(),
                 productEntity.getName(),
                 productEntity.getPrice(),
-                productEntity.getImageUrl()
+                productEntity.getImageUrl(),
+                productEntity.getIsDeleted()
         );
     }
 
@@ -28,7 +29,8 @@ public class ProductMapper {
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
-                product.getImageUrl()
+                product.getImageUrl(),
+                product.getIsDeleted()
         );
     }
 }

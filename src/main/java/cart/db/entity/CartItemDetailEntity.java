@@ -10,6 +10,7 @@ public class CartItemDetailEntity {
     private final String productName;
     private final Integer productPrice;
     private final String productImageUrl;
+    private final boolean productIsDeleted;
     private final Integer quantity;
 
     public CartItemDetailEntity(
@@ -21,6 +22,7 @@ public class CartItemDetailEntity {
             final String productName,
             final Integer productPrice,
             final String productImageUrl,
+            final boolean productIsDeleted,
             final Integer quantity
     ) {
         this.id = id;
@@ -31,6 +33,7 @@ public class CartItemDetailEntity {
         this.productName = productName;
         this.productPrice = productPrice;
         this.productImageUrl = productImageUrl;
+        this.productIsDeleted = productIsDeleted;
         this.quantity = quantity;
     }
 
@@ -64,6 +67,10 @@ public class CartItemDetailEntity {
 
     public String getProductImageUrl() {
         return productImageUrl;
+    }
+
+    public boolean getProductIsDeleted() {
+        return productIsDeleted;
     }
 
     public Integer getQuantity() {

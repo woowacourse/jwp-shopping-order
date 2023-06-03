@@ -37,22 +37,22 @@ public class CartItemDao {
     public List<CartItemDetailEntity> findByMemberId(final Long memberId) {
         String sql = "SELECT cart_item.id, cart_item.quantity, " +
                 "member.id, member.name, member.password, " +
-                "product.id, product.name, product.price, product.image_url " +
+                "product.id, product.name, product.price, product.image_url, product.is_deleted " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.member_id = ?";
+                "WHERE cart_item.member_id = ? AND product.is_deleted = false";
         return jdbcTemplate.query(sql, new CartItemDetailEntityRowMapper(), memberId);
     }
 
     public List<CartItemDetailEntity> findById(final Long id) {
         String sql = "SELECT cart_item.id, cart_item.quantity, " +
                 "member.id, member.name, member.password, " +
-                "product.id, product.name, product.price, product.image_url " +
+                "product.id, product.name, product.price, product.image_url, product.is_deleted " +
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id = ?";
+                "WHERE cart_item.id = ? AND product.is_deleted = false";
         return jdbcTemplate.query(sql, new CartItemDetailEntityRowMapper(), id);
     }
 
@@ -61,7 +61,7 @@ public class CartItemDao {
                 "FROM cart_item " +
                 "INNER JOIN member ON cart_item.member_id = member.id " +
                 "INNER JOIN product ON cart_item.product_id = product.id " +
-                "WHERE cart_item.id IN (:ids) AND member.id = (:memberId)";
+                "WHERE cart_item.id IN (:ids) AND member.id = (:memberId) AND product.is_deleted = false";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("ids", ids);
         mapSqlParameterSource.addValue("memberId", memberId);
@@ -80,7 +80,8 @@ public class CartItemDao {
 
     public void deleteByIdsAndMemberId(final Long memberId, final List<Long> ids) {
         String sql = "DELETE FROM cart_item WHERE cart_item.id IN "
-                + " (SELECT cart_item.id FROM cart_item JOIN member ON cart_item.member_id = member.id and cart_item.id in (:ids) AND member.id = (:memberId))";
+                + " (SELECT cart_item.id FROM cart_item " +
+                "JOIN member ON cart_item.member_id = member.id and cart_item.id in (:ids) AND member.id = (:memberId) AND product.is_deleted = false)";
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("ids", ids);
@@ -95,7 +96,7 @@ public class CartItemDao {
             return new CartItemDetailEntity(
                     rs.getLong("cart_item.id"),
                     rs.getLong("member.id"), rs.getString("member.name"), rs.getString("member.password"),
-                    rs.getLong("product.id"), rs.getString("product.name"), rs.getInt("product.price"), rs.getString("product.image_url"),
+                    rs.getLong("product.id"), rs.getString("product.name"), rs.getInt("product.price"), rs.getString("product.image_url"), rs.getBoolean("product.is_deleted"),
                     rs.getInt("cart_item.quantity")
             );
         }

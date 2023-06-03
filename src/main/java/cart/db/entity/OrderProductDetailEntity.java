@@ -7,6 +7,7 @@ public class OrderProductDetailEntity {
     private final Long productId;
     private final String productName;
     private final int productPrice;
+    private final boolean productIsDeleted;
     private final String productImageUrl;
     private final int quantity;
 
@@ -16,7 +17,7 @@ public class OrderProductDetailEntity {
             final Long productId,
             final String productName,
             final int productPrice,
-            final String productImageUrl,
+            final boolean productIsDeleted, final String productImageUrl,
             final int quantity
     ) {
         this.id = id;
@@ -24,6 +25,7 @@ public class OrderProductDetailEntity {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
+        this.productIsDeleted = productIsDeleted;
         this.productImageUrl = productImageUrl;
         this.quantity = quantity;
     }
@@ -50,6 +52,10 @@ public class OrderProductDetailEntity {
 
     public String getProductImageUrl() {
         return productImageUrl;
+    }
+
+    public boolean getProductIsDeleted() {
+        return productIsDeleted;
     }
 
     public int getQuantity() {

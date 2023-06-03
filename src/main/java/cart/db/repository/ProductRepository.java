@@ -44,6 +44,6 @@ public class ProductRepository {
     }
 
     public void deleteById(final Long id) {
-        productDao.delete(id);
+        productDao.updateToDelete(id);
     }
 }

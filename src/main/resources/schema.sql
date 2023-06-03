@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS product
 (
-    id        INT UNSIGNED AUTO_INCREMENT,
-    name      VARCHAR(20)  NOT NULL,
-    price     INT          NOT NULL,
-    image_url VARCHAR(512) NOT NULL,
+    id         INT UNSIGNED AUTO_INCREMENT,
+    name       VARCHAR(20)  NOT NULL,
+    price      INT          NOT NULL,
+    image_url  VARCHAR(512) NOT NULL,
+    is_deleted TINYINT(1)   NOT NULL DEFAULT (0),
     PRIMARY KEY (id)
 );
 

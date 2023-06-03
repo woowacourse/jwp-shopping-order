@@ -25,7 +25,7 @@ public class OrderMapper {
         List<Item> items = orderProducts.stream().map(entity ->
                 new Item(
                         entity.getId(),
-                        new Product(entity.getProductId(), entity.getProductName(), entity.getProductPrice(), entity.getProductImageUrl()),
+                        new Product(entity.getProductId(), entity.getProductName(), entity.getProductPrice(), entity.getProductImageUrl(), entity.getProductIsDeleted()),
                         entity.getQuantity()
                 )
         ).collect(Collectors.toList());
@@ -46,7 +46,7 @@ public class OrderMapper {
                         Collectors.mapping(
                                 entity -> new Item(
                                         entity.getId(),
-                                        new Product(entity.getProductId(), entity.getProductName(), entity.getProductPrice(), entity.getProductImageUrl()),
+                                        new Product(entity.getProductId(), entity.getProductName(), entity.getProductPrice(), entity.getProductImageUrl(), entity.getProductIsDeleted()),
                                         entity.getQuantity()
                                 ),
                                 Collectors.toList()

@@ -5,17 +5,19 @@ public class Product {
     private final String name;
     private final int price;
     private final String imageUrl;
+    private final boolean isDeleted;
 
     public Product(String name, int price, String imageUrl) {
-        this(null, name, price, imageUrl);
+        this(null, name, price, imageUrl, false);
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(Long id, String name, int price, String imageUrl, boolean isDeleted) {
         validate(name, price);
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.isDeleted = isDeleted;
     }
 
     private void validate(final String name, final int price) {
@@ -49,5 +51,9 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted;
     }
 }

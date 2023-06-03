@@ -19,7 +19,8 @@ public class CartItemMapper {
                         cartItemDetailEntity.getProductId(),
                         cartItemDetailEntity.getProductName(),
                         cartItemDetailEntity.getProductPrice(),
-                        cartItemDetailEntity.getProductImageUrl()
+                        cartItemDetailEntity.getProductImageUrl(),
+                        cartItemDetailEntity.getProductIsDeleted()
                 ),
                 new Member(
                         cartItemDetailEntity.getMemberId(),
@@ -43,24 +44,4 @@ public class CartItemMapper {
                 cartItem.getItem().getQuantity()
         );
     }
-
-//    public static CartItemDetailEntity toEntity(final CartItem cartItem) {
-//        return new CartItemDetailEntity(
-//                cartItem.getId(),
-//                cartItem.getMember().getId(),
-//                car
-//                new Product(
-//                        cartItem.getProductId(),
-//                        cartItem.getProductName(),
-//                        cartItem.getProductPrice(),
-//                        cartItem.getProductImageUrl()
-//                ),
-//                new Member(
-//                        cartItem.getMemberId(),
-//                        cartItem.getMemberName(),
-//                        cartItem.getMemberPassword()
-//                )
-//        );
-//    }
-
 }

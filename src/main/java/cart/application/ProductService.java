@@ -41,7 +41,6 @@ public class ProductService {
     }
 
     public void deleteProduct(Long productId) {
-        // TODO: isDeleted 필드 추가 + 외래키 확인
         productRepository.deleteById(productId);
     }
 }
