@@ -4,11 +4,13 @@ import cart.application.service.member.dto.MemberResultDto;
 
 public class MemberResponse {
 
-    private final Long id;
-    private final String name;
-    private final String email;
-    private final String password;
+    private Long id;
+    private String name;
+    private String email;
+    private String password;
 
+    public MemberResponse() {
+    }
 
     private MemberResponse(final Long id, final String name, final String email, final String password) {
         this.id = id;
