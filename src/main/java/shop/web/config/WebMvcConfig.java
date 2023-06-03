@@ -25,8 +25,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthInterceptor(authService))
-                .addPathPatterns("/**")
-                .excludePathPatterns("/users/login", "/users/join", "/admin", "/settings", "/products/**");
+                .addPathPatterns("/cart-items/**", "/users/**", "/orders/**")
+                .excludePathPatterns("/users/login", "/users/join");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("https://monumental-kleicha-ad648a.netlify.app/",
-                        "http://localhost:9000", "http://localhost:3000", "http://localhost:8080",
+                        "http://localhost:9000", "http://localhost:8080",
                         "https://jourzura2.kro.kr")
                 .allowedMethods("*");
     }
