@@ -1,13 +1,11 @@
 package cart.dao.entity;
 
-import cart.domain.CartItem;
-
 public class CartItemEntity {
 
     private Long id;
-    private long memberId;
-    private long productId;
-    private int quantity;
+    private final long memberId;
+    private final long productId;
+    private final int quantity;
 
     public CartItemEntity(long memberId, long productId, int quantity) {
         this(null, memberId, productId, quantity);
@@ -18,14 +16,6 @@ public class CartItemEntity {
         this.memberId = memberId;
         this.productId = productId;
         this.quantity = quantity;
-    }
-
-    public static CartItemEntity fromDomain(CartItem cartItem) {
-        return new CartItemEntity(
-            cartItem.getId(),
-            cartItem.getMember().getId(),
-            cartItem.getProduct().getId(),
-            cartItem.getQuantityCount());
     }
 
     public Long getId() {

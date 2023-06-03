@@ -7,6 +7,7 @@ import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.exception.CartItemNotFoundException;
+import cart.repository.mapper.CartItemMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -21,7 +22,7 @@ public class CartItemRepository {
     }
 
     public long save(CartItem cartItem) {
-        CartItemEntity cartItemEntity = CartItemEntity.fromDomain(cartItem);
+        CartItemEntity cartItemEntity = CartItemMapper.toCartItemEntity(cartItem);
         return cartItemDao.save(cartItemEntity);
     }
 
@@ -29,13 +30,13 @@ public class CartItemRepository {
         CartItemProductDto foundCartItem = cartItemDao.findById(cartItemId)
             .orElseThrow(CartItemNotFoundException::new);
 
-        return foundCartItem.toDomain();
+        return CartItemMapper.toCartItem(foundCartItem);
     }
 
     public Cart findByMember(Member member) {
         return new Cart(cartItemDao.findByMemberId(member.getId())
             .stream()
-            .map(CartItemProductDto::toDomain)
+            .map(CartItemMapper::toCartItem)
             .collect(Collectors.toList()));
     }
 
@@ -46,7 +47,7 @@ public class CartItemRepository {
 
     public void updateQuantity(CartItem cartItem) {
         validateCartItemExistence(cartItem.getId());
-        cartItemDao.updateQuantity(CartItemEntity.fromDomain(cartItem));
+        cartItemDao.updateQuantity(CartItemMapper.toCartItemEntity(cartItem));
     }
 
     private void validateCartItemExistence(long cartItemId) {
@@ -58,7 +59,7 @@ public class CartItemRepository {
     public Cart findAllByIds(List<Long> ids) {
         List<CartItem> cartItems = cartItemDao.findAllByIds(ids)
             .stream()
-            .map(CartItemProductDto::toDomain)
+            .map(CartItemMapper::toCartItem)
             .collect(Collectors.toList());
         validateAllCartItemsFound(ids, cartItems);
         return new Cart(cartItems);

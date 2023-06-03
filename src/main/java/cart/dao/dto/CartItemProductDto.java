@@ -1,11 +1,5 @@
 package cart.dao.dto;
 
-import cart.domain.CartItem;
-import cart.domain.Member;
-import cart.domain.Money;
-import cart.domain.Product;
-import cart.domain.Quantity;
-
 public class CartItemProductDto {
 
     private final long cartItemId;
@@ -29,12 +23,35 @@ public class CartItemProductDto {
         this.productImageUrl = productImageUrl;
     }
 
-    public CartItem toDomain() {
-        return new CartItem(
-            cartItemId,
-            Quantity.from(quantity),
-            new Product(productId, productName, Money.from(price), productImageUrl),
-            new Member(memberId, email, null)
-        );
+    public long getCartItemId() {
+        return cartItemId;
+    }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public long getMemberId() {
+        return memberId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getProductImageUrl() {
+        return productImageUrl;
     }
 }
