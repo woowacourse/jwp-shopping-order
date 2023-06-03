@@ -21,10 +21,10 @@ public class OrderDao {
             (rs, rowNum) -> new OrderEntity(
                     rs.getLong("id"),
                     rs.getLong("member_id"),
-                    rs.getLong("total_product_price"),
+                    rs.getLong("total_price"),
                     rs.getLong("discounted_total_price"),
                     rs.getInt("delivery_price"),
-                    rs.getTimestamp("expired_at").toLocalDateTime()
+                    rs.getTimestamp("order_at").toLocalDateTime()
             );
 
     public OrderDao(JdbcTemplate jdbcTemplate) {

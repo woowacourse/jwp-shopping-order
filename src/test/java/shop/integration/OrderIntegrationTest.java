@@ -14,6 +14,8 @@ import shop.web.controller.order.dto.request.OrderItemRequest;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class OrderIntegrationTest extends IntegrationTest {
     private static final String name = "test1234";
     private static final String password = "test";
@@ -70,6 +72,97 @@ public class OrderIntegrationTest extends IntegrationTest {
 
     }
 
+    @DisplayName("사용한 쿠폰을 재사용할 수 없다")
+    @Test
+    void createOrderWithUsedCouponTest() {
+        //given
+        join();
+        String token = login();
+
+        List<OrderItemRequest> orderItemRequests = List.of(
+                new OrderItemRequest(1L, 5),
+                new OrderItemRequest(2L, 5)
+        );
+
+        OrderCreationRequest request = new OrderCreationRequest(orderItemRequests, 1L);
+
+        //when
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .body(request)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/orders/" + 1L);
+
+        //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .body(request)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("모든 주문 내역을 조회할 수 있다")
+    @Test
+    void getAllOrderHistoryTest() {
+        //given
+        join();
+        String token = login();
+
+        List<OrderItemRequest> orderItemRequests1 = List.of(
+                new OrderItemRequest(1L, 2),
+                new OrderItemRequest(2L, 3)
+        );
+
+        List<OrderItemRequest> orderItemRequests2 = List.of(
+                new OrderItemRequest(1L, 4),
+                new OrderItemRequest(3L, 5)
+        );
+
+        OrderCreationRequest request1 = new OrderCreationRequest(orderItemRequests1, null);
+        OrderCreationRequest request2 = new OrderCreationRequest(orderItemRequests2, null);
+
+        //when
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .body(request1)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/orders/" + 1L);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .body(request2)
+                .when().post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/orders/" + 2L);
+
+        //then
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "basic " + token)
+                .when().get("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        List<Long> orderIds = response.jsonPath().getList("orderId", Long.class);
+        List<Long> productIds = response.jsonPath().getList("items.product.id.flatten()", Long.class);
+        List<Integer> productQuantities = response.jsonPath().getList("items.quantity.flatten()", Integer.class);
+
+        assertThat(orderIds).containsExactlyInAnyOrder(1L, 2L);
+        assertThat(productIds).containsExactlyInAnyOrder(1L, 2L, 1L, 3L);
+        assertThat(productQuantities).containsExactlyInAnyOrder(2, 3, 4, 5);
+    }
+
 
     private void join() {
         RestAssured.given().log().all()
@@ -82,20 +175,6 @@ public class OrderIntegrationTest extends IntegrationTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    //    @DisplayName("주문 기록을 조회할 수 있다")
-//    @Test
-//    void getAllOrderHistoryTest() {
-//
-//        //given
-//        join();
-//        String token = login();
-//
-//        //when
-//
-//
-//        //then
-//
-//    }
     private String login() {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
