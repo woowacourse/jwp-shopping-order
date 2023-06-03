@@ -83,6 +83,13 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
+    @Override
+    public void deleteByMemberId(Long memberId) {
+        String sql = "DELETE FROM cart_item WHERE member_id = :member_id";
+        SqlParameterSource namedParameters = new MapSqlParameterSource("member_id", memberId);
+        namedParameterJdbcTemplate.update(sql, namedParameters);
+    }
+
     private CartItem makeCartItem(ResultSet rs, Member member, Product product) throws SQLException {
         Long cartItemId = rs.getLong("cart_item.id");
         int quantity = rs.getInt("cart_item.quantity");

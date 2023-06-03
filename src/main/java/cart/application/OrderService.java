@@ -40,11 +40,16 @@ public class OrderService {
     public long issue(Member member, OrderRequest request) {
         Order order = new Order(null, member, makeOrderInfoFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
+        adjustMemberPoint(member, request);
+        Order inserted = orderRepository.insert(order);
+        cartItemRepository.deleteById(member.getId());
+        return inserted.getId();
+    }
+
+    private void adjustMemberPoint(Member member, OrderRequest request) {
         validateExceedingAvailablePoint(request.getUsedPoint(), makeCartItemsFromRequest(request));
         useMemberPoint(member, request.getUsedPoint());
         addMemberPoint(member, request.getPointToAdd());
-        Order inserted = orderRepository.insert(order);
-        return inserted.getId();
     }
 
     private List<OrderInfo> makeOrderInfoFromRequest(Member member, OrderRequest request) {

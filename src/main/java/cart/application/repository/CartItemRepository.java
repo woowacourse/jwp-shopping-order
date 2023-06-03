@@ -18,4 +18,6 @@ public interface CartItemRepository {
     void update(CartItem cartItem);
 
     void deleteById(Long id);
+
+    void deleteByMemberId(Long memberId);
 }
