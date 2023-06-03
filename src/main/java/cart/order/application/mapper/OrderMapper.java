@@ -17,7 +17,11 @@ public class OrderMapper {
       final Member member,
       final RegisterOrderRequest registerOrderRequest
   ) {
-    return new OrderEntity(member.getId(), registerOrderRequest.getDeliveryFee());
+    return new OrderEntity(
+        member.getId(),
+        registerOrderRequest.getDeliveryFee(),
+        registerOrderRequest.getCouponId()
+    );
   }
 
   public static Order mapToOrder(

@@ -33,9 +33,14 @@ class OrderApiControllerTest extends IntegrationTestHelper {
     final List<Long> cartItemIdList = List.of(1L, 2L);
     final BigDecimal totalPrice = BigDecimal.valueOf(380400);
     final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
+    final long couponId = 1L;
 
-    final RegisterOrderRequest registerOrderRequest = new RegisterOrderRequest(cartItemIdList,
-        totalPrice, deliveryFee);
+    final RegisterOrderRequest registerOrderRequest = new RegisterOrderRequest(
+        cartItemIdList,
+        totalPrice,
+        deliveryFee,
+        couponId
+    );
 
     //when
     final String location = given().log().all()

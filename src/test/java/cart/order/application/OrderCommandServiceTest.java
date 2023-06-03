@@ -37,12 +37,14 @@ class OrderCommandServiceTest {
     final List<Long> cartItemIds = List.of(1L, 2L);
     final BigDecimal totalPrice = BigDecimal.valueOf(380400);
     final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
+    final long couponId = 1L;
 
     final RegisterOrderRequest registerOrderRequest =
         new RegisterOrderRequest(
             cartItemIds,
             totalPrice,
-            deliveryFee
+            deliveryFee,
+            couponId
         );
 
     //when
@@ -61,12 +63,14 @@ class OrderCommandServiceTest {
     final List<Long> cartItemIds = List.of(1L, 2L);
     final BigDecimal totalPrice = BigDecimal.valueOf(200000);
     final BigDecimal deliveryFee = BigDecimal.valueOf(3000);
+    final long couponId = 1L;
 
     final RegisterOrderRequest registerOrderRequest =
         new RegisterOrderRequest(
             cartItemIds,
             totalPrice,
-            deliveryFee
+            deliveryFee,
+            couponId
         );
 
     //when & then
