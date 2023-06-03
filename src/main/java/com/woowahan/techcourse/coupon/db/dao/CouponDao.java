@@ -38,7 +38,7 @@ public class CouponDao {
 
     public Optional<Coupon> findById(Long id) {
         try {
-            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID_SQL, rowMapper, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(FIND_BY_ID_SQL, rowMapper, id));
         } catch (Exception e) {
             return Optional.empty();
         }
