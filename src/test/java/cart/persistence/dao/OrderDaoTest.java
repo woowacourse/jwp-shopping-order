@@ -5,10 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.fixture.CouponFixture.금액_10000원이상_1000원할인;
-import cart.fixture.MemberFixture;
+import cart.fixture.MemberFixture.Member_test1;
 import cart.persistence.dto.OrderDetailDTO;
 import cart.persistence.entity.MemberCouponEntity;
-import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.OrderEntity;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,8 +45,7 @@ class OrderDaoTest {
     @Test
     void 주문을_저장_및_조회한다() {
         // given
-        MemberEntity member = MemberFixture.멤버_test1_엔티티;
-        long memberId = memberDao.create(member);
+        long memberId = memberDao.create(Member_test1.ENTITY);
         long couponId = couponDao.create(금액_10000원이상_1000원할인.ENTITY);
         MemberCouponEntity memberCoupon = 유효한_멤버쿠폰_엔티티(memberId, couponId);
         long memberCouponId = memberCouponDao.create(memberCoupon);
@@ -62,8 +60,7 @@ class OrderDaoTest {
                 () -> assertThat(result).isPresent(),
                 () -> assertThat(result.get().getMemberEntity())
                         .usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(member),
+                        .isEqualTo(Member_test1.getEntityOf(memberId)),
                 () -> assertThat(result.get().getOrderEntity())
                         .usingRecursiveComparison()
                         .ignoringFields("id", "createdAt")

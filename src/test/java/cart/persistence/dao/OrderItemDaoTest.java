@@ -3,7 +3,7 @@ package cart.persistence.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Product;
-import cart.fixture.MemberFixture;
+import cart.fixture.MemberFixture.Member_test1;
 import cart.fixture.ProductFixture.치킨_15000원;
 import cart.fixture.ProductFixture.피자_20000원;
 import cart.persistence.entity.OrderEntity;
@@ -40,7 +40,7 @@ class OrderItemDaoTest {
     @Test
     void 주문_아이템을_저장_및_조회한다() {
         // given
-        long memberId = memberDao.create(MemberFixture.멤버_test1_엔티티);
+        long memberId = memberDao.create(Member_test1.ENTITY);
         long orderId = orderDao.create(new OrderEntity(memberId, null, 1000, 10000));
         Product product1 = 피자_20000원.PRODUCT;
         Product product2 = 치킨_15000원.PRODUCT;

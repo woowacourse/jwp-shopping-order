@@ -1,11 +1,11 @@
 package cart.domain.coupon;
 
-import static cart.fixture.MemberFixture.멤버_test1_도메인;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import cart.domain.cart.CartItems;
 import cart.fixture.CouponFixture.금액_10000원이상_1000원할인;
+import cart.fixture.MemberFixture.Member_test1;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -25,7 +25,7 @@ class MemberCouponTest {
         void 만료되었으면_거짓() {
             // given
             CartItems cartItems = new CartItems(Collections.emptyList());
-            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, 멤버_test1_도메인, false,
+            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, Member_test1.MEMBER, false,
                     LocalDateTime.MIN,
                     LocalDateTime.now());
 
@@ -40,7 +40,7 @@ class MemberCouponTest {
         void 이미_사용된_쿠폰이면_거짓() {
             // given
             CartItems cartItems = new CartItems(Collections.emptyList());
-            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, 멤버_test1_도메인, true,
+            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, Member_test1.MEMBER, true,
                     LocalDateTime.MAX,
                     LocalDateTime.now());
 
@@ -54,7 +54,7 @@ class MemberCouponTest {
         @Test
         void 쿠폰_조건과_맞지않으면_거짓() {
             // given
-            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, 멤버_test1_도메인, false,
+            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, Member_test1.MEMBER, false,
                     LocalDateTime.MAX,
                     LocalDateTime.now());
             CartItems cartItems = Mockito.mock(CartItems.class);
@@ -70,7 +70,7 @@ class MemberCouponTest {
         @Test
         void 조건을_만족하면_참() {
             // given
-            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, 멤버_test1_도메인, false,
+            MemberCoupon memberCoupon = new MemberCoupon(1L, 금액_10000원이상_1000원할인.COUPON, Member_test1.MEMBER, false,
                     LocalDateTime.MAX,
                     LocalDateTime.now());
             CartItems cartItems = Mockito.mock(CartItems.class);

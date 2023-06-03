@@ -3,12 +3,12 @@ package cart.persistence.dao;
 import static cart.fixture.MemberCouponFixture.만료된_멤버쿠폰_엔티티;
 import static cart.fixture.MemberCouponFixture.사용된_멤버쿠폰_엔티티;
 import static cart.fixture.MemberCouponFixture.유효한_멤버쿠폰_엔티티;
-import static cart.fixture.MemberFixture.멤버_test1_엔티티;
-import static cart.fixture.MemberFixture.멤버_test2_엔티티;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.fixture.CouponFixture.금액_10000원이상_1000원할인;
+import cart.fixture.MemberFixture.Member_test1;
+import cart.fixture.MemberFixture.Member_test2;
 import cart.persistence.dto.MemberCouponDetailDTO;
 import cart.persistence.entity.MemberCouponEntity;
 import java.util.List;
@@ -45,7 +45,7 @@ class MemberCouponDaoTest {
     @Test
     void 멤버쿠폰을_생성_및_조회한다() {
         // given
-        long memberId = memberDao.create(멤버_test1_엔티티);
+        long memberId = memberDao.create(Member_test1.ENTITY);
         long couponId = couponDao.create(금액_10000원이상_1000원할인.ENTITY);
         MemberCouponEntity memberCoupon = 유효한_멤버쿠폰_엔티티(memberId, couponId);
 
@@ -62,8 +62,7 @@ class MemberCouponDaoTest {
                         .isEqualTo(금액_10000원이상_1000원할인.ENTITY),
                 () -> assertThat(result.get().getMemberEntity())
                         .usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(멤버_test1_엔티티),
+                        .isEqualTo(Member_test1.getEntityOf(memberId)),
                 () -> assertThat(result.get().getMemberCouponEntity())
                         .usingRecursiveComparison()
                         .ignoringFields("id")
@@ -74,8 +73,8 @@ class MemberCouponDaoTest {
     @Test
     void 자신의_유효한_멤버쿠폰만_조회한다() {
         // given
-        long memberId = memberDao.create(멤버_test1_엔티티);
-        long otherMemberId = memberDao.create(멤버_test2_엔티티);
+        long memberId = memberDao.create(Member_test1.ENTITY);
+        long otherMemberId = memberDao.create(Member_test2.ENTITY);
         long couponId = couponDao.create(금액_10000원이상_1000원할인.ENTITY);
         MemberCouponEntity validCoupon = 유효한_멤버쿠폰_엔티티(memberId, couponId);
         MemberCouponEntity otherCoupon = 유효한_멤버쿠폰_엔티티(otherMemberId, couponId);
