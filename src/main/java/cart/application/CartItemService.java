@@ -1,13 +1,13 @@
 package cart.application;
 
 import cart.dao.CartItemDao;
+import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartItemDto;
 import cart.dto.CartItemQuantityUpdateRequest;
 import cart.dto.CartItemRequest;
-import cart.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class CartItemService {
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
     private final CartItemDao cartItemDao;
 
-    public CartItemService(ProductRepository productRepository, CartItemDao cartItemDao) {
-        this.productRepository = productRepository;
+    public CartItemService(ProductDao productDao, CartItemDao cartItemDao) {
+        this.productDao = productDao;
         this.cartItemDao = cartItemDao;
     }
 
@@ -30,7 +30,8 @@ public class CartItemService {
     }
 
     public Long add(Member member, CartItemRequest cartItemRequest) {
-        Product product = productRepository.getProductById(cartItemRequest.getProductId());
+        Product product = productDao.findById(cartItemRequest.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 product가 존재하지 않습니다.."));
         return cartItemDao.save(new CartItem(member, product));
     }
 

@@ -2,6 +2,7 @@ package cart.application;
 
 import cart.dao.CartItemDao;
 import cart.dao.PaymentDao;
+import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -15,7 +16,6 @@ import cart.dto.OrderRequest;
 import cart.exception.OrderException;
 import cart.exception.PaymentException;
 import cart.repository.OrderRepository;
-import cart.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,14 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class OrderService {
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
     private final OrderRepository orderRepository;
     private final PaymentDao paymentDao;
     private final CartItemDao cartItemDao;
 
-    public OrderService(ProductRepository productRepository, OrderRepository orderRepository, PaymentDao paymentDao,
+    public OrderService(ProductDao productDao, OrderRepository orderRepository, PaymentDao paymentDao,
                         CartItemDao cartItemDao) {
-        this.productRepository = productRepository;
+        this.productDao = productDao;
         this.orderRepository = orderRepository;
         this.paymentDao = paymentDao;
         this.cartItemDao = cartItemDao;
@@ -57,7 +57,10 @@ public class OrderService {
         List<Long> productIds = cartItems.stream()
                 .map(it -> it.getProduct().getProductId())
                 .collect(Collectors.toList());
-        List<Product> productsInDb = productRepository.getProductsByIds(productIds);
+        List<Product> productsInDb = productIds.stream()
+                .map(it -> productDao.findById(it)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 product가 존재하지 않습니다..")))
+                .collect(Collectors.toList());
 
         if (!productsInRequest.equals(productsInDb)) {
             throw new OrderException("product 정보가 업데이트 되었습니다. 다시 확인해주세요.");

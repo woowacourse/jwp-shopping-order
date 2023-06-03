@@ -9,3 +9,5 @@
 
 2. 테스트 작성시 더미데이터 영향 받아도 되나?
 data.sql 실행 안되게 해야하나?
+
+3. findById의 결과값을 optional로 해두면.. service가 너무 지저분해진다. repository에서 해야할까?
