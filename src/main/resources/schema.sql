@@ -41,3 +41,11 @@ CREATE TABLE order_item
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
+
+CREATE TABLE point
+(
+    id        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    point     INT    NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
