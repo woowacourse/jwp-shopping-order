@@ -3,6 +3,7 @@ package cart.persistence.coupon;
 import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.CouponPolicy;
 import cart.domain.order.Order;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,5 +78,40 @@ class CouponJdbcRepositoryTest {
     void createOrderedCoupon() {
         Order order = new Order(1L, 10000, 11000, 1000, 비버_ID포함);
         assertThat(couponJdbcRepository.createOrderedCoupon(order.getId(), 2L)).isPositive();
+    }
+
+    // INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount)
+    // VALUES (1L, '웰컴 쿠폰 - 10%할인', 10000, 10, 0);
+    // INSERT INTO coupon (id, `name`, min_amount, discount_percent, discount_amount)
+    // VALUES (2L, '또 와요 쿠폰 - 3000원 할인', 15000, 0, 3000);
+
+    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
+    // VALUES (1L, 2L, 1L, 1);
+    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
+    // VALUES (2L, 2L, 1L, 0);
+    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
+    // VALUES (3L, 2L, 1L, 1);
+    // INSERT INTO member_coupon (id, member_id, coupon_id, status)
+    // VALUES (4L, 2L, 2L, 1);
+    @Test
+    @DisplayName("주문에 사용한 쿠폰 목록을 조회한다.")
+    void findCouponsOnOrder() {
+        couponJdbcRepository.createOrderedCoupon(1L, 1L);
+        List<Coupon> usedCoupons = couponJdbcRepository.findUsedCouponByOrderId(1L);
+        Coupon coupon = usedCoupons.get(0);
+        Assertions.assertAll(
+                () -> assertThat(usedCoupons).hasSize(1),
+                () -> assertThat(coupon.getCouponName()).isEqualTo("웰컴 쿠폰 - 10%할인"),
+                () -> assertThat(coupon.getDiscountAmount()).isEqualTo(0),
+                () -> assertThat(coupon.getDiscountPercent()).isEqualTo(10),
+                () -> assertThat(coupon.getMinAmount()).isEqualTo(10000)
+        );
+    }
+
+    @Test
+    @DisplayName("쿠폰을 사용하지 않은 주문의 경우 빈 리스트 반환")
+    void findCouponWhenNoUseCouponInOrder() {
+        List<Coupon> usedCoupons = couponJdbcRepository.findUsedCouponByOrderId(1L);
+        assertThat(usedCoupons).isEmpty();
     }
 }

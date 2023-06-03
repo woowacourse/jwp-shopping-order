@@ -17,4 +17,5 @@ public interface CouponRepository {
 
     long createOrderedCoupon(final Long orderId, final Long memberCouponId);
 
+    List<Coupon> findUsedCouponByOrderId(final Long orderId);
 }

@@ -26,9 +26,9 @@ public class CouponJdbcRepository implements CouponRepository {
             new Coupon(
                     rs.getLong("id"),
                     rs.getString("name"),
-                    rs.getInt("min_amount"),
                     rs.getInt("discount_percent"),
-                    rs.getInt("discount_amount")
+                    rs.getInt("discount_amount"),
+                    rs.getInt("min_amount")
             );
 
     private final RowMapper<CouponPolicy> percentCouponRowMapper = (rs, rowMapper) ->
@@ -102,5 +102,16 @@ public class CouponJdbcRepository implements CouponRepository {
         parameters.addValue("member_coupon_id", memberCouponId);
 
         return simpleOrderedCouponInsert.executeAndReturnKey(parameters).longValue();
+    }
+
+    @Override
+    public List<Coupon> findUsedCouponByOrderId(Long orderId) {
+        String sql = "SELECT coupon.id, coupon.name, coupon.min_amount, coupon.discount_percent, coupon.discount_amount " +
+                "FROM coupon " +
+                "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
+                "JOIN ordered_coupon ON member_coupon.id = ordered_coupon.member_coupon_id " +
+                "WHERE ordered_coupon.order_id = ?";
+
+        return jdbcTemplate.query(sql, couponRowMapper, orderId);
     }
 }
