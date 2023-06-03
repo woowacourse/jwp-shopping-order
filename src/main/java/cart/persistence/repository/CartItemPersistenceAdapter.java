@@ -71,8 +71,8 @@ public class CartItemPersistenceAdapter implements CartItemRepository {
     public void update(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("cart_item.quantity", cartItem.getQuantity())
-                .addValue("cart_item.id", cartItem.getId());
+                .addValue("quantity", cartItem.getQuantity())
+                .addValue("id", cartItem.getId());
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
