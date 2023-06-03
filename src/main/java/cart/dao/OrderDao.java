@@ -21,12 +21,12 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public OrderEntity findById(Long orderId) {
-        String sql = "select id, member_id, orders_status_id, create_at from orders where id = ?";
-        return jdbcTemplate.queryForObject(sql, new OrderRowMapper(), orderId);
+    public OrderEntity findBy(Long memberId, Long orderId) {
+        String sql = "select id, member_id, orders_status_id, create_at from orders where member_id = ? and id = ?";
+        return jdbcTemplate.queryForObject(sql, new OrderRowMapper(), memberId, orderId);
     }
 
-    public List<OrderEntity> findByMemberId(Long memberId) {
+    public List<OrderEntity> findAllByMemberId(Long memberId) {
         String sql = "select id, member_id, orders_status_id, create_at from orders where member_id = ?";
         return jdbcTemplate.query(sql, new OrderRowMapper(), memberId);
     }

@@ -47,7 +47,7 @@ class OrderDaoTest {
     @DisplayName("주문 정보를 조회할 수 있다.")
     @Test
     void findById() {
-        OrderEntity order = orderDao.findById(1L);
+        OrderEntity order = orderDao.findBy(1L, 1L);
 
         assertAll(
                 () -> assertThat(order.getId()).isEqualTo(1L),
@@ -59,7 +59,7 @@ class OrderDaoTest {
     @DisplayName("주문 정보를 유저 기반으로 조회할 수 있다.")
     @Test
     void findByMemberId() {
-        List<OrderEntity> orderEntities = orderDao.findByMemberId(1L);
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(1L);
         OrderEntity orderEntity1 = new OrderEntity(1L, 1L, 1, LocalDate.now());
         OrderEntity orderEntity2 = new OrderEntity(2L, 1L, 1, LocalDate.now());
 
@@ -73,7 +73,7 @@ class OrderDaoTest {
 
         orderDao.save(orderEntity);
 
-        OrderEntity order = orderDao.findById(3L);
+        OrderEntity order = orderDao.findBy(1L, 3L);
 
         assertAll(
                 () -> assertThat(order.getId()).isEqualTo(3L),
@@ -87,7 +87,7 @@ class OrderDaoTest {
     void deleteById() {
         orderDao.delete(1L, 1L);
 
-        OrderEntity order = orderDao.findById(1L);
+        OrderEntity order = orderDao.findBy(1L, 1L);
 
         assertAll(
                 () -> assertThat(order.getId()).isEqualTo(1L),

@@ -62,7 +62,7 @@ public class OrderRepository {
     }
 
     public List<Order> findAllByMemberId(Long memberId) {
-        List<OrderEntity> orderEntities = orderDao.findByMemberId(memberId);
+        List<OrderEntity> orderEntities = orderDao.findAllByMemberId(memberId);
         List<Long> orderIds = getOrderIds(orderEntities);
 
         List<OrderItemEntity> orderItemEntities = orderItemDao.findAllByOrderIds(orderIds);
@@ -70,12 +70,6 @@ public class OrderRepository {
         Map<Long, List<OrderItemEntity>> itemsByOrder = getItemsByOrder(orderEntities, orderItemEntities);
 
         return getOrders(orderEntities, itemsByOrder);
-    }
-
-    private List<Long> getOrderIds(List<OrderEntity> orderEntities) {
-        return orderEntities.stream()
-                .map(OrderEntity::getId)
-                .collect(Collectors.toList());
     }
 
     private Map<Long, List<OrderItemEntity>> getItemsByOrder(List<OrderEntity> orderEntities, List<OrderItemEntity> orderItems) {
@@ -116,5 +110,28 @@ public class OrderRepository {
         return new Points(pointHistoryEntities.stream()
                 .map(pointHistoryEntity -> Point.from(pointHistoryEntity.getUsedPoint()))
                 .collect(Collectors.toList()));
+    }
+
+    public Order findOrder(Long memberId, Long orderId) {
+        OrderEntity orderEntity = orderDao.findBy(memberId, orderId);
+        OrderStatus orderStatus = OrderStatus.findOrderStatusById(orderEntity.getOrderStatusId());
+        Points points = getPoints(orderId);
+        List<OrderItem> orderItems = getOrderItems(orderId);
+        LocalDate createAt = orderEntity.getCreateAt();
+        return new Order(orderId, orderStatus, points, orderItems, createAt);
+    }
+
+    private List<OrderItem> getOrderItems(Long orderId) {
+        List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
+        return orderItemEntities.stream()
+                .map(orderItemEntity -> new OrderItem(orderItemEntity.getProduct(),
+                        orderItemEntity.getQuantity(), orderItemEntity.getTotalPrice()))
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> getOrderIds(List<OrderEntity> orderEntities) {
+        return orderEntities.stream()
+                .map(OrderEntity::getId)
+                .collect(Collectors.toList());
     }
 }

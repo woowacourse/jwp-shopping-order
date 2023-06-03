@@ -81,7 +81,7 @@ class OrderRepositoryTest {
 
         orderRepository.save(member.getId(), order);
 
-        OrderEntity orderEntityDb = orderDao.findById(2L);
+        OrderEntity orderEntityDb = orderDao.findBy(1L, 2L);
         List<OrderItemEntity> orderItemsDb = orderItemDao.findByOrderId(2L);
         List<PointHistoryEntity> pointHistoryEntities = pointHistoryDao.findByPointIds(List.of(1L));
 
@@ -106,6 +106,20 @@ class OrderRepositoryTest {
                 () -> assertThat(orders.get(0).getId()).isEqualTo(1L),
                 () -> assertThat(orders.get(0).getOrderItems()).containsExactlyInAnyOrder(orderItem1, orderItem2),
                 () -> assertThat(orders.get(0).getTotalUsedPoint()).isEqualTo(1000)
+        );
+    }
+
+    @DisplayName("주문 번호를 사용해 주문 이력을 확인할수 있다.")
+    @Test
+    void find() {
+        OrderItem orderItem1 = new OrderItem(product1, 3, 30000);
+        OrderItem orderItem2 = new OrderItem(product2, 2, 40000);
+        Order order = orderRepository.findOrder(member.getId(), 1L);
+
+        assertAll(
+                () -> assertThat(order.getId()).isEqualTo(1L),
+                () -> assertThat(order.getOrderItems()).containsExactlyInAnyOrder(orderItem1, orderItem2),
+                () -> assertThat(order.getTotalUsedPoint()).isEqualTo(1000)
         );
     }
 }
