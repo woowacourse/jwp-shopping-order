@@ -5,6 +5,7 @@ import cart.ui.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -28,6 +29,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .exposedHeaders("Location")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/static/css/")
+                .setCachePeriod(3600)
+                .resourceChain(true);
+
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("classpath:/static/js/")
+                .setCachePeriod(3600)
+                .resourceChain(true);
     }
 }
 
