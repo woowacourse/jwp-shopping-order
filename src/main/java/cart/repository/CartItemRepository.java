@@ -39,7 +39,6 @@ public class CartItemRepository {
 
     public List<CartItem> findByIds(final List<Long> cartItemsIds) {
         List<CartItemEntity> cartItems = cartItemDao.findByIds(cartItemsIds);
-        // TODO: 5/31/23 외부에서 받을지(로그인한거), 여기서 새로 조회해볼지 고민좀 해보기
         Map<Long, MemberEntity> allMembersById = memberDao2.findAll().stream()
                 .collect(Collectors.toMap(MemberEntity::getId, memberEntity -> memberEntity));
         Map<Long, ProductEntity> allProductsById = productDao.findAll().stream()

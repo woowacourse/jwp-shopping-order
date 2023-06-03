@@ -15,6 +15,7 @@ public class Member {
         this.nickname = nickname;
     }
 
+    // TODO: 6/3/23 안에서 예외 터르리기 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
