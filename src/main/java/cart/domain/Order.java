@@ -17,11 +17,12 @@ public class Order {
         this.cartItems = cartItems;
     }
 
-    public Order(final int points, final List<CartItem> cartItems) {
-        this(null, points, cartItems);
+    public Order(final int usedPoints, final List<CartItem> cartItems, final int memberPoints) {
+        this(null, usedPoints, cartItems);
+        validatePoints(memberPoints);
     }
 
-    public void validatePoints(final int memberPoints) {
+    private void validatePoints(final int memberPoints) {
         if (points > memberPoints) {
             throw new IllegalPointUsageException();
         }

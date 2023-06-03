@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.CartItem;
 import cart.domain.Member;
+import cart.domain.Order;
 import cart.entity.OrderEntity;
 import cart.exception.notfound.OrderNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,11 +40,15 @@ public class OrderDao {
     }
 
 
-    public Long createOrder(final int usedPoints, final List<CartItem> cartItems, final int savingRate, final Member member) {
+    public Long save(final Order order, final int savingRate, final Member member) {
 
-        final long id = orderInsert.executeAndReturnKey(Map.of("member_id", member.getId(), "used_points", usedPoints, "saving_rate", savingRate)).longValue();
+        final long id = orderInsert.executeAndReturnKey(
+                Map.of(
+                        "member_id", member.getId(), "used_points", order.getPoints(), "saving_rate", savingRate
+                )
+        ).longValue();
 
-        batchInsertCartItems(cartItems, id);
+        batchInsertCartItems(order.getCartItems(), id);
 
         return id;
     }

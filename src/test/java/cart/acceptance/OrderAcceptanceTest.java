@@ -10,7 +10,6 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -18,6 +17,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class OrderAcceptanceTest extends AcceptanceTest {
 
@@ -28,7 +28,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         RestAssured.given()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
                 .post("/orders")
@@ -98,7 +98,20 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         final OrderCreateRequest request = new OrderCreateRequest(100, List.of(new CartItemRequest(3L, 1L, 2)));
         given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/orders")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void 장바구니에_없는_상품을_주문한다() {
+        final OrderCreateRequest request = new OrderCreateRequest(100, List.of(new CartItemRequest(3L, 5L, 2)));
+        given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .contentType(APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
                 .post("/orders")

@@ -4,12 +4,14 @@ import cart.dao.CartItemDao;
 import cart.dto.request.CartItemAddRequest;
 import cart.dto.request.CartItemUpdateRequest;
 import cart.dto.response.CartItemUpdateResponse;
+import cart.exception.notfound.CartItemNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class CartItemsAcceptanceTest extends AcceptanceTest {
@@ -91,6 +93,8 @@ public class CartItemsAcceptanceTest extends AcceptanceTest {
                 .patch("/cart-items/1")
                 .then();
 
-        assertThat(cartItemDao.findById(1L)).isNull();
+        assertThatThrownBy(
+                () -> cartItemDao.findById(1L))
+                .isInstanceOf(CartItemNotFoundException.class);
     }
 }

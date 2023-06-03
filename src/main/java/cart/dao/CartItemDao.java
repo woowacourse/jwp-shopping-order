@@ -132,7 +132,7 @@ public class CartItemDao {
 
     public void deleteByProductId(final Long productId) {
         String sql = "DELETE FROM cart_item WHERE product_id = ?";
-        final int affected = jdbcTemplate.update(sql, productId);
+        jdbcTemplate.update(sql, productId);
     }
 
     public void deleteAll(final List<Long> cartItemIds) {

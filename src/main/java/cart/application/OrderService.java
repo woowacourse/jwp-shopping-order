@@ -4,7 +4,6 @@ import cart.dao.CartItemDao;
 import cart.dao.MemberDao;
 import cart.dao.OrderDao;
 import cart.dao.OrderItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Member;
 import cart.domain.Order;
@@ -33,41 +32,39 @@ public class OrderService {
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
     private final MemberDao memberDao;
 
-    public OrderService(final OrderDao orderDao, final OrderItemDao orderItemDao, final CartItemDao cartItemDao, final ProductDao productDao, final MemberDao memberDao) {
+    public OrderService(
+            final OrderDao orderDao,
+            final OrderItemDao orderItemDao,
+            final CartItemDao cartItemDao,
+            final MemberDao memberDao
+    ) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
         this.cartItemDao = cartItemDao;
-        this.productDao = productDao;
         this.memberDao = memberDao;
     }
 
     public Long createOrder(final OrderCreateRequest orderCreateRequest, final Member member) {
-        final List<Long> cartItemIds = orderCreateRequest.getCartItems().stream()
-                .map(CartItemRequest::getId)
-                .collect(Collectors.toList());
+        final List<Long> cartItemIds = orderCreateRequest.toCartItemIds();
         final List<CartItem> cartItems = cartItemDao.findByIds(cartItemIds);
-        final List<CartItemRequest> requests = orderCreateRequest.getCartItems();
+        final List<CartItemRequest> cartItemRequests = orderCreateRequest.getCartItems();
 
-        validateLegalOrder(cartItems, requests);
+        validateLegalOrder(cartItems, cartItemRequests);
 
-        final List<CartItem> cartItemsByRequest = toCartItems(member, requests);
-
-        cartItemDao.deleteAll(cartItemIds);
-
-        final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItemsByRequest);
-        order.validatePoints(member.getPoints());
-
-        final Long id = orderDao.createOrder(orderCreateRequest.getUsedPoints(), cartItemsByRequest, PointPolicy.getSavingRate(), member);
-
+        final Order order = new Order(orderCreateRequest.getUsedPoints(), cartItems, member.getPoints());
+        final Long id = orderDao.save(order, PointPolicy.getSavingRate(), member);
         updateMember(member, order);
+        cartItemDao.deleteAll(cartItemIds);
 
         return id;
     }
 
     private void validateLegalOrder(final List<CartItem> cartItems, final List<CartItemRequest> requests) {
+        if (cartItems.size() != requests.size()) {
+            throw new InvalidOrderProductException();
+        }
         for (final CartItem cartItem : cartItems) {
             iterateRequests(requests, cartItem);
         }
@@ -107,15 +104,6 @@ public class OrderService {
 
     private boolean isNotChecked(final CartItem cartItem) {
         return !cartItem.isChecked();
-    }
-
-    private List<CartItem> toCartItems(final Member member, final List<CartItemRequest> requests) {
-        return requests.stream()
-                .map(cartItemRequest -> new CartItem(cartItemRequest.getId(), cartItemRequest.getQuantity(),
-                        productDao.getProductById(cartItemRequest.getProductId()),
-                        member,
-                        true
-                )).collect(Collectors.toList());
     }
 
     private void updateMember(final Member member, final Order order) {
