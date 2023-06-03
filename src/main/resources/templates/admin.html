@@ -62,8 +62,90 @@
         </div>
     </div>
 </div>
+
+<div class="container">
+    <h3>내 쿠폰</h3>
+
+    <button class="cart-item-delete" onclick="refresh()">새로고침</button>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>할인종류</th>
+            <th>할인량</th>
+        </tr>
+        <tbody id="member-coupons">
+        </tbody>
+    </table>
+    <h3>발급 가능한 쿠폰</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>할인종류</th>
+            <th>할인량</th>
+            <th>발급받기</th>
+        </tr>
+        <tbody id="coupon-list">
+        <tr th:each="coupon : ${coupons}">
+            <td th:text="${coupon.couponId}"></td>
+            <td th:text="${coupon.name}"></td>
+            <td th:text="${coupon.discount.type}"></td>
+            <td th:text="${coupon.discount.amount}"></td>
+            <td>
+                <button type="submit" th:onclick="coupon([[${coupon.couponId}]])">발급받기</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/admin.js}"> </script>
+<script>
+
+    const getCredentials = () => {
+        return localStorage.getItem('credentials');
+    }
+
+    const coupon = async (couponId) => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${getCredentials()}`
+            }
+        };
+        await axios.post(`/member/coupons/${couponId}`, null, config);
+        refresh();
+    }
+    const refresh = () => {
+
+        axios.get('/coupons', {
+            headers: {
+                'Authorization': `Basic ${getCredentials()}`
+            }
+        }).then((response) => {
+            const coupons = response.data;
+
+            let myCouponElements = '';
+            coupons.forEach(coupon => {
+                myCouponElements += `
+                          <tr>
+                            <td>${coupon.couponId}</td>
+                            <td>${coupon.name}</td>
+                            <td>${coupon.discount.type}</td>
+                            <td>${coupon.discount.amount}</td>
+                          </tr>
+                      `;
+            });
+
+            document.querySelector('#member-coupons').innerHTML = myCouponElements;
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
+
+    document.addEventListener("DOMContentLoaded", refresh);
+</script>
 </body>
 </html>
 
