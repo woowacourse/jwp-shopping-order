@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.BusinessException;
+import java.util.List;
 import java.util.Objects;
 
 public class Amount {
@@ -7,7 +9,16 @@ public class Amount {
   private final int value;
 
   public Amount(final int value) {
+    if (value < 0) {
+      throw new BusinessException("가격은 0원이상이여야 합니다.");
+    }
     this.value = value;
+  }
+
+  public static Amount sum(final List<Amount> amounts) {
+    return new Amount(amounts.stream()
+        .mapToInt(amount -> amount.value)
+        .sum());
   }
 
   public Amount minus(final Amount amount) {
