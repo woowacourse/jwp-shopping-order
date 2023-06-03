@@ -1,6 +1,7 @@
 package cart.application;
 
 import cart.application.domain.OrderInfo;
+import cart.application.exception.ExceedingProductsPointException;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberRepository;
 import cart.application.repository.OrderRepository;
@@ -37,24 +38,29 @@ public class OrderService {
     }
 
     public void issue(Member member, OrderRequest request) {
-        Order order = new Order(null, member, makeOrderInfoFromRequest(request),
-                request.getOriginalPrice(),
-                request.getUsedPoint(),
-                request.getPointToAdd());
-
+        Order order = new Order(null, member, makeOrderInfoFromRequest(member, request),
+                request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
+        validateExceedingAvailablePoint(request.getUsedPoint(), makeCartItemsFromRequest(request));
+        useMemberPoint(member, request.getUsedPoint());
+        addMemberPoint(member, request.getPointToAdd());
         orderRepository.insert(order);
-        subtractUserPoint(member, request.getUsedPoint());
     }
 
-    private List<OrderInfo> makeOrderInfoFromRequest(OrderRequest request) {
-        return makeCartItemsFromIds(request.getCartItemIds()).stream()
-                .map(this::makeCartItemToOrderInfo)
+    private List<OrderInfo> makeOrderInfoFromRequest(Member member, OrderRequest request) {
+        List<CartItem> cartItems = makeCartItemsFromRequest(request);
+        cartItems.forEach(cartItem -> cartItem.validateIsOwnedBy(member));
+        return makeOrderInfosFromCartItems(cartItems);
+    }
+
+    private List<CartItem> makeCartItemsFromRequest(OrderRequest request) {
+        return request.getCartItemIds().stream()
+                .map(cartItemRepository::findById)
                 .collect(Collectors.toList());
     }
 
-    private List<CartItem> makeCartItemsFromIds(List<Long> ids) {
-        return ids.stream()
-                .map(cartItemRepository::findById)
+    private List<OrderInfo> makeOrderInfosFromCartItems(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(this::makeCartItemToOrderInfo)
                 .collect(Collectors.toList());
     }
 
@@ -64,12 +70,36 @@ public class OrderService {
                 product.getImageUrl(), cartItem.getQuantity());
     }
 
-    private void subtractUserPoint(Member member, long usedPoint) {
+    private void validateExceedingAvailablePoint(Long usedPoint, List<CartItem> cartItems) {
+        Long availablePoint = cartItems.stream()
+                .filter(cartItem -> cartItem.getProduct().isPointAvailable())
+                .map(this::calculateMaximumPoint)
+                .reduce(0L, Long::sum);
+
+        if (usedPoint > availablePoint) {
+            throw new ExceedingProductsPointException();
+        }
+    }
+
+    private long calculateMaximumPoint(CartItem cartItem) {
+        Product product = cartItem.getProduct();
+        double pointRatio = product.getPointRatio() / 100;
+        long price = product.getPrice() * cartItem.getQuantity();
+        return Math.round(pointRatio * price);
+    }
+
+    private void useMemberPoint(Member member, long usedPoint) {
         if (member.getPoint() - usedPoint < 0) {
             throw new PointExceedException();
         }
         Member updatedMember = new Member(member.getId(), member.getEmail(),
                 member.getPassword(), member.getPoint() - usedPoint);
+        memberRepository.update(updatedMember);
+    }
+
+    private void addMemberPoint(Member member, Long pointToAdd) {
+        Member updatedMember = new Member(member.getId(), member.getEmail(),
+                member.getPassword(), member.getPoint() + pointToAdd);
         memberRepository.update(updatedMember);
     }
 
