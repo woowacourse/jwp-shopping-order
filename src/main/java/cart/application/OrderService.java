@@ -37,13 +37,14 @@ public class OrderService {
         this.memberRepository = memberRepository;
     }
 
-    public void issue(Member member, OrderRequest request) {
+    public long issue(Member member, OrderRequest request) {
         Order order = new Order(null, member, makeOrderInfoFromRequest(member, request),
                 request.getOriginalPrice(), request.getUsedPoint(), request.getPointToAdd());
         validateExceedingAvailablePoint(request.getUsedPoint(), makeCartItemsFromRequest(request));
         useMemberPoint(member, request.getUsedPoint());
         addMemberPoint(member, request.getPointToAdd());
-        orderRepository.insert(order);
+        Order inserted = orderRepository.insert(order);
+        return inserted.getId();
     }
 
     private List<OrderInfo> makeOrderInfoFromRequest(Member member, OrderRequest request) {

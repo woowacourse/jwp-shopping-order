@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -39,8 +40,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> issueOrder(Member member, @RequestBody OrderRequest request) {
-        orderService.issue(member, request);
-        // TODO: CREATED URI 반환
-        return ResponseEntity.ok().build();
+        long id = orderService.issue(member, request);
+        return ResponseEntity.created(URI.create("orders/" + id)).build();
     }
 }
