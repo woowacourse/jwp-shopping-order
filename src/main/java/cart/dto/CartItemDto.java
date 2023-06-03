@@ -3,16 +3,19 @@ package cart.dto;
 import cart.domain.CartItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+
 @Schema(description = "장바구니 상품")
 public class CartItemDto {
 
     @Schema(description = "장바구니 상품 id", example = "1")
     private Long id;
     @Schema(description = "장바구니 상품 수량", example = "1")
-    private Integer quantity;
+    private int quantity;
     private ProductResponse product;
 
-    public CartItemDto(final Long id, final Integer quantity, final ProductResponse product) {
+    public CartItemDto(final Long id, final int quantity, final ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -27,7 +30,7 @@ public class CartItemDto {
         return id;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
