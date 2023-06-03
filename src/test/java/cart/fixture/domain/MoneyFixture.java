@@ -11,4 +11,8 @@ public abstract class MoneyFixture {
     public static Money 포인트(String 포인트) {
         return Money.from(포인트);
     }
+
+    public static Money 배송비(String 배송비) {
+        return Money.from(배송비);
+    }
 }

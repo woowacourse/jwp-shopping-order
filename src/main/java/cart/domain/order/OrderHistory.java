@@ -13,14 +13,16 @@ public class OrderHistory {
     private final OrderItems orderItems;
     private final Money totalPrice;
     private final Money usePoint;
+    private final Money deliveryFee;
     private final LocalDateTime createdAt;
 
-    public OrderHistory(Long id, Member member, OrderItems orderItems, Money totalPrice, Money usePoint, LocalDateTime createdAt) {
+    public OrderHistory(Long id, Member member, OrderItems orderItems, Money totalPrice, Money usePoint, Money deliveryFee, LocalDateTime createdAt) {
         this.id = id;
         this.member = member;
         this.orderItems = orderItems;
         this.totalPrice = totalPrice;
         this.usePoint = usePoint;
+        this.deliveryFee = deliveryFee;
         this.createdAt = createdAt;
     }
 
@@ -48,6 +50,10 @@ public class OrderHistory {
         return usePoint;
     }
 
+    public Money getDeliveryFee() {
+        return deliveryFee;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -57,12 +63,12 @@ public class OrderHistory {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderHistory that = (OrderHistory) o;
-        return Objects.equals(member, that.member) && Objects.equals(orderItems, that.orderItems) && Objects.equals(totalPrice, that.totalPrice) && Objects.equals(usePoint, that.usePoint) && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(member, that.member) && Objects.equals(orderItems, that.orderItems) && Objects.equals(totalPrice, that.totalPrice) && Objects.equals(usePoint, that.usePoint) && Objects.equals(deliveryFee, that.deliveryFee) && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(member, orderItems, totalPrice, usePoint, createdAt);
+        return Objects.hash(member, orderItems, totalPrice, usePoint, deliveryFee, createdAt);
     }
 
     @Override
@@ -73,6 +79,7 @@ public class OrderHistory {
                 ", orderItems=" + orderItems +
                 ", totalPrice=" + totalPrice +
                 ", usePoint=" + usePoint +
+                ", deliveryFee=" + deliveryFee +
                 ", createdAt=" + createdAt +
                 '}';
     }

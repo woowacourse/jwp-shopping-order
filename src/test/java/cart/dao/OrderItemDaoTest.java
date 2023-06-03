@@ -44,7 +44,7 @@ class OrderItemDaoTest extends DaoTestConfig {
         Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
         Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
         CartItem 장바구니_상품 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
-        Long 주문_식별자값 = orderDaoFixture.주문을_등록한다(회원, 장바구니_상품_목록(List.of(장바구니_상품)), "1000", now());
+        Long 주문_식별자값 = orderDaoFixture.주문을_등록한다(회원, 장바구니_상품_목록(List.of(장바구니_상품)), "1000", "3000", now());
         OrderItemEntity 주문의_장바구니_상품_엔티티 = 주문의_장바구니_상품_엔티티(주문_식별자값, 장바구니_상품);
 
         // when
@@ -62,7 +62,7 @@ class OrderItemDaoTest extends DaoTestConfig {
         Member 회원 = memberDaoFixture.회원을_등록한다("a@a.com", "1234", "10000", "1000");
         Product 계란 = productDaoFixture.상품을_등록한다("계란", 1000);
         CartItem 장바구니_상품 = cartItemDaoFixture.장바구니_상품을_등록한다(계란, 회원, 10);
-        Long 주문_식별자값 = orderDaoFixture.주문을_등록한다(회원, 장바구니_상품_목록(List.of(장바구니_상품)), "1000", now());
+        Long 주문_식별자값 = orderDaoFixture.주문을_등록한다(회원, 장바구니_상품_목록(List.of(장바구니_상품)), "1000", "3000", now());
         OrderItemEntity 주문의_장바구니_상품_엔티티 = 주문의_장바구니_상품_엔티티(주문_식별자값, 장바구니_상품);
 
         Long 주문의_장바구니_상품_식별자값 = orderItemDao.insertOrderItem(주문의_장바구니_상품_엔티티);
@@ -87,7 +87,7 @@ class OrderItemDaoTest extends DaoTestConfig {
         CartItem 장바구니_치킨 = cartItemDaoFixture.장바구니_상품을_등록한다(치킨, 회원, 1);
 
         LocalDateTime 주문_시간 = now();
-        Long 주문_식별자값 = orderDaoFixture.주문을_등록한다(회원, 장바구니_상품_목록(List.of(장바구니_계란, 장바구니_치킨)), "1000", 주문_시간);
+        Long 주문_식별자값 = orderDaoFixture.주문을_등록한다(회원, 장바구니_상품_목록(List.of(장바구니_계란, 장바구니_치킨)), "1000", "3000", 주문_시간);
 
         OrderItemEntity 주문의_장바구니_계란_엔티티 = 주문의_장바구니_상품_엔티티(주문_식별자값, 장바구니_계란);
         OrderItemEntity 주문의_장바구니_치킨_엔티티 = 주문의_장바구니_상품_엔티티(주문_식별자값, 장바구니_치킨);

@@ -25,7 +25,7 @@ public class OrderRowMapper {
                 rs.getLong("member_id"),
                 rs.getBigDecimal("total_price"),
                 rs.getBigDecimal("use_point"),
-                rs.getBigDecimal("use_point"),
+                rs.getBigDecimal("delivery_fee"),
                 rs.getTimestamp("created_at").toLocalDateTime()
         );
     };
@@ -41,6 +41,7 @@ public class OrderRowMapper {
         Long orderId = rs.getLong("orders.id");
         Money totalPrice = Money.from(rs.getBigDecimal("orders.total_price"));
         Money usePoint = Money.from(rs.getBigDecimal("orders.use_point"));
+        Money deliveryFee = Money.from(rs.getBigDecimal("orders.delivery_fee"));
         LocalDateTime createdAt = rs.getTimestamp("orders.created_at").toLocalDateTime();
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -58,6 +59,6 @@ public class OrderRowMapper {
             orderItems.add(new OrderItem(orderItemId, product, Quantity.from(orderItemQuantity), memberId));
         } while (rs.next());
 
-        return new OrderHistory(orderId, member, OrderItems.from(orderItems), totalPrice, usePoint, createdAt);
+        return new OrderHistory(orderId, member, OrderItems.from(orderItems), totalPrice, usePoint, deliveryFee, createdAt);
     };
 }

@@ -16,31 +16,35 @@ public class Order {
     private final CartItems cartItems;
     private final Money totalPrice;
     private final Money usePoint;
+    private final Money deliveryFee;
     private final LocalDateTime createdAt;
 
-    public Order(Member member, CartItems cartItems, Money usePoint) {
-        this(null, member, cartItems, usePoint, LocalDateTime.now());
+    public Order(Member member, CartItems cartItems, Money usePoint, Money deliveryFee) {
+        this(null, member, cartItems, usePoint, deliveryFee, LocalDateTime.now());
     }
 
-    public Order(Long id, Member member, CartItems cartItems, Money usePoint, LocalDateTime createdAt) {
+    public Order(Long id, Member member, CartItems cartItems, Money usePoint, Money deliveryFee, LocalDateTime createdAt) {
         this.id = id;
         this.member = member;
         this.cartItems = cartItems;
         this.totalPrice = cartItems.totalPrice();
         this.usePoint = usePoint;
+        this.deliveryFee = deliveryFee;
         this.createdAt = createdAt;
     }
 
-    public static Order of(Member member, CartItems cartItems, Money usePoint, PayPoint payPoint) {
+    public static Order of(Member member, CartItems cartItems, Money deliveryFee, Money usePoint, PayPoint payPoint) {
+        cartItems.checkOwner(member);
         validateOverFlowPoint(cartItems, usePoint);
-        Money realPay = cartItems.totalPrice().minus(usePoint);
+
+        Money payWithOutDeliveryFee = cartItems.totalPrice().minus(usePoint);
+        Money realPay = payWithOutDeliveryFee.plus(deliveryFee);
 
         member.spendPoint(usePoint);
         member.spendMoney(realPay);
+        member.accumulatePoint(payPoint.calculate(payWithOutDeliveryFee));
 
-        member.accumulatePoint(payPoint.calculate(realPay));
-
-        return new Order(member, cartItems, usePoint);
+        return new Order(member, cartItems, usePoint, deliveryFee);
     }
 
     private static void validateOverFlowPoint(CartItems cartItems, Money usePoint) {
@@ -69,6 +73,10 @@ public class Order {
         return usePoint;
     }
 
+    public Money getDeliveryFee() {
+        return deliveryFee;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -78,12 +86,12 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(member, order.member) && Objects.equals(cartItems, order.cartItems) && Objects.equals(totalPrice, order.totalPrice) && Objects.equals(usePoint, order.usePoint);
+        return Objects.equals(member, order.member) && Objects.equals(cartItems, order.cartItems) && Objects.equals(totalPrice, order.totalPrice) && Objects.equals(usePoint, order.usePoint) && Objects.equals(deliveryFee, order.deliveryFee) && Objects.equals(createdAt, order.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(member, cartItems, totalPrice, usePoint);
+        return Objects.hash(member, cartItems, totalPrice, usePoint, deliveryFee, createdAt);
     }
 
     @Override
@@ -94,6 +102,8 @@ public class Order {
                 ", cartItems=" + cartItems +
                 ", totalPrice=" + totalPrice +
                 ", usePoint=" + usePoint +
+                ", deliveryFee=" + deliveryFee +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

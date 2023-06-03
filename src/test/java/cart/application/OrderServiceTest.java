@@ -110,9 +110,10 @@ class OrderServiceTest {
                 .isEqualTo(new OrderHistory(
                         주문_식별자값,
                         new Member(회원.getId(), "a@a.com", "1234", Money.from(88000), Money.from(90)),
-                        OrderItems.from(List.of( new OrderItem(null, 계란, Quantity.from(10), 회원.getId()))),
+                        OrderItems.from(List.of(new OrderItem(null, 계란, Quantity.from(10), 회원.getId()))),
                         Money.from("10000"),
                         Money.from("1000"),
+                        Money.from("3000"),
                         null
                 ));
     }

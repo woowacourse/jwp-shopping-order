@@ -38,11 +38,10 @@ public class OrderService {
     @Transactional
     public Long createOrder(Member member, OrderRequest request) {
         Money usePoint = Money.from(request.getPoint());
-
+        Money deliveryFee = Money.from(request.getDeliveryFee());
         CartItems findCartItems = cartItemRepository.findByCartItemIds(request.getCartIds());
-        findCartItems.checkOwner(member);
 
-        Order order = Order.of(member, findCartItems, usePoint, DEFAULT_POINT_POLICY);
+        Order order = Order.of(member, findCartItems, deliveryFee, usePoint, DEFAULT_POINT_POLICY);
         publisher.publishEvent(MemberUpdateEvent.from(member));
 
         cartItemRepository.deleteByCartItemIds(request.getCartIds());

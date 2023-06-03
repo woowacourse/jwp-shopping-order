@@ -27,7 +27,7 @@ public class OrderWithTotalPriceResponse {
         return new OrderWithTotalPriceResponse(
                 orderHistory.getId(),
                 collectOrderProductResponses(orderHistory.getOrderItems()),
-                orderHistory.getTotalPrice().getValue().intValue(),
+                orderHistory.getTotalPrice().plus(orderHistory.getDeliveryFee()).getValue().intValue(),
                 orderHistory.getUsePoint().getValue().intValue(),
                 orderHistory.getCreatedAt()
         );

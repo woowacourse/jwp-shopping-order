@@ -13,13 +13,15 @@ public class OrderRequest {
 
     @PositiveOrZero(message = "사용할 포인트는 음수일 수 없습니다.")
     private int point;
+    private int deliveryFee;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(List<Long> cartIds, int point) {
+    public OrderRequest(List<Long> cartIds, int point, int deliveryFee) {
         this.cartIds = cartIds;
         this.point = point;
+        this.deliveryFee = deliveryFee;
     }
 
     public List<Long> getCartIds() {
@@ -28,5 +30,9 @@ public class OrderRequest {
 
     public int getPoint() {
         return point;
+    }
+
+    public int getDeliveryFee() {
+        return deliveryFee;
     }
 }

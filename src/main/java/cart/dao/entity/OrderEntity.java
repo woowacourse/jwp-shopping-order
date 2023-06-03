@@ -15,17 +15,19 @@ public class OrderEntity {
     private final Long memberId;
     private final BigDecimal totalPrice;
     private final BigDecimal usePoint;
+    private final BigDecimal deliveryFee;
     private final LocalDateTime createdAt;
 
-    public OrderEntity(Long memberId, BigDecimal totalPrice, BigDecimal usePoint, LocalDateTime createdAt) {
-        this(null, memberId, totalPrice, usePoint, createdAt);
+    public OrderEntity(Long memberId, BigDecimal totalPrice, BigDecimal usePoint, BigDecimal deliveryFee, LocalDateTime createdAt) {
+        this(null, memberId, totalPrice, usePoint, deliveryFee, createdAt);
     }
 
-    public OrderEntity(Long id, Long memberId, BigDecimal totalPrice, BigDecimal usePoint, LocalDateTime createdAt) {
+    public OrderEntity(Long id, Long memberId, BigDecimal totalPrice, BigDecimal usePoint, BigDecimal deliveryFee, LocalDateTime createdAt) {
         this.id = id;
         this.memberId = memberId;
         this.totalPrice = totalPrice;
         this.usePoint = usePoint;
+        this.deliveryFee = deliveryFee;
         this.createdAt = createdAt;
     }
 
@@ -34,12 +36,13 @@ public class OrderEntity {
                 order.getMember().getId(),
                 order.getTotalPrice().getValue(),
                 order.getUsePoint().getValue(),
+                order.getDeliveryFee().getValue(),
                 order.getCreatedAt()
         );
     }
 
     public Order toDomain(Member member, CartItems cartItems) {
-        return new Order(id, member, cartItems, Money.from(usePoint), createdAt);
+        return new Order(id, member, cartItems, Money.from(usePoint), Money.from(deliveryFee), createdAt);
     }
 
     public Long getId() {
@@ -56,6 +59,10 @@ public class OrderEntity {
 
     public BigDecimal getUsePoint() {
         return usePoint;
+    }
+
+    public BigDecimal getDeliveryFee() {
+        return deliveryFee;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -82,6 +89,7 @@ public class OrderEntity {
                 ", memberId=" + memberId +
                 ", totalPrice=" + totalPrice +
                 ", usePoint=" + usePoint +
+                ", deliveryFee=" + deliveryFee +
                 ", createdAt=" + createdAt +
                 '}';
     }

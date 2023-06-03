@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static cart.fixture.domain.CartItemsFixture.장바구니_상품_목록;
+import static cart.fixture.domain.MoneyFixture.배송비;
 import static cart.fixture.domain.MoneyFixture.포인트;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +42,7 @@ class OrderRepositoryTest extends RepositoryTestConfig {
     @Test
     void 주문과_주문_상품_목록을_저장한다() {
         // given
-        Order 주문 = new Order(회원, 장바구니_상품_목록, 포인트("1000"));
+        Order 주문 = new Order(회원, 장바구니_상품_목록, 포인트("1000"), 배송비("3000"));
 
         // when
         Long 주문_식별자값 = orderRepository.saveOrder(주문);
@@ -55,7 +56,7 @@ class OrderRepositoryTest extends RepositoryTestConfig {
     @Test
     void 회원의_주문을_조회한다() {
         // given
-        Order 주문 = new Order(회원, 장바구니_상품_목록, 포인트("1000"));
+        Order 주문 = new Order(회원, 장바구니_상품_목록, 포인트("1000"), 배송비("3000"));
 
         Long 주문_식별자값 = orderRepository.saveOrder(주문);
 
@@ -70,8 +71,9 @@ class OrderRepositoryTest extends RepositoryTestConfig {
                         new OrderHistory(주문_식별자값,
                                 회원,
                                 OrderItems.from(List.of(new OrderItem(null, 계란, Quantity.from(10), 회원.getId()))),
-                                Money.from(10000),
-                                Money.from(1000),
+                                Money.from("10000"),
+                                Money.from("1000"),
+                                Money.from("3000"),
                                 null
                         )
                 ));

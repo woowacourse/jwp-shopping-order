@@ -79,6 +79,7 @@ class OrderDaoTest extends DaoTestConfig {
                         OrderItems.from(List.of(new OrderItem(계란, Quantity.from(10), 회원.getId()))),
                         Money.from("10000"),
                         Money.from("1000"),
+                        Money.from("3000"),
                         주문_시간
                 )
         );
@@ -120,6 +121,7 @@ class OrderDaoTest extends DaoTestConfig {
                                 OrderItems.from(List.of(new OrderItem(주문1_장바구니_식별자값, 계란, Quantity.from(10), 회원.getId()))),
                                 Money.from("10000"),
                                 Money.from("1000"),
+                                Money.from("3000"),
                                 주문1_시간
                         ),
                         new OrderHistory(
@@ -128,6 +130,7 @@ class OrderDaoTest extends DaoTestConfig {
                                 OrderItems.from(List.of(new OrderItem(주문2_장바구니_식별자값, 치킨, Quantity.from(10), 회원.getId()))),
                                 Money.from("10000"),
                                 Money.from("0"),
+                                Money.from("3000"),
                                 주문2_시간
                         ),
                         new OrderHistory(
@@ -136,6 +139,7 @@ class OrderDaoTest extends DaoTestConfig {
                                 OrderItems.from(List.of(new OrderItem(주문3_장바구니_식별자값, 콜라, Quantity.from(10), 회원.getId()))),
                                 Money.from("10000"),
                                 Money.from("0"),
+                                Money.from("3000"),
                                 주문3_시간
                         )
                 );
