@@ -28,7 +28,7 @@ public class MemberCoupon {
         if (productAmount.isLessThan(coupon.getMinAmount())) {
             throw new BusinessException("총 금액은 최소금액보다 커야합니다.");
         }
-        return productAmount.minus(coupon.getDiscountAmount());
+        return Amount.of(coupon.calculateDiscountedAmount(productAmount.getValue()));
     }
 
     public void use() {
