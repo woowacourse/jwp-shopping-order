@@ -86,9 +86,11 @@ class OrderDaoTest {
     void 회원_id로_주문_정보를_얻는다() {
         //given
         orderDao.addOrder(new OrderEntity(memberId, 19000, 1000));
+        final int start = 0;
+        final int size = 10;
 
         //when
-        final List<OrderEntity> orderEntities = orderDao.getOrderEntityByMemberId(memberId);
+        final List<OrderEntity> orderEntities = orderDao.getOrderEntityByMemberId(memberId, start, size);
 
         //then
         assertThat(orderEntities).usingRecursiveComparison()
@@ -120,5 +122,18 @@ class OrderDaoTest {
         //then
         assertThat(detailEntities).usingRecursiveComparison()
                 .isEqualTo(List.of(new OrderDetailEntity(1L, 1L, 1L, 1)));
+    }
+
+    @Test
+    void 주문_정보의_개수를_센다() {
+        //given
+        final Long orderId = orderDao.addOrder(new OrderEntity(memberId, 19000, 1000));
+        orderDao.addOrderDetail(new OrderDetailEntity(orderId, productId, 1));
+
+        //when
+        final int count = orderDao.countAllOrders();
+
+        //then
+        assertThat(count).isEqualTo(1);
     }
 }

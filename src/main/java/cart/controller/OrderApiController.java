@@ -4,6 +4,8 @@ import cart.auth.Auth;
 import cart.domain.member.Member;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.dto.PageRequest;
+import cart.dto.PagingOrderResponse;
 import cart.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -33,9 +34,9 @@ public class OrderApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getAllOrders(@Auth final Member member) {
-        final List<OrderResponse> responses = orderService.getAllOrders(member);
-        return ResponseEntity.ok(responses);
+    public ResponseEntity<PagingOrderResponse> getAllOrders(@Auth final Member member, final PageRequest pageRequest) {
+        final PagingOrderResponse response = orderService.getAllOrders(member, pageRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{orderId}")

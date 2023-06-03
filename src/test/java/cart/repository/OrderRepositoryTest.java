@@ -76,11 +76,25 @@ class OrderRepositoryTest {
     void 회원의_주문_목록을_얻는다() {
         //given
         orderRepository.addOrder(Order.from(member, 19000, 1000, List.of(new OrderItem(product, 1))));
+        final int start = 0;
+        final int size = 10;
 
         //when
-        final List<Order> orders = orderRepository.getAllOrders(member);
+        final List<Order> orders = orderRepository.getAllOrders(member, start, size);
 
         //then
         assertThat(orders).isEqualTo(List.of(Order.from(member, 19000, 1000, List.of(new OrderItem(product, 1)))));
+    }
+
+    @Test
+    void 회원의_주문_목록의_전체_개수를_센다() {
+        //given
+        orderRepository.addOrder(Order.from(member, 19000, 1000, List.of(new OrderItem(product, 1))));
+
+        //when
+        final int count = orderRepository.countAllOrders();
+
+        //then
+        assertThat(count).isEqualTo(1);
     }
 }

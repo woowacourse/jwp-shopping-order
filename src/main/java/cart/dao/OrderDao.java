@@ -71,8 +71,10 @@ public class OrderDao {
         }
     }
 
-    public List<OrderEntity> getOrderEntityByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM orders WHERE member_id = ?";
+    public List<OrderEntity> getOrderEntityByMemberId(final Long memberId, final int start, final int size) {
+        final String sql = "SELECT * FROM orders WHERE member_id = ? " +
+                "ORDER BY ID " +
+                "LIMIT " + size + " OFFSET " + start;
         return jdbcTemplate.query(sql, orderEntityRowMapper, memberId);
     }
 
@@ -84,5 +86,10 @@ public class OrderDao {
     public List<OrderEntity> getAllOrders() {
         final String sql = "SELECT * FROM orders";
         return jdbcTemplate.query(sql, orderEntityRowMapper);
+    }
+
+    public Integer countAllOrders() {
+        final String sql = "SELECT COUNT(*) FROM orders";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 }

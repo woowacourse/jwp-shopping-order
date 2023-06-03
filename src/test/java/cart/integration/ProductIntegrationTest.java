@@ -2,6 +2,7 @@ package cart.integration;
 
 import cart.domain.product.Product;
 import cart.dto.PageInfo;
+import cart.dto.PageRequest;
 import cart.dto.PagingProductResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -21,10 +22,13 @@ public class ProductIntegrationTest extends IntegrationTest {
     @Sql("classpath:testData.sql")
     @Test
     public void getProducts() {
+        //given
+        final PageRequest pageRequest = new PageRequest(1, 10);
+
         //when
         var result = given().log().all()
-                .param("page", 1)
-                .param("size", 10)
+                .param("page", pageRequest.getPage())
+                .param("size", pageRequest.getSize())
                 .when()
                 .get("/products")
                 .then()

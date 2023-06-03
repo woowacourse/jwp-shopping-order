@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.CartItemDao;
-import cart.dao.ProductDao;
 import cart.domain.CartItem;
 import cart.domain.Order;
 import cart.domain.OrderItem;
@@ -11,7 +10,10 @@ import cart.domain.member.Member;
 import cart.dto.OrderItemDto;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.dto.PageRequest;
+import cart.dto.PagingOrderResponse;
 import cart.dto.PaymentDto;
+import cart.paging.Paging;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ public class OrderService {
     private final CartItemDao cartItemDao;
     private final PointPolicy pointPolicy;
 
-    public OrderService(final OrderRepository orderRepository, final MemberRepository memberRepository, final CartItemDao cartItemDao, final ProductDao productDao, final PointPolicy pointPolicy) {
+    public OrderService(final OrderRepository orderRepository, final MemberRepository memberRepository, final CartItemDao cartItemDao, final PointPolicy pointPolicy) {
         this.orderRepository = orderRepository;
         this.memberRepository = memberRepository;
         this.cartItemDao = cartItemDao;
@@ -60,11 +62,16 @@ public class OrderService {
         return Order.from(member, paymentDto.getFinalPayment(), paymentDto.getPoint(), orderItems);
     }
 
-    public List<OrderResponse> getAllOrders(final Member member) {
-        final List<Order> orders = orderRepository.getAllOrders(member);
-        return orders.stream()
+    public PagingOrderResponse getAllOrders(final Member member, final PageRequest pageRequest) {
+        final Paging paging = new Paging(pageRequest);
+
+        final List<Order> orders = orderRepository.getAllOrders(member, paging.getStart(), paging.getSize());
+        final List<OrderResponse> orderResponses = orders.stream()
                 .map(OrderResponse::from)
                 .collect(Collectors.toUnmodifiableList());
+
+        final int count = orderRepository.countAllOrders();
+        return new PagingOrderResponse(paging.getPageInfo(count), orderResponses);
     }
 
     public OrderResponse getOrderById(final Member member, final Long orderId) {

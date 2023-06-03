@@ -7,10 +7,12 @@ import cart.dto.OrderItemDto;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.OrderedProduct;
+import cart.dto.PageInfo;
+import cart.dto.PageRequest;
+import cart.dto.PagingOrderResponse;
 import cart.dto.PaymentDto;
 import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
-import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,29 +96,34 @@ class OrderIntegrationTest extends IntegrationTest {
     @Test
     void 전체_주문을_조회한다() {
         //given
+        final PageRequest pageRequest = new PageRequest(1, 10);
+
         addOrder(EMAIL, PASSWORD, new OrderRequest(List.of(new OrderItemDto(cartItemId)), new PaymentDto(20000, 19000, 1000)));
 
         //when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
+                .param("size", pageRequest.getSize())
+                .param("page", pageRequest.getPage())
                 .when()
                 .get("/orders")
                 .then()
                 .log().all().extract();
 
         //then
-        final List<OrderResponse> orderResponses = response.as(new TypeRef<>() {
-        });
+        final PagingOrderResponse orderResponse = response.as(PagingOrderResponse.class);
 
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(orderResponses).usingRecursiveComparison()
+            softly.assertThat(orderResponse.getOrderResponses()).usingRecursiveComparison()
                     .isEqualTo(
                             List.of(new OrderResponse(
                                     1L,
                                     List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
                                     new PaymentDto(20000, 19000, 1000))
                             ));
+            softly.assertThat(orderResponse.getPageInfo()).usingRecursiveComparison()
+                    .isEqualTo(new PageInfo(1, 10, 1, 1));
         });
     }
 

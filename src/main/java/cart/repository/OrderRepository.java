@@ -50,10 +50,14 @@ public class OrderRepository {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<Order> getAllOrders(final Member member) {
-        final List<OrderEntity> orderEntities = orderDao.getOrderEntityByMemberId(member.getId());
+    public List<Order> getAllOrders(final Member member, final int start, final int size) {
+        final List<OrderEntity> orderEntities = orderDao.getOrderEntityByMemberId(member.getId(), start, size);
         return orderEntities.stream()
                 .map(orderEntity -> generateOrder(member, orderEntity))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public int countAllOrders() {
+        return orderDao.countAllOrders();
     }
 }

@@ -13,6 +13,9 @@ import cart.dto.OrderItemDto;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.OrderedProduct;
+import cart.dto.PageInfo;
+import cart.dto.PageRequest;
+import cart.dto.PagingOrderResponse;
 import cart.dto.PaymentDto;
 import cart.repository.MemberRepository;
 import cart.repository.OrderRepository;
@@ -33,6 +36,7 @@ import static cart.common.fixture.DomainFixture.PRODUCT_CHICKEN;
 import static cart.common.fixture.DomainFixture.PRODUCT_IMAGE;
 import static cart.common.fixture.DomainFixture.PRODUCT_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -87,20 +91,30 @@ class OrderServiceTest {
     @Test
     void 회원의_모든_주문을_얻는다() {
         //given
-        when(orderRepository.getAllOrders(MEMBER_HUCHU))
+        final PageRequest pageRequest = new PageRequest(1, 10);
+
+        when(orderRepository.getAllOrders(MEMBER_HUCHU, 0, 10))
                 .thenReturn(List.of(Order.from(1L, MEMBER_HUCHU, 19000, 1000, List.of(new OrderItem(PRODUCT_CHICKEN, 1)))));
 
+        when(orderRepository.countAllOrders())
+                .thenReturn(1);
+
         //when
-        final List<OrderResponse> responses = orderService.getAllOrders(MEMBER_HUCHU);
+        final PagingOrderResponse response = orderService.getAllOrders(MEMBER_HUCHU, pageRequest);
 
         //then
-        assertThat(responses).usingRecursiveComparison()
-                .isEqualTo(List.of(new OrderResponse(
-                                1L,
-                                List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
-                                new PaymentDto(20000, 19000, 1000))
-                        )
-                );
+        assertSoftly(softly -> {
+            softly.assertThat(response.getOrderResponses()).usingRecursiveComparison()
+                    .isEqualTo(List.of(new OrderResponse(
+                                    1L,
+                                    List.of(new OrderedProduct(PRODUCT_NAME, 20000, 1, PRODUCT_IMAGE)),
+                                    new PaymentDto(20000, 19000, 1000))
+                            )
+                    );
+            softly.assertThat(response.getPageInfo()).usingRecursiveComparison()
+                    .isEqualTo(new PageInfo(1, 10, 1, 1));
+        });
+
     }
 
     @Test
