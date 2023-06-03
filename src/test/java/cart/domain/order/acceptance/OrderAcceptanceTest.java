@@ -129,7 +129,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
                 // then
                 assertAll(
-                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                        () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
                         () -> assertThat(response.getBody().asString()).isEqualTo("장바구니 상품에 없는 상품입니다.")
                 );
             }

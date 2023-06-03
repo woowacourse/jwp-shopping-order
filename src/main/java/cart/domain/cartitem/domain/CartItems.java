@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.domain.order.domain.dto.OrderCartItemDto;
 import cart.domain.product.domain.Product;
 import cart.global.exception.CartItemNotFoundException;
 
@@ -32,30 +31,18 @@ public class CartItems {
                 .orElseThrow(() -> new CartItemNotFoundException("상품에 해당하는 장바구니 상품을 찾을 수 없습니다."));
     }
 
-    public List<CartItem> getCartItemsByOrderCartItemDtos(List<OrderCartItemDto> orderCartItemDtos) {
-        List<CartItem> findCartItems = new ArrayList<>();
-        for (OrderCartItemDto orderCartItemDto : orderCartItemDtos) {
-            CartItem findCartItem = getCartItemById(orderCartItemDto.getCartItemId());
-            validateCartItemInfoMatch(findCartItem, orderCartItemDto);
-            findCartItems.add(findCartItem);
-        }
-        return findCartItems;
+    public CartItems getCartItemsByCartItemIds(List<Long> cartItemIds) {
+        List<CartItem> cartItems = cartItemIds.stream()
+                .map(this::getCartItemById)
+                .collect(Collectors.toUnmodifiableList());
+        return new CartItems(cartItems);
     }
 
-    private CartItem getCartItemById(Long cartItemId) {
+    public CartItem getCartItemById(Long cartItemId) {
         return cartItems.stream()
                 .filter(cartItem -> cartItem.isSameId(cartItemId))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("장바구니 상품에 없는 상품입니다."));
-    }
-
-    private void validateCartItemInfoMatch(CartItem findCartItem, OrderCartItemDto orderCartItemDto) {
-        String orderCartItemName = orderCartItemDto.getOrderCartItemName();
-        int orderCartItemPrice = orderCartItemDto.getOrderCartItemPrice();
-        String orderCartItemImageUrl = orderCartItemDto.getOrderCartItemImageUrl();
-        if (findCartItem.isNotSameProductInfo(orderCartItemName, orderCartItemPrice, orderCartItemImageUrl)) {
-            throw new IllegalArgumentException("주문 상품 정보와 기존 상품 정보가 일치하지 않습니다.");
-        }
+                .orElseThrow(() -> new CartItemNotFoundException("장바구니 상품에 없는 상품입니다."));
     }
 
     public int getTotalPrice() {

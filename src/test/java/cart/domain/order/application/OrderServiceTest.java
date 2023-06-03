@@ -15,6 +15,7 @@ import cart.domain.order.application.dto.OrderRequest;
 import cart.domain.order.domain.dto.OrderCartItemDto;
 import cart.domain.product.domain.Product;
 import cart.global.config.AuthMember;
+import cart.global.exception.CartItemNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -94,7 +95,7 @@ class OrderServiceTest {
 
             // when, then
             Assertions.assertThatThrownBy(() -> orderService.order(authMember, request))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(CartItemNotFoundException.class)
                     .hasMessage("장바구니 상품에 없는 상품입니다.");
         }
 

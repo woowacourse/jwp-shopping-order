@@ -2,7 +2,6 @@ package cart.domain.cartItem.domain;
 
 import static cart.fixtures.CartItemFixtures.Dooly_CartItem1;
 import static cart.fixtures.CartItemFixtures.Dooly_CartItem2;
-import static cart.fixtures.OrderFixtures.Dooly_Order1;
 import static cart.fixtures.ProductFixtures.CHICKEN;
 import static cart.fixtures.ProductFixtures.PANCAKE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,11 +11,9 @@ import java.util.List;
 
 import cart.domain.cartitem.domain.CartItem;
 import cart.domain.cartitem.domain.CartItems;
-import cart.domain.order.domain.dto.OrderCartItemDto;
 import cart.domain.product.domain.Product;
 import cart.global.exception.CartItemNotFoundException;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class CartItemsTest {
@@ -68,68 +65,46 @@ class CartItemsTest {
                 .hasMessage("상품에 해당하는 장바구니 상품을 찾을 수 없습니다.");
     }
 
-    @Nested
-    @DisplayName("OrderCartItemDto를 받아서 해당하는 장바구니 상품 목록 반환 시")
-    class getCartItemsByOrderCartItemDtos {
+    @Test
+    @DisplayName("장바구니 상품 아이디 목록을 받아서 해당하는 장바구니 상품이 담긴 CartItems를 반환한다.")
+    void getCartItemsByCartItemIds() {
+        // given
+        List<Long> cartItemIds = List.of(Dooly_CartItem1.ID, Dooly_CartItem2.ID);
+        CartItems cartItems = new CartItems(List.of(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY()));
 
-        @Test
-        @DisplayName("장바구니 상품과 주문할 장바구니 상품 이름이 다르면 예외가 발생한다.")
-        void throws_not_match_cartItem_name() {
-            // given
-            List<OrderCartItemDto> orderCartItemDtos = Dooly_Order1.UPDATE_NAME_REQUEST().getOrderCartItemDtos();
-            CartItems cartItems = new CartItems(List.of(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY()));
+        // when
+        CartItems findCartItems = cartItems.getCartItemsByCartItemIds(cartItemIds);
 
-            // when
-            assertThatThrownBy(() -> cartItems.getCartItemsByOrderCartItemDtos(orderCartItemDtos))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("주문 상품 정보와 기존 상품 정보가 일치하지 않습니다.");
-        }
+        // then
+        assertThat(findCartItems.getCartItems()).usingRecursiveFieldByFieldElementComparator()
+                .contains(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY());
+    }
 
-        @Test
-        @DisplayName("장바구니 상품과 주문할 장바구니 상품 가격이 다르면 예외가 발생한다.")
-        void throws_not_match_cartItem_price() {
-            // given
-            List<OrderCartItemDto> orderCartItemDtos = Dooly_Order1.UPDATE_PRICE_REQUEST().getOrderCartItemDtos();
-            CartItems cartItems = new CartItems(List.of(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY()));
+    @Test
+    @DisplayName("장바구니 상품 ID로 장바구니 상품을 가져온다.")
+    void getCartItemById_success() {
+        // given
+        Long cartItemId = Dooly_CartItem1.ID;
+        CartItems cartItems = new CartItems(List.of(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY()));
 
-            // when
-            assertThatThrownBy(() -> cartItems.getCartItemsByOrderCartItemDtos(orderCartItemDtos))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("주문 상품 정보와 기존 상품 정보가 일치하지 않습니다.");
-        }
+        // when
+        CartItem findCartItem = cartItems.getCartItemById(cartItemId);
 
-        @Test
-        @DisplayName("장바구니 상품과 주문할 장바구니 상품 이미지가 다르면 예외가 발생한다.")
-        void throws_not_match_cartItem_imageUrl() {
-            // given
-            List<OrderCartItemDto> orderCartItemDtos = Dooly_Order1.UPDATE_IMAGE_URL_REQUEST().getOrderCartItemDtos();
-            CartItems cartItems = new CartItems(List.of(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY()));
+        // then
+        assertThat(findCartItem).usingRecursiveComparison().isEqualTo(Dooly_CartItem1.ENTITY());
+    }
 
-            // when
-            assertThatThrownBy(() -> cartItems.getCartItemsByOrderCartItemDtos(orderCartItemDtos))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("주문 상품 정보와 기존 상품 정보가 일치하지 않습니다.");
-        }
+    @Test
+    @DisplayName("장바구니 상품 ID로 장바구니 상품을 가져올 때 장바구니 상품이 없으면 예외가 발생한다.")
+    void getCartItemById_throws_when_not_found_cartItem() {
+        // given
+        Long notExistId = -1L;
+        CartItems cartItems = new CartItems(List.of(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY()));
 
-        @Test
-        @DisplayName("주문할 장바구니 상품 정보와 같은 장바구니 상품 목록을 반환한다.")
-        void getMatchedCartItems() {
-            // given
-            Product product1 = Dooly_CartItem1.PRODUCT;
-            Product product2 = Dooly_CartItem2.PRODUCT;
-            List<OrderCartItemDto> orderCartItemDtos = List.of(
-                    new OrderCartItemDto(Dooly_CartItem1.ID, product1.getName(), product1.getPrice(), product1.getImageUrl()),
-                    new OrderCartItemDto(Dooly_CartItem2.ID, product2.getName(), product2.getPrice(), product2.getImageUrl())
-            );
-            CartItems cartItems = new CartItems(List.of(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY()));
-
-            // when
-            List<CartItem> cartItemsToOrder = cartItems.getCartItemsByOrderCartItemDtos(orderCartItemDtos);
-
-            // then
-            assertThat(cartItemsToOrder).usingRecursiveFieldByFieldElementComparator()
-                    .contains(Dooly_CartItem1.ENTITY(), Dooly_CartItem2.ENTITY());
-        }
+        // when, then
+        assertThatThrownBy(() -> cartItems.getCartItemById(notExistId))
+                .isInstanceOf(CartItemNotFoundException.class)
+                .hasMessage("장바구니 상품에 없는 상품입니다.");
     }
 
     @Test

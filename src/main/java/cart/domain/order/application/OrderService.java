@@ -14,9 +14,9 @@ import cart.domain.order.application.dto.OrdersResponse;
 import cart.domain.order.domain.Order;
 import cart.domain.order.domain.OrderItem;
 import cart.domain.order.domain.OrderItems;
-import cart.domain.order.domain.dto.OrderCartItemDto;
 import cart.domain.order.persistence.OrderDao;
 import cart.domain.order.persistence.OrderItemDao;
+import cart.domain.order.validator.OrderValidator;
 import cart.global.config.AuthMember;
 import cart.global.exception.OrderNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,24 +28,30 @@ public class OrderService {
     private final CartItemDao cartItemDao;
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
+    private final OrderValidator orderValidator;
 
     public OrderService(final MemberDao memberDao, final CartItemDao cartItemDao,
-                        final OrderDao orderDao, final OrderItemDao orderItemDao) {
+                        final OrderDao orderDao, final OrderItemDao orderItemDao,
+                        final OrderValidator orderValidator) {
         this.memberDao = memberDao;
         this.cartItemDao = cartItemDao;
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
+        this.orderValidator = orderValidator;
     }
 
-    // TODO: 크기 줄이기 (OrderItems?)
     public Long order(AuthMember authMember, OrderRequest orderRequest) {
         Member findMember = memberDao.selectMemberByEmail(authMember.getEmail());
-        CartItems allCartItems = new CartItems(cartItemDao.selectAllByMemberId(findMember.getId()));
-        List<OrderCartItemDto> orderCartItemDtos = orderRequest.getOrderCartItemDtos();
-        CartItems cartItemsToOrder = new CartItems(allCartItems.getCartItemsByOrderCartItemDtos(orderCartItemDtos));
+        CartItems cartItemsToOrder = findCartItemsToOrder(orderRequest, findMember);
+        orderValidator.validate(cartItemsToOrder, orderRequest.getOrderCartItemDtos());
         int totalPrice = cartItemsToOrder.getTotalPrice();
         findMember.checkPayable(totalPrice);
         memberDao.updateMemberCash(findMember.pay(totalPrice));
+        Order insertedOrder = saveOrder(findMember, cartItemsToOrder, totalPrice);
+        return insertedOrder.getId();
+    }
+
+    private Order saveOrder(Member findMember, CartItems cartItemsToOrder, int totalPrice) {
         for (Long cartItemIdToOrder : cartItemsToOrder.getCartItemIds()) {
             cartItemDao.deleteById(cartItemIdToOrder);
         }
@@ -56,7 +62,13 @@ public class OrderService {
                     cartItem.getProductPrice(), cartItem.getProductImageUrl(), cartItem.getQuantity());
             orderItemDao.insert(orderItem);
         }
-        return insertedOrder.getId();
+        return insertedOrder;
+    }
+
+    private CartItems findCartItemsToOrder(OrderRequest orderRequest, Member findMember) {
+        CartItems allCartItems = new CartItems(cartItemDao.selectAllByMemberId(findMember.getId()));
+        List<Long> cartItemIds = orderRequest.getCartItemIds();
+        return allCartItems.getCartItemsByCartItemIds(cartItemIds);
     }
 
     public OrdersResponse findOrders(AuthMember authMember) {
