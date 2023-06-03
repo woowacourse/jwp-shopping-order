@@ -15,6 +15,7 @@ import cart.exception.notfound.MemberCouponNotFoundException;
 import cart.exception.notfound.OrderNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +43,15 @@ public class OrderService {
         CartItems cartItems = cartItemRepository.findByIds(new ArrayList<>(cartProductRequests.keySet()));
         validateCartItems(cartProductRequests, cartItems);
 
-        MemberCoupon memberCoupon = memberCouponRepository.findById(request.getCouponId())
-                .orElseThrow(MemberCouponNotFoundException::new);
+        Long memberCouponId = request.getCouponId();
+        if (Objects.isNull(memberCouponId)) {
+            Order order = Order.of(member, cartItems, MemberCoupon.none(member));
+            cartItemRepository.deleteAll(cartItems);
+            return orderRepository.order(order);
+        }
 
+        MemberCoupon memberCoupon = memberCouponRepository.findById(memberCouponId)
+                .orElseThrow(MemberCouponNotFoundException::new);
         Order order = Order.of(member, cartItems, memberCoupon);
 
         cartItemRepository.deleteAll(cartItems);
