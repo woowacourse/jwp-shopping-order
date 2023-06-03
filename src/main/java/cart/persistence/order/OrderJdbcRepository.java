@@ -3,6 +3,7 @@ package cart.persistence.order;
 import cart.application.repository.order.OrderRepository;
 import cart.domain.Member;
 import cart.domain.order.Order;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderJdbcRepository implements OrderRepository {
@@ -56,4 +58,14 @@ public class OrderJdbcRepository implements OrderRepository {
         return jdbcTemplate.query(sql, orderRowMapper, memberId);
     }
 
+    @Override
+    public Optional<Order> findOrderBy(long orderId) {
+        String sql = "SELECT * FROM orders JOIN member ON member.id = orders.member_id WHERE orders.id = ?";
+        try {
+            Order order = jdbcTemplate.queryForObject(sql, orderRowMapper, orderId);
+            return Optional.of(order);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
 }
