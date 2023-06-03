@@ -20,6 +20,10 @@ public class CartItems {
         }
     }
 
+    public boolean hasSize(final int size) {
+        return cartItems.size() == size;
+    }
+
     public void checkOwner(final Member member) {
         cartItems.forEach(cartItem -> cartItem.checkOwner(member));
     }

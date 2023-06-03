@@ -2,6 +2,7 @@ package cart.application.service;
 
 import static cart.exception.badrequest.BadRequestErrorType.CART_ITEM_PRICE_INCORRECT;
 import static cart.exception.badrequest.BadRequestErrorType.CART_ITEM_QUANTITY_INCORRECT;
+import static cart.exception.noexist.NoExistErrorType.CART_ITEM_NO_EXIST;
 import static cart.exception.noexist.NoExistErrorType.COUPON_NO_EXIST;
 import static cart.exception.noexist.NoExistErrorType.ORDER_NO_EXIST;
 
@@ -68,6 +69,7 @@ public class OrderService {
 
     private void validateCartItems(final Map<Long, OrderProductRequest> cartProductRequests,
             final CartItems cartItems) {
+        validateCartSize(cartProductRequests, cartItems);
         for (final CartItem cartItem : cartItems.getCartItems()) {
             OrderProductRequest cartProductRequest = cartProductRequests.get(cartItem.getId());
             if (cartItem.getQuantity() != cartProductRequest.getQuantity()) {
@@ -76,6 +78,15 @@ public class OrderService {
             if (cartItem.getProduct().getPrice() != cartProductRequest.getPrice()) {
                 throw new BadRequestException(CART_ITEM_PRICE_INCORRECT);
             }
+        }
+    }
+
+    private void validateCartSize(final Map<Long, OrderProductRequest> cartProductRequests,
+            final CartItems cartItems) {
+        cartItems.checkNotEmpty();
+
+        if (!cartItems.hasSize(cartProductRequests.size())) {
+            throw new NoExistException(CART_ITEM_NO_EXIST);
         }
     }
 
