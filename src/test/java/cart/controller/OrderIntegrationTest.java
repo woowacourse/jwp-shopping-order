@@ -70,10 +70,6 @@ class OrderIntegrationTest extends IntegrationTest {
                         .map(CouponResponseDto::getMemberCouponId)
         );
 
-        ExtractableResponse<Response> cc = requestGetCartItems(member);
-        List<CartItemResponse> cir = cc.as(new TypeRef<>() {});
-        System.out.println("cart item !!!!!!!!!!!!!!!!!!!!!!!! : " + cir);
-
         // when
         // 사용자는 장바구니에 있는 물품들을 선택해서 주문한다.
         ExtractableResponse<Response> response = given()
@@ -126,7 +122,6 @@ class OrderIntegrationTest extends IntegrationTest {
         assertThat(couponResponseDtos)
                 .hasSize(1)
                 .noneMatch(couponResponseDto -> couponResponseDto.getName().equals("정액 할인 쿠폰"));
-
     }
 
     private boolean isSameCoupon(CouponResponseDto couponResponseDto) {

@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.swing.text.html.Option;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -84,6 +85,20 @@ public class OrderRepository {
         return getOrdersByOrderDtos(memberByEmail, orderDtos);
     }
 
+    public Order findOrderById(Member member, Long orderId) {
+        Member memberByEmail = memberDao.getMemberByEmail(member.getEmail());
+        OrderDto orderDto = orderDao.findByIdAndMemberId(orderId, memberByEmail.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 고객의 주문이 아닙니다."));
+        List<OrderProduct> orderProductsByOrderDto = getOrderProductsByOrderDto(orderDto);
+        return new Order(
+                orderId,
+                orderDto.getTimeStamp(),
+                memberByEmail,
+                findCouponById(orderDto.getCouponId()),
+                orderProductsByOrderDto
+        );
+    }
+
     private List<Order> getOrdersByOrderDtos(final Member memberByEmail, final List<OrderDto> orderDtos) {
         List<Order> orders = new ArrayList<>();
 
@@ -95,6 +110,11 @@ public class OrderRepository {
         }
 
         return orders;
+    }
+
+    private Optional<Coupon> findCouponById(Long id) {
+        Optional<CouponDto> couponDto = couponDao.findById(id);
+        return couponDto.map(CouponConvertor::dtoToDomain);
     }
 
     private List<OrderProduct> getOrderProductsByOrderDto(final OrderDto orderDto) {

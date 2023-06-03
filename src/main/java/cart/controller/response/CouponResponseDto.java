@@ -30,4 +30,12 @@ public class CouponResponseDto {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "CouponResponseDto{" +
+                "memberCouponId=" + memberCouponId +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
 }

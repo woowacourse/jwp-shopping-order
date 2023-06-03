@@ -57,4 +57,13 @@ public class OrderDao {
         return jdbcTemplate.query(sql, orderDtoRowMapper, memberId);
     }
 
+    public Optional<OrderDto> findByIdAndMemberId(final Long id, final Long memberId) {
+        String sql = "SELECT * FROM orders WHERE id = ? AND member_id = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, orderDtoRowMapper, id, memberId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
 }

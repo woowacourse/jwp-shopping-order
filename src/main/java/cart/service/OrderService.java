@@ -44,4 +44,8 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public OrderResponseDto findOrderById(final Member member ,final Long orderId) {
+        Order orderById = orderRepository.findOrderById(member, orderId);
+        return OrderResponseDto.from(orderById);
+    }
 }

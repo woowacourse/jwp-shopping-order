@@ -36,8 +36,8 @@ public class Order {
     }
 
     public static Order of(final Member member,
-                                  final Optional<Coupon> coupon,
-                                  final List<CartItem> cartItems) {
+                           final Optional<Coupon> coupon,
+                           final List<CartItem> cartItems) {
         validateSameMember(member, cartItems);
 
         List<OrderProduct> orderProducts = cartItems.stream()
