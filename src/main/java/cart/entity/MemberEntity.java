@@ -5,20 +5,20 @@ public class MemberEntity {
     private final Long id;
     private final String email;
     private final String password;
-    private final String rank;
+    private final String grade;
     private final int totalPurchaseAmount;
 
     public MemberEntity(
             final Long id,
             final String email,
             final String password,
-            final String rank,
+            final String grade,
             final int totalPurchaseAmount
     ) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.rank = rank;
+        this.grade = grade;
         this.totalPurchaseAmount = totalPurchaseAmount;
     }
 
@@ -34,8 +34,8 @@ public class MemberEntity {
         return password;
     }
 
-    public String getRank() {
-        return rank;
+    public String getGrade() {
+        return grade;
     }
 
     public int getTotalPurchaseAmount() {

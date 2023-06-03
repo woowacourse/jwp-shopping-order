@@ -1,6 +1,6 @@
 package cart.domain;
 
-public enum Rank {
+public enum Grade {
 
     NORMAL(0.0),
     SILVER(0.05),
@@ -11,7 +11,7 @@ public enum Rank {
 
     private final double discountRate;
 
-    Rank(final double discountRate) {
+    Grade(final double discountRate) {
         this.discountRate = discountRate;
     }
 

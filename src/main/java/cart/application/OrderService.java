@@ -25,9 +25,10 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final MemberRepository memberRepository;
 
-    public OrderService(final OrderRepository orderRepository,
-                        final CartItemRepository cartItemRepository,
-                        final MemberRepository memberRepository
+    public OrderService(
+            final OrderRepository orderRepository,
+            final CartItemRepository cartItemRepository,
+            final MemberRepository memberRepository
     ) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
@@ -58,7 +59,7 @@ public class OrderService {
         final Long savedId = orderRepository.saveOrder(order).getId();
 
         member.addTotalPurchaseAmount(order.calculateTotalPrice());
-        member.upgradeRank();
+        member.upgradeGrade();
         memberRepository.update(member);
         return savedId;
     }
@@ -66,27 +67,10 @@ public class OrderService {
     public OrderShowResponse showOrder(final Member member, final Long orderId) {
         final List<OrderItem> orderItems = orderRepository.findAllOrderItemsByIdAndMemberId(orderId, member.getId());
         final List<OrderItemDto> orderItemDtos = orderItems.stream()
-                .map(orderItem -> new OrderItemDto(
-                                orderItem.getId(),
-                                orderItem.getName(),
-                                orderItem.getPrice(),
-                                orderItem.getImageUrl(),
-                                orderItem.getQuantity(),
-                                orderItem.getDiscountRate(),
-                                orderItem.calculateDiscountedPrice()
-                        )
-                ).collect(Collectors.toList());
+                .map(OrderItemDto::from)
+                .collect(Collectors.toList());
         final Order order = orderRepository.findOrderById(member, orderId, orderItems);
-        return new OrderShowResponse(
-                orderItemDtos,
-                order.getOrderedAt(),
-                order.calculateTotalItemDiscountAmount(orderItems),
-                order.calculateTotalMemberDiscountAmount(orderItems),
-                order.calculateTotalItemPrice(),
-                order.calculateDiscountedTotalItemPrice(),
-                order.getShippingFee(),
-                order.calculateTotalPrice()
-        );
+        return OrderShowResponse.of(orderItemDtos, order, orderItems);
     }
 
     public List<OrderShowResponse> showAllOrders(final Member member) {
@@ -97,26 +81,9 @@ public class OrderService {
             final List<OrderItem> orderItems = orderRepository.findAllOrderItemsByIdAndMemberId(order.getId(),
                     member.getId());
             final List<OrderItemDto> orderItemDtos = orderItems.stream()
-                    .map(orderItem -> new OrderItemDto(
-                                    orderItem.getId(),
-                                    orderItem.getName(),
-                                    orderItem.getPrice(),
-                                    orderItem.getImageUrl(),
-                                    orderItem.getQuantity(),
-                                    orderItem.getDiscountRate(),
-                                    orderItem.calculateDiscountedPrice()
-                            )
-                    ).collect(Collectors.toList());
-            orderShowResponses.add(new OrderShowResponse(
-                    orderItemDtos,
-                    order.getOrderedAt(),
-                    order.calculateTotalItemDiscountAmount(orderItems),
-                    order.calculateTotalMemberDiscountAmount(orderItems),
-                    order.calculateTotalItemPrice(),
-                    order.calculateDiscountedTotalItemPrice(),
-                    order.getShippingFee(),
-                    order.calculateTotalPrice())
-            );
+                    .map(OrderItemDto::from)
+                    .collect(Collectors.toList());
+            orderShowResponses.add(OrderShowResponse.of(orderItemDtos, order, orderItems));
         }
         return orderShowResponses;
     }

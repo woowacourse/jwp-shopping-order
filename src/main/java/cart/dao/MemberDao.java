@@ -20,7 +20,7 @@ public class MemberDao {
                     rs.getLong("id"),
                     rs.getString("email"),
                     rs.getString("password"),
-                    rs.getString("rank"),
+                    rs.getString("grade"),
                     rs.getInt("total_purchase_amount")
             );
 
@@ -38,7 +38,7 @@ public class MemberDao {
                 savedId,
                 memberEntity.getEmail(),
                 memberEntity.getPassword(),
-                memberEntity.getRank(),
+                memberEntity.getGrade(),
                 memberEntity.getTotalPurchaseAmount()
         );
     }
@@ -59,12 +59,12 @@ public class MemberDao {
     }
 
     public void update(final Member member) {
-        final String sql = "update member set email = ?, password = ?, rank = ?, total_purchase_amount = ? where id = ?";
+        final String sql = "update member set email = ?, password = ?, grade = ?, total_purchase_amount = ? where id = ?";
         jdbcTemplate.update(
                 sql,
                 member.getEmail(),
                 member.getPassword(),
-                member.getRank().name(),
+                member.getGrade().name(),
                 member.getTotalPurchaseAmount(),
                 member.getId()
         );

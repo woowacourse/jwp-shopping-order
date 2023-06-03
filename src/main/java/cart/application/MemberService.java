@@ -2,7 +2,7 @@ package cart.application;
 
 import cart.domain.Member;
 import cart.repository.MemberRepository;
-import cart.ui.dto.MemberRankResponse;
+import cart.ui.dto.MemberGradeResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,12 +14,12 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public MemberRankResponse getMemberInfo(final Long id) {
+    public MemberGradeResponse getMemberInfo(final Long id) {
         final Member member = memberRepository.findById(id);
-        return new MemberRankResponse(
+        return new MemberGradeResponse(
                 member.getId(),
-                member.getRank().name(),
-                (int) (member.getRank().getDiscountRate() * 100)
+                member.getGrade().name(),
+                (int) (member.getGrade().getDiscountRate() * 100)
         );
     }
 }

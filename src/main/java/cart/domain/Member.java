@@ -8,7 +8,7 @@ public class Member {
     private Long id;
     private Email email;
     private Password password;
-    private Rank rank;
+    private Grade grade;
     private Money totalPurchaseAmount;
 
     public Member() {
@@ -22,7 +22,7 @@ public class Member {
         this.id = id;
         this.email = new Email(email);
         this.password = new Password(password);
-        this.rank = Rank.NORMAL;
+        this.grade = Grade.NORMAL;
         this.totalPurchaseAmount = new Money(0);
     }
 
@@ -35,7 +35,7 @@ public class Member {
         this.id = id;
         this.email = new Email(email);
         this.password = new Password(password);
-        this.rank = Rank.NORMAL;
+        this.grade = Grade.NORMAL;
         this.totalPurchaseAmount = new Money(totalPurchaseAmount);
     }
 
@@ -48,18 +48,18 @@ public class Member {
         this.totalPurchaseAmount = new Money(this.totalPurchaseAmount.getValue() + value);
     }
 
-    public void upgradeRank() {
+    public void upgradeGrade() {
         if (totalPurchaseAmount.getValue() >= 100_000) {
-            rank = Rank.SILVER;
+            grade = Grade.SILVER;
         }
         if (totalPurchaseAmount.getValue() >= 200_000) {
-            rank = Rank.GOLD;
+            grade = Grade.GOLD;
         }
         if (totalPurchaseAmount.getValue() >= 300_000) {
-            rank = Rank.PLATINUM;
+            grade = Grade.PLATINUM;
         }
         if (totalPurchaseAmount.getValue() >= 500_000) {
-            rank = Rank.DIAMOND;
+            grade = Grade.DIAMOND;
         }
     }
 
@@ -75,8 +75,8 @@ public class Member {
         return password.getValue();
     }
 
-    public Rank getRank() {
-        return rank;
+    public Grade getGrade() {
+        return grade;
     }
 
     public int getTotalPurchaseAmount() {

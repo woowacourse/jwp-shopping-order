@@ -58,8 +58,8 @@ public class OrderItem {
         return (int) (price.getValue() * (discountRate.getValue() / 100.0) * quantity.getValue());
     }
 
-    public int calculateMemberDiscountAmount(final double discountedRateByRank) {
-        return (int) (price.getValue() * discountedRateByRank * quantity.getValue());
+    public int calculateMemberDiscountAmount(final double discountedRateByGrade) {
+        return (int) (price.getValue() * discountedRateByGrade * quantity.getValue());
     }
 
     public int calculateDiscountedPriceBy(final double discountRate) {

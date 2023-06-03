@@ -1,5 +1,7 @@
 package cart.ui.dto;
 
+import cart.domain.OrderItem;
+
 public class OrderItemDto {
 
     private Long id;
@@ -10,7 +12,7 @@ public class OrderItemDto {
     private int discountRate;
     private int discountedPrice;
 
-    public OrderItemDto(
+    private OrderItemDto(
             final Long id,
             final String name,
             final int price,
@@ -26,6 +28,18 @@ public class OrderItemDto {
         this.quantity = quantity;
         this.discountRate = discountRate;
         this.discountedPrice = discountedPrice;
+    }
+
+    public static OrderItemDto from(final OrderItem orderItem) {
+        return new OrderItemDto(
+                orderItem.getId(),
+                orderItem.getName(),
+                orderItem.getPrice(),
+                orderItem.getImageUrl(),
+                orderItem.getQuantity(),
+                orderItem.getDiscountRate(),
+                orderItem.calculateDiscountedPrice()
+        );
     }
 
     public Long getId() {

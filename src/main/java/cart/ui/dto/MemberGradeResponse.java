@@ -1,12 +1,12 @@
 package cart.ui.dto;
 
-public class MemberRankResponse {
+public class MemberGradeResponse {
 
     private Long id;
     private String rank;
     private int discountRate;
 
-    public MemberRankResponse(final Long id, final String rank, final int discountRate) {
+    public MemberGradeResponse(final Long id, final String rank, final int discountRate) {
         this.id = id;
         this.rank = rank;
         this.discountRate = discountRate;

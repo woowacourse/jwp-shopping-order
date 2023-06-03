@@ -53,7 +53,7 @@ public class Order {
         }
         return orderItems.stream()
                 .mapToInt(orderItem ->
-                        orderItem.calculateMemberDiscountAmount(member.getRank().getDiscountRate()))
+                        orderItem.calculateMemberDiscountAmount(member.getGrade().getDiscountRate()))
                 .sum();
     }
 
@@ -68,7 +68,7 @@ public class Order {
 
     private int getMemberDiscount(int sum, final OrderItem orderItem) {
         if (orderItem.isMemberDiscount()) {
-            final double discountRate = member.getRank().getDiscountRate();
+            final double discountRate = member.getGrade().getDiscountRate();
             sum += orderItem.calculateDiscountedPriceBy(discountRate);
         }
         return sum;

@@ -1,5 +1,7 @@
 package cart.ui.dto;
 
+import cart.domain.Order;
+import cart.domain.OrderItem;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,6 +34,23 @@ public class OrderShowResponse {
         this.discountedTotalItemPrice = discountedTotalItemPrice;
         this.shippingFee = shippingFee;
         this.totalPrice = totalPrice;
+    }
+
+    public static OrderShowResponse of(
+            final List<OrderItemDto> orderItemDtos,
+            final Order order,
+            final List<OrderItem> orderItems
+    ) {
+        return new OrderShowResponse(
+                orderItemDtos,
+                order.getOrderedAt(),
+                order.calculateTotalItemDiscountAmount(orderItems),
+                order.calculateTotalMemberDiscountAmount(orderItems),
+                order.calculateTotalItemPrice(),
+                order.calculateDiscountedTotalItemPrice(),
+                order.getShippingFee(),
+                order.calculateTotalPrice()
+        );
     }
 
     public List<OrderItemDto> getOrderItems() {

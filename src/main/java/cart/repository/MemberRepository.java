@@ -22,7 +22,7 @@ public class MemberRepository {
                 member.getId(),
                 member.getEmail(),
                 member.getPassword(),
-                member.getRank().name(),
+                member.getGrade().name(),
                 member.getTotalPurchaseAmount()
         ));
         return new Member(

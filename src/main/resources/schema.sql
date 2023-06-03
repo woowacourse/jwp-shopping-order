@@ -13,7 +13,7 @@ CREATE TABLE if not exists member
     id                    BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email                 VARCHAR(255) NOT NULL UNIQUE,
     password              VARCHAR(255) NOT NULL,
-    rank                  varchar(255) not null,
+    grade                 varchar(255) not null,
     total_purchase_amount int          not null
 );
 
