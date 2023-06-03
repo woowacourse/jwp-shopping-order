@@ -74,7 +74,7 @@ public class Order {
     }
 
     public int calculateDiscountPrice() {
-        return totalOrderPrice - calculateTotalProductPrice();
+        return calculateTotalProductPrice() - totalOrderPrice;
     }
 
     public void checkOwner(final Member member) {
