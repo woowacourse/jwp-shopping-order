@@ -19,12 +19,8 @@ public class CouponResponse {
     }
 
     public static CouponResponse from(final Coupon coupon) {
-        if (Objects.nonNull(coupon)) {
-            final CouponType couponType = coupon.getCouponType();
-            return new CouponResponse(coupon.getId(), couponType.getName(), couponType.getDiscountAmount().getValue());
-        }
-        // TODO 여기서 null을 반환하는게 맞나? 애초에 null을 전달 안해야 하는 거 아닌가?
-        return null;
+        final CouponType couponType = coupon.getCouponType();
+        return new CouponResponse(coupon.getId(), couponType.getName(), couponType.getDiscountAmount().getValue());
     }
 
     public static List<CouponResponse> from(final List<Coupon> coupons) {

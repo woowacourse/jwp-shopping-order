@@ -1,7 +1,9 @@
 package cart.dto;
 
+import cart.domain.Coupon;
 import cart.domain.Order;
 import java.util.List;
+import java.util.Objects;
 
 public class OrderDetailResponse {
 
@@ -30,13 +32,24 @@ public class OrderDetailResponse {
     }
 
     public static OrderDetailResponse from(final Order order) {
+        final Coupon coupon = order.getCoupon();
+        if (Objects.nonNull(coupon)) {
+            return new OrderDetailResponse(
+                    order.getId(),
+                    OrderItemResponse.from(order.getOrderItems()),
+                    order.totalProductPrice().getValue(),
+                    order.totalPayments().getValue(),
+                    order.getDeliveryFee().getValue(),
+                    CouponResponse.from(coupon)
+            );
+        }
         return new OrderDetailResponse(
                 order.getId(),
                 OrderItemResponse.from(order.getOrderItems()),
                 order.totalProductPrice().getValue(),
                 order.totalPayments().getValue(),
                 order.getDeliveryFee().getValue(),
-                CouponResponse.from(order.getCoupon())
+                null
         );
     }
 
