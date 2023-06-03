@@ -5,8 +5,6 @@ import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.dto.SimpleOrderResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -69,7 +67,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-//        assertThat(orderDao.findByMember(멤버_A)).isEmpty();
+        assertThat(orderDao.findAllByMember(멤버_A)).isEmpty();
     }
 
     @Test
@@ -82,7 +80,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-//        assertThat(orderDao.findByMember(멤버_A)).isEmpty();
+        assertThat(orderDao.findAllByMember(멤버_A)).isEmpty();
     }
 
     @Test
@@ -152,8 +150,7 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         // when
         final ExtractableResponse<Response> 모든_주문_정보 = 사용자의_모든_주문정보를_가져온다(멤버_A);
-        final String string = 모든_주문_정보.asString();
-        final List<SimpleOrderResponse> simpleOrderResponses = new ObjectMapper().readValue(string, new TypeReference<>() {});
+        final List<SimpleOrderResponse> simpleOrderResponses = 모든_주문_정보.jsonPath().getList(".", SimpleOrderResponse.class);
 
         // then
         assertAll(
