@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.OrderServerException;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -29,6 +31,21 @@ public class Point {
 
     public static Point from(int value) {
         return new Point(null, value, null, null, null);
+    }
+
+    public Point subtract(Point other) {
+        if (value < other.value) {
+            throw new OrderServerException("포인트는 빼려고하는 값이 더 작아야합니다.");
+        }
+        return Point.of(id, value - other.value, comment, createAt, expiredAt);
+    }
+
+    public boolean isEmpty() {
+        return value == 0;
+    }
+
+    public boolean isGreaterThan(Point other) {
+        return value > other.value;
     }
 
     public Long getId() {
