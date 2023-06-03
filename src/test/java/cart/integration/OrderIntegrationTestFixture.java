@@ -24,16 +24,29 @@ public class OrderIntegrationTestFixture {
             ExtractableResponse<Response> 응답,
             Long 주문_id,
             int 배송비,
-            int 총_가격,
+            String 쿠폰_이름,
+            int 할인_금액,
+            int 할인_전_금액,
+            int 총_금액,
             OrderProductResponse... 주문_상품_응답
     ) {
         List<OrderProductResponse> responses = Arrays.asList(주문_상품_응답);
-        OrderDetailResponse response = new OrderDetailResponse(주문_id, null, null, 배송비, BigDecimal.valueOf(총_가격),
-                responses);
+        OrderDetailResponse response = new OrderDetailResponse(
+                주문_id,
+                null,
+                null,
+                배송비,
+                쿠폰_이름,
+                BigDecimal.valueOf(할인_금액),
+                BigDecimal.valueOf(할인_전_금액),
+                BigDecimal.valueOf(총_금액),
+                responses
+        );
         OrderDetailResponse actual = 응답.as(OrderDetailResponse.class);
         assertThat(actual)
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields()
+                .withEqualsForType((d1, d2) -> d1.compareTo(d2) == 0, BigDecimal.class)
                 .isEqualTo(response);
     }
 
@@ -49,15 +62,15 @@ public class OrderIntegrationTestFixture {
         );
     }
 
-    public static ExtractableResponse<Response> 주문_요청(Member 사용자, int 배송비, int 총_가격, Long... 장바구니_ID) {
+    public static ExtractableResponse<Response> 주문_요청(Member 사용자, int 배송비, Long 내_쿠폰_ID, int 총_가격, Long... 장바구니_ID) {
         List<Long> ids = Arrays.asList(장바구니_ID);
-        OrderRequest request = new OrderRequest(ids, 배송비, BigDecimal.valueOf(총_가격));
+        OrderRequest request = new OrderRequest(ids, 내_쿠폰_ID, 배송비, BigDecimal.valueOf(총_가격));
         return RestAssured.given()
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .body(request)
+                .body(request).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .post("/orders")
-                .then()
+                .then().log().all()
                 .extract();
 
     }
@@ -71,15 +84,16 @@ public class OrderIntegrationTestFixture {
                 .extract();
     }
 
-    public static OrderResponse 사용자_주문_목록_응답(Long 주문_ID, OrderProductResponse... 응답) {
+    public static OrderResponse 사용자_주문_목록_응답(Long 주문_ID, int 총_금액, OrderProductResponse... 응답) {
         List<OrderProductResponse> responses = Arrays.asList(응답);
-        return new OrderResponse(주문_ID, null, null, responses);
+        return new OrderResponse(주문_ID, null, null, BigDecimal.valueOf(총_금액), responses);
     }
 
     public static void 주문_전체_조회_응답_검증(ExtractableResponse<Response> 응답, OrderResponse... orderResponses) {
         List<OrderResponse> responses = Arrays.asList(orderResponses);
         assertThat(응답.jsonPath().getList(".", OrderResponse.class)).usingRecursiveComparison()
                 .ignoringExpectedNullFields()
+                .withEqualsForType((d1, d2) -> d1.compareTo(d2) == 0, BigDecimal.class)
                 .isEqualTo(responses);
     }
 

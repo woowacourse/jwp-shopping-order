@@ -13,6 +13,7 @@ import cart.domain.coupon.Coupon;
 import cart.entity.CouponEntity;
 import cart.entity.OrderEntity;
 import cart.entity.OrderProductEntity;
+import cart.exception.NonExistCouponException;
 import cart.exception.NonExistMemberException;
 import java.util.List;
 import java.util.Optional;
@@ -112,7 +113,7 @@ public class OrderRepository {
         }
         return couponDao.findById(couponId)
                 .map(CouponEntity::toDomain)
-                .orElseThrow();
+                .orElseThrow(NonExistCouponException::new);
     }
 
     private Member getMember(OrderEntity order) {

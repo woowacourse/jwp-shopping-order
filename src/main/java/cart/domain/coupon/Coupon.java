@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class Coupon {
 
-    public static final Coupon NONE = new Coupon(CouponType.NONE, "NONE", BigDecimal.ZERO, Money.ZERO);
+    public static final Coupon NONE = new Coupon("NONE", CouponType.NONE, BigDecimal.ZERO, Money.ZERO);
 
     private final Long id;
     private final String name;
@@ -14,7 +14,7 @@ public class Coupon {
     private final BigDecimal discountValue;
     private final Money minOrderPrice;
 
-    public Coupon(CouponType couponType, String name, BigDecimal discountValue, Money minOrderPrice) {
+    public Coupon(String name, CouponType couponType, BigDecimal discountValue, Money minOrderPrice) {
         this(null, name, couponType, discountValue, minOrderPrice);
     }
 

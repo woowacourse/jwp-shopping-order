@@ -11,6 +11,7 @@ import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
 import cart.exception.IncorrectPriceException;
 import cart.exception.NonExistCartItemException;
+import cart.exception.NonExistCouponException;
 import cart.exception.NonExistOrderException;
 import cart.repository.CartItemRepository;
 import cart.repository.MemberCouponRepository;
@@ -59,7 +60,7 @@ public class OrderService {
             return new MemberCoupon(member, Coupon.NONE);
         }
         return memberCouponRepository.findById(couponId)
-                .orElseThrow();
+                .orElseThrow(NonExistCouponException::new);
     }
 
     private void deleteOrdered(List<CartItem> cartItems, MemberCoupon memberCoupon) {
