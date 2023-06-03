@@ -40,14 +40,23 @@ public class CartService {
     public Long add(final Member member, final CartItemRequest cartItemRequest) {
         Cart cart = cartRepository.findCartByMemberId(member.getId());
         Product product = productRepository.findProductById(cartItemRequest.getProductId());
-        CartItem cartItem = cart.addItem(product);
 
-        if (cartItem.isExistAlready()) {
-            cartRepository.updateCartItemQuantity(cartItem);
-            return cartItem.getId();
+        if (cartRepository.isExistAlreadyCartItem(cart, product)) {
+            return updateCartItemQuantity(cartItemRequest, cart);
         }
 
-        return cartRepository.insertNewCartItem(cart.getId(), cartItem);
+        return makeNewCartItem(cartItemRequest, cart);
+    }
+
+    private Long updateCartItemQuantity(final CartItemRequest cartItemRequest, final Cart cart) {
+        CartItem cartItem = cartRepository.findCartItem(cart, cartItemRequest.getProductId());
+
+        cartRepository.addCartItemQuantity(cartItem);
+        return cartItem.getId();
+    }
+
+    private Long makeNewCartItem(final CartItemRequest cartItemRequest, final Cart cart) {
+        return cartRepository.insertNewCartItem(cart, cartItemRequest.getProductId());
     }
 
     @Transactional
@@ -57,30 +66,26 @@ public class CartService {
         validateOwner(cart, cartItem);
 
         if (request.getQuantity() == EMPTY) {
-            cart.removeItem(cartItem);
             cartRepository.removeCartItem(cartItem);
             return;
         }
 
-        cartItem.changeQuantity(request.getQuantity());
-        cartRepository.updateCartItemQuantity(cartItem);
+        cartRepository.updateCartItemQuantity(cartItem, request.getQuantity());
+    }
+
+    private void validateOwner(final Cart cart, final CartItem cartItem) {
+        if (!cartRepository.hasCartItem(cart, cartItem)) {
+            throw new MemberNotOwnerException();
+        }
     }
 
     @Transactional
     public void remove(final Member member, final Long cartItemId) {
         CartItem cartItem = cartRepository.findCartItemById(cartItemId);
         Cart cart = cartRepository.findCartByMemberId(member.getId());
-
         validateOwner(cart, cartItem);
-        cart.removeItem(cartItem);
 
         cartRepository.deleteCartItemById(cartItem.getId());
-    }
-
-    private void validateOwner(final Cart cart, final CartItem cartItem) {
-        if (!cart.hasCartItem(cartItem)) {
-            throw new MemberNotOwnerException();
-        }
     }
 
     @Transactional

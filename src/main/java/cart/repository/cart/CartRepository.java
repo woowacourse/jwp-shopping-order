@@ -43,8 +43,8 @@ public class CartRepository {
         return new Cart(cartEntity.getId(), new CartItems(cartItems));
     }
 
-    public Long insertNewCartItem(final Long cartId, final CartItem cartItem) {
-        return cartDao.saveCartItem(cartId, cartItem);
+    public Long insertNewCartItem(final Cart cart, final Long productId) {
+        return cartDao.saveCartItem(cart.getId(), productId);
     }
 
     public CartItem findCartItemById(final Long cartItemId) {
@@ -65,6 +65,14 @@ public class CartRepository {
         cartDao.updateQuantity(cartItem.getId(), cartItem.getQuantity());
     }
 
+    public void updateCartItemQuantity(final CartItem cartItem, final int quantity) {
+        cartDao.updateQuantity(cartItem.getId(), quantity);
+    }
+
+    public void addCartItemQuantity(final CartItem cartItem) {
+        cartDao.updateQuantity(cartItem.getId(), cartItem.getQuantity() + 1);
+    }
+
     public void deleteCartItemById(final Long cartItemId) {
         cartDao.removeCartItemByCartITemId(cartItemId);
     }
@@ -75,5 +83,20 @@ public class CartRepository {
 
     public void deleteAllCartItems(final Cart cart) {
         cartDao.deleteAllCartItemsByCartId(cart.getId());
+    }
+
+    public boolean isExistAlreadyCartItem(final Cart cart, final Product product) {
+        return cartDao.isExistAlreadyCartItem(cart.getId(), product.getId());
+    }
+
+    public CartItem findCartItem(final Cart cart, final Long productId) {
+        CartItemEntity cartItemEntity = cartDao.findCartItem(cart.getId(), productId);
+        ProductEntity productEntity = productDao.findById(cartItemEntity.getProductId());
+        Product product = new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.isOnSale(), 0);
+        return new CartItem(cartItemEntity.getId(), product, cartItemEntity.getQuantity());
+    }
+
+    public boolean hasCartItem(final Cart cart, final CartItem cartItem) {
+        return cartDao.hasCartItem(cart.getId(), cartItem.getId());
     }
 }

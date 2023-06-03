@@ -73,6 +73,19 @@ public class CartDao {
         return insert.executeAndReturnKey(parameters).longValue();
     }
 
+    public Long saveCartItem(final long cartId, final Long productId) {
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("cart_id", cartId);
+        parameters.put("product_id", productId);
+        parameters.put("quantity", 1);
+
+        return insert.executeAndReturnKey(parameters).longValue();
+    }
+
     public void updateQuantity(final long cartItemId, final int quantity) {
         String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, quantity, cartItemId);
@@ -96,6 +109,23 @@ public class CartDao {
     public void deleteAllCartItemsByCartId(final Long cartId) {
         String sql = "DELETE FROM cart_item WHERE cart_id = ?";
         jdbcTemplate.update(sql, cartId);
+    }
+
+    public boolean isExistAlreadyCartItem(final long cartId, final long productId) {
+        String sql = "SELECT COUNT(*) FROM cart_item WHERE cart_id = ? AND product_id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, cartId, productId);
+        return count > 0;
+    }
+
+    public CartItemEntity findCartItem(final Long cartId, final Long productId) {
+        String sql = "SELECT * FROM cart_item WHERE cart_id = ? AND product_id = ?";
+        return jdbcTemplate.queryForObject(sql, cartItemRowMapper, cartId, productId);
+    }
+
+    public boolean hasCartItem(final Long cartId, final Long cartItemId) {
+        String sql = "SELECT COUNT(*) FROM cart_item WHERE cart_id = ? AND id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, cartId, cartItemId);
+        return count > 0;
     }
 }
 

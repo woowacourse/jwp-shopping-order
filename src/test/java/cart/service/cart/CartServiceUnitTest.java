@@ -21,6 +21,7 @@ import static cart.fixture.MemberFixture.createMember;
 import static cart.fixture.ProductFixture.createProduct;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -58,17 +59,20 @@ public class CartServiceUnitTest {
         // given
         Member member = createMember();
         Cart cart = createCart();
+        CartItem cartItem = createCartItem();
         Product product = createProduct();
         CartItemRequest req = new CartItemRequest(1L);
 
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
         given(productRepository.findProductById(req.getProductId())).willReturn(product);
+        given(cartRepository.isExistAlreadyCartItem(cart, product)).willReturn(true);
+        given(cartRepository.findCartItem(cart, req.getProductId())).willReturn(cartItem);
 
         // when
         Long id = cartService.add(member, req);
 
         // then
-        verify(cartRepository).updateCartItemQuantity(any(CartItem.class));
+        verify(cartRepository).addCartItemQuantity(any(CartItem.class));
     }
 
     @DisplayName("카트 아이템의 수량을 변경한다.")
@@ -82,12 +86,13 @@ public class CartServiceUnitTest {
 
         given(cartRepository.findCartItemById(any())).willReturn(cartItem);
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
+        given(cartRepository.hasCartItem(cart, cartItem)).willReturn(true);
 
         // when
         cartService.updateQuantity(member, 1L, req);
 
         // then
-        verify(cartRepository).updateCartItemQuantity(any(CartItem.class));
+        verify(cartRepository).updateCartItemQuantity(any(CartItem.class), eq(req.getQuantity()));
     }
 
     @DisplayName("아이템을 제거한다.")
@@ -100,6 +105,7 @@ public class CartServiceUnitTest {
 
         given(cartRepository.findCartItemById(any())).willReturn(cartItem);
         given(cartRepository.findCartByMemberId(member.getId())).willReturn(cart);
+        given(cartRepository.hasCartItem(cart, cartItem)).willReturn(true);
 
         // when
         cartService.remove(member, 1L);
@@ -122,5 +128,5 @@ public class CartServiceUnitTest {
 
         // then
         verify(cartRepository).deleteAllCartItems(any(Cart.class));
-     }
+    }
 }
