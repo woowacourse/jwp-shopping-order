@@ -30,7 +30,6 @@ public class CouponQueryService {
         return couponDao.findAllByMemberId(memberId);
     }
 
-    //todo 리팩토링
     public CalculateActualPriceResponse calculateActualPrice(
             CalculateActualPriceRequest calculateActualPriceRequest) {
         Coupons coupons = findCoupons(calculateActualPriceRequest.getCouponIds());
