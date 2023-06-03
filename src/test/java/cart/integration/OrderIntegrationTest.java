@@ -123,6 +123,56 @@ public class OrderIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void 장바구니_상품을_쿠폰없이_주문_및_조회한다() {
+        requestUpdateCartItemQuantity(member, cartItemId1, 3);
+
+        CreateOrderByCartItemsRequest request = new CreateOrderByCartItemsRequest(
+                null,
+                List.of(
+                        new OrderProductRequest(cartItemId1, 3, "치킨", 10_000, "http://example.com/chicken.jpg"),
+                        new OrderProductRequest(cartItemId2, 1, "피자", 15_000, "http://example.com/pizza.jpg")
+                )
+        );
+
+        long orderId = orderCartItems(member, request);
+        FindOrderDetailResponse response = findOrderById(member, orderId);
+
+        FindOrderDetailResponse expected = new FindOrderDetailResponse(orderId, List.of(
+                new OrderDetailProductResponse(productId, "치킨", "http://example.com/chicken.jpg", 10_000, 3),
+                new OrderDetailProductResponse(productId2, "피자", "http://example.com/pizza.jpg", 15_000, 1)),
+                45000, 0, 0);
+
+        assertThat(response)
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void 배송비_유료_주문을_한다() {
+        CreateOrderByCartItemsRequest request = new CreateOrderByCartItemsRequest(
+                null,
+                List.of(
+                        new OrderProductRequest(cartItemId1, 1, "치킨", 10_000, "http://example.com/chicken.jpg"),
+                        new OrderProductRequest(cartItemId2, 1, "피자", 15_000, "http://example.com/pizza.jpg")
+                )
+        );
+
+        long orderId = orderCartItems(member, request);
+        FindOrderDetailResponse response = findOrderById(member, orderId);
+
+        FindOrderDetailResponse expected = new FindOrderDetailResponse(orderId, List.of(
+                new OrderDetailProductResponse(productId, "치킨", "http://example.com/chicken.jpg", 10_000, 1),
+                new OrderDetailProductResponse(productId2, "피자", "http://example.com/pizza.jpg", 15_000, 1)),
+                25000, 0, 3000);
+
+        assertThat(response)
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .isEqualTo(expected);
+    }
+
+    @Test
     void 전체_주문목록을_조회한다() {
         LocalDateTime futureDate = LocalDateTime.of(9999, 12, 31, 0, 0);
         requestUpdateCartItemQuantity(member, cartItemId1, 3);
