@@ -39,7 +39,7 @@
 Request
 
 ```
-GET /products?page={int}&size=10 HTTP/1.1
+GET /products?page={int}&size={int} HTTP/1.1
 ```
 
 Response
@@ -49,26 +49,32 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-    "pageInfo" : {
-        "page" : 1
-        "size" : 10,
-        "totalElements" : 20
-        "totalPages" : 2
-    }
-    "products" : [
+    "pageInfo": {
+        "page": 1,
+        "size": 10,
+        "totalElements": 21,
+        "totalPages": 3
+    },
+    "products": [
         {
             "id": 1,
-            "name": "치킨",
-            "price": 10000,
-            "imageUrl": "http://example.com/chicken.jpg"
+            "name": "product1",
+            "price": 1000,
+            "imageUrl": "image.jpeg"
         },
         {
             "id": 2,
-            "name": "피자",
-            "price": 20000,
-            "imageUrl": "http://example.com/pizza.jpg"
-        }
+            "name": "product2",
+            "price": 1000,
+            "imageUrl": "image.jpeg"
+        },
         (...)
+        {
+            "id": 10,
+            "name": "product10",
+            "price": 1000,
+            "imageUrl": "image.jpeg"
+        }
     ]
 }
 ```
@@ -260,7 +266,7 @@ Authorization: Basic ${credentials}
 Content-Type: application/json
 
 {
-가    "orderItems" : [
+    "orderItems" : [
         {
             "cartItemId": 1
          },
@@ -289,7 +295,7 @@ Content-Type: application/json
 Request
 
 ```
-GET /orders?page={int}&size=10 HTTP/1.1
+GET /orders?page=1&size=10 HTTP/1.1
 Authorization: Basic ${credentials}
 Content-Type: application/json
 ```
@@ -300,44 +306,32 @@ Response
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-[
-    {
-        "orderId" : 1,
-        "orderedProducts" : [
-            {
-                "name": "치킨",
-                "price": 10000,
-                "quantity" : 3,
-                "imageUrl": "http://example.com/chicken.jpg"
-            },
-            {
-                "name": "피자",
-                "price": 15000,
-                "quantity" : 1,
-                "imageUrl": "http://example.com/pizza.jpg"
-            },
-        ],
-        "payment" : {
-            "originalPayment" : 25000,
-            "finalPayment" : 24000,
-            "point" : 1000
+{
+    "pageInfo": {
+        "page": 1,
+        "size": 10,
+        "totalElements": 1,
+        "totalPages": 1
+    },
+    "orders": [
+        {
+            "orderId": 1,
+            "orderedProducts": [
+                {
+                    "name": "chicken",
+                    "price": 20000,
+                    "quantity": 1,
+                    "imageUrl": "chicken.jpeg"
+                }
+            ],
+            "payment": {
+                "originalPayment": 20000,
+                "finalPayment": 19000,
+                "point": 1000
+            }
         }
-        "orderId" : 2,
-        "orderedProducts" : [
-            {
-                "name": "치킨",
-                "price": 10000,
-                "quantity" : 3,
-                "imageUrl": "http://example.com/chicken.jpg"
-            },
-        ],
-        "payment" : {
-            "originalPayment" : 10000,
-            "finalPayment" : 10000,
-            "point" : 0
-        }
-    }
-]
+    ]
+}
 
 ```
 
@@ -404,63 +398,95 @@ Content-Type: application/json
 
 # DB
 
+## ERD
+
+```mermaid
+erDiagram
+
+    entity "member" {
+    id BIGINT PK
+    email VARCHAR(255)
+    password VARCHAR(255)
+    point BIGINT
+}
+
+    entity "product" {
+    id BIGINT PK
+    name VARCHAR(255)
+    price INT
+    image_url VARCHAR(255)
+}
+
+    entity "cart_item" {
+    id BIGINT PK
+    member_id BIGINT FK
+    product_id BIGINT FK
+    quantity INT
+}
+
+    entity "orders" {
+    id BIGINT PK
+    member_id BIGINT FK
+    payment BIGINT
+    discount_point BIGINT
+    order_date DATETIME
+}
+
+    entity "order_detail" {
+    id BIGINT PK
+    order_id BIGINT FK
+    product_id BIGINT FK
+    quantity BIGINT
+}
+
+    member ||--o{ cart_item: owns
+    member ||--o{ orders: places
+    product ||--o{ cart_item: includes
+    product ||--o{ order_detail: includes
+    orders ||--|{ order_detail: includes
 ```
-CREATE TABLE product if not exists (
+
+## DDL
+
+```
+CREATE TABLE if not exists product (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
     image_url VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE member if not exists (
+CREATE TABLE if not exists member (
      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) NOT NULL UNIQUE,
      password VARCHAR(255) NOT NULL,
      point BIGINT NOT NULL
 );
 
-CREATE TABLE cart_item if not exists (
+CREATE TABLE if not exists cart_item (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
 
-CREATE TABLE order if not exists (
+CREATE TABLE if not exists orders (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
     payment BIGINT NOT NULL,
     discount_point BIGINT NOT NULL,
     order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (member_id) REFERENCES member(id)
+    FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE
 );
 
-CREATE TABLE order_detail if not exists (
+CREATE TABLE if not exists order_detail (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity BIGINT NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES order(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
 ```
-
-## 메모
-
-- unsigned 잠시 지움
-- order 는 예약어 인 것 같음
-- 주문 취소도 기능 만들까?
-- 포인트 조회의 명세는 "/members/{memberId}/point" 여야 하지 않을까?
-- Member와 Credential 을 구분해야 하지 않을까?
-
-orderAdd 할 때
-
-- cartItem id 를 받아와야 로직이 제대로 수행될 것 같다.
-
-## 협업 회의 때 말할 내용
-
-- 특정 주문 조회 orderId 추가
-- 주문 조회 시 totalPayment -> payment
-- cartId 가능하다면 이걸로 수정해주고, 아니면 추가만 해주는 건 어떠신가요?
