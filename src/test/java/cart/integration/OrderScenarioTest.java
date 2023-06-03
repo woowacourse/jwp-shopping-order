@@ -117,7 +117,7 @@ public class OrderScenarioTest extends ScenarioFixture {
                 "쿠폰의 할인정책이 적용된 첫 번째 상품 검증",
                 () -> assertThat(jsonPath.getLong("cartItemsPrice[0].cartItemId")).isEqualTo(치킨.getId()),
                 () -> assertThat(jsonPath.getLong("cartItemsPrice[0].originalPrice")).isEqualTo(치킨.getPrice()),
-                () -> assertThat(jsonPath.getLong("cartItemsPrice[0].discountPrice")).isEqualTo(1_000)
+                () -> assertThat(jsonPath.getLong("cartItemsPrice[0].discountPrice")).isEqualTo(4_000)
         );
 
         assertAll(

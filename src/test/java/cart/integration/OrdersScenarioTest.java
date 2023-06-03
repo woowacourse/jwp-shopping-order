@@ -43,8 +43,8 @@ public class OrdersScenarioTest extends OrderScenarioTest {
                 () -> assertThat(jsonPath.getInt("[0].orderedItems[0].price")).isEqualTo(order.getOrderItems().get(0).getOriginalPrice()),
                 () -> assertThat(jsonPath.getInt("[0].orderedItems[0].quantity")).isEqualTo(order.getOrderItems().get(0).getQuantity()),
                 () -> assertThat(jsonPath.getString("[0].orderedItems[0].imageUrl")).isEqualTo(order.getOrderItems().get(0).getImgUri()),
-                () -> assertThat(jsonPath.getInt("[0].orderedItems[0].totalPrice")).isEqualTo(9000),
-                () -> assertThat(jsonPath.getInt("[0].orderedItems[0].totalDiscountPrice")).isEqualTo(1000),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[0].totalPrice")).isEqualTo(6_000),
+                () -> assertThat(jsonPath.getInt("[0].orderedItems[0].totalDiscountPrice")).isEqualTo(4_000),
 
                 () -> assertThat(jsonPath.getLong("[0].orderedItems[1].id")).isEqualTo(order.getOrderItems().get(1).getProductId()),
                 () -> assertThat(jsonPath.getString("[0].orderedItems[1].name")).isEqualTo(order.getOrderItems().get(1).getProductName()),
@@ -80,8 +80,8 @@ public class OrdersScenarioTest extends OrderScenarioTest {
                 () -> assertThat(jsonPath.getInt("orderedItems[0].price")).isEqualTo(order.getOrderItems().get(0).getOriginalPrice()),
                 () -> assertThat(jsonPath.getInt("orderedItems[0].quantity")).isEqualTo(order.getOrderItems().get(0).getQuantity()),
                 () -> assertThat(jsonPath.getString("orderedItems[0].imageUrl")).isEqualTo(order.getOrderItems().get(0).getImgUri()),
-                () -> assertThat(jsonPath.getInt("orderedItems[0].totalPrice")).isEqualTo(9_000),
-                () -> assertThat(jsonPath.getInt("orderedItems[0].totalDiscountPrice")).isEqualTo(1_000),
+                () -> assertThat(jsonPath.getInt("orderedItems[0].totalPrice")).isEqualTo(6_000),
+                () -> assertThat(jsonPath.getInt("orderedItems[0].totalDiscountPrice")).isEqualTo(4_000),
 
                 () -> assertThat(jsonPath.getLong("orderedItems[1].id")).isEqualTo(order.getOrderItems().get(1).getProductId()),
                 () -> assertThat(jsonPath.getString("orderedItems[1].name")).isEqualTo(order.getOrderItems().get(1).getProductName()),
