@@ -46,16 +46,17 @@ public class OrderIntegrationTest extends IntegrationTest {
     void createOrder() {
         // given, when
         final long deliveryFee = 3000L;
-        final ExtractableResponse<Response> createResponse = 주문_정보_추가(member, new OrderRequest(
+        final ExtractableResponse<Response> createdResponse = 주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
                 deliveryFee, null));
 
         // then
-        assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(createResponse.header("Location")).isEqualTo("/orders/1");
+        assertThat(createdResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(createdResponse.header("Location")).isEqualTo("/orders/1");
 
-        final ExtractableResponse<Response> getResponse = 주문_정보_상세_조회(member, getIdFromCreatedResponse(createResponse));
-        final OrderDetailResponse order = getResponse.body().jsonPath().getObject(".", OrderDetailResponse.class);
+        final ExtractableResponse<Response> foundResponse = 주문_정보_상세_조회(member,
+                getIdFromCreatedResponse(createdResponse));
+        final OrderDetailResponse order = foundResponse.body().jsonPath().getObject(".", OrderDetailResponse.class);
         assertThat(order.getTotalPrice()).isEqualTo(DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE);
         assertThat(order.getDeliveryFee()).isEqualTo(deliveryFee);
         assertThat(order.getCoupon()).isNull();
@@ -68,16 +69,17 @@ public class OrderIntegrationTest extends IntegrationTest {
         final long couponId = 1L;
         final long deliveryFee = 3000L;
         // when
-        final ExtractableResponse<Response> createResponse = 주문_정보_추가(member, new OrderRequest(
+        final ExtractableResponse<Response> createdResponse = 주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
                 deliveryFee, couponId));
 
         // then
-        assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(createResponse.header("Location")).isEqualTo("/orders/1");
+        assertThat(createdResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(createdResponse.header("Location")).isEqualTo("/orders/1");
 
-        final ExtractableResponse<Response> getResponse = 주문_정보_상세_조회(member, getIdFromCreatedResponse(createResponse));
-        final OrderDetailResponse order = getResponse.body().jsonPath().getObject(".", OrderDetailResponse.class);
+        final ExtractableResponse<Response> foundResponse = 주문_정보_상세_조회(member,
+                getIdFromCreatedResponse(createdResponse));
+        final OrderDetailResponse order = foundResponse.body().jsonPath().getObject(".", OrderDetailResponse.class);
         assertThat(order.getTotalPrice()).isEqualTo(DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE);
         assertThat(order.getDeliveryFee()).isEqualTo(deliveryFee);
         assertThat(order.getCoupon()).isNotNull();
@@ -194,12 +196,12 @@ public class OrderIntegrationTest extends IntegrationTest {
         // given
         final long couponId = 1L;
         final long deliveryFee = 3000L;
-        final ExtractableResponse<Response> createResponse = 주문_정보_추가(member, new OrderRequest(
+        final ExtractableResponse<Response> createdResponse = 주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
                 DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, 1L));
 
         // when
-        final ExtractableResponse<Response> response = 주문_정보_상세_조회(member, getIdFromCreatedResponse(createResponse));
+        final ExtractableResponse<Response> response = 주문_정보_상세_조회(member, getIdFromCreatedResponse(createdResponse));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -229,12 +231,12 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void deleteOrder() {
         // given
-        final ExtractableResponse<Response> createResponse = 주문_정보_추가(member, new OrderRequest(
+        final ExtractableResponse<Response> createdResponse = 주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
                 DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
-        final long orderId = getIdFromCreatedResponse(createResponse);
+        final long orderId = getIdFromCreatedResponse(createdResponse);
         final ExtractableResponse<Response> response = 주문_삭제(member, orderId);
 
         // then
@@ -262,12 +264,12 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void deleteOrderByIllegalMemberId() {
         // given
-        final ExtractableResponse<Response> createResponse = 주문_정보_추가(member, new OrderRequest(
+        final ExtractableResponse<Response> createdResponse = 주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
                 DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
-        final ExtractableResponse<Response> response = 주문_삭제(member2, getIdFromCreatedResponse(createResponse));
+        final ExtractableResponse<Response> response = 주문_삭제(member2, getIdFromCreatedResponse(createdResponse));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -277,18 +279,18 @@ public class OrderIntegrationTest extends IntegrationTest {
     @Test
     void cancelOrderById() {
         // given
-        final ExtractableResponse<Response> createResponse = 주문_정보_추가(member, new OrderRequest(
+        final ExtractableResponse<Response> createdResponse = 주문_정보_추가(member, new OrderRequest(
                 List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
                 DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // when
-        final long orderId = getIdFromCreatedResponse(createResponse);
+        final long orderId = getIdFromCreatedResponse(createdResponse);
         final ExtractableResponse<Response> response = 주문_취소(member, orderId);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        final ExtractableResponse<Response> getResponse = 주문_정보_목록_조회(member);
-        final List<OrderResponse> orderResponses = getResponse.jsonPath().getList(".", OrderResponse.class);
+        final ExtractableResponse<Response> foundResponse = 주문_정보_목록_조회(member);
+        final List<OrderResponse> orderResponses = foundResponse.jsonPath().getList(".", OrderResponse.class);
         System.out.println(orderResponses);
         orderResponses.stream()
                 .filter(orderResponse -> Objects.equals(orderResponse.getOrderId(), orderId))
@@ -304,12 +306,12 @@ public class OrderIntegrationTest extends IntegrationTest {
     void cancelOrderWithCoupon() {
         // given
         final long couponId = 1L;
-        final ExtractableResponse<Response> createResponse = 주문_정보_추가(member,
+        final ExtractableResponse<Response> createdResponse = 주문_정보_추가(member,
                 new OrderRequest(List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
                         DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, couponId));
 
         // when
-        final ExtractableResponse<Response> response = 주문_취소(member, getIdFromCreatedResponse(createResponse));
+        final ExtractableResponse<Response> response = 주문_취소(member, getIdFromCreatedResponse(createdResponse));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
