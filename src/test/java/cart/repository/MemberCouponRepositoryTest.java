@@ -18,6 +18,7 @@ import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -104,5 +105,27 @@ class MemberCouponRepositoryTest {
 
         // then
         verify(memberCouponDao, times(1)).deleteById(any());
+    }
+
+    @Test
+    void 만료기간이_지나지_않은_쿠폰을_멤버로_조회한다() {
+        given(memberCouponDao.findByMemberId(any()))
+                .willReturn(List.of(
+                        new MemberCouponEntity(1L, 1L, 1L, LocalDate.of(3000, 6, 16)),
+                        new MemberCouponEntity(2L, 1L, 1L, LocalDate.of(1000, 6, 16)),
+                        new MemberCouponEntity(3L, 1L, 1L, LocalDate.of(3000, 6, 8))
+                ));
+        given(couponDao.findById(1L))
+                .willReturn(Optional.of(new CouponEntity(1L, "쿠폰", "RATE", BigDecimal.valueOf(10), BigDecimal.ZERO)));
+        given(memberDao.findById(1L))
+                .willReturn(Optional.of(new MemberEntity(1L, "millie@email.com", "millie")));
+
+        // when
+        List<MemberCoupon> memberCoupons = memberCouponRepository.findNotExpiredAllByMember(밀리);
+
+        // then
+        assertThat(memberCoupons).hasSize(2);
+        assertThat(memberCoupons).map(MemberCoupon::getId)
+                .containsExactly(1L, 3L);
     }
 }

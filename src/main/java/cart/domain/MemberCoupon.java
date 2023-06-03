@@ -41,9 +41,13 @@ public class MemberCoupon {
     }
 
     private void checkExpiredDate() {
-        if (expiredDate.isBefore(LocalDate.now())) {
+        if (!isNotExpired()) {
             throw new IllegalCouponException();
         }
+    }
+
+    public boolean isNotExpired() {
+        return !expiredDate.isBefore(LocalDate.now());
     }
 
     private void checkOwner(Member member) {

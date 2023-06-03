@@ -22,7 +22,10 @@ public class TestFixture {
 
     public static final Coupon 쿠폰_10퍼센트 = new Coupon(1L, "10퍼센트 할인 쿠폰", CouponType.RATE, BigDecimal.valueOf(10),
             new Money(21000));
+    public static final Coupon 쿠폰_1000원 = new Coupon(2L, "1000원 할인 쿠폰", CouponType.FIXED, BigDecimal.valueOf(1000),
+            new Money(1000));
     public static final MemberCoupon 밀리_쿠폰_10퍼센트 = new MemberCoupon(1L, 밀리, 쿠폰_10퍼센트, LocalDate.of(3000, 6, 16));
+    public static final MemberCoupon 밀리_쿠폰_1000원 = new MemberCoupon(2L, 밀리, 쿠폰_1000원, LocalDate.of(3000, 6, 16));
     public static final MemberCoupon 밀리_만료기간_지난_쿠폰_10퍼센트 = new MemberCoupon(3L, 밀리, 쿠폰_10퍼센트,
             LocalDate.of(1000, 6, 16));
     public static final MemberCoupon 박스터_쿠폰_10퍼센트 = new MemberCoupon(2L, 박스터, 쿠폰_10퍼센트, LocalDate.of(3000, 6, 16));

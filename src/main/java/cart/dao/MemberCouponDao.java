@@ -4,6 +4,7 @@ import cart.entity.MemberCouponEntity;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -63,5 +64,11 @@ public class MemberCouponDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM member_coupon WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public List<MemberCouponEntity> findByMemberId(Long memberId) {
+        String sql = "SELECT * FROM member_coupon WHERE member_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 }

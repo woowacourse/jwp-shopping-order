@@ -7,6 +7,7 @@ import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -79,5 +80,22 @@ class MemberCouponDaoTest {
         // then
         Optional<MemberCouponEntity> memberCouponEntity = memberCouponDao.findById(id);
         assertThat(memberCouponEntity).isEmpty();
+    }
+
+    @Test
+    void 멤버로_멤버_쿠폰을_조회한다() {
+        // given
+        MemberCouponEntity memberCoupon1 = new MemberCouponEntity(memberId, couponId, LocalDate.of(3000, 6, 16));
+        MemberCouponEntity memberCoupon2 = new MemberCouponEntity(memberId, couponId, LocalDate.of(3000, 6, 8));
+        memberCouponDao.save(memberCoupon1);
+        memberCouponDao.save(memberCoupon2);
+
+        // when
+        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(memberId);
+
+        // then
+        assertThat(memberCouponEntities).usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(List.of(memberCoupon1, memberCoupon2));
     }
 }

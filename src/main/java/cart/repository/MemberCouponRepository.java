@@ -11,7 +11,9 @@ import cart.entity.MemberCouponEntity;
 import cart.entity.MemberEntity;
 import cart.exception.NonExistCouponException;
 import cart.exception.NonExistMemberException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -32,10 +34,15 @@ public class MemberCouponRepository {
         if (savedMemberCoupon.isEmpty()) {
             return Optional.empty();
         }
-        MemberCouponEntity memberCoupon = savedMemberCoupon.get();
+        MemberCouponEntity memberCouponEntity = savedMemberCoupon.get();
+        MemberCoupon memberCoupon = toDomain(memberCouponEntity);
+        return Optional.of(memberCoupon);
+    }
+
+    private MemberCoupon toDomain(MemberCouponEntity memberCoupon) {
         Coupon coupon = toCoupon(memberCoupon.getCouponId());
         Member member = toMember(memberCoupon.getMemberId());
-        return Optional.of(new MemberCoupon(id, member, coupon, memberCoupon.getExpiredDate()));
+        return new MemberCoupon(memberCoupon.getId(), member, coupon, memberCoupon.getExpiredDate());
     }
 
     private Coupon toCoupon(Long couponId) {
@@ -66,5 +73,13 @@ public class MemberCouponRepository {
 
     public void delete(MemberCoupon memberCoupon) {
         memberCouponDao.deleteById(memberCoupon.getId());
+    }
+
+    public List<MemberCoupon> findNotExpiredAllByMember(Member member) {
+        List<MemberCouponEntity> memberCouponEntities = memberCouponDao.findByMemberId(member.getId());
+        return memberCouponEntities.stream()
+                .map(this::toDomain)
+                .filter(MemberCoupon::isNotExpired)
+                .collect(Collectors.toList());
     }
 }
