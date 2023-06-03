@@ -95,7 +95,7 @@ class CartItemRepositoryTest {
         final CartItem cartItem = cartItemRepository.save(new CartItem(member, product));
 
         // when
-        cartItemRepository.deleteById(cartItem.getId(), member.getId());
+        cartItemRepository.deleteById(cartItem.getId());
 
         // then
         assertThat(cartItemRepository.findAllByMemberId(member.getId())).isEmpty();

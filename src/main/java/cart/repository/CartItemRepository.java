@@ -88,7 +88,7 @@ public class CartItemRepository {
         return getItems(memberId, cartItemEntities);
     }
 
-    public void deleteById(final Long cartItemId, final Long memberId) {
-        cartItemDao.deleteById(cartItemId, memberId);
+    public void deleteById(final Long cartItemId) {
+        cartItemDao.deleteById(cartItemId);
     }
 }

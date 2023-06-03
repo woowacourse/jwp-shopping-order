@@ -95,7 +95,7 @@ class CartItemDaoTest {
         final CartItemEntity cartItem = cartItemDao.insert(new CartItemEntity(member.getId(), product.getId(), 1));
 
         // when
-        cartItemDao.deleteById(cartItem.getId(), member.getId());
+        cartItemDao.deleteById(cartItem.getId());
 
         // then
         assertThat(cartItemDao.findAllByMemberId(member.getId())).isEmpty();
