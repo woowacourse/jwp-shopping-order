@@ -1,8 +1,5 @@
 package com.woowahan.techcourse.cart.domain;
 
-import com.woowahan.techcourse.cart.exception.IllegalMemberException;
-import java.util.Objects;
-
 public class CartItem {
 
     private static final int DEFAULT_QUANTITY = 1;
@@ -37,12 +34,6 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public void checkOwner(long memberId) {
-        if (!Objects.equals(this.memberId, memberId)) {
-            throw new IllegalMemberException(this, memberId);
-        }
     }
 
     public void changeQuantity(int quantity) {

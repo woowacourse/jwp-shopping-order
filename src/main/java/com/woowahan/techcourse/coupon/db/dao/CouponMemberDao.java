@@ -6,19 +6,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CouponMemberDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final CouponDao couponDao;
 
     public CouponMemberDao(JdbcTemplate jdbcTemplate, CouponDao couponDao) {
         this.jdbcTemplate = jdbcTemplate;
-        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.couponDao = couponDao;
     }
 
