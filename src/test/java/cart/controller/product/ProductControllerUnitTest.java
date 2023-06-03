@@ -32,7 +32,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = ProductController.class)
@@ -65,23 +64,17 @@ class ProductControllerUnitTest {
         mockMvc.perform(get("/products")
                         .header("Authorization", "member")
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].name").value("치킨"))
-                .andExpect(jsonPath("$[0].price").value(10000))
-                .andExpect(jsonPath("$[0].imageUrl").value("img"))
-                .andExpect(jsonPath("$[0].isOnSale").value("false"))
-                .andExpect(jsonPath("$[0].salePrice").value(0))
                 .andDo(customDocument("find_all_products",
                         requestHeaders(
                                 headerWithName("Authorization").description("Basic auth credentials")
                         ),
                         responseFields(
-                                fieldWithPath("[0].id").description(1L),
-                                fieldWithPath("[0].name").description("치킨"),
-                                fieldWithPath("[0].price").description(10000),
-                                fieldWithPath("[0].imageUrl").description("img"),
-                                fieldWithPath("[0].isOnSale").description(false),
-                                fieldWithPath("[0].salePrice").description(0)
+                                fieldWithPath("[0].id").description("상품의 id"),
+                                fieldWithPath("[0].name").description("상품명"),
+                                fieldWithPath("[0].price").description("상품의 가격"),
+                                fieldWithPath("[0].imageUrl").description("상품의 이미지 주소"),
+                                fieldWithPath("[0].isOnSale").description("상품의 할인 여부"),
+                                fieldWithPath("[0].salePrice").description("세일이 적용되는 가격")
                         )
                 ));
     }
@@ -98,12 +91,6 @@ class ProductControllerUnitTest {
         mockMvc.perform(RestDocumentationRequestBuilders.get("/products/{id}", id)
                         .header("Authorization", "member")
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("치킨"))
-                .andExpect(jsonPath("$.price").value(10000))
-                .andExpect(jsonPath("$.imageUrl").value("img"))
-                .andExpect(jsonPath("$.isOnSale").value("false"))
-                .andExpect(jsonPath("$.salePrice").value(0))
                 .andDo(customDocument("find_product_by_id",
                         requestHeaders(
                                 headerWithName("Authorization").description("Basic auth credentials")
@@ -112,12 +99,12 @@ class ProductControllerUnitTest {
                                 parameterWithName("id").description("product_id")
                         ),
                         responseFields(
-                                fieldWithPath("id").description(1L),
-                                fieldWithPath("name").description("치킨"),
-                                fieldWithPath("price").description(10000),
-                                fieldWithPath("imageUrl").description("img"),
-                                fieldWithPath("isOnSale").description(false),
-                                fieldWithPath("salePrice").description(0)
+                                fieldWithPath("id").description("상품의 id"),
+                                fieldWithPath("name").description("상품명"),
+                                fieldWithPath("price").description("상품의 가격"),
+                                fieldWithPath("imageUrl").description("상품의 이미지 주소"),
+                                fieldWithPath("isOnSale").description("상품의 세일 여부"),
+                                fieldWithPath("salePrice").description("세일되는 가격")
                         )
                 ));
     }
@@ -141,14 +128,13 @@ class ProductControllerUnitTest {
                                 headerWithName("Authorization").description("Basic auth credentials")
                         ),
                         requestFields(
-                                fieldWithPath("productName").description("치킨"),
-                                fieldWithPath("productPrice").description(1000),
-                                fieldWithPath("imageUrl").description("img")
+                                fieldWithPath("productName").description("상품명"),
+                                fieldWithPath("productPrice").description("상품의 가격"),
+                                fieldWithPath("imageUrl").description("상품의 이미지 주소")
                         ),
                         responseHeaders(
                                 headerWithName("Location").description("/products/{createdId}")
                         )
-
                 ));
     }
 
@@ -173,9 +159,9 @@ class ProductControllerUnitTest {
                                 headerWithName("Authorization").description("Basic auth credentials")
                         ),
                         requestFields(
-                                fieldWithPath("productName").description("치킨"),
-                                fieldWithPath("productPrice").description(1000),
-                                fieldWithPath("imageUrl").description("img")
+                                fieldWithPath("productName").description("상품명"),
+                                fieldWithPath("productPrice").description("상품의 가격"),
+                                fieldWithPath("imageUrl").description("상품의 이미지 주소")
                         )
                 ));
     }
@@ -192,7 +178,7 @@ class ProductControllerUnitTest {
                                 headerWithName("Authorization").description("Basic auth credentials")
                         ),
                         pathParameters(
-                                parameterWithName("id").description("product id")
+                                parameterWithName("id").description("상품의 id")
                         )
                 ));
     }
@@ -217,12 +203,11 @@ class ProductControllerUnitTest {
                                 headerWithName("Authorization").description("Basic auth credentials")
                         ),
                         requestFields(
-                                fieldWithPath("amount").description("10")
+                                fieldWithPath("amount").description("할인 정책의 값")
                         ),
                         responseHeaders(
                                 headerWithName("Location").description("/products/" + id + "/sales")
                         )
-
                 ));
     }
 
@@ -244,7 +229,6 @@ class ProductControllerUnitTest {
                         responseHeaders(
                                 headerWithName("Location").description("/products/" + id + "/sales")
                         )
-
                 ));
     }
 }

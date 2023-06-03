@@ -109,19 +109,18 @@ public class OrderControllerUnitTest {
                                 headerWithName("Authorization").description("Basic auth credentials")
                         ),
                         responseFields(
-                                fieldWithPath("orders[0].orderId").description("The ID of the order"),
-                                fieldWithPath("orders[0].orderedTime").description("The time the order was placed"),
-                                fieldWithPath("orders[0].products[0].productId").description("The ID of the product"),
-                                fieldWithPath("orders[0].products[0].productName").description("The name of the product"),
-                                fieldWithPath("orders[0].products[0].imgUrl").description("The image URL of the product"),
-                                fieldWithPath("orders[0].products[0].quantity").description("The quantity of the product"),
-                                fieldWithPath("orders[0].products[0].price").description("The price of the product"),
-                                fieldWithPath("orders[0].deliveryPrice.deliveryPrice").description("The delivery price of the order"),
-                                fieldWithPath("orders[0].coupons[0].couponId").description("The ID of the coupon"),
-                                fieldWithPath("orders[0].coupons[0].couponName").description("The name of the coupon")
+                                fieldWithPath("orders[0].orderId").description("주문 내역의 id"),
+                                fieldWithPath("orders[0].orderedTime").description("주문 시간"),
+                                fieldWithPath("orders[0].products[0].productId").description("상품의 id"),
+                                fieldWithPath("orders[0].products[0].productName").description("상품의 이름"),
+                                fieldWithPath("orders[0].products[0].imgUrl").description("상품의 이미지 주소"),
+                                fieldWithPath("orders[0].products[0].quantity").description("상품의 수량"),
+                                fieldWithPath("orders[0].products[0].price").description("상품의 가격"),
+                                fieldWithPath("orders[0].deliveryPrice.deliveryPrice").description("상품의 배달 가격"),
+                                fieldWithPath("orders[0].coupons[0].couponId").description("쿠폰의 id"),
+                                fieldWithPath("orders[0].coupons[0].couponName").description("쿠폰의 이름")
                         )
                 ));
-
     }
 
     @DisplayName("주문 내역을 단건 조회한다.")
@@ -161,18 +160,17 @@ public class OrderControllerUnitTest {
                                 parameterWithName("id").description("product_id")
                         ),
                         responseFields(
-                                fieldWithPath("orderId").description("The ID of the order"),
-                                fieldWithPath("orderedTime").description("The time the order was placed"),
-                                fieldWithPath("products[0].productId").description("The ID of the product"),
-                                fieldWithPath("products[0].productName").description("The name of the product"),
-                                fieldWithPath("products[0].imgUrl").description("The image URL of the product"),
-                                fieldWithPath("products[0].quantity").description("The quantity of the product"),
-                                fieldWithPath("products[0].price").description("The price of the product"),
-                                fieldWithPath("deliveryPrice.deliveryPrice").description("The delivery price of the order"),
-                                fieldWithPath("coupons[0].couponId").description("The ID of the coupon"),
-                                fieldWithPath("coupons[0].couponName").description("The name of the coupon")
+                                fieldWithPath("orderId").description("주문 내역의 id"),
+                                fieldWithPath("orderedTime").description("주문 시간"),
+                                fieldWithPath("products[0].productId").description("상품의 id"),
+                                fieldWithPath("products[0].productName").description("상품의 이름"),
+                                fieldWithPath("products[0].imgUrl").description("상품의 이미지 주소"),
+                                fieldWithPath("products[0].quantity").description("상품의 수량"),
+                                fieldWithPath("products[0].price").description("상품의 가격"),
+                                fieldWithPath("deliveryPrice.deliveryPrice").description("상품의 배달료"),
+                                fieldWithPath("coupons[0].couponId").description("쿠폰의 id"),
+                                fieldWithPath("coupons[0].couponName").description("쿠폰의 이름")
                         )
                 ));
-
     }
 }

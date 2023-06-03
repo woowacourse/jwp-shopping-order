@@ -106,6 +106,8 @@ include::{snippets}/order-controller-unit-test/find_orders/http-request.adoc[]
 ==== 응답
 
 include::{snippets}/order-controller-unit-test/find_orders/http-response.adoc[]
+include::{snippets}/order-controller-unit-test/find_orders/response-body.adoc[]
+include::{snippets}/order-controller-unit-test/find_orders/response-fields.adoc[]
 
 === 주문 내역 전체 조회
 
@@ -118,6 +120,7 @@ include::{snippets}/order-controller-unit-test/find_order/http-request.adoc[]
 ==== 응답
 
 include::{snippets}/order-controller-unit-test/find_order/http-response.adoc[]
+include::{snippets}/order-controller-unit-test/find_order/response-fields.adoc[]
 
 == 결제
 
@@ -131,6 +134,7 @@ include::{snippets}/payment-controller-unit-test/find_payment_page/http-request.
 ==== 응답
 
 include::{snippets}/payment-controller-unit-test/find_payment_page/http-response.adoc[]
+include::{snippets}/payment-controller-unit-test/find_payment_page/response-fields.adoc[]
 
 === 쿠폰 적용 페이지 조회
 
@@ -142,6 +146,7 @@ include::{snippets}/payment-controller-unit-test/apply_coupons/request-parameter
 ==== 응답
 
 include::{snippets}/payment-controller-unit-test/apply_coupons/http-response.adoc[]
+include::{snippets}/payment-controller-unit-test/apply_coupons/response-fields.adoc[]
 
 === 장바구니 상품 모두 결제
 
@@ -149,6 +154,7 @@ include::{snippets}/payment-controller-unit-test/apply_coupons/http-response.ado
 
 include::{snippets}/payment-controller-unit-test/pay/request-headers.adoc[]
 include::{snippets}/payment-controller-unit-test/pay/http-request.adoc[]
+include::{snippets}/payment-controller-unit-test/pay/request-fields.adoc[]
 
 ==== 응답
 
@@ -165,6 +171,7 @@ include::{snippets}/coupon-controller-unit-test/find_all_coupons/http-request.ad
 ==== 응답
 
 include::{snippets}/coupon-controller-unit-test/find_all_coupons/http-response.adoc[]
+include::{snippets}/coupon-controller-unit-test/find_all_coupons/response-fields.adoc[]
 
 === 쿠폰 단건 조회
 
@@ -175,6 +182,7 @@ include::{snippets}/coupon-controller-unit-test/find_coupon_by_id/http-request.a
 ==== 응답
 
 include::{snippets}/coupon-controller-unit-test/find_coupon_by_id/http-response.adoc[]
+include::{snippets}/coupon-controller-unit-test/find_coupon_by_id/response-fields.adoc[]
 
 === 쿠폰 생성
 
@@ -185,6 +193,7 @@ include::{snippets}/coupon-controller-unit-test/create-coupon/http-request.adoc[
 ==== 응답
 
 include::{snippets}/coupon-controller-unit-test/create-coupon/http-response.adoc[]
+include::{snippets}/coupon-controller-unit-test/create-coupon/request-fields.adoc[]
 
 === 쿠폰 삭제
 
@@ -213,6 +222,7 @@ include::{snippets}/coupon-controller-unit-test/give_coupon/http-response.adoc[]
 ==== 요청
 
 include::{snippets}/member-controller-unit-test/create_member/http-request.adoc[]
+include::{snippets}/member-controller-unit-test/create_member/request-fields.adoc[]
 
 ==== 응답
 
@@ -227,6 +237,7 @@ include::{snippets}/member-controller-unit-test/find_all_members/http-request.ad
 ==== 응답
 
 include::{snippets}/member-controller-unit-test/find_all_members/http-response.adoc[]
+include::{snippets}/member-controller-unit-test/find_all_members/response-fields.adoc[]
 
 === 멤버 개별 조회
 
@@ -237,6 +248,7 @@ include::{snippets}/member-controller-unit-test/find_member/http-request.adoc[]
 ==== 응답
 
 include::{snippets}/member-controller-unit-test/find_member/http-response.adoc[]
+include::{snippets}/member-controller-unit-test/find_member/response-fields.adoc[]
 
 === 멤버 삭제
 
@@ -260,6 +272,7 @@ include::{snippets}/cart-controller-unit-test/find_all_cart_items/http-request.a
 ==== 응답
 
 include::{snippets}/cart-controller-unit-test/find_all_cart_items/http-response.adoc[]
+include::{snippets}/cart-controller-unit-test/find_all_cart_items/response-fields.adoc[]
 
 === 장바구니 아이템 추가
 

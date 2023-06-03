@@ -100,18 +100,18 @@ class PaymentControllerUnitTest {
                                 headerWithName("Authorization").description("Basic auth credentials")
                         ),
                         responseFields(
-                                fieldWithPath("products[0].productId").description(1L),
-                                fieldWithPath("products[0].productName").description("치킨"),
-                                fieldWithPath("products[0].price").description(10000),
-                                fieldWithPath("products[0].quantity").description(10),
-                                fieldWithPath("products[0].imgUrl").description("img"),
-                                fieldWithPath("products[0].isOnSale").description(false),
-                                fieldWithPath("products[0].salePrice").description(100),
-                                fieldWithPath("coupons[0].couponId").description(1),
-                                fieldWithPath("coupons[0].couponName").description("1000원 할인 쿠폰"),
-                                fieldWithPath("coupons[1].couponId").description(1),
-                                fieldWithPath("coupons[2].couponName").description("10% 할인 쿠폰"),
-                                fieldWithPath("deliveryPrice.deliveryPrice").description(3000)
+                                fieldWithPath("products[0].productId").description("상품의 id"),
+                                fieldWithPath("products[0].productName").description("상품의 이름"),
+                                fieldWithPath("products[0].price").description("상품의 가격"),
+                                fieldWithPath("products[0].quantity").description("상품 수량"),
+                                fieldWithPath("products[0].imgUrl").description("상품의 이미지 주소"),
+                                fieldWithPath("products[0].isOnSale").description("상품의 세일 여부"),
+                                fieldWithPath("products[0].salePrice").description("세일되는 가격"),
+                                fieldWithPath("coupons[0].couponId").description("쿠폰의 id"),
+                                fieldWithPath("coupons[0].couponName").description("쿠폰의 이름"),
+                                fieldWithPath("coupons[1].couponId").description("쿠폰의 id"),
+                                fieldWithPath("coupons[2].couponName").description("쿠폰의 이름"),
+                                fieldWithPath("deliveryPrice.deliveryPrice").description("배달료")
                         )
                 ));
     }

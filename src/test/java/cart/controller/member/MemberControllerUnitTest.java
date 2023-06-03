@@ -65,8 +65,8 @@ class MemberControllerUnitTest {
                 ).andExpect(status().isOk())
                 .andDo(customDocument("create_member",
                         requestFields(
-                                fieldWithPath("email").description("email@email.com"),
-                                fieldWithPath("password").description("1234")
+                                fieldWithPath("email").description("멤버의 이메일"),
+                                fieldWithPath("password").description("멤버의 패스워드")
                         )
                 ));
     }
@@ -83,9 +83,9 @@ class MemberControllerUnitTest {
                 .andExpect(status().isOk())
                 .andDo(customDocument("find_all_members",
                         responseFields(
-                                fieldWithPath("[0].memberId").description(1),
-                                fieldWithPath("[0].email").description("a@a.com"),
-                                fieldWithPath("[0].password").description("1234")
+                                fieldWithPath("[0].memberId").description("멤버의 id"),
+                                fieldWithPath("[0].email").description("이메일"),
+                                fieldWithPath("[0].password").description("패스워드")
                         )));
     }
 
@@ -104,9 +104,9 @@ class MemberControllerUnitTest {
                                 parameterWithName("id").description("member_id")
                         ),
                         responseFields(
-                                fieldWithPath("memberId").description(1),
-                                fieldWithPath("email").description("a@a.com"),
-                                fieldWithPath("password").description("1234")
+                                fieldWithPath("memberId").description("멤버의 id"),
+                                fieldWithPath("email").description("이메일"),
+                                fieldWithPath("password").description("패스워드")
                         )));
     }
 
@@ -118,7 +118,7 @@ class MemberControllerUnitTest {
                 .andExpect(status().isNoContent())
                 .andDo(customDocument("delete_member",
                         pathParameters(
-                                parameterWithName("id").description("member_id")
+                                parameterWithName("id").description("멤버의 id")
                         )
                 ));
     }

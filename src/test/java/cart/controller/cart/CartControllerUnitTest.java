@@ -86,17 +86,17 @@ class CartControllerUnitTest {
                 ).andExpect(status().isOk())
                 .andDo(customDocument("find_all_cart_items",
                         requestHeaders(
-                                headerWithName("Authorization").description("Basic auth credentials")
+                                headerWithName("Authorization").description("Basic auth")
                         ),
                         responseFields(
-                                fieldWithPath("[0].cartItemId").description(1),
-                                fieldWithPath("[0].quantity").description(10),
-                                fieldWithPath("[0].product.id").description(1),
-                                fieldWithPath("[0].product.name").description("치킨"),
-                                fieldWithPath("[0].product.price").description(10000),
-                                fieldWithPath("[0].product.imageUrl").description("img.img"),
-                                fieldWithPath("[0].product.isOnSale").description(false),
-                                fieldWithPath("[0].product.salePrice").description(0)
+                                fieldWithPath("[0].cartItemId").description("카트 아이템의 id"),
+                                fieldWithPath("[0].quantity").description("카트 아이템의 수량"),
+                                fieldWithPath("[0].product.id").description("상품의 id"),
+                                fieldWithPath("[0].product.name").description("상품명"),
+                                fieldWithPath("[0].product.price").description("상품 가격 (숫자)"),
+                                fieldWithPath("[0].product.imageUrl").description("이미지 주소"),
+                                fieldWithPath("[0].product.isOnSale").description("세일 여부"),
+                                fieldWithPath("[0].product.salePrice").description("상품이 할인되는 가격")
                         )));
     }
 
@@ -119,7 +119,7 @@ class CartControllerUnitTest {
                                 headerWithName("Authorization").description("Basic Auth")
                         ),
                         requestFields(
-                                fieldWithPath("productId").description(1)
+                                fieldWithPath("productId").description("상품 id")
                         ),
                         responseHeaders(
                                 headerWithName("Location").description("/products/{createdId}")
@@ -145,7 +145,7 @@ class CartControllerUnitTest {
                                 headerWithName("Authorization").description("Basic Auth")
                         ),
                         pathParameters(
-                                parameterWithName("id").description("cartItemId")
+                                parameterWithName("id").description("카트 아이템의 id")
                         )
                 ));
     }
@@ -165,7 +165,7 @@ class CartControllerUnitTest {
                                 headerWithName("Authorization").description("Basic Auth")
                         ),
                         pathParameters(
-                                parameterWithName("id").description("cartItemId")
+                                parameterWithName("id").description("카트 아이템의 id")
                         )
                 ));
     }

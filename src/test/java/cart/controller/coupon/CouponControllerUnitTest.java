@@ -82,10 +82,10 @@ class CouponControllerUnitTest {
                 .andExpect(jsonPath("$[1].couponName").value("10% 할인 쿠폰"))
                 .andDo(customDocument("find_all_coupons",
                         responseFields(
-                                fieldWithPath("[0].couponId").description(1),
-                                fieldWithPath("[0].couponName").description("1000원 할인 쿠폰"),
-                                fieldWithPath("[1].couponId").description(2),
-                                fieldWithPath("[1].couponName").description("10% 할인 쿠폰")
+                                fieldWithPath("[0].couponId").description("쿠폰의 id"),
+                                fieldWithPath("[0].couponName").description("쿠폰의 이름"),
+                                fieldWithPath("[1].couponId").description("쿠폰의 id"),
+                                fieldWithPath("[1].couponName").description("쿠폰의 이름")
                         )
                 ));
     }
@@ -105,11 +105,11 @@ class CouponControllerUnitTest {
                 .andExpect(jsonPath("$.couponName").value("1000원 할인 쿠폰"))
                 .andDo(customDocument("find_coupon_by_id",
                         pathParameters(
-                                parameterWithName("id").description(1)
+                                parameterWithName("id").description("쿠폰의 id")
                         ),
                         responseFields(
-                                fieldWithPath(".couponId").description(1),
-                                fieldWithPath(".couponName").description("1000원 할인 쿠폰")
+                                fieldWithPath(".couponId").description("쿠폰의 id"),
+                                fieldWithPath(".couponName").description("쿠폰의 이름")
                         )
                 ));
     }
@@ -146,7 +146,7 @@ class CouponControllerUnitTest {
                 .andExpect(status().isNoContent())
                 .andDo(customDocument("delete_coupon",
                         pathParameters(
-                                parameterWithName("id").description(1)
+                                parameterWithName("id").description("쿠폰의 id")
                         )
                 ));
     }
@@ -163,8 +163,8 @@ class CouponControllerUnitTest {
                 .andExpect(status().isOk())
                 .andDo(customDocument("give_coupon",
                         pathParameters(
-                                parameterWithName("couponId").description("ID of the coupon"),
-                                parameterWithName("memberId").description("ID of the member")
+                                parameterWithName("couponId").description("쿠폰의 id"),
+                                parameterWithName("memberId").description("멤버의 id")
                         )));
     }
 }
