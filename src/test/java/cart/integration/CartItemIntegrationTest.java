@@ -1,9 +1,7 @@
 package cart.integration;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.application.dto.CartItemQuantityUpdateRequest;
 import cart.application.dto.CartItemRequest;
 import cart.application.dto.CartItemResponse;
 import cart.application.dto.ProductRequest;
@@ -20,7 +18,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 public class CartItemIntegrationTest extends IntegrationTest {
 
@@ -132,7 +129,7 @@ public class CartItemIntegrationTest extends IntegrationTest {
     void removeCartItem() {
         Long cartItemId = requestAddCartItemAndGetId(member, productId);
 
-        ExtractableResponse<Response> response = requestDeleteCartItem(cartItemId);
+        ExtractableResponse<Response> response = requestDeleteCartItem(member, cartItemId);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
@@ -145,74 +142,5 @@ public class CartItemIntegrationTest extends IntegrationTest {
                 .findFirst();
 
         assertThat(selectedCartItemResponse.isPresent()).isFalse();
-    }
-
-    private Long createProduct(ProductRequest productRequest) {
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when()
-                .post("/products")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract();
-
-        return getIdFromCreatedResponse(response);
-    }
-
-    private long getIdFromCreatedResponse(ExtractableResponse<Response> response) {
-        return Long.parseLong(response.header("Location").split("/")[2]);
-    }
-
-    private ExtractableResponse<Response> requestAddCartItem(Member member, CartItemRequest cartItemRequest) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .body(cartItemRequest)
-                .when()
-                .post("/cart-items")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private Long requestAddCartItemAndGetId(Member member, Long productId) {
-        ExtractableResponse<Response> response = requestAddCartItem(member, new CartItemRequest(productId));
-        return getIdFromCreatedResponse(response);
-    }
-
-    private ExtractableResponse<Response> requestGetCartItems(Member member) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .get("/cart-items")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> requestUpdateCartItemQuantity(Member member, Long cartItemId, int quantity) {
-        CartItemQuantityUpdateRequest quantityUpdateRequest = new CartItemQuantityUpdateRequest(quantity);
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .body(quantityUpdateRequest)
-                .patch("/cart-items/{cartItemId}", cartItemId)
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> requestDeleteCartItem(Long cartItemId) {
-        return given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .delete("/cart-items/{cartItemId}", cartItemId)
-                .then()
-                .log().all()
-                .extract();
     }
 }
