@@ -112,6 +112,7 @@ public class OrderService {
         memberDao.updateMember(updatedMember);
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse findById(final Long orderId, final Member member) {
         final OrderEntity orderEntity = orderDao.findById(orderId, member.getId());
         final List<OrderItemEntity> orderItemEntities = orderItemDao.findByOrderId(orderId);
@@ -130,6 +131,7 @@ public class OrderService {
                 )).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findAll(final Member member) {
         List<OrderEntity> orderEntities = orderDao.findAll(member.getId());
 

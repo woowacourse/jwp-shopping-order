@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @Transactional
+@Service
 public class CartItemService {
     private static final int ZERO_QUANTITY = 0;
     private static final boolean NOT_CHECKED = false;
@@ -27,11 +27,13 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findByMember(Member member) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(member.getId());
         return cartItems.stream().map(CartItemResponse::of).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CartItemResponse findById(Long cartItemId) {
         final CartItem cartItem = cartItemDao.findById(cartItemId);
         return CartItemResponse.of(cartItem);
