@@ -3,6 +3,7 @@ package cart.ui;
 import cart.exception.AuthenticationException;
 import cart.exception.CartItemException;
 import cart.exception.InvalidCardException;
+import cart.exception.OrderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,12 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(InvalidCardException.class)
     public ResponseEntity<Void> handleInvalidCardException(InvalidCardException e) {
+        LOGGER.info("An error occurred: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<Void> handleInvalidOrderException(OrderException.IllegalMember e) {
         LOGGER.info("An error occurred: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }

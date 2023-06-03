@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.domain.Point;
-
 public enum PointEarningPolicy {
     BASIC(0.01);
 
