@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 class CartItemTest {
 
     @Test
-    void cartitem은_product와_quantity와_member를_가진다() {
+    void cartitem은_product와_member와_수량을_가진다() {
         // given
-        Product chicken = new Product("치킨", 5000, "http://chickenimageutl", 30);
+        Product chicken = new Product("치킨", 5000, "http://chickenimageurl", 30);
         Member member = new Member(1L, "a@a.com", "1234", new Point(3000));
 
         // when
@@ -47,7 +47,7 @@ class CartItemTest {
     }
 
     @Test
-    void cartItem의_quantity를_체크할_수_있다() {
+    void cartItem의_수량을_체크할_수_있다() {
         // given
         Product chicken = new Product("치킨", 5000, "http://chickenimageutl", 30);
         Member member = new Member(1L, "a@a.com", "1234", new Point(3000));
@@ -61,7 +61,7 @@ class CartItemTest {
     }
 
     @Test
-    void cartItem의_quantity를_업데이트_할_수_있다() {
+    void cartItem의_수량을_업데이트_할_수_있다() {
         // given
         Product chicken = new Product("치킨", 5000, "http://chickenimageutl", 30);
         Member member = new Member(1L, "a@a.com", "1234", new Point(3000));

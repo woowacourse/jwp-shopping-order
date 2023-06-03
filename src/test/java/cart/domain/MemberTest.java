@@ -37,7 +37,7 @@ class MemberTest {
     }
 
     @Test
-    void 보유한_point_보다_큰_point를_사용하면_에러가_발생한다() {
+    void 보유한_point_보다_큰_point를_사용하면_예외가_발생한다() {
         // given
         Member member = new Member("a@a.com", "1234", new Point(3000));
 
