@@ -39,13 +39,13 @@ public class OrderService {
     public Long createOrder(Member member, OrderRequest request) {
         Money usePoint = Money.from(request.getPoint());
 
-        CartItems findCartItems = cartItemRepository.findByCartItemIds(request.getCartItemIds());
+        CartItems findCartItems = cartItemRepository.findByCartItemIds(request.getCartIds());
         findCartItems.checkOwner(member);
 
         Order order = Order.of(member, findCartItems, usePoint, DEFAULT_POINT_POLICY);
         publisher.publishEvent(MemberUpdateEvent.from(member));
 
-        cartItemRepository.deleteByCartItemIds(request.getCartItemIds());
+        cartItemRepository.deleteByCartItemIds(request.getCartIds());
 
         return orderRepository.saveOrder(order);
     }

@@ -9,7 +9,7 @@ public class OrderRequest {
 
     @NotNull(message = "주문할 장바구니 목록이 null일 수 없습니다.")
     @NotEmpty(message = "주문할 장바구니 목록이 비어있을 수 없습니다.")
-    private List<Long> cartItemIds;
+    private List<Long> cartIds;
 
     @PositiveOrZero(message = "사용할 포인트는 음수일 수 없습니다.")
     private int point;
@@ -17,13 +17,13 @@ public class OrderRequest {
     public OrderRequest() {
     }
 
-    public OrderRequest(List<Long> cartItemIds, int point) {
-        this.cartItemIds = cartItemIds;
+    public OrderRequest(List<Long> cartIds, int point) {
+        this.cartIds = cartIds;
         this.point = point;
     }
 
-    public List<Long> getCartItemIds() {
-        return cartItemIds;
+    public List<Long> getCartIds() {
+        return cartIds;
     }
 
     public int getPoint() {

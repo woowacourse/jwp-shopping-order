@@ -5,6 +5,7 @@ import cart.dao.rowmapper.OrderRowMapper;
 import cart.domain.order.OrderHistory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -24,11 +25,14 @@ public class OrderDao {
     public OrderDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .usingColumns()
                 .withTableName("orders")
                 .usingGeneratedKeyColumns("id");
     }
 
     public Long insertOrder(OrderEntity orderEntity) {
+        simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(orderEntity))
+                .longValue();
         return simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource()
                         .addValue("member_id", orderEntity.getMemberId())
                         .addValue("total_price", orderEntity.getTotalPrice())

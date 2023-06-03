@@ -51,7 +51,7 @@ class OrderApiControllerTest extends ControllerTestConfig {
                                 headerWithName(AUTHORIZATION).description("basic 64인코딩값")
                         ),
                         requestFields(
-                                fieldWithPath("cartItemIds").description("장바구니 상품 식별자값 목록"),
+                                fieldWithPath("cartIds").description("장바구니 상품 식별자값 목록"),
                                 fieldWithPath("point").description("사용할 포인트")
                         ),
                         responseHeaders(
