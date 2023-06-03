@@ -1,6 +1,4 @@
-package cart.ui.order;
-
-import cart.ui.order.dto.CreateOrderItemRequest;
+package cart.ui.order.dto;
 
 public class CreateOrderItemDto {
     private final Long cartItemId;

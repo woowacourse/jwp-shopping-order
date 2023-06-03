@@ -7,7 +7,7 @@ import cart.application.repository.ProductRepository;
 import cart.application.repository.order.OrderRepository;
 import cart.application.repository.order.OrderedItemRepository;
 import cart.ui.MemberAuth;
-import cart.ui.order.CreateOrderItemDto;
+import cart.ui.order.dto.CreateOrderItemDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +45,6 @@ class OrderWriteServiceTest {
     @Test
     void createOrder() {
         MemberAuth memberAuth = new MemberAuth(10L, "leo", "leo@gmail.com", "qwer1234");
-//        new;
         new CreateOrderItemDto(1L, 1L, 3);
-//        orderWriteService.createOrder();
     }
 }
