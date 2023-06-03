@@ -1,33 +1,37 @@
 package cart.application.service.order;
 
 import cart.application.repository.order.OrderRepository;
+import cart.application.service.order.dto.OrderResultDto;
+import cart.domain.member.Member;
 import cart.domain.order.Order;
-import cart.persistence.order.OrderedItemJdbcRepository;
-import cart.ui.MemberAuth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class OrderReadService {
 
     private final OrderRepository orderRepository;
-    private final OrderedItemJdbcRepository orderedItemJdbcRepository;
 
-    public OrderReadService(final OrderRepository orderRepository, final OrderedItemJdbcRepository orderedItemJdbcRepository) {
+    public OrderReadService(final OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.orderedItemJdbcRepository = orderedItemJdbcRepository;
     }
 
-    public List<OrderDto> findAllByMember(final MemberAuth memberAuth) {
-        final List<Order> orders = orderRepository.findAllByMemberId(memberAuth.getId());
+    public List<OrderResultDto> findAllByMember(final Member member) {
+        final List<Order> orders = orderRepository.findAllByMemberId(member.getId());
+        if (orders.isEmpty()) {
+            throw new IllegalArgumentException("사용자의 주문 목록이 없습니다.");
+        }
+        return OrderResultDto.from(orders);
+    }
 
-        return orders.stream()
-                .map(OrderDto::of)
-                .collect(Collectors.toUnmodifiableList());
+    public OrderResultDto findMemberOrderByOrderId(final Member member, final Long orderId) {
+        final Order order = orderRepository.findByOrderId(member.getId(), orderId)
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 주문번호가 없습니다."));
+
+        return OrderResultDto.from(order);
     }
 
 }

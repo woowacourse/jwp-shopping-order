@@ -1,6 +1,6 @@
-package cart.ui.order.dto;
+package cart.ui.order.dto.response;
 
-import cart.application.service.order.OrderItemDto;
+import cart.application.service.order.dto.OrderItemDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +10,6 @@ public class OrderItemResponse {
     private final String productName;
     private final Integer productPrice;
     private final Integer paymentPrice;
-    private final String createdAt;
     private final Integer productQuantity;
     private final String imageUrl;
 
@@ -19,7 +18,6 @@ public class OrderItemResponse {
             final String productName,
             final Integer productPrice,
             final Integer paymentPrice,
-            final String createdAt,
             final Integer productQuantity,
             final String imageUrl
     ) {
@@ -27,7 +25,6 @@ public class OrderItemResponse {
         this.productName = productName;
         this.productPrice = productPrice;
         this.paymentPrice = paymentPrice;
-        this.createdAt = createdAt;
         this.productQuantity = productQuantity;
         this.imageUrl = imageUrl;
     }
@@ -39,7 +36,6 @@ public class OrderItemResponse {
                         orderItemDto.getProductName(),
                         orderItemDto.getProductPrice(),
                         orderItemDto.getPaymentPrice(),
-                        orderItemDto.getCreatedAt(),
                         orderItemDto.getProductQuantity(),
                         orderItemDto.getImageUrl()
                 ))
@@ -60,10 +56,6 @@ public class OrderItemResponse {
 
     public Integer getPaymentPrice() {
         return paymentPrice;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
     }
 
     public Integer getProductQuantity() {
