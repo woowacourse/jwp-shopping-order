@@ -1,9 +1,14 @@
 package cart.application.service.order;
 
 import cart.application.repository.order.OrderRepository;
+import cart.application.service.order.dto.OrderDto;
+import cart.application.service.order.dto.OrderInfoDto;
 import cart.domain.order.Order;
+import cart.domain.order.OrderItem;
 import cart.persistence.order.OrderedItemJdbcRepository;
 import cart.ui.MemberAuth;
+import java.util.ArrayList;
+import java.util.Collections;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +28,7 @@ public class OrderReadService {
     }
 
     public List<OrderDto> findAllByMember(final MemberAuth memberAuth) {
-        final List<Order> orders = orderRepository.findAllByMemberId(memberAuth.getId());
+        List<Order> orders = orderRepository.findAllByMemberId(memberAuth.getId());
 
         return orders.stream()
                 .map(OrderDto::of)

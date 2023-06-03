@@ -1,6 +1,6 @@
 package cart.ui.order;
 
-import cart.application.service.order.OrderDto;
+import cart.application.service.order.dto.OrderDto;
 import cart.application.service.order.OrderReadService;
 import cart.ui.MemberAuth;
 import cart.ui.order.dto.OrderResponse;
@@ -25,13 +25,13 @@ public class OrderReadController {
     @GetMapping
     public ResponseEntity<OrdersResponse> findOrders(final MemberAuth memberAuth) {
         final List<OrderDto> orderDtos = orderReadService.findAllByMember(memberAuth);
-
         return ResponseEntity.ok(OrdersResponse.from(orderDtos));
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> findProductsByOrder(@PathVariable("orderId") Long orderId) {
-        return ResponseEntity.ok(new OrderResponse());
+//        return ResponseEntity.ok(new OrderResponse());
+        return null;
     }
 
 }

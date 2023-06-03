@@ -16,7 +16,7 @@ class OrderJdbcRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        this.orderJdbcRepository = new OrderJdbcRepository(jdbcTemplate);
+//        this.orderJdbcRepository = new OrderJdbcRepository(jdbcTemplate, memberRepository, orderedItemRepository);
     }
 
     @DisplayName("order를 저장한다.")

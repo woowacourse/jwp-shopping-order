@@ -1,6 +1,6 @@
 package cart.ui.order.dto;
 
-import cart.application.service.order.OrderDto;
+import cart.application.service.order.dto.OrderDto;
 import cart.ui.coupon.dto.CouponResponse;
 
 import java.util.List;
@@ -13,16 +13,20 @@ public class OrderResponse {
     private List<CouponResponse> usedCoupons;
     private int usedPoint;
     private int paymentPrice;
+    private String createdAt;
 
-    public OrderResponse() {
+    public OrderResponse(String createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public OrderResponse(final Long orderId, final List<OrderItemResponse> orderItems, final List<CouponResponse> usedCoupons, final int usedPoint, final int paymentPrice) {
+    public OrderResponse(final Long orderId, final List<OrderItemResponse> orderItems, final List<CouponResponse> usedCoupons, final int usedPoint, final int paymentPrice,
+                         String createdAt) {
         this.orderId = orderId;
         this.orderItems = orderItems;
         this.usedCoupons = usedCoupons;
         this.usedPoint = usedPoint;
         this.paymentPrice = paymentPrice;
+        this.createdAt = createdAt;
     }
 
     public static OrderResponse from(final OrderDto orderDto) {
@@ -30,7 +34,9 @@ public class OrderResponse {
                 orderDto.getOrderId(),
                 OrderItemResponse.from(orderDto.getOrderItems()),
                 orderDto.getUsedCoupons().stream().map(CouponResponse::from).collect(Collectors.toUnmodifiableList()),
-                orderDto.getUsedPoint(), orderDto.getPaymentPrice()
+                orderDto.getUsedPoint(),
+                orderDto.getPaymentPrice(),
+                orderDto.getCreatedAt()
         );
     }
 
@@ -52,6 +58,10 @@ public class OrderResponse {
 
     public int getPaymentPrice() {
         return paymentPrice;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 
 }

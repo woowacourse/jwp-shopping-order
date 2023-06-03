@@ -5,15 +5,14 @@ import cart.domain.coupon.Coupon;
 import cart.domain.discountpolicy.AmountCoupon;
 import cart.domain.discountpolicy.CouponPolicy;
 import cart.domain.discountpolicy.PercentCoupon;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class CouponJdbcRepository implements CouponRepository {
@@ -51,12 +50,29 @@ public class CouponJdbcRepository implements CouponRepository {
     }
 
     @Override
+    public Coupon findById(final Long id) {
+        final String sql = "SELECT coupon.* " +
+                "FROM coupon " +
+                "WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, couponRowMapper, id);
+    }
+
+    @Override
     public List<Coupon> findByMemberId(final Long memberId) {
         final String sql = "SELECT coupon.* " +
                 "FROM coupon " +
                 "JOIN member_coupon ON coupon.id = member_coupon.coupon_id " +
                 "WHERE member_coupon.member_id = ? AND member_coupon.status = " + USABLE;
         return jdbcTemplate.query(sql, couponRowMapper, memberId);
+    }
+
+    @Override
+    public List<Coupon> findAllByOrderId(Long orderId) {
+        final String sql = "SELECT c.* FROM coupon c "
+                + "JOIN member_coupon AS mc ON c.id = mc.coupon_id "
+                + "JOIN ordered_coupon AS oc ON oc.member_coupon_id = mc.id "
+                + "WHERE oc.order_id = ?";
+        return jdbcTemplate.query(sql, couponRowMapper, orderId);
     }
 
     @Override

@@ -17,6 +17,7 @@ import cart.exception.OverFullPointException;
 import cart.ui.MemberAuth;
 import cart.ui.order.CreateOrderDto;
 import cart.ui.order.CreateOrderItemDto;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,9 +76,16 @@ public class OrderWriteService {
 
 
         //오더 만듬
-        final Order order = new Order(finalPaymentPrice, totalPrice, usedPoint, member, cartItems.getCartItems().stream()
+        final Order order = new Order(finalPaymentPrice,
+                totalPrice,
+                usedPoint,
+                member,
+                cartItems.getCartItems().stream()
                 .map(cartItem1 -> OrderItem.of(cartItem1.getQuantity(), cartItem1.getProduct()))
-                .collect(Collectors.toUnmodifiableList()));
+                .collect(Collectors.toUnmodifiableList()),
+                couponIds.stream()
+                        .map(couponRepository::findById).collect(Collectors.toList()),
+                null);
 
 //        오더 저장
         Long orderId = orderRepository.createOrder(order);
@@ -132,8 +140,8 @@ public class OrderWriteService {
         }
 
         for (Long memberCouponId : memberCouponIds) {
-            Optional<CouponPolicy> percentCoupon = couponRepository.findAmountCouponById(memberCouponId);
-            percentCoupon.ifPresent(couponPolicies::add);
+            Optional<CouponPolicy> amountCoupon = couponRepository.findAmountCouponById(memberCouponId);
+            amountCoupon.ifPresent(couponPolicies::add);
         }
         return couponPolicies;
     }

@@ -1,7 +1,7 @@
 package cart.ui.coupon;
 
 import cart.application.service.coupon.CouponReadService;
-import cart.application.service.coupon.CouponResultDto;
+import cart.application.service.coupon.dto.CouponResultDto;
 import cart.ui.MemberAuth;
 import cart.ui.coupon.dto.CouponResponse;
 import org.springframework.http.ResponseEntity;

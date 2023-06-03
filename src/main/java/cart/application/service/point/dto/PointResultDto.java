@@ -1,4 +1,4 @@
-package cart.application.service.point;
+package cart.application.service.point.dto;
 
 import cart.domain.PointHistory;
 

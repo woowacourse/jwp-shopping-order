@@ -7,7 +7,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CouponRepository {
+
+    Coupon findById(final Long id);
+
     List<Coupon> findByMemberId(final Long memberId);
+
+    List<Coupon> findAllByOrderId(final Long orderId);
 
     Optional<CouponPolicy> findPercentCouponById(final Long memberCouponId);
 

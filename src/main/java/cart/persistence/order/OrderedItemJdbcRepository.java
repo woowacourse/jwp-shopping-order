@@ -2,13 +2,12 @@ package cart.persistence.order;
 
 import cart.application.repository.order.OrderedItemRepository;
 import cart.domain.order.OrderItem;
+import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class OrderedItemJdbcRepository implements OrderedItemRepository {
@@ -25,11 +24,12 @@ public class OrderedItemJdbcRepository implements OrderedItemRepository {
 
     private final RowMapper<OrderItem> orderItemRowMapper = ((rs, rowNum) ->
             new OrderItem(
+                    rs.getLong("id"),
                     rs.getString("product_name"),
                     rs.getString("product_image"),
                     rs.getInt("product_price"),
                     rs.getInt("product_quantity")
-                    ));
+            ));
 
     @Override
     public void createOrderItems(final Long orderId, final List<OrderItem> orderItems) {

@@ -1,4 +1,4 @@
-package cart.application.service.coupon;
+package cart.application.service.coupon.dto;
 
 import cart.domain.coupon.Coupon;
 

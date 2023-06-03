@@ -4,12 +4,16 @@ import cart.domain.Product;
 
 public class OrderItem {
 
+    private final Long id;
     private final String productName;
-    private final String productImage;
     private final int productPrice;
     private final int productQuantity;
+    private final String productImage;
 
-    public OrderItem(final String productName, final String productImage, final int productPrice, final int productQuantity) {
+    public OrderItem(Long id, final String productName, final String productImage, final int productPrice,
+                     final int productQuantity) {
+        this.id = id;
+
         this.productName = productName;
         this.productImage = productImage;
         this.productPrice = productPrice;
@@ -18,11 +22,16 @@ public class OrderItem {
 
     public static OrderItem of(final int quantity, final Product product) {
         return new OrderItem(
+                null,
                 product.getName(),
                 product.getImageUrl(),
                 product.getPrice(),
                 quantity
         );
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getProductName() {
@@ -40,4 +49,5 @@ public class OrderItem {
     public int getProductQuantity() {
         return productQuantity;
     }
+
 }

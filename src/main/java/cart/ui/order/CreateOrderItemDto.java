@@ -27,6 +27,6 @@ public class CreateOrderItemDto {
 
     public static CreateOrderItemDto from(final CreateOrderItemRequest createOrderItemRequest) {
         return new CreateOrderItemDto(createOrderItemRequest.getCartItemId(), createOrderItemRequest.getProductId(), createOrderItemRequest.getQuantity());
-
     }
+
 }
