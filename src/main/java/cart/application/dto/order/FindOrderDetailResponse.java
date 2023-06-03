@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 public class FindOrderDetailResponse {
 
     private final long id;
-    private final List<FindOrderDetailProductResponse> products;
+    private final List<OrderDetailProductResponse> products;
     private final int totalProductPrice;
     private final int discountPrice;
     private final int shippingFee;
 
     public FindOrderDetailResponse(final long id,
-            final List<FindOrderDetailProductResponse> products, final int totalProductPrice, final int discountPrice,
+            final List<OrderDetailProductResponse> products, final int totalProductPrice, final int discountPrice,
             final int shippingFee) {
         this.id = id;
         this.products = products;
@@ -25,8 +25,8 @@ public class FindOrderDetailResponse {
 
     public static FindOrderDetailResponse from(final Order order) {
         List<OrderItem> orderItems = order.getOrderItems();
-        List<FindOrderDetailProductResponse> products = orderItems.stream()
-                .map(FindOrderDetailProductResponse::from)
+        List<OrderDetailProductResponse> products = orderItems.stream()
+                .map(OrderDetailProductResponse::from)
                 .collect(Collectors.toList());
         return new FindOrderDetailResponse(
                 order.getId(),
@@ -41,7 +41,7 @@ public class FindOrderDetailResponse {
         return id;
     }
 
-    public List<FindOrderDetailProductResponse> getProducts() {
+    public List<OrderDetailProductResponse> getProducts() {
         return products;
     }
 

@@ -1,6 +1,6 @@
 package cart.application.dto.order;
 
-public class OrderCartItemProductRequest {
+public class OrderProductRequest {
 
     private long cartItemId;
     private int quantity;
@@ -8,10 +8,10 @@ public class OrderCartItemProductRequest {
     private int price;
     private String imageUrl;
 
-    public OrderCartItemProductRequest() {
+    public OrderProductRequest() {
     }
 
-    public OrderCartItemProductRequest(final long cartItemId, final int quantity, final String name, final int price,
+    public OrderProductRequest(final long cartItemId, final int quantity, final String name, final int price,
             final String imageUrl) {
         this.cartItemId = cartItemId;
         this.quantity = quantity;

@@ -6,7 +6,7 @@ import cart.domain.coupon.CouponInfo;
 import cart.domain.coupon.MemberCoupon;
 import java.time.LocalDateTime;
 
-public class FindOrderCouponResponse {
+public class OrderCouponResponse {
 
     private long id;
     private String name;
@@ -16,10 +16,10 @@ public class FindOrderCouponResponse {
     private Integer discountPrice;
     private LocalDateTime expiredAt;
 
-    private FindOrderCouponResponse() {
+    private OrderCouponResponse() {
     }
 
-    public FindOrderCouponResponse(final long id, final String name, final int minOrderPrice,
+    public OrderCouponResponse(final long id, final String name, final int minOrderPrice,
             final int maxDiscountPrice, final boolean isAvailable,
             final Integer discountPrice, final LocalDateTime expiredAt) {
         this.id = id;
@@ -31,11 +31,11 @@ public class FindOrderCouponResponse {
         this.expiredAt = expiredAt;
     }
 
-    public static FindOrderCouponResponse from(final MemberCoupon memberCoupon, final CartItems cartItems) {
+    public static OrderCouponResponse from(final MemberCoupon memberCoupon, final CartItems cartItems) {
         Coupon coupon = memberCoupon.getCoupon();
         CouponInfo couponInfo = coupon.getCouponInfo();
         boolean applicable = memberCoupon.isApplicable(cartItems);
-        return new FindOrderCouponResponse(
+        return new OrderCouponResponse(
                 memberCoupon.getId(),
                 couponInfo.getName(),
                 couponInfo.getMinOrderPrice(),

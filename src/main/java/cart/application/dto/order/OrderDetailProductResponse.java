@@ -3,7 +3,7 @@ package cart.application.dto.order;
 import cart.domain.Product;
 import cart.domain.order.OrderItem;
 
-public class FindOrderDetailProductResponse {
+public class OrderDetailProductResponse {
 
     private final long id;
     private final String name;
@@ -11,7 +11,7 @@ public class FindOrderDetailProductResponse {
     private final int price;
     private final int quantity;
 
-    public FindOrderDetailProductResponse(final long id, final String name, final String imageUrl, final int price,
+    public OrderDetailProductResponse(final long id, final String name, final String imageUrl, final int price,
             final int quantity) {
         this.id = id;
         this.name = name;
@@ -20,9 +20,9 @@ public class FindOrderDetailProductResponse {
         this.quantity = quantity;
     }
 
-    public static FindOrderDetailProductResponse from(final OrderItem orderItem) {
+    public static OrderDetailProductResponse from(final OrderItem orderItem) {
         Product product = orderItem.getProduct();
-        return new FindOrderDetailProductResponse(
+        return new OrderDetailProductResponse(
                 product.getId(),
                 product.getName(),
                 product.getImageUrl(),

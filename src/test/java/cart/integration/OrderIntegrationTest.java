@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.application.dto.ProductRequest;
 import cart.application.dto.coupon.CreateCouponRequest;
 import cart.application.dto.coupon.IssueCouponRequest;
-import cart.application.dto.order.FindOrderCouponResponse;
 import cart.application.dto.order.FindOrderCouponsResponse;
+import cart.application.dto.order.OrderCouponResponse;
 import cart.domain.Member;
 import cart.domain.coupon.CouponType;
 import cart.persistence.dao.MemberCouponDao;
@@ -70,9 +70,9 @@ public class OrderIntegrationTest extends IntegrationTest {
 
         FindOrderCouponsResponse response = findCouponsByCartItemIds(member, List.of(cartItemId1, cartItemId2));
 
-        List<FindOrderCouponResponse> expected = List.of(
-                new FindOrderCouponResponse(memberCouponId1, "10%(10,000~)", 10_000, 3000, true, 2500, futureDate),
-                new FindOrderCouponResponse(memberCouponId2, "1000원(50,000~)", 50_000, 1000, false, null, futureDate)
+        List<OrderCouponResponse> expected = List.of(
+                new OrderCouponResponse(memberCouponId1, "10%(10,000~)", 10_000, 3000, true, 2500, futureDate),
+                new OrderCouponResponse(memberCouponId2, "1000원(50,000~)", 50_000, 1000, false, null, futureDate)
         );
 
         assertThat(response.getCoupons())

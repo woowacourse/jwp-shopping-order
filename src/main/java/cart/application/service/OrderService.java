@@ -5,10 +5,10 @@ import static cart.exception.badrequest.BadRequestErrorType.CART_ITEM_QUANTITY_I
 import static cart.exception.noexist.NoExistErrorType.COUPON_NO_EXIST;
 import static cart.exception.noexist.NoExistErrorType.ORDER_NO_EXIST;
 
+import cart.application.dto.order.CreateOrderByCartItemsRequest;
 import cart.application.dto.order.FindOrderDetailResponse;
 import cart.application.dto.order.FindOrdersResponse;
-import cart.application.dto.order.OrderCartItemProductRequest;
-import cart.application.dto.order.OrderCartItemsRequest;
+import cart.application.dto.order.OrderProductRequest;
 import cart.application.repository.CartItemRepository;
 import cart.application.repository.MemberCouponRepository;
 import cart.application.repository.OrderRepository;
@@ -43,9 +43,9 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public long orderCartItems(final Member member, final OrderCartItemsRequest request) {
-        Map<Long, OrderCartItemProductRequest> cartProductRequests = request.getProducts().stream()
-                .collect(Collectors.toMap(OrderCartItemProductRequest::getCartItemId, cartItem -> cartItem));
+    public long orderCartItems(final Member member, final CreateOrderByCartItemsRequest request) {
+        Map<Long, OrderProductRequest> cartProductRequests = request.getProducts().stream()
+                .collect(Collectors.toMap(OrderProductRequest::getCartItemId, cartItem -> cartItem));
 
         CartItems cartItems = cartItemRepository.findByIds(new ArrayList<>(cartProductRequests.keySet()));
         validateCartItems(cartProductRequests, cartItems);
@@ -66,10 +66,10 @@ public class OrderService {
         return orderRepository.order(order);
     }
 
-    private void validateCartItems(final Map<Long, OrderCartItemProductRequest> cartProductRequests,
+    private void validateCartItems(final Map<Long, OrderProductRequest> cartProductRequests,
             final CartItems cartItems) {
         for (final CartItem cartItem : cartItems.getCartItems()) {
-            OrderCartItemProductRequest cartProductRequest = cartProductRequests.get(cartItem.getId());
+            OrderProductRequest cartProductRequest = cartProductRequests.get(cartItem.getId());
             if (cartItem.getQuantity() != cartProductRequest.getQuantity()) {
                 throw new BadRequestException(CART_ITEM_QUANTITY_INCORRECT);
             }

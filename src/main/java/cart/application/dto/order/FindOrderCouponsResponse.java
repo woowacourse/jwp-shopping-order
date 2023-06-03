@@ -7,23 +7,23 @@ import java.util.stream.Collectors;
 
 public class FindOrderCouponsResponse {
 
-    private List<FindOrderCouponResponse> coupons;
+    private List<OrderCouponResponse> coupons;
 
     private FindOrderCouponsResponse() {
     }
 
-    public FindOrderCouponsResponse(final List<FindOrderCouponResponse> coupons) {
+    public FindOrderCouponsResponse(final List<OrderCouponResponse> coupons) {
         this.coupons = coupons;
     }
 
     public static FindOrderCouponsResponse from(final List<MemberCoupon> memberCoupons, final CartItems cartItems) {
-        List<FindOrderCouponResponse> coupons = memberCoupons.stream()
-                .map(memberCoupon -> FindOrderCouponResponse.from(memberCoupon, cartItems))
+        List<OrderCouponResponse> coupons = memberCoupons.stream()
+                .map(memberCoupon -> OrderCouponResponse.from(memberCoupon, cartItems))
                 .collect(Collectors.toList());
         return new FindOrderCouponsResponse(coupons);
     }
 
-    public List<FindOrderCouponResponse> getCoupons() {
+    public List<OrderCouponResponse> getCoupons() {
         return coupons;
     }
 }
