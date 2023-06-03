@@ -11,8 +11,8 @@ public class MemberCoupon {
     private boolean isUsed;
     private Money discountedPrice;
 
-    public MemberCoupon(Long id, Coupon coupon) {
-        this.id = id;
+    public MemberCoupon(Coupon coupon) {
+        this.id = null;
         this.coupon = coupon;
         this.isUsed = false;
         this.discountedPrice = new Money(0);
