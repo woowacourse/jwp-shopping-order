@@ -5,7 +5,6 @@ DROP TABLE orders IF EXISTS;
 DROP TABLE order_item IF EXISTS;
 DROP TABLE coupon_type IF EXISTS;
 DROP TABLE coupon IF EXISTS;
-DROP TABLE member_coupon IF EXISTS;
 
 CREATE TABLE product (
                          id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -56,11 +55,7 @@ CREATE TABLE coupon_type (
 
 CREATE TABLE coupon (
                         id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+                        member_id BIGINT NOT NULL,
                         coupon_type_id BIGINT NOT NULL,
                         is_used BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE TABLE member_coupon (
-                               member_id BIGINT NOT NULL,
-                               coupon_id BIGINT NOT NULL
 );

@@ -64,6 +64,9 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CouponException.class)
     public ResponseEntity<ErrorResponse> handleCouponException(final CouponException exception) {
+        if (exception.getClass() == CouponException.IllegalMember.class) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(exception.getMessage()));
+        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
     }
 }

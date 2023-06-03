@@ -12,6 +12,7 @@ public class CouponDao {
 
     private static final RowMapper<CouponEntity> ROW_MAPPER = (resultSet, rowNum) -> new CouponEntity(
             resultSet.getLong("id"),
+            resultSet.getLong("member_id"),
             resultSet.getLong("coupon_type_id"),
             resultSet.getBoolean("is_used")
     );
@@ -23,7 +24,7 @@ public class CouponDao {
     }
 
     public Optional<CouponEntity> findById(final Long id) {
-        final String sql = "SELECT id, coupon_type_id, is_used "
+        final String sql = "SELECT id, member_id, coupon_type_id, is_used "
                 + "FROM coupon "
                 + "WHERE id = ? ";
         try {
@@ -32,4 +33,17 @@ public class CouponDao {
             return Optional.empty();
         }
     }
+
+    public void updateStatus(final CouponEntity coupon) {
+        final String sql = "UPDATE coupon "
+                + "SET is_used = ? "
+                + "WHERE id = ? ";
+        jdbcTemplate.update(sql, coupon.isUsed(), coupon.getId());
+    }
+
+    // TODO updateStatus
+
+    // TODO findByMember
+
+    // TODO add, findAll, remove (admin)
 }

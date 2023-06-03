@@ -29,9 +29,14 @@ public class OrderRepository {
         this.couponRepository = couponRepository;
     }
 
-    public long add(final Order order) {
+    public long add(final Member member, final Order order) {
         final long orderId = orderDao.save(OrderEntity.from(order));
-        // TODO 쿠폰 상태 변경 (null이면 변경 x)
+        final Long couponId = order.getCouponId();
+        if (Objects.nonNull(couponId)) {
+            final Coupon coupon = couponRepository.findById(couponId)
+                    .orElseThrow(() -> new CouponException.IllegalId(couponId));
+            couponRepository.updateStatus(coupon.use(member));
+        }
         orderItemDao.saveAll(OrderItemEntity.of(orderId, order.getOrderItems()));
         return orderId;
     }
@@ -68,7 +73,10 @@ public class OrderRepository {
     }
 
     public void update(final Order order) {
-        // TODO 쿠폰 상태 변경 (null이면 변경 x)
+        final Coupon coupon = order.getCoupon();
+        if (Objects.nonNull(coupon)) {
+            couponRepository.updateStatus(coupon);
+        }
         orderDao.updateStatus(OrderEntity.from(order));
     }
 }

@@ -89,7 +89,10 @@ public class Order {
         if (isCanceled()) {
             throw new OrderException.AlreadyCanceledOrder(id);
         }
-        return new Order(id, member, coupon, deliveryFee, OrderStatus.CANCEL, orderItems, createdAt);
+        if (Objects.nonNull(coupon)) {
+            return new Order(id, member, coupon.refund(member), deliveryFee, OrderStatus.CANCEL, orderItems, createdAt);
+        }
+        return new Order(id, member, null, deliveryFee, OrderStatus.CANCEL, orderItems, createdAt);
     }
 
     public Long getId() {

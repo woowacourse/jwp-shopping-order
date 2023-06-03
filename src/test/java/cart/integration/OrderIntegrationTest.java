@@ -7,6 +7,7 @@ import cart.domain.Member;
 import cart.domain.OrderStatus;
 import cart.dto.OrderRequest;
 import cart.dto.OrderResponse;
+import cart.repository.CouponRepository;
 import cart.repository.MemberRepository;
 import io.restassured.response.*;
 import java.util.List;
@@ -24,6 +25,8 @@ public class OrderIntegrationTest extends IntegrationTest {
     private static final Long DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE = 380_400L;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private CouponRepository couponRepository;
     private Member member;
     private Member member2;
 
@@ -46,6 +49,20 @@ public class OrderIntegrationTest extends IntegrationTest {
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isEqualTo("/orders/1");
+    }
+
+    @DisplayName("쿠폰을 적용하여 주문을 추가한다.")
+    @Test
+    void createOrderUsingCoupon() {
+        // given, when
+        final ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE,
+                3000L, 1L));
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isEqualTo("/orders/1");
+        assertThat(couponRepository.findById(1L).get().isUsed()).isTrue();
     }
 
     @DisplayName("잘못된 사용자 정보로 주문 정보 추가 요청시 실패한다.")
@@ -79,9 +96,12 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 장바구니 아이템 정보로 주문 정보 추가 요청시 실패한다.")
     @Test
     void addNotExistingCartItem() {
-        // given, when
+        // given
+        final List<Long> cartItemIds = List.of(-1L);
+
+        // when
         final ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(
-                List.of(-1L), DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
+                cartItemIds, DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, null));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -90,12 +110,45 @@ public class OrderIntegrationTest extends IntegrationTest {
     @DisplayName("잘못된 총 금액으로 주문 정보 추가 요청시 실패한다.")
     @Test
     void addByIllegalTotalPrice() {
-        // given, when
+        // given
+        final long totalPrice = 4000L;
+
+        // when
         final ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(
-                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), 4000L, 3000L, null));
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2), totalPrice, 3000L, null));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+    }
+
+    @DisplayName("잘못된 쿠폰 정보로 주문 정보 추가 요청시 실패한다.")
+    @Test
+    void addByNotExistingCoupon() {
+        // given
+        final long couponId = 10L;
+
+        // when
+        final ExtractableResponse<Response> response = 주문_정보_추가(member, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, couponId));
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("다른 사용자의 쿠폰 정보로 주문 정보 추가 요청시 실패한다.")
+    @Test
+    void addByIllegalCoupon() {
+        // given
+        final long couponId = 1L;
+
+        // when
+        final ExtractableResponse<Response> response = 주문_정보_추가(member2, new OrderRequest(
+                List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, couponId));
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     @DisplayName("주문 정보 목록을 조회한다.")
@@ -207,6 +260,27 @@ public class OrderIntegrationTest extends IntegrationTest {
         final String orderStatus = result.jsonPath().get("orderStatus").toString();
         assertThat(orderStatus.substring(1, orderStatus.length() - 1))
                 .isEqualTo(OrderStatus.CANCEL.getValue());
+    }
+
+    @DisplayName("쿠폰을 적용한 주문을 결제 취소하면, 해당 쿠폰은 다시 사용 가능한 상태가 된다.")
+    @Test
+    void cancelOrderWithCoupon() {
+        // given
+        final long couponId = 1L;
+        주문_정보_추가(member, new OrderRequest(List.of(DUMMY_MEMBER1_CART_ITEM_ID1, DUMMY_MEMBER1_CART_ITEM_ID2),
+                DUMMY_MEMBER1_CART_ITEMS_TOTAL_PRICE, 3000L, couponId));
+
+        // when
+        final ExtractableResponse<Response> response = 주문_취소(member, 1L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        final ExtractableResponse<Response> result = 주문_정보_목록_조회(member);
+        final String orderStatus = result.jsonPath().get("orderStatus").toString();
+        assertThat(orderStatus.substring(1, orderStatus.length() - 1))
+                .isEqualTo(OrderStatus.CANCEL.getValue());
+        assertThat(couponRepository.findById(couponId).get().isUsed())
+                .isFalse();
     }
 
     private ExtractableResponse<Response> 주문_정보_추가(final Member member, final OrderRequest orderRequest) {

@@ -37,12 +37,12 @@ public class OrderService {
 
         final Order order = new Order(
                 member,
-                new Coupon(orderRequest.getCouponId()),
+                new Coupon(orderRequest.getCouponId(), member),
                 new Money(orderRequest.getTotalPrice()),
                 OrderItem.convert(cartItems));
         order.checkTotalPrice(new Money(orderRequest.getTotalPrice()));
         cartItemService.remove(member, cartItemIds);
-        return orderRepository.add(order);
+        return orderRepository.add(member, order);
     }
 
     public List<OrderResponse> findOrdersByMember(final Member member) {

@@ -64,22 +64,16 @@ VALUES ('신규 가입 할인', '정액제', 5000);
 INSERT INTO coupon_type (name, discount_type, discount_amount)
 VALUES ('여름 맞이 할인', '정액제', 2000);
 
--- 발행 쿠폰 (coupon이 member_id 가지도록 수정하기)
-INSERT INTO coupon (coupon_type_id)
-VALUES (1);
-INSERT INTO coupon (coupon_type_id)
-VALUES (2);
-INSERT INTO coupon (coupon_type_id)
-VALUES (3);
-INSERT INTO coupon (coupon_type_id)
-VALUES (4);
-INSERT INTO coupon (coupon_type_id)
-VALUES (5);
-INSERT INTO coupon (coupon_type_id)
-VALUES (6);
-INSERT INTO member_coupon (member_id, coupon_id)
+-- 발행 쿠폰
+INSERT INTO coupon (member_id, coupon_type_id)
 VALUES (1, 1);
-INSERT INTO member_coupon (member_id, coupon_id)
+INSERT INTO coupon (member_id, coupon_type_id)
 VALUES (1, 2);
-INSERT INTO member_coupon (member_id, coupon_id)
+INSERT INTO coupon (member_id, coupon_type_id)
 VALUES (1, 3);
+INSERT INTO coupon (member_id, coupon_type_id)
+VALUES (2, 4);
+INSERT INTO coupon (member_id, coupon_type_id)
+VALUES (2, 5);
+INSERT INTO coupon (member_id, coupon_type_id)
+VALUES (2, 6);

@@ -25,9 +25,12 @@ public class CouponRepository {
         if (foundCoupon.isEmpty()) {
             return Optional.empty();
         }
-        final CouponEntity coupon = foundCoupon.get();
         final CouponTypeEntity couponType = couponTypeDao.findById(id)
                 .orElseThrow(() -> new IllegalStateException("illegal data exists in table COUPON; coupon_type_id"));
-        return Optional.of(Coupon.of(coupon, CouponType.from(couponType)));
+        return Optional.of(Coupon.of(foundCoupon.get(), CouponType.from(couponType)));
+    }
+
+    public void updateStatus(final Coupon coupon) {
+        couponDao.updateStatus(CouponEntity.from(coupon));
     }
 }
