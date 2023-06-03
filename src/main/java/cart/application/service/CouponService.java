@@ -23,6 +23,7 @@ public class CouponService {
         return couponRepository.create(coupon);
     }
 
+    @Transactional(readOnly = true)
     public FindCouponsResponse findAllCoupons() {
         List<Coupon> coupons = couponRepository.findAll();
         return FindCouponsResponse.from(coupons);
