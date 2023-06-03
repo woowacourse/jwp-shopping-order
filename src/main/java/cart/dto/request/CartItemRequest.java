@@ -1,12 +1,14 @@
 package cart.dto.request;
 
+import java.beans.ConstructorProperties;
+import javax.validation.constraints.NotNull;
+
 public class CartItemRequest {
 
+    @NotNull
     private Long productId;
 
-    public CartItemRequest() {
-    }
-
+    @ConstructorProperties(value = {"productId"})
     public CartItemRequest(Long productId) {
         this.productId = productId;
     }
