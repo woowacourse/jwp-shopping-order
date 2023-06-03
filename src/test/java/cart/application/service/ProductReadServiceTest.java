@@ -1,6 +1,6 @@
 package cart.application.service;
 
-import cart.application.repository.ProductRepository;
+import cart.application.repository.product.ProductRepository;
 import cart.application.service.product.ProductReadService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

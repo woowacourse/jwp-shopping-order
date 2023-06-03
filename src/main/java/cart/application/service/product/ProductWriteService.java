@@ -1,8 +1,8 @@
 package cart.application.service.product;
 
-import cart.application.repository.ProductRepository;
+import cart.application.repository.product.ProductRepository;
 import cart.application.service.product.dto.ProductCreateDto;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +19,7 @@ public class ProductWriteService {
     }
 
     public Long createProduct(final ProductCreateDto productCreateDto) {
-        final Product product = new Product(productCreateDto.getName(), productCreateDto.getPrice(), productCreateDto.getImageUrl());
+        final Product product = new Product(productCreateDto);
         return productRepository.createProduct(product);
     }
 
@@ -27,7 +27,7 @@ public class ProductWriteService {
         productRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
 
-        final Product product = new Product(productId, productCreateDto.getName(), productCreateDto.getPrice(), productCreateDto.getImageUrl());
+        final Product product = new Product(productId, productCreateDto);
         productRepository.updateProduct(product);
     }
 
