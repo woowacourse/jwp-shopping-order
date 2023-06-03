@@ -1,5 +1,9 @@
 # jwp-shopping-order
 
+### 주문 기능 시퀀스 다이어그램
+
+<img src="img.png" alt="img" width="200" height="200">
+
 ### 기능 요구사항
 
 - [x] 장바구니에 담은 상품을 주문할 수 있다.
