@@ -1,10 +1,7 @@
 package cart.ui;
 
 import cart.dto.ErrorResponse;
-import cart.exception.AuthenticationException;
-import cart.exception.CartItemException;
-import cart.exception.IllegalMemberException;
-import cart.exception.OrderException;
+import cart.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,7 +36,7 @@ public class ControllerExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({CartItemException.NoSuchIds.class, OrderException.NoSuchId.class})
+    @ExceptionHandler({NoSuchIdsException.class})
     public ErrorResponse handleNotFound(RuntimeException e) {
         return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }

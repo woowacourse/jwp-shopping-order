@@ -4,6 +4,7 @@ import cart.domain.Product;
 import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.exception.NoSuchIdsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public class ProductService {
 
     public List<ProductResponse> getProductsById(List<Long> ids) {
         final List<Product> products = productDao.getProductsByIds(ids);
+        if (products.size() != ids.size()) {
+            throw new NoSuchIdsException(ids);
+        }
+
         return products.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 

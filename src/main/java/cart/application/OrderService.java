@@ -6,7 +6,7 @@ import cart.domain.Member;
 import cart.domain.Order;
 import cart.domain.OrderCalculator;
 import cart.dto.OrderRequest;
-import cart.exception.OrderException;
+import cart.exception.NoSuchIdsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +40,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Order findById(Member member, Long orderId) {
         final Order order = orderDao.findById(orderId)
-                .orElseThrow(() -> new OrderException.NoSuchId(orderId));
+                .orElseThrow(() -> new NoSuchIdsException(List.of(orderId)));
         order.checkOwner(member);
 
         return order;

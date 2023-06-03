@@ -2,6 +2,8 @@ package cart.integration;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +15,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ProductIntegrationTest extends IntegrationTest {
+
+    @BeforeEach
+    void setUp() {
+        super.setUp();
+        databaseSetting.createTables();
+    }
+
+    @AfterEach
+    void clear() {
+        databaseSetting.clearDatabase();
+    }
 
     @Test
     public void getProducts() {
@@ -47,7 +60,7 @@ public class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void query스트링이_형식이_맞지않으면_400_예외를_발생시킨다() {
+    public void query스트링이_형식이_맞지않으면_400를_발생시킨다() {
         var result = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -57,6 +70,23 @@ public class ProductIntegrationTest extends IntegrationTest {
 
         assertAll(
                 () -> assertThat(result.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(result.jsonPath().getInt("errorCode")).isNotNull()
+        );
+    }
+
+    @Test
+    public void id가_존재하지_않으면_404을_응답한다() {
+        databaseSetting.addProducts();
+
+        var result = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products?ids=1000,1")
+                .then().log().all()
+                .extract();
+
+        assertAll(
+                () -> assertThat(result.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
                 () -> assertThat(result.jsonPath().getInt("errorCode")).isNotNull()
         );
     }
