@@ -1,6 +1,9 @@
 package cart.domain;
 
+import cart.exception.OrderException;
+
 import java.sql.Date;
+import java.util.Objects;
 
 public class Order {
 
@@ -47,6 +50,12 @@ public class Order {
             return 0L;
         }
         return deliveryFee;
+    }
+
+    public void checkOwner(Member member) {
+        if (!Objects.equals(this.member.getId(), member.getId())) {
+            throw new OrderException.IllegalMember(this, member);
+        }
     }
 
     private Long calculateTotalPrice() {

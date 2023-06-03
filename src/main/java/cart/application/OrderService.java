@@ -32,7 +32,7 @@ public class OrderService {
                 })
                 .collect(Collectors.toList());
 
-        Long orderId = orderDao.save(new Order(member, new OrderItems(orderItems), 3000L, new Date(20220505)));
+        Long orderId = orderDao.save(new Order(member, new OrderItems(orderItems), 3000L, new Date(2022-5-5)));
 
         Order order = orderDao.findById(orderId);
 
@@ -41,17 +41,22 @@ public class OrderService {
 
     public OrderResponse findById(Member member, Long orderId) {
         Order order = orderDao.findById(orderId);
+        order.checkOwner(member);
         return OrderResponse.of(order);
     }
 
     public OrdersResponse findAll(Member member) {
         List<Order> orders = orderDao.findAllByMember(member.getId());
+        for (Order order : orders) {
+            order.checkOwner(member);
+        }
         return OrdersResponse.of(orders);
     }
 
     public void remove(Member member, Long id) {
         Order order = orderDao.findById(id);
-        // member의 order가 맞는지 확인!
+        order.checkOwner(member);
+
         orderDao.deleteById(id);
     }
 }

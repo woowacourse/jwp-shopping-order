@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS orders
     discount_price BIGINT   NOT NULL,
     delivery_fee   BIGINT   NOT NULL,
     total_price    BIGINT   NOT NULL,
-    created_at     DATETIME NOT NULL default current_timestamp,
+    created_at     DATETIME NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
 

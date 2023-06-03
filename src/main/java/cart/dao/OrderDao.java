@@ -111,7 +111,7 @@ public class OrderDao {
     }
 
     public void deleteById(Long id) {
-        String sql = "UPDATE FROM orders WHERE id = ?";
+        String sql = "DELETE FROM orders WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
