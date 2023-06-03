@@ -30,7 +30,7 @@ public class BasicAuthorizationExtractor {
 
             return new AuthInfo(email, password);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            throw new AuthenticationException.InvalidTokenFormat("토큰 형식이 올바르지 않습니다.", ex);
+            throw new AuthenticationException.InvalidTokenFormat(ex);
         }
     }
 
@@ -39,7 +39,7 @@ public class BasicAuthorizationExtractor {
             throw new AuthenticationException.ForbiddenMember();
         }
         if (checkNonBasicType(header)) {
-            throw new AuthenticationException.InvalidTokenFormat("올바른 인증 방식이 아닙니다.");
+            throw new AuthenticationException.InvalidAuthentication();
         }
     }
 

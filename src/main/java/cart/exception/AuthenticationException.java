@@ -10,14 +10,17 @@ public abstract class AuthenticationException extends RuntimeException {
         super(message, cause);
     }
 
+    public static class InvalidAuthentication extends AuthenticationException {
+
+        public InvalidAuthentication() {
+            super("유효한 인증 방식이 아닙니다.");
+        }
+    }
+
     public static class InvalidTokenFormat extends AuthenticationException {
 
-        public InvalidTokenFormat(String message) {
-            super(message);
-        }
-
-        public InvalidTokenFormat(String message, Throwable cause) {
-            super(message, cause);
+        public InvalidTokenFormat(Throwable cause) {
+            super("유효한 토큰 형식이 아닙니다.", cause);
         }
     }
 

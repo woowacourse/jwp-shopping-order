@@ -43,7 +43,7 @@ class BasicAuthorizationExtractorTest {
 
         assertThatThrownBy(() -> extractor.extract("Basic " + encoded))
                 .isInstanceOf(AuthenticationException.InvalidTokenFormat.class)
-                .hasMessage("토큰 형식이 올바르지 않습니다.");
+                .hasMessage("유효한 토큰 형식이 아닙니다.");
     }
 
     @Test
@@ -52,8 +52,8 @@ class BasicAuthorizationExtractorTest {
         String encoded = encode(MEMBER_A.getEmail() + ":" + MEMBER_A.getPassword());
 
         assertThatThrownBy(() -> extractor.extract(encoded))
-                .isInstanceOf(AuthenticationException.InvalidTokenFormat.class)
-                .hasMessage("올바른 인증 방식이 아닙니다.");
+                .isInstanceOf(AuthenticationException.InvalidAuthentication.class)
+                .hasMessage("유효한 인증 방식이 아닙니다.");
     }
 
     private String encode(String userInfo) {
