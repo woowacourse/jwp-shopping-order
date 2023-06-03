@@ -15,6 +15,7 @@ import cart.exception.OrderException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrdersResponse> findAllByMemberId(Member member) {
         return orderRepository.findAllByMemberId(member).stream()
+                .sorted(Comparator.comparing(Order::getId).reversed())
                 .map(OrdersResponse::of).collect(Collectors.toList());
     }
 
