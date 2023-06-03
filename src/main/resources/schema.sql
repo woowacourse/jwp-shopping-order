@@ -38,4 +38,24 @@ CREATE TABLE coupon_box (
     FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
 
+CREATE TABLE ordered (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    member_id BIGINT NOT NULL,
+    time TIMESTAMP NOT NULL,
+    delivery_price INT NOT NULL,
+    discount_price_from_total INT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(id)
+);
+
+CREATE TABLE ordered_item (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ordered_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    FOREIGN KEY (ordered_id) REFERENCES ordered(id)
+);
+
+
+
 

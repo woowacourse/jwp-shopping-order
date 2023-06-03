@@ -3,14 +3,15 @@ package cart.domain;
 import cart.domain.coupon.Coupon;
 import cart.domain.coupon.SingleCoupon;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BinaryOperator;
 
 public class Order {
     private final static Price DELIVERY_FEE = Price.DELIVERY;
     private final List<OrderCartItem> orderCartItems;
     private final Coupon coupon;
+    private final Timestamp time;
 
     public Order(List<OrderCartItem> orderCartItems, Coupon coupon) {
         this.orderCartItems = orderCartItems;
@@ -18,6 +19,7 @@ public class Order {
             throw new IllegalArgumentException("지원하지 않는 쿠폰입니다.");
         }
         this.coupon = coupon;
+        this.time = new Timestamp(System.currentTimeMillis());
     }
 
     public Order(List<OrderCartItem> orderCartItems) {
@@ -55,4 +57,7 @@ public class Order {
                 .plus(getDeliveryPrice());
     }
 
+    public Timestamp getTime() {
+        return time;
+    }
 }
